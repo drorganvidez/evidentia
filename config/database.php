@@ -73,6 +73,15 @@ return [
             'prefix'   => '',
         ),
 
+        'base21' => [
+            'driver' => 'mysql',
+            'host' =>  'localhost',
+            'port' => '33060',
+            'database' => 'base21',
+            'username' => 'homestead',
+            'password' => 'secret'
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

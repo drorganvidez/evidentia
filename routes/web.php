@@ -13,16 +13,31 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
+Auth::routes();
 
 Route::get('/', 'InstanceController@list');
 
-Route::prefix('{instance}')->group(function () {
+/*
+ *  ADMIN ROUTES
+ */
 
-    Route::get('', 'UserControllerSample@index');
+Route::prefix('admin')->group(function () {
 
-    Route::get('admin', function(){
-        echo "hola admin";
-    });
+    Route::get('', 'InstanceController@admin')->name('admin');
+    Route::get('/instance/create', 'InstanceController@create')->name('admin.instance.create');
+    Route::post('/instance/new', 'InstanceController@new')->name('admin.instance.new');
 
 });
+
+/*
+ *  ALL ROUTES
+ */
+
+Route::prefix('{instance}')->group(function () {
+
+    Route::get('/', 'HomeController@index')->name('home');
+
+});
+
+
+//Route::get('/home', 'HomeController@index')->name('home');

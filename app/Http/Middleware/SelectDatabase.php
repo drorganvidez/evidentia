@@ -17,18 +17,20 @@ class SelectDatabase
      */
     public function handle($request, Closure $next)
     {
-
         $param = $request->segment(1);
 
-        // main page
-        if($param == ""){
+        $admin_routes = array("", "admin", "login", "logout");
+
+        if (in_array($param, $admin_routes))
+        {
             return $next($request);
         }
 
         $instance = Instance::where('route',$param)->first();
 
         // if database doesn't exist
-        if($instance == null){
+        if($instance == null)
+        {
             return redirect('/');
         }
 
