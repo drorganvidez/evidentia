@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Instance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 
 class InstanceController extends Controller
 {
@@ -41,6 +42,8 @@ class InstanceController extends Controller
         $instance->password = $request->password;
         $instance->active = true;
 
+        DB::statement("CREATE DATABASE `{$instance->database}`");
+
         config(['database.connections.instance' => [
             'driver'   => 'mysql',
             'host' => $instance->host,
@@ -51,6 +54,8 @@ class InstanceController extends Controller
         ]]);
 
         config(['database.default' => 'instance']);
+
+
 
         Artisan::call('migrate',
                     [
@@ -63,6 +68,30 @@ class InstanceController extends Controller
 
         $instance->save();
 
-        return redirect("/");
+        return redirect(route('admin.instance.manage'));
+    }
+
+    public function manage(){
+        $instances = Instance::all();
+        return view('instances.manage', ['instances' => $instances]);
+    }
+
+    public function delete($id){
+        $instance = Instance::where('id', $id)->first();
+        return view('instances.delete', ['instance' => $instance]);
+    }
+
+    public function remove(Request $request){
+        $instance = Instance::where('id', $request->id)->first();
+
+        $request->validate([
+            'name' => 'in:'.$instance->name
+        ]);
+
+        DB::statement("DROP DATABASE `{$instance->database}`");
+
+        $instance->delete();
+
+        return redirect(route('admin.instance.manage'));
     }
 }

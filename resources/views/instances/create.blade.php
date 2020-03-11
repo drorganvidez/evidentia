@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Crear instancia')
+@section('title-icon', 'fas fa-box')
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -24,6 +25,7 @@
 
                             <x-input col="4" attr="route" label="Ruta por defecto" description="Define una ruta de acceso para el curso"/>
                         </div>
+
 
                         <div class="form-row">
 

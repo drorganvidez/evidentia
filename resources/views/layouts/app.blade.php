@@ -194,6 +194,8 @@
         <div class="sidebar">
 
             @auth
+                {{-- ADMIN SIDEBAR --}}
+
                 @if(Request::is('/') || Request::is('admin/*'))
                     <!-- Sidebar user panel (optional) -->
                         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
@@ -210,10 +212,19 @@
                             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
                                 <li class="nav-item">
-                                    <a href="{{ route('admin.instance.create') }}" class="nav-link  {{ (request()->is('admin/*')) ? 'active' : '' }}">
-                                        <i class="fas fa-plus-circle"></i>
+                                    <a href="{{ route('admin.instance.create') }}" class="nav-link  {{ (request()->is('admin/instance/create')) ? 'active' : '' }}">
+                                        <i class="fas fa-box"></i>
                                         <p>
-                                            Crear instancia
+                                            &nbsp;Crear instancia
+                                        </p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.instance.manage') }}" class="nav-link  {{ (request()->is('admin/instance/manage/*')) ? 'active' : '' }}">
+                                        <i class="fas fa-boxes"></i>
+                                        <p>
+                                            &nbsp;Gestionar instancias
                                         </p>
                                     </a>
                                 </li>
@@ -224,7 +235,7 @@
                                                         document.getElementById('logout-form').submit();">
                                         <i class="fas fa-sign-out-alt"></i>
                                         <p>
-                                            Cerrar sesión
+                                            &nbsp;Cerrar sesión
                                         </p>
                                     </a>
                                 </li>
@@ -237,6 +248,7 @@
                         </nav>
                         <!-- /.sidebar-menu -->
                 @endif
+                {{-- /ADMIN SIDEBAR --}}
             @endauth
 
             @guest
@@ -268,7 +280,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0 text-dark">@yield('title')</h1>
+                        <h1 class="m-0 text-dark"><i class="@yield('title-icon')"></i>&nbsp;&nbsp;@yield('title')</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
