@@ -55,8 +55,6 @@ class InstanceController extends Controller
 
         config(['database.default' => 'instance']);
 
-
-
         Artisan::call('migrate',
                     [
                         '--path' => 'database/migrations/instances',
@@ -69,6 +67,11 @@ class InstanceController extends Controller
         $instance->save();
 
         return redirect(route('admin.instance.manage'));
+    }
+
+    public function edit($id){
+        $instance = Instance::where('id', $id)->first();
+        return view('instances.create', ['instance' => $instance]);
     }
 
     public function manage(){

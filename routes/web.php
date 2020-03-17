@@ -30,6 +30,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/instance/manage', 'InstanceController@manage')->name('admin.instance.manage');
     Route::get('/instance/manage/delete/{id}', 'InstanceController@delete')->name('admin.instance.manage.delete');
     Route::post('/instance/manage/remove/', 'InstanceController@remove')->name('admin.instance.manage.remove');
+    Route::get('/instance/manage/edit/{id}', 'InstanceController@edit')->name('admin.instance.manage.edit');
 
 });
 

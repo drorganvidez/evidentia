@@ -42,7 +42,7 @@
 
                                 <td>
                                     <a class="btn btn-primary btn-sm" href="/{{$instance->route}}" role="button">Acceder</a>
-                                    <a class="btn btn-primary btn-sm" href="/{{$instance->route}}" role="button">Editar</a>
+                                    <a class="btn btn-primary btn-sm" href="{{route('admin.instance.manage.edit',$instance->id)}}" role="button">Editar</a>
                                     <a class="btn btn-primary btn-sm" href="/{{$instance->route}}" role="button">Exportar</a>
                                     <a class="btn btn-danger btn-sm" href="{{route('admin.instance.manage.delete',$instance->id)}}" role="button">Eliminar</a>
                                 </td>

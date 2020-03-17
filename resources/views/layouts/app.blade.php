@@ -221,7 +221,7 @@
                                 </li>
 
                                 <li class="nav-item">
-                                    <a href="{{ route('admin.instance.manage') }}" class="nav-link  {{ (request()->is('admin/instance/manage/*')) ? 'active' : '' }}">
+                                    <a href="{{ route('admin.instance.manage') }}" class="nav-link  {{ (request()->is('admin/instance/manage') || request()->is('admin/instance/manage/*')) ? 'active' : '' }}">
                                         <i class="fas fa-boxes"></i>
                                         <p>
                                             &nbsp;Gestionar instancias
