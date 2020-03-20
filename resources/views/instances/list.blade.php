@@ -9,34 +9,26 @@
 
 @section('content')
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
+        <div class="row">
 
-                <div class="card-body table-responsive p-0">
-                    <table class="table table-hover text-nowrap">
-                        <thead>
-                        <tr>
-                            <th>Curso</th>
-                            <th>Acceso</th>
-                        </tr>
-                        </thead>
-                        <tbody>
+            @foreach($instances as $instance)
 
-                        @foreach($instances as $instance)
-                            <tr>
-                                <td>{{$instance->name}}</td>
-                                <td><a class="btn btn-primary" href="/{{$instance->route}}" role="button">Acceder</a></td>
-                            </tr>
-                        @endforeach
+                <div class="col-lg-4 col-4">
+                    <div class="small-box bg-light" onclick="location.href='/{{$instance->route}}';" style="cursor: pointer;">
+                        <div class="inner">
+                            <h3>{{$instance->name}}</h3>
 
-                        </tbody>
-                    </table>
+                            <p>&nbsp;</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <a href="/{{$instance->route}}" class="small-box-footer">Acceder <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
                 </div>
-                <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
+
+            @endforeach
+
         </div>
-    </div>
 
 @endsection

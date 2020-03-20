@@ -19,8 +19,11 @@ class Input extends Component
     public $placeholder;
     public $value;
     public $type;
+    public $disabled;
 
-    public function __construct($col,$label,$attr,$description="",$placeholder="",$value=" ",$type="text")
+    public $edit;
+
+    public function __construct($col,$label,$attr,$description="",$placeholder="",$value="",$type="text", $disabled=false,$edit=false)
     {
         $this->col = $col;
         $this->label = $label;
@@ -29,6 +32,9 @@ class Input extends Component
         $this->placeholder = $placeholder;
         $this->value = $value;
         $this->type = $type;
+        $this->disabled = $disabled;
+
+        $this->edit = $edit;
     }
 
     /**

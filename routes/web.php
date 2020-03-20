@@ -25,12 +25,20 @@ Route::prefix('admin')->group(function () {
 
     // Instances
     Route::get('', 'InstanceController@admin')->name('admin');
+
+    Route::get('/instance/manage', 'InstanceController@manage')->name('admin.instance.manage');
+
     Route::get('/instance/create', 'InstanceController@create')->name('admin.instance.create');
     Route::post('/instance/new', 'InstanceController@new')->name('admin.instance.new');
-    Route::get('/instance/manage', 'InstanceController@manage')->name('admin.instance.manage');
+
+    Route::get('/instance/manage/edit/{id}', 'InstanceController@edit')->name('admin.instance.manage.edit');
+    Route::post('/instance/manage/save', 'InstanceController@save')->name('admin.instance.manage.save');
+
+
     Route::get('/instance/manage/delete/{id}', 'InstanceController@delete')->name('admin.instance.manage.delete');
     Route::post('/instance/manage/remove/', 'InstanceController@remove')->name('admin.instance.manage.remove');
-    Route::get('/instance/manage/edit/{id}', 'InstanceController@edit')->name('admin.instance.manage.edit');
+
+
 
 });
 

@@ -6,6 +6,7 @@ use App\Instance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class InstanceController extends Controller
 {
@@ -21,14 +22,19 @@ class InstanceController extends Controller
     }
 
     public function create(){
-        return view('instances.create');
+        return view('instances.createandedit', ['route' => route('admin.instance.new')]);
     }
 
     public function new(Request $request){
 
-        $request->validate([
-            'name' => ['unique:instances'],
-            'route' => ['unique:instances']
+        $validatedData = $request->validate([
+            'name' => 'required|unique:instances',
+            'route' => 'required|unique:instances',
+            'host' => 'required',
+            'port' => 'required',
+            'database' => 'required|unique:instances',
+            'username' => 'required',
+            'password' => 'required',
         ]);
 
         $instance = new Instance();
@@ -44,6 +50,31 @@ class InstanceController extends Controller
 
         DB::statement("CREATE DATABASE `{$instance->database}`");
 
+        $this->set($instance);
+
+        try {
+            DB::connection()->getPdo();
+            Artisan::call('migrate',
+                [
+                    '--path' => 'database/migrations/instances',
+                    '--database' => 'instance'
+                ]);
+        } catch (\Exception $e) {
+
+            $this->reset();
+            DB::statement("DROP DATABASE `{$instance->database}`");
+            return back()->withInput()->with('error', 'Conexión fallida, revise los parámetros de configuración de la base de datos.');
+
+        }
+
+        $this->reset();
+
+        $instance->save();
+
+        return redirect()->route('admin.instance.manage')->with('success', 'Instancia creada con éxito.');
+    }
+
+    private function set($instance){
         config(['database.connections.instance' => [
             'driver'   => 'mysql',
             'host' => $instance->host,
@@ -52,26 +83,53 @@ class InstanceController extends Controller
             'username' => $instance->username,
             'password' => $instance->password
         ]]);
-
         config(['database.default' => 'instance']);
+    }
 
-        Artisan::call('migrate',
-                    [
-                        '--path' => 'database/migrations/instances',
-                        '--database' => 'instance'
-                    ]);
-
+    private function reset(){
         Artisan::call('config:clear');
         config(['database.default' => 'mysql']);
-
-        $instance->save();
-
-        return redirect(route('admin.instance.manage'));
     }
 
     public function edit($id){
         $instance = Instance::where('id', $id)->first();
-        return view('instances.create', ['instance' => $instance]);
+        return view('instances.createandedit', ['instance' => $instance, 'edit' => true, 'route' => route('admin.instance.manage.save')]);
+    }
+
+    public function save(Request $request){
+
+        $validatedData = $request->validate([
+            'name' => ['required',Rule::unique('instances')->ignore($request->_id)],
+            'route' => ['required',Rule::unique('instances')->ignore($request->_id)],
+            'host' => 'required',
+            'port' => 'required',
+            'username' => 'required',
+            'password' => 'required',
+        ]);
+
+        $instance = Instance::where('id', $request->_id)->first();
+        $instance->name = $request->name;
+        $instance->route = $request->route;
+        $instance->host = $request->host;
+        $instance->port = $request->port;
+        $instance->username = $request->username;
+        $instance->password = $request->password;
+
+        $this->set($instance);
+
+        try {
+            DB::connection()->getPdo();
+            $instance->save();
+        } catch (\Exception $e) {
+
+            $this->reset();
+            return back()->withInput()->with('error', 'Conexión fallida, revise los parámetros de configuración de la base de datos.');
+
+        }
+
+        $this->reset();
+
+        return redirect()->route('admin.instance.manage')->with('success', 'Instancia actualizada con éxito.');
     }
 
     public function manage(){
@@ -95,6 +153,6 @@ class InstanceController extends Controller
 
         $instance->delete();
 
-        return redirect(route('admin.instance.manage'));
+        return redirect()->route('admin.instance.manage')->with('success', 'Instancia eliminada con éxito.');;
     }
 }

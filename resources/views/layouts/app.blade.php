@@ -11,6 +11,7 @@
 
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
     <link href="{{ asset('dist/css/adminlte.min.css') }}" rel="stylesheet">
 
@@ -296,7 +297,9 @@
 
         <!-- Main content -->
         <section class="content">
-            @yield('content')
+            <div class="container-fluid">
+                @yield('content')
+            </div>
         </section>
         <!-- /.content -->
     </div>

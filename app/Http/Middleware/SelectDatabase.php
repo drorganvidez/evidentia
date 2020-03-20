@@ -43,6 +43,5 @@ class SelectDatabase
 
         return $next($request);
 
-
     }
 }
