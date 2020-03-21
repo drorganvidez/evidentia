@@ -28,6 +28,7 @@
                 <div class="card-body">
                     <form method="POST" action="{{$route}}">
                         @csrf
+
                         <x-id :id="$instance->id ?? ''" :edit="$edit ?? ''"/>
 
                         <div class="form-row">

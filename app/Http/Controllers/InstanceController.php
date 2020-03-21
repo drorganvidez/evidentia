@@ -10,22 +10,32 @@ use Illuminate\Validation\Rule;
 
 class InstanceController extends Controller
 {
-    public function list(){
+
+    public function __construct()
+    {
+
+    }
+
+    public function list()
+    {
 
         $instances = Instance::all();
 
         return view('instances.list', ['instances' => $instances]);
     }
 
-    public function admin(){
+    public function admin()
+    {
         return view('instances.admin');
     }
 
-    public function create(){
+    public function create()
+    {
         return view('instances.createandedit', ['route' => route('admin.instance.new')]);
     }
 
-    public function new(Request $request){
+    public function new(Request $request)
+    {
 
         $validatedData = $request->validate([
             'name' => 'required|unique:instances',
@@ -74,9 +84,10 @@ class InstanceController extends Controller
         return redirect()->route('admin.instance.manage')->with('success', 'Instancia creada con éxito.');
     }
 
-    private function set($instance){
+    private function set($instance)
+    {
         config(['database.connections.instance' => [
-            'driver'   => 'mysql',
+            'driver' => 'mysql',
             'host' => $instance->host,
             'database' => $instance->database,
             'port' => $instance->port,
@@ -86,21 +97,24 @@ class InstanceController extends Controller
         config(['database.default' => 'instance']);
     }
 
-    private function reset(){
+    private function reset()
+    {
         Artisan::call('config:clear');
         config(['database.default' => 'mysql']);
     }
 
-    public function edit($id){
-        $instance = Instance::where('id', $id)->first();
+    public function edit($id)
+    {
+        $instance = Instance::find($id);
         return view('instances.createandedit', ['instance' => $instance, 'edit' => true, 'route' => route('admin.instance.manage.save')]);
     }
 
-    public function save(Request $request){
+    public function save(Request $request)
+    {
 
         $validatedData = $request->validate([
-            'name' => ['required',Rule::unique('instances')->ignore($request->_id)],
-            'route' => ['required',Rule::unique('instances')->ignore($request->_id)],
+            'name' => ['required', Rule::unique('instances')->ignore($request->_id)],
+            'route' => ['required', Rule::unique('instances')->ignore($request->_id)],
             'host' => 'required',
             'port' => 'required',
             'username' => 'required',
@@ -132,21 +146,24 @@ class InstanceController extends Controller
         return redirect()->route('admin.instance.manage')->with('success', 'Instancia actualizada con éxito.');
     }
 
-    public function manage(){
+    public function manage()
+    {
         $instances = Instance::all();
         return view('instances.manage', ['instances' => $instances]);
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
         $instance = Instance::where('id', $id)->first();
         return view('instances.delete', ['instance' => $instance]);
     }
 
-    public function remove(Request $request){
+    public function remove(Request $request)
+    {
         $instance = Instance::where('id', $request->id)->first();
 
         $request->validate([
-            'name' => 'in:'.$instance->name
+            'name' => 'in:' . $instance->name
         ]);
 
         DB::statement("DROP DATABASE `{$instance->database}`");
@@ -155,4 +172,5 @@ class InstanceController extends Controller
 
         return redirect()->route('admin.instance.manage')->with('success', 'Instancia eliminada con éxito.');;
     }
+
 }
