@@ -15,16 +15,19 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::get('/', 'InstanceController@list');
-
 /*
- *  ADMIN ROUTES
+ *  MAIN ROUTE
  */
 
-Route::prefix('admin')->group(function () {
+Route::get('/', 'MetaAdminController@list');
 
-    // Instances
-    Route::get('', 'InstanceController@admin')->name('admin');
+/*
+ *  META ADMIN ROUTES
+ */
+
+Route::get('/admin', 'MetaAdminController@admin')->name('admin');
+
+Route::prefix('admin')->group(function () {
 
     Route::get('/instance/manage', 'InstanceController@manage')->name('admin.instance.manage');
 
@@ -49,8 +52,12 @@ Route::prefix('admin')->group(function () {
 Route::prefix('{instance}')->group(function () {
 
     Route::get('/', 'HomeController@index')->name('home');
+    Route::get('/login', 'LoginInstanceController@login')->name('instance.login');
+    Route::post('/login_p', 'LoginInstanceController@login_p')->name('instance.login_p');
 
 });
+
+//Route::get('20/login', 'LoginInstanceController@login')->name('instance.login');
 
 
 //Route::get('/home', 'HomeController@index')->name('home');

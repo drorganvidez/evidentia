@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
 
         //Artisan::call('config:clear');
 
+        /*
         config(['database.connections.instance' => [
             'driver'   => 'mysql',
             'host' => 'localhost',
@@ -37,6 +38,7 @@ class CreateUsersTable extends Migration
 
 
         //Config::set('database.default', 'instance');
+        */
 
         Schema::connection('instance')->create('users', function (Blueprint $table) {
             $table->id();

@@ -13,20 +13,7 @@ class InstanceController extends Controller
 
     public function __construct()
     {
-
-    }
-
-    public function list()
-    {
-
-        $instances = Instance::all();
-
-        return view('instances.list', ['instances' => $instances]);
-    }
-
-    public function admin()
-    {
-        return view('instances.admin');
+        $this->middleware('auth');
     }
 
     public function create()

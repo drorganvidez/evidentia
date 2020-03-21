@@ -248,6 +248,31 @@
                             </ul>
                         </nav>
                         <!-- /.sidebar-menu -->
+                @else
+
+                    <!-- Sidebar Menu -->
+                        <nav class="mt-2">
+                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+                                <li class="nav-item">
+                                    <a href="{{ route('logout') }}"  class="nav-link"
+                                       onclick="event.preventDefault();
+                                                        document.getElementById('logout-form').submit();">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        <p>
+                                            &nbsp;Cerrar sesión
+                                        </p>
+                                    </a>
+                                </li>
+
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+
+                            </ul>
+                        </nav>
+                        <!-- /.sidebar-menu -->
+
                 @endif
                 {{-- /ADMIN SIDEBAR --}}
             @endauth
@@ -286,7 +311,6 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             @section('breadcrumb')
-                                <p>This is appended to the master sidebar.</p>
                             @show
                         </ol>
                     </div><!-- /.col -->
