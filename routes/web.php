@@ -55,6 +55,14 @@ Route::prefix('{instance}')->group(function () {
     Route::get('/login', 'LoginInstanceController@login')->name('instance.login');
     Route::post('/login_p', 'LoginInstanceController@login_p')->name('instance.login_p');
 
+    Route::get('/evidence/list', 'EvidenceController@list')->name('evidence.list');
+    Route::get('/evidence/create', 'EvidenceController@create')->name('evidence.create');
+    Route::post('/evidence/new', 'EvidenceController@new')->name('evidence.new');
+
+    Route::middleware(['checknotnull:Evidence'])->group(function () {
+
+    });
+
 });
 
 //Route::get('20/login', 'LoginInstanceController@login')->name('instance.login');

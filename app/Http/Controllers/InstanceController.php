@@ -157,7 +157,7 @@ class InstanceController extends Controller
 
         $instance->delete();
 
-        return redirect()->route('admin.instance.manage')->with('success', 'Instancia eliminada con éxito.');;
+        return redirect()->route('admin.instance.manage')->with('success', 'Instancia eliminada con éxito.');
     }
 
 }

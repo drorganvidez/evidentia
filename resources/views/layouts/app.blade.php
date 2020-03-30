@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
     <link href="{{ asset('dist/css/adminlte.min.css') }}" rel="stylesheet">
+    <!-- summernote -->
+    <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.css')}}">
 
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
@@ -54,7 +56,7 @@
                         <a href="/" class="nav-link">Home</a>
                     </li>
                     <li class="nav-item d-none d-sm-inline-block">
-                        <a href="#" class="nav-link">Contact</a>
+                        <a href="#" class="nav-link">Informar de un problema</a>
                     </li>
                 </ul>
 
@@ -204,7 +206,7 @@
                                 <img src="{{asset('dist/img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image">
                             </div>
                             <div class="info">
-                                <a href="#" class="d-block">{{Auth::user()->name}}</a>
+                                <a href="#" class="d-block">{{Auth::user()->name}} {{Auth::user()->surname}}</a>
                             </div>
                         </div>
 
@@ -250,9 +252,27 @@
                         <!-- /.sidebar-menu -->
                 @else
 
+                        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                            <div class="image">
+                                <img src="{{asset('dist/img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image">
+                            </div>
+                            <div class="info">
+                                <a href="#" class="d-block">{{Auth::user()->name}} {{Auth::user()->surname}}</a>
+                            </div>
+                        </div>
+
                     <!-- Sidebar Menu -->
                         <nav class="mt-2">
                             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+                                <li class="nav-item">
+                                    <a href="{{ route('evidence.create',$instance) }}" class="nav-link  {{ (request()->is($instance.'/evidence/create')) ? 'active' : '' }}">
+                                        <i class="fab fa-angellist"></i>
+                                        <p>
+                                            &nbsp;Crear evidencia
+                                        </p>
+                                    </a>
+                                </li>
 
                                 <li class="nav-item">
                                     <a href="{{ route('logout') }}"  class="nav-link"
@@ -355,10 +375,72 @@
 
 <!-- jQuery -->
 <script src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
+
 <!-- Bootstrap 4 -->
 <script src="{{asset('plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+
 <!-- AdminLTE App -->
 <script src="{{asset('dist/js/adminlte.min.js')}}"></script>
+
+<!-- Selectors -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+
+<!-- File Input -->
+<link href="{{asset('dist/css/fileinput.css')}}" media="all" rel="stylesheet" type="text/css" />
+<link href="{{asset('dist/themes/explorer/theme.css')}}" media="all" rel="stylesheet" type="text/css" />
+<script src="{{asset('dist/js/plugins/piexif.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('dist/js/plugins/sortable.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('dist/js/plugins/purify.min.js')}}" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="{{asset('dist/js/fileinput.js')}}"></script>
+<script src="{{asset('dist/themes/fas/theme.js')}}"></script>
+<script src="{{asset('dist/themes/explorer/theme.js')}}"></script>
+<script src="{{asset('dist/js/fileinput_locales/es.js')}}"></script>
+
+
+<!-- Summernote -->
+<script src="../../plugins/summernote/summernote-bs4.min.js"></script>
+<script>
+
+    $("#files").fileinput({
+        theme: "explorer",
+        language: "es",
+        showUpload: false,
+        overwriteInitial: false,
+        maxFileSize: 10000,
+        uploadUrl: "/file-upload-batch/2",
+        autoReplace: true,
+        deleteUrl: "/site/file-delete",
+        browseClass: "btn btn-primary btn-block",
+        showCaption: false,
+        showRemove: false,
+        showUpload: false
+    });
+
+    $(document).ready(function(){
+
+        $(function () {
+            // Summernote
+            $('.textarea').summernote()
+        })
+
+
+        $('#summernote').summernote({
+            //placeholder: 'Incluye una breve descripción de tu evidencia',
+            height: 300,
+            minHeight: 300
+        });
+
+
+
+    });
+
+
+
+
+</script>
+
 </body>
 
 </html>

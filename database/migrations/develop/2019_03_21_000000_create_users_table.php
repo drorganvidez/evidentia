@@ -14,17 +14,29 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        config(['database.connections.instance' => [
+            'driver'   => 'mysql',
+            'host' => 'localhost',
+            'database' => 'base20',
+            'port' => '33060',
+            'username' => 'homestead',
+            'password' => 'secret'
+        ]]);
+
+        config(['database.default' => 'instance']);
+
+        Schema::connection('instance')->create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('surname');
-            $table->string('username');
+            $table->string('username')->unique();;
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
         });
+
     }
 
     /**

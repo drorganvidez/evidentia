@@ -4,14 +4,13 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class Input extends Component
+class Textarea extends Component
 {
     /**
      * Create a new component instance.
      *
      * @return void
      */
-
     public $col;
     public $label;
     public $attr;
@@ -20,13 +19,13 @@ class Input extends Component
     public $value;
     public $type;
     public $disabled;
-    public $step;
 
-    public $edit;
     public $id;
     public $class;
 
-    public function __construct($col,$label,$attr,$description="",$placeholder="",$value="",$type="text", $disabled=false,$edit=false, $step="", $id="", $class="")
+    public $edit;
+
+    public function __construct($col,$label,$attr,$description="",$placeholder="",$value="",$type="text", $disabled=false,$edit=false,$id="",$class="")
     {
         $this->col = $col;
         $this->label = $label;
@@ -36,11 +35,11 @@ class Input extends Component
         $this->value = $value;
         $this->type = $type;
         $this->disabled = $disabled;
-        $this->step = $step;
 
-        $this->edit = $edit;
         $this->id = $id;
         $this->class = $class;
+
+        $this->edit = $edit;
 
     }
 
@@ -51,6 +50,6 @@ class Input extends Component
      */
     public function render()
     {
-        return view('components.input');
+        return view('components.textarea');
     }
 }
