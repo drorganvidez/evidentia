@@ -8,6 +8,7 @@ class Evidence extends Model
 {
 
     protected $table="evidences";
+    protected $perPage = 2;
 
     protected $fillable = [
         'title', 'description', 'hours', 'user_id', 'comittee_id', 'points_to', 'status', 'stamp'
@@ -16,5 +17,15 @@ class Evidence extends Model
     public function proofs()
     {
         return $this->hasMany('App\Proof');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
+
+    public function comittee()
+    {
+        return $this->belongsTo('App\Comittee');
     }
 }

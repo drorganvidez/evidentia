@@ -10,16 +10,24 @@ use App\Proof;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class EvidenceController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('checkroles:PRESIDENT|COORDINATOR|REGISTER_COORDINATOR|SECRETARY|STUDENT');
+    }
+
     public function list()
     {
+        $evidences = Evidence::where('user_id', Auth::id())->orderBy('created_at', 'desc')->paginate(5);
         $instance = instance();
-        return view('evidence.list', [
-            'instance' => $instance]);
+        return view('evidence.list',
+            ['instance' => $instance, 'evidences' => $evidences]);
     }
 
     public function create()
@@ -55,9 +63,9 @@ class EvidenceController extends Controller
             'comittee_id' => $request->input('comittee')
         ]);
 
-        //return "hasta aqui";
-
-        //return $request->file('files');
+        // cómputo del sello
+        $evidence = \Stamp::compute_evidence($evidence);
+        $evidence->save();
 
         // creación de la prueba o pruebas adjuntas
         $files = $request->file('files');
@@ -66,7 +74,7 @@ class EvidenceController extends Controller
             // almacenamos en disco la prueba
             $path = Storage::putFileAs($instance.'/proofs/'.$user->username.'/evidence_'.$evidence->id.'', $file, $file->getClientOriginalName());
 
-            // almacenamos en la BBDD la información de la prueba
+            // almacenamos en la BBDD la información del archivo
             $file_entity = File::create([
                 'name' => $file->getClientOriginalName(),
                 'type' => strtolower($file->getClientOriginalExtension()),
@@ -74,9 +82,11 @@ class EvidenceController extends Controller
                 'size' => $file->getSize(),
             ]);
 
-            $file_entity->stamp = "estoesunsello";
+            // cómputo del sello
+            $file_entity = \Stamp::compute_file($file_entity);
             $file_entity->save();
 
+            // almacenamos en la BBDD la información de la prueba de la evidencia
             $proof = Proof::create([
                 'evidence_id' => $evidence->id,
                 'file_id' => $file_entity->id

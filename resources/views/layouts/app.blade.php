@@ -275,6 +275,15 @@
                                 </li>
 
                                 <li class="nav-item">
+                                    <a href="{{ route('evidence.list',$instance) }}" class="nav-link  {{ (request()->is($instance.'/evidence/list')) ? 'active' : '' }}">
+                                        <i class="fab fa-battle-net"></i>
+                                        <p>
+                                            &nbsp;Mis evidencias
+                                        </p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
                                     <a href="{{ route('logout') }}"  class="nav-link"
                                        onclick="event.preventDefault();
                                                         document.getElementById('logout-form').submit();">

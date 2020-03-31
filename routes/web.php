@@ -63,9 +63,12 @@ Route::prefix('{instance}')->group(function () {
 
     });
 
+    Route::get('/trabajadores/pdf','TrabajadorController@export_pdf');
+
 });
 
 //Route::get('20/login', 'LoginInstanceController@login')->name('instance.login');
 
 
 //Route::get('/home', 'HomeController@index')->name('home');
+
