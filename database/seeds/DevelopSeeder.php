@@ -184,6 +184,46 @@ class DevelopSeeder extends Seeder
         ]);
 
         DB::table('role_user')->insert([
+            'role_id' => 6,
+            'user_id' => 3
+        ]);
+
+        DB::table('role_user')->insert([
+            'role_id' => 6,
+            'user_id' => 4
+        ]);
+
+        DB::table('role_user')->insert([
+            'role_id' => 6,
+            'user_id' => 5
+        ]);
+
+        DB::table('role_user')->insert([
+            'role_id' => 6,
+            'user_id' => 6
+        ]);
+
+        DB::table('role_user')->insert([
+            'role_id' => 6,
+            'user_id' => 7
+        ]);
+
+        DB::table('role_user')->insert([
+            'role_id' => 6,
+            'user_id' => 8
+        ]);
+
+        DB::table('role_user')->insert([
+            'role_id' => 6,
+            'user_id' => 9
+        ]);
+
+        DB::table('role_user')->insert([
+            'role_id' => 6,
+            'user_id' => 10
+        ]);
+
+        DB::table('role_user')->insert([
             'role_id' => 5,
             'user_id' => 3
         ]);
