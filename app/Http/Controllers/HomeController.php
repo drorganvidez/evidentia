@@ -24,7 +24,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $instance = $instance = instance();
+        $instance = \Instantiation::instance();
         return view('home',['instance' => $instance]);
     }
 }

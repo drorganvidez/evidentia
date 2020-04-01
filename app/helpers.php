@@ -2,61 +2,66 @@
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 use App\Configuration;
 
-
-// TODO: CREAR CLASES CON FUNCIONES ESTÁTICAS
 /*
  *  CONEXIONES CON LAS DISTINTAS BASES
  *  Se ofrece una forma fácil y segura de alternar entre las distintas
  *  bases de Evidentia.
  */
-
-function default_connection()
+class Instantiation
 {
-    Artisan::call('config:clear');
-    config(['database.default' => 'mysql']);
-}
 
-function default_instance()
-{
-    Artisan::call('config:clear');
-    config(['database.default' => 'instance']);
-}
+    public static function set_default_connection()
+    {
+        Artisan::call('config:clear');
+        config(['database.default' => 'mysql']);
+    }
 
-function set($instance)
-{
-    config(['database.connections.instance' => [
-        'driver' => 'mysql',
-        'host' => $instance->host,
-        'database' => $instance->database,
-        'port' => $instance->port,
-        'username' => $instance->username,
-        'password' => $instance->password
-    ]]);
-    config(['database.default' => 'instance']);
-}
+    public static function set_default_instance()
+    {
+        Artisan::call('config:clear');
+        config(['database.default' => 'instance']);
+    }
 
-/*
- *  OBTENER INFORMACIÓN DE LA INSTANCIA SEGÚN LA URL ACTUAL
- */
+    public static function set($instance)
+    {
+        config(['database.connections.instance' => [
+            'driver' => 'mysql',
+            'host' => $instance->host,
+            'database' => $instance->database,
+            'port' => $instance->port,
+            'username' => $instance->username,
+            'password' => $instance->password
+        ]]);
+        config(['database.default' => 'instance']);
+    }
 
-function instance()
-{
-    $url_current = url()->current();
-    $collection = Str::of($url_current)->explode('/');
-    $instance = $collection->all()[3];
-    return $instance;
-}
+    public static function instance()
+    {
+        $instance = "";
+        try
+        {
+            $url_current = url()->current();
+            $collection = Str::of($url_current)->explode('/');
+            $instance = $collection->all()[3];
 
-function instance_entity()
-{
-    $id = instance();
-    default_connection();
-    $entity = \App\Instance::where('id', $id)->first();
-    default_instance();
-    return $entity;
+        }catch (\Exception $e)
+        {
+
+        }
+
+        return $instance;
+    }
+
+    public static function instance_entity()
+    {
+        $id = self::Instantiation();
+        self::set_default_connection();
+        $entity = \App\Instance::where('id', $id)->first();
+        self::set_default_instance();
+        return $entity;
+    }
 }
 
 /*
@@ -68,7 +73,7 @@ class Stamp
     public static function compute_file($file)
     {
         $salt =  \Config::secret();
-        $hash_file = hash_file('sha256', storage_path('/app/prueba.png')); // TODO: Obtener bien la ruta
+        $hash_file = hash_file('sha256', storage_path('/app/'.$file->route));
         $file->stamp = hash('sha256',
                 $file->name.
                     $file->size.

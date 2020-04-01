@@ -19,20 +19,21 @@ class EvidenceController extends Controller
 
     public function __construct()
     {
+        $this->middleware('auth');
         $this->middleware('checkroles:PRESIDENT|COORDINATOR|REGISTER_COORDINATOR|SECRETARY|STUDENT');
     }
 
     public function list()
     {
         $evidences = Evidence::where('user_id', Auth::id())->orderBy('created_at', 'desc')->paginate(5);
-        $instance = instance();
+        $instance = \Instantiation::instance();
         return view('evidence.list',
             ['instance' => $instance, 'evidences' => $evidences]);
     }
 
     public function create()
     {
-        $instance = instance();
+        $instance = \Instantiation::instance();
         $comittees = Comittee::all();
         return view('evidence.create', ['route_draft' => route('evidence.draft',$instance),
                                             'route_publish' => route('evidence.publish',$instance),
@@ -40,7 +41,7 @@ class EvidenceController extends Controller
                                             'comittees' => $comittees]);
     }
 
-    public function new(Request $request)
+    public function draft(Request $request)
     {
 
         // validar una evidencia
@@ -52,7 +53,7 @@ class EvidenceController extends Controller
 
         // datos necesarios para crear evidencias
         $user = Auth::user();
-        $instance = instance();
+        $instance = \Instantiation::instance();
 
         // creación de una nueva evidencia
         $evidence = Evidence::create([

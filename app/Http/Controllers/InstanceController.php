@@ -47,7 +47,7 @@ class InstanceController extends Controller
 
         DB::statement("CREATE DATABASE `{$instance->database}`");
 
-        $this->set($instance);
+        \Instantiation::set($instance);
 
         try {
             DB::connection()->getPdo();
@@ -58,36 +58,17 @@ class InstanceController extends Controller
                 ]);
         } catch (\Exception $e) {
 
-            $this->reset();
+            \Instantiation::set_default_connection();
             DB::statement("DROP DATABASE `{$instance->database}`");
             return back()->withInput()->with('error', 'Conexión fallida, revise los parámetros de configuración de la base de datos.');
 
         }
 
-        $this->reset();
+        \Instantiation::set_default_connection();
 
         $instance->save();
 
         return redirect()->route('admin.instance.manage')->with('success', 'Instancia creada con éxito.');
-    }
-
-    private function set($instance)
-    {
-        config(['database.connections.instance' => [
-            'driver' => 'mysql',
-            'host' => $instance->host,
-            'database' => $instance->database,
-            'port' => $instance->port,
-            'username' => $instance->username,
-            'password' => $instance->password
-        ]]);
-        config(['database.default' => 'instance']);
-    }
-
-    private function reset()
-    {
-        Artisan::call('config:clear');
-        config(['database.default' => 'mysql']);
     }
 
     public function edit($id)
@@ -116,19 +97,19 @@ class InstanceController extends Controller
         $instance->username = $request->username;
         $instance->password = $request->password;
 
-        $this->set($instance);
+        \Instantiation::set($instance);
 
         try {
             DB::connection()->getPdo();
             $instance->save();
         } catch (\Exception $e) {
 
-            $this->reset();
+            \Instantiation::set_default_connection();
             return back()->withInput()->with('error', 'Conexión fallida, revise los parámetros de configuración de la base de datos.');
 
         }
 
-        $this->reset();
+        \Instantiation::set_default_connection();
 
         return redirect()->route('admin.instance.manage')->with('success', 'Instancia actualizada con éxito.');
     }

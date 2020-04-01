@@ -23,6 +23,10 @@ class DevelopSeeder extends Seeder
 
         Artisan::call('config:clear');
 
+        /*
+         *  ROLES
+         */
+
         DB::table('roles')->insert([
             'id' => 1,
             'rol' => 'LECTURE'
@@ -53,22 +57,26 @@ class DevelopSeeder extends Seeder
             'rol' => 'STUDENT'
         ]);
 
+        /*
+         *  USUARIOS
+         */
+
         DB::table('users')->insert([
             'id' => 1,
             'name' => 'Alumno',
             'surname' => 'Primero',
-            'email' => 'user1@user1.com',
-            'username' => 'user1@user1.com',
-            'password' => Hash::make('user1'),
+            'email' => 'alumno1@alumno1.com',
+            'username' => 'alumno1@alumno1.com',
+            'password' => Hash::make('alumno1'),
         ]);
 
         DB::table('users')->insert([
             'id' => 2,
             'name' => 'Alumno',
             'surname' => 'Segundo',
-            'email' => 'user2@user2.com',
-            'username' => 'user2@user2.com',
-            'password' => Hash::make('user2'),
+            'email' => 'alumno2@alumno2.com',
+            'username' => 'alumno2@alumno2.com',
+            'password' => Hash::make('alumno2'),
         ]);
 
         DB::table('users')->insert([
@@ -82,11 +90,11 @@ class DevelopSeeder extends Seeder
 
         DB::table('users')->insert([
             'id' => 4,
-            'name' => 'Coordinador de registro',
-            'surname' => 'Cocoacalo',
-            'email' => 'coordinadorregistro1@coordinadorregistro1.com',
-            'username' => 'coordinadorregistro1@coordinadorregistro1.com',
-            'password' => Hash::make('coordinadorregistro1'),
+            'name' => 'Secretario',
+            'surname' => 'Segismundo',
+            'email' => 'secretario2@secretario2.com',
+            'username' => 'secretario2@secretario2.com',
+            'password' => Hash::make('secretario2'),
         ]);
 
         DB::table('users')->insert([
@@ -100,6 +108,33 @@ class DevelopSeeder extends Seeder
 
         DB::table('users')->insert([
             'id' => 6,
+            'name' => 'Coordinador',
+            'surname' => 'Coocoordina',
+            'email' => 'coordinador2@coordinador2.com',
+            'username' => 'coordinador2@coordinador2.com',
+            'password' => Hash::make('coordinador2'),
+        ]);
+
+        DB::table('users')->insert([
+            'id' => 7,
+            'name' => 'Coordinador de registro',
+            'surname' => 'Cocoacalo',
+            'email' => 'coordinadorregistro1@coordinadorregistro1.com',
+            'username' => 'coordinadorregistro1@coordinadorregistro1.com',
+            'password' => Hash::make('coordinadorregistro1'),
+        ]);
+
+        DB::table('users')->insert([
+            'id' => 8,
+            'name' => 'Coordinador de registro',
+            'surname' => 'Cocoacalo',
+            'email' => 'coordinadorregistro2@coordinadorregistro2.com',
+            'username' => 'coordinadorregistro2@coordinadorregistro2.com',
+            'password' => Hash::make('coordinadorregistro2'),
+        ]);
+
+        DB::table('users')->insert([
+            'id' => 9,
             'name' => 'Presidente',
             'surname' => 'Pérez',
             'email' => 'presidente1@presidente1.com',
@@ -108,7 +143,16 @@ class DevelopSeeder extends Seeder
         ]);
 
         DB::table('users')->insert([
-            'id' => 7,
+            'id' => 10,
+            'name' => 'Presidente',
+            'surname' => 'Pérez',
+            'email' => 'presidente2@presidente2.com',
+            'username' => 'presidente2@presidente2.com',
+            'password' => Hash::make('presidente2'),
+        ]);
+
+        DB::table('users')->insert([
+            'id' => 11,
             'name' => 'Profesor',
             'surname' => 'Popitas',
             'email' => 'profesor1@profesor1.com',
@@ -116,24 +160,27 @@ class DevelopSeeder extends Seeder
             'password' => Hash::make('profesor1'),
         ]);
 
+        DB::table('users')->insert([
+            'id' => 12,
+            'name' => 'Profesor',
+            'surname' => 'Popitas',
+            'email' => 'profesor2@profesor2com',
+            'username' => 'profesor2@profesor2.com',
+            'password' => Hash::make('profesor2'),
+        ]);
+
+        /*
+         *  RELACIÓN DE USUARIOS Y ROLES
+         */
+
         DB::table('role_user')->insert([
-            'role_id' => 1,
-            'user_id' => 6
+            'role_id' => 6,
+            'user_id' => 1
         ]);
 
         DB::table('role_user')->insert([
-            'role_id' => 2,
-            'user_id' => 7
-        ]);
-
-        DB::table('role_user')->insert([
-            'role_id' => 3,
-            'user_id' => 4
-        ]);
-
-        DB::table('role_user')->insert([
-            'role_id' => 4,
-            'user_id' => 5
+            'role_id' => 6,
+            'user_id' => 2
         ]);
 
         DB::table('role_user')->insert([
@@ -143,13 +190,52 @@ class DevelopSeeder extends Seeder
 
         DB::table('role_user')->insert([
             'role_id' => 5,
-            'user_id' => 1
+            'user_id' => 4
         ]);
 
         DB::table('role_user')->insert([
-            'role_id' => 5,
-            'user_id' => 2
+            'role_id' => 4,
+            'user_id' => 5
         ]);
+
+        DB::table('role_user')->insert([
+            'role_id' => 4,
+            'user_id' => 6
+        ]);
+
+        DB::table('role_user')->insert([
+            'role_id' => 3,
+            'user_id' => 7
+        ]);
+
+        DB::table('role_user')->insert([
+            'role_id' => 3,
+            'user_id' => 8
+        ]);
+
+        DB::table('role_user')->insert([
+            'role_id' => 2,
+            'user_id' => 9
+        ]);
+
+        DB::table('role_user')->insert([
+            'role_id' => 2,
+            'user_id' => 10
+        ]);
+
+        DB::table('role_user')->insert([
+            'role_id' => 1,
+            'user_id' => 11
+        ]);
+
+        DB::table('role_user')->insert([
+            'role_id' => 1,
+            'user_id' => 12
+        ]);
+
+        /*
+         *  COMITÉS
+         */
 
         DB::table('comittees')->insert(['group' => 1, 'comittee' => 'Presidencia' ]);
         DB::table('comittees')->insert(['group' => 2, 'comittee' => 'Secretaría' ]);

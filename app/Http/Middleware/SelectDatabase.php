@@ -34,12 +34,7 @@ class SelectDatabase
             return redirect('/');
         }
 
-        Config::set('database.connections.instance.host', $instance->host);
-        Config::set('database.connections.instance.port', $instance->port);
-        Config::set('database.connections.instance.username', $instance->username);
-        Config::set('database.connections.instance.password', $instance->password);
-        Config::set('database.connections.instance.database', $instance->database);
-        Config::set('database.default', 'instance');
+        \Instantiation::set($instance);
 
         return $next($request);
 

@@ -19,11 +19,6 @@ class CheckRoles
 
         $roles = explode('|', $roles);
 
-        if(Auth::user() == null)
-        {
-            return redirect()->route('instances.home');
-        }
-
         foreach(Auth::user()->roles as $rol)
         {
             if (in_array($rol->rol, $roles))

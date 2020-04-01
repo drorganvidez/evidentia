@@ -12,9 +12,7 @@ class LoginInstanceController extends Controller
 {
     public function login()
     {
-        $url_current = url()->current();
-        $collection = Str::of($url_current)->explode('/');
-        $instance = $collection->all()[3];
+        $instance = \Instantiation::instance();
         return view('auth.login',['instance' => $instance]);
     }
 
