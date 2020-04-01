@@ -19,7 +19,7 @@ Auth::routes();
  *  MAIN ROUTE
  */
 
-Route::get('/', 'MetaAdminController@list');
+Route::get('/', 'MetaAdminController@list')->name('instances.home');;
 
 /*
  *  META ADMIN ROUTES
@@ -57,18 +57,13 @@ Route::prefix('{instance}')->group(function () {
 
     Route::get('/evidence/list', 'EvidenceController@list')->name('evidence.list');
     Route::get('/evidence/create', 'EvidenceController@create')->name('evidence.create');
-    Route::post('/evidence/new', 'EvidenceController@new')->name('evidence.new');
+
+    // Las evidencias se pueden guardar como BORRADOR o como PENDIENTE DE REVISIÓN
+    Route::post('/evidence/draft', 'EvidenceController@draft')->name('evidence.draft');
+    Route::post('/evidence/publish', 'EvidenceController@publish')->name('evidence.publish');
 
     Route::middleware(['checknotnull:Evidence'])->group(function () {
 
     });
 
-    Route::get('/trabajadores/pdf','TrabajadorController@export_pdf');
-
 });
-
-//Route::get('20/login', 'LoginInstanceController@login')->name('instance.login');
-
-
-//Route::get('/home', 'HomeController@index')->name('home');
-

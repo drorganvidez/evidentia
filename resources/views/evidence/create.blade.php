@@ -26,7 +26,7 @@
             <div class="card">
 
                 <div class="card-body">
-                    <form method="POST" action="{{$route}}" enctype="multipart/form-data">
+                    <form method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <x-id :id="$instance->id ?? ''" :edit="$edit ?? ''"/>
@@ -66,7 +66,8 @@
 
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Guardar evidencia</button>
+                        <button type="submit" formaction="{{$route_draft}}" class="btn btn-primary"><i class="far fa-paper-plane"></i> Publicar evidencia</button>
+                        <button type="submit" formaction="{{$route_draft}}" class="btn btn-light"><i class="fas fa-pencil-ruler"></i> Guardar evidencia como borrador</button>
 
                     </form>
                 </div>

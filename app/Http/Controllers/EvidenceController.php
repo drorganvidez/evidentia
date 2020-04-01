@@ -34,7 +34,8 @@ class EvidenceController extends Controller
     {
         $instance = instance();
         $comittees = Comittee::all();
-        return view('evidence.create', ['route' => route('evidence.new',$instance),
+        return view('evidence.create', ['route_draft' => route('evidence.draft',$instance),
+                                            'route_publish' => route('evidence.publish',$instance),
                                             'instance' => $instance,
                                             'comittees' => $comittees]);
     }

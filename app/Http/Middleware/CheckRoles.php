@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 class CheckRoles
@@ -19,6 +18,11 @@ class CheckRoles
     {
 
         $roles = explode('|', $roles);
+
+        if(Auth::user() == null)
+        {
+            return redirect()->route('instances.home');
+        }
 
         foreach(Auth::user()->roles as $rol)
         {
