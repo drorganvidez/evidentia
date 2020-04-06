@@ -32,7 +32,9 @@ class Instantiation
             'database' => $instance->database,
             'port' => $instance->port,
             'username' => $instance->username,
-            'password' => $instance->password
+            'password' => $instance->password,
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci'
         ]]);
         config(['database.default' => 'instance']);
     }
@@ -56,9 +58,9 @@ class Instantiation
 
     public static function instance_entity()
     {
-        $id = self::Instantiation();
+        $route = self::instance();
         self::set_default_connection();
-        $entity = \App\Instance::where('id', $id)->first();
+        $entity = \App\Instance::where('route',$route)->first();
         self::set_default_instance();
         return $entity;
     }

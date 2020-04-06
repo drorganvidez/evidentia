@@ -61,9 +61,11 @@ Route::prefix('{instance}')->group(function () {
     // Las evidencias se pueden guardar como BORRADOR o como PENDIENTE DE REVISIÓN
     Route::post('/evidence/draft', 'EvidenceController@draft')->name('evidence.draft');
     Route::post('/evidence/publish', 'EvidenceController@publish')->name('evidence.publish');
+    Route::post('/evidence/draft/edit', 'EvidenceController@draft_edit')->name('evidence.draft.edit');
+    Route::post('/evidence/publish/edit', 'EvidenceController@publish_edit')->name('evidence.publish.edit');
 
     Route::middleware(['checknotnull:Evidence'])->group(function () {
-
+        Route::get('/evidence/edit/{id}', 'EvidenceController@edit')->name('evidence.edit')->middleware(['evidencecanbeedited','evidencemine']);
     });
 
 });

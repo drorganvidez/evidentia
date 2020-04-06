@@ -12,8 +12,10 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
     <!-- Theme style -->
     <link href="{{ asset('dist/css/adminlte.min.css') }}" rel="stylesheet">
+
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.css')}}">
 
@@ -75,7 +77,7 @@
             @endauth
 
         </div>
-        <!-- /.sidebar -->
+
     </aside>
 
     <!-- Content Wrapper. Contains page content -->
@@ -123,10 +125,10 @@
     <footer class="main-footer">
         <!-- To the right -->
         <div class="float-right d-none d-sm-inline">
-            Hecho con <i class="fas fa-heart"></i>
+             Hecho con <i class="fas fa-heart"></i>
         </div>
         <!-- Default to the left -->
-        GNU General Public License 3.0. <a href="https://github.com/drorganvidez/evidentia">Repositorio en GitHub</a>
+        GNU/GPL 3.0 · <a href="https://github.com/drorganvidez/evidentia"><i class="fab fa-github"></i> Repositorio en GitHub</a>
     </footer>
 </div>
 <!-- ./wrapper -->
@@ -160,7 +162,7 @@
 
 
 <!-- Summernote -->
-<script src="../../plugins/summernote/summernote-bs4.min.js"></script>
+<script src="{{asset('plugins/summernote/summernote-bs4.min.js')}}"></script>
 <script>
 
     $("#files").fileinput({

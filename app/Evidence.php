@@ -8,10 +8,9 @@ class Evidence extends Model
 {
 
     protected $table="evidences";
-    protected $perPage = 2;
 
     protected $fillable = [
-        'title', 'description', 'hours', 'user_id', 'comittee_id', 'points_to', 'status', 'stamp'
+        'id', 'title', 'description', 'hours', 'user_id', 'comittee_id', 'points_to', 'status', 'stamp'
     ];
 
     public function proofs()
@@ -28,4 +27,5 @@ class Evidence extends Model
     {
         return $this->belongsTo('App\Comittee');
     }
+
 }

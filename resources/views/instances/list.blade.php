@@ -2,33 +2,42 @@
 
 @section('title', 'Bienvenid@ a Evidentia')
 
+@section('title-icon', 'fas fa-door-open')
+
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item active">@yield('title')</li>
+    <li class="breadcrumb-item">Home</li>
 @endsection
 
 @section('content')
 
-        <div class="row">
+    <div class="card">
 
-            @foreach($instances as $instance)
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-8 col-sm-12">
+                    <div class="row">
 
-                <div class="col-lg-4 col-4">
-                    <div class="small-box bg-light" onclick="location.href='/{{$instance->route}}';" style="cursor: pointer;">
-                        <div class="inner">
-                            <h3>{{$instance->name}}</h3>
+                        @foreach($instances as $instance)
+                            <div class="col-lg-6 col-sm-12">
+                                <div class="info-box bg-light" onclick="location.href='/{{$instance->route}}';" style="cursor: pointer;">
+                                    <div class="info-box-content">
+                                        <span class="info-box-text text-center text-muted">{{$instance->name}}</span>
+                                        <a href="/{{$instance->route}}">
+                                            <span class="info-box-number text-center text-muted mb-0">Acceder</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
 
-                            <p>&nbsp;</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-chalkboard-teacher"></i>
-                        </div>
-                        <a href="/{{$instance->route}}" class="small-box-footer">Acceder <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-
-            @endforeach
-
+                <div class="col-lg-4 col-sm-12">
+                    <x-evidentiadescription/>
+                </div>
+            </div>
         </div>
+    </div>
+
 
 @endsection

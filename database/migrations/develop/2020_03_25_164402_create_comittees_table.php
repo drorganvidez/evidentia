@@ -17,7 +17,8 @@ class CreateComitteesTable extends Migration
             $table->id();
             $table->integer('group');
             $table->string('comittee');
-            $table->string('subcomitte')->nullable();
+            $table->string('subcomittee')->nullable();
+            $table->string('icon')->nullable();
             $table->timestamps();
         });
     }

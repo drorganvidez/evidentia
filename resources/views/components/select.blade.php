@@ -10,7 +10,8 @@
 
         name="{{ $attr }}"
 
-        required autofocus>
+         autofocus
+    >
 
         {{ $slot }}
 

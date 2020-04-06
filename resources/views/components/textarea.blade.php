@@ -4,11 +4,7 @@
            @error($attr) is-invalid @enderror"
            name="{{ $attr }}"
 
-           @if(old($attr))
-           value="{{ old($attr) }}"
-           @else
-           value="{{$value}}"
-           @endif
+
 
            required
 
@@ -19,6 +15,13 @@
            @endif
 
     >
+
+        @if(old($attr))
+            {{ old($attr) }}
+        @else
+            {!! $value !!}
+        @endif
+
     </textarea>
 
     <style>

@@ -32,19 +32,28 @@
                         </thead>
                         <tbody>
 
-                        @foreach($evidences as $evidence)
+                        @forelse($evidences as $evidence)
                             <tr>
                                 <td>{{$evidence->title}}</td>
                                 <td>{{$evidence->hours}}</td>
-                                <td>{{$evidence->comittee->comittee}}</td>
+                                <td>
+                                    <x-evidencecomittee :evidence="$evidence"/>
+                                </td>
                                 <td> {{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }} </td>
-                                <td>{{$evidence->status}}</td>
+                                <td>
+                                    <x-evidencestatus :status="$evidence->status"/>
+                                </td>
 
                                 <td>
-
+                                    <x-evidenceoptionsstudent :evidence="$evidence"/>
                                 </td>
+
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td>Sin evidencias
+                            </tr>
+                        @endforelse
 
                         </tbody>
                     </table>
