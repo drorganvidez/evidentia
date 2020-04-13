@@ -25,7 +25,11 @@
            value="{{$value}}"
            @endif
 
-           required autocomplete="{{ $attr }}" autofocus
+           @if($required == true)
+                required
+           @endif
+
+           autocomplete="{{ $attr }}" autofocus
 
            @if($edit == true)
                 @if($disabled == true)

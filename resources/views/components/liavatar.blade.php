@@ -19,16 +19,17 @@
                 {{Auth::user()->email}}
             </span>
 
-
-
         </a>
     </div>
 
     <div class="col-12">
         <p style="color: #c2c7d0; font-size: 12px; margin-top: 10px">
-            @foreach(Auth::user()->roles as $rol)
-                <span class="badge badge-pill badge-secondary">{{$rol->slug}}</span>
-            @endforeach
+
+            @if(Schema::hasTable('roles'))
+                @foreach(Auth::user()->roles as $rol)
+                    <span class="badge badge-pill badge-secondary">{{$rol->slug}}</span>
+                @endforeach
+            @endif
         </p>
     </div>
 

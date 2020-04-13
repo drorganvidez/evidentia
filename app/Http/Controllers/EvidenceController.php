@@ -62,8 +62,6 @@ class EvidenceController extends Controller
     private function new($request,$status)
     {
 
-        //return strlen(trim(strip_tags(trim($request->input('description')))));
-
         $instance = \Instantiation::instance();
 
         $evidence = $this->new_evidence($request,$status);
@@ -135,6 +133,39 @@ class EvidenceController extends Controller
         }
     }
 
+    private function copy_files($evidence_previous,$evidence)
+    {
+        $user = Auth::user();
+        $instance = \Instantiation::instance();
+
+        foreach($evidence_previous->proofs as $proof){
+
+            $file = $proof->file;
+
+            // copiamos el archivo en sí
+            Storage::copy($file->route, $instance.'/proofs/'.$user->username.'/evidence_'.$evidence->id.'/'.$file->name.'.'.$file->type);
+
+            // almacenamos en la BBDD la información del archivo
+            $file_entity = File::create([
+                'name' => $file->name,
+                'type' => $file->type,
+                'route' => $file->route,
+                'size' => $file->size,
+            ]);
+
+            // cómputo del sello
+            $file_entity = \Stamp::compute_file($file_entity);
+            $file_entity->save();
+
+            // almacenamos en la BBDD la información de la prueba de la evidencia
+            $proof = Proof::create([
+                'evidence_id' => $evidence->id,
+                'file_id' => $file_entity->id
+            ]);
+        }
+    }
+
+
     /****************************************************************************
      * EDIT AN EVIDENCE
      ****************************************************************************/
@@ -173,7 +204,28 @@ class EvidenceController extends Controller
         $evidence->points_to = $request->_id;
         $evidence->save();
 
+        $this->copy_files($evidence_previous,$evidence);
+
+        // si el usuario decide meter archivos nuevos
+        if($request->hasFile('files'))
+        {
+            $this->new_files($request,$evidence);
+        }
+
         return redirect()->route('evidence.list',$instance)->with('success', 'Evidencia editada con éxito.');
+
+    }
+
+    /****************************************************************************
+     * PROOFS FROM AN EVIDENCE
+     ****************************************************************************/
+
+    public function proofs(Request $request){
+
+        $id = $request->id;
+        $evidence = Evidence::find($id);
+
+        return $evidence->toJson();
 
     }
 }

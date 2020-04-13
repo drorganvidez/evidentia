@@ -21,12 +21,13 @@ class Input extends Component
     public $type;
     public $disabled;
     public $step;
+    public $required;
 
     public $edit;
     public $id;
     public $class;
 
-    public function __construct($col,$label,$attr,$description="",$placeholder="",$value="",$type="text", $disabled=false,$edit=false, $step="", $id="", $class="")
+    public function __construct($col,$label,$attr,$description="",$placeholder="",$value="",$type="text", $disabled=false,$edit=false, $step="", $id="", $class="", $required=true)
     {
         $this->col = $col;
         $this->label = $label;
@@ -37,6 +38,7 @@ class Input extends Component
         $this->type = $type;
         $this->disabled = $disabled;
         $this->step = $step;
+        $this->required = $required;
 
         $this->edit = $edit;
         $this->id = $id;

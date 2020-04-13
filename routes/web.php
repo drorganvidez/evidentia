@@ -57,8 +57,6 @@ Route::prefix('{instance}')->group(function () {
 
     Route::get('/evidence/list', 'EvidenceController@list')->name('evidence.list');
     Route::get('/evidence/create', 'EvidenceController@create')->name('evidence.create');
-
-    // Las evidencias se pueden guardar como BORRADOR o como PENDIENTE DE REVISIÓN
     Route::post('/evidence/draft', 'EvidenceController@draft')->name('evidence.draft');
     Route::post('/evidence/publish', 'EvidenceController@publish')->name('evidence.publish');
     Route::post('/evidence/draft/edit', 'EvidenceController@draft_edit')->name('evidence.draft.edit');
@@ -66,6 +64,11 @@ Route::prefix('{instance}')->group(function () {
 
     Route::middleware(['checknotnull:Evidence'])->group(function () {
         Route::get('/evidence/edit/{id}', 'EvidenceController@edit')->name('evidence.edit')->middleware(['evidencecanbeedited','evidencemine']);
+        Route::post('/evidence/proofs/{id}', 'EvidenceController@proofs')->name('evidence.proofs')->middleware(['evidencecanbeedited','evidencemine']);
+    });
+
+    Route::middleware(['checknotnull:File'])->group(function () {
+        Route::get('/file/download/{id}', 'FileController@download')->name('file.download');
     });
 
 });

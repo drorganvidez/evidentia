@@ -65,19 +65,113 @@
                                         description="Escribe una descripción concisa de tu evidencia (entre 10 y 20000 caracteres)."
                             />
 
-                            <x-input col="6" attr="files[]" id="files" type="file"  label="Adjuntar archivos" description="Adjunta archivos que respalden tu evidencia y el número de horas empleadas."/>
+                            @isset($edit)
+
+                                <div class="col-12 col-sm-6 col-lg-6">
+
+                                    <label>Archivos asociados</label>
+
+                                    <div class="card card-primary card-outline card-outline-tabs">
+                                        <div class="card-header p-0 border-bottom-0">
+                                            <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill" href="#attached_files" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">Archivos subidos</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#add_files" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="false">Subir más archivos</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="tab-content" id="custom-tabs-three-tabContent">
+                                                <div class="tab-pane fade show active" id="attached_files" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+                                                    <div class="card-body table-responsive p-0">
+                                                        <table class="table table-hover text-nowrap">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Nombre</th>
+                                                                <th>Tamaño</th>
+                                                                <th>Opciones</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+
+                                                            @foreach($evidence->proofs as $proof)
+
+
+                                                                <tr>
+                                                                    <td>{{$proof->file->name}}</td>
+                                                                    <td>{{$proof->file->sizeForHuman()}}</td>
+                                                                    <td>
+                                                                        <a class="btn btn-primary btn-sm" href="{{route('file.download',['instance' => $instance, 'id' => $proof->file->id])}}">
+                                                                            <i class="fas fa-download"></i>
+                                                                            Descargar
+                                                                        </a>
+                                                                        <a class="btn btn-danger btn-sm" href="#">
+                                                                            <i class="fas fa-trash"></i>
+                                                                            Eliminar
+                                                                        </a>
+                                                                    </td>
+
+                                                                </tr>
+
+                                                            @endforeach
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade" id="add_files" role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
+                                                    <x-input col="12" attr="files[]" id="files" type="file" :required="false"
+                                                             label="Adjuntar más archivos"
+                                                             description="Adjunta más archivos que respalden tu evidencia y el número de horas empleadas."/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /.card -->
+                                    </div>
+                                </div>
+
+
+                            @else
+                                <x-input col="6" attr="files[]" id="files" type="file"  label="Adjuntar archivos" description="Adjunta archivos que respalden tu evidencia y el número de horas empleadas."/>
+                            @endisset
 
 
                         </div>
 
                         <div class="row">
                             <div class="col-lg-3 mt-1">
-                                <button type="submit" formaction="{{$route_publish}}" class="btn btn-primary btn-block"><i class="fas fa-external-link-square-alt"></i> &nbsp;Publicar evidencia</button>
+                                <button type="button"  class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-default"><i class="fas fa-external-link-square-alt"></i> &nbsp;Publicar evidencia</button>
                             </div>
                             <div class="col-lg-3 mt-1">
                                 <button type="submit" formaction="{{$route_draft}}" class="btn btn-secondary btn-block"><i class="fas fa-pencil-ruler"></i> &nbsp;Guardar como borrador</button>
                             </div>
                         </div>
+
+                        <div class="modal fade" id="modal-default">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Publicar la evidencia</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Cuando se publica una evidencia, esta se manda al coordinador de tu comité
+                                        para su posterior revisión. Mientras esté en proceso de revisión,
+                                        <b>no podrá ser editada.</b></p>
+                                        <p>¿Deseas continuar?</p>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                        <button type="submit" formaction="{{$route_publish}}" class="btn btn-primary" data-toggle="modal" data-target="#modal-default"><i class="fas fa-external-link-square-alt"></i> &nbsp;Sí, publicar evidencia</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
 
                     </form>
                 </div>
@@ -86,5 +180,31 @@
 
         </div>
     </div>
+
+
+
+    @isset($edit)
+
+        @section('scripts')
+
+        <script>
+            $.ajax({
+                url: "{{route('evidence.proofs',['instance' => $instance, 'id' => $evidence->id])}}",
+                type: "POST",
+                data: {"_token": "{{ csrf_token() }}"},
+                success: function (result) {
+                    console.log(result);
+                }
+            });
+
+            $('input[type="submit"]:nth-child(1)').click(function(){
+                alert("bof");
+            });
+
+        </script>
+
+        @endsection
+
+    @endisset
 
 @endsection

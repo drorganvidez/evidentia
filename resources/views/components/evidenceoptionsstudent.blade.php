@@ -14,5 +14,5 @@
 <a class="btn btn-danger btn-sm" href="#">
     <i class="fas fa-trash">
     </i>
-    Borrar
+    Eliminar
 </a>
