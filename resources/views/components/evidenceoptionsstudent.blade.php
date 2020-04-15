@@ -11,8 +11,4 @@
 </a>
 @endif
 
-<a class="btn btn-danger btn-sm" href="#">
-    <i class="fas fa-trash">
-    </i>
-    Eliminar
-</a>
+<x-buttonremove :id="$evidence->id" route="evidence.remove"/>

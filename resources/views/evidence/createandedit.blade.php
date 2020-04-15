@@ -78,7 +78,7 @@
                                                     <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill" href="#attached_files" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">Archivos subidos</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#add_files" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="false">Subir más archivos</a>
+                                                    <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#add_files" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="false">Subir más</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -99,7 +99,7 @@
                                                             @foreach($evidence->proofs as $proof)
 
 
-                                                                <tr>
+                                                                <tr id="file_{{$proof->file->id}}">
                                                                     <td>{{$proof->file->name}}</td>
                                                                     <td>{{$proof->file->sizeForHuman()}}</td>
                                                                     <td>
@@ -107,10 +107,30 @@
                                                                             <i class="fas fa-download"></i>
                                                                             Descargar
                                                                         </a>
-                                                                        <a class="btn btn-danger btn-sm" href="#">
+                                                                        <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-remove-{{$proof->file->id}}">
                                                                             <i class="fas fa-trash"></i>
                                                                             Eliminar
                                                                         </a>
+                                                                        <div class="modal fade" id="modal-remove-{{$proof->file->id}}">
+                                                                            <div class="modal-dialog modal-dialog-centered">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <h4 class="modal-title">Eliminar archivo</h4>
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                            <span aria-hidden="true">&times;</span>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    <div class="modal-body">
+                                                                                        <p>Este cambio no se puede deshacer.</p>
+                                                                                        <p>¿Deseas continuar?</p>
+                                                                                    </div>
+                                                                                    <div class="modal-footer justify-content-between">
+                                                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                                                                        <button type="button"  onclick="remove_file({{$proof->file->id}})" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-trash"></i> &nbsp;Sí, eliminar archivo</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
                                                                     </td>
 
                                                                 </tr>
@@ -150,16 +170,13 @@
                         </div>
 
                         <div class="modal fade" id="modal-default">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Publicar la evidencia</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                        <h4 class="modal-title">Publicar una evidencia</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <p>Cuando se publica una evidencia, esta se manda al coordinador de tu comité
+                                        <p>Cuando se publica una evidencia, esta se envía al coordinador de tu comité
                                         para su posterior revisión. Mientras esté en proceso de revisión,
                                         <b>no podrá ser editada.</b></p>
                                         <p>¿Deseas continuar?</p>
@@ -188,18 +205,18 @@
         @section('scripts')
 
         <script>
-            $.ajax({
-                url: "{{route('evidence.proofs',['instance' => $instance, 'id' => $evidence->id])}}",
-                type: "POST",
-                data: {"_token": "{{ csrf_token() }}"},
-                success: function (result) {
-                    console.log(result);
-                }
-            });
 
-            $('input[type="submit"]:nth-child(1)').click(function(){
-                alert("bof");
-            });
+            function remove_file(id){
+                $("#file_"+id).fadeOut(1000);
+                $.ajax({
+                    url: "{{route('file.remove',$instance)}}",
+                    type: "POST",
+                    data: {"_token": "{{ csrf_token() }}","_id": id},
+                    success: function (result) {
+                        console.log(result);
+                    }
+                });
+            }
 
         </script>
 

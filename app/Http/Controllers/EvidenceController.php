@@ -216,16 +216,43 @@ class EvidenceController extends Controller
 
     }
 
-    /****************************************************************************
-     * PROOFS FROM AN EVIDENCE
-     ****************************************************************************/
-
-    public function proofs(Request $request){
-
-        $id = $request->id;
+    public function remove(Request $request)
+    {
+        $id = $request->_id;
         $evidence = Evidence::find($id);
+        $instance = \Instantiation::instance();
 
-        return $evidence->toJson();
+        // eliminamos recursivamente la evidencia y todas las versiones anteriores, incluyendo archivos
+        $this->delete_evidence($evidence);
 
+        return redirect()->route('evidence.list',$instance)->with('success', 'Evidencia borrada con éxito.');
     }
+
+    private function delete_evidence($evidence)
+    {
+        $instance = \Instantiation::instance();
+        $user = Auth::user();
+
+        // por si la evidencia apunta a otra anterior
+        $evidence_previous = Evidence::find($evidence->points_to);
+
+        // eliminamos los archivos almacenados
+        $this->delete_files($evidence);
+        Storage::deleteDirectory($instance.'/proofs/'.$user->username.'/evidence_'.$evidence->id.'');
+        $evidence->delete();
+
+        if($evidence_previous != null)
+        {
+            $this->delete_evidence($evidence_previous);
+        }
+    }
+
+    private function delete_files($evidence)
+    {
+        foreach($evidence->proofs as $proof)
+        {
+            $proof->file->delete();
+        }
+    }
+
 }

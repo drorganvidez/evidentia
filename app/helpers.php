@@ -34,7 +34,8 @@ class Instantiation
             'username' => $instance->username,
             'password' => $instance->password,
             'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci'
+            'collation' => 'utf8mb4_unicode_ci',
+            'engine' => 'InnoDB',
         ]]);
         config(['database.default' => 'instance']);
     }

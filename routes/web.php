@@ -55,6 +55,9 @@ Route::prefix('{instance}')->group(function () {
     Route::get('/login', 'LoginInstanceController@login')->name('instance.login');
     Route::post('/login_p', 'LoginInstanceController@login_p')->name('instance.login_p');
 
+    /**
+     *  EVIDENCES
+     */
     Route::get('/evidence/list', 'EvidenceController@list')->name('evidence.list');
     Route::get('/evidence/create', 'EvidenceController@create')->name('evidence.create');
     Route::post('/evidence/draft', 'EvidenceController@draft')->name('evidence.draft');
@@ -64,11 +67,24 @@ Route::prefix('{instance}')->group(function () {
 
     Route::middleware(['checknotnull:Evidence'])->group(function () {
         Route::get('/evidence/edit/{id}', 'EvidenceController@edit')->name('evidence.edit')->middleware(['evidencecanbeedited','evidencemine']);
-        Route::post('/evidence/proofs/{id}', 'EvidenceController@proofs')->name('evidence.proofs')->middleware(['evidencecanbeedited','evidencemine']);
+        Route::post('/evidence/remove', 'EvidenceController@remove')->name('evidence.remove')->middleware('evidencemine');
     });
 
+
+
+    /**
+     *  PROOF
+     */
+    Route::post('/proof/remove/', 'ProofController@remove')->name('proof.remove');
+
+    /**
+     *  FILES
+     */
+
+    Route::post('/file/remove/', 'FileController@remove')->name('file.remove');
     Route::middleware(['checknotnull:File'])->group(function () {
         Route::get('/file/download/{id}', 'FileController@download')->name('file.download');
+
     });
 
 });

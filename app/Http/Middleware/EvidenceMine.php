@@ -20,6 +20,10 @@ class EvidenceMine
         $instance = \Instantiation::instance();
 
         $id = $request->route('id');
+        if($id == null) // si se recibe por POST
+        {
+            $id = $request->_id;
+        }
         $evidence = Evidence::find($id);
 
         if($evidence->user->id != Auth::id())

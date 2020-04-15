@@ -15,8 +15,10 @@ class CreateProofsTable extends Migration
     {
         Schema::create('proofs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('evidence_id');
-            $table->foreignId('file_id');
+            $table->foreignId('evidence_id')->references('id')
+                                                ->on('evidences')->onDelete('cascade');
+            $table->foreignId('file_id')->references('id')
+                                                ->on('files')->onDelete('cascade');
             $table->timestamps();
         });
     }

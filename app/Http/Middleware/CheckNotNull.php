@@ -16,6 +16,10 @@ class CheckNotNull
     public function handle($request, Closure $next, $model)
     {
         $id = $request->route('id');
+        if($id == null) // si se recibe por POST
+        {
+            $id = $request->_id;
+        }
 
         $model = 'App\\' . $model;
         $entity = $model::where('id', $id)->first();

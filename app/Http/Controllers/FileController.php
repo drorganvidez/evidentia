@@ -19,4 +19,14 @@ class FileController extends Controller
 
         return $response;
     }
+
+    public function remove(Request $request)
+    {
+        $id = $request->_id;
+        $file = File::find($id);
+        Storage::delete($file->route);
+        $file->delete();
+    }
+
+
 }
