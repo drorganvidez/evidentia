@@ -28,4 +28,21 @@ class Evidence extends Model
         return $this->belongsTo('App\Comittee');
     }
 
+    public function previous_evidences()
+    {
+        $evidence_previous = Evidence::find($this->points_to);
+        return $this->previous_evidences_p($evidence_previous,collect());
+    }
+
+    private function previous_evidences_p($evidence,$collection)
+    {
+        if($evidence->points_to == null){
+            return $collection;
+        }else{
+            $collection->push($evidence);
+            $evidence_previous = Evidence::find($evidence->points_to);
+            return $this->previous_evidences_p($evidence_previous,$collection);
+        }
+    }
+
 }

@@ -1,4 +1,4 @@
-<a class="btn btn-primary btn-sm" href="#">
+<a class="btn btn-primary btn-sm" href="{{route('evidence.view',['instance' => $instance, 'id' => $evidence->id])}}">
     <i class="fas fa-eye"></i>
     Ver
 </a>
@@ -11,4 +11,5 @@
 </a>
 @endif
 
-<x-buttonremove :id="$evidence->id" route="evidence.remove"/>
+<x-buttonremove :id="$evidence->id" route="evidence.remove" title="¿Seguro?" description="Esto borrará la evidencia actual, las
+ediciones anteriores <b>y todos los archivos adjuntos.</b>"/>

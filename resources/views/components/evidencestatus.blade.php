@@ -4,7 +4,7 @@
         </div>
     </div>
     <small>
-        En borrador
+        <span class="badge badge-pill badge-dark">En borrador</span>
     </small>
 @endif
 
@@ -14,7 +14,7 @@
         </div>
     </div>
     <small>
-        Pendiente de revisión
+        <span class="badge badge-pill badge-dark">Pendiente de revisión</span>
     </small>
 @endif
 
@@ -24,7 +24,7 @@
         </div>
     </div>
     <small>
-        Aceptada
+        <span class="badge badge-pill badge-success">Aceptada</span>
     </small>
 @endif
 
@@ -34,7 +34,7 @@
         </div>
     </div>
     <small>
-        Rechazada
+        <span class="badge badge-pill badge-danger">Rechazada</span>
     </small>
 @endif
 

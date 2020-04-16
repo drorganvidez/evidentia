@@ -25,6 +25,15 @@ class EvidenceController extends Controller
         $this->middleware('checkroles:PRESIDENT|COORDINATOR|REGISTER_COORDINATOR|SECRETARY|STUDENT');
     }
 
+    public function view($instance,$id)
+    {
+        $instance = \Instantiation::instance();
+        $evidence = Evidence::find($id);
+
+        return view('evidence.view',
+            ['instance' => $instance, 'evidence' => $evidence]);
+    }
+
     public function list()
     {
         $evidences = Evidence::where(['user_id' => Auth::id(),'last' => true])->orderBy('created_at', 'desc')->paginate(5);
@@ -142,26 +151,32 @@ class EvidenceController extends Controller
 
             $file = $proof->file;
 
-            // copiamos el archivo en sí
-            Storage::copy($file->route, $instance.'/proofs/'.$user->username.'/evidence_'.$evidence->id.'/'.$file->name.'.'.$file->type);
+            try {
 
-            // almacenamos en la BBDD la información del archivo
-            $file_entity = File::create([
-                'name' => $file->name,
-                'type' => $file->type,
-                'route' => $file->route,
-                'size' => $file->size,
-            ]);
+                // copiamos el archivo en sí
+                Storage::copy($file->route, $instance . '/proofs/' . $user->username . '/evidence_' . $evidence->id . '/' . $file->name . '.' . $file->type);
 
-            // cómputo del sello
-            $file_entity = \Stamp::compute_file($file_entity);
-            $file_entity->save();
+                // almacenamos en la BBDD la información del archivo
+                $file_entity = File::create([
+                    'name' => $file->name,
+                    'type' => $file->type,
+                    'route' => $file->route,
+                    'size' => $file->size,
+                ]);
 
-            // almacenamos en la BBDD la información de la prueba de la evidencia
-            $proof = Proof::create([
-                'evidence_id' => $evidence->id,
-                'file_id' => $file_entity->id
-            ]);
+                // cómputo del sello
+                $file_entity = \Stamp::compute_file($file_entity);
+                $file_entity->save();
+
+                // almacenamos en la BBDD la información de la prueba de la evidencia
+                $proof = Proof::create([
+                    'evidence_id' => $evidence->id,
+                    'file_id' => $file_entity->id
+                ]);
+
+            } catch (\Exception $e) {
+
+            }
         }
     }
 
@@ -196,24 +211,44 @@ class EvidenceController extends Controller
     {
         $instance = \Instantiation::instance();
 
+        // evidencia desde la que hemos decidido partir
         $evidence_previous = Evidence::find($request->_id);
-        $evidence_previous->last = false;
-        $evidence_previous->save();
 
-        $evidence = $this->new_evidence($request,$status);
-        $evidence->points_to = $request->_id;
-        $evidence->save();
+        // creamos la nueva evidencia a partir de la seleccionada para editar
+        $evidence_new = $this->new_evidence($request,$status);
 
-        $this->copy_files($evidence_previous,$evidence);
+        // evidencia cabecera en el flujo de ediciones (la última)
+        $evidence_header = $this->find_header_evidence($evidence_previous);
+        $evidence_header->last = false;
+        $evidence_header->save();
+
+        // apuntamos al final del flujo de ediciones
+        $evidence_new->points_to = $evidence_header->id;
+        $evidence_new->save();
+
+        // nos traemos los archivos de la evidencia anterior
+        $this->copy_files($evidence_previous,$evidence_new);
 
         // si el usuario decide meter archivos nuevos
         if($request->hasFile('files'))
-        {
-            $this->new_files($request,$evidence);
-        }
+            $this->new_files($request,$evidence_new);
 
         return redirect()->route('evidence.list',$instance)->with('success', 'Evidencia editada con éxito.');
 
+    }
+
+    /*
+     *  FIND HEADER EVIDENCE
+     */
+    private function find_header_evidence($evidence)
+    {
+
+        if($evidence->last)
+            return $evidence;
+        else {
+            $points_me = Evidence::where('points_to',$evidence->id)->first();
+            return $this->find_header_evidence($points_me);
+        }
     }
 
     public function remove(Request $request)

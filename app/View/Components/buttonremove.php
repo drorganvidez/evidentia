@@ -16,13 +16,15 @@ class buttonremove extends Component
     public $route;
     public $instance;
     public $title;
+    public $description;
 
-    public function __construct($id,$route,$title="Confirmación")
+    public function __construct($id,$route,$title="Confirmación",$description="Este cambio no se puede deshacer.")
     {
         $this->id = $id;
         $this->route = $route;
         $this->instance = \Instantiation::instance();
         $this->title = $title;
+        $this->description = $description;
     }
 
     /**
