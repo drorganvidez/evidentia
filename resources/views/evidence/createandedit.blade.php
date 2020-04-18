@@ -88,6 +88,8 @@
 
                         <x-id :id="$evidence->id ?? ''" :edit="$edit ?? ''"/>
 
+                        <input type="hidden" name="removed_files" id="removed_files"/>
+
                         <div class="form-row">
 
                             <x-input col="6" attr="title" :value="$evidence->title ?? ''" label="Título" description="Escribe un título que describa con precisión tu evidencia (mínimo 5 caracteres)"/>
@@ -264,15 +266,8 @@
         <script>
 
             function remove_file(id){
-                $("#file_"+id).fadeOut(1000);
-                $.ajax({
-                    url: "{{route('file.remove',$instance)}}",
-                    type: "POST",
-                    data: {"_token": "{{ csrf_token() }}","_id": id},
-                    success: function (result) {
-                        console.log(result);
-                    }
-                });
+                $("#removed_files").val($("#removed_files").val() + "|" + id);
+                $("#file_"+id).fadeOut(500);
             }
 
         </script>

@@ -1387,12 +1387,12 @@
                 '      {remove}\n' +
                 '      {cancel}\n' +
                 '      {pause}\n' +
-                '      {upload}\n' +
+                '     \n' +
                 '      {browse}\n' +
                 '    </div>\n' +
                 '</div>';
             tMain2 = '{preview}\n<div class="kv-upload-progress kv-hidden"></div>\n<div class="clearfix"></div>\n' +
-                '{remove}\n{cancel}\n{upload}\n{browse}\n';
+                '{remove}\n{cancel}\n{browse}\n';
             tPreview = '<div class="file-preview {class}">\n' +
                 '  {close}' +
                 '  <div class="{dropClass} clearfix">\n' +
@@ -1451,7 +1451,7 @@
                 '</div>';
             tActions = '<div class="file-actions">\n' +
                 '    <div class="file-footer-buttons">\n' +
-                '        {download} {upload} {delete} {zoom} {other}' +
+                '        {download} {delete} {zoom} {other}' +
                 '    </div>\n' +
                 '</div>\n' +
                 '{drag}\n' +
@@ -1459,8 +1459,7 @@
             //noinspection HtmlUnknownAttribute
             tActionDelete = '<button type="button" class="kv-file-remove {removeClass}" ' +
                 'title="{removeTitle}" {dataUrl}{dataKey}>{removeIcon}</button>\n';
-            tActionUpload = '<button type="button" class="kv-file-upload {uploadClass}" title="{uploadTitle}">' +
-                '{uploadIcon}</button>';
+            tActionUpload = '';
             tActionDownload = '<a class="kv-file-download {downloadClass}" title="{downloadTitle}" ' +
                 'href="{downloadUrl}" download="{caption}" target="_blank">{downloadIcon}</a>';
             tActionZoom = '<button type="button" class="kv-file-zoom {zoomClass}" ' +

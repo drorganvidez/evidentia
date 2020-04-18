@@ -97,4 +97,20 @@ class Evidence extends Model
         return $previous_evidences->concat($later_evidences)->push($this)->unique()->sortByDesc('created_at');
     }
 
+    // obtiene la evidencia que va a la cabeza del flujo de ediciones
+    public function find_header_evidence()
+    {
+        return $this->find_header_evidence_p($this);
+    }
+
+    private function find_header_evidence_p($evidence)
+    {
+        if($evidence->last)
+            return $evidence;
+        else {
+            $points_me = Evidence::where('points_to',$evidence->id)->first();
+            return $this->find_header_evidence_p($points_me);
+        }
+    }
+
 }

@@ -142,7 +142,7 @@ class EvidenceController extends Controller
         }
     }
 
-    private function copy_files($evidence_previous,$evidence)
+    private function copy_files($evidence_previous, $evidence_new, $removed_files)
     {
         $user = Auth::user();
         $instance = \Instantiation::instance();
@@ -151,10 +151,15 @@ class EvidenceController extends Controller
 
             $file = $proof->file;
 
+            // los archivos que hemos "eliminado" de la evidencia anterior no se incluyen en la nueva
+            $collection = Str::of($removed_files)->explode('|');
+            if($collection->contains($file->id))
+                continue;
+
             try {
 
                 // copiamos el archivo en sí
-                Storage::copy($file->route, $instance . '/proofs/' . $user->username . '/evidence_' . $evidence->id . '/' . $file->name . '.' . $file->type);
+                Storage::copy($file->route, $instance . '/proofs/' . $user->username . '/evidence_' . $evidence_new->id . '/' . $file->name . '.' . $file->type);
 
                 // almacenamos en la BBDD la información del archivo
                 $file_entity = File::create([
@@ -170,7 +175,7 @@ class EvidenceController extends Controller
 
                 // almacenamos en la BBDD la información de la prueba de la evidencia
                 $proof = Proof::create([
-                    'evidence_id' => $evidence->id,
+                    'evidence_id' => $evidence_new->id,
                     'file_id' => $file_entity->id
                 ]);
 
@@ -218,7 +223,7 @@ class EvidenceController extends Controller
         $evidence_new = $this->new_evidence($request,$status);
 
         // evidencia cabecera en el flujo de ediciones (la última)
-        $evidence_header = $this->find_header_evidence($evidence_previous);
+        $evidence_header = $evidence_previous->find_header_evidence();
         $evidence_header->last = false;
         $evidence_header->save();
 
@@ -226,8 +231,8 @@ class EvidenceController extends Controller
         $evidence_new->points_to = $evidence_header->id;
         $evidence_new->save();
 
-        // nos traemos los archivos de la evidencia anterior
-        $this->copy_files($evidence_previous,$evidence_new);
+        // nos traemos los archivos de la evidencia anterior y los copiamos
+        $this->copy_files($evidence_previous,$evidence_new,$request->removed_files);
 
         // si el usuario decide meter archivos nuevos
         if($request->hasFile('files'))
@@ -235,20 +240,6 @@ class EvidenceController extends Controller
 
         return redirect()->route('evidence.list',$instance)->with('success', 'Evidencia editada con éxito.');
 
-    }
-
-    /*
-     *  FIND HEADER EVIDENCE
-     */
-    private function find_header_evidence($evidence)
-    {
-
-        if($evidence->last)
-            return $evidence;
-        else {
-            $points_me = Evidence::where('points_to',$evidence->id)->first();
-            return $this->find_header_evidence($points_me);
-        }
     }
 
     public function remove(Request $request)
