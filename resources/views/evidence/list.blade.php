@@ -19,11 +19,11 @@
             <div class="card">
 
                 <div class="card-body table-responsive p-0">
-                    <table class="table table-hover text-nowrap">
+                    <table class="table table-hover text-nowrap ">
                         <thead>
                         <tr>
                             <th>Título</th>
-                            <th>Horas</th>
+                            <th class="d-sm-none d-md-none">Horas</th>
                             <th>Comité</th>
                             <th>Creada</th>
                             <th>Estado</th>

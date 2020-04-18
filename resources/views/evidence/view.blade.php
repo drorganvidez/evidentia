@@ -44,6 +44,8 @@
                                     <div class="post text-justify">
                                         {!! $evidence->description !!}
 
+                                        <br><br>
+
                                         @if($evidence->status == 'DRAFT')
                                             <a class="btn btn-info btn-sm"
                                                href="{{route('evidence.edit',['instance' => $instance, 'id' => $evidence->id])}}">
@@ -89,7 +91,6 @@ ediciones anteriores <b>y todos los archivos adjuntos.</b>"/>
                                     <table class="table text-nowrap table-borderless ">
                                     <thead class="thead-light">
                                     <tr>
-                                        <th>Título</th>
                                         <th>Edición</th>
                                         <th>Opciones</th>
                                     </tr>
@@ -100,7 +101,6 @@ ediciones anteriores <b>y todos los archivos adjuntos.</b>"/>
 
 
                                         <tr>
-                                            <td>{{$evidence_i->title}}</td>
                                             <td>{{ \Carbon\Carbon::parse($evidence_i->created_at)->diffForHumans() }}</td>
                                             <td><a class="btn btn-info btn-sm"
                                                    href="{{route('evidence.edit',['instance' => $instance, 'id' => $evidence_i->id])}}">
