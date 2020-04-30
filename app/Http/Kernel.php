@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'checkroles' => \App\Http\Middleware\CheckRoles::class,
         'evidencecanbeedited' => \App\Http\Middleware\EvidenceCanBeEdited::class,
         'evidencemine' => \App\Http\Middleware\EvidenceMine::class,
+        'evidencefrommycommittee' => \App\Http\Middleware\EvidenceFromMyComittee::class,
     ];
 }

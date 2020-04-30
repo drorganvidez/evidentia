@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Mis evidencias')
+@section('title', 'Gestionar evidencias de '.Auth::user()->coordinator->comittee->name)
 
-@section('title-icon', 'fab fa-battle-net')
+@section('title-icon', 'fas fa-clipboard-check')
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>
@@ -10,6 +10,18 @@
 @endsection
 
 @section('content')
+
+    <div class="row mb-2">
+        <div class="form-group col-md-6 col-sm-6">
+            <form method="GET" action="{{route('coordinator.evidence.list.search',$instance)}}" />
+            <input name="s" type="text" class="form-control" placeholder="Buscar evidencia por título, alumna/o, horas..." name="title" value="" required=""
+                   autocomplete="title" autofocus>
+        </div>
+        <div class="col-md-2 col-sm-6">
+            <button type="button" class="btn btn-primary btn-block"><i class="fas fa-search"></i> &nbsp;Buscar</button>
+        </div>
+    </div>
+
 
     <div class="row">
         <div class="col-lg-12">
@@ -22,10 +34,10 @@
                     <table class="table table-hover text-nowrap ">
                         <thead>
                         <tr>
+                            <th>Alumna/o</th>
                             <th>Título</th>
                             <th>Horas</th>
-                            <th>Comité</th>
-                            <th>Creada</th>
+                            <th>Recibida</th>
                             <th>Estado</th>
                             <th>Herramientas</th>
                         </tr>
@@ -34,11 +46,14 @@
 
                         @forelse($evidences as $evidence)
                             <tr>
-                                <td>{{$evidence->title}}</td>
-                                <td>{{$evidence->hours}}</td>
+                                <td>{{$evidence->user->surname}}, {{$evidence->user->name}}</td>
                                 <td>
-                                    <x-evidencecomittee :evidence="$evidence"/>
+                                    <a href="{{route('evidence.view',
+                                                ['instance' => $instance, 'id' => $evidence->id])}}">
+                                        {{$evidence->title}}
+                                    </a>
                                 </td>
+                                <td>{{$evidence->hours}}</td>
                                 <td> {{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }} </td>
                                 <td>
                                     <x-evidencestatus :status="$evidence->status"/>

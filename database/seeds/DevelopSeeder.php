@@ -69,8 +69,8 @@ class DevelopSeeder extends Seeder
 
         DB::table('users')->insert([
             'id' => 1,
-            'name' => 'Alumno',
-            'surname' => 'Primero',
+            'name' => 'David',
+            'surname' => 'Romero Organvídez',
             'email' => 'alumno1@alumno1.com',
             'username' => 'alumno1@alumno1.com',
             'password' => Hash::make('alumno1'),
@@ -78,8 +78,8 @@ class DevelopSeeder extends Seeder
 
         DB::table('users')->insert([
             'id' => 2,
-            'name' => 'Alumno',
-            'surname' => 'Segundo',
+            'name' => 'Ron',
+            'surname' => 'Weasley',
             'email' => 'alumno2@alumno2.com',
             'username' => 'alumno2@alumno2.com',
             'password' => Hash::make('alumno2'),
@@ -105,8 +105,8 @@ class DevelopSeeder extends Seeder
 
         DB::table('users')->insert([
             'id' => 5,
-            'name' => 'Coordinador',
-            'surname' => 'Coocoordina',
+            'name' => 'Irene',
+            'surname' => 'Martín Chavero',
             'email' => 'coordinador1@coordinador1.com',
             'username' => 'coordinador1@coordinador1.com',
             'password' => Hash::make('coordinador1'),
@@ -280,27 +280,131 @@ class DevelopSeeder extends Seeder
         ]);
 
         /*
-         *  COMITÉS
+         *  COORDINADORES Y SECRETARIOS
          */
 
-        DB::table('comittees')->insert(['group' => 1, 'comittee' => 'Presidencia', 'icon' => '<i class="fas fa-user-tie"></i>']);
-        DB::table('comittees')->insert(['group' => 2, 'comittee' => 'Secretaría', 'icon' => '<i class="fas fa-file-signature"></i>' ]);
-        DB::table('comittees')->insert(['group' => 3, 'comittee' => 'Programa', 'icon' => '<i class="fas fa-list-ol"></i>' ]);
-        DB::table('comittees')->insert(['group' => 4, 'comittee' => 'Igualdad', 'icon' => '<i class="fas fa-people-carry"></i>' ]);
-        DB::table('comittees')->insert(['group' => 5, 'comittee' => 'Sostenibilidad', 'icon' => '<i class="fas fa-piggy-bank"></i>' ]);
-        DB::table('comittees')->insert(['group' => 6, 'comittee' => 'Finanzas', 'icon' => '<i class="fas fa-euro-sign"></i>' ]);
-        DB::table('comittees')->insert(['group' => 7, 'comittee' => 'Logística', 'subcomittee' => 'Sede', 'icon' => '<i class="fas fa-map-pin"></i>' ]);
-        DB::table('comittees')->insert(['group' => 7, 'comittee' => 'Logística', 'subcomittee' => 'Registro', 'icon' => '<i class="fas fa-user-check"></i>' ]);
-        DB::table('comittees')->insert(['group' => 7, 'comittee' => 'Logística', 'subcomittee' => 'Medios Audiovisuales', 'icon' => '<i class="fas fa-film"></i>' ]);
-        DB::table('comittees')->insert(['group' => 7, 'comittee' => 'Logística', 'subcomittee' => 'Eventos Sociales', 'icon' => '<i class="fas fa-users"></i>' ]);
-        DB::table('comittees')->insert(['group' => 8, 'comittee' => 'Comunicación', 'subcomittee' => 'Web', 'icon' => '<i class="fas fa-laptop"></i>' ]);
-        DB::table('comittees')->insert(['group' => 8, 'comittee' => 'Comunicación', 'subcomittee' => 'Publicidad', 'icon' => '<i class="fas fa-ad"></i>' ]);
-        DB::table('comittees')->insert(['group' => 8, 'comittee' => 'Comunicación', 'subcomittee' => 'Redes Sociales', 'icon' => '<i class="fas fa-hashtag"></i>' ]);
-        DB::table('comittees')->insert(['group' => 8, 'comittee' => 'Comunicación', 'subcomittee' => 'Diseño', 'icon' => '<i class="fab fa-sketch"></i>' ]);
+        DB::table('coordinators')->insert([
+            'user_id' => 5,
+            'comittee_id' => 5
+        ]);
+
+        DB::table('coordinators')->insert([
+            'user_id' => 6,
+            'comittee_id' => 7
+        ]);
+
+        /*
+         *  COMITÉS & SUBCOMITÉS
+         */
+
+        DB::table('comittees')->insert([
+            'id' => 1,
+            'name' => 'Presidencia',
+            'icon' => '<i class="fas fa-user-tie"></i>'
+        ]);
+
+        DB::table('comittees')->insert([
+            'id' => 2,
+            'name' => 'Secretaría',
+            'icon' => '<i class="fas fa-file-signature"></i>'
+        ]);
+
+        DB::table('comittees')->insert([
+            'id' => 3,
+            'name' => 'Programa',
+            'icon' => '<i class="fas fa-list-ol"></i>'
+        ]);
+
+        DB::table('comittees')->insert([
+            'id' => 4,
+            'name' => 'Igualdad',
+            'icon' => '<i class="fas fa-people-carry"></i>'
+        ]);
+
+        DB::table('comittees')->insert([
+            'id' => 5,
+            'name' => 'Sostenibilidad',
+            'icon' => '<i class="fas fa-piggy-bank"></i>'
+        ]);
+
+        DB::table('comittees')->insert([
+            'id' => 6,
+            'name' => 'Finanzas',
+            'icon' => '<i class="fas fa-euro-sign"></i>'
+        ]);
+
+        DB::table('comittees')->insert([
+            'id' => 7,
+            'name' => 'Logística'
+        ]);
+
+        DB::table('comittees')->insert([
+            'id' => 8,
+            'name' => 'Comunicación'
+        ]);
+
+        DB::table('subcomittees')->insert([
+            'id' => 1,
+            'comittee_id' => 7,
+            'name' => 'Sede',
+            'icon' => '<i class="fas fa-map-pin"></i>'
+        ]);
+
+        DB::table('subcomittees')->insert([
+            'id' => 2,
+            'comittee_id' => 7,
+            'name' => 'Registro',
+            'icon' => '<i class="fas fa-user-check"></i>'
+        ]);
+
+        DB::table('subcomittees')->insert([
+            'id' => 3,
+            'comittee_id' => 7,
+            'name' => 'Medios Audiovisuales',
+            'icon' => '<i class="fas fa-film"></i>'
+        ]);
+
+        DB::table('subcomittees')->insert([
+            'id' => 4,
+            'comittee_id' => 7,
+            'name' => 'Eventos Sociales',
+            'icon' => '<i class="fas fa-users"></i>'
+        ]);
+
+        DB::table('subcomittees')->insert([
+            'id' => 5,
+            'comittee_id' => 8,
+            'name' => 'Web',
+            'icon' => '<i class="fas fa-laptop"></i>'
+        ]);
+
+        DB::table('subcomittees')->insert([
+            'id' => 6,
+            'comittee_id' => 8,
+            'name' => 'Publicidad',
+            'icon' => '<i class="fas fa-ad"></i>'
+        ]);
+
+        DB::table('subcomittees')->insert([
+            'id' => 7,
+            'comittee_id' => 8,
+            'name' => 'Redes Sociales',
+            'icon' => '<i class="fas fa-hashtag"></i>'
+        ]);
+
+        DB::table('subcomittees')->insert([
+            'id' => 8,
+            'comittee_id' => 8,
+            'name' => 'Diseño',
+            'icon' => '<i class="fab fa-sketch"></i>'
+        ]);
+
+        /*
+         *  CONFIGURACIÓN
+         */
 
         DB::table('configuration')->insert([
             'secret' => Str::random(10),
-
         ]);
 
     }

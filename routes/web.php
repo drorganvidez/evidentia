@@ -71,6 +71,12 @@ Route::prefix('{instance}')->group(function () {
         Route::post('/evidence/remove', 'EvidenceController@remove')->name('evidence.remove')->middleware('evidencemine');
     });
 
+    // EVIDENCES MANAGEMENT
+    Route::prefix('coordinator')->group(function () {
+        Route::get('/evidence/list/search', 'SearchController@coordinator_search_evidences')->name('coordinator.evidence.list.search');
+        Route::get('/evidence/list', 'EvidenceCoordinatorController@list')->name('coordinator.evidence.list');
+    });
+
 
 
     /**
@@ -85,7 +91,6 @@ Route::prefix('{instance}')->group(function () {
     Route::post('/file/remove/', 'FileController@remove')->name('file.remove');
     Route::middleware(['checknotnull:File'])->group(function () {
         Route::get('/file/download/{id}', 'FileController@download')->name('file.download');
-
     });
 
 });

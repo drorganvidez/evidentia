@@ -63,11 +63,11 @@
                 @else
 
                     <x-menucommon/>
-                    <x-menustudent/>
                     <x-menusecretary/>
                     <x-menucoordinator/>
                     <x-menuregistercoordinator/>
                     <x-menupresident/>
+                    <x-menustudent/>
                     <x-menulecture/>
 
                     <x-menuoptions/>
@@ -87,15 +87,13 @@
         <div class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1 class="m-0 text-dark"><i class="@yield('title-icon')"></i>&nbsp;&nbsp;@yield('title')</h1>
-                    </div><!-- /.col -->
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
+                    <div class="col-sm-12 col-12">
+                        <ol class="breadcrumb mb-2">
                             @section('breadcrumb')
                             @show
                         </ol>
-                    </div><!-- /.col -->
+                        <h1 class="m-0 text-dark"><i class="@yield('title-icon')"></i>&nbsp;&nbsp;@yield('title')</h1>
+                    </div>
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
         </div>

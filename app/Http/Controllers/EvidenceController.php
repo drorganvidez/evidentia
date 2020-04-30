@@ -242,6 +242,10 @@ class EvidenceController extends Controller
 
     }
 
+    /****************************************************************************
+     * REMOVE AN EVIDENCE
+     ****************************************************************************/
+
     public function remove(Request $request)
     {
         $id = $request->_id;
@@ -280,5 +284,6 @@ class EvidenceController extends Controller
             $proof->file->delete();
         }
     }
+
 
 }

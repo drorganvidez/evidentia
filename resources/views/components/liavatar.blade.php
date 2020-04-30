@@ -1,10 +1,9 @@
-<div class="row" style="margin-top: 10px; margin-left: 5px; margin-bottom: 0px; padding-bottom: 0px">
-    <div class="col-lg-3">
-
-            <img src="{{asset('dist/img/user2-160x160.jpg')}}" style="width: 50px" class="img-circle" alt="User Image">
-
+<div class="user-panel  d-flex">
+    <div class="image">
+        <img src="{{asset('dist/img/user2-160x160.jpg')}}" class="img-circle elevation-2" style="margin-top: 10px"
+             alt="User Image">
     </div>
-    <div class="col-lg-9">
+    <div class="info">
         <a href="#">
 
             <span style="font-size: 12px; display: block; line-height : 15px;">
@@ -20,17 +19,16 @@
             </span>
 
         </a>
-    </div>
 
-    <div class="col-12">
-        <p style="color: #c2c7d0; font-size: 12px; margin-top: 10px">
+
 
             @if(Schema::hasTable('roles'))
                 @foreach(Auth::user()->roles as $rol)
                     <span class="badge badge-pill badge-secondary">{{$rol->slug}}</span>
                 @endforeach
             @endif
-        </p>
-    </div>
 
+
+
+    </div>
 </div>

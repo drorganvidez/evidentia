@@ -59,4 +59,14 @@ class User extends Authenticatable
         }
         return false;
     }
+
+    public function coordinator()
+    {
+        return $this->hasOne('App\Coordinator');
+    }
+
+    public function secretary()
+    {
+        return $this->hasOne('App\Secretary');
+    }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateComitteesTable extends Migration
+class CreateSubcomitteesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class CreateComitteesTable extends Migration
      */
     public function up()
     {
-        Schema::create('comittees', function (Blueprint $table) {
+        Schema::create('subcomittees', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('comittee_id');
             $table->string('name');
             $table->string('icon')->nullable();
             $table->timestamps();
@@ -28,6 +29,6 @@ class CreateComitteesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comittees');
+        Schema::dropIfExists('subcomittees');
     }
 }

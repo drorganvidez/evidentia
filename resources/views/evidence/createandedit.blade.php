@@ -101,11 +101,7 @@
                                 <select id="comittee" class="selectpicker form-control @error('comittee') is-invalid @enderror" name="comittee" value="{{ old('comittee') }}" required autofocus>
                                     @foreach($comittees as $comittee)
                                         <option {{$comittee->id == old('comittee') ? 'selected' : ''}} value="{{$comittee->id}}">
-                                            {{$comittee->comittee}}
-
-                                            @if(isset($comittee->subcomittee))
-                                                ({{$comittee->subcomittee}})
-                                            @endif
+                                            {{$comittee->name}}
                                         </option>
                                     @endforeach
                                 </select>
