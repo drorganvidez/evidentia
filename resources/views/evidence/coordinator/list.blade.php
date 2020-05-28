@@ -22,9 +22,20 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-lg-2 mt-1">
+            <a  class="btn btn-primary btn-block" disabled><i class="fas fa-clock"></i> &nbsp;Pendientes</a>
+        </div>
+        <div class="col-lg-2 mt-1">
+            <a type="button" class="btn btn-secondary btn-block"><i class="far fa-thumbs-up"></i> &nbsp;Aceptadas</a>
+        </div>
+        <div class="col-lg-2 mt-1">
+            <a type="button" class="btn btn-secondary btn-block"><i class="far fa-thumbs-down"></i> &nbsp;Rechazadas</a>
+        </div>
+    </div>
 
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-12 mt-3">
 
             <x-status/>
 
@@ -60,7 +71,7 @@
                                 </td>
 
                                 <td>
-                                    <x-evidenceoptionsstudent :evidence="$evidence"/>
+                                    <x-evidenceoptionscoordinator :evidence="$evidence"/>
                                 </td>
 
                             </tr>

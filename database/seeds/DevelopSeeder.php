@@ -105,8 +105,8 @@ class DevelopSeeder extends Seeder
 
         DB::table('users')->insert([
             'id' => 5,
-            'name' => 'Irene',
-            'surname' => 'Martín Chavero',
+            'name' => 'Hermione',
+            'surname' => 'Jane Granger',
             'email' => 'coordinador1@coordinador1.com',
             'username' => 'coordinador1@coordinador1.com',
             'password' => Hash::make('coordinador1'),

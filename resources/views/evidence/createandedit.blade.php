@@ -100,7 +100,11 @@
                                 <label for="comittee">Comité</label>
                                 <select id="comittee" class="selectpicker form-control @error('comittee') is-invalid @enderror" name="comittee" value="{{ old('comittee') }}" required autofocus>
                                     @foreach($comittees as $comittee)
-                                        <option {{$comittee->id == old('comittee') ? 'selected' : ''}} value="{{$comittee->id}}">
+                                        @isset($evidence)
+                                            <option {{$comittee->id == old('comittee') || $evidence->comittee->id == $comittee->id ? 'selected' : ''}} value="{{$comittee->id}}">
+                                        @else
+                                            <option {{$comittee->id == old('comittee') ? 'selected' : ''}} value="{{$comittee->id}}">
+                                        @endisset
                                             {{$comittee->name}}
                                         </option>
                                     @endforeach

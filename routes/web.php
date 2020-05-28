@@ -56,6 +56,11 @@ Route::prefix('{instance}')->group(function () {
     Route::post('/login_p', 'LoginInstanceController@login_p')->name('instance.login_p');
 
     /**
+     *  MESSAGES
+     */
+    Route::get('/mailbox', 'MessageController@mailbox')->name('message.mailbox');
+
+    /**
      *  EVIDENCES
      */
     Route::get('/evidence/list', 'EvidenceController@list')->name('evidence.list');
@@ -75,6 +80,11 @@ Route::prefix('{instance}')->group(function () {
     Route::prefix('coordinator')->group(function () {
         Route::get('/evidence/list/search', 'SearchController@coordinator_search_evidences')->name('coordinator.evidence.list.search');
         Route::get('/evidence/list', 'EvidenceCoordinatorController@list')->name('coordinator.evidence.list');
+
+        Route::middleware(['checknotnull:Evidence'])->group(function () {
+            Route::get('/evidence/view/{id}', 'EvidenceController@view')->name('coordinator.evidence.view');
+        });
+
     });
 
 

@@ -1,10 +1,10 @@
 @if($status == "DRAFT")
     <div class="progress progress-sm">
-        <div class="progress-bar bg-dark" role="progressbar" aria-volumenow="33" aria-volumemin="0" aria-volumemax="100" style="width: 33%">
+        <div class="progress-bar bg-light role="progressbar" aria-volumenow="33" aria-volumemin="0" aria-volumemax="100" style="width: 33%">
         </div>
     </div>
     <small>
-        <span class="badge badge-pill badge-dark">En borrador</span>
+        <span class="badge badge-pill badge-light">En borrador</span>
     </small>
 @endif
 

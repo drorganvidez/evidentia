@@ -15,16 +15,15 @@ class SearchController extends Controller
         $comittee_id = Auth::user()->coordinator->comittee->id;
 
         // buscar evidencias por titulo
-        $evidences = Evidence::where(['title' => $s])->get();
-        //$evidences = Evidence::whereRaw('lower(title) like (?) and comittee_id = '.$comittee_id, ["%{$s}%"])->get();
+        $evidences = Evidence::whereRaw('lower(title) like (?) AND comittee_id = '.$comittee_id, ["%{$s}%"])->get();
 
         // buscar evidencias por horas
         $evidences = $evidences->concat(Evidence::whereRaw('lower(hours) like (?)', ["%{$s}%"])->get());
 
-        // filtramos evidencias repetidos
+        // filtramos evidencias repetidas
         $evidences = $evidences->unique();
 
-        return $evidences;
+        //return $evidences;
 
         $evidences = $evidences->paginate(5);
 

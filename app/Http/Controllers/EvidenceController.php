@@ -216,6 +216,12 @@ class EvidenceController extends Controller
     {
         $instance = \Instantiation::instance();
 
+        $validatedData = $request->validate([
+            'title' => 'required|max:255',
+            'hours' => 'required|numeric|between:0.5,99.99|max:100',
+            'description' => ['required',new MinCharacters(10),new MaxCharacters(20000)],
+        ]);
+
         // evidencia desde la que hemos decidido partir
         $evidence_previous = Evidence::find($request->_id);
 

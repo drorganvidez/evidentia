@@ -46,17 +46,33 @@
 
                                         <br><br>
 
-                                        @if($evidence->status == 'DRAFT')
-                                            <a class="btn btn-info btn-sm"
-                                               href="{{route('evidence.edit',['instance' => $instance, 'id' => $evidence->id])}}">
-                                                <i class="fas fa-pencil-alt">
-                                                </i>
-                                                Editar
-                                            </a>
+
+
+                                        @if(\Illuminate\Support\Facades\Auth::user()->hasRole('COORDINATOR') and $evidence->comittee->id == \Illuminate\Support\Facades\Auth::user()->coordinator->comittee->id)
+                                        <a class="btn btn-success btn-sm" href="{{route('evidence.edit',['instance' => $instance, 'id' => $evidence->id])}}">
+                                            <i class="far fa-thumbs-up"></i>
+                                            Aprobar
+                                        </a>
+                                        <a class="btn btn-danger btn-sm" href="{{route('evidence.edit',['instance' => $instance, 'id' => $evidence->id])}}">
+                                            <i class="far fa-thumbs-down"></i>
+                                            Rechazar
+                                        </a>
+                                        @else
+
+                                            @if($evidence->status == 'DRAFT')
+                                                <a class="btn btn-info btn-sm"
+                                                   href="{{route('evidence.edit',['instance' => $instance, 'id' => $evidence->id])}}">
+                                                    <i class="fas fa-pencil-alt">
+                                                    </i>
+                                                    Editar
+                                                </a>
+                                            @endif
+
+                                            <x-buttonremove :id="$evidence->id" route="evidence.remove" title="¿Seguro?" description="Esto borrará la evidencia actual, las
+ediciones anteriores <b>y todos los archivos adjuntos.</b>"/>
                                         @endif
 
-                                        <x-buttonremove :id="$evidence->id" route="evidence.remove" title="¿Seguro?" description="Esto borrará la evidencia actual, las
-ediciones anteriores <b>y todos los archivos adjuntos.</b>"/>
+
                                     </div>
 
 
