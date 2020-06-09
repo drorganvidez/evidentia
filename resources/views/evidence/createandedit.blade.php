@@ -94,10 +94,10 @@
 
                             <x-input col="6" attr="title" :value="$evidence->title ?? ''" label="Título" description="Escribe un título que describa con precisión tu evidencia (mínimo 5 caracteres)"/>
 
-                            <x-input col="3" attr="hours" :value="$evidence->hours ?? ''" type="number" step="0.01" label="Horas" description="Números enteros o decimales."/>
+                            <x-input col="3" attr="hours" :value="$evidence->hours ?? ''" type="number" step="0.01" label="Horas invertidas" description="Números enteros o decimales."/>
 
                             <div class="form-group col-md-3">
-                                <label for="comittee">Comité</label>
+                                <label for="comittee">Comité asociado</label>
                                 <select id="comittee" class="selectpicker form-control @error('comittee') is-invalid @enderror" name="comittee" value="{{ old('comittee') }}" required autofocus>
                                     @foreach($comittees as $comittee)
                                         @isset($evidence)
@@ -221,10 +221,10 @@
 
                         <div class="row">
                             <div class="col-lg-3 mt-1">
-                                <button type="button"  class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-default"><i class="fas fa-external-link-square-alt"></i> &nbsp;Publicar evidencia</button>
+                                <button type="submit" formaction="{{$route_draft}}" class="btn btn-secondary btn-block"><i class="fas fa-pencil-ruler"></i> &nbsp;Guardar como borrador</button>
                             </div>
                             <div class="col-lg-3 mt-1">
-                                <button type="submit" formaction="{{$route_draft}}" class="btn btn-secondary btn-block"><i class="fas fa-pencil-ruler"></i> &nbsp;Guardar como borrador</button>
+                                <button type="button"  class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-default"><i class="fas fa-external-link-square-alt"></i> &nbsp;Publicar evidencia</button>
                             </div>
                         </div>
 

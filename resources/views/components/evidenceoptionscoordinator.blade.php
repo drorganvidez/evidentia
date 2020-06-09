@@ -2,3 +2,5 @@
     <i class="fas fa-eye"></i>
     Ver
 </a>
+
+<x-evidencemanagecoordinator :instance="$instance" :evidence="$evidence" />

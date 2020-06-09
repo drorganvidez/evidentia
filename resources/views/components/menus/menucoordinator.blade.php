@@ -6,7 +6,10 @@
             <li class="nav-header">COMITÉ</li>
             <x-li route="home" icon='fas fa-globe-europe' name="Resumen"/>
             <x-li route="home" icon='fas fa-user-friends' name="Gestionar comité"/>
-            <x-li route="coordinator.evidence.list" icon='fas fa-clipboard-check' name="Gestionar evidencias"/>
+
+            <x-li route="coordinator.evidence.list.all"
+                  secondaries="coordinator.evidence.view,coordinator.evidence.list.all,coordinator.evidence.list.pending,coordinator.evidence.list.accepted,coordinator.evidence.list.rejected"
+                  icon='fas fa-clipboard-check' name="Gestionar evidencias"/>
 
         </ul>
     </nav>

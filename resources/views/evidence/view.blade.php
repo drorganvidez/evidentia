@@ -6,7 +6,12 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>
-    <li class="breadcrumb-item"><a href="{{route('evidence.list',$instance)}}">Mis evidencias</a></li>
+    @if(\Illuminate\Support\Facades\Auth::user()->hasRole('COORDINATOR') and $evidence->comittee->id == \Illuminate\Support\Facades\Auth::user()->coordinator->comittee->id)
+        <li class="breadcrumb-item"><a href="{{route('coordinator.evidence.list.all',$instance)}}">Gestionar evidencias de {{\Illuminate\Support\Facades\Auth::user()->coordinator->comittee->name}}</a></li>
+    @else
+        <li class="breadcrumb-item"><a href="{{route('evidence.list',$instance)}}">Mis evidencias</a></li>
+    @endif
+
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
 
@@ -49,14 +54,9 @@
 
 
                                         @if(\Illuminate\Support\Facades\Auth::user()->hasRole('COORDINATOR') and $evidence->comittee->id == \Illuminate\Support\Facades\Auth::user()->coordinator->comittee->id)
-                                        <a class="btn btn-success btn-sm" href="{{route('evidence.edit',['instance' => $instance, 'id' => $evidence->id])}}">
-                                            <i class="far fa-thumbs-up"></i>
-                                            Aprobar
-                                        </a>
-                                        <a class="btn btn-danger btn-sm" href="{{route('evidence.edit',['instance' => $instance, 'id' => $evidence->id])}}">
-                                            <i class="far fa-thumbs-down"></i>
-                                            Rechazar
-                                        </a>
+
+                                            <x-evidencemanagecoordinator :instance="$instance" :evidence="$evidence" />
+
                                         @else
 
                                             @if($evidence->status == 'DRAFT')
@@ -94,7 +94,7 @@ ediciones anteriores <b>y todos los archivos adjuntos.</b>"/>
                                 </div>
 
                                 <div class="col-lg-8 mt-1">
-                                    <x-evidencestatus :status="$evidence->status"/>
+                                    <x-evidencestatus :evidence="$evidence"/>
                                 </div>
 
                             </div>

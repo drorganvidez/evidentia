@@ -15,6 +15,7 @@
 
     <!-- Theme style -->
     <link href="{{ asset('dist/css/adminlte.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('dist/css/style.css') }}" rel="stylesheet">
 
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.css')}}">
@@ -180,6 +181,8 @@
 
     $(document).ready(function(){
 
+        // Esto sirve para inicializar funcionalidades especiales JavaScript
+
         $(function () {
             // Summernote
             $('.textarea').summernote()
@@ -191,6 +194,10 @@
             height: 300,
             minHeight: 300
         });
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
 
     });
 

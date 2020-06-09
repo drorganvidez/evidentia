@@ -11,10 +11,10 @@ class evidencestatus extends Component
      *
      * @return void
      */
-    public $status;
-    public function __construct($status)
+    public $evidence;
+    public function __construct($evidence)
     {
-        $this->status = $status;
+        $this->evidence = $evidence;
     }
 
     /**

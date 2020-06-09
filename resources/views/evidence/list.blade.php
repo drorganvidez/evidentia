@@ -34,14 +34,14 @@
 
                         @forelse($evidences as $evidence)
                             <tr>
-                                <td>{{$evidence->title}}</td>
+                                <td><a  href="{{route('evidence.view',['instance' => $instance, 'id' => $evidence->id])}}">{{$evidence->title}}</a></td>
                                 <td>{{$evidence->hours}}</td>
                                 <td>
                                     <x-evidencecomittee :evidence="$evidence"/>
                                 </td>
                                 <td> {{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }} </td>
                                 <td>
-                                    <x-evidencestatus :status="$evidence->status"/>
+                                    <x-evidencestatus :evidence="$evidence"/>
                                 </td>
 
                                 <td>

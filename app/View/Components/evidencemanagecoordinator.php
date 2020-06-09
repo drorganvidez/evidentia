@@ -2,31 +2,22 @@
 
 namespace App\View\Components;
 
-use Illuminate\Support\Str;
 use Illuminate\View\Component;
 
-class li extends Component
+class evidencemanagecoordinator extends Component
 {
     /**
      * Create a new component instance.
      *
      * @return void
      */
-
-    public $route;
+    public $evidence;
     public $instance;
-    public $icon;
-    public $name;
 
-    public $secondaries;
-
-    public function __construct($route,$icon="",$name,$secondaries = "")
+    public function __construct($evidence)
     {
-        $this->route = $route;
+        $this->evidence = $evidence;
         $this->instance = \Instantiation::instance();
-        $this->icon = $icon;
-        $this->name = $name;
-        $this->secondaries = Str::of($secondaries)->explode(',');
     }
 
     /**
@@ -36,6 +27,6 @@ class li extends Component
      */
     public function render()
     {
-        return view('components.li');
+        return view('components.evidencemanagecoordinator');
     }
 }

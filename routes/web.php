@@ -76,13 +76,18 @@ Route::prefix('{instance}')->group(function () {
         Route::post('/evidence/remove', 'EvidenceController@remove')->name('evidence.remove')->middleware('evidencemine');
     });
 
-    // EVIDENCES MANAGEMENT
+    // EVIDENCES MANAGEMENT BY A COORDINATOR
     Route::prefix('coordinator')->group(function () {
         Route::get('/evidence/list/search', 'SearchController@coordinator_search_evidences')->name('coordinator.evidence.list.search');
-        Route::get('/evidence/list', 'EvidenceCoordinatorController@list')->name('coordinator.evidence.list');
+        Route::get('/evidence/list/all', 'EvidenceCoordinatorController@all')->name('coordinator.evidence.list.all');
+        Route::get('/evidence/list/pending', 'EvidenceCoordinatorController@pending')->name('coordinator.evidence.list.pending');
+        Route::get('/evidence/list/accepted', 'EvidenceCoordinatorController@accepted')->name('coordinator.evidence.list.accepted');
+        Route::get('/evidence/list/rejected', 'EvidenceCoordinatorController@rejected')->name('coordinator.evidence.list.rejected');
 
         Route::middleware(['checknotnull:Evidence'])->group(function () {
-            Route::get('/evidence/view/{id}', 'EvidenceController@view')->name('coordinator.evidence.view');
+            Route::get('/evidence/view/{id}', 'EvidenceController@view')->name('coordinator.evidence.view')->middleware('evidencefrommycommittee');
+            Route::get('/evidence/accept/{id}', 'EvidenceCoordinatorController@accept')->name('coordinator.evidence.accept')->middleware('evidencefrommycommittee');
+            Route::post('/evidence/reject/', 'EvidenceCoordinatorController@reject')->name('coordinator.evidence.reject')->middleware('evidencefrommycommittee');
         });
 
     });

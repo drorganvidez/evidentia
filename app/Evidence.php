@@ -28,6 +28,11 @@ class Evidence extends Model
         return $this->belongsTo('App\Comittee');
     }
 
+    public function reason_rejection()
+    {
+        return $this->hasOne('App\ReasonRejection');
+    }
+
     /**
      * @return mixed
      * Evidence Flow
