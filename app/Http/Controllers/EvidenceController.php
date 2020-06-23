@@ -291,5 +291,22 @@ class EvidenceController extends Controller
         }
     }
 
+    /****************************************************************************
+     * REEDIT AN EVIDENCE
+     ****************************************************************************/
+
+    public function reedit(Request $request)
+    {
+        $id = $request->_id;
+        $evidence = Evidence::find($id);
+        $instance = \Instantiation::instance();
+
+        $evidence->status = "DRAFT";
+
+        $evidence->save();
+
+        return redirect()->route('evidence.list',$instance)->with('success', 'Evidencia reasignada como borrador con éxito.');
+    }
+
 
 }

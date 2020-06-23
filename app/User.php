@@ -69,4 +69,14 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\Secretary');
     }
+
+    public function defaultLists()
+    {
+        return $this->belongsToMany('App\DefaultList');
+    }
+
+    public function meetings()
+    {
+        return $this->belongsToMany('App\Meeting');
+    }
 }

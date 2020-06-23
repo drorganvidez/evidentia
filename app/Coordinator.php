@@ -19,8 +19,4 @@ class Coordinator extends Model
         return $this->belongsTo('App\User');
     }
 
-    public function prueba()
-    {
-        return "pfff";
-    }
 }

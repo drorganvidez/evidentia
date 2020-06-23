@@ -22,7 +22,7 @@ class EvidenceCanBeEdited
         $id = $request->route('id');
         $evidence = Evidence::find($id);
 
-        if($evidence->status != "DRAFT")
+        if($evidence->status != "DRAFT" and $evidence->status != "REJECTED")
         {
             return redirect()->route('home',$instance);
         }

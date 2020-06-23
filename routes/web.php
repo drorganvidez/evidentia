@@ -73,6 +73,7 @@ Route::prefix('{instance}')->group(function () {
     Route::middleware(['checknotnull:Evidence'])->group(function () {
         Route::get('/evidence/view/{id}', 'EvidenceController@view')->name('evidence.view')->middleware('evidencemine');
         Route::get('/evidence/edit/{id}', 'EvidenceController@edit')->name('evidence.edit')->middleware(['evidencecanbeedited','evidencemine']);
+        Route::post('/evidence/reedit', 'EvidenceController@reedit')->name('evidence.reedit')->middleware('evidencemine');
         Route::post('/evidence/remove', 'EvidenceController@remove')->name('evidence.remove')->middleware('evidencemine');
     });
 
@@ -95,7 +96,7 @@ Route::prefix('{instance}')->group(function () {
 
 
     /**
-     *  PROOF
+     *  PROOFS
      */
     Route::post('/proof/remove/', 'ProofController@remove')->name('proof.remove');
 

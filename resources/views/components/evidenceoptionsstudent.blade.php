@@ -11,5 +11,13 @@
 </a>
 @endif
 
-<x-buttonremove :id="$evidence->id" route="evidence.remove" title="¿Seguro?" description="Esto borrará la evidencia actual, las
-ediciones anteriores <b>y todos los archivos adjuntos.</b>"/>
+@if($evidence->status == 'REJECTED')
+    <x-buttonconfirm :id="$evidence->id" route="evidence.reedit" title="Editar de nuevo" description="Puedes volver a editar una evidencia
+que ha sido rechazada. Esta pasará automáticamente a borrador y tendrá que ser validada de nuevo por tu coordinador." type="INFO" name="Editar de nuevo"/>
+@endif
+
+
+<x-buttonconfirm :id="$evidence->id" route="evidence.remove" title="¿Seguro?" description="Esto borrará la evidencia actual, las
+ediciones anteriores <b>y todos los archivos adjuntos.</b>" type="REMOVE" />
+
+

@@ -68,7 +68,7 @@
                                                 </a>
                                             @endif
 
-                                            <x-buttonremove :id="$evidence->id" route="evidence.remove" title="¿Seguro?" description="Esto borrará la evidencia actual, las
+                                            <x-buttonconfirm :id="$evidence->id" route="evidence.remove" title="¿Seguro?" description="Esto borrará la evidencia actual, las
 ediciones anteriores <b>y todos los archivos adjuntos.</b>"/>
                                         @endif
 
