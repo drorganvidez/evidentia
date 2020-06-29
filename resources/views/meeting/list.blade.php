@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Gestionar listas')
+@section('title', 'Gestionar reuniones')
 
 @section('title-icon', 'far fa-list-alt')
 
@@ -18,7 +18,7 @@
 
             <div class="row mb-3">
                 <div class="col-lg-2 mt-1">
-                    <a href="{{route('secretary.defaultlist.create',['instance' => $instance])}}" class="btn btn-primary btn-block" role="button"><i class="fas fa-plus"></i> &nbsp;Crear nueva lista</a>
+                    <a href="{{route('secretary.meeting.create',['instance' => $instance])}}" class="btn btn-primary btn-block" role="button"><i class="fas fa-plus"></i> &nbsp;Crear nueva reunión</a>
                 </div>
             </div>
 
@@ -31,16 +31,16 @@
                         <table class="table table-hover text-nowrap m-0">
                             <thead>
                             <tr>
-                                <th scope="col">Título de la lista</th>
-                                <th scope="col">Creada</th>
+                                <th scope="col">Título de la reunión</th>
+                                <th scope="col">Realizada</th>
                                 <th scope="col">Herramientas</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($defaultlists as $defaultlist)
+                            @foreach($meetings as $meeting)
                                 <tr scope="row">
-                                    <td>{{$defaultlist->name}}</td>
-                                    <td>{{ \Carbon\Carbon::parse($defaultlist->created_at)->diffForHumans() }}</td>
+                                    <td>{{$meeting->title}}</td>
+                                    <td>{{ \Carbon\Carbon::parse($meeting->datetime)->diffForHumans() }}</td>
                                     <td>
                                         <a class="btn btn-primary btn-sm"
                                            href="{{route('secretary.defaultlist.edit',['instance' => $instance, 'id' => $defaultlist->id])}}"
@@ -48,7 +48,7 @@
                                             <i class="far fa-edit"></i>
                                             Editar lista</a>
 
-                                        <x-buttonconfirm :id="$defaultlist->id" route="secretary.defaultlist.remove" title="¿Seguro?" description="Esta acción es permanente." type="REMOVE" />
+                                        <x-buttonconfirm :id="$meeting->id" route="secretary.defaultlist.remove" title="¿Seguro?" description="Esta acción es permanente." type="REMOVE" />
 
                                     </td>
                                 </tr>
@@ -62,7 +62,7 @@
 
             </div>
 
-            {{ $defaultlists->links() }}
+            {{ $meetings->links() }}
 
 
         </div>

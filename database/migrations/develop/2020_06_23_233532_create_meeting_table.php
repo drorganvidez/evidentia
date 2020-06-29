@@ -16,7 +16,7 @@ class CreateMeetingTable extends Migration
         Schema::create('meeting', function (Blueprint $table) {
             $table->id();
             $table->foreignId('comittee_id');
-            $table->foreignId('meetingrequest_id');
+            $table->foreignId('meetingrequest_id')->nullable(true);
             $table->string('title');
             $table->timestamp('datetime');
             $table->string('place');

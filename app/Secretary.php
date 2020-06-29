@@ -18,6 +18,6 @@ class Secretary extends Model
 
     public function default_lists()
     {
-        return $this->hasMany('App\DefaultList');
+        return $this->hasMany('App\DefaultList')->orderByDesc('created_at');
     }
 }

@@ -51,6 +51,11 @@ Route::prefix('admin')->group(function () {
 
 Route::prefix('{instance}')->group(function () {
 
+    /**
+     *  GENERAL PURPOSE
+     */
+    Route::get('/gp/users/all', 'GeneralPurposeController@users_all')->name('gp.users.all');
+
     Route::get('/', 'HomeController@index')->name('home');
     Route::get('/login', 'LoginInstanceController@login')->name('instance.login');
     Route::post('/login_p', 'LoginInstanceController@login_p')->name('instance.login_p');
@@ -97,6 +102,10 @@ Route::prefix('{instance}')->group(function () {
      *  MEETINGS
      */
     Route::prefix('secretary')->group(function () {
+
+        /*
+         *  DEFAULT LISTS
+         */
         Route::get('/defaultlist/list/', 'DefaultListSecretaryController@list')->name('secretary.defaultlist.list');
         Route::get('/defaultlist/list/create', 'DefaultListSecretaryController@create')->name('secretary.defaultlist.create');
         Route::post('/defaultlist/list/new', 'DefaultListSecretaryController@new')->name('secretary.defaultlist.new');
@@ -105,6 +114,20 @@ Route::prefix('{instance}')->group(function () {
             Route::get('/defaultlist/edit/{id}', 'DefaultListSecretaryController@edit')->name('secretary.defaultlist.edit');
             Route::post('/defaultlist/save', 'DefaultListSecretaryController@save')->name('secretary.defaultlist.save');
             Route::post('/defaultlist/remove', 'DefaultListSecretaryController@remove')->name('secretary.defaultlist.remove');
+        });
+
+        /*
+         * MEETINGS
+         */
+        Route::get('/meeting/list/', 'MeetingSecretaryController@list')->name('secretary.meeting.list');
+        Route::get('/meeting/create/', 'MeetingSecretaryController@create')->name('secretary.meeting.create');
+        Route::post('/meeting/list/new', 'MeetingSecretaryController@new')->name('secretary.meeting.new');
+        Route::get('/meeting/defaultlist/{id}', 'MeetingSecretaryController@defaultlist')->name('secretary.meeting.defaultlist');
+
+        Route::middleware(['checknotnull:Meeting'])->group(function () {
+            Route::get('/meeting/edit/{id}', 'MeetingSecretaryController@edit')->name('secretary.meeting.edit');
+            Route::post('/meeting/save', 'MeetingSecretaryController@save')->name('secretary.meeting.save');
+            Route::post('/meeting/remove', 'MeetingSecretaryController@remove')->name('secretary.meeting.remove');
         });
 
     });

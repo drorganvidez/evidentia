@@ -40,7 +40,15 @@
                                 <small class="form-text text-muted">Selecciona las alumnas y alumnos que deseas que formen parte de la lista.</small>
                                 <select id="users" name="users[]" class="duallistbox" multiple="multiple @error('users') is-invalid @enderror">
                                     @foreach($users as $user)
-                                        <option {{$user->id == old('user') ? 'selected' : ''}} value="{{$user->id}}">
+                                        <option
+
+                                            @isset($defaultlist)
+                                            @if($defaultlist->users->contains($user))
+                                                selected
+                                            @endif
+                                            @endisset
+
+                                            {{$user->id == old('user') ? 'selected' : ''}} value="{{$user->id}}">
                                             {{$user->surname}}, {{$user->name}}
                                         </option>
                                     @endforeach

@@ -20,7 +20,7 @@ class DefaultListSecretaryController extends Controller
     {
         $instance = \Instantiation::instance();
 
-        $defaultlists = Auth::user()->secretary->default_lists;
+        $defaultlists = Auth::user()->secretary->default_lists()->paginate(5);
 
         return view('defaultlist.list',
             ['instance' => $instance, 'defaultlists' => $defaultlists]);
@@ -43,6 +43,7 @@ class DefaultListSecretaryController extends Controller
 
         $validatedData = $request->validate([
             'name' => 'required|max:255',
+            'users' => 'required|array|min:1',
         ]);
 
         $users_ids = $request->input('users',[]);
