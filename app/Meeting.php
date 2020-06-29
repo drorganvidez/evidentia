@@ -21,4 +21,14 @@ class Meeting extends Model
     {
         return $this->belongsTo('App\Comittee');
     }
+
+    public function meetingRequest()
+    {
+        return $this->belongsTo('App\MeetingRequest');
+    }
+
+    public function meetingMinutes()
+    {
+        return $this->hasMany('App\MeetingMinutes');
+    }
 }

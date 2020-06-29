@@ -79,4 +79,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Meeting');
     }
+
+    public function bonus()
+    {
+        return $this->belongsToMany('App\Bonus');
+    }
+
+    public function avatar()
+    {
+        return $this->hasOne('App\Avatar');
+    }
 }

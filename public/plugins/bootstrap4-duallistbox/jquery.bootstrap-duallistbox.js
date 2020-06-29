@@ -29,8 +29,8 @@
   // Create the defaults once
   var pluginName = 'bootstrapDualListbox',
     defaults = {
-      filterTextClear: 'show all',
-      filterPlaceHolder: 'Filter',
+      filterTextClear: 'mostrar todo',
+      filterPlaceHolder: 'Filtrar',
       moveSelectedLabel: 'Move selected',
       moveAllLabel: 'Move all',
       removeSelectedLabel: 'Remove selected',
@@ -45,9 +45,9 @@
       showFilterInputs: true,                                                             // whether to show filter inputs
       nonSelectedFilter: '',                                                              // string, filter the non selected options
       selectedFilter: '',                                                                 // string, filter the selected options
-      infoText: 'Showing all {0}',                                                        // text when all options are visible / false for no info text
-      infoTextFiltered: '<span class="badge badge-warning">Filtered</span> {0} from {1}', // when not all of the options are visible due to the filter
-      infoTextEmpty: 'Empty list',                                                        // when there are no options present in the list
+      infoText: 'Mostrando todo: {0} resultados',                                                        // text when all options are visible / false for no info text
+      infoTextFiltered: '<span class="badge badge-warning">Filtrado</span> {0} de {1}', // when not all of the options are visible due to the filter
+      infoTextEmpty: 'Lista vacía',                                                        // when there are no options present in the list
       filterOnValues: false,                                                              // filter by selector's values, boolean
       sortByInputOrder: false,
       eventMoveOverride: false,                                                           // boolean, allows user to unbind default event behaviour and run their own instead
@@ -57,8 +57,8 @@
       btnClass: 'btn-outline-secondary',                                                  // sets the button style class for all the buttons
       btnMoveText: '&gt;',                                                                // string, sets the text for the "Move" button
       btnRemoveText: '&lt;',                                                              // string, sets the text for the "Remove" button
-      btnMoveAllText: '&gt;&gt;',                                                         // string, sets the text for the "Move All" button
-      btnRemoveAllText: '&lt;&lt;'                                                        // string, sets the text for the "Remove All" button
+      btnMoveAllText: '<i class="fas fa-arrow-circle-right"></i>',                                                         // string, sets the text for the "Move All" button
+      btnRemoveAllText: '<i class="fas fa-arrow-circle-left"></i>'                                                        // string, sets the text for the "Remove All" button
     },
     // Selections are invisible on android if the containing select is styled with CSS
     // http://code.google.com/p/android/issues/detail?id=16922
@@ -407,7 +407,7 @@
         '   </span>' +
         '   <input class="form-control filter" type="text">' +
         '   <div class="btn-group buttons">' +
-        '     <button type="button" class="btn moveall"></button>' +
+        '     <button type="button" class="btn moveall dddd"></button>' +
         '     <button type="button" class="btn move"></button>' +
         '   </div>' +
         '   <select multiple="multiple"></select>' +

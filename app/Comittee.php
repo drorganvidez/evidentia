@@ -44,11 +44,6 @@ class Comittee extends Model
         return $this->hasMany('App\Secretary');
     }
 
-    public function defaultList()
-    {
-        return $this->hasMany('App\DefaultList');
-    }
-
     public function meetings()
     {
         return $this->hasMany('App\Meeting');

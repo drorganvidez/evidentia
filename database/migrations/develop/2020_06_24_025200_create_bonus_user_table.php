@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDefaultlistTable extends Migration
+class CreateBonusUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateDefaultlistTable extends Migration
      */
     public function up()
     {
-        Schema::create('defaultlist', function (Blueprint $table) {
+        Schema::create('bonus_user', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignId('secretary_id');
+            $table->foreignId('bonus_id');
+            $table->foreignId('user_id');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateDefaultlistTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('defaultlist');
+        Schema::dropIfExists('bonus_user');
     }
 }

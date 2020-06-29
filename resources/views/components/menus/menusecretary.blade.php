@@ -6,7 +6,7 @@
             <li class="nav-header">REUNIONES</li>
             <x-li route="home" icon='far fa-handshake' name="Crear reuniones"/>
             <x-li route="home" icon='fas fa-pen-square' name="Gestionar reuniones"/>
-            <x-li route="home" icon='far fa-list-alt' name="Gestionar listas"/>
+            <x-li route="secretary.defaultlist.list" secondaries="secretary.defaultlist.create,secretary.defaultlist.edit" icon='far fa-list-alt' name="Gestionar listas"/>
 
         </ul>
     </nav>

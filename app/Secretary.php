@@ -15,4 +15,9 @@ class Secretary extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    public function default_lists()
+    {
+        return $this->hasMany('App\DefaultList');
+    }
 }

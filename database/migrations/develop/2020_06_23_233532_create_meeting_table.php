@@ -16,10 +16,12 @@ class CreateMeetingTable extends Migration
         Schema::create('meeting', function (Blueprint $table) {
             $table->id();
             $table->foreignId('comittee_id');
+            $table->foreignId('meetingrequest_id');
             $table->string('title');
-            $table->timestamp('date');
+            $table->timestamp('datetime');
             $table->string('place');
             $table->enum('type',['ORDINARY','EXTRAORDINARY']);
+            $table->integer('hours');
             $table->timestamps();
         });
     }

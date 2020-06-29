@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDefaultlistTable extends Migration
+class CreateAgreementTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateDefaultlistTable extends Migration
      */
     public function up()
     {
-        Schema::create('defaultlist', function (Blueprint $table) {
+        Schema::create('agreement', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignId('secretary_id');
+            $table->foreignId('point_id');
+            $table->string('identificator');
+            $table->text('description');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateDefaultlistTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('defaultlist');
+        Schema::dropIfExists('agreement');
     }
 }

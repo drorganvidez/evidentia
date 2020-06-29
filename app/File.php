@@ -15,7 +15,6 @@ class File extends Model
 
     public function proof()
     {
-        //return $this->belongsTo('App\Proof');
         return $this->hasOne('App\Proof');
     }
 

@@ -93,6 +93,21 @@ Route::prefix('{instance}')->group(function () {
 
     });
 
+    /**
+     *  MEETINGS
+     */
+    Route::prefix('secretary')->group(function () {
+        Route::get('/defaultlist/list/', 'DefaultListSecretaryController@list')->name('secretary.defaultlist.list');
+        Route::get('/defaultlist/list/create', 'DefaultListSecretaryController@create')->name('secretary.defaultlist.create');
+        Route::post('/defaultlist/list/new', 'DefaultListSecretaryController@new')->name('secretary.defaultlist.new');
+
+        Route::middleware(['checknotnull:DefaultList'])->group(function () {
+            Route::get('/defaultlist/edit/{id}', 'DefaultListSecretaryController@edit')->name('secretary.defaultlist.edit');
+            Route::post('/defaultlist/save', 'DefaultListSecretaryController@save')->name('secretary.defaultlist.save');
+            Route::post('/defaultlist/remove', 'DefaultListSecretaryController@remove')->name('secretary.defaultlist.remove');
+        });
+
+    });
 
 
     /**
