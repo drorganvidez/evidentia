@@ -101,6 +101,9 @@ Route::prefix('{instance}')->group(function () {
     /**
      *  MEETINGS
      */
+
+    Route::get('/meeting/list/', 'MeetingController@list')->name('meeting.list');
+
     Route::prefix('secretary')->group(function () {
 
         /*

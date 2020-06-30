@@ -46,6 +46,6 @@ class Comittee extends Model
 
     public function meetings()
     {
-        return $this->hasMany('App\Meeting');
+        return $this->hasMany('App\Meeting')->orderByDesc('datetime');
     }
 }

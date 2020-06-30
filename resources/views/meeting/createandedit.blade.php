@@ -10,6 +10,9 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>
+    @isset($edit)
+        <li class="breadcrumb-item"><a href="{{route('secretary.meeting.list',['instance' => $instance])}}">Gestionar reuniones</a></li>
+    @endisset
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
 
@@ -60,8 +63,8 @@
                                 <label for="time">Hora</label>
                                 <input id="time" type="time"
                                        class="form-control @error('time') is-invalid @enderror" name="time"
-                                       @if(old('date'))
-                                       value="{{old('date')}}"
+                                       @if(old('time'))
+                                       value="{{old('time')}}"
                                        @else
                                        @isset($edit)
                                        value="{{\Carbon\Carbon::parse($meeting->datetime)->format('H:i')}}"
@@ -92,8 +95,8 @@
                                 <select id="type" class="selectpicker form-control @error('type') is-invalid @enderror" name="type" value="{{ old('type') }}" required autofocus>
 
                                     @isset($meeting)
-                                        <option {{$meeting->type  == old('type') || $meeting->type == 'ORDINARY' ? 'selected' : ''}} value="1">ORDINARIA</option>
-                                        <option {{$meeting->type  == old('type') || $meeting->type == 'EXTRAORDINARY' ? 'selected' : ''}} value="2">EXTRAORDINARIA</option>
+                                        <option {{$meeting->type  == old('type') || $meeting->type == '1' ? 'selected' : ''}} value="1">ORDINARIA</option>
+                                        <option {{$meeting->type  == old('type') || $meeting->type == '2' ? 'selected' : ''}} value="2">EXTRAORDINARIA</option>
                                     @else
                                         <option value="1">ORDINARIA</option>
                                         <option value="2">EXTRAORDINARIA</option>
@@ -125,8 +128,6 @@
 
                                 </select>
 
-                                <small class="form-text text-muted">Selecciona una lista por defecto.</small>
-
                                 @error('defaultlist')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -136,7 +137,6 @@
 
                             <div class="form-group col-md-12">
                                 <label>Seleccionar alumnos</label>
-                                <small class="form-text text-muted">Selecciona las alumnas y alumnos que deseas que formen parte de la lista.</small>
                                 <select id="users" name="users[]" class="duallistbox" multiple="multiple @error('users') is-invalid @enderror">
                                     @foreach($users as $user)
                                         <option

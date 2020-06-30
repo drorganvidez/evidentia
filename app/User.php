@@ -72,7 +72,7 @@ class User extends Authenticatable
 
     public function defaultLists()
     {
-        return $this->belongsToMany('App\DefaultList');
+        return $this->hasMany('App\DefaultList');
     }
 
     public function meetings()
@@ -88,5 +88,62 @@ class User extends Authenticatable
     public function avatar()
     {
         return $this->hasOne('App\Avatar');
+    }
+
+    public function evidences_not_draft() {
+        return $this->evidences()->where('status','!=', 'DRAFT')->orderByDesc('updated_at');
+    }
+
+    public function evidences_pending() {
+        return $this->evidences()->where('status','=', 'PENDING')->orderByDesc('updated_at');
+    }
+
+    public function evidences_accepted() {
+        return $this->evidences()->where('status','=', 'ACCEPTED')->orderByDesc('updated_at');
+    }
+
+    public function evidences_rejected() {
+        return $this->evidences()->where('status','=', 'REJECTED')->orderByDesc('updated_at');
+    }
+
+    /*
+     *  MÉTODOS DERIVADOS DE INTERÉS
+     */
+
+     private function collection_hours($collection)
+     {
+         $hours =  $collection->map(function ($item, $key) {
+             return $item->hours;
+         });
+         return $hours->sum();
+     }
+
+    private function collection_count($collection)
+    {
+        return $collection->count();
+    }
+
+    // Todas las evidencias
+
+    public function evidences_hours()
+    {
+        return $this->collection_hours($this->evidences());
+    }
+
+    public function evidences_count()
+    {
+        return $this->collection_count($this->evidences());
+    }
+
+    // Reuniones
+
+    public function meetings_hours()
+    {
+        return $this->collection_hours($this->meetings);
+    }
+
+    public function meetings_count()
+    {
+        return $this->collection_count($this->meetings);
     }
 }

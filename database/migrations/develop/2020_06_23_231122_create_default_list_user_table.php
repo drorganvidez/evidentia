@@ -17,7 +17,7 @@ class CreateDefaultlistUserTable extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('default_list_id')->references('id')
-                                                                ->on('defaultlist')->onDelete('cascade');;
+                                                                ->on('defaultlist')->onDelete('cascade');
             $table->timestamps();
         });
     }
