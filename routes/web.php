@@ -61,6 +61,14 @@ Route::prefix('{instance}')->group(function () {
     Route::post('/login_p', 'LoginInstanceController@login_p')->name('instance.login_p');
 
     /**
+     *  PROFILE
+     */
+    Route::get('/profile', 'ProfileController@view')->name('profile.view');
+    Route::post('/profile/upload/info', 'ProfileController@upload_info')->name('profile.upload.info');
+    Route::post('/profile/upload/biography', 'ProfileController@upload_biography')->name('profile.upload.biography');
+    Route::post('/profile/upload/pass', 'ProfileController@upload_pass')->name('profile.upload.pass');
+
+    /**
      *  MESSAGES
      */
     Route::get('/mailbox', 'MessageController@mailbox')->name('message.mailbox');

@@ -7,9 +7,15 @@ use Illuminate\Support\Facades\Auth;
 
 class MeetingController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('checkroles:SECRETARY');
+    }
+
     public function list()
     {
-
         $instance = \Instantiation::instance();
 
         $meetings = Auth::user()->meetings()->paginate(5);
