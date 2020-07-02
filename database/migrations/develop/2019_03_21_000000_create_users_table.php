@@ -34,6 +34,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->text('biography')->nullable();
+            $table->enum('participation',['ORGANIZATION','INTERMEDIATE','ASSISTANCE']);
             $table->rememberToken();
             $table->timestamps();
         });

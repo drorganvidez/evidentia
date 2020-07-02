@@ -11,7 +11,7 @@ class MeetingController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('checkroles:SECRETARY');
+        $this->middleware('checkroles:PRESIDENT|COORDINATOR|REGISTER_COORDINATOR|SECRETARY|STUDENT');
     }
 
     public function list()

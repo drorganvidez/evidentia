@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Avatar extends Model
 {
+
+    protected $fillable = ["user_id",'file_id'];
+    protected $table = "avatar";
+
     public function user()
     {
         return $this->belongsTo('App\User');
@@ -13,6 +17,6 @@ class Avatar extends Model
 
     public function file()
     {
-        return $this->hasOne('App\File');
+        return $this->belongsTo('App\File');
     }
 }

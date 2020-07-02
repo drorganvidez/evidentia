@@ -13,10 +13,10 @@ class File extends Model
         'name', 'type', 'route', 'size'
     ];
 
-    public function proof()
+    /*public function proof()
     {
         return $this->hasOne('App\Proof');
-    }
+    }*/
 
     public function sizeForHuman()
     {

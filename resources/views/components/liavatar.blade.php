@@ -1,6 +1,6 @@
 <div class="user-panel  d-flex">
     <div class="image">
-        <img src="{{asset('dist/img/user2-160x160.jpg')}}" class="img-circle elevation-2" style="margin-top: 10px"
+        <img width="33" height="33" src="{{Auth::user()->avatar_route()}}" class="img-circle elevation-2" style="margin-top: 10px"
              alt="User Image">
     </div>
     <div class="info">
@@ -12,10 +12,6 @@
 
             <span style="font-size: 14px; display: block; line-height : 15px;">
                 {{Auth::user()->name}}
-            </span>
-
-            <span style="font-size: 12px; display: block; line-height : 20px;">
-                {{Auth::user()->email}}
             </span>
 
         </a>

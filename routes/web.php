@@ -158,4 +158,29 @@ Route::prefix('{instance}')->group(function () {
         Route::get('/file/download/{id}', 'FileController@download')->name('file.download');
     });
 
+    /**
+     *  AVATAR
+     */
+    Route::get('/avatar/{id}', 'AvatarController@avatar')->name('avatar');
+
+    Route::get('storage/{id}', function ($instance,$filename)
+    {
+        $path = storage_path('app/20/avatares/secretario1@secretario1.com/' . $filename);
+
+        if (!File::exists($path)) {
+            abort(404);
+        }
+
+        $file = File::get($path);
+        $type = File::mimeType($path);
+
+        $response = Response::make($file, 200);
+        $response->header("Content-Type", $type);
+
+        // limpiar búfer de salida
+        ob_end_clean();
+
+        return $response;
+    });
+
 });

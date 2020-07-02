@@ -26,7 +26,7 @@ class EvidenceCoordinatorController extends Controller
 
         $coordinator = Auth::user()->coordinator;
         $comittee = $coordinator->comittee;
-        $evidences = $comittee->evidences_not_draft();
+        $evidences = $comittee->evidences_not_draft()->paginate(10);;
 
         return view('evidence.coordinator.list',
             ['instance' => $instance, 'evidences' => $evidences]);

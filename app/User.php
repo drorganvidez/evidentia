@@ -146,4 +146,10 @@ class User extends Authenticatable
     {
         return $this->collection_count($this->meetings);
     }
+
+    public function avatar_route()
+    {
+        $instance = \Instantiation::instance();
+        return route('avatar',['instance' => $instance, 'id' => Auth::id()]);
+    }
 }

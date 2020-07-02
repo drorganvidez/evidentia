@@ -21,13 +21,11 @@
         <div class="col-md-3">
 
 
-
-            <!-- Profile Image -->
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
                     <div class="text-center">
-                        <img class="profile-user-img img-fluid img-circle"
-                             src="{{asset('dist/img/user2-160x160.jpg')}}"
+                        <img width="100" height="100" class="img-bordered img-circle"
+                             src="{{route('avatar',['instance' => $instance, 'id' => Auth::id()])}}"
                              alt="User profile picture">
                     </div>
 
@@ -109,6 +107,27 @@
                         <div class="tab-pane" id="biografia">
                             <form method="POST" enctype="multipart/form-data" action="{{$route_upload_biography}}">
                             @csrf
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="participation">Nivel de participación</label>
+                                        <select id="participation" class="selectpicker form-control @error('participation') is-invalid @enderror" name="participation" value="{{ old('participation') }}" required autofocus>
+
+                                            <option {{old('participation') == 1 || Auth::user()->participation == 'ORGANIZATION' ? 'selected' : 'NO'}} value="1">ORGANIZACIÓN</option>
+                                            <option {{old('participation') == 2 || Auth::user()->participation == 'INTERMEDIATE' ? 'selected' : 'NO'}} value="2">INTERMEDIO</option>
+                                            <option {{old('participation') == 3 || Auth::user()->participation == 'ASSISTANCE' ? 'selected' : 'NO'}} value="3">ASISTENCIA</option>
+
+                                        </select>
+
+                                        <small class="form-text text-muted">Selecciona el nivel de participación en las jornadas InnoSoft Days de este año.</small>
+
+                                        @error('participation')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                </div>
 
                                 <div class="form-row">
 
