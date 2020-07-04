@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'dni','surname','name', 'username','password','email',
     ];
 
     /**
@@ -70,10 +70,10 @@ class User extends Authenticatable
         return $this->hasOne('App\Secretary');
     }
 
-    public function defaultLists()
+    /*public function defaultLists()
     {
         return $this->hasMany('App\DefaultList');
-    }
+    }*/
 
     public function meetings()
     {

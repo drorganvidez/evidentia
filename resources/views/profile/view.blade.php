@@ -24,7 +24,7 @@
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
                     <div class="text-center">
-                        <img width="100" height="100" class="img-bordered img-circle"
+                        <img width="100" height="100" class="img-circle elevation-2"
                              src="{{route('avatar',['instance' => $instance, 'id' => Auth::id()])}}"
                              alt="User profile picture">
                     </div>
@@ -52,7 +52,10 @@
                 <div class="card-header p-2">
                     <ul class="nav nav-pills">
                         <li class="nav-item"><a class="nav-link active" href="#data" data-toggle="tab">Personal</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#biografia" data-toggle="tab">Biografía</a></li>
+                        @if(!Auth::user()->hasRole('LECTURE'))
+                            <li class="nav-item"><a class="nav-link" href="#biografia" data-toggle="tab">Biografía</a></li>
+                        @endif
+
                         <li class="nav-item"><a class="nav-link" href="#pass" data-toggle="tab">Contraseña</a></li>
                     </ul>
                 </div>
@@ -69,7 +72,9 @@
 
                                         <div class="form-row">
 
-                                            <x-input col="12" attr="username" :value="Auth::user()->username" disabled="true" :edit="true" label="Nombre de usuario"/>
+                                            <x-input col="6" attr="username" :value="Auth::user()->username" disabled="true" :edit="true" label="Nombre de usuario" description="El nombre de usuario no puede ser editado."/>
+
+                                            <x-input col="6" attr="dni" :value="Auth::user()->dni" disabled="true" :edit="true" label="DNI" description="El DNI no puede ser editado."/>
 
                                             <x-input col="6" attr="name" :value="Auth::user()->name" label="Nombre"/>
 
@@ -104,6 +109,7 @@
                             </form>
                         </div>
 
+                        @if(!Auth::user()->hasRole('LECTURE'))
                         <div class="tab-pane" id="biografia">
                             <form method="POST" enctype="multipart/form-data" action="{{$route_upload_biography}}">
                             @csrf
@@ -146,7 +152,7 @@
 
                             </form>
                         </div>
-
+                        @endif
                         <div class="tab-pane" id="pass">
                             <form method="POST" enctype="multipart/form-data" action="{{$route_upload_pass}}">
                                 @csrf
