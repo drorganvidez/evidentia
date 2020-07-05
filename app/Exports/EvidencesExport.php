@@ -10,14 +10,16 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 class EvidencesExport implements FromCollection, WithHeadings, ShouldAutoSize
 {
 
-    private $evidences_select = null;
-    private $meetings_select = null;
-    private $events_select = null;
+    public $evidences_select = null;
+    public $meetings_select = null;
+    public $events_select = null;
+    public $bonus = null;
 
-    public function __construct($evidences_select,$meetings_select,$events_select){
+    public function __construct($evidences_select,$meetings_select,$events_select,$bonus){
         $this->evidences_select = $evidences_select;
         $this->meetings_select = $meetings_select;
         $this->events_select = $events_select;
+        $this->bonus = $bonus;
     }
 
     /**
@@ -25,6 +27,7 @@ class EvidencesExport implements FromCollection, WithHeadings, ShouldAutoSize
     */
     public function collection()
     {
+        $instance = \Instantiation::instance();
         $users = User::all();
         $res = collect();
         foreach($users as $user){
@@ -32,23 +35,55 @@ class EvidencesExport implements FromCollection, WithHeadings, ShouldAutoSize
             // los profesores no se incluyen
             if(!$user->hasRole('LECTURE')) {
 
-                $res->push(
-                    (object)[
-                        'dni' => $user->dni,
-                        'apellidos' => $user->surname,
-                        'nombre' => $user->name,
-                        'uvus' => $user->username,
-                        'correo' => $user->email,
-                        'participacion' => $user->participation,
-                        'eventos_asistidos' => $user->events_count(),
-                        'horas_asistencia' => $user->events_hours(),
-                        'reuniones_asistidas' => $user->meetings_count(),
-                        'horas_reuniones' => $user->meetings_hours(),
-                        'bono_horas' => $user->bonus_hours(),
-                        'evidencias_aceptadas' => $user->evidences_accepted_count(),
-                        'horas_evidencias' => $user->evidences_accepted_hours(),
-                        'horas_totales_' => 0
-                    ]);
+                $array = [
+                    'dni' => $user->dni,
+                    'apellidos' => $user->surname,
+                    'nombre' => $user->name,
+                    'uvus' => $user->username,
+                    'correo' => $user->email,
+                    'perfil' => route('profiles.view',['instance' => $instance, 'id' => $user->id]),
+                    'participacion' => $user->participation,
+                    'eventos_asistidos' => $user->events_count(),
+                    'horas_asistencia' => $user->events_hours(),
+                    'reuniones_asistidas' => $user->meetings_count(),
+                    'horas_reuniones' => $user->meetings_hours(),
+                    'bono_horas' => $user->bonus_hours(),
+                    'evidencias_aceptadas' => $user->evidences_accepted_count(),
+                    'horas_evidencias' => $user->evidences_accepted_hours(),
+                    'horas_totales' => 0
+                ];
+
+                // se descartan las columnas no seleccionadas
+                if($this->events_select != 'on') {
+                    unset($array['eventos_asistidos']);
+                    unset($array['horas_asistencia']);
+                }
+
+                if($this->meetings_select != 'on') {
+                    unset($array['reuniones_asistidas']);
+                    unset($array['horas_reuniones']);
+                }
+
+                if($this->evidences_select != 'on') {
+                    unset($array['evidencias_aceptadas']);
+                    unset($array['horas_evidencias']);
+                }
+
+                if($this->bonus != 'on'){
+                    unset($array['bono_horas']);
+                }
+
+                // horas en total
+                $horas_totales = 0;
+                if($this->events_select == 'on') $horas_totales+=$user->events_hours();
+                if($this->meetings_select == 'on') $horas_totales+=$user->meetings_hours();
+                if($this->evidences_select == 'on') $horas_totales+=$user->evidences_accepted_hours();
+                if($this->bonus == 'on') $horas_totales+=$user->bonus_hours();
+
+                $array['horas_totales'] = $horas_totales;
+
+                $object = (object) $array;
+                $res->push($object);
 
             }
 
@@ -60,12 +95,14 @@ class EvidencesExport implements FromCollection, WithHeadings, ShouldAutoSize
 
     public function headings(): array
     {
-        return [
+        $events_select = $this->events_select;
+        $cabeceras =  [
             'D.N.I.',
             'Apellidos',
             'Nombre',
             'Uvus',
             'Correo',
+            'Perfil',
             'Participación',
             'Eventos asistidos',
             'Horas de asistencia',
@@ -76,5 +113,42 @@ class EvidencesExport implements FromCollection, WithHeadings, ShouldAutoSize
             'Horas de evidencias',
             'Horas en total'
         ];
+
+        // se descartan las columnas no seleccionadas
+        if($this->events_select != 'on') {
+            if (($key = array_search('Eventos asistidos', $cabeceras)) !== false) {
+                unset($cabeceras[$key]);
+            }
+            if (($key = array_search('Horas de asistencia', $cabeceras)) !== false) {
+                unset($cabeceras[$key]);
+            }
+        }
+
+        if($this->meetings_select != 'on') {
+            if (($key = array_search('Reuniones asistidas', $cabeceras)) !== false) {
+                unset($cabeceras[$key]);
+            }
+            if (($key = array_search('Horas de reuniones', $cabeceras)) !== false) {
+                unset($cabeceras[$key]);
+            }
+        }
+
+        if($this->evidences_select != 'on') {
+            if (($key = array_search('Evidencias registradas', $cabeceras)) !== false) {
+                unset($cabeceras[$key]);
+            }
+            if (($key = array_search('Horas de evidencias', $cabeceras)) !== false) {
+                unset($cabeceras[$key]);
+            }
+        }
+
+        if($this->bonus != 'on'){
+            if (($key = array_search('Bono de horas', $cabeceras)) !== false) {
+                unset($cabeceras[$key]);
+            }
+        }
+
+
+        return $cabeceras;
     }
 }

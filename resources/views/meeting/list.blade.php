@@ -25,10 +25,8 @@
             <div class="card">
 
 
-                <div class="card-body table-responsive p-0">
-
-                    <div class="table-responsive">
-                        <table class="table table-hover text-nowrap m-0">
+                <div class="card-body">
+                    <table id="dataset" class="table table-bordered table-striped">
                             <thead>
                             <tr>
                                 <th scope="col">Reunión</th>
@@ -64,12 +62,10 @@
 
                 </div>
 
-            </div>
-
-            {{ $meetings->links() }}
-
-
         </div>
+
+
     </div>
+
 
 @endsection

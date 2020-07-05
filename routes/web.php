@@ -172,5 +172,10 @@ Route::prefix('{instance}')->group(function () {
     Route::get('/lecture/export','ImportExportController@export')->name('lecture.export');
     Route::post('/lecture/export/save','ImportExportController@export_save')->name('lecture.export.save');
 
+    /**
+     *  PROFILES
+     */
+    Route::get('/profiles/view/{id}','ProfileController@profiles_view')->name('profiles.view');
+
 
 });

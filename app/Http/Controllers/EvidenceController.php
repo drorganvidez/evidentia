@@ -36,7 +36,7 @@ class EvidenceController extends Controller
 
     public function list()
     {
-        $evidences = Evidence::where(['user_id' => Auth::id(),'last' => true])->orderBy('created_at', 'desc')->paginate(5);
+        $evidences = Evidence::where(['user_id' => Auth::id(),'last' => true])->orderBy('created_at', 'desc')->get();
         $instance = \Instantiation::instance();
 
         return view('evidence.list',

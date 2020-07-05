@@ -11,23 +11,6 @@
 
 @section('content')
 
-    <form method="GET" action="{{route('coordinator.evidence.list.search',$instance)}}">
-    <div class="row mb-2">
-
-
-            <div class="form-group col-md-6 col-sm-6">
-
-                <input name="s" type="text" class="form-control" placeholder="Buscar evidencia por título, alumna/o, horas..." name="title" value=""
-                       autocomplete="title" autofocus>
-            </div>
-            <div class="col-md-2 col-sm-6">
-                <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-search"></i> &nbsp;Buscar</button>
-            </div>
-
-
-    </div>
-    </form>
-
     <x-evidencelistcoordinator />
 
     <div class="row">
@@ -37,8 +20,8 @@
 
             <div class="card">
 
-                <div class="card-body table-responsive p-0">
-                    <table class="table table-hover text-nowrap ">
+                <div class="card-body">
+                    <table id="dataset" class="table table-bordered table-striped">
                         <thead>
                         <tr>
                             <th>Título</th>
@@ -51,7 +34,7 @@
                         </thead>
                         <tbody>
 
-                        @forelse($evidences as $evidence)
+                        @foreach($evidences as $evidence)
                             <tr>
                                 <td>
                                     <a href="{{route('coordinator.evidence.view',
@@ -71,11 +54,7 @@
                                 </td>
 
                             </tr>
-                        @empty
-                            <tr>
-                                <td>Sin evidencias
-                            </tr>
-                        @endforelse
+                        @endforeach
 
                         </tbody>
                     </table>

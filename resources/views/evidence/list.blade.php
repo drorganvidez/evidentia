@@ -18,8 +18,8 @@
 
             <div class="card">
 
-                <div class="card-body table-responsive p-0">
-                    <table class="table table-hover text-nowrap ">
+                <div class="card-body">
+                    <table id="dataset" class="table table-bordered table-striped">
                         <thead>
                         <tr>
                             <th>Título</th>
@@ -32,7 +32,7 @@
                         </thead>
                         <tbody>
 
-                        @forelse($evidences as $evidence)
+                        @foreach($evidences as $evidence)
                             <tr>
                                 <td><a  href="{{route('evidence.view',['instance' => $instance, 'id' => $evidence->id])}}">{{$evidence->title}}</a></td>
                                 <td>{{$evidence->hours}}</td>
@@ -49,11 +49,7 @@
                                 </td>
 
                             </tr>
-                        @empty
-                            <tr>
-                                <td>Sin evidencias
-                            </tr>
-                        @endforelse
+                        @endforeach
 
                         </tbody>
                     </table>
@@ -61,8 +57,6 @@
                 </div>
 
             </div>
-
-            {{ $evidences->links() }}
 
         </div>
     </div>

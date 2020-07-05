@@ -20,7 +20,7 @@ class MeetingSecretaryController extends Controller
     {
         $instance = \Instantiation::instance();
 
-        $meetings = Auth::user()->secretary->comittee->meetings()->paginate(5);
+        $meetings = Auth::user()->secretary->comittee->meetings()->get();
 
         return view('meeting.list',
             ['instance' => $instance, 'meetings' => $meetings]);

@@ -20,7 +20,7 @@ class DefaultListSecretaryController extends Controller
     {
         $instance = \Instantiation::instance();
 
-        $defaultlists = Auth::user()->secretary->default_lists()->paginate(5);
+        $defaultlists = Auth::user()->secretary->default_lists()->get();
 
         return view('defaultlist.list',
             ['instance' => $instance, 'defaultlists' => $defaultlists]);

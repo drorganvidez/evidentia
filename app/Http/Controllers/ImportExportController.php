@@ -85,11 +85,12 @@ class ImportExportController extends Controller
         $evidences_select = $request->input('evidences');
         $meetings_select = $request->input('meetings');
         $events_select = $request->input('events');
+        $bonus = $request->input('bonus');
 
         try{
             // limpiar búfer de salida
             ob_end_clean();
-            return Excel::download(new EvidencesExport($evidences_select,$meetings_select,$events_select), 'evidencias' . Carbon::now() . '.xlsx');
+            return Excel::download(new EvidencesExport($evidences_select,$meetings_select,$events_select,$bonus), 'evidencias' . Carbon::now() . '.xlsx');
         }catch(\Exception $e){
             return redirect()->route('lecture.export',$instance)->with('error', 'Ocurrió un error: ' . $e->getMessage());
         }

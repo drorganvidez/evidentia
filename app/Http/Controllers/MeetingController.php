@@ -18,7 +18,7 @@ class MeetingController extends Controller
     {
         $instance = \Instantiation::instance();
 
-        $meetings = Auth::user()->meetings()->paginate(5);
+        $meetings = Auth::user()->meetings()->get();
 
         return view('meeting.mylist',
             ['instance' => $instance, 'meetings' => $meetings]);

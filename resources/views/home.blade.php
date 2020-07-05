@@ -6,15 +6,28 @@
 @section('content')
 
     <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
+        <div class="col-lg-6 col-sm-12">
 
-                <div class="card-body">
+            <div class="row">
+
+                <div class="col-lg-6">
+
+                    <x-infomeetingcount :user="Auth::user()" />
+
 
                 </div>
+
+                <div class="col-lg-6">
+
+                    <x-infomeetinghours :user="Auth::user()" />
+
+                </div>
+
             </div>
 
         </div>
+
+
     </div>
 
 

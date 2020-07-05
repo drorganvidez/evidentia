@@ -39,7 +39,7 @@
                                         alumno y alumna.</p>
                                     </div>
 
-                                    <form method="POST" enctype="multipart/form-data" action="{{$route}}">
+                                    <form method="POST" action="{{$route}}">
 
                                         @csrf
 
@@ -47,7 +47,7 @@
 
                                             <div class="row">
                                                 <div class="col-sm-6">
-                                                    <!-- checkbox -->
+                                                    <div class="form-group">Elige qué quieres incluir en el Excel:</div>
                                                     <div class="form-group">
 
                                                         <div class="form-check">
@@ -56,13 +56,18 @@
                                                         </div>
 
                                                         <div class="form-check">
-                                                            <input class="form-check-input" name="meetings" type="checkbox">
+                                                            <input class="form-check-input" name="meetings" type="checkbox"  checked="">
                                                             <label class="form-check-label">Reuniones</label>
                                                         </div>
 
                                                         <div class="form-check">
-                                                            <input class="form-check-input" name="events" type="checkbox">
+                                                            <input class="form-check-input" name="events" type="checkbox"  checked="">
                                                             <label class="form-check-label">Eventos</label>
+                                                        </div>
+
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" name="bonus" type="checkbox"  checked="">
+                                                            <label class="form-check-label">Bono de horas</label>
                                                         </div>
 
                                                     </div>
