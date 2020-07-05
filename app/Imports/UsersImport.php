@@ -23,7 +23,7 @@ class UsersImport implements ToModel, WithHeadingRow
             'surname' => explode(',',$row['apellidos_nombre'])[0],
             'name' => explode(',',$row['apellidos_nombre'])[1],
             'username' => $row['uvus'],
-            'password' => Hash::make($row['uvus']),
+            'password' => Hash::make($row['dni']),
             'email' => $row['correo'],
         ]);
     }

@@ -91,19 +91,19 @@ class User extends Authenticatable
     }
 
     public function evidences_not_draft() {
-        return $this->evidences()->where('status','!=', 'DRAFT')->orderByDesc('updated_at');
+        return $this->evidences->where('status','!=', 'DRAFT');
     }
 
     public function evidences_pending() {
-        return $this->evidences()->where('status','=', 'PENDING')->orderByDesc('updated_at');
+        return $this->evidences->where('status','=', 'PENDING');
     }
 
     public function evidences_accepted() {
-        return $this->evidences()->where('status','=', 'ACCEPTED')->orderByDesc('updated_at');
+        return $this->evidences->where('status','=', 'ACCEPTED');
     }
 
     public function evidences_rejected() {
-        return $this->evidences()->where('status','=', 'REJECTED')->orderByDesc('updated_at');
+        return $this->evidences->where('status','=', 'REJECTED');
     }
 
     /*
@@ -135,6 +135,18 @@ class User extends Authenticatable
         return $this->collection_count($this->evidences());
     }
 
+    // Evidencias aceptadas
+
+    public function evidences_accepted_hours()
+    {
+        return $this->collection_hours($this->evidences_accepted());
+    }
+
+    public function evidences_accepted_count()
+    {
+        return $this->collection_count($this->evidences_accepted());
+    }
+
     // Reuniones
 
     public function meetings_hours()
@@ -145,6 +157,23 @@ class User extends Authenticatable
     public function meetings_count()
     {
         return $this->collection_count($this->meetings);
+    }
+
+    // Eventos
+    public function events_hours()
+    {
+        return 0;
+    }
+
+    public function events_count()
+    {
+        return 0;
+    }
+
+    // Bonos
+    public function bonus_hours()
+    {
+        return 0;
     }
 
     public function avatar_route()

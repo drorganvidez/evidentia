@@ -1,0 +1,100 @@
+@extends('layouts.app')
+
+@section('title', 'Exportaciones')
+@section('title-icon', 'nav-icon fas fa-file-export')
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>
+    <li class="breadcrumb-item active">@yield('title')</li>
+@endsection
+
+@section('content')
+
+    <div class="row">
+
+        <div class="col-lg-12">
+            <x-status/>
+        </div>
+
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header p-2">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item"><a class="nav-link active" href="#evidences" data-toggle="tab">Exportar evidencias</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#instances" data-toggle="tab">Exportar instancias</a></li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content">
+
+                        <div class="active tab-pane" id="evidences">
+
+                            <div class="row">
+                                <div class="col-lg-6">
+
+                                    <div class="callout callout-info">
+                                        <h5>¡Fácil y rápido!</h5>
+
+                                        <p>Puedes exportar un XLS con las evidencias, reuniones y asistencias de cada
+                                        alumno y alumna.</p>
+                                    </div>
+
+                                    <form method="POST" enctype="multipart/form-data" action="{{$route}}">
+
+                                        @csrf
+
+                                        <div class="col-lg-12">
+
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <!-- checkbox -->
+                                                    <div class="form-group">
+
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" name="evidences" type="checkbox" checked="">
+                                                            <label class="form-check-label">Evidencias</label>
+                                                        </div>
+
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" name="meetings" type="checkbox">
+                                                            <label class="form-check-label">Reuniones</label>
+                                                        </div>
+
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" name="events" type="checkbox">
+                                                            <label class="form-check-label">Eventos</label>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-row">
+
+                                                <div class="col-lg-6 mt-1">
+                                                    <button type="submit"  class="btn btn-primary btn-block">Exportar evidencias</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </form>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="instances">
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+@endsection

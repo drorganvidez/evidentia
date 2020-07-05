@@ -166,8 +166,11 @@ Route::prefix('{instance}')->group(function () {
     /**
      *  LECTURE
      */
+    Route::get('/lecture/user/list','UserManagerController@user_list')->name('lecture.user.list');
     Route::get('/lecture/import','ImportExportController@import')->name('lecture.import');
     Route::post('/lecture/import/save','ImportExportController@import_save')->name('lecture.import.save');
+    Route::get('/lecture/export','ImportExportController@export')->name('lecture.export');
+    Route::post('/lecture/export/save','ImportExportController@export_save')->name('lecture.export.save');
 
 
 });

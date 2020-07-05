@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\EvidencesExport;
 use App\Role;
 use App\User;
 use Illuminate\Http\Request;
 use App\Imports\UsersImport;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Mockery\Exception;
@@ -46,7 +48,7 @@ class ImportExportController extends Controller
             // seteamos todos los usuarios como ESTUDIANTE por defecto
             $this->set_student_rol();
 
-            return "ha funcionao?";
+            return redirect()->route('lecture.user.list',$instance)->with('success', 'Alumnos importados con éxito');
         }catch (\Exception $e){
             // borramos cualquier archivo subido
             Storage::delete($path);
@@ -66,6 +68,32 @@ class ImportExportController extends Controller
                 $user->roles()->attach($student_role);
             }
         }
+    }
+
+    public function export()
+    {
+        $instance = \Instantiation::instance();
+        $route = route('lecture.export.save',$instance);
+
+        return view('importexport.export',
+            ['instance' => $instance, 'route' => $route]);
+    }
+
+    public function export_save(Request $request)
+    {
+        $instance = \Instantiation::instance();
+        $evidences_select = $request->input('evidences');
+        $meetings_select = $request->input('meetings');
+        $events_select = $request->input('events');
+
+        try{
+            // limpiar búfer de salida
+            ob_end_clean();
+            return Excel::download(new EvidencesExport($evidences_select,$meetings_select,$events_select), 'evidencias' . Carbon::now() . '.xlsx');
+        }catch(\Exception $e){
+            return redirect()->route('lecture.export',$instance)->with('error', 'Ocurrió un error: ' . $e->getMessage());
+        }
+
     }
 
 }
