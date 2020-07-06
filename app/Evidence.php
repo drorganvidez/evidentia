@@ -118,4 +118,9 @@ class Evidence extends Model
         }
     }
 
+    public function evidences_accepted()
+    {
+        return Evidence::where('status','=','ACCEPTED')->get();
+    }
+
 }

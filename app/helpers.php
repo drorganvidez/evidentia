@@ -89,17 +89,44 @@ class Stamp
         return $file;
     }
 
+    public static function get_stamp_file($file)
+    {
+        $salt =  \Config::secret();
+        $hash_file = hash_file('sha256', storage_path('/app/'.$file->route));
+        return hash('sha256',
+            $file->name.
+            $file->size.
+            $file->type.
+            $file->route.
+            $file->created_at.
+            $file->upload_at.
+            $hash_file.
+            $salt);
+    }
+
     public static function compute_evidence($evidence)
     {
         $salt =  \Config::secret();
         $evidence->stamp = hash('sha256',
-                $evidence->name.
+                $evidence->title.
                     $evidence->description.
                     $evidence->hours.
                     $evidence->created_at.
                     $evidence->upload_at.
                     $salt);
         return $evidence;
+    }
+
+    public static function get_stamp_evidence($evidence)
+    {
+        $salt =  \Config::secret();
+        return hash('sha256',
+            $evidence->title.
+            $evidence->description.
+            $evidence->hours.
+            $evidence->created_at.
+            $evidence->upload_at.
+            $salt);
     }
 }
 
