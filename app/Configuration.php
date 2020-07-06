@@ -7,4 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Configuration extends Model
 {
     protected $table = "configuration";
+
+    protected $fillable = ["upload_evidences_timestamp", "validate_evidences_timestamp", "meetings_timestamp", "bonus_timestamp"];
 }

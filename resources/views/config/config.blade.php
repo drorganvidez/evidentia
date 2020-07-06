@@ -1,0 +1,116 @@
+@extends('layouts.app')
+
+@section('title', 'Configurar curso')
+
+@section('title-icon', 'nav-icon fas fa-cogs')
+
+@section('breadcrumb')
+    <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>
+    <li class="breadcrumb-item active">@yield('title')</li>
+@endsection
+
+@section('content')
+
+    <div class="row">
+
+        <div class="col-lg-12">
+            <x-status/>
+        </div>
+
+        <div class="col-md-12">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <form method="POST" action="{{$route}}">
+                    @csrf
+
+                        <div class="row">
+
+                            <div class="col-lg-6">
+                                <div class="callout">
+                                    <h5>Subida de nuevas evidencias</h5>
+
+                                    <p>Establece una fecha máximo de tope de subidas de nuevas evidencias de tus alumnos.</p>
+
+                                    <div class="form-row">
+
+                                        <x-input col="6" attr="upload_evidences_date" type="date" :value="\Carbon\Carbon::parse($configuration->upload_evidences_timestamp)->format('Y-m-d') ?? ''" label="Día" description="Indica el día límite."/>
+
+                                        <x-input col="6" attr="upload_evidences_time" type="time" :value="\Carbon\Carbon::parse($configuration->upload_evidences_timestamp)->format('H:i') ?? ''" label="Hora" description="Indica la hora límite."/>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="callout">
+                                    <h5>Validación de evidencias</h5>
+
+                                    <p>Establece una fecha máximo de tope de validación de evidencias por parte de los coordinadores de
+                                        cada comité.</p>
+
+                                    <div class="form-row">
+
+                                        <x-input col="6" attr="validate_evidences_date" type="date" :value="\Carbon\Carbon::parse($configuration->validate_evidences_timestamp)->format('Y-m-d') ?? ''" label="Día" description="Indica el día límite."/>
+
+                                        <x-input col="6" attr="validate_evidences_time" type="time" :value="\Carbon\Carbon::parse($configuration->validate_evidences_timestamp)->format('H:i') ?? ''" label="Hora" description="Indica la hora límite."/>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="callout">
+                                    <h5>Registro de reuniones</h5>
+
+                                    <p>Establece una fecha máximo de tope de registro de reuniones por parte de los secretarios de
+                                        cada comité.</p>
+
+                                    <div class="form-row">
+
+                                        <x-input col="6" attr="meetings_date" type="date" :value="\Carbon\Carbon::parse($configuration->meetings_timestamp)->format('Y-m-d') ?? ''" label="Día" description="Indica el día límite."/>
+
+                                        <x-input col="6" attr="meetings_time" type="time" :value="\Carbon\Carbon::parse($configuration->meetings_timestamp)->format('H:i') ?? ''" label="Hora" description="Indica la hora límite."/>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="callout">
+                                    <h5>Registro de bonos</h5>
+
+                                    <p>Establece una fecha máximo de tope de registro de bonos de horas por parte de los secretarios de
+                                        cada comité.</p>
+
+                                    <div class="form-row">
+
+                                        <x-input col="6" attr="bonus_date" type="date" :value="\Carbon\Carbon::parse($configuration->bonus_timestamp)->format('Y-m-d') ?? ''" label="Día" description="Indica el día límite."/>
+
+                                        <x-input col="6" attr="bonus_time" type="time" :value="\Carbon\Carbon::parse($configuration->bonus_timestamp)->format('H:i') ?? ''" label="Hora" description="Indica la hora límite."/>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-row">
+                            <div class="col-lg-3 mt-1">
+                                <button type="submit"  class="btn btn-primary btn-block">Guardar configuración</button>
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+@endsection

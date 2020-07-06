@@ -168,54 +168,26 @@ class Config
         return self::config_entity()->max_assist_number;
     }
 
-    public static function lower_upload_evidences_timestamp()
+    // configuración de fechas límite
+
+    public static function upload_evidences_timestamp()
     {
-        return self::config_entity()->lower_upload_evidences_timestamp;
+        return self::config_entity()->upload_evidences_timestamp;
     }
 
-    public static function upper_upload_evidences_timestamp()
+    public static function validate_evidences_timestamp()
     {
-        return self::config_entity()->upper_upload_evidences_timestamp;
+        return self::config_entity()->validate_evidences_timestamp;
     }
 
-    public static function lower_validate_evidences_timestamp()
+    public static function meetings_timestamp()
     {
-        return self::config_entity()->lower_validate_evidences_timestamp;
+        return self::config_entity()->meetings_timestamp;
     }
 
-    public static function upper_validate_evidences_timestamp()
+    public static function bonus_timestamp()
     {
-        return self::config_entity()->upper_validate_evidences_timestamp;
-    }
-
-    public static function lower_register_meeting_timestamp()
-    {
-        return self::config_entity()->lower_register_meeting_timestamp;
-    }
-
-    public static function upper_register_meeting_timestamp()
-    {
-        return self::config_entity()->upper_register_meeting_timestamp;
-    }
-
-    public static function lower_allegations_timestamp()
-    {
-        return self::config_entity()->lower_allegations_timestamp;
-    }
-
-    public static function upper_allegations_timestamp()
-    {
-        return self::config_entity()->upper_allegations_timestamp;
-    }
-
-    public static function lower_register_bonus_timestamp()
-    {
-        return self::config_entity()->lower_register_bonus_timestamp;
-    }
-
-    public static function upper_register_bonus_timestamp()
-    {
-        return self::config_entity()->upper_register_bonus_timestamp;
+        return self::config_entity()->bonus_timestamp;
     }
 
     public static function secret()

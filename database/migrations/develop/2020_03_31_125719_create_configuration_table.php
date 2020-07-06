@@ -26,20 +26,10 @@ class CreateConfigurationTable extends Migration
             $table->integer('max_assist_number')->default(-1);
 
             // límites de fechas
-            $table->timestamp('lower_upload_evidences_timestamp', 0)->nullable();
-            $table->timestamp('upper_upload_evidences_timestamp', 0)->nullable();
-
-            $table->timestamp('lower_validate_evidences_timestamp', 0)->nullable();
-            $table->timestamp('upper_validate_evidences_timestamp', 0)->nullable();
-
-            $table->timestamp('lower_register_meeting_timestamp', 0)->nullable();
-            $table->timestamp('upper_register_meeting_timestamp', 0)->nullable();
-
-            $table->timestamp('lower_allegations_timestamp', 0)->nullable();
-            $table->timestamp('upper_allegations_timestamp', 0)->nullable();
-
-            $table->timestamp('lower_register_bonus_timestamp', 0)->nullable();
-            $table->timestamp('upper_register_bonus_timestamp', 0)->nullable();
+            $table->timestamp('upload_evidences_timestamp', 0)->nullable();
+            $table->timestamp('validate_evidences_timestamp', 0)->nullable();
+            $table->timestamp('meetings_timestamp', 0)->nullable();
+            $table->timestamp('bonus_timestamp', 0)->nullable();
 
             // otros
             $table->string('secret')->default(Str::random(10));
