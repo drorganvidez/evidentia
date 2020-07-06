@@ -92,7 +92,6 @@ Route::prefix('{instance}')->group(function () {
 
     // EVIDENCES MANAGEMENT BY A COORDINATOR
     Route::prefix('coordinator')->group(function () {
-        Route::get('/evidence/list/search', 'SearchController@coordinator_search_evidences')->name('coordinator.evidence.list.search');
         Route::get('/evidence/list/all', 'EvidenceCoordinatorController@all')->name('coordinator.evidence.list.all');
         Route::get('/evidence/list/pending', 'EvidenceCoordinatorController@pending')->name('coordinator.evidence.list.pending');
         Route::get('/evidence/list/accepted', 'EvidenceCoordinatorController@accepted')->name('coordinator.evidence.list.accepted');
@@ -164,9 +163,18 @@ Route::prefix('{instance}')->group(function () {
     Route::get('/avatar/{id}', 'AvatarController@avatar')->name('avatar');
 
     /**
+     *  PRESIDENT
+     */
+    Route::get('/president/user/list','ManagementController@user_list')->name('president.user.list');
+    Route::get('/president/evidence/list','ManagementController@evidence_list')->name('president.evidence.list');
+    Route::get('/president/meeting/list','ManagementController@meeting_list')->name('president.meeting.list');
+
+    /**
      *  LECTURE
      */
-    Route::get('/lecture/user/list','UserManagerController@user_list')->name('lecture.user.list');
+    Route::get('/lecture/user/list','ManagementController@user_list')->name('lecture.user.list');
+    Route::get('/lecture/evidence/list','ManagementController@evidence_list')->name('lecture.evidence.list');
+    Route::get('/lecture/meeting/list','ManagementController@meeting_list')->name('lecture.meeting.list');
 
     Route::get('/lecture/config','ConfigController@config')->name('lecture.config');
     Route::post('/lecture/config/save','ConfigController@config_save')->name('lecture.config.save');
@@ -183,6 +191,7 @@ Route::prefix('{instance}')->group(function () {
      *  PROFILES
      */
     Route::get('/profiles/view/{id}','ProfileController@profiles_view')->name('profiles.view');
+    Route::get('/profiles/view/{id_user}/evidence/{id_evidence}','ProfileController@evidences_view')->name('profiles.view.evidence');
 
 
 });

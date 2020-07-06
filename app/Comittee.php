@@ -22,6 +22,10 @@ class Comittee extends Model
         return $this->evidences()->where('status','!=', 'DRAFT')->orderByDesc('updated_at');
     }
 
+    public function evidences_draft() {
+        return $this->evidences()->where('status','=', 'DRAFT')->orderByDesc('updated_at');
+    }
+
     public function evidences_pending() {
         return $this->evidences()->where('status','=', 'PENDING')->orderByDesc('updated_at');
     }

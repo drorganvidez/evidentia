@@ -118,9 +118,13 @@ class Evidence extends Model
         }
     }
 
-    public function evidences_accepted()
+    public static function evidences_accepted()
     {
         return Evidence::where('status','=','ACCEPTED')->get();
+    }
+
+    public static function evidences_not_draft() {
+        return Evidence::where('status','!=', 'DRAFT')->orderByDesc('updated_at')->get();
     }
 
 }

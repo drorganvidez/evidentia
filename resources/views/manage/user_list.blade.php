@@ -22,20 +22,20 @@
                     <table id="dataset" class="table table-bordered table-striped">
                         <thead>
                         <tr>
+                            <th>DNI</th>
                             <th>Apellidos</th>
                             <th>Nombre</th>
                             <th>UVUS</th>
-                            <th>DNI</th>
                         </tr>
                         </thead>
                         <tbody>
 
                         @forelse($users as $user)
                             <tr>
-                                <td>{{$user->surname}}</td>
-                                <td>{{$user->name}}</td>
-                                <td>{{$user->username}}</td>
                                 <td>{{$user->dni}}</td>
+                                <td><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $user->id])}}">{{$user->surname}}</a></td>
+                                <td><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $user->id])}}">{{$user->name}}</a></td>
+                                <td>{{$user->username}}</td>
                             </tr>
                         @empty
                             <tr>
