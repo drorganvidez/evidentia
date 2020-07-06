@@ -118,13 +118,24 @@ class Evidence extends Model
         }
     }
 
-    public static function evidences_accepted()
-    {
-        return Evidence::where('status','=','ACCEPTED')->get();
-    }
-
     public static function evidences_not_draft() {
         return Evidence::where('status','!=', 'DRAFT')->orderByDesc('updated_at')->get();
+    }
+
+    public static function evidences_draft() {
+        return Evidence::where('status','=', 'DRAFT')->where('points_to','=',null)->orderByDesc('updated_at')->get();
+    }
+
+    public static function evidences_pending() {
+        return Evidence::where('status','=', 'PENDING')->orderByDesc('updated_at')->get();
+    }
+
+    public static function evidences_accepted() {
+        return Evidence::where('status','=', 'ACCEPTED')->orderByDesc('updated_at')->get();
+    }
+
+    public static function evidences_rejected() {
+        return Evidence::where('status','=', 'ACCEPTED')->orderByDesc('updated_at')->get();
     }
 
 }
