@@ -68,7 +68,7 @@ class Instantiation
 }
 
 /*
- *  SELLO DE UN ARCHIVO
+ *  SELLO DE UN ARCHIVO Y DE UNA EVIDENCIA
  */
 
 class Stamp

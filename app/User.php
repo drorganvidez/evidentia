@@ -90,6 +90,10 @@ class User extends Authenticatable
         return $this->hasOne('App\Avatar');
     }
 
+    public function evidences_draft() {
+        return $this->evidences->where('status','=', 'DRAFT');
+    }
+
     public function evidences_not_draft() {
         return $this->evidences->where('status','!=', 'DRAFT');
     }
@@ -127,12 +131,36 @@ class User extends Authenticatable
 
     public function evidences_hours()
     {
-        return $this->collection_hours($this->evidences());
+        return $this->collection_hours($this->evidences);
     }
 
     public function evidences_count()
     {
-        return $this->collection_count($this->evidences());
+        return $this->collection_count($this->evidences);
+    }
+
+    // Evidencias en borrador
+
+    public function evidences_draft_hours()
+    {
+        return $this->collection_hours($this->evidences_draft());
+    }
+
+    public function evidences_draft_count()
+    {
+        return $this->collection_count($this->evidences_draft());
+    }
+
+    // Evidencias pendientes
+
+    public function evidences_pending_hours()
+    {
+        return $this->collection_hours($this->evidences_pending());
+    }
+
+    public function evidences_pending_count()
+    {
+        return $this->collection_count($this->evidences_pending());
     }
 
     // Evidencias aceptadas
@@ -145,6 +173,18 @@ class User extends Authenticatable
     public function evidences_accepted_count()
     {
         return $this->collection_count($this->evidences_accepted());
+    }
+
+    // Evidencias rechazadas
+
+    public function evidences_rejected_hours()
+    {
+        return $this->collection_hours($this->evidences_rejected());
+    }
+
+    public function evidences_rejected_count()
+    {
+        return $this->collection_count($this->evidences_rejected());
     }
 
     // Reuniones

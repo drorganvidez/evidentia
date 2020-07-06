@@ -12,6 +12,23 @@
 @section('content')
 
     <div class="row">
+
+        <div class="col-lg-3 col-sm-12">
+            <x-infoevidencetotalcountdraft :user="Auth::user()" />
+        </div>
+        <div class="col-lg-3 col-sm-12">
+            <x-infoevidencetotalcountpending :user="Auth::user()" />
+        </div>
+        <div class="col-lg-3 col-sm-12">
+            <x-infoevidencetotalcountaccepted :user="Auth::user()" />
+        </div>
+        <div class="col-lg-3 col-sm-12">
+            <x-infoevidencetotalcountrejected :user="Auth::user()" />
+        </div>
+
+    </div>
+
+    <div class="row">
         <div class="col-lg-12">
 
             <x-status/>
