@@ -49,7 +49,15 @@ Route::prefix('admin')->group(function () {
  *  ALL ROUTES
  */
 
-Route::prefix('{instance}')->group(function () {
+/**
+ *  BLOCK
+ */
+Route::get('/{instance}/block',function(){
+    return view('block');
+})->name('block');
+
+
+Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], function(){
 
     /**
      *  GENERAL PURPOSE

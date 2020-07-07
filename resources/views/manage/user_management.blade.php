@@ -64,7 +64,13 @@
 
                                         <div class="col-md-12 form-group">
                                             <div class="custom-control custom-switch custom-switch-on-danger custom-switch-off-success">
-                                                <input type="checkbox" name="block" class="custom-control-input" id="customSwitch3">
+                                                <input type="checkbox"
+
+                                                       @if($user->block == true)
+                                                           checked
+                                                           @endif
+
+                                                       name="block" class="custom-control-input" id="customSwitch3">
                                                 <label class="custom-control-label" for="customSwitch3">Permitir acceso del usuario a Evidentia</label>
                                             </div>
                                         </div>
