@@ -142,7 +142,6 @@ Route::prefix('{instance}')->group(function () {
 
     });
 
-
     /**
      *  PROOFS
      */
@@ -160,7 +159,9 @@ Route::prefix('{instance}')->group(function () {
     /**
      *  AVATAR
      */
-    Route::get('/avatar/{id}', 'AvatarController@avatar')->name('avatar');
+    Route::middleware(['checknotnull:User'])->group(function () {
+        Route::get('/avatar/{id}', 'AvatarController@avatar')->name('avatar');
+    });
 
     /**
      *  PRESIDENT
@@ -168,6 +169,11 @@ Route::prefix('{instance}')->group(function () {
     Route::get('/president/user/list','ManagementController@user_list')->name('president.user.list');
     Route::get('/president/evidence/list','ManagementController@evidence_list')->name('president.evidence.list');
     Route::get('/president/meeting/list','ManagementController@meeting_list')->name('president.meeting.list');
+
+    Route::middleware(['checknotnull:User'])->group(function () {
+        Route::get('/president/user/management/{id}','ManagementController@user_management')->name('president.user.management');
+        Route::post('/president/user/management/save','ManagementController@user_management_save')->name('president.user.management.save');
+    });
 
     /**
      *  LECTURE
@@ -187,10 +193,17 @@ Route::prefix('{instance}')->group(function () {
     Route::get('/lecture/export','ImportExportController@export')->name('lecture.export');
     Route::post('/lecture/export/save','ImportExportController@export_save')->name('lecture.export.save');
 
+    Route::middleware(['checknotnull:User'])->group(function () {
+        Route::get('/lecture/user/management/{id}','ManagementController@user_management')->name('lecture.user.management');
+        Route::post('/lecture/user/management/save','ManagementController@user_management_save')->name('lecture.user.management.save');
+    });
+
     /**
      *  PROFILES
      */
-    Route::get('/profiles/view/{id}','ProfileController@profiles_view')->name('profiles.view');
+    Route::middleware(['checknotnull:User'])->group(function () {
+        Route::get('/profiles/view/{id}','ProfileController@profiles_view')->name('profiles.view');
+    });
     Route::get('/profiles/view/{id_user}/evidence/{id_evidence}','ProfileController@evidences_view')->name('profiles.view.evidence');
 
 

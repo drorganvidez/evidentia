@@ -244,7 +244,11 @@ class EvidenceController extends Controller
         if($request->hasFile('files'))
             $this->new_files($request,$evidence_new);
 
-        return redirect()->route('evidence.list',$instance)->with('success', 'Evidencia editada con éxito.');
+        if($status == "DRAFT") {
+            return redirect()->route('evidence.list', $instance)->with('success', 'Evidencia editada con éxito.');
+        }else{
+            return redirect()->route('evidence.list', $instance)->with('success', 'Evidencia publicada con éxito.');
+        }
 
     }
 

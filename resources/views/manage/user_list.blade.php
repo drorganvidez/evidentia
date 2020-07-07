@@ -26,22 +26,38 @@
                             <th>Apellidos</th>
                             <th>Nombre</th>
                             <th>UVUS</th>
+                            <th>Roles</th>
+                            <th>Opciones</th>
                         </tr>
                         </thead>
                         <tbody>
 
-                        @forelse($users as $user)
+                        @foreach($users as $user)
                             <tr>
                                 <td>{{$user->dni}}</td>
                                 <td><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $user->id])}}">{{$user->surname}}</a></td>
                                 <td><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $user->id])}}">{{$user->name}}</a></td>
                                 <td>{{$user->username}}</td>
+                                <td>
+                                    @foreach($user->roles as $rol)
+                                        <span class="badge badge-pill badge-secondary">{{$rol->slug}}</span>
+                                    @endforeach
+                                </td>
+                                <td>
+                                    @if(Auth::user()->hasRole('PRESIDENT'))
+                                        <a class="btn btn-primary btn-sm" href="{{route('president.user.management',['instance' => $instance, 'id' => $user->id])}}">
+                                            <i class="nav-icon nav-icon fas fa-users-cog"></i>
+                                            Gestionar
+                                        </a>
+                                    @else
+                                        <a class="btn btn-primary btn-sm" href="{{route('lecture.user.management',['instance' => $instance, 'id' => $user->id])}}">
+                                            <i class="nav-icon nav-icon fas fa-users-cog"></i>
+                                            Gestionar
+                                        </a>
+                                    @endif
+                                </td>
                             </tr>
-                        @empty
-                            <tr>
-                                <td>Sin alumnos
-                            </tr>
-                        @endforelse
+                        @endforeach
 
                         </tbody>
                     </table>

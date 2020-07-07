@@ -39,7 +39,7 @@ class ProfileController extends Controller
 
         $user = Auth::user();
 
-        $validatedData = $request->validate([
+        $request->validate([
             'name' => 'required|max:255',
             'surname' => 'required|max:255'
         ]);
@@ -105,7 +105,7 @@ class ProfileController extends Controller
 
         $user = Auth::user();
 
-        $validatedData = $request->validate([
+        $request->validate([
             'biography' => ['required',new MinCharacters(10),new MaxCharacters(20000)],
             'participation' => 'required|numeric|min:1|max:3',
         ]);
@@ -126,7 +126,7 @@ class ProfileController extends Controller
 
         $user = Auth::user();
 
-        $validatedData = $request->validate([
+        $request->validate([
             'password' => 'required|confirmed|min:6'
         ]);
 

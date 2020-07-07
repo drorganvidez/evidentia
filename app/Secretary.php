@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Secretary extends Model
 {
+    protected $table = "secretaries";
+
     public function comittee()
     {
         return $this->belongsTo('App\Comittee');

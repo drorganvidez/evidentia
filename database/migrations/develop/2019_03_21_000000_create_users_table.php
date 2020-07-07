@@ -36,6 +36,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->text('biography')->nullable();
             $table->enum('participation',['ORGANIZATION','INTERMEDIATE','ASSISTANCE']);
+            $table->boolean('block')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

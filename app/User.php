@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'dni','surname','name', 'username','password','email',
+        'dni','surname','name', 'username','password','email','block',
     ];
 
     /**
@@ -220,5 +220,17 @@ class User extends Authenticatable
     {
         $instance = \Instantiation::instance();
         return route('avatar',['instance' => $instance, 'id' => Auth::id()]);
+    }
+
+    public function associate_comittee()
+    {
+        // ¿es coordinador o secretario?
+        if($this->hasRole('COORDINATOR')){
+            return $this->coordinator->comittee->name;
+        }elseif ($this->hasRole('SECRETARY')){
+            return $this->secretary->comittee->name;
+        }else{
+            return "None";
+        }
     }
 }
