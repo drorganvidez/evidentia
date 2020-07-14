@@ -64,7 +64,7 @@ return [
             ]) : [],
         ],
 
-        'instance' => array(
+        'instance' => [
             'driver'   => 'mysql',
             'host'     => '',
             'port'     => '',
@@ -74,8 +74,8 @@ return [
             'prefix'   => '',
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
-            'engine' => 'InnoDB',
-        ),
+            'engine' => 'InnoDB'
+        ],
 
         'base21' => [
             'driver' => 'mysql',
@@ -84,6 +84,15 @@ return [
             'database' => 'base21',
             'username' => 'homestead',
             'password' => 'secret'
+        ],
+
+        'quickinstance' => [
+            'driver' => 'mysql',
+            'host' =>  '',
+            'port' => '',
+            'database' => '',
+            'username' => '',
+            'password' => ''
         ],
 
         'pgsql' => [

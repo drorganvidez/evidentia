@@ -41,15 +41,15 @@
 
                             <x-input col="4" attr="route" :value="$instance->route ?? ''" label="Ruta por defecto" description="Define una ruta de acceso para el curso"/>
 
-                            <x-input col="4" attr="host" :value="$instance->host ?? ''" label="Host" placeholder="localhost"/>
+                            <x-input col="4" attr="host" :value="$instance->host ?? 'localhost'" label="Host" placeholder="localhost"/>
 
-                            <x-input col="4" attr="port" :value="$instance->port ?? ''" label="Puerto" placeholder="3306"/>
+                            <x-input col="4" attr="port" :value="$instance->port ?? '33060'" label="Puerto" placeholder="3306"/>
 
                             <x-input col="4" attr="database" disabled="true" :edit="$edit ?? ''" :value="$instance->database ?? ''" label="Base de datos" description="Nombre de la base de datos para la instancia"/>
 
-                            <x-input col="4" attr="username" :value="$instance->username ?? ''" label="Nombre de usuario" description="Nombre de usuario que gestiona la base"/>
+                            <x-input col="4" attr="username" :value="$instance->username ?? 'homestead'" label="Nombre de usuario" description="Nombre de usuario que gestiona la base"/>
 
-                            <x-input col="4" attr="password" label="Contraseña" description="Contraseña del usuario que gestiona la base"/>
+                            <x-input col="4" attr="password" :value="$instance->password ?? 'secret'" label="Contraseña" description="Contraseña del usuario que gestiona la base"/>
 
                         </div>
 

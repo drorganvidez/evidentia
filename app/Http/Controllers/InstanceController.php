@@ -51,11 +51,7 @@ class InstanceController extends Controller
 
         try {
             DB::connection()->getPdo();
-            Artisan::call('migrate',
-                [
-                    '--path' => 'database/migrations/instances',
-                    '--database' => 'instance'
-                ]);
+            \Instantiation::migrate();
         } catch (\Exception $e) {
 
             \Instantiation::set_default_connection();

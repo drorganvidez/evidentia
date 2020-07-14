@@ -65,13 +65,15 @@
 
             @auth
 
-                <x-liavatar/>
+
 
                 @if(Request::is('/') || Request::is('admin/*'))
 
                     <x-menuadmin/>
 
                 @else
+
+                    <x-liavatar/>
 
                     <x-menucommon/>
                     <x-menusecretary/>

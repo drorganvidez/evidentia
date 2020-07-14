@@ -52,9 +52,7 @@ Route::prefix('admin')->group(function () {
 /**
  *  BLOCK
  */
-Route::get('/{instance}/block',function(){
-    return view('block');
-})->name('block');
+Route::get('/{instance}/block','BlockController@block')->name('block');
 
 
 Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], function(){
@@ -205,6 +203,9 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         Route::get('/lecture/user/management/{id}','ManagementController@user_management')->name('lecture.user.management');
         Route::post('/lecture/user/management/save','ManagementController@user_management_save')->name('lecture.user.management.save');
     });
+
+    Route::get('/lecture/instances','QuickInstances@list')->name('lecture.instances.list');
+    Route::post('/lecture/instances/save','QuickInstances@save')->name('lecture.instances.save');
 
     /**
      *  PROFILES

@@ -25,8 +25,9 @@
                 </div>
 
                 <div class="card-body">
+                    <div class="row">
                     @foreach($instances as $instance)
-                        <div class="col-lg-6 col-sm-12">
+                        <div class="col-lg-4">
                             <div class="info-box bg-light" onclick="location.href='/{{$instance->route}}';" style="cursor: pointer;">
                                 <div class="info-box-content">
                                     <span class="info-box-text text-center text-muted">{{$instance->name}}</span>
@@ -37,6 +38,7 @@
                             </div>
                         </div>
                     @endforeach
+                    </div>
                 </div>
 
             </div>

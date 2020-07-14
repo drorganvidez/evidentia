@@ -65,6 +65,15 @@ class Instantiation
         self::set_default_instance();
         return $entity;
     }
+
+    public static function migrate()
+    {
+        Artisan::call('migrate',
+            [
+                '--path' => 'database/migrations/instances',
+                '--database' => 'instance'
+            ]);
+    }
 }
 
 /*

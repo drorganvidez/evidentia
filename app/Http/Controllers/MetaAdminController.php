@@ -15,7 +15,7 @@ class MetaAdminController extends Controller
     public function list()
     {
 
-        $instances = Instance::all();
+        $instances = Instance::orderBy('created_at', 'desc')->get();
 
         return view('instances.list', ['instances' => $instances]);
     }
