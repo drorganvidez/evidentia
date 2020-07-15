@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'dni','surname','name', 'username','password','email','block',
+        'dni','surname','name', 'username','password','email','block','biography'
     ];
 
     /**
@@ -213,7 +213,7 @@ class User extends Authenticatable
     // Bonos
     public function bonus_hours()
     {
-        return 0;
+        return $this->collection_hours($this->bonus);
     }
 
     public function avatar_route()

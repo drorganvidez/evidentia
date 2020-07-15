@@ -52,16 +52,16 @@
 
                     <div class="row">
 
-                        <div class="col-lg-12 col-sm-12">
+                        <div class="col-lg-6 col-sm-12">
                             <x-infomeetingcount :user="Auth::user()" />
-                        </div>
-
-                        <div class="col-lg-12 col-sm-12">
-                            <x-infomeetinghours :user="Auth::user()" />
                         </div>
 
                         <div class="col-lg-6 col-sm-12">
                             <x-infomeetinghours :user="Auth::user()" />
+                        </div>
+
+                        <div class="col-lg-12 col-sm-12">
+                            <x-infobonushours :user="Auth::user()" />
                         </div>
 
                         <div class="col-lg-6 col-sm-12">

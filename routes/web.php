@@ -112,7 +112,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     });
 
     /**
-     *  MEETINGS
+     *  MEETINGS, LISTS AND BONUS
      */
 
     Route::get('/meeting/list/', 'MeetingController@list')->name('meeting.list');
@@ -137,7 +137,9 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
          */
         Route::get('/meeting/list/', 'MeetingSecretaryController@list')->name('secretary.meeting.list');
         Route::get('/meeting/create/', 'MeetingSecretaryController@create')->name('secretary.meeting.create');
-        Route::post('/meeting/list/new', 'MeetingSecretaryController@new')->name('secretary.meeting.new');
+        Route::post('/meeting/new', 'MeetingSecretaryController@new')->name('secretary.meeting.new');
+
+        // Consulta AJAX
         Route::get('/meeting/defaultlist/{id}', 'MeetingSecretaryController@defaultlist')->name('secretary.meeting.defaultlist');
 
         Route::middleware(['checknotnull:Meeting'])->group(function () {
@@ -146,7 +148,21 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
             Route::post('/meeting/remove', 'MeetingSecretaryController@remove')->name('secretary.meeting.remove');
         });
 
+        /*
+         * BONUS
+         */
+        Route::get('/bonus/list/', 'BonusSecretaryController@list')->name('secretary.bonus.list');
+        Route::get('/bonus/create/', 'BonusSecretaryController@create')->name('secretary.bonus.create');
+        Route::post('/bonus/new', 'BonusSecretaryController@new')->name('secretary.bonus.new');
+
+        Route::middleware(['checknotnull:Bonus'])->group(function () {
+            Route::get('/bonus/edit/{id}', 'BonusSecretaryController@edit')->name('secretary.bonus.edit');
+            Route::post('/bonus/save', 'BonusSecretaryController@save')->name('secretary.bonus.save');
+            Route::post('/bonus/remove', 'BonusSecretaryController@remove')->name('secretary.bonus.remove');
+        });
+
     });
+
 
     /**
      *  PROOFS

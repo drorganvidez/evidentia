@@ -52,6 +52,11 @@ class InstanceController extends Controller
         try {
             DB::connection()->getPdo();
             \Instantiation::migrate();
+            Artisan::call('db:seed',
+                [
+                    '--class' => 'SampleSeeder',
+                    '--database' => 'instance'
+                ]);
         } catch (\Exception $e) {
 
             \Instantiation::set_default_connection();

@@ -15,6 +15,7 @@ class CreateBonusTable extends Migration
     {
         Schema::create('bonus', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('comittee_id')->nullable(true);
             $table->string('reason');
             $table->integer('hours');
             $table->timestamps();
