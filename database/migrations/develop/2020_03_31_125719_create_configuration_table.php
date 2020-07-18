@@ -33,6 +33,7 @@ class CreateConfigurationTable extends Migration
 
             // otros
             $table->string('secret')->default(Str::random(10));
+            $table->string('eventbrite_token')->default('LMMJ22DGZJL3YGV5AVGC');
             $table->timestamps();
         });
     }

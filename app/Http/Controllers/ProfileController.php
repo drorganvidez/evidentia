@@ -7,6 +7,7 @@ use App\File;
 use App\Proof;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -78,7 +79,10 @@ class ProfileController extends Controller
                 $file_entity->save();
 
                 // borramos el avatar antiguo (si lo tuviera)
-                if ($user->avatar != null) $user->avatar->delete();
+                if ($user->avatar != null){
+                    Storage::delete($user->avatar->file->route);
+                    $user->avatar->delete();
+                }
 
                 // almacenamos en la BBDD el avatar
                 $avatar = Avatar::create([
@@ -136,5 +140,19 @@ class ProfileController extends Controller
 
         return redirect()->route('profile.view',$instance)->with('success', 'Contraseña cambiada con éxito.');
 
+    }
+
+    public function profiles_view($instance,$id)
+    {
+        $instance = \Instantiation::instance();
+        $user = User::find($id);
+
+        return view('profile.generalview',
+            ['instance' => $instance, 'user' => $user]);
+    }
+
+    public function evidences_view($instance,$id_user, $id_evidence)
+    {
+        //TODO
     }
 }

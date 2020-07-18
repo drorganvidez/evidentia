@@ -3,9 +3,10 @@
     <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-            <li class="nav-header">ASISTENCIAS</li>
-            <x-li route="home" icon='fas fa-calendar-minus' name="Ajutes de Eventbrite"/>
-            <x-li route="home" icon='fas fa-book-reader' name="Volcar asistencias"/>
+            <li class="nav-header">ASISTENCIAS Y EVENTOS</li>
+            <x-li route="registercoordinator.token" icon='fas fa-screwdriver' name="Ajustes de Eventbrite"/>
+            <x-li route="registercoordinator.event.list" icon='fas fa-calendar-alt' name="Gestionar eventos"/>
+            <x-li route="registercoordinator.attendee.list" icon='fas fa-user-check' name="Gestionar asistencias"/>
 
         </ul>
     </nav>

@@ -77,8 +77,10 @@ class ManagementController extends Controller
         // guardar bloqueo
         if($request->input('block') == 'on'){
             $user->block = true;
-            $user->save();
+        }else{
+            $user->block = false;
         }
+        $user->save();
 
         // aqui se cambian los roles
         $roles_id = $request->input('roles',[]);
@@ -114,6 +116,7 @@ class ManagementController extends Controller
 
         $user->save();
 
+        // el profesor tiene potestad para cambiar datos sensibles de un alumno
         if(Auth::user()->hasRole('LECTURE')) {
 
             $request->validate([

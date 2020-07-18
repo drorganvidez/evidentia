@@ -204,6 +204,11 @@ class Config
         return self::config_entity()->secret;
     }
 
+    public static function eventbrite_token()
+    {
+        return self::config_entity()->eventbrite_token;
+    }
+
 }
 
 

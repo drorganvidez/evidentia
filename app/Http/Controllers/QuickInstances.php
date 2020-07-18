@@ -66,7 +66,9 @@ class QuickInstances extends Controller
         $instance->password = 'secret';
         $instance->active = true;
 
-        DB::statement("CREATE DATABASE `{$instance->database}`");
+        DB::connection()->getPdo()->exec("CREATE DATABASE `{$instance->database}`");
+        DB::connection()->getPdo()->exec("ALTER SCHEMA `{$instance->database}`  DEFAULT CHARACTER SET utf8mb4  DEFAULT COLLATE utf8mb4_unicode_ci");
+
 
         \Instantiation::set($instance);
 

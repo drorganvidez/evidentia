@@ -70,11 +70,6 @@ class User extends Authenticatable
         return $this->hasOne('App\Secretary');
     }
 
-    /*public function defaultLists()
-    {
-        return $this->hasMany('App\DefaultList');
-    }*/
-
     public function meetings()
     {
         return $this->belongsToMany('App\Meeting');
@@ -88,6 +83,11 @@ class User extends Authenticatable
     public function avatar()
     {
         return $this->hasOne('App\Avatar');
+    }
+
+    public function attendees()
+    {
+        return $this->hasMany('App\Attendee');
     }
 
     public function evidences_draft() {
