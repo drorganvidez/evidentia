@@ -6,6 +6,7 @@ use App\Attendee;
 use App\Configuration;
 use App\Event;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
@@ -106,6 +107,12 @@ class EventbriteController extends Controller
                         $saved_event->status = $event->status;
                         $saved_event->url = $event->url;
 
+                        // Cálculo de las horas
+                        $start = new Carbon($saved_event->start_datetime);
+                        $end = new Carbon($saved_event->end_datetime);
+                        $hours = $end->diffInHours($start);
+                        $saved_event->hours = $hours;
+
                         $saved_event->save();
                     } else {
                         $new_event = Event::create([
@@ -118,6 +125,13 @@ class EventbriteController extends Controller
                             'status' => $event->status,
                             'url' => $event->url
                         ]);
+
+                        // Cálculo de las horas
+                        $start = new Carbon($new_event->start_datetime);
+                        $end = new Carbon($new_event->end_datetime);
+                        $hours = $end->diffInHours($start);
+                        $new_event->hours = $hours;
+
                         $new_event->save();
                     }
 
@@ -127,7 +141,7 @@ class EventbriteController extends Controller
             return redirect()->route('registercoordinator.event.list', $instance)->with('success', 'Eventos cargados con éxito.');
 
         }catch (\Exception $e){
-            return back()->with('error', 'Ups, parece que hay un problema con el token. Comprueba que es válido.');
+            return back()->with('error', 'Ups, parece que hay un problema con el token. Comprueba que es válido.' . $e->getMessage());
         }
     }
 

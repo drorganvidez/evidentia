@@ -1,5 +1,5 @@
 <div class="info-box">
-    <span class="info-box-icon bg-dark elevation-1"><i class="nav-icon fab fa-angellist"></i></span>
+    <span class="info-box-icon bg-light elevation-1"><i class="nav-icon fab fa-angellist"></i></span>
 
     <div class="info-box-content">
         <span class="info-box-text">Evidencias registradas</span>

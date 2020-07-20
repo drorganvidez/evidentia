@@ -34,6 +34,7 @@
                             <th scope="col">Fecha de inicio</th>
                             <th scope="col">Fecha de fin</th>
                             <th scope="col">Capacidad</th>
+                            <th scope="col">Horas</th>
                             <th scope="col">Estado</th>
                         </tr>
                         </thead>
@@ -45,7 +46,8 @@
                                 <td>{{ \Carbon\Carbon::parse($event->start_datetime) }}</td>
                                 <td>{{ \Carbon\Carbon::parse($event->end_datetime) }}</td>
                                 <td>{{ $event->capacity }}</td>
-                                <td>{{ $event->status }}</td>
+                                <td>{{ $event->hours }}</td>
+                                <td><x-eventstatus :event="$event"/></td>
                             </tr>
                         @endforeach
                         </tbody>

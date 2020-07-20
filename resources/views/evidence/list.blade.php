@@ -2,7 +2,7 @@
 
 @section('title', 'Mis evidencias')
 
-@section('title-icon', 'fab fa-battle-net')
+@section('title-icon', 'fas fa-id-badge')
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>
@@ -14,13 +14,13 @@
     <div class="row">
 
         <div class="col-lg-3 col-sm-12">
-            <x-infoevidencetotalcountdraft :user="Auth::user()" />
-        </div>
-        <div class="col-lg-3 col-sm-12">
-            <x-infoevidencetotalcountpending :user="Auth::user()" />
+            <x-infoevidencetotalhours :user="Auth::user()" />
         </div>
         <div class="col-lg-3 col-sm-12">
             <x-infoevidencetotalcountaccepted :user="Auth::user()" />
+        </div>
+        <div class="col-lg-3 col-sm-12">
+            <x-infoevidencetotalcountpending :user="Auth::user()" />
         </div>
         <div class="col-lg-3 col-sm-12">
             <x-infoevidencetotalcountrejected :user="Auth::user()" />

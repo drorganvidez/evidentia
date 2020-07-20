@@ -110,6 +110,18 @@ class User extends Authenticatable
         return $this->evidences->where('status','=', 'REJECTED');
     }
 
+    // Asistencias pendientes
+    public function attendees_pending()
+    {
+        return $this->attendees->where('status','=', 'Attending');
+    }
+
+    // Asistencias confirmadas
+    public function attendees_checkedin()
+    {
+        return $this->attendees->where('status','=', 'Checked In');
+    }
+
     /*
      *  MÉTODOS DERIVADOS DE INTERÉS
      */
@@ -199,7 +211,27 @@ class User extends Authenticatable
         return $this->collection_count($this->meetings);
     }
 
-    // Eventos
+    // Asistencias totales pendientes
+    public function attendees_pending_count()
+    {
+        return $this->collection_count($this->attendees_pending());
+    }
+
+    // Asistencias totales confirmadas
+    public function attendees_checkedin_count()
+    {
+        return $this->collection_count($this->attendees_checkedin());
+    }
+
+    // Horas de asistencia
+    public function attendees_hours()
+    {
+        $hours =  $this->attendees_checkedin()->map(function ($item, $key) {
+            return $item->event->hours;
+        });
+        return $hours->sum();
+    }
+
     public function events_hours()
     {
         return 0;

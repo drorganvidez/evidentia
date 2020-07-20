@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Gestionar asistencias')
+@section('title', 'Mis asistencias')
 
-@section('title-icon', 'fas fa-user-check')
+@section('title-icon', 'fas fa-hiking')
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>
@@ -12,17 +12,23 @@
 @section('content')
 
     <div class="row">
+
+        <div class="col-lg-3 col-sm-12">
+            <x-infoattendeeshours :user="Auth::user()" />
+        </div>
+        <div class="col-lg-3 col-sm-12">
+            <x-infoeventtotalcheckedin :user="Auth::user()" />
+        </div>
+        <div class="col-lg-3 col-sm-12">
+            <x-infoeventtotalattending :user="Auth::user()" />
+        </div>
+
+    </div>
+
+    <div class="row">
         <div class="col-lg-12">
 
             <x-status/>
-
-            <div class="row mb-3">
-                <div class="col-lg-4 mt-1">
-                    <a href="{{route('registercoordinator.attendee.load',['instance' => $instance])}}"
-                       class="btn btn-primary btn-block" role="button">
-                        <i class="fas fa-cloud-download-alt"></i> &nbsp;Cargar asistencias desde Eventbrite</a>
-                </div>
-            </div>
 
             <div class="card">
 
@@ -30,16 +36,20 @@
                     <table id="dataset" class="table table-bordered table-striped">
                         <thead>
                         <tr>
-                            <th scope="col">Alumna/o</th>
                             <th scope="col">Evento</th>
+                            <th scope="col">Horas</th>
+                            <th scope="col">Fecha de inicio</th>
+                            <th scope="col">Fecha de fin</th>
                             <th scope="col">Asistencia</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($attendees as $attendee)
                             <tr scope="row">
-                                <td>{{$attendee->user->surname}}, {{$attendee->user->name}}</td>
                                 <td>{{$attendee->event->name}}</td>
+                                <td>{{$attendee->event->hours}}</td>
+                                <td>{{ \Carbon\Carbon::parse($attendee->event->start_datetime) }}</td>
+                                <td>{{ \Carbon\Carbon::parse($attendee->event->end_datetime) }}</td>
                                 <td><x-attendeestatus :attendee="$attendee"/></td>
                             </tr>
                         @endforeach

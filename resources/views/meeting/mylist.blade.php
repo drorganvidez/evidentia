@@ -15,16 +15,18 @@
 
         <div class="col-lg-3">
 
-            <x-infomeetingcount :user="Auth::user()" />
-
+            <x-infomeetinghours :user="Auth::user()" />
 
         </div>
 
         <div class="col-lg-3">
 
-            <x-infomeetinghours :user="Auth::user()" />
+            <x-infomeetingcount :user="Auth::user()" />
+
 
         </div>
+
+
 
     </div>
 

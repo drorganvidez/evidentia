@@ -163,6 +163,11 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
     });
 
+    /**
+     *  ATTENDEES
+     */
+    Route::get('/attendee/list/', 'AttendeeController@list')->name('attendee.list');
+
 
     /**
      *  PROOFS

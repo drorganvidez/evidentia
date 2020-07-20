@@ -1,5 +1,5 @@
 <div class="info-box">
-    <span class="info-box-icon bg-dark elevation-1"><i class="fas fa-hourglass-half"></i></span>
+    <span class="info-box-icon bg-dark elevation-1"><i class="fas fa-cocktail"></i></span>
 
     <div class="info-box-content">
         <span class="info-box-text">Horas de reuniones</span>
