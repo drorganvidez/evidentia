@@ -61,6 +61,12 @@
             </div>
 
         </div>
+
+        <div class="col-lg-12">
+            Última actualización de eventos: {{ \Carbon\Carbon::parse($events_update)->diffForHumans() }}
+            <br>
+            Última actualización de asistencias: {{ \Carbon\Carbon::parse($attendees_update)->diffForHumans() }}
+        </div>
     </div>
 
 @endsection

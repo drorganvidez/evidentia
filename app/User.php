@@ -234,12 +234,12 @@ class User extends Authenticatable
 
     public function events_hours()
     {
-        return 0;
+        return $this->attendees_hours();
     }
 
     public function events_count()
     {
-        return 0;
+        return $this->attendees_checkedin_count();
     }
 
     // Bonos

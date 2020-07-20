@@ -101,11 +101,22 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-12 col-12">
-                        <ol class="breadcrumb mb-2">
-                            @section('breadcrumb')
-                            @show
-                        </ol>
-                        <h1 class="m-0 text-dark"><i class="@yield('title-icon')"></i>&nbsp;&nbsp;@yield('title')</h1>
+
+
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <ol class="breadcrumb mb-2">
+                                    @section('breadcrumb')
+                                    @show
+                                </ol>
+                                <h1 class="m-0 text-dark"><i class="@yield('title-icon')"></i>&nbsp;&nbsp;@yield('title')</h1>
+                            </div>
+                            <div>
+                                @section('info')
+                                @show
+                            </div>
+                        </div>
+
                     </div>
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->

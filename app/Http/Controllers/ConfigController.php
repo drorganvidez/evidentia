@@ -28,13 +28,13 @@ class ConfigController extends Controller
     public function config_save(Request $request)
     {
         $instance = \Instantiation::instance();
-        $route = route('lecture.config.save',$instance);
 
-        $validatedData = $request->validate([
+        $request->validate([
             'upload_evidences_date' => 'required|date_format:Y-m-d|after:today',
             'validate_evidences_date' => 'required|date_format:Y-m-d|after:today|after:upload_evidences_date',
             'meetings_date' => 'required|date_format:Y-m-d|after:today',
             'bonus_date' => 'required|date_format:Y-m-d|after:today',
+            'attendees_date' => 'required|date_format:Y-m-d|after:today',
         ]);
 
         $configuration = Configuration::find(1);
@@ -43,6 +43,7 @@ class ConfigController extends Controller
         $configuration->validate_evidences_timestamp = $request->input('validate_evidences_date')." ".$request->input('validate_evidences_time');
         $configuration->meetings_timestamp = $request->input('meetings_date')." ".$request->input('meetings_time');
         $configuration->bonus_timestamp = $request->input('bonus_date')." ".$request->input('bonus_time');
+        $configuration->attendee_timestamp = $request->input('attendees_date')." ".$request->input('attendees_time');
 
         $configuration->save();
 

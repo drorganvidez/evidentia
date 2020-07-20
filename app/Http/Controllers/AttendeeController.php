@@ -18,7 +18,11 @@ class AttendeeController extends Controller
         $instance = \Instantiation::instance();
         $attendees = Auth::user()->attendees;
 
+        $events_update = \Config::events_uploaded_timestamp();
+        $attendees_update = \Config::attendees_uploaded_timestamp();
+
         return view('attendee.list',
-            ['instance' => $instance, 'attendees' => $attendees]);
+            ['instance' => $instance, 'attendees' => $attendees,
+                'events_update' => $events_update, 'attendees_update' => $attendees_update]);
     }
 }

@@ -30,6 +30,11 @@ class CreateConfigurationTable extends Migration
             $table->timestamp('validate_evidences_timestamp', 0)->nullable();
             $table->timestamp('meetings_timestamp', 0)->nullable();
             $table->timestamp('bonus_timestamp', 0)->nullable();
+            $table->timestamp('attendee_timestamp', 0)->nullable();
+
+            // actualizaciones
+            $table->timestamp('events_uploaded_timestamp', 0)->nullable();
+            $table->timestamp('attendees_uploaded_timestamp', 0)->nullable();
 
             // otros
             $table->string('secret')->default(Str::random(10));

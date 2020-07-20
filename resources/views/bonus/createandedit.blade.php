@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @isset($edit)
-    @section('title', 'Editar bono: '.$bonus->title)
+    @section('title', 'Editar bono: '.$bonus->reason)
 @else
     @section('title', 'Crear bono')
 @endisset
@@ -14,6 +14,10 @@
         <li class="breadcrumb-item"><a href="{{route('secretary.bonus.list',['instance' => $instance])}}">Gestionar bonos</a></li>
     @endisset
     <li class="breadcrumb-item active">@yield('title')</li>
+@endsection
+
+@section('info')
+    <x-slimreminder :datetime="\Config::bonus_timestamp()"/>
 @endsection
 
 @section('content')

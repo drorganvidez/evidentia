@@ -199,6 +199,21 @@ class Config
         return self::config_entity()->bonus_timestamp;
     }
 
+    public static function attendee_timestamp()
+    {
+        return self::config_entity()->attendee_timestamp;
+    }
+
+    public static function events_uploaded_timestamp()
+    {
+        return self::config_entity()->events_uploaded_timestamp;
+    }
+
+    public static function attendees_uploaded_timestamp()
+    {
+        return self::config_entity()->attendees_uploaded_timestamp;
+    }
+
     public static function secret()
     {
         return self::config_entity()->secret;

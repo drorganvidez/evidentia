@@ -95,6 +95,23 @@
                                 </div>
                             </div>
 
+                            <div class="col-lg-6">
+                                <div class="callout">
+                                    <h5>Registro de eventos y asistencias</h5>
+
+                                    <p>Establece una fecha máximo de tope de registro de eventos y asistencia a los mismos
+                                        por parte de los coordinadores de registro.</p>
+
+                                    <div class="form-row">
+
+                                        <x-input col="6" attr="attendees_date" type="date" :value="\Carbon\Carbon::parse($configuration->attendee_timestamp)->format('Y-m-d') ?? ''" label="Día" description="Indica el día límite."/>
+
+                                        <x-input col="6" attr="attendees_time" type="time" :value="\Carbon\Carbon::parse($configuration->attendee_timestamp)->format('H:i') ?? ''" label="Hora" description="Indica la hora límite."/>
+
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                         <div class="form-row">
                             <div class="col-lg-3 mt-1">

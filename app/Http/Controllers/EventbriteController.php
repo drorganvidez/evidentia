@@ -136,7 +136,12 @@ class EventbriteController extends Controller
                     }
 
                 }
+
             }
+
+            $config = Configuration::find(1);
+            $config->events_uploaded_timestamp = Carbon::now();
+            $config->save();
 
             return redirect()->route('registercoordinator.event.list', $instance)->with('success', 'Eventos cargados con éxito.');
 
@@ -194,6 +199,10 @@ class EventbriteController extends Controller
                 }
 
             }
+
+            $config = Configuration::find(1);
+            $config->attendees_uploaded_timestamp = Carbon::now();
+            $config->save();
 
             return redirect()->route('registercoordinator.attendee.list', $instance)->with('success', 'Asistencias cargadas con éxito.');
 

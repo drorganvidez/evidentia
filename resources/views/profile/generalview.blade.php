@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $user->surname)
+@section('title', $user->surname . ', ' .$user->name)
 @section('title-icon', 'nav-icon fas fa-user')
 
 @section('breadcrumb')

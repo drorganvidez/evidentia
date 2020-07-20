@@ -9,6 +9,10 @@
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
 
+@section('info')
+    <x-slimreminder :datetime="\Config::upload_evidences_timestamp()"/>
+@endsection
+
 @section('content')
 
     <div class="row">
