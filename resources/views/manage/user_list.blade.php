@@ -33,7 +33,13 @@
                         <tbody>
 
                         @foreach($users as $user)
+
+                        @if($user->block)
+                            <tr class="bg-danger">
+                        @else
                             <tr>
+                        @endif
+
                                 <td>{{$user->dni}}</td>
                                 <td><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $user->id])}}">{{$user->surname}}</a></td>
                                 <td><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $user->id])}}">{{$user->name}}</a></td>

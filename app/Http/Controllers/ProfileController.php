@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Avatar;
+use App\Evidence;
 use App\File;
 use App\Proof;
 use App\Rules\MaxCharacters;
@@ -153,6 +154,11 @@ class ProfileController extends Controller
 
     public function evidences_view($instance,$id_user, $id_evidence)
     {
-        //TODO
+        $instance = \Instantiation::instance();
+        $user = User::find($id_user);
+        $evidence = Evidence::find($id_evidence);
+
+        return view('profile.profile_evidence_view',
+            ['instance' => $instance, 'user' => $user, 'evidence' => $evidence]);
     }
 }

@@ -37,7 +37,7 @@
                         @endforeach
                     </p>
 
-                    <p style="text-justify: auto">{!! Auth::user()->biography !!}</p>
+                    <p>{!! Auth::user()->biography !!}</p>
 
 
                 </div>

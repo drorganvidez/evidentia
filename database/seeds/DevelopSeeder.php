@@ -75,6 +75,12 @@ class DevelopSeeder extends Seeder
             'email' => 'alumno1@alumno1.com',
             'username' => 'alumno1',
             'password' => Hash::make('alumno1'),
+            'biography' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum sem in nunc rutrum,
+            at viverra justo bibendum. Fusce bibendum luctus justo, id ornare est consectetur et. Vestibulum vel
+            condimentum mi. Donec volutpat tortor sed elit maximus venenatis. Quisque finibus tempus odio vitae
+            viverra. Fusce blandit feugiat pretium. Pellentesque purus ligula, vulputate et diam nec, laoreet
+            viverra dui. Proin id lacus eu sem faucibus scelerisque. Nullam a neque ultricies, rhoncus velit et,
+            tempus ante. Integer mollis eleifend suscipit.'
         ]);
 
         DB::table('users')->insert([
@@ -85,6 +91,12 @@ class DevelopSeeder extends Seeder
             'email' => 'alumno2@alumno2.com',
             'username' => 'alumno2',
             'password' => Hash::make('alumno2'),
+            'biography' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum sem in nunc rutrum,
+            at viverra justo bibendum. Fusce bibendum luctus justo, id ornare est consectetur et. Vestibulum vel
+            condimentum mi. Donec volutpat tortor sed elit maximus venenatis. Quisque finibus tempus odio vitae
+            viverra. Fusce blandit feugiat pretium. Pellentesque purus ligula, vulputate et diam nec, laoreet
+            viverra dui. Proin id lacus eu sem faucibus scelerisque. Nullam a neque ultricies, rhoncus velit et,
+            tempus ante. Integer mollis eleifend suscipit.'
         ]);
 
         DB::table('users')->insert([
@@ -95,6 +107,12 @@ class DevelopSeeder extends Seeder
             'email' => 'secretario1@secretario1.com',
             'username' => 'secretario1',
             'password' => Hash::make('secretario1'),
+            'biography' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum sem in nunc rutrum,
+            at viverra justo bibendum. Fusce bibendum luctus justo, id ornare est consectetur et. Vestibulum vel
+            condimentum mi. Donec volutpat tortor sed elit maximus venenatis. Quisque finibus tempus odio vitae
+            viverra. Fusce blandit feugiat pretium. Pellentesque purus ligula, vulputate et diam nec, laoreet
+            viverra dui. Proin id lacus eu sem faucibus scelerisque. Nullam a neque ultricies, rhoncus velit et,
+            tempus ante. Integer mollis eleifend suscipit.'
         ]);
 
         DB::table('users')->insert([
@@ -105,6 +123,12 @@ class DevelopSeeder extends Seeder
             'email' => 'secretario2@secretario2.com',
             'username' => 'secretario2',
             'password' => Hash::make('secretario2'),
+            'biography' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum sem in nunc rutrum,
+            at viverra justo bibendum. Fusce bibendum luctus justo, id ornare est consectetur et. Vestibulum vel
+            condimentum mi. Donec volutpat tortor sed elit maximus venenatis. Quisque finibus tempus odio vitae
+            viverra. Fusce blandit feugiat pretium. Pellentesque purus ligula, vulputate et diam nec, laoreet
+            viverra dui. Proin id lacus eu sem faucibus scelerisque. Nullam a neque ultricies, rhoncus velit et,
+            tempus ante. Integer mollis eleifend suscipit.'
         ]);
 
         DB::table('users')->insert([
@@ -115,6 +139,12 @@ class DevelopSeeder extends Seeder
             'email' => 'coordinador1@coordinador1.com',
             'username' => 'coordinador1',
             'password' => Hash::make('coordinador1'),
+            'biography' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum sem in nunc rutrum,
+            at viverra justo bibendum. Fusce bibendum luctus justo, id ornare est consectetur et. Vestibulum vel
+            condimentum mi. Donec volutpat tortor sed elit maximus venenatis. Quisque finibus tempus odio vitae
+            viverra. Fusce blandit feugiat pretium. Pellentesque purus ligula, vulputate et diam nec, laoreet
+            viverra dui. Proin id lacus eu sem faucibus scelerisque. Nullam a neque ultricies, rhoncus velit et,
+            tempus ante. Integer mollis eleifend suscipit.'
         ]);
 
         DB::table('users')->insert([
@@ -125,6 +155,12 @@ class DevelopSeeder extends Seeder
             'email' => 'coordinador2@coordinador2.com',
             'username' => 'coordinador2',
             'password' => Hash::make('coordinador2'),
+            'biography' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum sem in nunc rutrum,
+            at viverra justo bibendum. Fusce bibendum luctus justo, id ornare est consectetur et. Vestibulum vel
+            condimentum mi. Donec volutpat tortor sed elit maximus venenatis. Quisque finibus tempus odio vitae
+            viverra. Fusce blandit feugiat pretium. Pellentesque purus ligula, vulputate et diam nec, laoreet
+            viverra dui. Proin id lacus eu sem faucibus scelerisque. Nullam a neque ultricies, rhoncus velit et,
+            tempus ante. Integer mollis eleifend suscipit.'
         ]);
 
         DB::table('users')->insert([
@@ -135,6 +171,12 @@ class DevelopSeeder extends Seeder
             'email' => 'coordinadorregistro1@coordinadorregistro1.com',
             'username' => 'coordinadorregistro1',
             'password' => Hash::make('coordinadorregistro1'),
+            'biography' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum sem in nunc rutrum,
+            at viverra justo bibendum. Fusce bibendum luctus justo, id ornare est consectetur et. Vestibulum vel
+            condimentum mi. Donec volutpat tortor sed elit maximus venenatis. Quisque finibus tempus odio vitae
+            viverra. Fusce blandit feugiat pretium. Pellentesque purus ligula, vulputate et diam nec, laoreet
+            viverra dui. Proin id lacus eu sem faucibus scelerisque. Nullam a neque ultricies, rhoncus velit et,
+            tempus ante. Integer mollis eleifend suscipit.'
         ]);
 
         DB::table('users')->insert([
@@ -145,6 +187,12 @@ class DevelopSeeder extends Seeder
             'email' => 'coordinadorregistro2@coordinadorregistro2.com',
             'username' => 'coordinadorregistro2',
             'password' => Hash::make('coordinadorregistro2'),
+            'biography' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum sem in nunc rutrum,
+            at viverra justo bibendum. Fusce bibendum luctus justo, id ornare est consectetur et. Vestibulum vel
+            condimentum mi. Donec volutpat tortor sed elit maximus venenatis. Quisque finibus tempus odio vitae
+            viverra. Fusce blandit feugiat pretium. Pellentesque purus ligula, vulputate et diam nec, laoreet
+            viverra dui. Proin id lacus eu sem faucibus scelerisque. Nullam a neque ultricies, rhoncus velit et,
+            tempus ante. Integer mollis eleifend suscipit.'
         ]);
 
         DB::table('users')->insert([
@@ -155,6 +203,12 @@ class DevelopSeeder extends Seeder
             'email' => 'presidente1@presidente1.com',
             'username' => 'presidente1',
             'password' => Hash::make('presidente1'),
+            'biography' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum sem in nunc rutrum,
+            at viverra justo bibendum. Fusce bibendum luctus justo, id ornare est consectetur et. Vestibulum vel
+            condimentum mi. Donec volutpat tortor sed elit maximus venenatis. Quisque finibus tempus odio vitae
+            viverra. Fusce blandit feugiat pretium. Pellentesque purus ligula, vulputate et diam nec, laoreet
+            viverra dui. Proin id lacus eu sem faucibus scelerisque. Nullam a neque ultricies, rhoncus velit et,
+            tempus ante. Integer mollis eleifend suscipit.'
         ]);
 
         DB::table('users')->insert([
@@ -165,6 +219,12 @@ class DevelopSeeder extends Seeder
             'email' => 'presidente2@presidente2.com',
             'username' => 'presidente2',
             'password' => Hash::make('presidente2'),
+            'biography' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce bibendum sem in nunc rutrum,
+            at viverra justo bibendum. Fusce bibendum luctus justo, id ornare est consectetur et. Vestibulum vel
+            condimentum mi. Donec volutpat tortor sed elit maximus venenatis. Quisque finibus tempus odio vitae
+            viverra. Fusce blandit feugiat pretium. Pellentesque purus ligula, vulputate et diam nec, laoreet
+            viverra dui. Proin id lacus eu sem faucibus scelerisque. Nullam a neque ultricies, rhoncus velit et,
+            tempus ante. Integer mollis eleifend suscipit.'
         ]);
 
         DB::table('users')->insert([

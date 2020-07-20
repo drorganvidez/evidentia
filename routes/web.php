@@ -243,10 +243,13 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     /**
      *  PROFILES
      */
-    Route::middleware(['checknotnull:User'])->group(function () {
-        Route::get('/profiles/view/{id}','ProfileController@profiles_view')->name('profiles.view');
-    });
-    Route::get('/profiles/view/{id_user}/evidence/{id_evidence}','ProfileController@evidences_view')->name('profiles.view.evidence');
 
+    // Solo visibles para profesores y presidentes
+    Route::middleware(['checkroles:LECTURE|PRESIDENT'])->group(function () {
+        Route::middleware(['checknotnull:User'])->group(function () {
+            Route::get('/profiles/view/{id}','ProfileController@profiles_view')->name('profiles.view');
+        });
+        Route::get('/profiles/view/{id_user}/evidence/{id_evidence}','ProfileController@evidences_view')->name('profiles.view.evidence');
+    });
 
 });

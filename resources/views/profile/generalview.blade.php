@@ -10,7 +10,25 @@
 
 @section('content')
 
+    <div class="row">
 
+        <div class="col-lg-3 col-sm-12">
+            <x-infoevidencetotalhours :user="$user" />
+        </div>
+
+        <div class="col-lg-3 col-sm-12">
+            <x-infomeetinghours :user="$user" />
+        </div>
+
+        <div class="col-lg-3 col-sm-12">
+            <x-infoattendeeshours :user="$user" />
+        </div>
+
+        <div class="col-lg-3 col-sm-12">
+            <x-infobonushours :user="$user" />
+        </div>
+
+    </div>
 
     <div class="row">
 
