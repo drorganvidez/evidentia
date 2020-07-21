@@ -69,5 +69,10 @@ class Kernel extends HttpKernel
         'evidencemine' => \App\Http\Middleware\EvidenceMine::class,
         'evidencefrommycommittee' => \App\Http\Middleware\EvidenceFromMyComittee::class,
         'checkblock' => \App\Http\Middleware\CheckBlock::class,
+        'checkuploadevidences' => \App\Http\Middleware\CheckUploadEvidences::class,
+        'checkvalidateevidences' => \App\Http\Middleware\CheckValidateEvidences::class,
+        'checkregistermeetings' => \App\Http\Middleware\CheckRegisterMeeting::class,
+        'checkregisterbonus' => \App\Http\Middleware\CheckRegisterBonus::class,
+        'checkregistereventsandattendings' => \App\Http\Middleware\CheckRegisterEventsAndAttendings::class,
     ];
 }

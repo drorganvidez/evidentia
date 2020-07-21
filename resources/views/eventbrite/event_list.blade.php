@@ -20,11 +20,13 @@
 
             <x-status/>
 
+            @if(!\Carbon\Carbon::now()->gt(\Config::attendee_timestamp()))
             <div class="row mb-3">
                 <div class="col-lg-3 mt-1">
                     <a href="{{route('registercoordinator.event.load',['instance' => $instance])}}" class="btn btn-primary btn-block" role="button"><i class="fas fa-cloud-download-alt"></i> &nbsp;Cargar eventos desde Eventbrite</a>
                 </div>
             </div>
+            @endif
 
             <div class="card">
 

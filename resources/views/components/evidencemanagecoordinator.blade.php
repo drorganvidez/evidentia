@@ -1,17 +1,18 @@
-@if ($evidence->status != 'ACCEPTED')
+@if ($evidence->status != 'ACCEPTED' and !\Carbon\Carbon::now()->gt(\Config::validate_evidences_timestamp()))
 <a class="btn btn-success btn-sm" href="{{route('coordinator.evidence.accept',['instance' => $instance, 'id' => $evidence->id])}}">
     <i class="far fa-thumbs-up"></i>
     Aceptar
 </a>
 @endif
 
-@if ($evidence->status != 'REJECTED')
+@if ($evidence->status != 'REJECTED' and !\Carbon\Carbon::now()->gt(\Config::validate_evidences_timestamp()))
 <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-rejected-{{$evidence->id}}">
     <i class="far fa-thumbs-down"></i>
     Rechazar
 </a>
 @endif
 
+@if (!\Carbon\Carbon::now()->gt(\Config::validate_evidences_timestamp()))
 <div class="container">
     <div class="modal fade" id="modal-rejected-{{$evidence->id}}">
         <div class="modal-dialog modal-dialog-centered">
@@ -45,3 +46,4 @@
     </div>
 
 </div>
+@endif

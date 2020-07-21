@@ -46,7 +46,7 @@
                         <tbody>
                         @foreach($attendees as $attendee)
                             <tr scope="row">
-                                <td>{{$attendee->event->name}}</td>
+                                <td><a href="{{$attendee->event->url}}" target="_blank">{!! $attendee->event->name !!}</a></td>
                                 <td>{{$attendee->event->hours}}</td>
                                 <td>{{ \Carbon\Carbon::parse($attendee->event->start_datetime) }}</td>
                                 <td>{{ \Carbon\Carbon::parse($attendee->event->end_datetime) }}</td>

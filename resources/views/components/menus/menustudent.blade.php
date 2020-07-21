@@ -4,7 +4,9 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
             <li class="nav-header">HERRAMIENTAS</li>
+            @if(!\Carbon\Carbon::now()->gt(\Config::upload_evidences_timestamp()))
             <x-li route="evidence.create" icon='fab fa-angellist' name="Crear evidencia"/>
+            @endif
             <x-li route="evidence.list" secondaries="evidence.view,evidence.edit" icon='fas fa-id-badge' name="Mis evidencias"/>
             <x-li route="meeting.list" icon='fas fa-cocktail' name="Mis reuniones"/>
             <x-li route="attendee.list" icon='fas fa-hiking' name="Mis asistencias"/>

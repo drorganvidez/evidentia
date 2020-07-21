@@ -59,7 +59,7 @@
 
                                         @else
 
-                                            @if($evidence->status == 'DRAFT')
+                                            @if($evidence->status == 'DRAFT' and !\Carbon\Carbon::now()->gt(\Config::upload_evidences_timestamp()))
                                                 <a class="btn btn-info btn-sm"
                                                    href="{{route('evidence.edit',['instance' => $instance, 'id' => $evidence->id])}}">
                                                     <i class="fas fa-pencil-alt">
@@ -68,8 +68,11 @@
                                                 </a>
                                             @endif
 
-                                            <x-buttonconfirm :id="$evidence->id" route="evidence.remove" title="¿Seguro?" description="Esto borrará la evidencia actual, las
-ediciones anteriores <b>y todos los archivos adjuntos.</b>"/>
+                                            @if(!\Carbon\Carbon::now()->gt(\Config::upload_evidences_timestamp()))
+                                                <x-buttonconfirm :id="$evidence->id" route="evidence.remove" title="¿Seguro?" description="Esto borrará la evidencia actual, las
+                                                ediciones anteriores <b>y todos los archivos adjuntos.</b>"/>
+                                            @endif
+
                                         @endif
 
 
@@ -100,7 +103,7 @@ ediciones anteriores <b>y todos los archivos adjuntos.</b>"/>
                             </div>
 
 
-                            @if($evidence->status == 'DRAFT')
+                            @if($evidence->status == 'DRAFT' and !\Carbon\Carbon::now()->gt(\Config::upload_evidences_timestamp()))
                                 <h5 class="text-muted mt-2">Ediciones anteriores</h5>
 
                                 <div class="card-body table-responsive p-0" style="height: 200px;">

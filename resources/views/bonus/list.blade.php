@@ -20,11 +20,13 @@
 
             <x-status/>
 
+            @if(!\Carbon\Carbon::now()->gt(\Config::bonus_timestamp()))
             <div class="row mb-3">
                 <div class="col-lg-3 mt-1">
                     <a href="{{route('secretary.bonus.create',['instance' => $instance])}}" class="btn btn-primary btn-block" role="button"><i class="fas fa-plus"></i> &nbsp;Crear nuevo bono de horas</a>
                 </div>
             </div>
+            @endif
 
             <div class="card">
 
@@ -35,7 +37,9 @@
                             <tr>
                                 <th scope="col">Razón</th>
                                 <th scope="col">Horas</th>
+                                @if(!\Carbon\Carbon::now()->gt(\Config::bonus_timestamp()))
                                 <th scope="col">Herramientas</th>
+                                @endif
                             </tr>
                             </thead>
                             <tbody>
@@ -43,6 +47,7 @@
                                 <tr scope="row">
                                     <td>{{$bono->reason}}</td>
                                     <td>{{$bono->hours}}</td>
+                                    @if(!\Carbon\Carbon::now()->gt(\Config::bonus_timestamp()))
                                     <td>
                                         <a class="btn btn-primary btn-sm"
                                            href="{{route('secretary.bonus.edit',['instance' => $instance, 'id' => $bono->id])}}"
@@ -53,6 +58,7 @@
                                         <x-buttonconfirm :id="$bono->id" route="secretary.bonus.remove" title="¿Seguro?" description="Las horas asociadas a los alumnos se borrarán." type="REMOVE" />
 
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
                             </tbody>

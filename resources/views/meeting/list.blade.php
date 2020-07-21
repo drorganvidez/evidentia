@@ -20,11 +20,13 @@
 
             <x-status/>
 
+            @if(!\Carbon\Carbon::now()->gt(\Config::meetings_timestamp()))
             <div class="row mb-3">
                 <div class="col-lg-2 mt-1">
                     <a href="{{route('secretary.meeting.create',['instance' => $instance])}}" class="btn btn-primary btn-block" role="button"><i class="fas fa-plus"></i> &nbsp;Crear nueva reunión</a>
                 </div>
             </div>
+            @endif
 
             <div class="card">
 
@@ -37,7 +39,9 @@
                                 <th scope="col">Lugar</th>
                                 <th scope="col">Horas</th>
                                 <th scope="col">Realizada</th>
+                                @if(!\Carbon\Carbon::now()->gt(\Config::meetings_timestamp()))
                                 <th scope="col">Herramientas</th>
+                                @endif
                             </tr>
                             </thead>
                             <tbody>
@@ -47,6 +51,7 @@
                                     <td>{{$meeting->place}}</td>
                                     <td>{{$meeting->hours}}</td>
                                     <td>{{ \Carbon\Carbon::parse($meeting->datetime)->diffForHumans() }}</td>
+                                    @if(!\Carbon\Carbon::now()->gt(\Config::meetings_timestamp()))
                                     <td>
                                         <a class="btn btn-primary btn-sm"
                                            href="{{route('secretary.meeting.edit',['instance' => $instance, 'id' => $meeting->id])}}"
@@ -57,6 +62,7 @@
                                         <x-buttonconfirm :id="$meeting->id" route="secretary.meeting.remove" title="¿Seguro?" description="La reunión y las actas asociadas se borrarán. Las horas asociadas a los alumnos también." type="REMOVE" />
 
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
                             </tbody>

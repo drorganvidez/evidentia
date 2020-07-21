@@ -20,6 +20,7 @@
 
             <x-status/>
 
+            @if(!\Carbon\Carbon::now()->gt(\Config::attendee_timestamp()))
             <div class="row mb-3">
                 <div class="col-lg-4 mt-1">
                     <a href="{{route('registercoordinator.attendee.load',['instance' => $instance])}}"
@@ -27,6 +28,7 @@
                         <i class="fas fa-cloud-download-alt"></i> &nbsp;Cargar asistencias desde Eventbrite</a>
                 </div>
             </div>
+            @endif
 
             <div class="card">
 
@@ -43,7 +45,7 @@
                         @foreach($attendees as $attendee)
                             <tr scope="row">
                                 <td>{{$attendee->user->surname}}, {{$attendee->user->name}}</td>
-                                <td>{{$attendee->event->name}}</td>
+                                <td><a href="{{$attendee->event->url}}" target="_blank">{!! $attendee->event->name !!}</a></td>
                                 <td><x-attendeestatus :attendee="$attendee"/></td>
                             </tr>
                         @endforeach

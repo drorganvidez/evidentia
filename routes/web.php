@@ -83,17 +83,22 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
      *  EVIDENCES
      */
     Route::get('/evidence/list', 'EvidenceController@list')->name('evidence.list');
-    Route::get('/evidence/create', 'EvidenceController@create')->name('evidence.create');
-    Route::post('/evidence/draft', 'EvidenceController@draft')->name('evidence.draft');
-    Route::post('/evidence/publish', 'EvidenceController@publish')->name('evidence.publish');
-    Route::post('/evidence/draft/edit', 'EvidenceController@draft_edit')->name('evidence.draft.edit');
-    Route::post('/evidence/publish/edit', 'EvidenceController@publish_edit')->name('evidence.publish.edit');
+    Route::middleware(['checkuploadevidences'])->group(function () {
+        Route::get('/evidence/create', 'EvidenceController@create')->name('evidence.create');
+        Route::post('/evidence/draft', 'EvidenceController@draft')->name('evidence.draft');
+        Route::post('/evidence/publish', 'EvidenceController@publish')->name('evidence.publish');
+        Route::post('/evidence/draft/edit', 'EvidenceController@draft_edit')->name('evidence.draft.edit');
+        Route::post('/evidence/publish/edit', 'EvidenceController@publish_edit')->name('evidence.publish.edit');
+    });
 
-    Route::middleware(['checknotnull:Evidence'])->group(function () {
-        Route::get('/evidence/view/{id}', 'EvidenceController@view')->name('evidence.view')->middleware('evidencemine');
-        Route::get('/evidence/edit/{id}', 'EvidenceController@edit')->name('evidence.edit')->middleware(['evidencecanbeedited','evidencemine']);
-        Route::post('/evidence/reedit', 'EvidenceController@reedit')->name('evidence.reedit')->middleware('evidencemine');
-        Route::post('/evidence/remove', 'EvidenceController@remove')->name('evidence.remove')->middleware('evidencemine');
+    Route::middleware(['checknotnull:Evidence','evidencemine'])->group(function () {
+        Route::get('/evidence/view/{id}', 'EvidenceController@view')->name('evidence.view');
+
+        Route::middleware(['checkuploadevidences'])->group(function () {
+            Route::get('/evidence/edit/{id}', 'EvidenceController@edit')->name('evidence.edit')->middleware('evidencecanbeedited');
+            Route::post('/evidence/reedit', 'EvidenceController@reedit')->name('evidence.reedit');
+            Route::post('/evidence/remove', 'EvidenceController@remove')->name('evidence.remove');
+        });
     });
 
     // EVIDENCES MANAGEMENT BY A COORDINATOR
@@ -103,10 +108,13 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         Route::get('/evidence/list/accepted', 'EvidenceCoordinatorController@accepted')->name('coordinator.evidence.list.accepted');
         Route::get('/evidence/list/rejected', 'EvidenceCoordinatorController@rejected')->name('coordinator.evidence.list.rejected');
 
-        Route::middleware(['checknotnull:Evidence'])->group(function () {
-            Route::get('/evidence/view/{id}', 'EvidenceController@view')->name('coordinator.evidence.view')->middleware('evidencefrommycommittee');
-            Route::get('/evidence/accept/{id}', 'EvidenceCoordinatorController@accept')->name('coordinator.evidence.accept')->middleware('evidencefrommycommittee');
-            Route::post('/evidence/reject/', 'EvidenceCoordinatorController@reject')->name('coordinator.evidence.reject')->middleware('evidencefrommycommittee');
+        Route::middleware(['checknotnull:Evidence','evidencefrommycommittee'])->group(function () {
+            Route::get('/evidence/view/{id}', 'EvidenceController@view')->name('coordinator.evidence.view');
+
+            Route::middleware(['checkvalidateevidences'])->group(function () {
+                Route::get('/evidence/accept/{id}', 'EvidenceCoordinatorController@accept')->name('coordinator.evidence.accept');
+                Route::post('/evidence/reject/', 'EvidenceCoordinatorController@reject')->name('coordinator.evidence.reject');
+            });
         });
 
     });
@@ -136,13 +144,16 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
          * MEETINGS
          */
         Route::get('/meeting/list/', 'MeetingSecretaryController@list')->name('secretary.meeting.list');
-        Route::get('/meeting/create/', 'MeetingSecretaryController@create')->name('secretary.meeting.create');
-        Route::post('/meeting/new', 'MeetingSecretaryController@new')->name('secretary.meeting.new');
+
+        Route::middleware(['checkregistermeetings'])->group(function () {
+            Route::get('/meeting/create/', 'MeetingSecretaryController@create')->name('secretary.meeting.create');
+            Route::post('/meeting/new', 'MeetingSecretaryController@new')->name('secretary.meeting.new');
+        });
 
         // Consulta AJAX
         Route::get('/meeting/defaultlist/{id}', 'MeetingSecretaryController@defaultlist')->name('secretary.meeting.defaultlist');
 
-        Route::middleware(['checknotnull:Meeting'])->group(function () {
+        Route::middleware(['checknotnull:Meeting','checkregistermeetings'])->group(function () {
             Route::get('/meeting/edit/{id}', 'MeetingSecretaryController@edit')->name('secretary.meeting.edit');
             Route::post('/meeting/save', 'MeetingSecretaryController@save')->name('secretary.meeting.save');
             Route::post('/meeting/remove', 'MeetingSecretaryController@remove')->name('secretary.meeting.remove');
@@ -152,10 +163,13 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
          * BONUS
          */
         Route::get('/bonus/list/', 'BonusSecretaryController@list')->name('secretary.bonus.list');
-        Route::get('/bonus/create/', 'BonusSecretaryController@create')->name('secretary.bonus.create');
-        Route::post('/bonus/new', 'BonusSecretaryController@new')->name('secretary.bonus.new');
 
-        Route::middleware(['checknotnull:Bonus'])->group(function () {
+        Route::middleware(['checkregisterbonus'])->group(function () {
+            Route::get('/bonus/create/', 'BonusSecretaryController@create')->name('secretary.bonus.create');
+            Route::post('/bonus/new', 'BonusSecretaryController@new')->name('secretary.bonus.new');
+        });
+
+        Route::middleware(['checknotnull:Bonus','checkregisterbonus'])->group(function () {
             Route::get('/bonus/edit/{id}', 'BonusSecretaryController@edit')->name('secretary.bonus.edit');
             Route::post('/bonus/save', 'BonusSecretaryController@save')->name('secretary.bonus.save');
             Route::post('/bonus/remove', 'BonusSecretaryController@remove')->name('secretary.bonus.remove');
@@ -193,11 +207,13 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     /**
      *  REGISTER COORDINATOR
      */
-    Route::get('/registercoordinator/token/','EventbriteController@token')->name('registercoordinator.token');
-    Route::post('/registercoordinator/token/save','EventbriteController@token_save')->name('registercoordinator.token.save');
+    Route::middleware(['checkregistereventsandattendings'])->group(function () {
+        Route::get('/registercoordinator/token/', 'EventbriteController@token')->name('registercoordinator.token');
+        Route::post('/registercoordinator/token/save', 'EventbriteController@token_save')->name('registercoordinator.token.save');
 
-    Route::get('/registercoordinator/event/load','EventbriteController@event_load')->name('registercoordinator.event.load');
-    Route::get('/registercoordinator/attendee/load','EventbriteController@attendee_load')->name('registercoordinator.attendee.load');
+        Route::get('/registercoordinator/event/load', 'EventbriteController@event_load')->name('registercoordinator.event.load');
+        Route::get('/registercoordinator/attendee/load', 'EventbriteController@attendee_load')->name('registercoordinator.attendee.load');
+    });
 
     Route::get('/registercoordinator/event/list','EventbriteController@event_list')->name('registercoordinator.event.list');
     Route::get('/registercoordinator/attendee/list','EventbriteController@attendee_list')->name('registercoordinator.attendee.list');
