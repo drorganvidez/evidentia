@@ -31,6 +31,8 @@
 
                     <h3 class="profile-username text-center">{{Auth::user()->name}} {{Auth::user()->surname}}</h3>
 
+                    <x-participation :user="Auth::user()"/>
+
                     <p class="text-muted text-center">
                         @foreach(Auth::user()->roles as $rol)
                             <span class="badge badge-pill badge-secondary">{{$rol->slug}}</span>

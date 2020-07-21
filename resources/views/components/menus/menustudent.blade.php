@@ -3,7 +3,7 @@
     <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-            <li class="nav-header">HERRAMIENTAS</li>
+            <li class="nav-header">MIS COSAS</li>
             @if(!\Carbon\Carbon::now()->gt(\Config::upload_evidences_timestamp()))
             <x-li route="evidence.create" icon='fab fa-angellist' name="Crear evidencia"/>
             @endif

@@ -49,6 +49,8 @@
 
                     <h3 class="profile-username text-center">{{$user->name}} {{$user->surname}}</h3>
 
+                    <x-participation :user="$user"/>
+
                     <p class="text-muted text-center">
                         @foreach($user->roles as $rol)
                             <span class="badge badge-pill badge-secondary">{{$rol->slug}}</span>
