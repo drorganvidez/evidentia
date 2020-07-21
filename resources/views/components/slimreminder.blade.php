@@ -9,7 +9,7 @@
         @if(\Carbon\Carbon::create($datetime)->lt(\Carbon\Carbon::now()))
             Tiempo finalizado
         @else
-            Quedan {{\Carbon\Carbon::create($datetime)->diff(\Carbon\Carbon::now(),false)->format('%d días, %h horas y %i minutos')}}
+            Quedan {{\Carbon\Carbon::create($datetime)->diff(\Carbon\Carbon::now(),false)->format('%M meses, %d días, %h horas y %i minutos')}}
         @endif
 
     @endif
