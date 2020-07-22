@@ -25,7 +25,7 @@ class CreateUsersTable extends Migration
 
         config(['database.default' => 'instance']);
 
-        Schema::connection('instance')->create('users', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('surname');

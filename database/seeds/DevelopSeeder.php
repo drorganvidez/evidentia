@@ -19,6 +19,8 @@ class DevelopSeeder extends Seeder
         Config::set('database.connections.instance.username', 'homestead');
         Config::set('database.connections.instance.password', 'secret');
         Config::set('database.connections.instance.database', 'base20');
+        Config::set('database.connections.instance.charset', 'utf8mb4');
+        Config::set('database.connections.instance.collation', 'utf8mb4_unicode_ci');
         Config::set('database.default', 'instance');
 
         Artisan::call('config:clear');
