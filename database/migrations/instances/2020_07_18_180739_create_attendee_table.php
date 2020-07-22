@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBonusTable extends Migration
+class CreateAttendeeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateBonusTable extends Migration
      */
     public function up()
     {
-        Schema::create('bonus', function (Blueprint $table) {
+        Schema::create('attendee', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('comittee_id')->nullable(true);
-            $table->string('reason');
-            $table->integer('hours');
+            $table->foreignId('event_id');
+            $table->foreignId('user_id');
+            $table->enum('status',['Attending','Checked In','Guests Attended','Guests Attending','Not Attending (Refunded/Canceled)']);
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateBonusTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bonus');
+        Schema::dropIfExists('attendee');
     }
 }

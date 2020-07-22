@@ -23,7 +23,7 @@ class DevelopSeeder extends Seeder
         Config::set('database.connections.instance.collation', 'utf8mb4_unicode_ci');
         Config::set('database.default', 'instance');
 
-        Artisan::call('config:clear');
+        //Artisan::call('config:clear');
 
         /*
          *  ROLES
@@ -72,8 +72,8 @@ class DevelopSeeder extends Seeder
         DB::table('users')->insert([
             'id' => 1,
             'dni' => 111111111,
-            'name' => 'David',
-            'surname' => 'Romero Organvídez',
+            'name' => 'John',
+            'surname' => 'Doe',
             'email' => 'alumno1@alumno1.com',
             'username' => 'alumno1',
             'password' => Hash::make('alumno1'),
@@ -88,8 +88,8 @@ class DevelopSeeder extends Seeder
         DB::table('users')->insert([
             'id' => 2,
             'dni' => 222222222,
-            'name' => 'Alumno',
-            'surname' => 'Almansa 2',
+            'name' => 'Jess',
+            'surname' => 'Ahmad',
             'email' => 'alumno2@alumno2.com',
             'username' => 'alumno2',
             'password' => Hash::make('alumno2'),
@@ -104,8 +104,8 @@ class DevelopSeeder extends Seeder
         DB::table('users')->insert([
             'id' => 3,
             'dni' => 333333333,
-            'name' => 'Secretario',
-            'surname' => 'Segismundo 1',
+            'name' => 'Tim',
+            'surname' => 'Strong',
             'email' => 'secretario1@secretario1.com',
             'username' => 'secretario1',
             'password' => Hash::make('secretario1'),
@@ -120,8 +120,8 @@ class DevelopSeeder extends Seeder
         DB::table('users')->insert([
             'id' => 4,
             'dni' => 444444444,
-            'name' => 'Secretario',
-            'surname' => 'Segismundo 2',
+            'name' => 'Diogo',
+            'surname' => 'Chadwick',
             'email' => 'secretario2@secretario2.com',
             'username' => 'secretario2',
             'password' => Hash::make('secretario2'),
@@ -136,8 +136,8 @@ class DevelopSeeder extends Seeder
         DB::table('users')->insert([
             'id' => 5,
             'dni' => 555555555,
-            'name' => 'Coordinador',
-            'surname' => 'Cobardica 1',
+            'name' => 'Margaret',
+            'surname' => 'Hendricks',
             'email' => 'coordinador1@coordinador1.com',
             'username' => 'coordinador1',
             'password' => Hash::make('coordinador1'),
@@ -152,8 +152,8 @@ class DevelopSeeder extends Seeder
         DB::table('users')->insert([
             'id' => 6,
             'dni' => 666666666,
-            'name' => 'Coordinador',
-            'surname' => 'Cobardica 2',
+            'name' => 'Diana',
+            'surname' => 'Rowley',
             'email' => 'coordinador2@coordinador2.com',
             'username' => 'coordinador2',
             'password' => Hash::make('coordinador2'),
@@ -168,8 +168,8 @@ class DevelopSeeder extends Seeder
         DB::table('users')->insert([
             'id' => 7,
             'dni' => 777777777,
-            'name' => 'Registrador',
-            'surname' => 'Corchuelo 1',
+            'name' => 'Karl',
+            'surname' => 'Clayton',
             'email' => 'coordinadorregistro1@coordinadorregistro1.com',
             'username' => 'coordinadorregistro1',
             'password' => Hash::make('coordinadorregistro1'),
@@ -184,8 +184,8 @@ class DevelopSeeder extends Seeder
         DB::table('users')->insert([
             'id' => 8,
             'dni' => 888888888,
-            'name' => 'Registrador',
-            'surname' => 'Corchuelo 2',
+            'name' => 'Clara',
+            'surname' => 'Hart',
             'email' => 'coordinadorregistro2@coordinadorregistro2.com',
             'username' => 'coordinadorregistro2',
             'password' => Hash::make('coordinadorregistro2'),
@@ -200,8 +200,8 @@ class DevelopSeeder extends Seeder
         DB::table('users')->insert([
             'id' => 9,
             'dni' => 999999999,
-            'name' => 'Presidente',
-            'surname' => 'Pérez 1',
+            'name' => 'Jamie-Leigh',
+            'surname' => 'Liu',
             'email' => 'presidente1@presidente1.com',
             'username' => 'presidente1',
             'password' => Hash::make('presidente1'),
@@ -216,8 +216,8 @@ class DevelopSeeder extends Seeder
         DB::table('users')->insert([
             'id' => 10,
             'dni' => 101010101,
-            'name' => 'Presidente',
-            'surname' => 'Pérez 2',
+            'name' => 'Kathryn',
+            'surname' => 'Cordova',
             'email' => 'presidente2@presidente2.com',
             'username' => 'presidente2',
             'password' => Hash::make('presidente2'),
@@ -232,8 +232,8 @@ class DevelopSeeder extends Seeder
         DB::table('users')->insert([
             'id' => 11,
             'dni' => 110011001,
-            'name' => 'Profesor',
-            'surname' => 'Popitas 1',
+            'name' => 'Samara',
+            'surname' => 'Woolley',
             'email' => 'profesor1@profesor1.com',
             'username' => 'profesor1',
             'password' => Hash::make('profesor1'),
@@ -242,8 +242,8 @@ class DevelopSeeder extends Seeder
         DB::table('users')->insert([
             'id' => 12,
             'dni' => 121212121,
-            'name' => 'Profesor',
-            'surname' => 'Popitas 2',
+            'name' => 'Stephan',
+            'surname' => 'Bennett',
             'email' => 'profesor2@profesor2com',
             'username' => 'profesor2',
             'password' => Hash::make('profesor2'),
@@ -389,7 +389,7 @@ class DevelopSeeder extends Seeder
 
         DB::table('comittees')->insert([
             'id' => 2,
-            'name' => 'Secretaría',
+            'name' => 'Secretar&iacute;a',
             'icon' => '<i class="fas fa-file-signature"></i>'
         ]);
 
@@ -419,12 +419,12 @@ class DevelopSeeder extends Seeder
 
         DB::table('comittees')->insert([
             'id' => 7,
-            'name' => 'Logística'
+            'name' => 'Log&iacute;stica'
         ]);
 
         DB::table('comittees')->insert([
             'id' => 8,
-            'name' => 'Comunicación'
+            'name' => 'Comunicaci&oacute;n'
         ]);
 
         DB::table('subcomittees')->insert([

@@ -21,7 +21,7 @@
                 <div class="card-header p-2">
                     <ul class="nav nav-pills">
                         <li class="nav-item"><a class="nav-link active" href="#users" data-toggle="tab">Importar alumnos</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#instances" data-toggle="tab">Importar instancias</a></li>
+                        {{--<li class="nav-item"><a class="nav-link" href="#instances" data-toggle="tab">Importar instancias</a></li>--}}
                     </ul>
                 </div>
                 <div class="card-body">

@@ -13,7 +13,7 @@ class createdefaultinstance extends Command
      *
      * @var string
      */
-    protected $signature = 'createdefaultinstance';
+    protected $signature = 'evidentia:createinstance';
 
     /**
      * The console command description.

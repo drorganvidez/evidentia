@@ -107,7 +107,7 @@
                                         @else
                                             <option {{$comittee->id == old('comittee') ? 'selected' : ''}} value="{{$comittee->id}}">
                                         @endisset
-                                            {{$comittee->name}}
+                                            {!! $comittee->name !!}
                                         </option>
                                     @endforeach
                                 </select>

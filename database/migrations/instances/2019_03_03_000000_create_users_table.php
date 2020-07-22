@@ -25,7 +25,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->text('biography')->nullable();
-            $table->enum('participation',['ORGANIZATION','INTERMEDIATE','ASSISTANCE']);
+            $table->enum('participation',['ORGANIZATION','INTERMEDIATE','ASSISTANCE'])->default('ASSISTANCE');
             $table->boolean('block')->default(0);
             $table->rememberToken();
             $table->timestamps();

@@ -13,7 +13,7 @@ class reloaddefaultinstance extends Command
      *
      * @var string
      */
-    protected $signature = 'reloaddefaultinstance';
+    protected $signature = 'evidentia:reloadinstance';
 
     /**
      * The console command description.

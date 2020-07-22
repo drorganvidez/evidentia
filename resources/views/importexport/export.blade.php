@@ -21,7 +21,7 @@
                 <div class="card-header p-2">
                     <ul class="nav nav-pills">
                         <li class="nav-item"><a class="nav-link active" href="#evidences" data-toggle="tab">Exportar evidencias</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#instances" data-toggle="tab">Exportar instancias</a></li>
+                        {{--<li class="nav-item"><a class="nav-link" href="#instances" data-toggle="tab">Exportar instancias</a></li>--}}
                     </ul>
                 </div>
                 <div class="card-body">

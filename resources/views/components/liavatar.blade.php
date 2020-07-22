@@ -7,17 +7,17 @@
         <a href="#">
 
             <span style="font-size: 14px; display: block; line-height : 15px;">
-                {{Auth::user()->surname}}
+                {!! Auth::user()->surname!!}
             </span>
 
             <span style="font-size: 16px; display: block; line-height : 15px;">
-                {{Auth::user()->name}}
-            </span>
+            {!!Auth::user()->name!!}
+</span>
 
-        </a>
-
-
+</a>
 
 
-    </div>
+
+
+</div>
 </div>

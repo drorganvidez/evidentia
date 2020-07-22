@@ -1,9 +1,10 @@
-<h2>evidentia.<b>cloud</b><sup>beta</sup></h2>
+<h2>evidentia.<b>cloud</b></h2>
 <p class="text-muted">
-    <b>evidentia.cloud<sup>beta</sup></b> es un sistema de gestión automática de evidencias de trabajos de alumnos
+    <b>evidentia.cloud</b> es un sistema de gestión automática de evidencias de trabajos de alumnos
     y alumnas. Fue originalmente pensado para las Jornadas InnoSoft Days organizadas en el ámbito de la asignatura
     Evolución y Gestión de la Configuración.
 </p>
+
 <div class="text-muted">
 
     <div class="table-responsive">

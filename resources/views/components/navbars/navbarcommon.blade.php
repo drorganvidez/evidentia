@@ -8,6 +8,9 @@
 
     </ul>
 
+    {{\Instantiation::instance_entity()->name}}
+
+    {{--
     <ul class="navbar-nav ml-auto">
 
         <li class="nav-item dropdown">
@@ -101,5 +104,5 @@
                     class="fas fa-th-large"></i></a>
         </li>
     </ul>
-
+    --}}
 </nav>
