@@ -47,7 +47,7 @@
                              alt="User profile picture">
                     </div>
 
-                    <h3 class="profile-username text-center">{!! Auth::user()->name!!} {!!  Auth::user()->surname!!}</h3>
+                    <h3 class="profile-username text-center">{!! $user->name!!} {!!  $user->surname!!}</h3>
 
                     <x-participation :user="$user"/>
 
