@@ -41,7 +41,7 @@ class evidentiastart extends Command
     {
         exec("cat /dev/null > .env");
         exec('echo "APP_NAME=Laravel" >> .env');
-        exec('echo "APP_ENV=local" >> .env');
+        exec('echo "APP_ENV=localhost.local" >> .env');
         exec('echo "APP_KEY=" >> .env');
         exec('echo "APP_DEBUG=true" >> .env');
         exec('echo "APP_URL=http://localhost" >> .env');
@@ -94,18 +94,16 @@ class evidentiastart extends Command
         Artisan::call('key:generate');
         Artisan::call('config:cache');
 
+        DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `homestead`;");
+        DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `base20`;");
+
         DB::connection()->getPdo()->exec("CREATE DATABASE IF NOT EXISTS `homestead`");
 
         DB::connection()->getPdo()->exec("ALTER SCHEMA `homestead`  DEFAULT CHARACTER SET utf8mb4  DEFAULT COLLATE utf8mb4_unicode_ci");
 
-        DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `base20`;");
+        exec("php artisan migrate");
+        exec("php artisan db:seed");
 
-        Artisan::call('migrate:fresh',
-            [
-                '--seed' => 'DatabaseSeeder'
-            ]);
-
-        Artisan::call("config:cache");
         Artisan::call("view:cache");
 
         $this->info("Evidentia has started successfully. Enjoy!");
