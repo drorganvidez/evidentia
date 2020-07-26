@@ -40,7 +40,7 @@ class evidentiastart extends Command
     public function handle()
     {
         Artisan::call("optimize:clear");
-        
+
         exec("cat /dev/null > .env");
         exec('echo "APP_NAME=Laravel" >> .env');
         exec('echo "APP_ENV=localhost.local" >> .env');
