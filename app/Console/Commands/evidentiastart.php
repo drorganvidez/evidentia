@@ -104,7 +104,7 @@ class evidentiastart extends Command
         exec("php artisan migrate");
         exec("php artisan db:seed");
 
-        Artisan::call("view:cache");
+        Artisan::call("optimize:clear");
 
         $this->info("Evidentia has started successfully. Enjoy!");
     }

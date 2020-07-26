@@ -18,6 +18,7 @@ class InstanceController extends Controller
 
     public function create()
     {
+
         return view('instances.createandedit', ['route' => route('admin.instance.new')]);
     }
 
@@ -118,8 +119,11 @@ class InstanceController extends Controller
 
     public function manage()
     {
+
         $instances = Instance::all();
+
         return view('instances.manage', ['instances' => $instances]);
+        return "hola";
     }
 
     public function delete($id)

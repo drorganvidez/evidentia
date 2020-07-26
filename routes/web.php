@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,19 +20,21 @@ Auth::routes();
  *  MAIN ROUTE
  */
 
-Route::get('/', 'MetaAdminController@list')->name('instances.home');;
+Route::get('/', 'MetaAdminController@list')->name('instances.home');
 
 /*
  *  META ADMIN ROUTES
  */
 
-Route::get('/admin', 'MetaAdminController@admin')->name('admin');
+Route::get('administration', 'MetaAdminController@admin')->name('admin');
+
+
 
 Route::prefix('admin')->group(function () {
 
     Route::get('/instance/manage', 'InstanceController@manage')->name('admin.instance.manage');
 
-    Route::get('/instance/create', 'InstanceController@create')->name('admin.instance.create');
+    Route::get('instance/create', 'InstanceController@create')->name('admin.instance.create');
     Route::post('/instance/new', 'InstanceController@new')->name('admin.instance.new');
 
     Route::middleware(['checknotnull:Instance'])->group(function () {
@@ -49,13 +52,13 @@ Route::prefix('admin')->group(function () {
  *  ALL ROUTES
  */
 
-/**
- *  BLOCK
- */
-Route::get('/{instance}/block','BlockController@block')->name('block');
-
 
 Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], function(){
+
+    /**
+     *  BLOCK
+     */
+    Route::get('/block','BlockController@block')->name('block');
 
     /**
      *  GENERAL PURPOSE
