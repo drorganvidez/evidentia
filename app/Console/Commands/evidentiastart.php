@@ -39,6 +39,8 @@ class evidentiastart extends Command
      */
     public function handle()
     {
+        Artisan::call("optimize:clear");
+        
         exec("cat /dev/null > .env");
         exec('echo "APP_NAME=Laravel" >> .env');
         exec('echo "APP_ENV=localhost.local" >> .env');
@@ -103,8 +105,6 @@ class evidentiastart extends Command
 
         exec("php artisan migrate");
         exec("php artisan db:seed");
-
-        Artisan::call("optimize:clear");
 
         $this->info("Evidentia has started successfully. Enjoy!");
     }
