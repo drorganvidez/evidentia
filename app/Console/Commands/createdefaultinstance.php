@@ -40,27 +40,43 @@ class createdefaultinstance extends Command
     public function handle()
     {
 
-        DB::connection()->getPdo()->exec("CREATE DATABASE `base20`");
+        try{
+            $this->line('Creating default instance');
+            DB::connection()->getPdo()->exec("CREATE DATABASE `base20`");
+            $this->line('Creating default instance ... [OK]');
 
-        DB::connection()->getPdo()->exec("ALTER SCHEMA `base20`  DEFAULT CHARACTER SET utf8mb4  DEFAULT COLLATE utf8mb4_unicode_ci");
+            $this->line('Setting character set to UTF8MB4');
+            DB::connection()->getPdo()->exec("ALTER SCHEMA `base20`  DEFAULT CHARACTER SET utf8mb4  DEFAULT COLLATE utf8mb4_unicode_ci");
+            $this->line('Setting character set to UTF8MB4 ... [OK]');
 
-        DB::connection()->getPdo()->exec("CREATE TABLE `base20`.`migrations` (`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,`migration` VARCHAR(255) NOT NULL,`batch` INT(11) NOT NULL, PRIMARY KEY (`id`));");
+            $this->line('Creating migrations table');
+            DB::connection()->getPdo()->exec("CREATE TABLE `base20`.`migrations` (`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,`migration` VARCHAR(255) NOT NULL,`batch` INT(11) NOT NULL, PRIMARY KEY (`id`));");
+            $this->line('Creating migrations table ... [OK]');
 
-        Artisan::call('db:seed',
-            [
-                '--class' => 'InstancesTableSeeder'
-            ]);
+            $this->line('Registering instance');
+            Artisan::call('db:seed',
+                [
+                    '--class' => 'InstancesTableSeeder'
+                ]);
+            $this->line('Registering instance ... [OK]');
 
-        Artisan::call('migrate',
-            [
-                '--path' => 'database/migrations/develop'
-            ]);
+            $this->line('Migrating');
+            Artisan::call('migrate',
+                [
+                    '--path' => 'database/migrations/develop'
+                ]);
 
-        Artisan::call('db:seed',
-            [
-                '--class' => 'DevelopSeeder'
-            ]);
+            Artisan::call('db:seed',
+                [
+                    '--class' => 'DevelopSeeder'
+                ]);
+            $this->line('Migrating ... [OK]');
 
-        $this->info('Instance created successfully.');
+            $this->info('Instance created successfully.');
+        }catch (\Exception $e){
+            $this->error('There seems to be a problem creating the instance. Check that it has not been previously instantiated.');
+            $this->comment("Tip: use 'php artisan evidentia:reloadinstance' if you want to reload instance settings and database.");
+        }
+
     }
 }
