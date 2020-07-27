@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Instance;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -39,8 +40,12 @@ class evidentiastart extends Command
      */
     public function handle()
     {
-        Artisan::call("optimize:clear");
 
+        $this->line('Optimizing');
+        Artisan::call("optimize:clear");
+        $this->line('Optimizing ... [OK]');
+
+        $this->line('Setting environment file');
         exec("cat /dev/null > .env");
         exec('echo "APP_NAME=Laravel" >> .env');
         exec('echo "APP_ENV=localhost.local" >> .env');
@@ -91,20 +96,47 @@ class evidentiastart extends Command
         exec('echo "MIX_PUSHER_APP_KEY=\"${PUSHER_APP_KEY}\"" >> .env');
         exec('echo "MIX_PUSHER_APP_CLUSTER=\"${PUSHER_APP_CLUSTER}\"" >> .env');
         exec('echo "" >> .env');
+        $this->line('Setting environment file ... [OK]');
 
-        Artisan::call('config:cache');
-        Artisan::call('key:generate');
-        Artisan::call('config:cache');
+        $this->line('Generating key');
+        exec("php artisan config:cache");
+        exec("php artisan key:generate");
+        exec("php artisan config:cache");
+        $this->line('Generating key ... [OK]');
 
-        DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `homestead`;");
+        // Borramos la instancia por defecto
+        $this->line('Dropping default instance');
         DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `base20`;");
+        $this->line('Dropping default instance ... [OK]');
 
+        // Borramos las demás instancias
+        $this->line('Dropping instances');
+        $instances = Instance::all();
+        foreach($instances as $instance){
+            DB::statement("DROP DATABASE IF EXISTS `{$instance->database}`");
+        }
+        $this->line('Dropping instances ... [OK]');
+
+        // Borramos la base de datos principal
+        $this->line('Dropping main database');
+        DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `homestead`;");
+        $this->line('Dropping main database ... [OK]');
+
+        // Creamos la base de datos principal
+        $this->line('Creating main database');
         DB::connection()->getPdo()->exec("CREATE DATABASE IF NOT EXISTS `homestead`");
+        $this->line('Creating main database ... [OK]');
 
+        // Codificación UTF8 MB4
+        $this->line('Setting character set to UTF8MB4');
         DB::connection()->getPdo()->exec("ALTER SCHEMA `homestead`  DEFAULT CHARACTER SET utf8mb4  DEFAULT COLLATE utf8mb4_unicode_ci");
+        $this->line('Setting character set to UTF8MB4 ... [OK]');
 
+        // Migraciones y seeders
+        $this->line('Migrating');
         exec("php artisan migrate");
         exec("php artisan db:seed");
+        $this->line('Migrating ... [OK]');
 
         $this->info("Evidentia has started successfully. Enjoy!");
     }
