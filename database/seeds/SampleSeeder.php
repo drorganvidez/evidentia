@@ -60,7 +60,7 @@ class SampleSeeder extends Seeder
             'id' => 1,
             'dni' => 110011001,
             'name' => 'Profesor',
-            'surname' => 'Popitas 1',
+            'surname' => 'Profesor',
             'email' => 'profesor1@profesor1.com',
             'username' => 'profesor1',
             'password' => Hash::make('profesor1'),

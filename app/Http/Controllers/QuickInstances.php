@@ -110,7 +110,9 @@ class QuickInstances extends Controller
 
         $instance->save();
 
-        return redirect()->route('lecture.instances.list',\Instantiation::instance())->with('success', 'Instancia creada con éxito.');
+        $message = 'Instancia creada con éxito.<br><br>CREDENCIALES DE ACCESO</br>Usuario: <code style="color: white">profesor1</code><br>Contraseña: <code style="color: white">profesor1</code>';
+
+        return redirect()->route('lecture.instances.list',\Instantiation::instance())->with('success', $message);
 
     }
 }

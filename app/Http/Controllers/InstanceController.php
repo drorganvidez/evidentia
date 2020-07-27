@@ -71,7 +71,9 @@ class InstanceController extends Controller
 
         $instance->save();
 
-        return redirect()->route('admin.instance.manage')->with('success', 'Instancia creada con éxito.');
+        $message = 'Instancia creada con éxito.<br><br>CREDENCIALES DE ACCESO</br>Usuario: <code style="color: white">profesor1</code><br>Contraseña: <code style="color: white">profesor1</code>';
+
+        return redirect()->route('admin.instance.manage')->with('success', $message);
     }
 
     public function edit($id)
