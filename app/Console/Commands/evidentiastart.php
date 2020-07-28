@@ -111,11 +111,16 @@ class evidentiastart extends Command
 
         // Borramos las demás instancias
         $this->line('Dropping instances');
-        $instances = Instance::all();
-        foreach($instances as $instance){
-            DB::statement("DROP DATABASE IF EXISTS `{$instance->database}`");
+        try {
+            $instances = Instance::all();
+            foreach ($instances as $instance) {
+                DB::statement("DROP DATABASE IF EXISTS `{$instance->database}`");
+            }
+            $this->line('Dropping instances ... [OK]');
+        }catch(\Exception $e){
+            $this->comment('No instances found');
         }
-        $this->line('Dropping instances ... [OK]');
+
 
         // Borramos la base de datos principal
         $this->line('Dropping main database');

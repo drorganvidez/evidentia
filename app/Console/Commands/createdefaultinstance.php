@@ -60,16 +60,10 @@ class createdefaultinstance extends Command
                 ]);
             $this->line('Registering instance ... [OK]');
 
+            // Migración y seeder
             $this->line('Migrating');
-            Artisan::call('migrate',
-                [
-                    '--path' => 'database/migrations/develop'
-                ]);
-
-            Artisan::call('db:seed',
-                [
-                    '--class' => 'DevelopSeeder'
-                ]);
+            exec('php artisan migrate --path database/migrations/develop');
+            exec('php artisan db:seed --class=DevelopSeeder');
             $this->line('Migrating ... [OK]');
 
             $this->info('Instance created successfully.');

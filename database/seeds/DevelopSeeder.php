@@ -389,7 +389,7 @@ class DevelopSeeder extends Seeder
 
         DB::table('comittees')->insert([
             'id' => 2,
-            'name' => 'Secretar&iacute;a',
+            'name' => 'Secretaría',
             'icon' => '<i class="fas fa-file-signature"></i>'
         ]);
 
@@ -419,12 +419,12 @@ class DevelopSeeder extends Seeder
 
         DB::table('comittees')->insert([
             'id' => 7,
-            'name' => 'Log&iacute;stica'
+            'name' => 'Logística'
         ]);
 
         DB::table('comittees')->insert([
             'id' => 8,
-            'name' => 'Comunicaci&oacute;n'
+            'name' => 'Comunicación'
         ]);
 
         DB::table('subcomittees')->insert([
