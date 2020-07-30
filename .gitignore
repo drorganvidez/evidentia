@@ -6,8 +6,6 @@
 .env
 .env.backup
 .phpunit.result.cache
-/homestead
-Homestead.json
 npm-debug.log
 yarn-error.log
 .DS_Store
