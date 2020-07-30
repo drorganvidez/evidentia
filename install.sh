@@ -1,5 +1,4 @@
 #!/bin/bash
-# shellcheck disable=SC2164
 cd homestead
 vagrant box add laravel/homestead
 vagrant up
