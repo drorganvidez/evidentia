@@ -23,8 +23,6 @@ class DevelopSeeder extends Seeder
         Config::set('database.connections.instance.collation', 'utf8mb4_unicode_ci');
         Config::set('database.default', 'instance');
 
-        //Artisan::call('config:clear');
-
         /*
          *  ROLES
          */

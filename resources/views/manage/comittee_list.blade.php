@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Gestionar evidencias')
+@section('title', 'Gestionar comités')
 
-@section('title-icon', 'nav-icon fas fa-clipboard-check')
+@section('title-icon', 'fas fa-sitemap')
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>
@@ -12,63 +12,6 @@
 @section('content')
 
     <div class="row">
-
-        <div class="col-lg-3 col-sm-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-light elevation-1"><i class="fas fa-pencil-ruler"></i></span>
-
-                <div class="info-box-content">
-                    <span class="info-box-text">Evidencias en borrador</span>
-                    <span class="info-box-number">
-                  {{\App\Evidence::evidences_draft()->count()}}
-                </span>
-                </div>
-
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-light elevation-1"><i class="fas fa-clock"></i></span>
-
-                <div class="info-box-content">
-                    <span class="info-box-text">Evidencias pendientes</span>
-                    <span class="info-box-number">
-                  {{\App\Evidence::evidences_pending()->count()}}
-                </span>
-                </div>
-
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-light elevation-1"><i class="far fa-thumbs-up"></i></span>
-
-                <div class="info-box-content">
-                    <span class="info-box-text">Evidencias aceptadas</span>
-                    <span class="info-box-number">
-                  {{\App\Evidence::evidences_accepted()->count()}}
-                </span>
-                </div>
-
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-light elevation-1"><i class="far fa-thumbs-down"></i></span>
-
-                <div class="info-box-content">
-                    <span class="info-box-text">Evidencias rechazadas</span>
-                    <span class="info-box-number">
-                  {{\App\Evidence::evidences_rejected()->count()}}
-                </span>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-
-    <div class="row">
         <div class="col-lg-12">
 
             <x-status/>
@@ -76,38 +19,78 @@
             <div class="card">
 
                 <div class="card-body">
-                    <table id="dataset" class="table table-bordered table-striped">
-                        <thead>
-                        <tr>
-                            <th>Título</th>
-                            <th>Apellido del autor</th>
-                            <th>Nombre del autor</th>
-                            <th>Horas</th>
-                            <th>Comité</th>
-                            <th>Creada</th>
-                            <th>Estado</th>
-                        </tr>
-                        </thead>
-                        <tbody>
 
-                        @foreach($evidences as $evidence)
+                    <div class="callout">
+
+                        <h4>Crear nuevo comité</h4>
+
+                        <p>Puedes encontrar más iconos en <a target="_blank" href="https://fontawesome.com/icons?d=gallery">Font Awesome</a></p>
+
+                    <form method="POST" action="{{$route_new}}">
+                        @csrf
+
+                        <div class="form-row">
+
+                            <div class="form-group col-auto">
+                                <label for="icon">Previsualización</label>
+                                <span id="write_new_icon" class="align-middle form-control input-group-text text-center"></span>
+                            </div>
+
+                            <x-input col="4" id="new_icon" attr="icon" :required="false" label="Icono de Font Awesome" />
+
+                            <x-input col="4" attr="name"  label="Nombre del comité" />
+
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-4">
+                            <button type="submit" class="btn btn-primary">Crear comité</button>
+                            </div>
+                        </div>
+
+                    </form>
+
+                    </div>
+
+                    <form method="POST" action="{{$route}}">
+                        @csrf
+
+                        <table id="dataset" class="table table-bordered table-striped">
+                            <thead>
                             <tr>
-                                <td><a  href="{{route('profiles.view.evidence',['instance' => $instance, 'id_user' => $evidence->user->id, 'id_evidence' => $evidence->id])}}">{{$evidence->title}}</a></td>
-                                <td><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $evidence->user->id])}}">{{$evidence->user->surname}}</a></td>
-                                <td><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $evidence->user->id])}}">{{$evidence->user->name}}</a></td>
-                                <td>{{$evidence->hours}}</td>
-                                <td>
-                                    <x-evidencecomittee :evidence="$evidence"/>
-                                </td>
-                                <td> {{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }} </td>
-                                <td>
-                                    <x-evidencestatus :evidence="$evidence"/>
-                                </td>
+                                <th>Previsualización</th>
+                                <th>Icono de Font Awesome</th>
+                                <th>Nombre del comité</th>
+                                <th>Opciones</th>
                             </tr>
-                        @endforeach
+                            </thead>
+                            <tbody>
 
-                        </tbody>
-                    </table>
+                            @foreach($comittees as $comittee)
+                                <tr>
+                                    <td class="align-middle text-center"><span id="icon_prev_{{$comittee->id}}" style="font-size: 20px">{!! $comittee->icon ?? '' !!}</span></td>
+                                    <td><input name="icon_{{$comittee->id}}" id="icon_{{$comittee->id}}" oninput="prev({{$comittee->id}})" type="text" class="form-control" placeholder="" value="{{$comittee->icon}}" autocomplete="icon" autofocus=""></td>
+                                    <td><input name="name_{{$comittee->id}}" type="text" class="form-control" placeholder="" value="{{$comittee->name}}" autocomplete="name" ></td>
+                                    <td>
+                                        <a class="form-control btn btn-danger " href="#" data-toggle="modal" data-target="#modal-{{$comittee->id}}">
+                                            <i class="fas fa-trash"></i> Eliminar
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+
+                            </tbody>
+                        </table>
+
+                            <div class="form-row">
+                                <div class="col-lg-3 mt-1">
+                                    <button type="submit"  class="btn btn-primary btn-block">Guardar comités</button>
+                                </div>
+                            </div>
+
+
+
+                    </form>
 
                 </div>
 
@@ -115,5 +98,81 @@
 
         </div>
     </div>
+
+    <div class="container">
+        @foreach($comittees as $comittee)
+        <div class="modal fade" id="modal-{{$comittee->id}}">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="overflow: visible">
+
+                    <div class="modal-header">
+                        <h4 class="modal-title text-wrap">Eliminar comité</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    @if($comittee->can_be_removed())
+
+                        <form action="{{$route_remove}}" method="POST">
+                            @csrf
+                            <input type="hidden" name="_id" value="{{$comittee->id}}"/>
+                            <div class="modal-body text-wrap">
+                                Esta acción no se puede deshacer. ¿Deseas continuar?
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-trash"></i> &nbsp;Eliminar comité
+                                </button>
+                            </div>
+                        </form>
+
+                    @else
+
+                        <div class="modal-body text-wrap">
+                            <p>No es posible eliminar este comité. Un comité puede ser eliminado si se cumplen las <b>tres condiciones siguientes</b>:
+                                <ol>
+                                    <li>
+                                        <b>No tiene ningún coordinador ni secretario</b><br>
+                                        (coordinadores: {{$comittee->coordinators->count()}}, secretarios: {{$comittee->secretaries->count()}})
+                                    </li>
+                                    <li><b>No tiene evidencias asociadas, sea cual sea su estado</b> (evidencias: {{$comittee->evidences->count()}})</li>
+                                <li><b>No hay reuniones asociadas</b> (reuniones: {{$comittee->meetings->count()}})</li>
+                                </ol>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        </div>
+
+                    @endif
+
+
+
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
+
+    @section('scripts')
+
+    <script>
+
+        // previsualizar icono a la hora de crear un nuevo comité
+        $("#new_icon").on('input',function(){
+            var val = $("#new_icon").val();
+            $("#write_new_icon").html(val);
+        });
+
+        // previsualizar icono a la hora de modificar un comité
+        function prev(id){
+            var val = $("#icon_"+id).val();
+            $("#icon_prev_"+id).html(val);
+        }
+
+    </script>
+
+    @endsection
 
 @endsection

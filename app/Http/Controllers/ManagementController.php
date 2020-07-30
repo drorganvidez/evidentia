@@ -49,6 +49,114 @@ class ManagementController extends Controller
             ['instance' => $instance, 'meetings' => $meetings]);
     }
 
+    public function comittee_list()
+    {
+        $instance = \Instantiation::instance();
+        $comittees = Comittee::all();
+
+        $route = null;
+        $route_new = null;
+        $route_remove = null;
+        if(Auth::user()->hasRole('PRESIDENT')){
+            $route = route('president.comittee.management.save', $instance);
+            $route_new = route('president.comittee.management.new', $instance);
+            $route_remove = route('president.comittee.management.remove', $instance);
+        }else{
+            $route = route('lecture.comittee.management.save', $instance);
+            $route_new = route('lecture.comittee.management.new', $instance);
+            $route_remove = route('lecture.comittee.management.remove', $instance);
+        }
+
+        return view('manage.comittee_list',
+            ['instance' => $instance, 'comittees' => $comittees, 'route' => $route, 'route_new' => $route_new, 'route_remove' => $route_remove]);
+    }
+
+    public function comittee_new(Request $request)
+    {
+        $instance = \Instantiation::instance();
+        $request->validate([
+            'icon' => 'max:255',
+            'name' => 'required|max:255|unique:comittees'
+        ]);
+
+        Comittee::create([
+            'icon' => $request->input('icon'),
+            'name' => $request->input('name')
+        ]);
+
+        if(Auth::user()->hasRole('PRESIDENT')){
+            return redirect()->route('president.comittee.list', $instance)->with('success', 'Comité creado con éxito.');
+        }else{
+            return redirect()->route('lecture.comittee.list', $instance)->with('success', 'Comité creado con éxito.');
+        }
+    }
+
+    public function comittee_save(Request $request)
+    {
+        $instance = \Instantiation::instance();
+        $returned_route = null;
+        if(Auth::user()->hasRole('PRESIDENT')){
+            $returned_route = "president.comittee.list";
+        }else{
+            $returned_route = "lecture.comittee.list";
+        }
+
+        // por sl algún usuario avispao modifica los ID en el HTML
+        try{
+            foreach (Comittee::all() as $comittee) {
+
+
+
+            }
+        }catch (\Exception $e){
+            return redirect()->route($returned_route, $instance)->with('error', 'Error en la integridad de los comités.' . $e->getMessage());
+        }
+
+        foreach (Comittee::all() as $comittee) {
+
+            /*
+            $request->validate([
+                'icon_' . $comittee->id => 'max:255',
+                'name_' . $comittee->id => 'required|max:255|unique:comittees'
+            ]);
+            */
+
+            $new_icon = $request->input('icon_' . $comittee->id);
+            $new_name = $request->input('name_' . $comittee->id);
+
+            if($new_name != "") {
+
+                $saved_comittee = Comittee::find($comittee->id);
+                $saved_comittee->icon = $new_icon;
+                $saved_comittee->name = $new_name;
+
+                $saved_comittee->save();
+            }
+        }
+
+        return redirect()->route($returned_route, $instance)->with('success', 'Comités guardados con éxito.');
+    }
+
+    public function comittee_remove(Request $request)
+    {
+        $instance = \Instantiation::instance();
+        $returned_route = null;
+        if(Auth::user()->hasRole('PRESIDENT')){
+            $returned_route = "president.comittee.list";
+        }else{
+            $returned_route = "lecture.comittee.list";
+        }
+
+        $comittee = Comittee::find($request->input('_id'));
+        if($comittee->can_be_removed()){
+            $comittee->delete();
+            return redirect()->route($returned_route, $instance)->with('success', 'Comité eliminado con éxito.');
+        }else{
+            return redirect()->route($returned_route, $instance)->with('error', 'El comité no ha podido ser eliminado.');
+        }
+
+    }
+
     public function user_management($instance,$id)
     {
         $instance = \Instantiation::instance();

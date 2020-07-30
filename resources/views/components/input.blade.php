@@ -1,5 +1,5 @@
 <div class="form-group col-md-{{ $col }}">
-    <label for="{{ $attr }}">{{ $label }}</label>
+    <label for="{{ $attr }}">{!!  $label  !!}</label>
     <input id="{{ $id }}" type="{{ $type }}"
 
            class="
@@ -27,6 +27,8 @@
 
            @if($required == true)
                 required
+           @else
+
            @endif
 
            autocomplete="{{ $attr }}" autofocus

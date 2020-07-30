@@ -11,14 +11,20 @@ class ConfigController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('checkroles:LECTURE');
+        $this->middleware('checkroles:LECTURE|PRESIDENT');
     }
 
 
     public function config()
     {
         $instance = \Instantiation::instance();
-        $route = route('lecture.config.save',$instance);
+        $route = null;
+        if(Auth::user()->hasRole('LECTURE')){
+            $route = route('lecture.config.save',$instance);
+        }else{
+            $route = route('president.config.save',$instance);
+        }
+
         $configuration = Configuration::find(1);
 
         return view('config.config',
@@ -47,7 +53,11 @@ class ConfigController extends Controller
 
         $configuration->save();
 
-        return redirect()->route('lecture.config',$instance)->with('success','Configuración guardada con éxito.');
+        if(Auth::user()->hasRole('LECTURE')) {
+            return redirect()->route('lecture.config', $instance)->with('success', 'Configuración guardada con éxito.');
+        }else{
+            return redirect()->route('president.config', $instance)->with('success', 'Configuración guardada con éxito.');
+        }
 
     }
 }

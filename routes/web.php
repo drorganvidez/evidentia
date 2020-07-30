@@ -224,9 +224,22 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     /**
      *  PRESIDENT
      */
+    Route::middleware(['checkroles:PRESIDENT'])->group(function () {
+        Route::get('/president/config', 'ConfigController@config')->name('president.config');
+        Route::post('/president/config/save', 'ConfigController@config_save')->name('president.config.save');
+    });
+
     Route::get('/president/user/list','ManagementController@user_list')->name('president.user.list');
     Route::get('/president/evidence/list','ManagementController@evidence_list')->name('president.evidence.list');
     Route::get('/president/meeting/list','ManagementController@meeting_list')->name('president.meeting.list');
+
+    Route::get('/president/comittee/list','ManagementController@comittee_list')->name('president.comittee.list');
+    Route::post('/president/comittee/management/save','ManagementController@comittee_save')->name('president.comittee.management.save');
+    Route::post('/president/comittee/management/new','ManagementController@comittee_new')->name('president.comittee.management.new');
+
+    Route::middleware(['checknotnull:Comittee'])->group(function () {
+        Route::post('/president/comittee/management/remove', 'ManagementController@comittee_remove')->name('president.comittee.management.remove');
+    });
 
     Route::middleware(['checknotnull:User'])->group(function () {
         Route::get('/president/user/management/{id}','ManagementController@user_management')->name('president.user.management');
@@ -240,8 +253,18 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/lecture/evidence/list','ManagementController@evidence_list')->name('lecture.evidence.list');
     Route::get('/lecture/meeting/list','ManagementController@meeting_list')->name('lecture.meeting.list');
 
-    Route::get('/lecture/config','ConfigController@config')->name('lecture.config');
-    Route::post('/lecture/config/save','ConfigController@config_save')->name('lecture.config.save');
+    Route::middleware(['checkroles:LECTURE'])->group(function () {
+        Route::get('/lecture/config', 'ConfigController@config')->name('lecture.config');
+        Route::post('/lecture/config/save', 'ConfigController@config_save')->name('lecture.config.save');
+    });
+
+    Route::get('/lecture/comittee/list','ManagementController@comittee_list')->name('lecture.comittee.list');
+    Route::post('/lecture/comittee/management/save','ManagementController@comittee_save')->name('lecture.comittee.management.save');
+    Route::post('/lecture/comittee/management/new','ManagementController@comittee_new')->name('lecture.comittee.management.new');
+
+    Route::middleware(['checknotnull:Comittee'])->group(function () {
+        Route::post('/lecture/comittee/management/remove', 'ManagementController@comittee_remove')->name('lecture.comittee.management.remove');
+    });
 
     Route::get('/lecture/integrity','IntegrityController@integrity')->name('lecture.integrity');
 
