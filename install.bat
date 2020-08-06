@@ -1,5 +1,4 @@
 @echo off
-runas /user:Administrator "echo 192.168.10.10 evidentia.test >> '%WINDIR%\System32\Drivers\Etc\Hosts'"
 cd homestead
 vagrant box add laravel/homestead
 vagrant up
