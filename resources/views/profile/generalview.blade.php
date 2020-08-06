@@ -38,32 +38,7 @@
 
         <div class="col-md-3">
 
-
-            <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-                    <div class="text-center">
-                        <img width="100" height="100" class="img-circle elevation-2"
-                             src="{{route('avatar',['instance' => $instance, 'id' => $user->id])}}"
-                             alt="User profile picture">
-                    </div>
-
-                    <h3 class="profile-username text-center">{!! $user->name!!} {!!  $user->surname!!}</h3>
-
-                    <x-participation :user="$user"/>
-
-                    <p class="text-muted text-center">
-                        @foreach($user->roles as $rol)
-                            <span class="badge badge-pill badge-secondary">{{$rol->slug}}</span>
-                        @endforeach
-                    </p>
-
-                    <p style="text-justify: auto">{!! $user->biography !!}</p>
-
-
-                </div>
-
-            </div>
-
+            <x-profile :user="$user"/>
 
         </div>
 

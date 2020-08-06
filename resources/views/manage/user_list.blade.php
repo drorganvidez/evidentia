@@ -45,9 +45,7 @@
                                 <td><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $user->id])}}">{{$user->name}}</a></td>
                                 <td>{{$user->username}}</td>
                                 <td>
-                                    @foreach($user->roles as $rol)
-                                        <span class="badge badge-pill badge-secondary">{{$rol->slug}}</span>
-                                    @endforeach
+                                    <x-roles :user="$user"/>
                                 </td>
                                 <td>
                                     @if(Auth::user()->hasRole('PRESIDENT'))

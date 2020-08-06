@@ -1,3 +1,4 @@
+@if(!$user->hasRole('LECTURE'))
 <h6 class="text-center">
     <span class="badge badge-pill badge-primary">
 
@@ -12,6 +13,8 @@
         @if ($user->participation == "ASSISTANCE")
             ASISTENCIA
         @endif
-    </span></h6>
+    </span>
+</h6>
+@endif
 
 

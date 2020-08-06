@@ -36,23 +36,8 @@
                         <div class="row">
 
                             <div class="col-md-6">
-                                <div class="card card-info card-outline">
-                                    <div class="card-body box-profile">
-                                        <div class="text-center">
-                                            <img width="100" height="100" class="img-circle elevation-2"
-                                                 src="{{route('avatar',['instance' => $instance, 'id' => $user->id])}}"
-                                                 alt="User profile picture">
-                                        </div>
 
-                                        <h3 class="profile-username text-center">{{$user->name}} {{$user->surname}}</h3>
-
-                                        <p style="text-justify: auto">{!! $user->biography !!}</p>
-
-
-                                    </div>
-
-                                </div>
-
+                                <x-profile :user="$user"/>
 
                             </div>
 
