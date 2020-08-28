@@ -265,4 +265,38 @@ class User extends Authenticatable
             return "None";
         }
     }
+
+    public function committee_belonging()
+    {
+
+        // se obtienen los comités de las evidencias validadas
+        $comittees_names =  $this->evidences->map(function ($item, $key) {
+            if($item->status == 'ACCEPTED') {
+                return $item->comittee->name;
+            }
+        });
+
+        // se eliminan comités repetidos
+        $comittees_names = $comittees_names->unique();
+
+        // eliminamos los comités nulos
+        $comittees_names =  $comittees_names ->filter(function ($value, $key) {
+            return $value != null;
+        });
+
+        $comittee = "";
+
+        // por defecto, si el alumno es coordinador o secretario, se añade el comité asociado
+        if($this->hasRole('COORDINATOR')){
+            $comittee = $this->coordinator->comittee->name;
+        }elseif ($this->hasRole('SECRETARY')){
+            $comittee = $this->secretary->comittee->name;
+        }
+
+        $comittees_names->push($comittee);
+
+        $comittees_names = $comittees_names->implode(" | ");
+
+        return $comittees_names;
+    }
 }

@@ -83,8 +83,8 @@ class EvidenceController extends Controller
 
     private function new_evidence($request,$status)
     {
-        $validatedData = $request->validate([
-            'title' => 'required|max:255',
+        $request->validate([
+            'title' => 'required|min:5|max:255',
             'hours' => 'required|numeric|between:0.5,99.99|max:100',
             'description' => ['required',new MinCharacters(10),new MaxCharacters(20000)],
         ]);
@@ -216,8 +216,8 @@ class EvidenceController extends Controller
     {
         $instance = \Instantiation::instance();
 
-        $validatedData = $request->validate([
-            'title' => 'required|max:255',
+        $request->validate([
+            'title' => 'required|min:5|max:255',
             'hours' => 'required|numeric|between:0.5,99.99|max:100',
             'description' => ['required',new MinCharacters(10),new MaxCharacters(20000)],
         ]);
