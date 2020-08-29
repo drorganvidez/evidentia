@@ -10,5 +10,5 @@
 
     {{\Instantiation::instance_entity()->name}}
 
-   
+
 </nav>

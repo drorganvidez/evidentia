@@ -55,10 +55,23 @@
 
                             <h5>
                                 <x-evidencecomittee :evidence="$evidence"/>
+
                                 <span class="badge badge-secondary">
-                                                <i class="far fa-clock"></i> {{$evidence->hours}} horas
-                                            </span>
+                                    <i class="far fa-clock"></i> {{$evidence->hours}} horas
+                                </span>
+
+                                <span class="badge badge-secondary">
+                                    @if($evidence->integrity())
+                                        Integridad <i class="fas fa-check-circle"></i>
+                                    @else
+                                        <i  class="fas fa-times-circle"></i>
+                                    @endif
+                                </span>
+
+
                             </h5>
+
+
 
                             <h4>{{$evidence->title}}</h4>
 

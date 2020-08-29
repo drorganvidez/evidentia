@@ -138,4 +138,9 @@ class Evidence extends Model
         return Evidence::where('status','=', 'ACCEPTED')->orderByDesc('updated_at')->get();
     }
 
+    public function integrity()
+    {
+        return $this->stamp == \Stamp::get_stamp_evidence($this);
+    }
+
 }

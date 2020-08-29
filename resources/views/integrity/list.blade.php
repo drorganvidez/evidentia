@@ -50,7 +50,7 @@
                                         <td>{{$evidence->user->surname}}, {{$evidence->user->name}}</td>
                                         <td> {{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }} </td>
                                         <td class="text-center">
-                                            @if($evidence->stamp == \Stamp::get_stamp_evidence($evidence))
+                                            @if($evidence->integrity())
                                                 <i style="color: green" class="fas fa-check-circle"></i>
                                             @else
                                                 <i style="color: red" class="fas fa-times-circle"></i>
@@ -85,7 +85,7 @@
                                         <td>{{$proof->evidence->user->surname}}, {{$proof->evidence->user->name}}</td>
                                         <td> {{ \Carbon\Carbon::parse($proof->created_at)->diffForHumans() }} </td>
                                         <td class="text-center">
-                                            @if($proof->file->stamp == \Stamp::get_stamp_file($proof->file))
+                                            @if($proof->integrity())
                                                 <i style="color: green" class="fas fa-check-circle"></i>
                                             @else
                                                 <i style="color: red" class="fas fa-times-circle"></i>

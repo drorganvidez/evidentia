@@ -20,4 +20,9 @@ class Proof extends Model
     {
         return $this->belongsTo('App\File');
     }
+
+    public function integrity()
+    {
+        return $this->file->stamp == \Stamp::get_stamp_file($this->file);
+    }
 }
