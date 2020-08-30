@@ -294,4 +294,14 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         Route::get('/profiles/view/{id_user}/evidence/{id_evidence}','ProfileController@evidences_view')->name('profiles.view.evidence');
     });
 
+    /**
+     *  RANDOMIZE EVIDENCES
+     */
+
+    Route::middleware(['checkroles:LECTURE'])->group(function () {
+        Route::get('/randomize','RandomizeController@randomize')->name('randomize.randomize');
+        Route::post('/randomize/save','RandomizeController@randomize_save')->name('randomize.save');
+    });
+
+
 });

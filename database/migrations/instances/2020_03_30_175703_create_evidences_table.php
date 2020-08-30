@@ -24,6 +24,7 @@ class CreateEvidencesTable extends Migration
             $table->enum('status', ['DRAFT', 'PENDING', 'ACCEPTED', 'REJECTED', 'BIN', 'CLOSED']);
             $table->string('stamp')->nullable($value = true);
             $table->boolean('last')->default(true);
+            $table->boolean('rand')->default(false);
             $table->timestamps();
         });
     }

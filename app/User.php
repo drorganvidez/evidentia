@@ -90,6 +90,30 @@ class User extends Authenticatable
         return $this->hasMany('App\Attendee');
     }
 
+    public function evidence_rand(){
+        return $this->evidences->where('rand','=', '1')->first();
+    }
+
+    public function evidence_rand_route(){
+
+        $route = "";
+        try{
+            $route = route('profiles.view.evidence',['instance' => \Instantiation::instance(), 'id_user' => $this->id, 'id_evidence' => $this->evidence_rand()->id]);
+        }catch (\Exception $e){
+            $route = "";
+        }
+
+        return $route;
+    }
+
+    public function evidence_rand_hours(){
+        try{
+            return $this->evidence_rand()->hours;
+        }catch (\Exception $e){
+            return 0;
+        }
+    }
+
     public function evidences_draft() {
         return $this->evidences->where('status','=', 'DRAFT');
     }

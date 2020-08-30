@@ -48,15 +48,8 @@ class reloaddefaultinstance extends Command
 
         DB::connection()->getPdo()->exec("CREATE TABLE `base20`.`migrations` (`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,`migration` VARCHAR(255) NOT NULL,`batch` INT(11) NOT NULL, PRIMARY KEY (`id`));");
 
-        Artisan::call('migrate',
-            [
-                '--path' => 'database/migrations/develop'
-            ]);
-
-        Artisan::call('db:seed',
-            [
-                '--class' => 'DevelopSeeder'
-            ]);
+        exec("php artisan migrate --path database/migrations/develop");
+        exec("php artisan db:seed --class=DevelopSeeder");
 
         $this->info('Instance reloaded successfully.');
     }
