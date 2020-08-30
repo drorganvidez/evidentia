@@ -27,8 +27,20 @@ class ManagementController extends Controller
         $instance = \Instantiation::instance();
         $users = User::all();
 
+        // el presidente no puede editar los usuarios de tipo profesor
+        $filtered_users = collect();
+        if(Auth::user()->hasRole('PRESIDENT')) {
+            $users->each(function ($item, $key) use ($filtered_users) {
+                if (!$item->hasRole('LECTURE')) {
+                    $filtered_users->push($item);
+                }
+            });
+        }else{
+            $filtered_users = $users;
+        }
+
         return view('manage.user_list',
-            ['instance' => $instance, 'users' => $users]);
+            ['instance' => $instance, 'users' => $filtered_users]);
     }
 
     public function evidence_list()
@@ -169,7 +181,15 @@ class ManagementController extends Controller
             $route = route('lecture.user.management.save', $instance);
         }
 
-        $roles = Role::all();
+
+        // el presidente no puede crear usuarios de tipo profesor
+        $roles = null;
+        if(Auth::user()->hasRole('PRESIDENT')){
+            $roles = Role::where('rol','!=','LECTURE')->get();
+        }else{
+            $roles = Role::all();
+        }
+
         $comittees = Comittee::all();
 
         return view('manage.user_management',
