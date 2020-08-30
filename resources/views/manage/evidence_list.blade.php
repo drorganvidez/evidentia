@@ -79,6 +79,7 @@
                     <table id="dataset" class="table table-bordered table-striped">
                         <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Título</th>
                             <th>Apellido del autor</th>
                             <th>Nombre del autor</th>
@@ -92,6 +93,7 @@
 
                         @foreach($evidences as $evidence)
                             <tr>
+                                <td>{{$evidence->id}}</td>
                                 <td><a  href="{{route('profiles.view.evidence',['instance' => $instance, 'id_user' => $evidence->user->id, 'id_evidence' => $evidence->id])}}">{{$evidence->title}}</a></td>
                                 <td><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $evidence->user->id])}}">{{$evidence->user->surname}}</a></td>
                                 <td><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $evidence->user->id])}}">{{$evidence->user->name}}</a></td>

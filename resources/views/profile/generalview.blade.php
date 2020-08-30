@@ -50,6 +50,7 @@
                     <table id="dataset" class="table table-bordered table-striped">
                         <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Título</th>
                             <th>Horas</th>
                             <th>Comité</th>
@@ -61,6 +62,7 @@
 
                         @foreach($user->evidences as $evidence)
                             <tr>
+                                <td>{{$evidence->id}}</td>
                                 <td><a  href="{{route('profiles.view.evidence',['instance' => $instance, 'id_user' => $user->id, 'id_evidence' => $evidence->id])}}">{{$evidence->title}}</a></td>
                                 <td>{{$evidence->hours}}</td>
                                 <td>

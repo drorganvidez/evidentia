@@ -28,6 +28,7 @@
                     <table id="dataset" class="table table-bordered table-striped">
                         <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Título</th>
                             <th>Alumna/o</th>
                             <th>Horas</th>
@@ -40,6 +41,7 @@
 
                         @foreach($evidences as $evidence)
                             <tr>
+                                <td>{{$evidence->id}}</td>
                                 <td>
                                     <a href="{{route('coordinator.evidence.view',
                                                 ['instance' => $instance, 'id' => $evidence->id])}}">

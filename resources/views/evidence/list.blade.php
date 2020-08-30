@@ -43,6 +43,7 @@
                     <table id="dataset" class="table table-bordered table-striped">
                         <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Título</th>
                             <th>Horas</th>
                             <th>Comité</th>
@@ -55,6 +56,7 @@
 
                         @foreach($evidences as $evidence)
                             <tr>
+                                <td>{{$evidence->id}}</td>
                                 <td><a  href="{{route('evidence.view',['instance' => $instance, 'id' => $evidence->id])}}">{{$evidence->title}}</a></td>
                                 <td>{{$evidence->hours}}</td>
                                 <td>

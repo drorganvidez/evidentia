@@ -36,6 +36,7 @@
                             <table id="dataset" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Evidencia</th>
                                     <th>Propietario</th>
                                     <th>Subida</th>
@@ -46,8 +47,9 @@
 
                                 @foreach($evidences as $evidence)
                                     <tr>
-                                        <td>{{$evidence->title}}</td>
-                                        <td>{{$evidence->user->surname}}, {{$evidence->user->name}}</td>
+                                        <td>{{$evidence->id}}</td>
+                                        <td><a  href="{{route('profiles.view.evidence',['instance' => $instance, 'id_user' => $evidence->user->id, 'id_evidence' => $evidence->id])}}">{{$evidence->title}}</a></td>
+                                        <td><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $evidence->user->id])}}">{{$evidence->user->surname}}, {{$evidence->user->name}}</a></td>
                                         <td> {{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }} </td>
                                         <td class="text-center">
                                             @if($evidence->integrity())
