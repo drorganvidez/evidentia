@@ -46,7 +46,7 @@ class InstanceController extends Controller
         $instance->password = $request->password;
         $instance->active = true;
 
-        DB::connection()->getPdo()->exec("CREATE DATABASE `{$instance->database}`");
+        DB::connection()->getPdo()->exec("CREATE DATABASE IF NOT EXISTS `{$instance->database}`");
         DB::connection()->getPdo()->exec("ALTER SCHEMA `{$instance->database}`  DEFAULT CHARACTER SET utf8mb4  DEFAULT COLLATE utf8mb4_unicode_ci");
 
         \Instantiation::set($instance);
