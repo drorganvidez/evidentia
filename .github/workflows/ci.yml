@@ -31,7 +31,7 @@ jobs:
         run: |
           cp .env.ci .env
           php artisan key:generate
-          mysql -u root -p password -e "CREATE DATABASE IF NOT EXISTS `homestead`"
+          mysql -u homestead -p password -e "CREATE DATABASE IF NOT EXISTS `homestead`"
 
       - name: Run Testsuite
         run: vendor/bin/phpunit tests/
