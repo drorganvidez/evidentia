@@ -40,11 +40,8 @@ jobs:
       - name: Install dependencies
         run: composer install
 
-      - name: Start evidentia
-        run: php artisan evidentia:start
-
-      - name: Start default instance
-        run: php artisan evidentia:createinstance
+      - name: Generate key
+        run: php artisan key:generate
 
       - name: Execute tests
         run: vendor/bin/phpunit --verbose
