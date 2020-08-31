@@ -68,4 +68,4 @@ jobs:
           FOLDER: "./"
           SERVER_IP: ${{ secrets.HOST }}
           USERNAME: ${{ secrets.USERNAME }}
-          SERVER_DESTINATION: "/var/www/html"
+          SERVER_DESTINATION: "/home/evidentia-deployment"
