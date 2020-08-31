@@ -33,7 +33,7 @@ jobs:
           php artisan key:generate
           php artisan migrate
           php artisan db:seed
-          php artisan db:seed --class=DevelopSeeder
+          php artisan db:seed --class=InstancesTableSeeder
 
       - name: Run Testsuite
         run: vendor/bin/phpunit tests/
