@@ -11,8 +11,6 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
-    container:
-      image: kirschbaumdevelopment/laravel-test-runner:7.3
     strategy:
       matrix:
         php: [7.3]
@@ -23,8 +21,8 @@ jobs:
       mysql:
         image: mysql:5.7
         env:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: test
+          MYSQL_ROOT_PASSWORD: secret
+          MYSQL_DATABASE: homestead
         ports:
           - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -48,7 +46,7 @@ jobs:
           coverage: none
 
       - name: Copy ENV Laravel Configuration for CI
-        run: cp .env.ci .env
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
       - name: Install dependencies
         run: composer install
