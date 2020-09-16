@@ -7,73 +7,169 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
 </p>
 
-## About Laravel
+# Aviso
+Se recomienda tener desactivado el Cortafuegos/Firewall para evitar problemas en la instalación. El firewall de Windows no suele dar problemas, cosa que no ocurre en otros como Kaspersky, Panda, Norton, etc...
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+# 1. Software necesario
+Es necesario tener el siguiente software instalado en la máquina donde se quiera desplegar Evidentia:
+* [Descargar VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+* [Descargar Vagrant](https://www.vagrantup.com/downloads.html)
+* [Descargar Git (para Windows)](https://git-scm.com/download/win)
+* [Descargar Git (para Mac)](https://sourceforge.net/projects/git-osx-installer/files/git-2.6.3-intel-universal-mavericks.dmg/download?use_mirror=autoselect)  
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+_Nota: es necesario reiniciar después de instalar Vagrant._
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+# 2. Clonar repositorio de Evidentia
+`git clone https://github.com/drorganvidez/evidentia.git evidentia`
 
-## Learning Laravel
+# 3. Instalación
+## 3.1 Instalación en Windows
+Dentro de la carpeta `evidentia` que acabamos de clonar, encontraremos un archivo llamado `install.bat`  
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Hacemos doble click en dicho archivo.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Seleccionaremos la opción `3) virtualbox`.  
 
-## Laravel Sponsors
+### 3.1. Host virtual
+Para habilitar un acceso más sencillo a través del navegador, se recomienda crear un host virtual.  
+Esto es posible haciendo click derecho en `host.bat`, **ejecutar como administrador**.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+_**Tiempo promedio de instalación: 30 minutos**_
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
+## 3.2 Instalación en Mac y Linux
+Dentro de la carpeta `evidentia` que acabamos de clonar, encontraremos un archivo llamado `install.sh`  
 
-## Contributing
+Primero, mediante consola, nos situaremos en la carpeta `evidentia`  
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Luego, daremos permisos de ejecución al archivo con `chmod +x install.sh`  
 
-## Code of Conduct
+Por último, ejecutaremos el archivo con `sh install.sh`  
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Seleccionaremos la opción `3) virtualbox`.  
 
-## Security Vulnerabilities
+_**Tiempo promedio de instalación: 30 minutos**_
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# 4. Comprobar que todo ha ido bien
+Desde el navegador, acceder a la dirección `http://evidentia.test`  
 
-## License
+## 4.1  Usuarios de prueba
+Por defecto, las cuentas que se crean en el _Curso 2020/21_ son:
+```
+ESTUDIANTES
+Usuario: alumno1
+Pass: alumno1
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# evidentia
+Usuario: alumno2
+Pass: alumno2
+
+SECRETARIOS
+Usuario: secretario1
+Pass: secretario1
+
+Usuario: secretario2
+Pass: secretario2
+
+COORDINADORES
+Usuario: coordinador1
+Pass: coordinador1
+
+Usuario: coordinador2
+Pass: coordinador2
+
+COORDINADORES DE REGISTRO
+Usuario: coordinadorregistro1
+Pass: coordinadorregistro1
+
+Usuario: coordinadorregistro2
+Pass: coordinadorregistro2
+
+PRESIDENTES
+Usuario: presidente1
+Pass: presidente1
+
+Usuario: presidente2
+Pass: presidente2
+
+PROFESORES
+Usuario: profesor1
+Pass: profesor1
+
+Usuario: profesor2
+Pass: profesor2
+
+ADMINISTRADOR DE INSTANCIAS
+Usuario: admin@admin.com
+Pass: admin
+```
+
+# 5. Consideraciones varias
+
+## 5.1 La máquina virtual Laravel Homestead
+La instalación demora bastante debido a que crea una máquina virtual Vagrant llamada **Homestead**. Es de suma utilidad poder acceder mediante terminal a esta máquina virtual para hacer uso de los comandos propios de Laravel. No en vano, no deja de ser un Ubuntu virtualizado, con la ventaja de poder trabajar desde tu máquina local y no depender de la virtualización de un escritorio consumiendo recursos gráficos.  
+
+Antes que nada, debemos situarnos en la carpeta `homestead`.
+
+### 5.1.1 Arrancar la máquina
+
+`vagrant up`
+
+### 5.1.2 Acceder a la máquina
+
+`vagrant ssh`
+
+### 5.1.3 Parar la máquina
+
+`vagrant halt`
+
+## 5.2 Crear y poblar la base de datos
+_Nota: el proceso de instalación ya realiza este paso._
+
+**Una vez dentro de la MV de Homestead**, hacemos  
+
+`cd laravel`  
+
+El siguiente comando inicializará la configuración de la base de datos. Si ya se hubiera trabajado anteriormente con la app, **borrará todas las instancias y comenzará de 0.**  
+
+`php artisan evidentia:start`  
+
+## 5.3 Crear la instancia por defecto
+_Nota: el proceso de instalación ya realiza este paso._  
+
+Ya que Evidentia soporta varias instancias de la misma app, es más rápido crear una instancia de desarrollo y saltar el paso del formulario en la administración. Además, esto creará usuarios de ejemplo:  
+
+`php artisan evidentia:createinstance`     
+
+Esto creará las tablas y las populará para una instancia en concreto, _Curso 2020/21_  
+
+## 5.4 Reiniciar la instancia por defecto
+
+Si, por lo que sea, en el desarrollo o testeo se decidiera crear nuevas tablas (migraciones), basta con ejecutar el siguiente comando:  
+
+`php artisan evidentia:reloadinstance`  
+
+## 5.5 Opciones de Vagrant
+
+### 5.5.1 Cambiar configuración en la máquina de Vagrant
+Cualquier configuración que se haga en el archivo `Homestead.yaml` debe ir seguido de `vagrant reload --provision`
+
+### 5.5.2 Salir de Vagrant
+`exit`
+
+### 5.5.3 Parar Vagrant
+`vagrant halt`  
+
+### 5.5.4 Destruir máquina de Vagrant
+`vagrant destroy`  
+
+### 5.5.5 Eliminar Laravel Homestead
+`vagrant box remove laravel/homestead`
+
+## 5.6 Acceder a la base de datos mediante MySQL Workbench u otro gestor de BBDD
+Los datos de acceso son los siguientes:
+```
+host: localhost
+puerto: 33060
+base de datos: homestead
+usuario: homestead
+contraseña: secret
+```
