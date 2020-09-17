@@ -3,8 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Software libre para la gestión de evidencias de trabajo en jornadas docentes" />
 
-    <title>@yield('title') | Evidentia</title>
+    <title>@yield('title') | Evidentia Test</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -41,15 +42,15 @@
 
     @auth
         @if(Request::is('/') || Request::is('admin/*'))
-            <x-navbaradmin/>
+            <x-navbars.navbaradmin/>
         @else
-            <x-navbarcommon/>
+            <x-navbars.navbarcommon/>
         @endif
     @endauth
 
-        @guest
-            <x-navbarguest/>
-        @endguest
+    @guest
+        <x-navbars.navbarguest/>
+    @endguest
 
     {{---------------------------------------------------}}
     {{-- MAIN MENU --}}
@@ -61,7 +62,7 @@
 
         <div class="sidebar">
 
-            <x-menuguest/>
+            <x-menus.menuguest/>
 
             @auth
 
@@ -69,21 +70,21 @@
 
                 @if(Request::is('/') || Request::is('admin/*'))
 
-                    <x-menuadmin/>
+                    <x-menus.menuadmin/>
 
                 @else
 
                     <x-liavatar/>
 
-                    <x-menucommon/>
-                    <x-menusecretary/>
-                    <x-menucoordinator/>
-                    <x-menuregistercoordinator/>
-                    <x-menupresident/>
-                    <x-menustudent/>
-                    <x-menulecture/>
+                    <x-menus.menucommon/>
+                    <x-menus.menusecretary/>
+                    <x-menus.menucoordinator/>
+                    <x-menus.menuregistercoordinator/>
+                    <x-menus.menupresident/>
+                    <x-menus.menustudent/>
+                    <x-menus.menulecture/>
 
-                    <x-menuoptions/>
+                    <x-menus.menuoptions/>
 
                 @endif
 
@@ -99,25 +100,21 @@
         <!-- Content Header (Page header) -->
         <div class="content-header">
             <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-12 col-12">
+                <div class="row">
 
-
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <ol class="breadcrumb mb-2">
-                                    @section('breadcrumb')
-                                    @show
-                                </ol>
-                                <h1 class="m-0 text-dark"><i class="@yield('title-icon')"></i>&nbsp;&nbsp;@yield('title')</h1>
-                            </div>
-                            <div>
-                                @section('info')
-                                @show
-                            </div>
-                        </div>
-
+                    <div class="col-12 col-md-6">
+                        <ol class="breadcrumb mb-2">
+                            @section('breadcrumb')
+                            @show
+                        </ol>
+                        <h1 class="m-0 text-dark"><i class="@yield('title-icon')"></i>&nbsp;&nbsp;@yield('title')</h1>
                     </div>
+
+                    <div class="col-12 col-md-6 mt-2">
+                        @section('info')
+                        @show
+                    </div>
+
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
         </div>
@@ -147,7 +144,7 @@
     <footer class="main-footer">
         <!-- To the right -->
         <div class="float-right d-none d-sm-inline">
-             Hecho con <i class="fas fa-heart"></i>
+            Hecho con <i class="fas fa-heart"></i>
         </div>
         <!-- Default to the left -->
         GNU/GPL 3.0 · <a href="https://github.com/drorganvidez/evidentia"><i class="fab fa-github"></i> Repositorio en GitHub</a>

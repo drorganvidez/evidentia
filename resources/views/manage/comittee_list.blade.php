@@ -43,8 +43,8 @@
                         </div>
 
                         <div class="form-row">
-                            <div class="form-group col-4">
-                            <button type="submit" class="btn btn-primary">Crear comité</button>
+                            <div class="form-group col-12 col-lg-2 col-sm-4">
+                            <button type="submit" class="btn btn-primary btn-block">Crear comité</button>
                             </div>
                         </div>
 
@@ -58,8 +58,8 @@
                         <table id="dataset" class="table table-bordered table-striped">
                             <thead>
                             <tr>
-                                <th>Previsualización</th>
-                                <th>Icono de Font Awesome</th>
+                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Previsualización</th>
+                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Icono de Font Awesome</th>
                                 <th>Nombre del comité</th>
                                 <th>Opciones</th>
                             </tr>
@@ -68,12 +68,12 @@
 
                             @foreach($comittees as $comittee)
                                 <tr>
-                                    <td class="align-middle text-center"><span id="icon_prev_{{$comittee->id}}" style="font-size: 20px">{!! $comittee->icon ?? '' !!}</span></td>
-                                    <td><input name="icon_{{$comittee->id}}" id="icon_{{$comittee->id}}" oninput="prev({{$comittee->id}})" type="text" class="form-control" placeholder="" value="{{$comittee->icon}}" autocomplete="icon" autofocus=""></td>
+                                    <td class="align-middle text-center d-none d-sm-none d-md-table-cell d-lg-table-cell"><span id="icon_prev_{{$comittee->id}}" style="font-size: 20px">{!! $comittee->icon ?? '' !!}</span></td>
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><input name="icon_{{$comittee->id}}" id="icon_{{$comittee->id}}" oninput="prev({{$comittee->id}})" type="text" class="form-control" placeholder="" value="{{$comittee->icon}}" autocomplete="icon" autofocus=""></td>
                                     <td><input name="name_{{$comittee->id}}" type="text" class="form-control" placeholder="" value="{{$comittee->name}}" autocomplete="name" ></td>
                                     <td>
                                         <a class="form-control btn btn-danger " href="#" data-toggle="modal" data-target="#modal-{{$comittee->id}}">
-                                            <i class="fas fa-trash"></i> Eliminar
+                                            <i class="fas fa-trash"></i> <span class="d-none d-sm-none d-md-none d-lg-inline">Eliminar</span>
                                         </a>
                                     </td>
                                 </tr>

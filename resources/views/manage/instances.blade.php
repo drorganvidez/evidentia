@@ -36,8 +36,8 @@
 
                             </div>
                             <div class="form-row">
-                                <div class="form-group col-lg-12">
-                                    <button type="submit" class="btn btn-primary">Crear curso</button>
+                                <div class="form-group col-12 col-lg-4 col-sm-4">
+                                    <button type="submit" class="btn btn-primary btn-block">Crear curso</button>
                                 </div>
                             </div>
                         </div>

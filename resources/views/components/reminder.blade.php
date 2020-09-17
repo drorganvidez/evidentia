@@ -17,7 +17,7 @@
                 @if(\Carbon\Carbon::create($datetime)->lt(\Carbon\Carbon::now()))
                     0 días, 0 horas y 0 minutos
                 @else
-                    {{\Carbon\Carbon::create($datetime)->diff(\Carbon\Carbon::now(),false)->format('%M meses, %d días, %h horas y %i minutos')}}
+                    {{\Carbon\Carbon::create($datetime)->diff(\Carbon\Carbon::now(),false)->format('%M meses, %d días, %H horas y %i minutos')}}
                 @endif
 
             @endif

@@ -17,17 +17,17 @@
 
             <div class="card">
 
-                <div class="card-body table-responsive p-0">
-                    <table class="table table-hover text-nowrap">
+                <div class="card-body">
+                    <table id="dataset" class="table table-bordered table-striped">
                         <thead>
                         <tr>
                             <th>Curso</th>
-                            <th>Ruta</th>
-                            <th>Host</th>
-                            <th>Puerto</th>
-                            <th>Base de datos</th>
-                            <th>Nombre de usuario</th>
-                            <th>Contraseña</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Ruta</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Host</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Puerto</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">BBDD</th>
+                            <th class="d-none d-sm-none d-md-none d-lg-table-cell">Usuario</th>
+                            <th class="d-none d-sm-none d-md-none d-lg-table-cell">Pass</th>
                             <th>Opciones</th>
                         </tr>
                         </thead>
@@ -36,18 +36,26 @@
                         @foreach($instances as $instance)
                             <tr>
                                 <td>{{$instance->name}}</td>
-                                <td>{{$instance->route}}</td>
-                                <td>{{$instance->host}}</td>
-                                <td>{{$instance->port}}</td>
-                                <td>{{$instance->database}}</td>
-                                <td>{{$instance->username}}</td>
-                                <td>{{$instance->password}}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$instance->route}}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$instance->host}}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$instance->port}}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$instance->database}}</td>
+                                <td class="d-none d-sm-none d-md-none d-lg-table-cell">{{$instance->username}}</td>
+                                <td class="d-none d-sm-none d-md-none d-lg-table-cell">{{$instance->password}}</td>
 
                                 <td>
-                                    <a class="btn btn-primary btn-sm" href="/{{$instance->route}}" role="button">Acceder</a>
-                                    <a class="btn btn-primary btn-sm" href="{{route('admin.instance.manage.edit',$instance->id)}}" role="button">Editar</a>
-                                    <a class="btn btn-primary btn-sm" href="/{{$instance->route}}" role="button">Exportar</a>
-                                    <a class="btn btn-danger btn-sm" href="{{route('admin.instance.manage.delete',$instance->id)}}" role="button">Eliminar</a>
+                                    <a class="btn btn-primary btn-sm" href="/{{$instance->route}}" role="button">
+                                        <i class="fas fa-sign-in-alt"></i> <span class="d-none d-sm-none d-md-none d-lg-inline">Acceder</span>
+                                    </a>
+
+                                    <a class="btn btn-info btn-sm" href="{{route('admin.instance.manage.edit',$instance->id)}}" role="button">
+                                        <i class="fas fa-edit"></i> <span class="d-none d-sm-none d-md-none d-lg-inline">Editar</span>
+                                    </a>
+
+                                    <a class="btn btn-danger btn-sm" href="{{route('admin.instance.manage.delete',$instance->id)}}" role="button">
+                                        <i class="fas fa-trash"></i> <span class="d-none d-sm-none d-md-none d-lg-inline">Eliminar</span>
+                                    </a>
+
                                 </td>
                             </tr>
                         @endforeach

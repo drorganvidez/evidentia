@@ -42,8 +42,8 @@
                         </div>
 
                         <div class="form-row">
-                            <div class="form-group col-lg-6">
-                                <button type="submit" class="btn btn-primary">Aleatorizar evidencias</button>
+                            <div class="form-group col-lg-6 col-sm-6 col-12">
+                                <button type="submit" class="btn btn-primary btn-block">Aleatorizar evidencias</button>
                             </div>
                         </div>
 

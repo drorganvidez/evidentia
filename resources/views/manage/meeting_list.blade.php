@@ -22,12 +22,12 @@
                     <table id="dataset" class="table table-bordered table-striped">
                         <thead>
                         <tr>
-                            <th scope="col">Reunión</th>
-                            <th scope="col">Lugar</th>
-                            <th scope="col">Horas</th>
-                            <th scope="col">Comité</th>
-                            <th scope="col">Nº de asistentes</th>
-                            <th scope="col">Realizada</th>
+                            <th>Reunión</th>
+                            <th>Lugar</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Horas</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Comité</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Nº de asistentes</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Realizada</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -36,12 +36,12 @@
                             <tr>
                                 <td>{{$meeting->title}}</td>
                                 <td>{{$meeting->place}}</td>
-                                <td>{{$meeting->hours}}</td>
-                                <td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$meeting->hours}}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
                                     <x-meetingcomittee :meeting="$meeting"/>
                                 </td>
-                                <td>{{$meeting->users->count()}}</td>
-                                <td>{{ \Carbon\Carbon::parse($meeting->datetime)->diffForHumans() }}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$meeting->users->count()}}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ \Carbon\Carbon::parse($meeting->datetime)->diffForHumans() }}</td>
                             </tr>
                         @endforeach
 

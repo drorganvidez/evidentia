@@ -1,17 +1,19 @@
 <a class="btn
 
-     @if($type == "REMOVE")
+    @if($type == "REMOVE")
         btn-danger
     @elseif($type == "INFO")
         btn-info
     @endif
 
+
  btn-sm" href="#" data-toggle="modal" data-target="#modal-confirm-{{$type}}-{{$id}}">
 
+
     @if($type == "REMOVE")
-        <i class="fas fa-trash"></i> &nbsp;{{$name}}
+        <i class="fas fa-trash"></i> <span class="d-none d-sm-none d-md-none d-lg-inline">{{ $name ?? 'Eliminar' }} </span>
     @elseif($type == "INFO")
-        {{$name}}
+        <i class="fas fa-info"></i> <span class="d-none d-sm-none d-md-none d-lg-inline">{{ $name ?? '' }}</span>
     @endif
 
 </a>
@@ -53,7 +55,7 @@
         </div>
     </div>
 
-    <form id="buttonconfirm-form-{{$id}}" action="{{ route($route,$instance) }}" method="POST" style="display: none;">
+    <form id="buttonconfirm-form-{{$id}}" action="{{ route($route,\Instantiation::instance()) }}" method="POST" style="display: none;">
         @csrf
         <input type="hidden" name="_id" value="{{$id}}"/>
     </form>

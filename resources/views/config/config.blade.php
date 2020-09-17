@@ -114,7 +114,7 @@
 
                         </div>
                         <div class="form-row">
-                            <div class="col-lg-3 mt-1">
+                            <div class="mt-1 col-12 col-lg-4 col-sm-4">
                                 <button type="submit"  class="btn btn-primary btn-block">Guardar configuración</button>
                             </div>
                         </div>

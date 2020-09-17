@@ -1,14 +1,14 @@
 @if ($evidence->status != 'ACCEPTED' and !\Carbon\Carbon::now()->gt(\Config::validate_evidences_timestamp()))
-<a class="btn btn-success btn-sm" href="{{route('coordinator.evidence.accept',['instance' => $instance, 'id' => $evidence->id])}}">
+<a class="btn btn-success btn-sm" href="{{route('coordinator.evidence.accept',['instance' => \Instantiation::instance(), 'id' => $evidence->id])}}">
     <i class="far fa-thumbs-up"></i>
-    Aceptar
+    <span class="d-none d-sm-none d-md-none d-lg-inline">Aceptar</span>
 </a>
 @endif
 
 @if ($evidence->status != 'REJECTED' and !\Carbon\Carbon::now()->gt(\Config::validate_evidences_timestamp()))
 <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-rejected-{{$evidence->id}}">
     <i class="far fa-thumbs-down"></i>
-    Rechazar
+    <span class="d-none d-sm-none d-md-none d-lg-inline">Rechazar</span>
 </a>
 @endif
 
@@ -24,11 +24,11 @@
                     </button>
                 </div>
 
-                <form action="{{route('coordinator.evidence.reject',['instance' => $instance])}}" method="POST">
+                <form action="{{route('coordinator.evidence.reject',['instance' => \Instantiation::instance()])}}" method="POST">
                     @csrf
                     <input type="hidden" name="_id" value="{{$evidence->id}}"/>
                     <div class="modal-body text-wrap">
-                        <x-textareasimple col="12" attr="reasonrejection"
+                        <x-textareasimple type="text" class="" col="12" attr="reasonrejection"
                                     label="Motivo de rechazo"
                                     description="Escribe un motivo de por qué se rechaza esta evidencia (entre 10 y 1000 caracteres)."
                         />

@@ -22,12 +22,12 @@
                     <table id="dataset" class="table table-bordered table-striped">
                         <thead>
                         <tr>
-                            <th>DNI</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">DNI</th>
                             <th>Apellidos</th>
                             <th>Nombre</th>
-                            <th>UVUS</th>
-                            <th>Roles</th>
-                            <th>Opciones</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">UVUS</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Roles</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -42,23 +42,23 @@
                                     <tr>
                                 @endif
 
-                                        <td>{{$user->dni}}</td>
+                                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$user->dni}}</td>
                                         <td><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $user->id])}}">{{$user->surname}}</a></td>
                                         <td><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $user->id])}}">{{$user->name}}</a></td>
-                                        <td>{{$user->username}}</td>
-                                        <td>
+                                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$user->username}}</td>
+                                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
                                             <x-roles :user="$user"/>
                                         </td>
                                         <td>
                                             @if(Auth::user()->hasRole('PRESIDENT'))
                                                 <a class="btn btn-primary btn-sm" href="{{route('president.user.management',['instance' => $instance, 'id' => $user->id])}}">
                                                     <i class="nav-icon nav-icon fas fa-users-cog"></i>
-                                                    Gestionar
+                                                    <span class="d-none d-sm-none d-md-none d-lg-inline">Gestionar</span>
                                                 </a>
                                             @else
                                                 <a class="btn btn-primary btn-sm" href="{{route('lecture.user.management',['instance' => $instance, 'id' => $user->id])}}">
                                                     <i class="nav-icon nav-icon fas fa-users-cog"></i>
-                                                    Gestionar
+                                                    <span class="d-none d-sm-none d-md-none d-lg-inline">Gestionar</span>
                                                 </a>
                                             @endif
                                         </td>

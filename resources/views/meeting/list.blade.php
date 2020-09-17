@@ -35,29 +35,30 @@
                     <table id="dataset" class="table table-bordered table-striped">
                             <thead>
                             <tr>
-                                <th scope="col">Reunión</th>
-                                <th scope="col">Lugar</th>
-                                <th scope="col">Horas</th>
-                                <th scope="col">Realizada</th>
+                                <th>Reunión</th>
+                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Lugar</th>
+                                <th>Horas</th>
+                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Realizada</th>
                                 @if(!\Carbon\Carbon::now()->gt(\Config::meetings_timestamp()))
-                                <th scope="col">Herramientas</th>
+                                <th>Herramientas</th>
                                 @endif
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($meetings as $meeting)
-                                <tr scope="row">
+                                <tr>
                                     <td>{{$meeting->title}}</td>
-                                    <td>{{$meeting->place}}</td>
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$meeting->place}}</td>
                                     <td>{{$meeting->hours}}</td>
-                                    <td>{{ \Carbon\Carbon::parse($meeting->datetime)->diffForHumans() }}</td>
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ \Carbon\Carbon::parse($meeting->datetime)->diffForHumans() }}</td>
                                     @if(!\Carbon\Carbon::now()->gt(\Config::meetings_timestamp()))
                                     <td>
                                         <a class="btn btn-primary btn-sm"
                                            href="{{route('secretary.meeting.edit',['instance' => $instance, 'id' => $meeting->id])}}"
                                            role="button">
                                             <i class="far fa-edit"></i>
-                                            Editar reunión</a>
+                                            <span class="d-none d-sm-none d-md-none d-lg-inline">Editar reunión</span>
+                                        </a>
 
                                         <x-buttonconfirm :id="$meeting->id" route="secretary.meeting.remove" title="¿Seguro?" description="La reunión y las actas asociadas se borrarán. Las horas asociadas a los alumnos también." type="REMOVE" />
 

@@ -25,15 +25,15 @@
             <div class="card">
 
                 <div class="card-body">
-                    <table id="dataset" class="table table-bordered table-striped">
+                    <table id="dataset" class="table table-bordered table-striped ">
                         <thead>
                         <tr>
-                            <th>ID</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">ID</th>
                             <th>Título</th>
-                            <th>Alumna/o</th>
-                            <th>Horas</th>
-                            <th>Recibida</th>
-                            <th>Estado</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Alumna/o</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Horas</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Recibida</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Estado</th>
                             <th>Herramientas</th>
                         </tr>
                         </thead>
@@ -41,21 +41,21 @@
 
                         @foreach($evidences as $evidence)
                             <tr>
-                                <td>{{$evidence->id}}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$evidence->id}}</td>
                                 <td>
                                     <a href="{{route('coordinator.evidence.view',
                                                 ['instance' => $instance, 'id' => $evidence->id])}}">
                                         {{$evidence->title}}
                                     </a>
                                 </td>
-                                <td>{{$evidence->user->surname}}, {{$evidence->user->name}}</td>
-                                <td>{{$evidence->hours}}</td>
-                                <td> {{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }} </td>
-                                <td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$evidence->user->surname}}, {{$evidence->user->name}}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$evidence->hours}}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"> {{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }} </td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
                                     <x-evidencestatus :evidence="$evidence"/>
                                 </td>
 
-                                <td>
+                                <td class="align-middle">
                                     <x-evidenceoptionscoordinator :evidence="$evidence"/>
                                 </td>
 

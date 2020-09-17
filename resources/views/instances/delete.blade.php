@@ -55,7 +55,11 @@
                             <x-input col="6" attr="name" label="Medida de seguridad" description="Introduzca el nombre del curso de la instancia"/>
                         </div>
 
-                        <button type="submit" class="btn btn-danger">Eliminar instancia</button>
+                        <div class="form-row">
+                            <div class="col-12 col-lg-3 col-sm-4">
+                                <button type="submit" class="btn btn-danger btn-block">Eliminar instancia</button>
+                            </div>
+                        </div>
 
                     </form>
                 </div>

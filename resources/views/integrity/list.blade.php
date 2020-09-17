@@ -23,8 +23,8 @@
 
                 <div class="card-header p-2">
                     <ul class="nav nav-pills">
-                        <li class="nav-item"><a class="nav-link active" href="#evidences" data-toggle="tab">Integridad de evidencias</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#proofs" data-toggle="tab">Integridad de pruebas</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="#evidences" data-toggle="tab">Evidencias</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#proofs" data-toggle="tab">Pruebas</a></li>
                     </ul>
                 </div>
 
@@ -36,10 +36,10 @@
                             <table id="dataset" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">ID</th>
                                     <th>Evidencia</th>
-                                    <th>Propietario</th>
-                                    <th>Subida</th>
+                                    <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Propietario</th>
+                                    <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Subida</th>
                                     <th>Integridad</th>
                                 </tr>
                                 </thead>
@@ -47,10 +47,10 @@
 
                                 @foreach($evidences as $evidence)
                                     <tr>
-                                        <td>{{$evidence->id}}</td>
+                                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$evidence->id}}</td>
                                         <td><a  href="{{route('profiles.view.evidence',['instance' => $instance, 'id_user' => $evidence->user->id, 'id_evidence' => $evidence->id])}}">{{$evidence->title}}</a></td>
-                                        <td><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $evidence->user->id])}}">{{$evidence->user->surname}}, {{$evidence->user->name}}</a></td>
-                                        <td> {{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }} </td>
+                                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $evidence->user->id])}}">{{$evidence->user->surname}}, {{$evidence->user->name}}</a></td>
+                                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"> {{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }} </td>
                                         <td class="text-center">
                                             @if($evidence->integrity())
                                                 <i style="color: green" class="fas fa-check-circle"></i>
@@ -72,9 +72,9 @@
                                 <thead>
                                 <tr>
                                     <th>Prueba</th>
-                                    <th>Evidencia asociada</th>
-                                    <th>Propietario</th>
-                                    <th>Subida</th>
+                                    <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Evidencia asociada</th>
+                                    <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Propietario</th>
+                                    <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Subida</th>
                                     <th>Integridad</th>
                                 </tr>
                                 </thead>
@@ -83,9 +83,9 @@
                                 @foreach($proofs as $proof)
                                     <tr>
                                         <td>{{$proof->file->name}}</td>
-                                        <td>{{$proof->evidence->title}}</td>
-                                        <td>{{$proof->evidence->user->surname}}, {{$proof->evidence->user->name}}</td>
-                                        <td> {{ \Carbon\Carbon::parse($proof->created_at)->diffForHumans() }} </td>
+                                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$proof->evidence->title}}</td>
+                                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$proof->evidence->user->surname}}, {{$proof->evidence->user->name}}</td>
+                                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"> {{ \Carbon\Carbon::parse($proof->created_at)->diffForHumans() }} </td>
                                         <td class="text-center">
                                             @if($proof->integrity())
                                                 <i style="color: green" class="fas fa-check-circle"></i>

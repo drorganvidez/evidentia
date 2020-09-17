@@ -11,7 +11,7 @@
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/">Home</a></li>
     @isset($edit)
-        <li class="breadcrumb-item"><a href="{{route('admin.instance.manage')}}">Gestionar incidencias</a></li>
+        <li class="breadcrumb-item"><a href="{{route('admin.instance.manage')}}">Gestionar instancias</a></li>
     @endisset
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
@@ -53,8 +53,11 @@
 
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Guardar instancia</button>
-
+                        <div class="form-row">
+                            <div class="col-12 col-lg-3 col-sm-4">
+                                <button type="submit" class="btn btn-primary btn-block">Guardar instancia</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
 

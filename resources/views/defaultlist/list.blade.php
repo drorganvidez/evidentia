@@ -29,22 +29,23 @@
                     <table id="dataset" class="table table-bordered table-striped">
                         <thead>
                         <tr>
-                            <th scope="col">Título de la lista</th>
-                            <th scope="col">Creada</th>
-                            <th scope="col">Herramientas</th>
+                            <th>Título de la lista</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Creada</th>
+                            <th>Herramientas</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($defaultlists as $defaultlist)
-                            <tr scope="row">
+                            <tr>
                                 <td>{{$defaultlist->name}}</td>
-                                <td>{{ \Carbon\Carbon::parse($defaultlist->created_at)->diffForHumans() }}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ \Carbon\Carbon::parse($defaultlist->created_at)->diffForHumans() }}</td>
                                 <td>
                                     <a class="btn btn-primary btn-sm"
                                        href="{{route('secretary.defaultlist.edit',['instance' => $instance, 'id' => $defaultlist->id])}}"
                                        role="button">
                                         <i class="far fa-edit"></i>
-                                        Editar lista</a>
+                                        <span class="d-none d-sm-none d-md-none d-lg-inline">Editar lista</span>
+                                    </a>
 
                                     <x-buttonconfirm :id="$defaultlist->id" route="secretary.defaultlist.remove" title="¿Seguro?" description="Esta acción es permanente." type="REMOVE" />
 

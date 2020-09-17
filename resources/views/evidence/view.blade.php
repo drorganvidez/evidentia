@@ -70,7 +70,7 @@
 
                                             @if(!\Carbon\Carbon::now()->gt(\Config::upload_evidences_timestamp()))
                                                 <x-buttonconfirm :id="$evidence->id" route="evidence.remove" title="¿Seguro?" description="Esto borrará la evidencia actual, las
-                                                ediciones anteriores <b>y todos los archivos adjuntos.</b>"/>
+                                                ediciones anteriores <b>y todos los archivos adjuntos.</b>" type="REMOVE"/>
                                             @endif
 
                                         @endif

@@ -35,24 +35,24 @@
                     <table id="dataset" class="table table-bordered table-striped">
                         <thead>
                         <tr>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Descripción</th>
-                            <th scope="col">Fecha de inicio</th>
-                            <th scope="col">Fecha de fin</th>
-                            <th scope="col">Capacidad</th>
-                            <th scope="col">Horas</th>
-                            <th scope="col">Estado</th>
+                            <th>Nombre</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Descripción</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Fecha de inicio</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Fecha de fin</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Capacidad</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Horas</th>
+                            <th>Estado</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($events as $event)
-                            <tr scope="row">
+                            <tr>
                                 <td><a href="{{$event->url}}" target="_blank">{!! $event->name !!}</a></td>
-                                <td>{!! $event->description !!}</td>
-                                <td>{{ \Carbon\Carbon::parse($event->start_datetime) }}</td>
-                                <td>{{ \Carbon\Carbon::parse($event->end_datetime) }}</td>
-                                <td>{{ $event->capacity }}</td>
-                                <td>{{ $event->hours }}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{!! $event->description !!}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ \Carbon\Carbon::parse($event->start_datetime) }}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ \Carbon\Carbon::parse($event->end_datetime) }}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ $event->capacity }}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ $event->hours }}</td>
                                 <td><x-eventstatus :event="$event"/></td>
                             </tr>
                         @endforeach

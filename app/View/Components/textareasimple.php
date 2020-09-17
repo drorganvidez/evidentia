@@ -23,9 +23,7 @@ class textareasimple extends Component
     public $id;
     public $class;
 
-    public $edit;
-
-    public function __construct($col,$label,$attr,$description="",$placeholder="",$value="",$type="text", $disabled=false,$edit=false,$id="",$class="")
+    public function __construct($col,$label,$attr,$description="",$placeholder="",$value="",$type="text", $disabled=false,$id="",$class="")
     {
         $this->col = $col;
         $this->label = $label;
@@ -38,8 +36,6 @@ class textareasimple extends Component
 
         $this->id = $id;
         $this->class = $class;
-
-        $this->edit = $edit;
 
     }
 

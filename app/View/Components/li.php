@@ -20,13 +20,13 @@ class li extends Component
 
     public $secondaries;
 
-    public function __construct($route,$icon="",$name,$secondaries = "")
+    public function __construct($route,$icon="",$name,$secondaries="")
     {
         $this->route = $route;
         $this->instance = \Instantiation::instance();
         $this->icon = $icon;
         $this->name = $name;
-        $this->secondaries = Str::of($secondaries)->explode(',');
+        $this->secondaries = $secondaries;
     }
 
     /**

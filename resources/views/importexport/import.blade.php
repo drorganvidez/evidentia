@@ -18,19 +18,13 @@
 
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header p-2">
-                    <ul class="nav nav-pills">
-                        <li class="nav-item"><a class="nav-link active" href="#users" data-toggle="tab">Importar alumnos</a></li>
-                        {{--<li class="nav-item"><a class="nav-link" href="#instances" data-toggle="tab">Importar instancias</a></li>--}}
-                    </ul>
-                </div>
                 <div class="card-body">
                     <div class="tab-content">
 
                         <div class="active tab-pane" id="users">
 
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-lg-6 mb-2">
 
                                     <div class="callout callout-info">
                                         <h5>¡Fácil y rápido!</h5>
@@ -43,7 +37,8 @@
 
                                         @csrf
 
-                                        <div class="col-lg-12">
+                                        <div class="row">
+                                            <div class="col-lg-12">
 
                                             <div class="form-row">
 
@@ -55,7 +50,7 @@
                                             </div>
 
                                         </div>
-
+                                        </div>
                                     </form>
 
                                 </div>
@@ -109,9 +104,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="tab-pane" id="instances">
                         </div>
 
 

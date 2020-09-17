@@ -37,18 +37,22 @@ class ImportExportController extends Controller
         try {
             // almacenamos en disco el archivo XLS de importación
             $file = $request->file('xls');
-            $path = Storage::putFileAs($instance . '/imports/', $file, $file->getClientOriginalName());
+            if($file != null) {
+                $path = Storage::putFileAs($instance . '/imports/', $file, $file->getClientOriginalName());
 
-            // importamos los usuarios a la base de datos
-            Excel::import(new UsersImport, $path);
+                // importamos los usuarios a la base de datos
+                Excel::import(new UsersImport, $path);
 
-            // borramos el XLS subido
-            Storage::delete($path);
+                // borramos el XLS subido
+                Storage::delete($path);
 
-            // seteamos todos los usuarios como ESTUDIANTE por defecto
-            $this->set_student_rol();
+                // seteamos todos los usuarios como ESTUDIANTE por defecto
+                $this->set_student_rol();
 
-            return redirect()->route('lecture.user.list',$instance)->with('success', 'Alumnos importados con éxito');
+                return redirect()->route('lecture.user.list', $instance)->with('success', 'Alumnos importados con éxito');
+            }else{
+                return redirect()->route('lecture.import',$instance)->with('error', 'No se seleccionó ningún archivo');
+            }
         }catch (\Exception $e){
             // borramos cualquier archivo subido
             Storage::delete($path);

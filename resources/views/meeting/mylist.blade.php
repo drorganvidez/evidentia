@@ -40,19 +40,19 @@
                     <table id="dataset" class="table table-bordered table-striped">
                             <thead>
                             <tr>
-                                <th scope="col">Reunión</th>
-                                <th scope="col">Lugar</th>
-                                <th scope="col">Horas</th>
-                                <th scope="col">Realizada</th>
+                                <th>Reunión</th>
+                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Lugar</th>
+                                <th>Horas</th>
+                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Realizada</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($meetings as $meeting)
                                 <tr scope="row">
                                     <td>{{$meeting->title}}</td>
-                                    <td>{{$meeting->place}}</td>
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$meeting->place}}</td>
                                     <td>{{$meeting->hours}}</td>
-                                    <td>{{ \Carbon\Carbon::parse($meeting->datetime)->diffForHumans() }}</td>
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ \Carbon\Carbon::parse($meeting->datetime)->diffForHumans() }}</td>
                                 </tr>
                             @endforeach
                             </tbody>

@@ -6,13 +6,8 @@
 
               required
 
-              @if($edit == true)
-              @if($disabled == true)
-              disabled
-           @endif
-        @endif
               style="min-height:300px;"
-    >@if(old($attr)){{ old($attr) }}@else{!! $value !!}@endif</textarea>
+    ></textarea>
 
     <small class="form-text text-muted">{{ $description }}</small>
 
