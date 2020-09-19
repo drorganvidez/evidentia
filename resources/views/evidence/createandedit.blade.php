@@ -41,7 +41,7 @@
 
                     @foreach($evidence->flow_evidences() as $evidence_i)
 
-                        <div class="col-lg-3">
+                        <div class="col-lg-3 mb-0 pb-0">
 
                             @if(Request()->route('id') == $evidence_i->id)
                                 <div class="small-box bg-info">
@@ -164,7 +164,7 @@
                                                                     <td>{{$proof->file->name}}</td>
                                                                     <td>{{$proof->file->sizeForHuman()}}</td>
                                                                     <td>
-                                                                        <a class="btn btn-primary btn-sm" href="{{route('file.download',['instance' => $instance, 'id' => $proof->file->id])}}">
+                                                                        <a class="btn btn-primary btn-sm" href="{{route('proof.download',['instance' => $instance, 'id' => $proof->id])}}">
                                                                             <i class="fas fa-download"></i>
                                                                             Descargar
                                                                         </a>

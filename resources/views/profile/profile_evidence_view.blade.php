@@ -106,7 +106,7 @@
 
                                         <tr>
                                             <td>
-                                                <a class="btn btn-primary btn-sm" href="{{route('file.download',['instance' => $instance, 'id' => $proof->file->id])}}">
+                                                <a class="btn btn-primary btn-sm" href="{{route('proof.download',['instance' => $instance, 'id' => $proof->id])}}">
                                                     <i class="fas fa-download"></i>
                                                     {{$proof->file->name}}
                                                 </a>

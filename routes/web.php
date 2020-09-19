@@ -196,8 +196,8 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
      */
 
     Route::post('/file/remove/', 'FileController@remove')->name('file.remove');
-    Route::middleware(['checknotnull:File'])->group(function () {
-        Route::get('/file/download/{id}', 'FileController@download')->name('file.download');
+    Route::middleware(['checknotnull:Proof','checkproofdownload'])->group(function () {
+        Route::get('/proof/download/{id}', 'ProofController@download')->name('proof.download');
     });
 
     /**
