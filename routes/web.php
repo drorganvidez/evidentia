@@ -303,5 +303,16 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         Route::post('/randomize/save','RandomizeController@randomize_save')->name('randomize.save');
     });
 
+    /**
+     *  RESET PASSWORDS
+     */
+
+    Route::prefix('password')->group(function () {
+        Route::get('/reset','PasswordResetController@reset')->name('password.reset');
+        Route::post('/reset_p','PasswordResetController@reset_p')->name('password.reset_p');
+
+        Route::get('/update/{token}','PasswordResetController@update')->name('password.update');
+        Route::post('/update_p/{token}','PasswordResetController@update_p')->name('password.update_p');
+    });
 
 });

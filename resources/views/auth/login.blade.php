@@ -33,25 +33,25 @@
 
                         <x-input col="12" attr="password" type="password" label="Contraseña" description="Introduce tu contraseña"/>
 
-                        <div class="form-group col-md-8">
+                        <div class="form-group col-md-8 mb-0">
                             <div class="icheck-primary">
                                 <input type="checkbox" id="remember">
                                 <label for="remember">
-                                    Recuérdame
+                                    &nbsp;Mantén la sesión iniciada
                                 </label>
                             </div>
                         </div>
 
+                        <div class="form-group col-sm-12 col-lg-12">
+                            <a href="{{route('password.reset',$instance)}}">¿Olvidaste tu contraseña?</a>
+                        </div>
+
                         <div class="form-group col-sm-12 col-lg-6">
                             <button type="submit" class="btn btn-primary btn-block">Acceder</button>
+
                         </div>
 
-                        <div class="row">
 
-                            <!-- /.col -->
-
-                            <!-- /.col -->
-                        </div>
 
                     </form>
                 </div>

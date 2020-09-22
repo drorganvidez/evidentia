@@ -27,3 +27,12 @@
     </div>
 
 @endif
+
+@if (session('light'))
+
+    <div class="alert alert-light alert-dismissible">
+        <h5><i class="fas fa-info"></i> Restablecer contraseña</h5>
+        {!!  session('light') !!}
+    </div>
+
+@endif

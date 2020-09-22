@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Restablecer contraseña')
+@section('title', 'Actualizar contraseña')
 
 @section('title-icon', 'fas fa-unlock-alt')
 
@@ -27,14 +27,21 @@
                 </div>
 
                 <div class="card-body">
-                    <form action="{{route('password.reset_p',$instance)}}" method="post">
+                    <form action="{{route('password.update_p',["instance" => $instance, "token" => $token])}}" method="post">
                         @csrf
 
-                        <x-input col="12" attr="email" type="text" label="Email" type="email" description="Introduce tu email corporativo (incluyendo @alum.us.es)"/>
+                        <div class="form-row">
+                            <x-input col="12" attr="password" :required="false" type="password" :required="true" label="Nueva contraseña"/>
+                        </div>
 
-                        <div class="form-group col-sm-12 col-lg-6">
-                            <button type="submit" class="btn btn-primary btn-block">Mándame link de restablecimiento</button>
+                        <div class="form-row">
+                            <x-input col="12" attr="password_confirmation" :required="false" type="password" :required="true" label="Repite la nueva contraseña"/>
+                        </div>
 
+                        <div class="form-row">
+                            <div class="col-lg-6 mt-1">
+                                <button type="submit"  class="btn btn-primary btn-block">Actualizar contraseña</button>
+                            </div>
                         </div>
 
                     </form>
