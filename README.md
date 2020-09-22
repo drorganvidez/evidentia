@@ -1,4 +1,4 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+<p align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/3/36/Logo.min.svg" width="400"></p>
 
 <p align="center">
 <a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
@@ -107,7 +107,7 @@ Pass: admin
 ## 5.1 La máquina virtual Laravel Homestead
 La instalación demora bastante debido a que crea una máquina virtual Vagrant llamada **Homestead**. Es de suma utilidad poder acceder mediante terminal a esta máquina virtual para hacer uso de los comandos propios de Laravel. No en vano, no deja de ser un Ubuntu virtualizado, con la ventaja de poder trabajar desde tu máquina local y no depender de la virtualización de un escritorio consumiendo recursos gráficos.  
 
-Antes que nada, debemos situarnos en la carpeta `homestead`.
+**Antes que nada, debemos situarnos en la carpeta `homestead`.**
 
 ### 5.1.1 Arrancar la máquina
 
@@ -165,7 +165,7 @@ Cualquier configuración que se haga en el archivo `Homestead.yaml` debe ir segu
 `vagrant box remove laravel/homestead`
 
 ## 5.6 Acceder a la base de datos mediante MySQL Workbench u otro gestor de BBDD
-Los datos de acceso son los siguientes:
+**Asegúrate de que la MV está arrancada.** Los datos de acceso son los siguientes:
 ```
 host: localhost
 puerto: 33060
