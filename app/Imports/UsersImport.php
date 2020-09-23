@@ -18,6 +18,27 @@ class UsersImport implements ToModel, WithHeadingRow
     {
         if(!array_filter($row)) return null;
 
+        // comprueba si ya hay un usuario con ese DNI
+        $dni = $row['dni'];
+        $user = User::where('dni',$dni)->first();
+        if($user != null){
+            return null;
+        }
+
+        // comprueba si ya hay un usuario con ese UVUS
+        $uvus = $row['uvus'];
+        $user = User::where('username',$uvus)->first();
+        if($user != null){
+            return null;
+        }
+
+        // comprueba si ya hay un usuario con ese email
+        $correo = $row['correo'];
+        $user = User::where('email',$correo)->first();
+        if($user != null){
+            return null;
+        }
+
         return new User([
             'dni' => $row['dni'],
             'surname' => explode(',',$row['apellidos_nombre'])[0],
