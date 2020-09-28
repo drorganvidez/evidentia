@@ -81,7 +81,7 @@ class InstanceTest extends TestCase
             'name' => 'Nuevo curso',
             'route' => '21',
             'host' => 'localhost',
-            'port' => '33060',
+            'port' => '3306',
             'database' => 'base21',
             'username' => 'homestead',
             'password' => 'secret',
@@ -91,7 +91,7 @@ class InstanceTest extends TestCase
         $response->assertStatus(302);
     }
 
-    public function testRemoveInstance()
+    /*public function testRemoveInstance()
     {
         $this->withoutExceptionHandling();
         $this->testAdminLoginTrue();
@@ -103,5 +103,5 @@ class InstanceTest extends TestCase
 
         $response = $this->post('admin/instance/manage/remove',$request);
         $response->assertStatus(302);
-    }
+    }*/
 }
