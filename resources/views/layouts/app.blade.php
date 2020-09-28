@@ -197,16 +197,14 @@
     $("#files").fileinput({
         theme: "explorer",
         language: "es",
-        showUpload: false,
-        overwriteInitial: false,
+        overwriteInitial: true,
         maxFileSize: 10000,
-        uploadUrl: "#",
         autoReplace: true,
-        deleteUrl: "#",
         browseClass: "btn btn-primary btn-block",
         showCaption: false,
-        showRemove: false,
-        showUpload: false
+        showRemove: true,
+        showUpload: false,
+        focusCaptionOnClear: true
     });
 
     $(document).ready(function(){

@@ -25,10 +25,8 @@
            value="{{$value}}"
            @endif
 
-           @if($required == true)
+           @if($required)
                 required
-           @else
-
            @endif
 
            autocomplete="{{ $attr }}" autofocus
