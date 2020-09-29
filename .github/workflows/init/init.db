@@ -1,0 +1,2 @@
+CREATE DATABASE IF NOT EXISTS `basetest`;
+GRANT ALL ON *.* TO 'homestead'@'%';
