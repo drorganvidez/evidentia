@@ -19,6 +19,7 @@ class InstanceTest extends TestCase
     public function testSettingUp() :void {
 
         DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `homestead`;");
+        DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `basetest`;");
         DB::connection()->getPdo()->exec("CREATE DATABASE IF NOT EXISTS `homestead`");
         DB::connection()->getPdo()->exec("ALTER SCHEMA `homestead`  DEFAULT CHARACTER SET utf8mb4  DEFAULT COLLATE utf8mb4_unicode_ci");
         exec("php artisan migrate");
@@ -69,7 +70,7 @@ class InstanceTest extends TestCase
     {
         $this->testAdminLoginTrue();
 
-        $response = $this->get('/admin/instance/create');
+        $response = $this->get('/admin/instance/manage');
         $response->assertStatus(200);
     }
 
@@ -81,14 +82,17 @@ class InstanceTest extends TestCase
             'name' => 'Nuevo curso',
             'route' => '21',
             'host' => 'localhost',
-            'port' => '3306',
-            'database' => 'base21',
+            'port' => '111',
+            'database' => 'basetest',
             'username' => 'homestead',
             'password' => 'secret',
         ];
 
         $response = $this->post('admin/instance/new',$request);
-        $response->assertStatus(302);
+
+        //$response->assertOk();
+
+        $response->assertStatus(200);
     }
 
     /*public function testRemoveInstance()

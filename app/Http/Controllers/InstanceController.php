@@ -50,9 +50,11 @@ class InstanceController extends Controller
         DB::connection()->getPdo()->exec("ALTER SCHEMA `{$instance->database}`  DEFAULT CHARACTER SET utf8mb4  DEFAULT COLLATE utf8mb4_unicode_ci");
 
         \Instantiation::set($instance);
+        //Artisan::call('config:clear');
 
         try {
             DB::connection()->getPdo();
+            //return back()->withInput()->with('error', 'Conexión fallida, revise los parámetros de configuración de la base de datos.')->setStatusCode(422);
             \Instantiation::migrate();
             Artisan::call('db:seed',
                 [
@@ -63,7 +65,7 @@ class InstanceController extends Controller
 
             \Instantiation::set_default_connection();
             DB::statement("DROP DATABASE `{$instance->database}`");
-            return back()->withInput()->with('error', 'Conexión fallida, revise los parámetros de configuración de la base de datos.');
+            return back()->withInput()->with('error', 'Conexión fallida, revise los parámetros de configuración de la base de datos.')->setStatusCode(422);
 
         }
 
@@ -73,7 +75,7 @@ class InstanceController extends Controller
 
         $message = 'Instancia creada con éxito.<br><br>CREDENCIALES DE ACCESO</br>Usuario: <code style="color: white">profesor1</code><br>Contraseña: <code style="color: white">profesor1</code>';
 
-        return redirect()->route('admin.instance.manage')->with('success', $message);
+        return redirect()->route('admin.instance.manage')->with('success', $message)->setStatusCode(200);
     }
 
     public function edit($id)
