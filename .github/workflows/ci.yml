@@ -17,7 +17,11 @@ jobs:
         ports:
           - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
+        entrypoint:
+          sh -c "
+          echo 'CREATE DATABASE IF NOT EXISTS basetest;' > /docker-entrypoint-initdb.d/init.sql;
+          /usr/local/bin/docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+          "
     steps:
       - uses: actions/checkout@v1
         with:
