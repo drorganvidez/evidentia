@@ -14,7 +14,6 @@ jobs:
           MYSQL_PASSWORD: secret
           MYSQL_ROOT_PASSWORD: secret
           MYSQL_DATABASE: homestead
-        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
         volumes:
           - init:/docker-entrypoint-initdb.d
         ports:
