@@ -25,7 +25,7 @@ jobs:
 
       - name: Grant privileges on MySQL
         run: |
-          mysql -u homestead -e "GRANT USAGE ON *.* TO 'homestead'@localhost IDENTIFIED BY 'secret'; GRANT USAGE ON *.* TO 'homestead'@'%' IDENTIFIED BY 'secret';"
+          "${mysql[@]}" -e "GRANT USAGE ON *.* TO 'homestead'@localhost IDENTIFIED BY 'secret'; GRANT USAGE ON *.* TO 'homestead'@'%' IDENTIFIED BY 'secret';"
 
       - name: Install composer dependencies
         run: |
