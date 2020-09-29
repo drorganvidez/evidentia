@@ -1,2 +1,4 @@
 CREATE DATABASE IF NOT EXISTS `basetest`;
 GRANT ALL ON *.* TO 'homestead'@'%';
+GRANT ALL ON *.* TO 'homestead'@'localhost';
+FLUSH PRIVILEGES;
