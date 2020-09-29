@@ -13,6 +13,7 @@ jobs:
           MYSQL_USER: homestead
           MYSQL_PASSWORD: secret
           MYSQL_ROOT_PASSWORD: secret
+          MYSQL_ROOT_HOST: "%"
           MYSQL_DATABASE: homestead
         volumes:
           - init.db:/docker-entrypoint-initdb.d
