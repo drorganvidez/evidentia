@@ -1,5 +1,5 @@
 on: push
-name: CI
+name: CI/CD
 jobs:
   phpunit:
     runs-on: ubuntu-latest
@@ -20,7 +20,7 @@ jobs:
       - name: Verify MySQL connection from host
         run: |
           sudo apt-get install -y mysql-client
-          mysql --host 127.0.0.1 --port 33306 -uroot -psecret -e "GRANT ALL ON *.*  TO 'homestead'@'%' identified by 'secret'; FLUSH PRIVILEGES; SHOW DATABASES"
+          mysql --host 127.0.0.1 --port 33306 -uroot -psecret -e "GRANT ALL ON *.*  TO 'homestead'@'%' identified by 'secret'; FLUSH PRIVILEGES;"
 
       - uses: actions/checkout@v1
         with:
@@ -42,6 +42,7 @@ jobs:
         run: vendor/bin/phpunit tests/
 
   deploy:
+    needs: phpunit
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
@@ -71,4 +72,4 @@ jobs:
           FOLDER: "./"
           SERVER_IP: ${{ secrets.HOST }}
           USERNAME: ${{ secrets.USERNAME }}
-          SERVER_DESTINATION: "/home/evidentia-deployment"
+          SERVER_DESTINATION: "/home/evidentia-deployment,"
