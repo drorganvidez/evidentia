@@ -25,7 +25,7 @@ jobs:
 
       - name: Grant privileges on MySQL
         run: |
-          mysql -uhomestead -psecret -h192.168.99.100 -P33306 -e "GRANT USAGE ON *.* TO 'homestead'@localhost IDENTIFIED BY 'secret'; GRANT USAGE ON *.* TO 'homestead'@'%' IDENTIFIED BY 'secret';"
+          mysql -uhomestead -psecret -h0.0.0.0 -P33306 -e "GRANT USAGE ON *.* TO 'homestead'@localhost IDENTIFIED BY 'secret'; GRANT USAGE ON *.* TO 'homestead'@'%' IDENTIFIED BY 'secret';"
 
       - name: Install composer dependencies
         run: |
