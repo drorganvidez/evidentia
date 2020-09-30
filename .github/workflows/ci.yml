@@ -26,7 +26,8 @@ jobs:
 
       - name: Grant privileges on MySQL
         run: |
-          mysql -P33306 --protocol=tcp -uhomestead  -e "GRANT USAGE ON *.* TO 'homestead'@localhost IDENTIFIED BY 'secret'; GRANT USAGE ON *.* TO 'homestead'@'%' IDENTIFIED BY 'secret';"
+          /etc/init.d/mysqld start
+          mysql -hlocalhost -P33306 --protocol=tcp -uhomestead -psecret -e "GRANT USAGE ON *.* TO 'homestead'@localhost IDENTIFIED BY 'secret'; GRANT USAGE ON *.* TO 'homestead'@'%' IDENTIFIED BY 'secret';"
 
       - name: Install composer dependencies
         run: |
