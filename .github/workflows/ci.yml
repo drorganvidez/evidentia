@@ -25,6 +25,7 @@ jobs:
 
       - name: Grant privileges on MySQL
         run: |
+          apt-get install mysql-client
           /etc/init.d/mysql start
           mysql -uhomestead -psecret -h127.0.0.1 -P33306 -e "GRANT USAGE ON *.* TO 'homestead'@localhost IDENTIFIED BY 'secret'; GRANT USAGE ON *.* TO 'homestead'@'%' IDENTIFIED BY 'secret';"
 
