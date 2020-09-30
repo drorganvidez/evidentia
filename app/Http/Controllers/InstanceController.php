@@ -50,11 +50,9 @@ class InstanceController extends Controller
         DB::connection()->getPdo()->exec("ALTER SCHEMA `{$instance->database}`  DEFAULT CHARACTER SET utf8mb4  DEFAULT COLLATE utf8mb4_unicode_ci");
 
         \Instantiation::set($instance);
-        //Artisan::call('config:clear');
 
         try {
             DB::connection()->getPdo();
-            //return back()->withInput()->with('error', 'Conexión fallida, revise los parámetros de configuración de la base de datos.')->setStatusCode(422);
             \Instantiation::migrate();
             Artisan::call('db:seed',
                 [

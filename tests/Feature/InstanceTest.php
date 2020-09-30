@@ -81,8 +81,8 @@ class InstanceTest extends TestCase
         $request = [
             'name' => 'Nuevo curso',
             'route' => '21',
-            'host' => 'localhost',
-            'port' => '111',
+            'host' => env("DB_HOST"),
+            'port' => env('DB_PORT'),
             'database' => 'basetest',
             'username' => 'homestead',
             'password' => 'secret',
