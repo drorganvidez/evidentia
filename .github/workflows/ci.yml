@@ -16,7 +16,7 @@ jobs:
           MYSQL_DATABASE: homestead
           MYSQL_ROOT_HOST: localhost
         ports:
-          - 127.0.0.1:33306:3306
+          - 33306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
@@ -26,8 +26,6 @@ jobs:
 
       - name: Grant privileges on MySQL
         run: |
-          ufw allow mysql
-          service mysql start
           mysql -P33306 --protocol=tcp -uhomestead  -e "GRANT USAGE ON *.* TO 'homestead'@localhost IDENTIFIED BY 'secret'; GRANT USAGE ON *.* TO 'homestead'@'%' IDENTIFIED BY 'secret';"
 
       - name: Install composer dependencies
