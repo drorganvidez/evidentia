@@ -173,9 +173,9 @@ $.extend( FixedHeader.prototype, {
 	{
 		return this.s.enable;
 	},
-	
+
 	/**
-	 * Set header offset 
+	 * Set header offset
 	 *
 	 * @param  {int} new value for headerOffset
 	 */
@@ -188,7 +188,7 @@ $.extend( FixedHeader.prototype, {
 
 		return this.c.headerOffset;
 	},
-	
+
 	/**
 	 * Set footer offset
 	 *
@@ -204,7 +204,7 @@ $.extend( FixedHeader.prototype, {
 		return this.c.footerOffset;
 	},
 
-	
+
 	/**
 	 * Recalculate the position of the fixed elements and force them into place
 	 */
@@ -227,7 +227,7 @@ $.extend( FixedHeader.prototype, {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Constructor
 	 */
-	
+
 	/**
 	 * FixedHeader constructor - adding the required event listeners and
 	 * simple initialisation
@@ -412,7 +412,7 @@ $.extend( FixedHeader.prototype, {
 	 * * `in` - Floating over the DataTable
 	 * * `below` - (Header only) Fixed to the bottom of the table body
 	 * * `above` - (Footer only) Fixed to the top of the table body
-	 * 
+	 *
 	 * @param  {string}  mode        Mode that the item should be shown in
 	 * @param  {string}  item        'header' or 'footer'
 	 * @param  {boolean} forceChange Force a redraw of the mode, even if already
@@ -431,7 +431,7 @@ $.extend( FixedHeader.prototype, {
 		var focus = $.contains( tablePart[0], document.activeElement ) ?
 			document.activeElement :
 			null;
-		
+
 		if ( focus ) {
 			focus.blur();
 		}

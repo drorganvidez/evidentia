@@ -649,7 +649,7 @@ $.extend( KeyTable.prototype, {
 				.rows( { filter: 'applied', order: 'applied' } )
 				.indexes()
 				.indexOf( index.row );
-			
+
 			// Don't focus rows that were filtered out.
 			if ( row < 0 ) {
 				return;
