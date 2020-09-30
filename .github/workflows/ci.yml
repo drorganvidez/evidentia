@@ -13,14 +13,14 @@ jobs:
           MYSQL_USER: homestead
           MYSQL_PASSWORD: secret
         ports:
-          - 33306:3306
+          - 33306:33060
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - name: Verify MySQL connection from host
         run: |
           sudo apt-get install -y mysql-client
-          mysql --host 127.0.0.1 --port 33306 -uroot -psecret -e "SHOW DATABASES"
+          mysql --host 127.0.0.1 --port 33306 -uroot -psecret -e "GRANT ALL ON *.*  TO 'homestead'@'%' identified by 'secret'; FLUSH PRIVILEGES; SHOW DATABASES"
 
       - uses: actions/checkout@v1
         with:
