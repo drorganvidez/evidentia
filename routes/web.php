@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
  */
 
 Route::get('/deploy/{token}', 'DeployController@deploy')->name('deploy');
+Route::get('/deploy/instance/{token}', 'DeployController@deploy_default_instance')->name('deploy.instance');
 
 Auth::routes();
 

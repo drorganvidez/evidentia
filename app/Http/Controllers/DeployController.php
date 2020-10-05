@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use App\Instance;
 
 class DeployController extends Controller
 {
@@ -28,6 +29,32 @@ class DeployController extends Controller
             Artisan::call("migrate");
             Artisan::call("db:seed");
         }
+
+        return redirect()->route('instances.home');
+    }
+
+    public function deploy_default_instance($token){
+
+        $instance = Instance::all()->first();
+        \Instantiation::set($instance);
+
+        // creamos las tablas
+        Artisan::call('migrate',
+            [
+                '--path' => 'database/migrations/instances',
+                '--database' => 'instance'
+            ]);
+        $output = Artisan::output();
+
+        // la populamos con SampleSeeder
+        Artisan::call('db:seed',
+            [
+                '--class' => 'SampleSeeder',
+                '--database' => 'instance'
+            ]);
+        $output = Artisan::output();
+
+        \Instantiation::set_default_connection();
 
         return redirect()->route('instances.home');
     }
