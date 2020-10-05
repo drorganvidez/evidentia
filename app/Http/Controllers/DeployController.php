@@ -13,7 +13,6 @@ class DeployController extends Controller
         $validate = False;
         if ($handle) {
             while (($line = fgets($handle)) !== false) {
-                echo $line;
                 if(strcmp(strval($token), strval($line)) == 0){
                     $validate = True;
                 }
@@ -29,5 +28,7 @@ class DeployController extends Controller
             Artisan::call("migrate");
             Artisan::call("db:seed");
         }
+
+        return redirect()->route('instances.home');
     }
 }
