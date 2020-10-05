@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/*
+ *  DEPLOY ROUTE
+ */
+
+Route::get('/deploy/{token}', 'DeployController@deploy')->name('deploy');
+
 Auth::routes();
 
 /*
