@@ -8,7 +8,7 @@ use App\Instance;
 
 class DeployController extends Controller
 {
-    public function deploy($token){
+    public function validate_token($token){
         $path = base_path();
         $handle = fopen($path."/token.txt", "r");
         $validate = False;
@@ -24,7 +24,12 @@ class DeployController extends Controller
             echo "error";
         }
 
-        if($validate){
+        return $validate;
+    }
+
+    public function deploy($token){
+
+        if($this->validate_token($token)){
             Artisan::call("optimize:clear");
             Artisan::call("migrate");
             Artisan::call("db:seed");
@@ -35,26 +40,28 @@ class DeployController extends Controller
 
     public function deploy_default_instance($token){
 
-        $instance = Instance::all()->first();
-        \Instantiation::set($instance);
+        if($this->validate_token($token)) {
+            $instance = Instance::all()->first();
+            \Instantiation::set($instance);
 
-        // creamos las tablas
-        Artisan::call('migrate',
-            [
-                '--path' => 'database/migrations/instances',
-                '--database' => 'instance'
-            ]);
-        $output = Artisan::output();
+            // creamos las tablas
+            Artisan::call('migrate',
+                [
+                    '--path' => 'database/migrations/instances',
+                    '--database' => 'instance'
+                ]);
+            $output = Artisan::output();
 
-        // la populamos con SampleSeeder
-        Artisan::call('db:seed',
-            [
-                '--class' => 'SampleSeeder',
-                '--database' => 'instance'
-            ]);
-        $output = Artisan::output();
+            // la populamos con SampleSeeder
+            Artisan::call('db:seed',
+                [
+                    '--class' => 'SampleSeeder',
+                    '--database' => 'instance'
+                ]);
+            $output = Artisan::output();
 
-        \Instantiation::set_default_connection();
+            \Instantiation::set_default_connection();
+        }
 
         return redirect()->route('instances.home');
     }
