@@ -26,6 +26,7 @@ class DeployController extends Controller
         if($validate){
             Artisan::call("optimize:clear");
             Artisan::call("key:generate");
+            Artisan::call("config:cache");
             Artisan::call("migrate");
             Artisan::call("db:seed");
         }
