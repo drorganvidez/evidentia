@@ -19,7 +19,7 @@ class SelectDatabase
     {
         $param = $request->segment(1);
 
-        $admin_routes = array("", "administration", "admin", "login", "logout");
+        $admin_routes = array("", "administration", "admin", "login", "logout", "deploy");
 
         if (in_array($param, $admin_routes))
         {
