@@ -18,7 +18,7 @@ class CreateMeetingTable extends Migration
             $table->foreignId('comittee_id')->nullable(true);
             $table->foreignId('meetingrequest_id')->nullable(true);
             $table->string('title');
-            $table->timestamp('datetime');
+            $table->timestamp('datetime')->nullable(true);
             $table->string('place');
             $table->enum('type',['ORDINARY','EXTRAORDINARY']);
             $table->integer('hours');

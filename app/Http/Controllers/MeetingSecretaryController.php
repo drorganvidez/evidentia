@@ -47,7 +47,7 @@ class MeetingSecretaryController extends Controller
             'type' => 'required|numeric|min:1|max:2',
             'hours' => 'required|numeric|between:0.5,99.99|max:100',
             'place' => 'required|min:5|max:255',
-            'date' => 'required|date_format:Y-m-d|before:today',
+            'date' => 'required|date_format:Y-m-d|before:tomorrow',
             'time' => 'required',
             'users' => 'required|array|min:1'
         ]);
@@ -104,7 +104,7 @@ class MeetingSecretaryController extends Controller
             'type' => 'required|numeric|min:1|max:2',
             'hours' => 'required|numeric|between:0.5,99.99|max:100',
             'place' => 'required|min:5|max:255',
-            'date' => 'required',
+            'date' => 'required|date_format:Y-m-d|before:tomorrow',
             'time' => 'required',
             'users' => 'required|array|min:1'
         ]);
