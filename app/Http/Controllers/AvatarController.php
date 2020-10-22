@@ -19,7 +19,6 @@ class AvatarController extends Controller
 
     public function avatar($instance,$id)
     {
-        $instance = \Instantiation::instance();
         $user = User::find($id);
 
         $path = null;
@@ -40,10 +39,33 @@ class AvatarController extends Controller
         $response = Response::make($file, 200);
         $response->header("Content-Type", $type);
 
+        // recorte de imagen
+        list($width, $height, $type, $attr) = getimagesize($path);
+
+        $img = null;
+
+        // ¿La imagen es más alta que ancha?
+        if($height > $width){
+            $new_width = $width;
+            $new_height = $width;
+            $img = Image::make($file)->crop($new_width,$new_height);
+        }
+
+        // ¿La imagen es más ancha que alta?
+        if($height < $width){
+            $new_width = $height;
+            $new_height = $height;
+            $img = Image::make($file)->crop($new_width,$new_height);
+        }
+
+        // ¿La imagen es cuadrada?
+        if($height == $width){
+            $img = Image::make($file)->crop($width,$height);
+        }
+
+
         // limpiar búfer de salida
         ob_end_clean();
-
-        $img = Image::make($file)->crop(500, 500);
 
         return $img->response('jpg');
 
