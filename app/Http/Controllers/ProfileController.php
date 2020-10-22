@@ -65,11 +65,11 @@ class ProfileController extends Controller
 
                 // almacenamos en disco el avatar
                 $file = $request->file('avatar');
-                $path = Storage::putFileAs($instance . '/avatares/' . $user->username, $file, $file->getClientOriginalName());
+                $path = Storage::putFileAs($instance . '/avatares/' . $user->username, $file, $this->file_name_parser($file));
 
                 // almacenamos en la BBDD la información del archivo
                 $file_entity = File::create([
-                    'name' => $file->getClientOriginalName(),
+                    'name' => $this->file_name_parser($file),
                     'type' => strtolower($file->getClientOriginalExtension()),
                     'route' => $path,
                     'size' => $file->getSize(),
@@ -82,6 +82,7 @@ class ProfileController extends Controller
                 // borramos el avatar antiguo (si lo tuviera)
                 if ($user->avatar != null){
                     Storage::delete($user->avatar->file->route);
+                    $user->avatar->file->delete();
                     $user->avatar->delete();
                 }
 
@@ -102,6 +103,18 @@ class ProfileController extends Controller
 
         return redirect()->route('profile.view',$instance)->with('success', 'Datos personales editados con éxito.');
 
+    }
+
+    private function file_name_parser($file){
+        $name = $file->getClientOriginalName();
+        $file_from_ddbb = File::where("name",$name)->first();
+
+        // si ya hay un avatar con ese nombre, ponerle otro nombre al nuevo
+        if($file_from_ddbb != null){
+            $name .= " (copy)";
+        }
+
+        return $name;
     }
 
     public function upload_biography(Request $request)
