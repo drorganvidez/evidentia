@@ -135,7 +135,7 @@ class Evidence extends Model
     }
 
     public static function evidences_rejected() {
-        return Evidence::where('status','=', 'ACCEPTED')->orderByDesc('updated_at')->get();
+        return Evidence::where('status','=', 'REJECTED')->orderByDesc('updated_at')->get();
     }
 
     public function integrity()
