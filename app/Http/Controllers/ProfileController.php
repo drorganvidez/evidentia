@@ -111,7 +111,7 @@ class ProfileController extends Controller
 
         // si ya hay un avatar con ese nombre, ponerle otro nombre al nuevo
         if($file_from_ddbb != null){
-            $name .= " (copy)";
+            $name .= " (copy)." . strtolower($file->getClientOriginalExtension());
         }
 
         return $name;
