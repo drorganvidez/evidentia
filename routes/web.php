@@ -322,4 +322,11 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         Route::post('/update_p/{token}','PasswordResetController@update_p')->name('password.update_p');
     });
 
+    /**
+     * SUGGESTIONS MAILBOX
+     */
+
+    Route::get('/suggestionsmailbox','SuggestionsMailboxController@suggestionsmailbox')->name('suggestionsmailbox');
+    Route::post('/suggestionsmailbox_p','SuggestionsMailboxController@suggestionsmailbox_p')->name('suggestionsmailbox_p');
+
 });
