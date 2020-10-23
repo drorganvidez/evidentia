@@ -21,7 +21,7 @@ class CreateMeetingTable extends Migration
             $table->timestamp('datetime')->nullable(true);
             $table->string('place');
             $table->enum('type',['ORDINARY','EXTRAORDINARY']);
-            $table->integer('hours');
+            $table->float('hours');
             $table->timestamps();
         });
     }

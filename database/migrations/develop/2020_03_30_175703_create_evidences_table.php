@@ -19,7 +19,7 @@ class CreateEvidencesTable extends Migration
             $table->foreignId('comittee_id');
             $table->string('title');
             $table->text('description');
-            $table->integer('hours');
+            $table->float('hours');
             $table->integer('points_to')->nullable($value = true);
             $table->enum('status', ['DRAFT', 'PENDING', 'ACCEPTED', 'REJECTED', 'BIN', 'CLOSED']);
             $table->string('stamp')->nullable($value = true);
