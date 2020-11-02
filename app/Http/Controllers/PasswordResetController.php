@@ -56,7 +56,11 @@ class PasswordResetController extends Controller
 
             $token->save();
 
-            Mail::to($user)->send(new PasswordReset(\Instantiation::instance(),$token,$user));
+            try{
+                Mail::to($user)->send(new PasswordReset(\Instantiation::instance(),$token,$user));
+            }catch(\Exception $e){
+
+            }
         }
 
         return redirect()->route('instance.login', \Instantiation::instance())->with('light', 'Si el email se encuentra en nuestros registros, recibirás un correo con instrucciones para restablecer tu contraseña.');
