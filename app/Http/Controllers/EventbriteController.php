@@ -110,7 +110,8 @@ class EventbriteController extends Controller
                         // Cálculo de las horas
                         $start = new Carbon($saved_event->start_datetime);
                         $end = new Carbon($saved_event->end_datetime);
-                        $hours = $end->diffInHours($start);
+                        $hours = $end->diffInMinutes($start,true);
+                        $hours = $hours/60;
                         $saved_event->hours = $hours;
 
                         $saved_event->save();
@@ -129,7 +130,8 @@ class EventbriteController extends Controller
                         // Cálculo de las horas
                         $start = new Carbon($new_event->start_datetime);
                         $end = new Carbon($new_event->end_datetime);
-                        $hours = $end->diffInHours($start);
+                        $hours = $end->diffInMinutes($start,true);
+                        $hours = $hours/60;
                         $new_event->hours = $hours;
 
                         $new_event->save();
