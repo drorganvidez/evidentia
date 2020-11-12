@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DefaultList;
 use App\Meeting;
+use App\Rules\CheckHoursAndMinutes;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -41,11 +42,13 @@ class MeetingSecretaryController extends Controller
     {
 
         $instance = \Instantiation::instance();
+        $minutes = $request->input('minutes');
 
         $validatedData = $request->validate([
             'title' => 'required|min:5|max:255',
             'type' => 'required|numeric|min:1|max:2',
-            'hours' => 'required|numeric|between:0.5,99.99|max:100',
+            'hours' => ['required_without:minutes','nullable','numeric','sometimes','max:99',new CheckHoursAndMinutes($request->input('minutes'))],
+            'minutes' => ['required_without:hours','nullable','numeric','sometimes','max:60',new CheckHoursAndMinutes($request->input('hours'))],
             'place' => 'required|min:5|max:255',
             'date' => 'required|date_format:Y-m-d|before:tomorrow',
             'time' => 'required',
@@ -54,7 +57,7 @@ class MeetingSecretaryController extends Controller
 
         $meeting = Meeting::create([
             'title' => $request->input('title'),
-            'hours' => $request->input('hours'),
+            'hours' => $request->input('hours') + floor(($minutes*100)/60)/100,
             'type' => $request->input('type'),
             'place' => $request->input('place'),
             'datetime' => $request->input('date')." ".$request->input('time')
@@ -98,11 +101,13 @@ class MeetingSecretaryController extends Controller
     {
 
         $instance = \Instantiation::instance();
+        $minutes = $request->input('minutes');
 
         $validatedData = $request->validate([
             'title' => 'required|min:5|max:255',
             'type' => 'required|numeric|min:1|max:2',
-            'hours' => 'required|numeric|between:0.5,99.99|max:100',
+            'hours' => ['required_without:minutes','nullable','numeric','sometimes','max:99',new CheckHoursAndMinutes($request->input('minutes'))],
+            'minutes' => ['required_without:hours','nullable','numeric','sometimes','max:60',new CheckHoursAndMinutes($request->input('hours'))],
             'place' => 'required|min:5|max:255',
             'date' => 'required|date_format:Y-m-d|before:tomorrow',
             'time' => 'required',
@@ -111,7 +116,7 @@ class MeetingSecretaryController extends Controller
 
         $meeting = Meeting::find($request->_id);
         $meeting->title = $request->input('title');
-        $meeting->hours = $request->input('hours');
+        $meeting->hours = $request->input('hours') + floor(($minutes*100)/60)/100;
         $meeting->type = $request->input('type');
         $meeting->place = $request->input('place');
         $meeting->datetime = $request->input('date')." ".$request->input('time');

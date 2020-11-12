@@ -7,6 +7,7 @@ use App\Comittee;
 use App\Evidence;
 use App\File;
 use App\Proof;
+use App\Rules\CheckHoursAndMinutes;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
 use App\User;
@@ -83,21 +84,23 @@ class EvidenceController extends Controller
 
     private function new_evidence($request,$status)
     {
+
         $request->validate([
             'title' => 'required|min:5|max:255',
-            'hours' => 'required|numeric|between:0.5,99.99|max:100',
+            'hours' => ['required_without:minutes','nullable','numeric','sometimes','max:99',new CheckHoursAndMinutes($request->input('minutes'))],
+            'minutes' => ['required_without:hours','nullable','numeric','sometimes','max:60',new CheckHoursAndMinutes($request->input('hours'))],
             'description' => ['required',new MinCharacters(10),new MaxCharacters(20000)],
         ]);
 
         // datos necesarios para crear evidencias
         $user = Auth::user();
-        $instance = \Instantiation::instance();
+        $minutes = $request->input('minutes');
 
         // creación de una nueva evidencia
         $evidence = Evidence::create([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
-            'hours' => $request->input('hours'),
+            'hours' => $request->input('hours') + floor(($minutes*100)/60)/100,
             'status' => $status,
             'user_id' => $user->id,
             'comittee_id' => $request->input('comittee')
@@ -215,12 +218,6 @@ class EvidenceController extends Controller
     private function save($request,$status)
     {
         $instance = \Instantiation::instance();
-
-        $request->validate([
-            'title' => 'required|min:5|max:255',
-            'hours' => 'required|numeric|between:0.5,99.99|max:100',
-            'description' => ['required',new MinCharacters(10),new MaxCharacters(20000)],
-        ]);
 
         // evidencia desde la que hemos decidido partir
         $evidence_previous = Evidence::find($request->_id);

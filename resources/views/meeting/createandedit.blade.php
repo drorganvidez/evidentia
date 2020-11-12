@@ -92,9 +92,30 @@
 
                             <x-input col="6" attr="place" :value="$meeting->place ?? ''" label="Lugar" description="Indica el lugar de la reunión."/>
 
-                            <x-input col="3" attr="hours" :value="$meeting->hours ?? ''" type="number" step="0.01" label="Horas invertidas" description="Números enteros o decimales."/>
+                            <div class="form-group col-md-2">
+                                <label for="hours">Horas invertidas</label>
+                                <input id="" type="number" class="form-control" placeholder="" name="hours" value="{{\Time::complex_shape_hours($meeting->hours ?? '')}}" autocomplete="hours" autofocus="" step="0.01">
+                                <small class="form-text text-muted">Enteros o decimales</small>
+                                @error("hours")
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
 
-                            <div class="form-group col-md-3">
+
+                            <div class="form-group col-md-2">
+                                <label for="minutes">Minutos invertidos</label>
+                                <input id="" type="number" min="0" max="60" class="form-control" placeholder="" name="minutes" value="{{\Time::complex_shape_minutes($meeting->hours ?? '') }}" autocomplete="minutes" autofocus="">
+                                <small class="form-text text-muted">Enteros</small>
+                                @error("minutes")
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
+                            <div class="form-group col-md-2">
                                 <label for="type">Tipo de reunión</label>
                                 <select id="type" class="selectpicker form-control @error('type') is-invalid @enderror" name="type" value="{{ old('type') }}" required autofocus>
 
