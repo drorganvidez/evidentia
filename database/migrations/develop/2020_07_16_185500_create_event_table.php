@@ -23,7 +23,7 @@ class CreateEventTable extends Migration
             $table->integer('capacity');
             $table->enum('status',['draft','live','started','ended','completed','canceled']);
             $table->string('url');
-            $table->integer('hours')->nullable();
+            $table->float('hours')->nullable();
             $table->timestamps();
         });
     }
