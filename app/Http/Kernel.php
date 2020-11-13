@@ -74,6 +74,7 @@ class Kernel extends HttpKernel
         'checkregistermeetings' => \App\Http\Middleware\CheckRegisterMeeting::class,
         'checkregisterbonus' => \App\Http\Middleware\CheckRegisterBonus::class,
         'checkregistereventsandattendings' => \App\Http\Middleware\CheckRegisterEventsAndAttendings::class,
-        'checkproofdownload' => \App\Http\Middleware\CheckProofDownload::class
+        'checkproofdownload' => \App\Http\Middleware\CheckProofDownload::class,
+        'checkisadministrator' => \App\Http\Middleware\CheckIsAdministrator::class
     ];
 }

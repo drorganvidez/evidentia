@@ -20,7 +20,7 @@ class Authenticate extends Middleware
         if (! $request->expectsJson()) {
 
             if($param == "admin"){
-                return route('admin');
+                return route('instances.home');
             }
 
             return $param.'/login';

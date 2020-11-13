@@ -41,7 +41,7 @@
 <div class="wrapper">
 
     @auth
-        @if(Request::is('/') || Request::is('admin/*'))
+        @if(Request::is('admin') || Request::is('admin/*'))
             <x-navbars.navbaradmin/>
         @else
             <x-navbars.navbarcommon/>
@@ -66,9 +66,7 @@
 
             @auth
 
-
-
-                @if(Request::is('/') || Request::is('admin/*'))
+                @if(Request::is('admin') || Request::is('admin/*'))
 
                     <x-menus.menuadmin/>
 

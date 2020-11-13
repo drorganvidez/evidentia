@@ -1,8 +1,15 @@
 <li class="nav-item">
-    <a href="{{ route($route,\Instantiation::instance()) }}" class="nav-link
+    @if(Request::is('admin') || Request::is('admin/*'))
+        <a href="{{ route($route) }}"
+    @else
+        <a href="{{ route($route,['instance' => \Instantiation::instance()]) }}"
+    @endif
+
+
+       class="nav-link
 
     @isset($secondaries)
-        @foreach(explode(',', $secondaries) as $secondary) 
+        @foreach(explode(',', $secondaries) as $secondary)
             @if(Route::currentRouteName() == $secondary)
                 active
             @endif

@@ -10,10 +10,23 @@ use Illuminate\Support\Str;
 
 class LoginInstanceController extends Controller
 {
+
     public function login()
     {
-        $instance = \Instantiation::instance();
-        return view('auth.login',['instance' => $instance]);
+
+        if(Auth::check()){
+            return redirect()->route('home',['instance' => \Instantiation::instance()]);
+        }
+
+        \Instantiation::set_default_connection();
+        $instances = Instance::all();
+        \Instantiation::set_default_instance();
+
+        if(count($instances) == 0){
+            return redirect()->route('admin.login');
+        }
+
+        return view('auth.login',['instances' => $instances]);
     }
 
     public function login_p(Request $request)
@@ -22,9 +35,17 @@ class LoginInstanceController extends Controller
         $credentials = $request->only('username', 'password');
 
         if (Auth::attempt($credentials)) {
-            return redirect()->intended('dashboard');
+            return redirect()->route('home',['instance' => \Instantiation::instance()]);
         }
 
         return back()->withInput()->with('error', 'Las credenciales no son válidas.');
+    }
+
+    public function logout(Request $request)
+    {
+
+        Auth::logout();
+
+        return redirect()->route('home',['instance' => \Instantiation::instance()]);
     }
 }

@@ -8,28 +8,18 @@
 
         <div class="card-body login-card-body">
 
+            <p class="login-box-msg">Acceso a la administración</p>
+
             <x-status/>
 
-            <form action="{{route('instance.login_p',\Instantiation::instance())}}" method="post">
+            <form method="POST" action="{{ route('admin.login_p') }}">
                 @csrf
 
                 <div class="input-group mb-3">
-                    <select id="subject" onchange="location = '/' + this.value;" class="selectpicker form-control @error('subject') is-invalid @enderror" name="subject" value="{{ old('subject') }}" required autofocus>
-
-                        @foreach($instances as $i)
-
-                            <option @if($i->route ==  \Instantiation::instance()) selected @endif value="{{$i->route}}">{{$i->name}}</option>
-
-                        @endforeach
-
-                    </select>
-                </div>
-
-                <div class="input-group mb-3">
-                    <input name="username" required type="text" class="form-control" placeholder="UVUS"  autocomplete="username" autofocus>
+                    <input name="email" required type="email" class="form-control" placeholder="Email"  autocomplete="email" autofocus>
                     <div class="input-group-append">
                         <div class="input-group-text">
-                            <span class="fas fa-user"></span>
+                            <span class="fas fa-envelope"></span>
                         </div>
                     </div>
                 </div>
@@ -60,11 +50,7 @@
                 </div>
             </form>
 
-            <a href="{{route('password.reset',\Instantiation::instance())}}" class="btn btn-block btn-light mt-3">
-                He olvidado mi contraseña
-            </a>
-
         </div>
-        <!-- /.login-card-body -->
     </div>
 @endsection
+

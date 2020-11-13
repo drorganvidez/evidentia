@@ -27,39 +27,48 @@ Auth::routes();
  *  MAIN ROUTE
  */
 
-Route::get('/', 'MetaAdminController@list')->name('instances.home');
+Route::get('/', 'MetaHomeController@home')->name('instances.home');
 
 /*
- *  META ADMIN ROUTES
+ *  ADMIN ROUTES
  */
+Route::group(['prefix' => 'admin'], function(){
 
-Route::get('administration', 'MetaAdminController@admin')->name('admin');
+    Route::get('', 'AdminController@home')->name('admin.home');
+    Route::get('login', 'LoginAdminController@login')->name('admin.login');
+    Route::post('login_p', 'LoginAdminController@login_p')->name('admin.login_p');
+    Route::post('logout', 'LoginAdminController@logout')->name('admin.logout');
 
+    Route::group(['middleware' => ['checkisadministrator']], function(){
+        /*
+         *  MANAGE INSTANCES
+         */
+        Route::prefix('instance')->group(function () {
 
+            Route::get('manage', 'InstanceController@manage')->name('admin.instance.manage');
 
-Route::prefix('admin')->group(function () {
+            Route::get('create', 'InstanceController@create')->name('admin.instance.create');
+            Route::post('new', 'InstanceController@new')->name('admin.instance.new');
 
-    Route::get('/instance/manage', 'InstanceController@manage')->name('admin.instance.manage');
+            Route::middleware(['checknotnull:Instance'])->group(function () {
+                Route::get('manage/edit/{id}', 'InstanceController@edit')->name('admin.instance.manage.edit');
+                Route::get('manage/delete/{id}', 'InstanceController@delete')->name('admin.instance.manage.delete');
+            });
 
-    Route::get('instance/create', 'InstanceController@create')->name('admin.instance.create');
-    Route::post('/instance/new', 'InstanceController@new')->name('admin.instance.new');
+            Route::post('manage/save', 'InstanceController@save')->name('admin.instance.manage.save');
 
-    Route::middleware(['checknotnull:Instance'])->group(function () {
-        Route::get('/instance/manage/edit/{id}', 'InstanceController@edit')->name('admin.instance.manage.edit');
-        Route::get('/instance/manage/delete/{id}', 'InstanceController@delete')->name('admin.instance.manage.delete');
+            Route::post('manage/remove/', 'InstanceController@remove')->name('admin.instance.manage.remove');
+        });
     });
 
-    Route::post('/instance/manage/save', 'InstanceController@save')->name('admin.instance.manage.save');
 
-    Route::post('/instance/manage/remove/', 'InstanceController@remove')->name('admin.instance.manage.remove');
+
 
 });
 
 /*
  *  ALL ROUTES
  */
-
-
 Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], function(){
 
     /**
@@ -75,6 +84,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/', 'HomeController@index')->name('home');
     Route::get('/login', 'LoginInstanceController@login')->name('instance.login');
     Route::post('/login_p', 'LoginInstanceController@login_p')->name('instance.login_p');
+    Route::post('/logout', 'LoginInstanceController@logout')->name('instance.logout');
 
     /**
      *  PROFILE
@@ -328,5 +338,19 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
     Route::get('/suggestionsmailbox','SuggestionsMailboxController@suggestionsmailbox')->name('suggestionsmailbox');
     Route::post('/suggestionsmailbox_p','SuggestionsMailboxController@suggestionsmailbox_p')->name('suggestionsmailbox_p');
+
+    // Listar las notas
+    Route::get('note/list', 'NoteController@list')->name('note.list');
+
+    // Crear una nota
+    Route::get('note/create', 'NoteController@create')->name('note.create');
+    Route::post('note/new', 'NoteController@new')->name('note.new');
+
+    // Editar una nota
+    Route::get('note/edit/{id}', 'NoteController@edit')->name('note.edit');
+    Route::post('note/save', 'NoteController@save')->name('note.save');
+
+    // Eliminar una nota
+    Route::post('note/remove', 'NoteController@remove')->name('note.remove');
 
 });

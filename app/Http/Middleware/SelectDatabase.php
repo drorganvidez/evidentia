@@ -19,13 +19,15 @@ class SelectDatabase
     {
         $param = $request->segment(1);
 
-        $admin_routes = array("", "administration", "admin", "login", "logout", "deploy");
+        $admin_routes = array("", "admin","logout", "deploy");
 
+        // si es una de las rutas permitidas en el array, dejo pasar
         if (in_array($param, $admin_routes))
         {
             return $next($request);
         }
 
+        // si no es ninguna ruta, compruebo que sea una instancia definida en la BBDD
         $instance = Instance::where('route',$param)->first();
 
         // if database doesn't exist

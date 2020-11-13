@@ -125,7 +125,6 @@ class InstanceController extends Controller
         $instances = Instance::all();
 
         return view('instances.manage', ['instances' => $instances]);
-        return "hola";
     }
 
     public function delete($id)

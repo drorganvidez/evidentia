@@ -226,5 +226,19 @@ class Config
 
 }
 
+class Time{
+
+    // extrae las horas (enteras) del campo hours
+    public static function complex_shape_hours($hours){
+        if(is_numeric($hours)) return intval($hours);
+    }
+
+    // extrae los minutos del campo hours
+    public static function complex_shape_minutes($hours){
+        if(is_numeric($hours)) return round((($hours-intval($hours)))*60);
+    }
+
+}
+
 
 ?>

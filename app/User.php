@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'dni','surname','name', 'username','password','email','block','biography'
+        'dni', 'surname', 'name', 'username', 'password', 'email', 'block', 'biography'
     ];
 
     /**
@@ -50,13 +50,26 @@ class User extends Authenticatable
 
     public function hasRole($rol_param)
     {
-        foreach($this->roles as $rol)
-        {
-            if($rol->rol == $rol_param)
-            {
-                return true;
+        try {
+            foreach ($this->roles as $rol) {
+                if ($rol->rol == $rol_param) {
+                    return true;
+                }
             }
+        }catch(\Exception $e){
+
         }
+        return false;
+    }
+
+    public function isAdmin()
+    {
+        try {
+            return $this->administrator;
+        }catch(\Exception $e){
+
+        }
+
         return false;
     }
 
