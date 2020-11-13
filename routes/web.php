@@ -339,18 +339,4 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/suggestionsmailbox','SuggestionsMailboxController@suggestionsmailbox')->name('suggestionsmailbox');
     Route::post('/suggestionsmailbox_p','SuggestionsMailboxController@suggestionsmailbox_p')->name('suggestionsmailbox_p');
 
-    // Listar las notas
-    Route::get('note/list', 'NoteController@list')->name('note.list');
-
-    // Crear una nota
-    Route::get('note/create', 'NoteController@create')->name('note.create');
-    Route::post('note/new', 'NoteController@new')->name('note.new');
-
-    // Editar una nota
-    Route::get('note/edit/{id}', 'NoteController@edit')->name('note.edit');
-    Route::post('note/save', 'NoteController@save')->name('note.save');
-
-    // Eliminar una nota
-    Route::post('note/remove', 'NoteController@remove')->name('note.remove');
-
 });
