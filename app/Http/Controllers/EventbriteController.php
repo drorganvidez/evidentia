@@ -173,44 +173,66 @@ class EventbriteController extends Controller
 
             foreach($events as $event) {
 
-                // obtenemos las asistencias a cada evento
+
+                // obtenemos la paginación
                 $attendees = $client->request('GET', 'events/' . $event->id_eventbrite .'/attendees', [
                     'query' => ['token' => $token]
                 ]);
 
                 $attendees = json_decode($attendees->getBody());
-                $attendees = (array)$attendees->attendees;
-                foreach($attendees as $attendee){
+                $page_count = $attendees->pagination->page_count;
+
+                $page_contador = 1;
+
+                while($page_contador <= $page_count){
+
+                    // obtenemos las asistencias a cada evento
+                    $attendees_page = $client->request('GET', 'events/' . $event->id_eventbrite .'/attendees', [
+                        'query' => ['token' => $token, 'page' => $page_contador]
+                    ]);
+
+                    $attendees_page = json_decode($attendees_page->getBody());
+                    $attendees_page = (array)$attendees_page->attendees;
+                    foreach($attendees_page as $attendee){
+
+                        // limpiamos el nombre de caracteres problemáticos
+                        $first_name = $attendee->profile->first_name;
+                        $first_name = strtoupper(trim(preg_replace('~[^0-9a-z]+~i', '', preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($first_name, ENT_QUOTES, 'UTF-8'))), ' '));
+
+                        // limpiamos los apellidos de caracteres problemáticos
+                        $last_name = $attendee->profile->last_name;
+                        $last_name = strtoupper(trim(preg_replace('~[^0-9a-z]+~i', '', preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($last_name, ENT_QUOTES, 'UTF-8'))), ' '));
+
+                        $status = $attendee->status;
+                        $email = $attendee->profile->email;
+
+                        $user = DB::table('users')->where('clean_name', 'like', '%' . $first_name . '%')->where('clean_surname', 'like', '%' . $last_name . '%')->first();
+
+                        // si no hemos encontrado al usuario por nombres y apellidos, lo intentamos por el email
+                        if($user == null){
+                            $user = DB::table('users')->where('email', 'like', '%' . $email . '%')->first();
+                        }
+
+                        // usuario encontrado
+                        if($user != null){
+
+                            $exits = Attendee::where("event_id", $event->id)->where("user_id", $user->id)->first();
+
+                            if($exits == null){
+                                $new_attendee = Attendee::create([
+                                    'event_id' => $event->id,
+                                    'user_id' => $user->id,
+                                    'status' => $status
+                                ]);
+                                $new_attendee->save();
+                            }
 
 
-                    // limpiamos el nombre de caracteres problemáticos
-                    $first_name = $attendee->profile->first_name;
-                    $first_name = strtoupper(trim(preg_replace('~[^0-9a-z]+~i', '', preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($first_name, ENT_QUOTES, 'UTF-8'))), ' '));
-
-                    // limpiamos los apellidos de caracteres problemáticos
-                    $last_name = $attendee->profile->last_name;
-                    $last_name = strtoupper(trim(preg_replace('~[^0-9a-z]+~i', '', preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($last_name, ENT_QUOTES, 'UTF-8'))), ' '));
-
-                    $status = $attendee->status;
-                    $email = $attendee->profile->email;
-
-                    $user = DB::table('users')->where('clean_name', 'like', '%' . $first_name . '%')->where('clean_surname', 'like', '%' . $last_name . '%')->first();
-
-                    // si no hemos encontrado al usuario por nombres y apellidos, lo intentamos por el email
-                    if($user == null){
-                        $user = DB::table('users')->where('email', 'like', '%' . $email . '%')->first();
+                        }
                     }
 
-                    // usuario encontrado
-                    if($user != null){
+                    $page_contador = $page_contador +1;
 
-                        $new_attendee = Attendee::create([
-                            'event_id' => $event->id,
-                            'user_id' => $user->id,
-                            'status' => $status
-                        ]);
-                        $new_attendee->save();
-                    }
                 }
 
             }
