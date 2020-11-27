@@ -60,7 +60,7 @@
                         </thead>
                         <tbody>
 
-                        @foreach($user->evidences as $evidence)
+                        @foreach($user->evidences_not_draft() as $evidence)
                             <tr>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$evidence->id}}</td>
                                 <td><a  href="{{route('profiles.view.evidence',['instance' => $instance, 'id_user' => $user->id, 'id_evidence' => $evidence->id])}}">{{$evidence->title}}</a></td>

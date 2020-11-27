@@ -174,6 +174,12 @@ class ProfileController extends Controller
         $user = User::find($id_user);
         $evidence = Evidence::find($id_evidence);
 
+        if($evidence == null){
+            return redirect()->route('home',['instance' => \Instantiation::instance()]);
+        }else if($evidence->status == "DRAFT"){
+            return redirect()->route('home',['instance' => \Instantiation::instance()]);
+        }
+
         return view('profile.profile_evidence_view',
             ['instance' => $instance, 'user' => $user, 'evidence' => $evidence]);
     }
