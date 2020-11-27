@@ -1,5 +1,5 @@
 @if($attendee->status == "Attending")
-    <span class="badge badge-light">Pendiente de asistir</span>
+    <span class="badge badge-light">Pendiente de contabilizar</span>
 @endif
 
 @if($attendee->status == "Checked In")
@@ -16,4 +16,8 @@
 
 @if($attendee->status == "Not Attending (Refunded/Canceled)")
     <span class="badge badge-danger">Sin asistencia</span>
+@endif
+
+@if($attendee->status == "Not Attending")
+    <span class="badge badge-danger">No asistido</span>
 @endif

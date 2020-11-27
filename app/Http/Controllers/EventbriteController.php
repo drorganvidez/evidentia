@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Attendee;
 use App\Configuration;
 use App\Event;
+use App\Exports\AttendeesExport;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EventbriteController extends Controller
 {
@@ -266,5 +268,16 @@ class EventbriteController extends Controller
 
         return view('eventbrite.attendee_list',
             ['instance' => $instance, 'attendees' => $attendees]);
+    }
+
+    public function attendee_export()
+    {
+        try{
+            // limpiar búfer de salida
+            ob_end_clean();
+            return Excel::download(new AttendeesExport(), 'asistencias' . \Illuminate\Support\Carbon::now() . '.xlsx');
+        }catch(\Exception $e){
+            return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
+        }
     }
 }

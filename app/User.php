@@ -263,6 +263,8 @@ class User extends Authenticatable
     // Horas de asistencia
     public function attendees_hours()
     {
+        if($this->attendees_checkedin_count() == 0) return "0";
+
         $hours =  $this->attendees_checkedin()->map(function ($item, $key) {
             return $item->event->hours;
         });

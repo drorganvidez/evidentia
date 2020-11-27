@@ -238,6 +238,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/registercoordinator/event/list','EventbriteController@event_list')->name('registercoordinator.event.list');
     Route::get('/registercoordinator/attendee/list','EventbriteController@attendee_list')->name('registercoordinator.attendee.list');
 
+    Route::get('/registercoordinator/attendee/export','EventbriteController@attendee_export')->name('registercoordinator.attendee.export');
     /**
      *  PRESIDENT
      */

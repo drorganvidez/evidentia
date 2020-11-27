@@ -27,6 +27,13 @@
                        class="btn btn-primary btn-block" role="button">
                         <i class="fas fa-cloud-download-alt"></i> &nbsp;Cargar asistencias desde Eventbrite</a>
                 </div>
+
+                <div class="col-lg-4 mt-1">
+                    <a href="{{route('registercoordinator.attendee.export',['instance' => $instance])}}"
+                       class="btn btn-info btn-block" role="button">
+                        <i class="fas fa-file-export"></i> &nbsp;Exportar asistencias</a>
+                </div>
+
             </div>
             @endif
 
