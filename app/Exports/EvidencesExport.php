@@ -23,8 +23,8 @@ class EvidencesExport implements FromCollection, WithHeadings, ShouldAutoSize
     }
 
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
         $instance = \Instantiation::instance();
@@ -48,7 +48,7 @@ class EvidencesExport implements FromCollection, WithHeadings, ShouldAutoSize
                     'evidencia_aleatoria' => $user->evidence_rand_route(),
                     'horas_evidencia_aleatoria' => $user->evidence_rand_hours(),
                     'eventos_asistidos' => $user->events_count(),
-                    'horas_asistencia' => $user->events_hours(),
+                    'horas_asistencia' => $user->max_events_hours(),
                     'reuniones_asistidas' => $user->meetings_count(),
                     'horas_reuniones' => $user->meetings_hours(),
                     'bono_horas' => $user->bonus_hours(),
@@ -79,7 +79,7 @@ class EvidencesExport implements FromCollection, WithHeadings, ShouldAutoSize
 
                 // horas en total
                 $horas_totales = 0;
-                if($this->events_select == 'on') $horas_totales+=$user->events_hours();
+                if($this->events_select == 'on') $horas_totales+=$user->max_events_hours();
                 if($this->meetings_select == 'on') $horas_totales+=$user->meetings_hours();
                 if($this->evidences_select == 'on') $horas_totales+=$user->evidences_accepted_hours();
                 if($this->bonus == 'on') $horas_totales+=$user->bonus_hours();
