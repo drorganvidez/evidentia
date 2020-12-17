@@ -29,6 +29,7 @@ class EvidencesExport implements FromCollection, WithHeadings, ShouldAutoSize
     {
         $instance = \Instantiation::instance();
         $users = User::all();
+        $users = $users->sortBy('clean_surname');
         $res = collect();
         foreach($users as $user){
 
@@ -92,7 +93,6 @@ class EvidencesExport implements FromCollection, WithHeadings, ShouldAutoSize
 
         }
 
-        $res = $res->sortBy('surname')->sortBy('participation')->sortBy('surname');
         return $res;
     }
 
