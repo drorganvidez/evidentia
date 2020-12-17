@@ -71,6 +71,10 @@ Route::group(['prefix' => 'admin'], function(){
  */
 Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], function(){
 
+    Route::get('/change/{evidence}', function (Request $request) {
+        // ...
+    });
+
     /**
      *  BLOCK
      */
@@ -263,6 +267,9 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         Route::get('/president/user/management/{id}','ManagementController@user_management')->name('president.user.management');
         Route::post('/president/user/management/save','ManagementController@user_management_save')->name('president.user.management.save');
     });
+
+    Route::get('/president/export','ImportExportController@export')->name('president.export');
+    Route::post('/president/export/save','ImportExportController@export_save')->name('president.export.save');
 
     /**
      *  LECTURE

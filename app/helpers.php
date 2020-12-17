@@ -87,14 +87,14 @@ class Stamp
         $salt =  \Config::secret();
         $hash_file = hash_file('sha256', storage_path('/app/'.$file->route));
         $file->stamp = hash('sha256',
-                $file->name.
-                    $file->size.
-                    $file->type.
-                    $file->route.
-                    $file->created_at.
-                    $file->upload_at.
-                    $hash_file.
-                    $salt);
+            $file->name.
+            $file->size.
+            $file->type.
+            $file->route.
+            $file->created_at.
+            $file->upload_at.
+            $hash_file.
+            $salt);
         return $file;
     }
 
@@ -117,12 +117,12 @@ class Stamp
     {
         $salt =  \Config::secret();
         $evidence->stamp = hash('sha256',
-                $evidence->title.
-                    $evidence->description.
-                    $evidence->hours.
-                    $evidence->created_at.
-                    $evidence->upload_at.
-                    $salt);
+            $evidence->title.
+            $evidence->description.
+            $evidence->hours.
+            $evidence->created_at.
+            $evidence->upload_at.
+            $salt);
         return $evidence;
     }
 
@@ -170,6 +170,11 @@ class Config
     public static function max_evidence_number()
     {
         return self::config_entity()->max_evidence_number;
+    }
+
+    public static function max_attendees_hours()
+    {
+        return self::config_entity()->max_attendees_hours;
     }
 
     public static function max_assist_number()

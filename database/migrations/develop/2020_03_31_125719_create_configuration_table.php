@@ -24,6 +24,7 @@ class CreateConfigurationTable extends Migration
             $table->integer('max_proof_size')->default(-1);
             $table->integer('max_evidence_number')->default(-1);
             $table->integer('max_assist_number')->default(-1);
+            $table->integer('max_attendees_hours')->default(10);
 
             // límites de fechas
             $table->timestamp('upload_evidences_timestamp', 0)->default(\Carbon\Carbon::now()->addDays(120)->toDateTimeString())->nullable();

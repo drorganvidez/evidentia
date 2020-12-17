@@ -2,10 +2,12 @@
 
 namespace App;
 
+use Config;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+
 
 class User extends Authenticatable
 {
@@ -163,13 +165,13 @@ class User extends Authenticatable
      *  MÉTODOS DERIVADOS DE INTERÉS
      */
 
-     private function collection_hours($collection)
-     {
-         $hours =  $collection->map(function ($item, $key) {
-             return $item->hours;
-         });
-         return $hours->sum();
-     }
+    private function collection_hours($collection)
+    {
+        $hours =  $collection->map(function ($item, $key) {
+            return $item->hours;
+        });
+        return $hours->sum();
+    }
 
     private function collection_count($collection)
     {
@@ -273,6 +275,16 @@ class User extends Authenticatable
 
     public function events_hours()
     {
+        return $this->attendees_hours();
+    }
+
+    public function max_events_hours()
+    {
+
+        if($this->attendees_hours() >= Config::max_attendees_hours()){
+            return Config::max_attendees_hours();
+        }
+
         return $this->attendees_hours();
     }
 

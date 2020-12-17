@@ -17,7 +17,7 @@ class ImportExportController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('checkroles:LECTURE');
+        $this->middleware('checkroles:LECTURE|PRESIDENT');
     }
 
     public function import()
