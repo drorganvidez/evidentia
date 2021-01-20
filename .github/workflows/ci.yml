@@ -1,4 +1,10 @@
-on: push
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+
 name: CI
 jobs:
   phpunit:
@@ -21,7 +27,6 @@ jobs:
         run: |
           sudo apt-get install -y mysql-client
           mysql --host 127.0.0.1 --port 33306 -uroot -psecret -e "GRANT ALL ON *.*  TO 'homestead'@'%' identified by 'secret'; FLUSH PRIVILEGES;"
-
       - uses: actions/checkout@v1
         with:
           fetch-depth: 1
@@ -29,6 +34,7 @@ jobs:
       - name: Install composer dependencies
         run: |
           composer install --no-scripts
+          composer update
 
       - name: Prepare Laravel Application
         run: |
@@ -37,6 +43,5 @@ jobs:
           php artisan migrate
           php artisan db:seed
           php artisan db:seed --class=InstancesTableSeeder
-
       - name: Run Testsuite
         run: vendor/bin/phpunit tests/
