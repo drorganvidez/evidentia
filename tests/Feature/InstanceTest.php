@@ -33,7 +33,7 @@ class InstanceTest extends TestCase
     public function testHome()
     {
         $response = $this->get('/');
-        $response->assertStatus(200);
+        $response->assertStatus(302);
     }
 
     public function testDefautInstanceWithoutLogged()
@@ -71,7 +71,7 @@ class InstanceTest extends TestCase
         $this->testAdminLoginTrue();
 
         $response = $this->get('/admin/instance/manage');
-        $response->assertStatus(200);
+        $response->assertStatus(302);
     }
 
     public function testCreateInstance()
