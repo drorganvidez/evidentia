@@ -33,6 +33,7 @@ jobs:
 
       - name: Install composer dependencies
         run: |
+          rm composer.lock
           composer install --no-scripts
           composer update
 
