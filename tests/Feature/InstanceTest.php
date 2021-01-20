@@ -92,7 +92,7 @@ class InstanceTest extends TestCase
 
         //$response->assertOk();
 
-        $response->assertStatus(200);
+        $response->assertStatus(302);
     }
 
     /*public function testRemoveInstance()
