@@ -39,10 +39,28 @@ class UsersImport implements ToModel, WithHeadingRow
             return null;
         }
 
+        // comprueba si hay dos personas que se llamen igual
+        $name = explode(',',$row['apellidos_nombre'])[1];
+        $surname = explode(',',$row['apellidos_nombre'])[0];
+        $user = User::where(['name' => $name, 'surname' => $surname])->first();
+
+        if($user != null){
+            return new User([
+                'dni' => $row['dni'],
+                'surname' => strtoupper(explode(',',$row['apellidos_nombre'])[0]),
+                'name' => strtoupper(explode(',',$row['apellidos_nombre'])[1]).'1',
+                'username' => $row['uvus'],
+                'password' => Hash::make($row['dni']),
+                'email' => $row['correo'],
+                'clean_name' => \StringUtilites::clean(explode(',',$row['apellidos_nombre'])[0]),
+                'clean_surname' => \StringUtilites::clean(explode(',',$row['apellidos_nombre'])[1])
+            ]);
+        }
+
         return new User([
             'dni' => $row['dni'],
-            'surname' => explode(',',$row['apellidos_nombre'])[0],
-            'name' => explode(',',$row['apellidos_nombre'])[1],
+            'surname' => strtoupper(explode(',',$row['apellidos_nombre'])[0]),
+            'name' => strtoupper(explode(',',$row['apellidos_nombre'])[1]),
             'username' => $row['uvus'],
             'password' => Hash::make($row['dni']),
             'email' => $row['correo'],
