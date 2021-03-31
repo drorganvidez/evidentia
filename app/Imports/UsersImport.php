@@ -46,6 +46,8 @@ class UsersImport implements ToModel, WithHeadingRow
             'username' => $row['uvus'],
             'password' => Hash::make($row['dni']),
             'email' => $row['correo'],
+            'clean_name' => \StringUtilites::clean(explode(',',$row['apellidos_nombre'])[0]),
+            'clean_surname' => \StringUtilites::clean(explode(',',$row['apellidos_nombre'])[1])
         ]);
     }
 }
