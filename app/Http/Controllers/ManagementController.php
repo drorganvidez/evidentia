@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Comittee;
-use App\Coordinator;
-use App\Evidence;
-use App\Meeting;
-use App\Role;
-use App\Secretary;
-use App\User;
+use App\Models\Comittee;
+use App\Models\Coordinator;
+use App\Models\Evidence;
+use App\Models\Meeting;
+use App\Models\Role;
+use App\Models\Secretary;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;

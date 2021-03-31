@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Avatar;
-use App\Evidence;
-use App\File;
-use App\Proof;
+use App\Models\Avatar;
+use App\Models\Evidence;
+use App\Models\File;
+use App\Models\Proof;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;

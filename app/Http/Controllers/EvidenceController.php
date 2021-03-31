@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 
-use App\Comittee;
-use App\Evidence;
-use App\File;
-use App\Proof;
+use App\Models\Comittee;
+use App\Models\Evidence;
+use App\Models\File;
+use App\Models\Proof;
 use App\Rules\CheckHoursAndMinutes;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;

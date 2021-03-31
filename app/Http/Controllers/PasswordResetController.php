@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Mail\PasswordReset;
-use App\Token;
-use App\User;
+use App\Models\Token;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;

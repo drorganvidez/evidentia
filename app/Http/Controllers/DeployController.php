@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
-use App\Instance;
+use App\Models\Instance;
 
 class DeployController extends Controller
 {

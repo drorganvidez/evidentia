@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Bonus;
-use App\Meeting;
-use App\User;
+use App\Models\Bonus;
+use App\Models\Meeting;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

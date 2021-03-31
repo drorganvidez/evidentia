@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Config;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -42,12 +42,12 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return $this->belongsToMany('App\Role');
+        return $this->belongsToMany('App\Models\Role');
     }
 
     public function evidences()
     {
-        return $this->hasMany('App\Evidence');
+        return $this->hasMany('App\Models\Evidence');
     }
 
     public function hasRole($rol_param)
@@ -77,32 +77,32 @@ class User extends Authenticatable
 
     public function coordinator()
     {
-        return $this->hasOne('App\Coordinator');
+        return $this->hasOne('App\Models\Coordinator');
     }
 
     public function secretary()
     {
-        return $this->hasOne('App\Secretary');
+        return $this->hasOne('App\Models\Secretary');
     }
 
     public function meetings()
     {
-        return $this->belongsToMany('App\Meeting');
+        return $this->belongsToMany('App\Models\Meeting');
     }
 
     public function bonus()
     {
-        return $this->belongsToMany('App\Bonus');
+        return $this->belongsToMany('App\Models\Bonus');
     }
 
     public function avatar()
     {
-        return $this->hasOne('App\Avatar');
+        return $this->hasOne('App\Models\Avatar');
     }
 
     public function attendees()
     {
-        return $this->hasMany('App\Attendee');
+        return $this->hasMany('App\Models\Attendee');
     }
 
     public function evidence_rand(){

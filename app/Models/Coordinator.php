@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,12 +11,12 @@ class Coordinator extends Model
 
     public function comittee()
     {
-        return $this->belongsTo('App\Comittee','comittee_id');
+        return $this->belongsTo('App\Models\Comittee','comittee_id');
     }
 
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\Models\User');
     }
 
 }

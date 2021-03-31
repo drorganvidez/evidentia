@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,21 +14,21 @@ class Meeting extends Model
 
     public function users()
     {
-        return $this->belongsToMany('App\User');
+        return $this->belongsToMany('App\Models\User');
     }
 
     public function comittee()
     {
-        return $this->belongsTo('App\Comittee');
+        return $this->belongsTo('App\Models\Comittee');
     }
 
     public function meetingRequest()
     {
-        return $this->belongsTo('App\MeetingRequest');
+        return $this->belongsTo('App\Models\MeetingRequest');
     }
 
     public function meetingMinutes()
     {
-        return $this->hasMany('App\MeetingMinutes');
+        return $this->hasMany('App\Models\MeetingMinutes');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,12 +13,12 @@ class Proof extends Model
 
     public function evidence()
     {
-        return $this->belongsTo('App\Evidence');
+        return $this->belongsTo('App\Models\Evidence');
     }
 
     public function file()
     {
-        return $this->belongsTo('App\File');
+        return $this->belongsTo('App\Models\File');
     }
 
     public function integrity()

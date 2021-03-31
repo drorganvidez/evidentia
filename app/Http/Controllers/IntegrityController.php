@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Evidence;
-use App\Proof;
-use App\User;
+use App\Models\Evidence;
+use App\Models\Proof;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class IntegrityController extends Controller

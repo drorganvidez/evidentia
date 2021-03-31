@@ -1,8 +1,9 @@
 <?php
 
+use App\Models\Instance;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
-use App\Configuration;
+use App\Models\Configuration;
 
 /*
  *  CONEXIONES CON LAS DISTINTAS BASES
@@ -61,7 +62,7 @@ class Instantiation
     {
         $route = self::instance();
         self::set_default_connection();
-        $entity = \App\Instance::where('route',$route)->first();
+        $entity = Instance::where('route',$route)->first();
         self::set_default_instance();
         return $entity;
     }

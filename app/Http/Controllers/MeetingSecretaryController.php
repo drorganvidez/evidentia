@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\DefaultList;
-use App\Meeting;
+use App\Models\DefaultList;
+use App\Models\Meeting;
 use App\Rules\CheckHoursAndMinutes;
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

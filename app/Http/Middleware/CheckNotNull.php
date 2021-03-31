@@ -21,7 +21,7 @@ class CheckNotNull
             $id = $request->_id;
         }
 
-        $model = 'App\\' . $model;
+        $model = 'App\\Models\\' . $model;
         $entity = $model::where('id', $id)->first();
 
         if($entity == null){

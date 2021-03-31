@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Evidence;
+use App\Models\Evidence;
 use App\Http\Middleware\EvidenceCanBeEdited;
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class RandomizeController extends Controller

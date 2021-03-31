@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -8,11 +8,11 @@ class Point extends Model
 {
     public function meetingMinutes()
     {
-        return $this->belongsTo('App\MeetingMinutes');
+        return $this->belongsTo('App\Models\MeetingMinutes');
     }
 
     public function agreements()
     {
-        return $this->hasMany('App\Agreement');
+        return $this->hasMany('App\Models\Agreement');
     }
 }

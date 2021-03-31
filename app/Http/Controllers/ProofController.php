@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\File;
-use App\Proof;
+use App\Models\File;
+use App\Models\Proof;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +15,7 @@ class File extends Model
 
     /*public function proof()
     {
-        return $this->hasOne('App\Proof');
+        return $this->hasOne('App\Models\Proof');
     }*/
 
     public function sizeForHuman()

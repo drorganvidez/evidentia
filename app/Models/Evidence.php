@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,22 +15,22 @@ class Evidence extends Model
 
     public function proofs()
     {
-        return $this->hasMany('App\Proof');
+        return $this->hasMany('App\Models\Proof');
     }
 
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\Models\User');
     }
 
     public function comittee()
     {
-        return $this->belongsTo('App\Comittee');
+        return $this->belongsTo('App\Models\Comittee');
     }
 
     public function reason_rejection()
     {
-        return $this->hasOne('App\ReasonRejection');
+        return $this->hasOne('App\Models\ReasonRejection');
     }
 
     /**

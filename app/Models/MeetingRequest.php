@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,11 +14,11 @@ class MeetingRequest extends Model
 
     public function meeting()
     {
-        return $this->hasOne('App\Meeting');
+        return $this->hasOne('App\Models\Meeting');
     }
 
     public function diary()
     {
-        return $this->hasOne('App\Diary');
+        return $this->hasOne('App\Models\Diary');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,12 +12,12 @@ class Comittee extends Model
 
     public function subcomittees()
     {
-        return $this->hasMany('App\Subcomittee');
+        return $this->hasMany('App\Models\Subcomittee');
     }
 
     public function evidences()
     {
-        return $this->hasMany('App\Evidence');
+        return $this->hasMany('App\Models\Evidence');
     }
 
     public function evidences_not_draft() {
@@ -42,22 +42,22 @@ class Comittee extends Model
 
     public function coordinators()
     {
-        return $this->hasMany('App\Coordinator');
+        return $this->hasMany('App\Models\Coordinator');
     }
 
     public function secretaries()
     {
-        return $this->hasMany('App\Secretary');
+        return $this->hasMany('App\Models\Secretary');
     }
 
     public function meetings()
     {
-        return $this->hasMany('App\Meeting')->orderByDesc('datetime');
+        return $this->hasMany('App\Models\Meeting')->orderByDesc('datetime');
     }
 
     public function bonus()
     {
-        return $this->hasMany('App\Bonus')->orderByDesc('created_at');
+        return $this->hasMany('App\Models\Bonus')->orderByDesc('created_at');
     }
 
     public function can_be_removed()

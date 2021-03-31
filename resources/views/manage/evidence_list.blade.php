@@ -20,7 +20,7 @@
                 <div class="info-box-content">
                     <span class="info-box-text">Evidencias en borrador</span>
                     <span class="info-box-number">
-                  {{\App\Evidence::evidences_draft()->count()}}
+                  {{\App\Models\Evidence::evidences_draft()->count()}}
                 </span>
                 </div>
 
@@ -33,7 +33,7 @@
                 <div class="info-box-content">
                     <span class="info-box-text">Evidencias pendientes</span>
                     <span class="info-box-number">
-                  {{\App\Evidence::evidences_pending()->count()}}
+                  {{\App\Models\Evidence::evidences_pending()->count()}}
                 </span>
                 </div>
 
@@ -46,7 +46,7 @@
                 <div class="info-box-content">
                     <span class="info-box-text">Evidencias aceptadas</span>
                     <span class="info-box-number">
-                  {{\App\Evidence::evidences_accepted()->count()}}
+                  {{\App\Models\Evidence::evidences_accepted()->count()}}
                 </span>
                 </div>
 
@@ -59,7 +59,7 @@
                 <div class="info-box-content">
                     <span class="info-box-text">Evidencias rechazadas</span>
                     <span class="info-box-number">
-                  {{\App\Evidence::evidences_rejected()->count()}}
+                  {{\App\Models\Evidence::evidences_rejected()->count()}}
                 </span>
                 </div>
 

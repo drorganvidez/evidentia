@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Instance;
+use App\Models\Instance;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;

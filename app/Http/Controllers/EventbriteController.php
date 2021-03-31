@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Attendee;
-use App\Configuration;
-use App\Event;
+use App\Models\Attendee;
+use App\Models\Configuration;
+use App\Models\Event;
 use App\Exports\AttendeesExport;
-use App\User;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;

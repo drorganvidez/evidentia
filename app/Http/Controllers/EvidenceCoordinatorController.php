@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Evidence;
-use App\ReasonRejection;
+use App\Models\Evidence;
+use App\Models\ReasonRejection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
