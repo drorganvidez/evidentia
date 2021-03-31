@@ -1,16 +1,16 @@
-/*! FixedHeader 3.1.6-dev
- * ©2009-2018 SpryMedia Ltd - datatables.net/license
+/*! FixedHeader 3.1.8
+ * ©2009-2021 SpryMedia Ltd - datatables.net/license
  */
 
 /**
  * @summary     FixedHeader
  * @description Fix a table's header or footer, so it is always visible while
  *              scrolling
- * @version     3.1.6-dev
+ * @version     3.1.8
  * @file        dataTables.fixedHeader.js
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     www.sprymedia.co.uk/contact
- * @copyright   Copyright 2009-2018 SpryMedia Ltd.
+ * @copyright   Copyright 2009-2021 SpryMedia Ltd.
  *
  * This source file is free software, available under the following license:
  *   MIT license - http://datatables.net/license/mit
@@ -173,9 +173,9 @@ $.extend( FixedHeader.prototype, {
 	{
 		return this.s.enable;
 	},
-
+	
 	/**
-	 * Set header offset
+	 * Set header offset 
 	 *
 	 * @param  {int} new value for headerOffset
 	 */
@@ -188,7 +188,7 @@ $.extend( FixedHeader.prototype, {
 
 		return this.c.headerOffset;
 	},
-
+	
 	/**
 	 * Set footer offset
 	 *
@@ -204,7 +204,7 @@ $.extend( FixedHeader.prototype, {
 		return this.c.footerOffset;
 	},
 
-
+	
 	/**
 	 * Recalculate the position of the fixed elements and force them into place
 	 */
@@ -227,7 +227,7 @@ $.extend( FixedHeader.prototype, {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Constructor
 	 */
-
+	
 	/**
 	 * FixedHeader constructor - adding the required event listeners and
 	 * simple initialisation
@@ -340,7 +340,7 @@ $.extend( FixedHeader.prototype, {
 		var get = function ( name ) {
 			return $(name, from)
 				.map( function () {
-					return $(this).width();
+					return $(this).css('width').replace(/[^\d\.]/g, '') * 1;
 				} ).toArray();
 		};
 
@@ -412,7 +412,7 @@ $.extend( FixedHeader.prototype, {
 	 * * `in` - Floating over the DataTable
 	 * * `below` - (Header only) Fixed to the bottom of the table body
 	 * * `above` - (Footer only) Fixed to the top of the table body
-	 *
+	 * 
 	 * @param  {string}  mode        Mode that the item should be shown in
 	 * @param  {string}  item        'header' or 'footer'
 	 * @param  {boolean} forceChange Force a redraw of the mode, even if already
@@ -425,13 +425,20 @@ $.extend( FixedHeader.prototype, {
 		var itemDom = this.dom[ item ];
 		var position = this.s.position;
 
+		// It isn't trivial to add a !important css attribute...
+		var importantWidth = function (w) {
+			itemDom.floating.attr('style', function(i,s) {
+				return (s || '') + 'width: '+w+'px !important;';
+			});
+		};
+
 		// Record focus. Browser's will cause input elements to loose focus if
 		// they are inserted else where in the doc
 		var tablePart = this.dom[ item==='footer' ? 'tfoot' : 'thead' ];
 		var focus = $.contains( tablePart[0], document.activeElement ) ?
 			document.activeElement :
 			null;
-
+		
 		if ( focus ) {
 			focus.blur();
 		}
@@ -465,8 +472,9 @@ $.extend( FixedHeader.prototype, {
 			itemDom.floating
 				.addClass( 'fixedHeader-floating' )
 				.css( item === 'header' ? 'top' : 'bottom', this.c[item+'Offset'] )
-				.css( 'left', position.left+'px' )
-				.css( 'width', position.width+'px' );
+				.css( 'left', position.left+'px' );
+
+			importantWidth(position.width);
 
 			if ( item === 'footer' ) {
 				itemDom.floating.css( 'top', '' );
@@ -479,8 +487,9 @@ $.extend( FixedHeader.prototype, {
 			itemDom.floating
 				.addClass( 'fixedHeader-locked' )
 				.css( 'top', position.tfootTop - position.theadHeight )
-				.css( 'left', position.left+'px' )
-				.css( 'width', position.width+'px' );
+				.css( 'left', position.left+'px' );
+
+			importantWidth(position.width);
 		}
 		else if ( mode === 'above' ) { // only used for the footer
 			// Fix the position of the floating footer at top of the table body
@@ -489,8 +498,9 @@ $.extend( FixedHeader.prototype, {
 			itemDom.floating
 				.addClass( 'fixedHeader-locked' )
 				.css( 'top', position.tbodyTop )
-				.css( 'left', position.left+'px' )
-				.css( 'width', position.width+'px' );
+				.css( 'left', position.left+'px' );
+
+			importantWidth(position.width);
 		}
 
 		// Restore focus if it was lost
@@ -585,7 +595,7 @@ $.extend( FixedHeader.prototype, {
 
 		if ( this.c.footer && this.dom.tfoot.length ) {
 			if ( ! this.s.enable ) {
-				headerMode = 'in-place';
+				footerMode = 'in-place';
 			}
 			else if ( ! position.visible || windowTop + position.windowHeight >= position.tfootBottom + this.c.footerOffset ) {
 				footerMode = 'in-place';
@@ -612,7 +622,7 @@ $.extend( FixedHeader.prototype, {
  * @type {String}
  * @static
  */
-FixedHeader.version = "3.1.6-dev";
+FixedHeader.version = "3.1.8";
 
 /**
  * Defaults
@@ -681,7 +691,7 @@ DataTable.Api.register( 'fixedHeader.enable()', function ( flag ) {
 
 DataTable.Api.register( 'fixedHeader.enabled()', function () {
 	if ( this.context.length ) {
-		var fx = this.content[0]._fixedHeader;
+		var fh = this.context[0]._fixedHeader;
 
 		if ( fh ) {
 			return fh.enabled();
