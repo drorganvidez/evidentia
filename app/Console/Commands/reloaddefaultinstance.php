@@ -40,13 +40,13 @@ class reloaddefaultinstance extends Command
     public function handle()
     {
 
-        DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `base20`;");
+        DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `base21`;");
 
-        DB::connection()->getPdo()->exec("CREATE DATABASE `base20`");
+        DB::connection()->getPdo()->exec("CREATE DATABASE `base21`");
 
-        DB::connection()->getPdo()->exec("ALTER SCHEMA `base20`  DEFAULT CHARACTER SET utf8mb4  DEFAULT COLLATE utf8mb4_unicode_ci");
+        DB::connection()->getPdo()->exec("ALTER SCHEMA `base21`  DEFAULT CHARACTER SET utf8mb4  DEFAULT COLLATE utf8mb4_unicode_ci");
 
-        DB::connection()->getPdo()->exec("CREATE TABLE `base20`.`migrations` (`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,`migration` VARCHAR(255) NOT NULL,`batch` INT(11) NOT NULL, PRIMARY KEY (`id`));");
+        DB::connection()->getPdo()->exec("CREATE TABLE `base21`.`migrations` (`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,`migration` VARCHAR(255) NOT NULL,`batch` INT(11) NOT NULL, PRIMARY KEY (`id`));");
 
         exec("php artisan migrate --path database/migrations/develop");
         exec("php artisan db:seed --class=DevelopSeeder");

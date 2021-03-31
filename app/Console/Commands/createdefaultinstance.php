@@ -42,15 +42,15 @@ class createdefaultinstance extends Command
 
         try{
             $this->line('Creating default instance');
-            DB::connection()->getPdo()->exec("CREATE DATABASE `base20`");
+            DB::connection()->getPdo()->exec("CREATE DATABASE `base21`");
             $this->line('Creating default instance ... [OK]');
 
             $this->line('Setting character set to UTF8MB4');
-            DB::connection()->getPdo()->exec("ALTER SCHEMA `base20`  DEFAULT CHARACTER SET utf8mb4  DEFAULT COLLATE utf8mb4_unicode_ci");
+            DB::connection()->getPdo()->exec("ALTER SCHEMA `base21`  DEFAULT CHARACTER SET utf8mb4  DEFAULT COLLATE utf8mb4_unicode_ci");
             $this->line('Setting character set to UTF8MB4 ... [OK]');
 
             $this->line('Creating migrations table');
-            DB::connection()->getPdo()->exec("CREATE TABLE `base20`.`migrations` (`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,`migration` VARCHAR(255) NOT NULL,`batch` INT(11) NOT NULL, PRIMARY KEY (`id`));");
+            DB::connection()->getPdo()->exec("CREATE TABLE `base21`.`migrations` (`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,`migration` VARCHAR(255) NOT NULL,`batch` INT(11) NOT NULL, PRIMARY KEY (`id`));");
             $this->line('Creating migrations table ... [OK]');
 
             $this->line('Registering instance');

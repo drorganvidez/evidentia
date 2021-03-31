@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
         config(['database.connections.instance' => [
             'driver'   => 'mysql',
             'host' => 'localhost',
-            'database' => 'base20',
+            'database' => 'base21',
             'port' => '33060',
             'username' => 'homestead',
             'password' => 'secret'
@@ -37,8 +37,8 @@ class CreateUsersTable extends Migration
             $table->text('biography')->nullable();
             $table->enum('participation',['ORGANIZATION','INTERMEDIATE','ASSISTANCE'])->default('ASSISTANCE');
             $table->boolean('block')->default(0);
-            $table->string('clean_name');
-            $table->string('clean_surname');
+            $table->string('clean_name')->default('');
+            $table->string('clean_surname')->default('');
             $table->rememberToken();
             $table->timestamps();
         });

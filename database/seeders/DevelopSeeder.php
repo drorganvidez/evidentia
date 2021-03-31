@@ -1,8 +1,12 @@
 <?php
 
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class DevelopSeeder extends Seeder
@@ -18,7 +22,7 @@ class DevelopSeeder extends Seeder
         Config::set('database.connections.instance.port', '33060');
         Config::set('database.connections.instance.username', 'homestead');
         Config::set('database.connections.instance.password', 'secret');
-        Config::set('database.connections.instance.database', 'base20');
+        Config::set('database.connections.instance.database', 'base21');
         Config::set('database.connections.instance.charset', 'utf8mb4');
         Config::set('database.connections.instance.collation', 'utf8mb4_unicode_ci');
         Config::set('database.default', 'instance');
@@ -80,7 +84,9 @@ class DevelopSeeder extends Seeder
             condimentum mi. Donec volutpat tortor sed elit maximus venenatis. Quisque finibus tempus odio vitae
             viverra. Fusce blandit feugiat pretium. Pellentesque purus ligula, vulputate et diam nec, laoreet
             viverra dui. Proin id lacus eu sem faucibus scelerisque. Nullam a neque ultricies, rhoncus velit et,
-            tempus ante. Integer mollis eleifend suscipit.'
+            tempus ante. Integer mollis eleifend suscipit.',
+            'clean_name' => \StringUtilites::clean('John'),
+            'clean_surname' => \StringUtilites::clean('Doe'),
         ]);
 
         DB::table('users')->insert([
@@ -96,7 +102,9 @@ class DevelopSeeder extends Seeder
             condimentum mi. Donec volutpat tortor sed elit maximus venenatis. Quisque finibus tempus odio vitae
             viverra. Fusce blandit feugiat pretium. Pellentesque purus ligula, vulputate et diam nec, laoreet
             viverra dui. Proin id lacus eu sem faucibus scelerisque. Nullam a neque ultricies, rhoncus velit et,
-            tempus ante. Integer mollis eleifend suscipit.'
+            tempus ante. Integer mollis eleifend suscipit.',
+            'clean_name' => \StringUtilites::clean('Jess'),
+            'clean_surname' => \StringUtilites::clean('Ahmad'),
         ]);
 
         DB::table('users')->insert([
@@ -112,7 +120,9 @@ class DevelopSeeder extends Seeder
             condimentum mi. Donec volutpat tortor sed elit maximus venenatis. Quisque finibus tempus odio vitae
             viverra. Fusce blandit feugiat pretium. Pellentesque purus ligula, vulputate et diam nec, laoreet
             viverra dui. Proin id lacus eu sem faucibus scelerisque. Nullam a neque ultricies, rhoncus velit et,
-            tempus ante. Integer mollis eleifend suscipit.'
+            tempus ante. Integer mollis eleifend suscipit.',
+            'clean_name' => \StringUtilites::clean('Tim'),
+            'clean_surname' => \StringUtilites::clean('Strong'),
         ]);
 
         DB::table('users')->insert([
@@ -128,7 +138,9 @@ class DevelopSeeder extends Seeder
             condimentum mi. Donec volutpat tortor sed elit maximus venenatis. Quisque finibus tempus odio vitae
             viverra. Fusce blandit feugiat pretium. Pellentesque purus ligula, vulputate et diam nec, laoreet
             viverra dui. Proin id lacus eu sem faucibus scelerisque. Nullam a neque ultricies, rhoncus velit et,
-            tempus ante. Integer mollis eleifend suscipit.'
+            tempus ante. Integer mollis eleifend suscipit.',
+            'clean_name' => \StringUtilites::clean('Diogo'),
+            'clean_surname' => \StringUtilites::clean('Chadwick'),
         ]);
 
         DB::table('users')->insert([
@@ -144,7 +156,9 @@ class DevelopSeeder extends Seeder
             condimentum mi. Donec volutpat tortor sed elit maximus venenatis. Quisque finibus tempus odio vitae
             viverra. Fusce blandit feugiat pretium. Pellentesque purus ligula, vulputate et diam nec, laoreet
             viverra dui. Proin id lacus eu sem faucibus scelerisque. Nullam a neque ultricies, rhoncus velit et,
-            tempus ante. Integer mollis eleifend suscipit.'
+            tempus ante. Integer mollis eleifend suscipit.',
+            'clean_name' => \StringUtilites::clean('Margaret'),
+            'clean_surname' => \StringUtilites::clean('Hendricks'),
         ]);
 
         DB::table('users')->insert([
@@ -160,7 +174,9 @@ class DevelopSeeder extends Seeder
             condimentum mi. Donec volutpat tortor sed elit maximus venenatis. Quisque finibus tempus odio vitae
             viverra. Fusce blandit feugiat pretium. Pellentesque purus ligula, vulputate et diam nec, laoreet
             viverra dui. Proin id lacus eu sem faucibus scelerisque. Nullam a neque ultricies, rhoncus velit et,
-            tempus ante. Integer mollis eleifend suscipit.'
+            tempus ante. Integer mollis eleifend suscipit.',
+            'clean_name' => \StringUtilites::clean('Diana'),
+            'clean_surname' => \StringUtilites::clean('Rowley'),
         ]);
 
         DB::table('users')->insert([
@@ -176,7 +192,9 @@ class DevelopSeeder extends Seeder
             condimentum mi. Donec volutpat tortor sed elit maximus venenatis. Quisque finibus tempus odio vitae
             viverra. Fusce blandit feugiat pretium. Pellentesque purus ligula, vulputate et diam nec, laoreet
             viverra dui. Proin id lacus eu sem faucibus scelerisque. Nullam a neque ultricies, rhoncus velit et,
-            tempus ante. Integer mollis eleifend suscipit.'
+            tempus ante. Integer mollis eleifend suscipit.',
+            'clean_name' => \StringUtilites::clean('Karl'),
+            'clean_surname' => \StringUtilites::clean('Clayton'),
         ]);
 
         DB::table('users')->insert([
@@ -192,7 +210,9 @@ class DevelopSeeder extends Seeder
             condimentum mi. Donec volutpat tortor sed elit maximus venenatis. Quisque finibus tempus odio vitae
             viverra. Fusce blandit feugiat pretium. Pellentesque purus ligula, vulputate et diam nec, laoreet
             viverra dui. Proin id lacus eu sem faucibus scelerisque. Nullam a neque ultricies, rhoncus velit et,
-            tempus ante. Integer mollis eleifend suscipit.'
+            tempus ante. Integer mollis eleifend suscipit.',
+            'clean_name' => \StringUtilites::clean('Clara'),
+            'clean_surname' => \StringUtilites::clean('Hart'),
         ]);
 
         DB::table('users')->insert([
@@ -208,7 +228,9 @@ class DevelopSeeder extends Seeder
             condimentum mi. Donec volutpat tortor sed elit maximus venenatis. Quisque finibus tempus odio vitae
             viverra. Fusce blandit feugiat pretium. Pellentesque purus ligula, vulputate et diam nec, laoreet
             viverra dui. Proin id lacus eu sem faucibus scelerisque. Nullam a neque ultricies, rhoncus velit et,
-            tempus ante. Integer mollis eleifend suscipit.'
+            tempus ante. Integer mollis eleifend suscipit.',
+            'clean_name' => \StringUtilites::clean('Jamie-Leigh'),
+            'clean_surname' => \StringUtilites::clean('Liu'),
         ]);
 
         DB::table('users')->insert([
@@ -224,7 +246,9 @@ class DevelopSeeder extends Seeder
             condimentum mi. Donec volutpat tortor sed elit maximus venenatis. Quisque finibus tempus odio vitae
             viverra. Fusce blandit feugiat pretium. Pellentesque purus ligula, vulputate et diam nec, laoreet
             viverra dui. Proin id lacus eu sem faucibus scelerisque. Nullam a neque ultricies, rhoncus velit et,
-            tempus ante. Integer mollis eleifend suscipit.'
+            tempus ante. Integer mollis eleifend suscipit.',
+            'clean_name' => \StringUtilites::clean('Kathryn'),
+            'clean_surname' => \StringUtilites::clean('Cordova'),
         ]);
 
         DB::table('users')->insert([
@@ -235,6 +259,8 @@ class DevelopSeeder extends Seeder
             'email' => 'profesor1@profesor1.com',
             'username' => 'profesor1',
             'password' => Hash::make('profesor1'),
+            'clean_name' => \StringUtilites::clean('Samara'),
+            'clean_surname' => \StringUtilites::clean('Woolley'),
         ]);
 
         DB::table('users')->insert([
@@ -245,6 +271,8 @@ class DevelopSeeder extends Seeder
             'email' => 'profesor2@profesor2com',
             'username' => 'profesor2',
             'password' => Hash::make('profesor2'),
+            'clean_name' => \StringUtilites::clean('Stephan'),
+            'clean_surname' => \StringUtilites::clean('Bennett'),
         ]);
 
         /*
