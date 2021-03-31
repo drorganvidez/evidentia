@@ -445,12 +445,14 @@ class DevelopSeeder extends Seeder
 
         DB::table('comittees')->insert([
             'id' => 7,
-            'name' => 'Logística'
+            'name' => 'Logística',
+            'icon' => '<i class="fas fa-warehouse"></i>'
         ]);
 
         DB::table('comittees')->insert([
             'id' => 8,
-            'name' => 'Comunicación'
+            'name' => 'Comunicación',
+            'icon' => '<i class="fab fa-twitter"></i>'
         ]);
 
         DB::table('subcomittees')->insert([
