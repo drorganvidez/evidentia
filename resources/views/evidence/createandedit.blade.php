@@ -35,7 +35,6 @@
         </div>
 
         <div class="collapse" id="collapseExample">
-            <div class="card card-body">
 
                 <div class="row">
 
@@ -73,7 +72,6 @@
 
                 </div>
 
-            </div>
         </div>
     @endisset
 
@@ -82,171 +80,201 @@
 
             <x-status/>
 
-            <div class="card">
+        </div>
+    </div>
 
-                <div class="card-body">
-                    <form method="POST" enctype="multipart/form-data">
-                        @csrf
+    <form method="POST" enctype="multipart/form-data">
+        @csrf
 
-                        <x-id :id="$evidence->id ?? ''" :edit="$edit ?? ''"/>
+        <x-id :id="$evidence->id ?? ''" :edit="$edit ?? ''"/>
 
-                        <input type="hidden" name="removed_files" id="removed_files"/>
+        <input type="hidden" name="removed_files" id="removed_files"/>
 
-                        <div class="form-row">
+        <div class="row">
 
-                            <x-input col="6" attr="title" :value="$evidence->title ?? ''" label="Título" description="Escribe un título que describa con precisión tu evidencia (mínimo 5 caracteres)"/>
+            <div class="col-lg-5">
 
-                            <div class="form-group col-md-2">
-                                <label for="hours">Horas invertidas</label>
-                                <input id="" type="number" min="0" max="99" class="form-control" placeholder="" name="hours" value="{{\Time::complex_shape_hours($evidence->hours ?? '')}}" autocomplete="hours" autofocus="" step="0.01">
-                                <small class="form-text text-muted">Enteros o decimales</small>
-                                @error("hours")
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
+                <div class="row">
+
+                    <div class="col-lg-12">
+                        <div class="card shadow-sm">
+
+                            <div class="card-body">
+
+                                <div class="form-row">
+
+                                    <x-input col="12" attr="title" :value="$evidence->title ?? ''" label="Título" description="Escribe un título que describa con precisión tu evidencia (mínimo 5 caracteres)"/>
+
+                                    <div class="form-group col-md-12">
+                                        <label for="comittee">Comité asociado</label>
+                                        <select id="comittee" class="selectpicker form-control @error('comittee') is-invalid @enderror" name="comittee" value="{{ old('comittee') }}" required autofocus>
+                                            @foreach($comittees as $comittee)
+                                                @isset($evidence)
+                                                    <option {{$comittee->id == old('comittee') || $evidence->comittee->id == $comittee->id ? 'selected' : ''}} value="{{$comittee->id}}">
+                                                @else
+                                                    <option {{$comittee->id == old('comittee') ? 'selected' : ''}} value="{{$comittee->id}}">
+                                                        @endisset
+                                                        {!! $comittee->name !!}
+                                                    </option>
+                                                    @endforeach
+                                        </select>
+
+                                        <small class="form-text text-muted">Elige un comité al que quieres asociar tu evidencia.</small>
+
+                                        @error('comite')
+                                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="hours">Horas invertidas</label>
+                                        <input id="" type="number" min="0" max="99" class="form-control" placeholder="" name="hours" value="{{\Time::complex_shape_hours($evidence->hours ?? '')}}" autocomplete="hours" autofocus="" step="0.01">
+                                        <small class="form-text text-muted">Enteros o decimales</small>
+                                        @error("hours")
+                                        <span class="invalid-feedback d-block" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="minutes">Minutos invertidos</label>
+                                        <input id="" type="number" min="0" max="60" class="form-control" placeholder="" name="minutes" value="{{\Time::complex_shape_minutes($evidence->hours ?? '') }}" autocomplete="minutes" autofocus="">
+                                        <small class="form-text text-muted">Enteros</small>
+                                        @error("minutes")
+                                        <span class="invalid-feedback d-block" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                        @enderror
+                                    </div>
+
+                                </div>
+
                             </div>
 
+                        </div>
+                    </div>
 
-                            <div class="form-group col-md-2">
-                                <label for="minutes">Minutos invertidos</label>
-                                <input id="" type="number" min="0" max="60" class="form-control" placeholder="" name="minutes" value="{{\Time::complex_shape_minutes($evidence->hours ?? '') }}" autocomplete="minutes" autofocus="">
-                                <small class="form-text text-muted">Enteros</small>
-                                @error("minutes")
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
+                    <div class="col-lg-12">
 
-                            <div class="form-group col-md-2">
-                                <label for="comittee">Comité asociado</label>
-                                <select id="comittee" class="selectpicker form-control @error('comittee') is-invalid @enderror" name="comittee" value="{{ old('comittee') }}" required autofocus>
-                                    @foreach($comittees as $comittee)
-                                        @isset($evidence)
-                                            <option {{$comittee->id == old('comittee') || $evidence->comittee->id == $comittee->id ? 'selected' : ''}} value="{{$comittee->id}}">
-                                        @else
-                                            <option {{$comittee->id == old('comittee') ? 'selected' : ''}} value="{{$comittee->id}}">
-                                        @endisset
-                                            {!! $comittee->name !!}
-                                        </option>
-                                    @endforeach
-                                </select>
+                        @isset($edit)
 
-                                <small class="form-text text-muted">Elige un comité al que quieres asociar tu evidencia.</small>
+                            <div class="card card-primary shadow-sm card-outline card-outline-tabs">
+                                    <div class="card-header p-0 border-bottom-0">
+                                        <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill" href="#attached_files" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">Archivos subidos</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#add_files" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="false">Subir más</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="tab-content" id="custom-tabs-three-tabContent">
+                                            <div class="tab-pane fade show active" id="attached_files" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+                                                <div class="card-body table-responsive p-0">
+                                                    <table class="table table-hover text-nowrap">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>Nombre</th>
+                                                            <th>Tamaño</th>
+                                                            <th>Opciones</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
 
-                                @error('comite')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <x-textarea col="6" attr="description" :value="$evidence->description ?? ''"
-                                        label="Descripción de la evidencia"
-                                        description="Escribe una descripción concisa de tu evidencia (entre 10 y 20000 caracteres)."
-                            />
-
-                            @isset($edit)
-
-                                <div class="col-12 col-sm-6 col-lg-6">
-
-                                    <label>Archivos asociados</label>
-
-                                    <div class="card card-primary card-outline card-outline-tabs">
-                                        <div class="card-header p-0 border-bottom-0">
-                                            <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
-                                                <li class="nav-item">
-                                                    <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill" href="#attached_files" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">Archivos subidos</a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#add_files" role="tab" aria-controls="custom-tabs-three-profile" aria-selected="false">Subir más</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="tab-content" id="custom-tabs-three-tabContent">
-                                                <div class="tab-pane fade show active" id="attached_files" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
-                                                    <div class="card-body table-responsive p-0">
-                                                        <table class="table table-hover text-nowrap">
-                                                            <thead>
-                                                            <tr>
-                                                                <th>Nombre</th>
-                                                                <th>Tamaño</th>
-                                                                <th>Opciones</th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-
-                                                            @foreach($evidence->proofs as $proof)
+                                                        @foreach($evidence->proofs as $proof)
 
 
-                                                                <tr id="file_{{$proof->file->id}}">
-                                                                    <td>{{$proof->file->name}}</td>
-                                                                    <td>{{$proof->file->sizeForHuman()}}</td>
-                                                                    <td>
-                                                                        <a class="btn btn-primary btn-sm" href="{{route('proof.download',['instance' => $instance, 'id' => $proof->id])}}">
-                                                                            <i class="fas fa-download"></i>
-                                                                            Descargar
-                                                                        </a>
-                                                                        <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-remove-{{$proof->file->id}}">
-                                                                            <i class="fas fa-trash"></i>
-                                                                            Eliminar
-                                                                        </a>
-                                                                        <div class="modal fade" id="modal-remove-{{$proof->file->id}}">
-                                                                            <div class="modal-dialog modal-dialog-centered">
-                                                                                <div class="modal-content">
-                                                                                    <div class="modal-header">
-                                                                                        <h4 class="modal-title">Eliminar archivo</h4>
-                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                            <span aria-hidden="true">&times;</span>
-                                                                                        </button>
-                                                                                    </div>
-                                                                                    <div class="modal-body">
-                                                                                        <p>Este cambio no se puede deshacer.</p>
-                                                                                        <p>¿Deseas continuar?</p>
-                                                                                    </div>
-                                                                                    <div class="modal-footer justify-content-between">
-                                                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                                                                        <button type="button"  onclick="remove_file({{$proof->file->id}})" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-trash"></i> &nbsp;Sí, eliminar archivo</button>
-                                                                                    </div>
+                                                            <tr id="file_{{$proof->file->id}}">
+                                                                <td>{{$proof->file->name}}</td>
+                                                                <td>{{$proof->file->sizeForHuman()}}</td>
+                                                                <td>
+                                                                    <a class="btn btn-primary btn-sm" href="{{route('proof.download',['instance' => $instance, 'id' => $proof->id])}}">
+                                                                        <i class="fas fa-download"></i>
+                                                                        Descargar
+                                                                    </a>
+                                                                    <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-remove-{{$proof->file->id}}">
+                                                                        <i class="fas fa-trash"></i>
+                                                                        Eliminar
+                                                                    </a>
+                                                                    <div class="modal fade" id="modal-remove-{{$proof->file->id}}">
+                                                                        <div class="modal-dialog modal-dialog-centered">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <h4 class="modal-title">Eliminar archivo</h4>
+                                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                        <span aria-hidden="true">&times;</span>
+                                                                                    </button>
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                    <p>Este cambio no se puede deshacer.</p>
+                                                                                    <p>¿Deseas continuar?</p>
+                                                                                </div>
+                                                                                <div class="modal-footer justify-content-between">
+                                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                                                                    <button type="button"  onclick="remove_file({{$proof->file->id}})" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-trash"></i> &nbsp;Sí, eliminar archivo</button>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    </td>
+                                                                    </div>
+                                                                </td>
 
-                                                                </tr>
+                                                            </tr>
 
-                                                            @endforeach
+                                                        @endforeach
 
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                                <div class="tab-pane fade" id="add_files" role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
-                                                    <x-input col="12" attr="files[]" id="files" type="file" :required="false"
-                                                             label="Adjuntar más archivos"
-                                                             description="Adjunta más archivos que respalden tu evidencia y el número de horas empleadas."/>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
+                                            <div class="tab-pane fade" id="add_files" role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
+                                                <x-input col="12" attr="files[]" id="files" type="file" :required="false"
+                                                         label="Adjuntar más archivos"
+                                                         description="Adjunta más archivos que respalden tu evidencia y el número de horas empleadas."/>
+                                            </div>
                                         </div>
-                                        <!-- /.card -->
                                     </div>
+                                    <!-- /.card -->
                                 </div>
 
+                        @else
 
-                            @else
-                                <x-input col="6" attr="files[]" id="files" type="file"  label="Adjuntar archivos" description="Adjunta archivos que respalden tu evidencia y el número de horas empleadas."/>
-                            @endisset
+                            <div class="card shadow-sm">
 
+                                <div class="card-body">
 
-                        </div>
+                                    <x-input col="12" attr="files[]" id="files" type="file"  label="Adjuntar archivos" description="Adjunta archivos que respalden tu evidencia y el número de horas empleadas."/>
+                                </div>
+                            </div>
+
+                        @endisset
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-7">
+
+                <div class="card shadow-sm">
+
+                    <div class="card-body">
+
+                        <x-textarea col="12" attr="description" :value="$evidence->description ?? ''"
+                                    label="Descripción de la evidencia"
+                                    description="Escribe una descripción concisa de tu evidencia (entre 10 y 20000 caracteres)."
+                        />
 
                         <div class="row">
-                            <div class="col-lg-3 mt-1">
+                            <div class="col-lg-4 col-md-6 mt-1">
                                 <button type="submit" formaction="{{$route_draft}}" class="btn btn-secondary btn-block"><i class="fas fa-pencil-ruler"></i> &nbsp;Guardar como borrador</button>
                             </div>
-                            <div class="col-lg-3 mt-1">
+                            <div class="col-lg-4 col-md-6 mt-1">
                                 <button type="button"  class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-default"><i class="fas fa-external-link-square-alt"></i> &nbsp;Publicar evidencia</button>
                             </div>
                         </div>
@@ -259,8 +287,8 @@
                                     </div>
                                     <div class="modal-body">
                                         <p>Cuando se publica una evidencia, esta se envía al coordinador de tu comité
-                                        para su posterior revisión. Mientras esté en proceso de revisión,
-                                        <b>no podrá ser editada.</b></p>
+                                            para su posterior revisión. Mientras esté en proceso de revisión,
+                                            <b>no podrá ser editada.</b></p>
                                         <p>¿Deseas continuar?</p>
                                     </div>
                                     <div class="modal-footer justify-content-between">
@@ -271,15 +299,15 @@
                             </div>
                         </div>
 
+                    </div>
 
-                    </form>
                 </div>
 
             </div>
 
         </div>
-    </div>
 
+    </form>
 
 
     @isset($edit)

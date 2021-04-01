@@ -16,31 +16,20 @@
 @section('content')
 
     <div class="row">
-
-        <div class="col-lg-3 col-sm-12">
-            <x-infoevidencetotalhours :user="Auth::user()" />
-        </div>
-        <div class="col-lg-3 col-sm-12">
-            <x-infoevidencetotalcountaccepted :user="Auth::user()" />
-        </div>
-        <div class="col-lg-3 col-sm-12">
-            <x-infoevidencetotalcountpending :user="Auth::user()" />
-        </div>
-        <div class="col-lg-3 col-sm-12">
-            <x-infoevidencetotalcountrejected :user="Auth::user()" />
-        </div>
-
-    </div>
-
-    <div class="row">
         <div class="col-lg-12">
 
             <x-status/>
 
-            <div class="card">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-10">
+
+            <div class="card shadow-lg">
 
                 <div class="card-body">
-                    <table id="dataset" class="table table-bordered table-striped">
+                    <table id="dataset" class="table table-hover">
                         <thead>
                         <tr>
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">ID</th>
@@ -82,6 +71,19 @@
             </div>
 
         </div>
+
+        <div class="col-lg-2">
+
+            <div class="card shadow-sm">
+
+                <div class="card-body">
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
 @endsection

@@ -18,167 +18,120 @@
 @section('content')
 
     <div class="row">
-        <div class="col-lg-12">
 
-            <div class="card">
+        <div class="col-lg-7">
+
+            <div class="card shadow-lg">
 
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-12 col-md-12 col-lg-6 order-2 order-md-1">
-                            <div class="row">
-                                <div class="col-12">
+
+                    <h5>
+                        <x-evidencecomittee :evidence="$evidence"/>
+                        <span class="badge badge-secondary">
+                            <i class="far fa-clock"></i> {{$evidence->hours}} horas
+                        </span>
+                    </h5>
+
+                    <h4>{{$evidence->title}}</h4>
+
+                    <div class="post text-justify">
+
+                        {!! $evidence->description !!}
+
+                        <br><br>
 
 
-                                    <div class="d-flex justify-content-between">
-                                        <div>
-                                            <h5>
-                                                <x-evidencecomittee :evidence="$evidence"/>
-                                                <span class="badge badge-secondary">
-                                                    <i class="far fa-clock"></i> {{$evidence->hours}} horas
-                                                </span>
-                                            </h5>
+                        @if(\Illuminate\Support\Facades\Auth::user()->hasRole('COORDINATOR') and $evidence->comittee->id == \Illuminate\Support\Facades\Auth::user()->coordinator->comittee->id)
 
-                                        </div>
-                                        <div>
+                            <x-evidencemanagecoordinator :instance="$instance" :evidence="$evidence" />
 
-                                        </div>
-                                    </div>
-
-                                    <h4>{{$evidence->title}}</h4>
-
-                                    <div class="post text-justify">
-                                        {!! $evidence->description !!}
-
-                                        <br><br>
-
-
-
-                                        @if(\Illuminate\Support\Facades\Auth::user()->hasRole('COORDINATOR') and $evidence->comittee->id == \Illuminate\Support\Facades\Auth::user()->coordinator->comittee->id)
-
-                                            <x-evidencemanagecoordinator :instance="$instance" :evidence="$evidence" />
-
-                                        @else
-
-                                            @if($evidence->status == 'DRAFT' and !\Carbon\Carbon::now()->gt(\Config::upload_evidences_timestamp()))
-                                                <a class="btn btn-info btn-sm"
-                                                   href="{{route('evidence.edit',['instance' => $instance, 'id' => $evidence->id])}}">
-                                                    <i class="fas fa-pencil-alt">
-                                                    </i>
-                                                    Editar
-                                                </a>
-                                            @endif
-
-                                            @if(!\Carbon\Carbon::now()->gt(\Config::upload_evidences_timestamp()))
-                                                <x-buttonconfirm :id="$evidence->id" route="evidence.remove" title="¿Seguro?" description="Esto borrará la evidencia actual, las
-                                                ediciones anteriores <b>y todos los archivos adjuntos.</b>" type="REMOVE"/>
-                                            @endif
-
-                                        @endif
-
-
-                                    </div>
-
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-12 col-lg-6 order-1 order-md-2">
-
-                            <div class="row">
-
-                                <div class="col-lg-4">
-
-
-                                        <div class="text-muted">
-                                            <p class="text-sm">Última edición
-                                                <b class="d-block">{{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }}</b>
-                                            </p>
-                                        </div>
-                                </div>
-
-                                <div class="col-lg-8 mt-1">
-                                    <x-evidencestatus :evidence="$evidence"/>
-                                </div>
-
-                            </div>
-
+                        @else
 
                             @if($evidence->status == 'DRAFT' and !\Carbon\Carbon::now()->gt(\Config::upload_evidences_timestamp()))
-                                <h5 class="text-muted mt-2">Ediciones anteriores</h5>
-
-                                <div class="card-body table-responsive p-0" style="height: 200px;">
-                                    <table class="table text-nowrap table-borderless ">
-                                    <thead class="thead-light">
-                                    <tr>
-                                        <th>Edición</th>
-                                        <th>Opciones</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-
-                                    @foreach($evidence->previous_evidences() as $evidence_i)
-
-
-                                        <tr>
-                                            <td>{{ \Carbon\Carbon::parse($evidence_i->created_at)->diffForHumans() }}</td>
-                                            <td><a class="btn btn-info btn-sm"
-                                                   href="{{route('evidence.edit',['instance' => $instance, 'id' => $evidence_i->id])}}">
-                                                    <i class="fas fa-pencil-alt">
-                                                    </i>
-                                                    Continuar edición
-                                                </a>
-                                            </td>
-                                        </tr>
-
-
-                                    @endforeach
-
-                                    </tbody>
-                                </table>
-                                </div>
-
+                                <a class="btn btn-info btn-sm"
+                                   href="{{route('evidence.edit',['instance' => $instance, 'id' => $evidence->id])}}">
+                                    <i class="fas fa-pencil-alt">
+                                    </i>
+                                    Editar
+                                </a>
                             @endif
 
-                            <h5 class="text-muted mt-2">Archivos adjuntos</h5>
-                            <div class="card-body table-responsive p-0">
-                                <table class="table text-nowrap table-borderless">
-                                    <thead class="thead-light">
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th>Tamaño</th>
-                                        <th>Opciones</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
+                            @if(!\Carbon\Carbon::now()->gt(\Config::upload_evidences_timestamp()))
+                                <x-buttonconfirm :id="$evidence->id" route="evidence.remove" title="¿Seguro?" description="Esto borrará la evidencia actual, las
+                                                ediciones anteriores <b>y todos los archivos adjuntos.</b>" type="REMOVE"/>
+                            @endif
 
-                                    @foreach($evidence->proofs as $proof)
-
-                                        <tr>
-                                            <td>{{$proof->file->name}}</td>
-                                            <td>{{$proof->file->sizeForHuman()}}</td>
-                                            <td>
-                                                <a class="btn btn-primary btn-sm" href="{{route('proof.download',['instance' => $instance, 'id' => $proof->id])}}">
-                                                    <i class="fas fa-download"></i>
-                                                    Descargar
-                                                </a>
-                                            </td>
-
-                                        </tr>
-
-                                    @endforeach
-
-                                    </tbody>
-                                </table>
-                            </div>
+                        @endif
 
 
-                        </div>
                     </div>
+
+
+
                 </div>
 
             </div>
 
         </div>
+
+        <div class="col-lg-5">
+
+            <div class="row">
+
+                <div class="col-lg-12">
+
+                    <div class="card shadow-sm">
+
+                        <div class="card-body">
+
+                            <label for="title">Archivos adjuntos</label>
+
+                            <br>
+
+                            @foreach($evidence->proofs as $proof)
+
+                                <a class="btn btn-primary btn-sm" href="{{route('proof.download',['instance' => $instance, 'id' => $proof->id])}}">
+                                    <i class="fas fa-download"></i>
+                                    {{$proof->file->name}} ({{$proof->file->sizeForHuman()}})
+                                </a>
+
+                            @endforeach
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-12">
+
+                    <div class="card shadow-sm">
+
+                        <div class="card-body">
+                            <div class="text-muted">
+                                <p class="text-muted">Última edición
+                                    <b>{{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }}</b>
+                                </p>
+                            </div>
+
+                            <x-evidencestatus :evidence="$evidence"/>
+
+                            <br>
+
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
     </div>
+
 
 @endsection

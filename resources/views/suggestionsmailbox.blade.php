@@ -13,36 +13,42 @@
 
     <div class="row">
         <div class="col-lg-12">
-
             <x-status/>
+        </div>
+    </div>
 
-            <div class="card">
+    <div class="row">
+
+        <div class="col-lg-4">
+
+            <div class="card shadow-sm">
+
+                <div class="card-body">
+                    <p>
+                        ¡Hola! ¿Has encontrado algo que no funciona como debería? ¿Crees que alguna funcionalidad se podría mejorar?
+                        ¿Se te ocurren nuevas herramientas?
+                    </p>
+
+                    <p>
+                        Te animamos a que hagas uso de este buzón de sugerencias para expresar tus inquietudes y opiniones. <b>Es completamente anónimo.</b>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-8">
+
+            <div class="card shadow-lg">
 
                 <div class="card-body">
 
                     <form action="{{$route}}" method="POST">
                         @csrf
 
-                        <div class="row">
-
-                            <div class="col-lg-6">
-
-                                <p>
-                                    ¡Hola! ¿Has encontrado algo que no funciona como debería? ¿Crees que alguna funcionalidad se podría mejorar?
-                                    ¿Se te ocurren nuevas herramientas?
-                                </p>
-
-                                <p>
-                                    Te animamos a que hagas uso de este buzón de sugerencias para expresar tus inquietudes y opiniones. <b>Es completamente anónimo.</b>
-                                </p>
-
-                            </div>
-
-                        </div>
-
                         <div class="form-row">
 
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-lg-6">
                                 <label for="subject">Asunto</label>
                                 <select id="subject" class="selectpicker form-control @error('subject') is-invalid @enderror" name="subject" value="{{ old('subject') }}" required autofocus>
 
@@ -64,14 +70,14 @@
 
                         <div class="form-row">
 
-                        <x-textarea col="6" attr="comment"
-                                    label="Comentario"
-                        />
+                            <x-textarea col="12" attr="comment"
+                                        label="Comentario"
+                            />
 
                         </div>
 
                         <div class="form-row">
-                            <div class="form-group col-lg-6 col-sm-6 col-6 col-12">
+                            <div class="form-group col-lg-3 col-sm-6 col-6 col-12">
                                 <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-paper-plane"></i>&nbsp;&nbsp;Enviar</button>
                             </div>
                         </div>
@@ -82,6 +88,12 @@
                 </div>
 
             </div>
+
+        </div>
+
+    </div>
+
+
 
 
         </div>

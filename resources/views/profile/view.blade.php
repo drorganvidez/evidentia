@@ -16,14 +16,14 @@
             <x-status/>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-4">
 
             <x-profile :user="Auth::user()"/>
 
         </div>
 
-        <div class="col-md-9">
-            <div class="card">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
                 <div class="card-header p-2">
                     <ul class="nav nav-pills">
                         <li class="nav-item"><a class="nav-link active" href="#data" data-toggle="tab">Personal</a></li>

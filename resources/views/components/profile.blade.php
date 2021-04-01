@@ -1,4 +1,4 @@
-<div class="card card-primary card-outline">
+<div class="card card-primary card-outline shadow-sm">
     <div class="card-body box-profile">
         <div class="text-center">
             <img width="100" height="100" class="img-circle elevation-2"

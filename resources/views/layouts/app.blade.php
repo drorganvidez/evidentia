@@ -186,6 +186,9 @@
 <script src="{{asset('dist/themes/fas/theme.js')}}"></script>
 <script src="{{asset('dist/themes/explorer/theme.js')}}"></script>
 <script src="{{asset('dist/js/fileinput_locales/es.js')}}"></script>
+<script src="{{asset('plugins/flot/jquery.flot.js')}}"></script>
+<script src="{{asset('plugins/flot/plugins/jquery.flot.resize.js')}}"></script>
+<script src="{{asset('plugins/flot/plugins/jquery.flot.pie.js')}}"></script>
 
 
 <!-- Summernote -->

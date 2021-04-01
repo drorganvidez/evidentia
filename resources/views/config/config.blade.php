@@ -25,7 +25,7 @@
         <div class="row">
 
             <div class="col-lg-6">
-                <div class="callout">
+                <div class="callout shadow-sm">
                     <h5>Subida de nuevas evidencias</h5>
 
                     <p>Establece una fecha máximo de tope de subidas de nuevas evidencias de tus alumnos.</p>
@@ -41,7 +41,7 @@
             </div>
 
             <div class="col-lg-6">
-                <div class="callout">
+                <div class="callout shadow-sm">
                     <h5>Validación de evidencias</h5>
 
                     <p>Establece una fecha máximo de tope de validación de evidencias por parte de los coordinadores de
@@ -58,7 +58,7 @@
             </div>
 
             <div class="col-lg-6">
-                <div class="callout">
+                <div class="callout shadow-sm">
                     <h5>Registro de reuniones</h5>
 
                     <p>Establece una fecha máximo de tope de registro de reuniones por parte de los secretarios de
@@ -75,7 +75,7 @@
             </div>
 
             <div class="col-lg-6">
-                <div class="callout">
+                <div class="callout shadow-sm">
                     <h5>Registro de bonos</h5>
 
                     <p>Establece una fecha máximo de tope de registro de bonos de horas por parte de los secretarios de
@@ -92,7 +92,7 @@
             </div>
 
             <div class="col-lg-6">
-                <div class="callout">
+                <div class="callout shadow-sm">
                     <h5>Registro de eventos y asistencias</h5>
 
                     <p>Establece una fecha máximo de tope de registro de eventos y asistencia a los mismos
@@ -111,7 +111,7 @@
         </div>
 
         <div class="row">
-            <div class="mt-1 mb-2 col-12 col-lg-4 col-sm-4">
+            <div class="mt-1 mb-3 col-12 col-lg-4 col-sm-4">
                 <button type="submit"  class="btn btn-primary btn-block">Guardar configuración</button>
             </div>
         </div>

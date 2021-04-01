@@ -12,68 +12,11 @@
 @section('content')
 
     <div class="row">
-
-        <div class="col-lg-3 col-sm-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-light elevation-1"><i class="fas fa-pencil-ruler"></i></span>
-
-                <div class="info-box-content">
-                    <span class="info-box-text">Evidencias en borrador</span>
-                    <span class="info-box-number">
-                  {{\App\Models\Evidence::evidences_draft()->count()}}
-                </span>
-                </div>
-
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-light elevation-1"><i class="fas fa-clock"></i></span>
-
-                <div class="info-box-content">
-                    <span class="info-box-text">Evidencias pendientes</span>
-                    <span class="info-box-number">
-                  {{\App\Models\Evidence::evidences_pending()->count()}}
-                </span>
-                </div>
-
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-light elevation-1"><i class="far fa-thumbs-up"></i></span>
-
-                <div class="info-box-content">
-                    <span class="info-box-text">Evidencias aceptadas</span>
-                    <span class="info-box-number">
-                  {{\App\Models\Evidence::evidences_accepted()->count()}}
-                </span>
-                </div>
-
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-12">
-            <div class="info-box">
-                <span class="info-box-icon bg-light elevation-1"><i class="far fa-thumbs-down"></i></span>
-
-                <div class="info-box-content">
-                    <span class="info-box-text">Evidencias rechazadas</span>
-                    <span class="info-box-number">
-                  {{\App\Models\Evidence::evidences_rejected()->count()}}
-                </span>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-
-    <div class="row">
         <div class="col-lg-12">
 
             <x-status/>
 
-            <div class="card">
+            <div class="card shadow-lg">
 
                 <div class="card-body">
                     <table id="dataset" class="table table-bordered table-striped">

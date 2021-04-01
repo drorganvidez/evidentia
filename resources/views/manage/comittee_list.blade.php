@@ -16,87 +16,104 @@
 
             <x-status/>
 
-            <div class="card">
+        </div>
+    </div>
+
+    <div class="row">
+
+
+
+        <div class="col-lg-8">
+
+            <div class="card shadow-lg">
 
                 <div class="card-body">
 
-                    <div class="callout">
+                    <form method="POST" action="{{$route}}">
+                @csrf
 
-                        <h4>Crear nuevo comité</h4>
+                <table id="dataset" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Previsualización</th>
+                        <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Icono de Font Awesome</th>
+                        <th>Nombre del comité</th>
+                        <th>Opciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
 
-                        <p>Puedes encontrar más iconos en <a target="_blank" href="https://fontawesome.com/icons?d=gallery">Font Awesome</a></p>
+                    @foreach($comittees as $comittee)
+                        <tr>
+                            <td class="align-middle text-center d-none d-sm-none d-md-table-cell d-lg-table-cell"><span id="icon_prev_{{$comittee->id}}" style="font-size: 20px">{!! $comittee->icon ?? '' !!}</span></td>
+                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><input name="icon_{{$comittee->id}}" id="icon_{{$comittee->id}}" oninput="prev({{$comittee->id}})" type="text" class="form-control" placeholder="" value="{{$comittee->icon}}" autocomplete="icon" autofocus=""></td>
+                            <td><input name="name_{{$comittee->id}}" type="text" class="form-control" placeholder="" value="{{$comittee->name}}" autocomplete="name" ></td>
+                            <td>
+                                <a class="form-control btn btn-danger " href="#" data-toggle="modal" data-target="#modal-{{$comittee->id}}">
+                                    <i class="fas fa-trash"></i> <span class="d-none d-sm-none d-md-none d-lg-inline">Eliminar</span>
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
+
+                    </tbody>
+                </table>
+
+                <div class="form-row">
+                    <div class="col-lg-3 mt-1">
+                        <button type="submit"  class="btn btn-primary btn-block">Guardar comités</button>
+                    </div>
+                </div>
+
+
+
+            </form>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+
+                <div class="card-body">
+
+                    <h4>Crear nuevo comité</h4>
+
+                    <p>Puedes encontrar más iconos en <a target="_blank" href="https://fontawesome.com/icons?d=gallery">Font Awesome</a></p>
 
                     <form method="POST" action="{{$route_new}}">
                         @csrf
 
                         <div class="form-row">
 
-                            <div class="form-group col-auto">
-                                <label for="icon">Previsualización</label>
+                            <div class="form-group col-lg-2">
+                                <label for="icon">Prev.</label>
                                 <span id="write_new_icon" class="align-middle form-control input-group-text text-center"></span>
                             </div>
 
-                            <x-input col="4" id="new_icon" attr="icon" :required="false" label="Icono de Font Awesome" />
+                            <x-input col="10" id="new_icon" attr="icon" :required="false" label="Icono de Font Awesome" />
 
-                            <x-input col="4" attr="name"  label="Nombre del comité" />
+                            <x-input col="12" attr="name"  label="Nombre del comité" />
 
                         </div>
 
                         <div class="form-row">
-                            <div class="form-group col-12 col-lg-2 col-sm-4">
-                            <button type="submit" class="btn btn-primary btn-block">Crear comité</button>
+                            <div class="form-group col-12 col-lg-6 col-sm-4">
+                                <button type="submit" class="btn btn-primary btn-block">Crear comité</button>
                             </div>
                         </div>
-
-                    </form>
-
-                    </div>
-
-                    <form method="POST" action="{{$route}}">
-                        @csrf
-
-                        <table id="dataset" class="table table-bordered table-striped">
-                            <thead>
-                            <tr>
-                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Previsualización</th>
-                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Icono de Font Awesome</th>
-                                <th>Nombre del comité</th>
-                                <th>Opciones</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            @foreach($comittees as $comittee)
-                                <tr>
-                                    <td class="align-middle text-center d-none d-sm-none d-md-table-cell d-lg-table-cell"><span id="icon_prev_{{$comittee->id}}" style="font-size: 20px">{!! $comittee->icon ?? '' !!}</span></td>
-                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><input name="icon_{{$comittee->id}}" id="icon_{{$comittee->id}}" oninput="prev({{$comittee->id}})" type="text" class="form-control" placeholder="" value="{{$comittee->icon}}" autocomplete="icon" autofocus=""></td>
-                                    <td><input name="name_{{$comittee->id}}" type="text" class="form-control" placeholder="" value="{{$comittee->name}}" autocomplete="name" ></td>
-                                    <td>
-                                        <a class="form-control btn btn-danger " href="#" data-toggle="modal" data-target="#modal-{{$comittee->id}}">
-                                            <i class="fas fa-trash"></i> <span class="d-none d-sm-none d-md-none d-lg-inline">Eliminar</span>
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-
-                            </tbody>
-                        </table>
-
-                            <div class="form-row">
-                                <div class="col-lg-3 mt-1">
-                                    <button type="submit"  class="btn btn-primary btn-block">Guardar comités</button>
-                                </div>
-                            </div>
-
-
 
                     </form>
 
                 </div>
 
             </div>
-
         </div>
+
+
+
     </div>
 
     <div class="container">
