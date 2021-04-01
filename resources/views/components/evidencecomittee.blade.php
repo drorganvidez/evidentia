@@ -1,4 +1,4 @@
-<span class="badge badge-dark">
+<span class="badge badge-light">
     {!!$evidence->comittee->icon!!}
 
     {{$evidence->comittee->name}}

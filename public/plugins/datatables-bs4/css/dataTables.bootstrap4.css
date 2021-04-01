@@ -1,8 +1,8 @@
 @charset "UTF-8";
 table.dataTable {
   clear: both;
-  margin-top: 6px !important;
-  margin-bottom: 6px !important;
+  margin-top: 2px !important;
+  margin-bottom: 2px !important;
   max-width: none !important;
   border-collapse: separate !important;
   border-spacing: 0;
@@ -21,28 +21,9 @@ table.dataTable.nowrap td {
   white-space: nowrap;
 }
 
-div.dataTables_wrapper div.dataTables_length label {
-  font-weight: normal;
-  text-align: left;
-  white-space: nowrap;
-}
-div.dataTables_wrapper div.dataTables_length select {
-  width: auto;
-  display: inline-block;
-}
-div.dataTables_wrapper div.dataTables_filter {
-  text-align: right;
-}
-div.dataTables_wrapper div.dataTables_filter label {
-  font-weight: normal;
-  white-space: nowrap;
-  text-align: left;
-}
-div.dataTables_wrapper div.dataTables_filter input {
-  margin-left: 0.5em;
-  display: inline-block;
-  width: auto;
-}
+
+
+
 div.dataTables_wrapper div.dataTables_info {
   padding-top: 0.85em;
 }
@@ -52,9 +33,9 @@ div.dataTables_wrapper div.dataTables_paginate {
   text-align: right;
 }
 div.dataTables_wrapper div.dataTables_paginate ul.pagination {
-  margin: 2px 0;
+  margin: 10px 0px;
   white-space: nowrap;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 div.dataTables_wrapper div.dataTables_processing {
   position: absolute;
@@ -152,17 +133,7 @@ div.dataTables_scrollFoot > .dataTables_scrollFootInner > table {
   border-top: none;
 }
 
-@media screen and (max-width: 767px) {
-  div.dataTables_wrapper div.dataTables_length,
-div.dataTables_wrapper div.dataTables_filter,
-div.dataTables_wrapper div.dataTables_info,
-div.dataTables_wrapper div.dataTables_paginate {
-    text-align: center;
-  }
-  div.dataTables_wrapper div.dataTables_paginate ul.pagination {
-    justify-content: center !important;
-  }
-}
+
 table.dataTable.table-sm > thead > tr > th:not(.sorting_disabled) {
   padding-right: 20px;
 }
@@ -208,3 +179,73 @@ div.table-responsive > div.dataTables_wrapper > div.row > div[class^=col-]:first
 div.table-responsive > div.dataTables_wrapper > div.row > div[class^=col-]:last-child {
   padding-right: 0;
 }
+
+
+
+/*
+    Adaptación a pantalla de móvil
+ */
+@media screen and (max-width: 767px) {
+
+    div.dataTables_wrapper div.dataTables_filter,
+    div.dataTables_wrapper div.dataTables_length,
+    div.dataTables_wrapper div.dataTables_info,
+    div.dataTables_wrapper div.dataTables_paginate {
+        width: max-content;
+    }
+
+    div.dataTables_wrapper div.dataTables_filter input {
+        display: inline-block;
+        width: 400px;
+    }
+
+    div.dataTables_wrapper div.dataTables_length select{
+        display: inline-block;
+        float: right
+    }
+
+    div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+        justify-content: right !important;
+    }
+}
+
+/*
+    Adaptación a pantalla normal
+ */
+
+/*
+    Buscador
+ */
+
+div.dataTables_wrapper div.dataTables_filter {
+    text-align: left;
+}
+
+div.dataTables_wrapper div.dataTables_filter input {
+    display: inline;
+    width: auto;
+}
+
+/*
+    Mostrar X elementos
+ */
+
+.dataTables_length {
+   text-align: right;!important;
+   width: auto;!important;
+}
+
+div.dataTables_wrapper div.dataTables_length select {
+    width: auto;
+    text-align: right;
+}
+
+/*
+    Paginación
+ */
+div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+    justify-content: left !important;
+}
+
+.table th { border-top: none; }
+.table  { margin-top: 0px }

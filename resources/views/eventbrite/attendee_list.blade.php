@@ -40,7 +40,7 @@
             <div class="card">
 
                 <div class="card-body">
-                    <table id="dataset" class="table table-bordered table-striped">
+                    <table id="dataset" class="table table-hover">
                         <thead>
                         <tr>
                             <th scope="col">Alumna/o</th>

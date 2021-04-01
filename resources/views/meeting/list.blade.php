@@ -9,10 +9,6 @@
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
 
-@section('info')
-    <x-slimreminder :datetime="\Config::meetings_timestamp()"/>
-@endsection
-
 @section('content')
 
     <div class="row">
@@ -32,7 +28,7 @@
 
 
                 <div class="card-body">
-                    <table id="dataset" class="table table-bordered table-striped">
+                    <table id="dataset" class="table table-hover">
                             <thead>
                             <tr>
                                 <th>Reunión</th>

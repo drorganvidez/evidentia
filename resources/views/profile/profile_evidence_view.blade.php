@@ -11,25 +11,94 @@
 
 @section('content')
 
+
     <div class="row">
 
-        <div class="col-lg-3 col-sm-12">
-            <x-infoevidencetotalhours :user="$user" />
+        <div class="col-md-4">
+
+            <x-profile :user="$user"/>
+
         </div>
 
-        <div class="col-lg-3 col-sm-12">
-            <x-infomeetinghours :user="$user" />
-        </div>
+        <div class="col-md-8">
 
-        <div class="col-lg-3 col-sm-12">
-            <x-infoattendeeshours :user="$user" />
-        </div>
+            <div class="card shadow-sm">
 
-        <div class="col-lg-3 col-sm-12">
-            <x-infobonushours :user="$user" />
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-lg-8">
+
+                            <h5>
+                                <x-evidencecomittee :evidence="$evidence"/>
+
+                                <span class="badge badge-secondary">
+                                    <i class="far fa-clock"></i> {{$evidence->hours}} horas
+                                </span>
+
+                                <span class="badge badge-secondary">
+                                    @if($evidence->integrity())
+                                        Integridad <i class="fas fa-check-circle"></i>
+                                    @else
+                                        <i  class="fas fa-times-circle"></i>
+                                    @endif
+                                </span>
+
+
+                            </h5>
+
+
+
+                            <h4>{{$evidence->title}}</h4>
+
+                            <div class="post text-justify">
+                                {!! $evidence->description !!}
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <div class="text-muted">
+                                <p class="text-sm">Última edición
+                                    <b class="d-block">{{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }}</b>
+                                </p>
+                            </div>
+
+                            <x-evidencestatus :evidence="$evidence"/>
+
+
+                            <br>
+
+                            @foreach($evidence->proofs as $proof)
+
+                                <a class="btn btn-primary btn-sm" href="{{route('proof.download',['instance' => $instance, 'id' => $proof->id])}}">
+                                    <i class="fas fa-download"></i>
+                                    {{$proof->file->name}} ({{$proof->file->sizeForHuman()}})
+                                </a>
+
+                            @endforeach
+
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+
         </div>
 
     </div>
+
+
+
+
 
     <div class="row">
 

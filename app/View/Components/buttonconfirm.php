@@ -20,7 +20,7 @@ class buttonconfirm extends Component
     public $type;
     public $name;
 
-    public function __construct($id,$route,$title="Confirmación",$description="Este cambio no se puede deshacer.",$type="REMOVE",$name="Eliminar")
+    public function __construct($id,$route,$title="Confirmación",$description="Este cambio no se puede deshacer.",$type="REMOVE",$name="")
     {
         $this->id = $id;
         $this->route = $route;

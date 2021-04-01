@@ -46,9 +46,9 @@ var DataTable = $.fn.dataTable;
 /* Set the defaults for DataTables initialisation */
 $.extend( true, DataTable.defaults, {
 	dom:
-		"<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+		"<'row'<'col-lg-6 col-md-6 col-sm-6'f><'col-lg-6 col-md-6 col-sm-6'l>>" +
 		"<'row'<'col-sm-12'tr>>" +
-		"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+		"<'row'<'col-sm-12 col-md-12'i><'col-sm-12 col-md-12'p>>",
 	renderer: 'bootstrap'
 } );
 
@@ -57,7 +57,7 @@ $.extend( true, DataTable.defaults, {
 $.extend( DataTable.ext.classes, {
 	sWrapper:      "dataTables_wrapper dt-bootstrap4",
 	sFilterInput:  "form-control form-control-sm",
-	sLengthSelect: "custom-select custom-select-sm form-control form-control-sm",
+	sLengthSelect: " form-control form-control-sm selectpicker",
 	sProcessing:   "dataTables_processing card",
 	sPageButton:   "paginate_button page-item"
 } );
@@ -157,7 +157,7 @@ DataTable.ext.renderer.pageButton.bootstrap = function ( settings, host, idx, bu
 	};
 
 	// IE9 throws an 'unknown error' if document.activeElement is used
-	// inside an iframe or frame. 
+	// inside an iframe or frame.
 	var activeEl;
 
 	try {

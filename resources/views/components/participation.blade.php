@@ -1,6 +1,6 @@
 @if(!$user->hasRole('LECTURE'))
 <h6 class="text-center">
-    <span class="badge badge-pill badge-primary">
+    <span class="badge badge-pill badge-default">
 
         @if ($user->participation == "ORGANIZATION")
             ORGANIZACIÓN

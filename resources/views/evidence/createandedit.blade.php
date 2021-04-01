@@ -195,11 +195,11 @@
                                                                 <td>
                                                                     <a class="btn btn-primary btn-sm" href="{{route('proof.download',['instance' => $instance, 'id' => $proof->id])}}">
                                                                         <i class="fas fa-download"></i>
-                                                                        Descargar
+
                                                                     </a>
                                                                     <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-remove-{{$proof->file->id}}">
                                                                         <i class="fas fa-trash"></i>
-                                                                        Eliminar
+
                                                                     </a>
                                                                     <div class="modal fade" id="modal-remove-{{$proof->file->id}}">
                                                                         <div class="modal-dialog modal-dialog-centered">

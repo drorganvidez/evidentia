@@ -33,7 +33,7 @@
 
                         <div class="active tab-pane" id="evidences">
 
-                            <table id="dataset" class="table table-bordered table-striped">
+                            <table id="dataset" class="table table-hover">
                                 <thead>
                                 <tr>
                                     <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">ID</th>

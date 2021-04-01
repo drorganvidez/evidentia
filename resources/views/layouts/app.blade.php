@@ -14,12 +14,14 @@
     <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 
-    <!-- DataTables -->
-    <link rel="stylesheet" href="{{asset('plugins/datatables-bs4/css/dataTables.bootstrap4.css')}}">
+
 
     <!-- Theme style -->
     <link href="{{ asset('dist/css/adminlte.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('dist/css/style.css') }}" rel="stylesheet">
+
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{{asset('plugins/datatables-bs4/css/dataTables.bootstrap4.css')}}">
 
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.css')}}">
@@ -33,6 +35,8 @@
 
     <!-- Bootstrap4 Duallistbox -->
     <link rel="stylesheet" href="{{ asset('plugins/bootstrap4-duallistbox/bootstrap-duallistbox.css')}}">
+
+    <link href="{{ asset('dist/css/style.css') }}" rel="stylesheet">
 
 </head>
 
@@ -56,7 +60,7 @@
     {{-- MAIN MENU --}}
     {{---------------------------------------------------}}
 
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <aside class="main-sidebar sidebar-dark-lightblue  elevation-4">
 
         <x-lilogo/>
 
@@ -189,11 +193,16 @@
 <script src="{{asset('plugins/flot/jquery.flot.js')}}"></script>
 <script src="{{asset('plugins/flot/plugins/jquery.flot.resize.js')}}"></script>
 <script src="{{asset('plugins/flot/plugins/jquery.flot.pie.js')}}"></script>
+<script src="{{asset('plugins/chart.js/Chart.min.js')}}"></script>
+<script src="{{asset('plugins/sparklines/sparkline.js')}}"></script>
+<script src="{{asset('plugins/jquery-knob/jquery.knob.min.js')}}"></script>
 
 
 <!-- Summernote -->
 <script src="{{asset('plugins/summernote/summernote-bs4.min.js')}}"></script>
 <script>
+
+
 
     $("#files").fileinput({
         theme: "explorer",
@@ -209,6 +218,12 @@
     });
 
     $(document).ready(function(){
+
+        $('.knob').knob()
+
+        $('tableSelector').DataTable({
+            "dom": '<"pull-left"f><"pull-right"l>tip'
+        });
 
         // Esto sirve para inicializar funcionalidades especiales JavaScript
 

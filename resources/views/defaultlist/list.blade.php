@@ -26,7 +26,7 @@
 
 
                 <div class="card-body">
-                    <table id="dataset" class="table table-bordered table-striped">
+                    <table id="dataset" class="table table-hover">
                         <thead>
                         <tr>
                             <th>Título de la lista</th>

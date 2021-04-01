@@ -9,23 +9,19 @@
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
 
-@section('info')
-    <x-slimreminder :datetime="\Config::validate_evidences_timestamp()"/>
-@endsection
-
 @section('content')
 
     <x-evidencelistcoordinator />
 
     <div class="row">
-        <div class="col-lg-12 mt-3">
+        <div class="col-lg-8 mt-3">
 
             <x-status/>
 
-            <div class="card">
+            <div class="card shadow-lg">
 
                 <div class="card-body">
-                    <table id="dataset" class="table table-bordered table-striped ">
+                    <table id="dataset" class="table table-hover">
                         <thead>
                         <tr>
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">ID</th>
@@ -70,6 +66,17 @@
             </div>
 
             {{ $evidences->links() }}
+
+        </div>
+
+        <div class="col-lg-4 mt-3">
+
+            <div class="card shadow-sm">
+
+                <div class="card-body">
+
+                </div>
+            </div>
 
         </div>
     </div>

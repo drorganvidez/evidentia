@@ -21,8 +21,6 @@
 
     <div class="row">
 
-
-
         <div class="col-lg-8">
 
             <div class="card shadow-lg">
@@ -32,7 +30,7 @@
                     <form method="POST" action="{{$route}}">
                 @csrf
 
-                <table id="dataset" class="table table-bordered table-striped">
+                <table id="dataset" class="table table-hover">
                     <thead>
                     <tr>
                         <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Previsualización</th>

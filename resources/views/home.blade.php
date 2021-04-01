@@ -14,7 +14,7 @@
                     <!-- Widget: user widget style 1 -->
                     <div class="card card-widget widget-user shadow-lg">
                         <!-- Add the bg color to the header using any of the bg-* classes -->
-                        <div class="widget-user-header text-white" style="background: url('../dist/img/programming.jpg') center center;">
+                        <div class="widget-user-header text-white" style="background: url({{ asset('dist/img/abstract.jpg') }}) left;">
                             <h3 class="widget-user-username text-left">{!!Auth::user()->name!!} {!!Auth::user()->surname!!}</h3>
                             <h5 class="widget-user-desc text-left">
                                 @foreach(Auth::user()->roles as $role)

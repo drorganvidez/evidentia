@@ -13,31 +13,12 @@
 
     <div class="row">
 
-        <div class="col-lg-3">
+        <div class="col-lg-8">
 
-            <x-infomeetinghours :user="Auth::user()" />
-
-        </div>
-
-        <div class="col-lg-3">
-
-            <x-infomeetingcount :user="Auth::user()" />
-
-
-        </div>
-
-
-
-    </div>
-
-    <div class="row">
-
-        <div class="col-lg-12">
-
-            <div class="card">
+            <div class="card shadow-lg">
 
                 <div class="card-body">
-                    <table id="dataset" class="table table-bordered table-striped">
+                    <table id="dataset" class="table table-hover">
                             <thead>
                             <tr>
                                 <th>Reunión</th>
@@ -64,6 +45,18 @@
 
             </div>
 
+
+        </div>
+
+        <div class="col-lg-4">
+
+            <div class="card shadow-sm">
+
+                <div class="card-body">
+
+                </div>
+
+            </div>
 
         </div>
 

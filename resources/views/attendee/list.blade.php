@@ -12,28 +12,14 @@
 @section('content')
 
     <div class="row">
-
-        <div class="col-lg-3 col-sm-12">
-            <x-infoattendeeshours :user="Auth::user()" />
-        </div>
-        <div class="col-lg-3 col-sm-12">
-            <x-infoeventtotalcheckedin :user="Auth::user()" />
-        </div>
-        <div class="col-lg-3 col-sm-12">
-            <x-infoeventtotalattending :user="Auth::user()" />
-        </div>
-
-    </div>
-
-    <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-8">
 
             <x-status/>
 
-            <div class="card">
+            <div class="card shadow-lg">
 
                 <div class="card-body">
-                    <table id="dataset" class="table table-bordered table-striped">
+                    <table id="dataset" class="table table-hover">
                         <thead>
                         <tr>
                             <th scope="col">Evento</th>
@@ -62,10 +48,16 @@
 
         </div>
 
-        <div class="col-lg-12">
-            Última actualización de eventos: {{ \Carbon\Carbon::parse($events_update)->diffForHumans() }}
-            <br>
-            Última actualización de asistencias: {{ \Carbon\Carbon::parse($attendees_update)->diffForHumans() }}
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+
+                <div class="card-body">
+                    Última actualización de eventos: {{ \Carbon\Carbon::parse($events_update)->diffForHumans() }}
+                    <br>
+                    Última actualización de asistencias: {{ \Carbon\Carbon::parse($attendees_update)->diffForHumans() }}
+                </div>
+            </div>
+
         </div>
     </div>
 

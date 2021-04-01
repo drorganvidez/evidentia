@@ -43,7 +43,7 @@
                         </div>
                     </form>
 
-                    <table id="dataset" class="table table-bordered table-striped">
+                    <table id="dataset" class="table table-hover">
                         <thead>
                         <tr>
                             <th scope="col">Curso</th>

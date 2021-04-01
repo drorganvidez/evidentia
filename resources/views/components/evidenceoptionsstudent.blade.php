@@ -1,13 +1,13 @@
 <a class="btn btn-primary btn-sm" href="{{route('evidence.view',['instance' => \Instantiation::instance(), 'id' => $evidence->id])}}">
     <i class="fas fa-eye"></i>
-    <span class="d-none d-sm-none d-md-none d-lg-inline">Ver</span>
+    <span class="d-none d-sm-none d-md-none d-lg-inline"></span>
 </a>
 
 @if($evidence->status == 'DRAFT' and !\Carbon\Carbon::now()->gt(\Config::upload_evidences_timestamp()))
 <a class="btn btn-info btn-sm" href="{{route('evidence.edit',['instance' => \Instantiation::instance(), 'id' => $evidence->id])}}">
     <i class="fas fa-pencil-alt">
     </i>
-    <span class="d-none d-sm-none d-md-none d-lg-inline">Editar</span>
+    <span class="d-none d-sm-none d-md-none d-lg-inline"></span>
 </a>
 @endif
 

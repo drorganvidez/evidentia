@@ -12,42 +12,23 @@
 
     <div class="row">
 
-        <div class="col-lg-3 col-sm-12">
-            <x-infoevidencetotalhours :user="$user" />
-        </div>
-
-        <div class="col-lg-3 col-sm-12">
-            <x-infomeetinghours :user="$user" />
-        </div>
-
-        <div class="col-lg-3 col-sm-12">
-            <x-infoattendeeshours :user="$user" />
-        </div>
-
-        <div class="col-lg-3 col-sm-12">
-            <x-infobonushours :user="$user" />
-        </div>
-
-    </div>
-
-    <div class="row">
-
-        <div class="col-lg-12">
-            <x-status/>
-        </div>
-
-        <div class="col-md-3">
+        <div class="col-md-4">
 
             <x-profile :user="$user"/>
 
         </div>
 
-        <div class="col-md-9">
-            <div class="card">
+        <div class="col-md-8">
+
+            <div class="card shadow-sm">
+
+
 
                 <div class="card-body">
 
-                    <table id="dataset" class="table table-bordered table-striped">
+                    <h3>Evidencias</h3>
+
+                    <table id="dataset" class="table table-hover">
                         <thead>
                         <tr>
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">ID</th>
@@ -86,6 +67,5 @@
         </div>
 
     </div>
-
 
 @endsection

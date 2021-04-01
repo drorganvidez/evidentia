@@ -19,7 +19,7 @@
             <div class="card shadow-lg">
 
                 <div class="card-body">
-                    <table id="dataset" class="table table-bordered table-striped">
+                    <table id="dataset" class="table table-hover">
                         <thead>
                         <tr>
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">ID</th>

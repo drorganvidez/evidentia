@@ -11,7 +11,7 @@
 
 
     @if($type == "REMOVE")
-        <i class="fas fa-trash"></i> <span class="d-none d-sm-none d-md-none d-lg-inline">{{ $name ?? 'Eliminar' }} </span>
+        <i class="fas fa-trash"></i> <span class="d-none d-sm-none d-md-none d-lg-inline">{{ $name ?? '' }} </span>
     @elseif($type == "INFO")
         <i class="fas fa-info"></i> <span class="d-none d-sm-none d-md-none d-lg-inline">{{ $name ?? '' }}</span>
     @endif
