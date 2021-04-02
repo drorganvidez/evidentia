@@ -19,7 +19,7 @@
 
     <div class="row">
 
-        <div class="col-lg-7">
+        <div class="col-lg-8">
 
             <div class="card shadow-lg">
 
@@ -74,7 +74,7 @@
 
         </div>
 
-        <div class="col-lg-5">
+        <div class="col-lg-4">
 
             <div class="row">
 

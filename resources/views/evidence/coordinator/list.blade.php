@@ -16,8 +16,6 @@
     <div class="row">
         <div class="col-lg-8 mt-3">
 
-            <x-status/>
-
             <div class="card shadow-lg">
 
                 <div class="card-body">

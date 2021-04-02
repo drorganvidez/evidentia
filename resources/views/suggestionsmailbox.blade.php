@@ -12,12 +12,6 @@
 @section('content')
 
     <div class="row">
-        <div class="col-lg-12">
-            <x-status/>
-        </div>
-    </div>
-
-    <div class="row">
 
         <div class="col-lg-4">
 

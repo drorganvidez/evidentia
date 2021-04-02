@@ -14,8 +14,6 @@
     <div class="row">
         <div class="col-lg-12">
 
-            <x-status/>
-
             @if(!\Carbon\Carbon::now()->gt(\Config::meetings_timestamp()))
             <div class="row mb-3">
                 <div class="col-lg-2 mt-1">

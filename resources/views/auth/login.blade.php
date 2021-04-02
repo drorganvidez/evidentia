@@ -8,8 +8,6 @@
 
         <div class="card-body login-card-body">
 
-            <x-status/>
-
             <form action="{{route('instance.login_p',\Instantiation::instance())}}" method="post">
                 @csrf
 

@@ -11,14 +11,6 @@
 
 @section('content')
 
-    <div class="row">
-
-        <div class="col-lg-12">
-            <x-status/>
-        </div>
-
-    </div>
-
     <form method="POST" action="{{$route}}">
         @csrf
 

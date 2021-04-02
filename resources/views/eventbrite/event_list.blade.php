@@ -18,8 +18,6 @@
     <div class="row">
         <div class="col-lg-12">
 
-            <x-status/>
-
             @if(!\Carbon\Carbon::now()->gt(\Config::attendee_timestamp()))
             <div class="row mb-3">
                 <div class="col-lg-3 mt-1">

@@ -14,8 +14,6 @@
     <div class="row">
         <div class="col-lg-12">
 
-            <x-status/>
-
             <div class="row mb-3">
                 <div class="col-lg-2 mt-1">
                     <a href="{{route('secretary.defaultlist.create',['instance' => $instance])}}" class="btn btn-primary btn-block" role="button"><i class="fas fa-plus"></i> &nbsp;Crear nueva lista</a>

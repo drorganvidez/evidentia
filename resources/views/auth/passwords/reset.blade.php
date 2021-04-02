@@ -31,8 +31,6 @@
 
             </form>
 
-            <x-status/>
-
         </div>
 
     </div>

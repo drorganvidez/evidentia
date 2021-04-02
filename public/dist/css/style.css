@@ -34,3 +34,7 @@
 .table > tbody > tr > td > .progress {
     margin-bottom: 0px !important;
 }
+
+#toastsContainerTopRight{
+    margin: 15px;
+}

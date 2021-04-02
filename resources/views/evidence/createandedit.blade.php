@@ -16,10 +16,6 @@
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
 
-@section('info')
-        <x-slimreminder :datetime="\Config::upload_evidences_timestamp()"/>
-@endsection
-
 @section('content')
 
     @isset($edit)
@@ -74,14 +70,6 @@
 
         </div>
     @endisset
-
-    <div class="row">
-        <div class="col-lg-12">
-
-            <x-status/>
-
-        </div>
-    </div>
 
     <form method="POST" enctype="multipart/form-data">
         @csrf

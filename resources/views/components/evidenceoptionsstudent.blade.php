@@ -12,8 +12,8 @@
 @endif
 
 @if($evidence->status == 'REJECTED' and !\Carbon\Carbon::now()->gt(\Config::upload_evidences_timestamp()))
-    <x-buttonconfirm :id="$evidence->id" route="evidence.reedit" title="Editar de nuevo" description="Puedes volver a editar una evidencia
-que ha sido rechazada. Esta pasará automáticamente a borrador y tendrá que ser validada de nuevo por tu coordinador." type="INFO" name="Editar de nuevo"/>
+    <x-buttonconfirm :id="$evidence->id" route="evidence.reedit" title="" description="Puedes volver a editar una evidencia
+que ha sido rechazada. Esta pasará automáticamente a borrador y tendrá que ser validada de nuevo por tu coordinador." type="INFO" name=""/>
 @endif
 
 @if(!\Carbon\Carbon::now()->gt(\Config::upload_evidences_timestamp()))

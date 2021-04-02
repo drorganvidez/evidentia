@@ -13,8 +13,6 @@
     <div class="row">
         <div class="col-lg-6 col-sm-12">
 
-            <x-status/>
-
             <div class="card">
 
                 <div class="card-header">

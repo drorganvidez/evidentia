@@ -25,8 +25,6 @@
     <div class="row">
         <div class="col-lg-12">
 
-            <x-status/>
-
             <div class="card">
 
                 <div class="card-body">

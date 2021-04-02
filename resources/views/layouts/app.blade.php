@@ -36,7 +36,10 @@
     <!-- Bootstrap4 Duallistbox -->
     <link rel="stylesheet" href="{{ asset('plugins/bootstrap4-duallistbox/bootstrap-duallistbox.css')}}">
 
-    <link href="{{ asset('dist/css/style.css') }}" rel="stylesheet">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css')}}">
+
+    <link rel="stylesheet" href="{{ asset('dist/css/style.css') }}" >
 
 </head>
 
@@ -172,6 +175,9 @@
 <!-- Bootstrap4 Duallistbox -->
 <script src="{{asset('plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.js')}}"></script>
 
+<!-- Toastr -->
+<script src="{{asset('plugins/toastr/toastr.min.js')}}"></script>
+
 <!-- AdminLTE App -->
 <script src="{{asset('dist/js/adminlte.min.js')}}"></script>
 
@@ -276,6 +282,59 @@
         });
 
     });
+
+    // estados
+    @if (session('success'))
+
+        $(document).Toasts('create', {
+            title: '¡Felicidades!',
+            icon: 'fas fa-check-circle',
+            class: 'bg-success',
+            autohide: true,
+            delay: 7000,
+            body: '{!!  session("success") !!}'
+        });
+
+    @endif
+
+    @if (session('error'))
+
+        $(document).Toasts('create', {
+            title: '¡Error!',
+            icon: 'icon fas fa-ban',
+            class: 'bg-danger',
+            autohide: true,
+            delay: 7000,
+            body: '{!!  session("error") !!}'
+        });
+
+    @endif
+
+    @if (session('warning'))
+
+        $(document).Toasts('create', {
+            title: '¡Aviso!',
+            icon: 'icon fas fa-ban',
+            class: 'bg-danger',
+            autohide: true,
+            delay: 7000,
+            body: '{!!  session("warning") !!}'
+        });
+
+    @endif
+
+    @if (session('light'))
+
+        $(document).Toasts('create', {
+            title: 'Restablecer contraseña',
+            icon: 'fas fa-info',
+            class: 'bg-light',
+            autohide: true,
+            delay: 7000,
+            body: '{!!  session("light") !!}'
+        });
+
+    @endif
 
 </script>
 

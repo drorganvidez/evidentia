@@ -12,20 +12,13 @@
 @section('content')
 
     <div class="row">
-        <div class="col-lg-12">
-
-            <x-status/>
-
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-10">
+        <div class="col-lg-8">
 
             <div class="card shadow-lg">
 
                 <div class="card-body">
-                    <table id="dataset" class="table table-hover">
+                    <div class="table-responsive">
+                        <table id="dataset" class="table table-hover">
                         <thead>
                         <tr>
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">ID</th>
@@ -61,14 +54,14 @@
 
                         </tbody>
                     </table>
-
+                    </div>
                 </div>
 
             </div>
 
         </div>
 
-        <div class="col-lg-2">
+        <div class="col-lg-4">
 
             <div class="card shadow-sm">
 

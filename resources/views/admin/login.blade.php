@@ -10,8 +10,6 @@
 
             <p class="login-box-msg">Acceso a la administración</p>
 
-            <x-status/>
-
             <form method="POST" action="{{ route('admin.login_p') }}">
                 @csrf
 

@@ -12,10 +12,6 @@
 
     <div class="row">
 
-        <div class="col-lg-12">
-            <x-status/>
-        </div>
-
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
