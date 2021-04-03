@@ -39,9 +39,19 @@
     <!-- Toastr -->
     <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css')}}">
 
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
+
+    <!-- Filepond -->
+    <link rel="stylesheet" href="{{ asset('dist/css/filepond.css') }}" >
+
+    <!-- Own style -->
     <link rel="stylesheet" href="{{ asset('dist/css/style.css') }}" >
 
+
 </head>
+
+
 
 <body class="hold-transition sidebar-mini">
 
@@ -178,6 +188,9 @@
 <!-- Toastr -->
 <script src="{{asset('plugins/toastr/toastr.min.js')}}"></script>
 
+<!-- Bootstrap Switch -->
+<script src="{{asset('plugins/bootstrap-switch/js/bootstrap-switch.min.js')}}"></script>
+
 <!-- AdminLTE App -->
 <script src="{{asset('dist/js/adminlte.min.js')}}"></script>
 
@@ -186,8 +199,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
 
 <!-- File Input -->
-<link href="{{asset('dist/css/fileinput.css')}}" media="all" rel="stylesheet" type="text/css" />
-<link href="{{asset('dist/themes/explorer/theme.css')}}" media="all" rel="stylesheet" type="text/css" />
+<!-- <link href="{{asset('dist/css/fileinput.css')}}" media="all" rel="stylesheet" type="text/css" /> -->
+<!-- <link href="{{asset('dist/themes/explorer/theme.css')}}" media="all" rel="stylesheet" type="text/css" /> -->
+
 <script src="{{asset('dist/js/plugins/piexif.min.js')}}" type="text/javascript"></script>
 <script src="{{asset('dist/js/plugins/sortable.min.js')}}" type="text/javascript"></script>
 <script src="{{asset('dist/js/plugins/purify.min.js')}}" type="text/javascript"></script>
@@ -196,34 +210,23 @@
 <script src="{{asset('dist/themes/fas/theme.js')}}"></script>
 <script src="{{asset('dist/themes/explorer/theme.js')}}"></script>
 <script src="{{asset('dist/js/fileinput_locales/es.js')}}"></script>
-<script src="{{asset('plugins/flot/jquery.flot.js')}}"></script>
-<script src="{{asset('plugins/flot/plugins/jquery.flot.resize.js')}}"></script>
-<script src="{{asset('plugins/flot/plugins/jquery.flot.pie.js')}}"></script>
 <script src="{{asset('plugins/chart.js/Chart.min.js')}}"></script>
 <script src="{{asset('plugins/sparklines/sparkline.js')}}"></script>
 <script src="{{asset('plugins/jquery-knob/jquery.knob.min.js')}}"></script>
 
 
+
 <!-- Summernote -->
 <script src="{{asset('plugins/summernote/summernote-bs4.min.js')}}"></script>
+
+
+
 <script>
 
 
-
-    $("#files").fileinput({
-        theme: "explorer",
-        language: "es",
-        overwriteInitial: true,
-        maxFileSize: 10000,
-        autoReplace: true,
-        browseClass: "btn btn-primary btn-block",
-        showCaption: false,
-        showRemove: true,
-        showUpload: false,
-        focusCaptionOnClear: true
-    });
-
     $(document).ready(function(){
+
+
 
         $('.knob').knob()
 
@@ -336,7 +339,18 @@
 
     @endif
 
+
+    $(".filepond--file-wrapper").on('click', '.filepond--file-action-button.filepond--action-revert-item-processing', function () {
+        console.log("asdfasjdf ñlasjdfalsdjfa sdfaa");
+    });
+
+    $('.filepond--action-revert-item-processing').on('click',function(){
+        printData();
+    })
+
 </script>
+
+<script src="{{asset('dist/js/filepond.js')}}"></script>
 
 @yield('scripts')
 

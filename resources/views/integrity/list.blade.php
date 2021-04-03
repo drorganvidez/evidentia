@@ -15,7 +15,7 @@
 
         <div class="col-md-12">
 
-            <div class="card">
+            <div class="card shadow-lg">
 
                 <div class="card-header p-2">
                     <ul class="nav nav-pills">

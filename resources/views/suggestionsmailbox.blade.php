@@ -13,23 +13,7 @@
 
     <div class="row">
 
-        <div class="col-lg-4">
 
-            <div class="card shadow-sm">
-
-                <div class="card-body">
-                    <p>
-                        ¡Hola! ¿Has encontrado algo que no funciona como debería? ¿Crees que alguna funcionalidad se podría mejorar?
-                        ¿Se te ocurren nuevas herramientas?
-                    </p>
-
-                    <p>
-                        Te animamos a que hagas uso de este buzón de sugerencias para expresar tus inquietudes y opiniones. <b>Es completamente anónimo.</b>
-                    </p>
-                </div>
-            </div>
-
-        </div>
 
         <div class="col-lg-8">
 
@@ -85,6 +69,23 @@
 
         </div>
 
+        <div class="col-lg-4">
+
+            <div class="card shadow-sm">
+
+                <div class="card-body">
+                    <p>
+                        ¿Has encontrado algo que no funciona como debería? ¿Crees que alguna funcionalidad se podría mejorar?
+                        ¿Se te ocurren nuevas herramientas?
+                    </p>
+
+                    <p>
+                        Te animamos a que hagas uso de este buzón de sugerencias para expresar tus inquietudes y opiniones. <b>Es completamente anónimo.</b>
+                    </p>
+                </div>
+            </div>
+
+        </div>
     </div>
 
 

@@ -104,6 +104,13 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/mailbox', 'MessageController@mailbox')->name('message.mailbox');
 
     /**
+     *
+     *  UPLOADS
+     */
+    Route::post('/evidence/upload/process','UploadController@process')->name('upload.process');
+    Route::delete('/evidence/upload/process','UploadController@delete')->name('upload.revert');
+
+    /**
      *  EVIDENCES
      */
     Route::get('/evidence/list', 'EvidenceController@list')->name('evidence.list');

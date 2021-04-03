@@ -1,7 +1,9 @@
 <?php
 
 use App\Models\Instance;
+use Dotenv\Exception\InvalidPathException;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 use App\Models\Configuration;
 
@@ -250,6 +252,27 @@ class StringUtilites{
 
     public static function clean($string){
         return strtoupper(trim(preg_replace('~[^0-9a-z]+~i', '', preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($string, ENT_QUOTES, 'UTF-8'))), ' '));
+    }
+}
+
+class Filepond
+{
+
+    public function getServerIdFromPath($path)
+    {
+        return Crypt::encryptString($path);
+    }
+
+    public function getPathFromServerId($serverId)
+    {
+
+        return Crypt::decryptString($serverId);
+    }
+
+    public function getBasePath()
+    {
+        return Storage::disk(config('filepond.temporary_files_disk', 'local'))
+            ->path(config('filepond.temporary_files_path', 'filepond'));
     }
 }
 

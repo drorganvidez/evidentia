@@ -117,20 +117,26 @@ class EvidenceController extends Controller
     {
         $user = Auth::user();
         $instance = \Instantiation::instance();
+        $token = $request->session()->token();
+        $tmp = $instance.'/tmp/'.$user->username.'/'.$token.'/';
 
-        // creación de la prueba o pruebas adjuntas
-        $files = $request->file('files');
-        foreach($files as $file){
+        foreach (Storage::files($tmp) as $filename) {
 
-            // almacenamos en disco la prueba
-            $path = Storage::putFileAs($instance.'/proofs/'.$user->username.'/evidence_'.$evidence->id.'', $file, $file->getClientOriginalName());
+            $name = pathinfo($filename, PATHINFO_FILENAME);
+            $type = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+            $size = Storage::size($filename);
+            $old_directory = $filename;
+            $new_directory = $instance.'/proofs/'.$user->username.'/evidence_'.$evidence->id.'/'.$name.'.'.$type;
+
+            // movemos
+            Storage::move($old_directory, $new_directory);
 
             // almacenamos en la BBDD la información del archivo
             $file_entity = File::create([
-                'name' => $file->getClientOriginalName(),
-                'type' => strtolower($file->getClientOriginalExtension()),
-                'route' => $path,
-                'size' => $file->getSize(),
+                'name' => $name,
+                'type' => $type,
+                'route' => $new_directory,
+                'size' => $size,
             ]);
 
             // cómputo del sello
@@ -142,7 +148,12 @@ class EvidenceController extends Controller
                 'evidence_id' => $evidence->id,
                 'file_id' => $file_entity->id
             ]);
+
         }
+
+        // ya no necesitamos la carpeta temporal, la eliminamos
+        Storage::deleteDirectory($tmp);
+
     }
 
     private function copy_files($evidence_previous, $evidence_new, $removed_files)
