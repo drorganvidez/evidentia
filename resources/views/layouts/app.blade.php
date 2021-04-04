@@ -217,7 +217,7 @@
 
 
 <!-- Summernote -->
-<script src="{{asset('plugins/summernote/summernote-bs4.min.js')}}"></script>
+<script src="{{asset('plugins/summernote/summernote-bs4.js')}}"></script>
 
 
 

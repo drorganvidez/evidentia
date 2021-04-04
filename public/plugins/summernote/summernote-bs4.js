@@ -1,14 +1,14 @@
 /*!
- * 
+ *
  * Super simple wysiwyg editor v0.8.18
  * https://summernote.org
- * 
- * 
+ *
+ *
  * Copyright 2013- Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license.
- * 
+ *
  * Date: 2020-05-20T16:47Z
- * 
+ *
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -5108,7 +5108,7 @@ var Table_Table = /*#__PURE__*/function () {
       }
 
       trHTML = trs.join('');
-      var $table = external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default()('<table>' + trHTML + '</table>');
+      var $table = external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default()('<div class=\'table-responsive\'><table class=\'table table-bordered\'>' + trHTML + '</table></div>');
 
       if (options && options.tableClassName) {
         $table.addClass(options.tableClassName);
@@ -9842,7 +9842,7 @@ external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default.a.summe
       backColor: '#FFFF00'
     },
     lineHeights: ['1.0', '1.2', '1.4', '1.5', '1.6', '1.8', '2.0', '3.0'],
-    tableClassName: 'table table-bordered',
+    tableClassName: '',
     insertTableMaxSize: {
       col: 10,
       row: 10
