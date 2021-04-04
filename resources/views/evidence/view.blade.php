@@ -52,7 +52,6 @@
                                    href="{{route('evidence.edit',['instance' => $instance, 'id' => $evidence->id])}}">
                                     <i class="fas fa-pencil-alt">
                                     </i>
-                                    Editar
                                 </a>
                             @endif
 

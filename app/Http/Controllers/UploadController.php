@@ -48,4 +48,36 @@ class UploadController extends Controller
 
 
     }
+
+    public function load($instance,$file_name)
+    {
+
+        $user = Auth::user();
+        $token = session()->token();
+
+        $route = $instance.'/tmp/'.$user->username.'/'.$token.'/'.$file_name;
+
+        $response = Storage::download($route);
+
+        // limpiar búfer de salida
+        ob_end_clean();
+
+        return $response;
+
+    }
+
+    public function remove($instance,$file_name)
+    {
+        $user = Auth::user();
+        $instance = \Instantiation::instance();
+        $token = session()->token();
+        $tmp = $instance.'/tmp/'.$user->username.'/'.$token.'/';
+        $path = $tmp.'/'.$file_name;
+
+        Storage::delete($path);
+
+        return Response::make('', 200, [
+            'Content-Type' => 'text/plain',
+        ]);
+    }
 }

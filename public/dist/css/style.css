@@ -38,3 +38,11 @@
 #toastsContainerTopRight{
     margin: 15px;
 }
+
+filepond--root.filepond--hopper{
+    margin: 0px;
+}
+
+.filepond--drop-label{
+    font-size: 12px!important;
+}

@@ -3798,16 +3798,16 @@
             'Arrastra & suelta o <span class="filepond--label-action">examina tu equipo</span>',
             Type.STRING,
         ],
-        labelInvalidField: ['Field contains invalid files', Type.STRING],
-        labelFileWaitingForSize: ['Waiting for size', Type.STRING],
-        labelFileSizeNotAvailable: ['Size not available', Type.STRING],
+        labelInvalidField: ['El campo contiene archivos inválidos', Type.STRING],
+        labelFileWaitingForSize: ['Esperando al tamaño', Type.STRING],
+        labelFileSizeNotAvailable: ['Tamaño no disponible', Type.STRING],
         labelFileCountSingular: ['file in list', Type.STRING],
         labelFileCountPlural: ['files in list', Type.STRING],
-        labelFileLoading: ['Loading', Type.STRING],
-        labelFileAdded: ['Added', Type.STRING], // assistive only
-        labelFileLoadError: ['Error during load', Type.STRING],
-        labelFileRemoved: ['Removed', Type.STRING], // assistive only
-        labelFileRemoveError: ['Error during remove', Type.STRING],
+        labelFileLoading: ['Cargando', Type.STRING],
+        labelFileAdded: ['Añadido', Type.STRING], // assistive only
+        labelFileLoadError: ['Error durante la carga', Type.STRING],
+        labelFileRemoved: ['Eliminado', Type.STRING], // assistive only
+        labelFileRemoveError: ['Error durante la eliminación', Type.STRING],
         labelFileProcessing: ['Subiendo', Type.STRING],
         labelFileProcessingComplete: ['Subida completa', Type.STRING],
         labelFileProcessingAborted: ['Subida cancelada', Type.STRING],

@@ -3,8 +3,9 @@
 use App\Models\Instance;
 use Dotenv\Exception\InvalidPathException;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;use Illuminate\Support\Str;
 use App\Models\Configuration;
 
 /*
@@ -269,10 +270,24 @@ class Filepond
         return Crypt::decryptString($serverId);
     }
 
-    public function getBasePath()
+    public static function getFilesFromTemporaryFolder()
     {
-        return Storage::disk(config('filepond.temporary_files_disk', 'local'))
-            ->path(config('filepond.temporary_files_path', 'filepond'));
+        $user = Auth::user();
+        $token = session()->token();
+        $instance = \Instantiation::instance();
+        $tmp = $instance.'/tmp/'.$user->username.'/'.$token.'/';
+
+        $collection = collect();
+
+        foreach (Storage::files($tmp) as $filename) {
+
+            $file_name = pathinfo($filename, PATHINFO_BASENAME);
+            $collection->push($file_name);
+
+        }
+
+        return $collection;
+
     }
 }
 

@@ -110,6 +110,9 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::post('/evidence/upload/process','UploadController@process')->name('upload.process');
     Route::delete('/evidence/upload/process','UploadController@delete')->name('upload.revert');
 
+    Route::get('/evidence/upload/load/{file_name}','UploadController@load')->name('upload.load');
+    Route::get('/evidence/upload/remove/{file_name}','UploadController@remove')->name('upload.remove');
+
     /**
      *  EVIDENCES
      */

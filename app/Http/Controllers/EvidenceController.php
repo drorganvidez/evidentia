@@ -37,8 +37,10 @@ class EvidenceController extends Controller
 
     public function list()
     {
-        $evidences = Evidence::where(['user_id' => Auth::id(),'last' => true])->orderBy('created_at', 'desc')->get();
+        $evidences = Evidence::where(['user_id' => Auth::id(),'last' => true])->get();
         $instance = \Instantiation::instance();
+
+        $evidences = $evidences->reverse();
 
         return view('evidence.list',
             ['instance' => $instance, 'evidences' => $evidences]);
@@ -76,7 +78,7 @@ class EvidenceController extends Controller
 
         $evidence = $this->new_evidence($request,$status);
 
-        $this->new_files($request,$evidence);
+        $this->save_files($request,$evidence);
 
         return redirect()->route('evidence.list',$instance)->with('success', 'Evidencia creada con éxito.');
 
@@ -113,7 +115,7 @@ class EvidenceController extends Controller
         return $evidence;
     }
 
-    private function new_files($request,$evidence)
+    private function save_files($request, $evidence)
     {
         $user = Auth::user();
         $instance = \Instantiation::instance();
@@ -128,59 +130,16 @@ class EvidenceController extends Controller
             $old_directory = $filename;
             $new_directory = $instance.'/proofs/'.$user->username.'/evidence_'.$evidence->id.'/'.$name.'.'.$type;
 
-            // movemos
-            Storage::move($old_directory, $new_directory);
-
-            // almacenamos en la BBDD la información del archivo
-            $file_entity = File::create([
-                'name' => $name,
-                'type' => $type,
-                'route' => $new_directory,
-                'size' => $size,
-            ]);
-
-            // cómputo del sello
-            $file_entity = \Stamp::compute_file($file_entity);
-            $file_entity->save();
-
-            // almacenamos en la BBDD la información de la prueba de la evidencia
-            $proof = Proof::create([
-                'evidence_id' => $evidence->id,
-                'file_id' => $file_entity->id
-            ]);
-
-        }
-
-        // ya no necesitamos la carpeta temporal, la eliminamos
-        Storage::deleteDirectory($tmp);
-
-    }
-
-    private function copy_files($evidence_previous, $evidence_new, $removed_files)
-    {
-        $user = Auth::user();
-        $instance = \Instantiation::instance();
-
-        foreach($evidence_previous->proofs as $proof){
-
-            $file = $proof->file;
-
-            // los archivos que hemos "eliminado" de la evidencia anterior no se incluyen en la nueva
-            $collection = Str::of($removed_files)->explode('|');
-            if($collection->contains($file->id))
-                continue;
-
-            try {
-
-                // copiamos el archivo en sí
-                Storage::copy($file->route, $instance . '/proofs/' . $user->username . '/evidence_' . $evidence_new->id . '/' . $file->name . '.' . $file->type);
+            try{
+                // movemos
+                Storage::move($old_directory, $new_directory);
 
                 // almacenamos en la BBDD la información del archivo
                 $file_entity = File::create([
-                    'name' => $file->name,
-                    'type' => $file->type,
-                    'route' => $file->route,
-                    'size' => $file->size,
+                    'name' => $name,
+                    'type' => $type,
+                    'route' => $new_directory,
+                    'size' => $size,
                 ]);
 
                 // cómputo del sello
@@ -189,16 +148,47 @@ class EvidenceController extends Controller
 
                 // almacenamos en la BBDD la información de la prueba de la evidencia
                 $proof = Proof::create([
-                    'evidence_id' => $evidence_new->id,
+                    'evidence_id' => $evidence->id,
                     'file_id' => $file_entity->id
                 ]);
-
             } catch (\Exception $e) {
 
             }
+
         }
+
+        // ya no necesitamos la carpeta temporal, la eliminamos
+        Storage::deleteDirectory($tmp);
+
     }
 
+    private function copy_files_into_temporary_folder($evidence)
+    {
+
+        $user = Auth::user();
+        $instance = \Instantiation::instance();
+        $token = session()->token();
+
+        $proofs_folder = $instance.'/proofs/'.$user->username.'/evidence_'.$evidence->id;
+        $tmp = $instance.'/tmp/'.$user->username.'/'.$token;
+
+        foreach (Storage::files($proofs_folder) as $filename) {
+
+            $filename_basename = pathinfo($filename, PATHINFO_BASENAME);
+
+            $old_directory = $proofs_folder.'/'.$filename_basename;
+            $new_directory = $tmp.'/'.$filename_basename;
+
+            try {
+                // copiamos
+                Storage::copy($old_directory, $new_directory);
+            } catch (\Exception $e) {
+
+            }
+
+        }
+
+    }
 
     /****************************************************************************
      * EDIT AN EVIDENCE
@@ -206,8 +196,23 @@ class EvidenceController extends Controller
 
     public function edit($instance,$id)
     {
+
+        $user = Auth::user();
+        $instance = \Instantiation::instance();
+        $token = session()->token();
+
         $evidence = Evidence::find($id);
         $comittees = Comittee::all();
+
+        $tmp = $instance.'/tmp/'.$user->username.'/'.$token.'/';
+
+        Storage::deleteDirectory($tmp);
+
+        // generamos un nuevo token
+        session()->regenerate();
+
+        // copiamos las pruebas a una carpeta temporal para poder trabajar con los mismos
+        $this->copy_files_into_temporary_folder($evidence);
 
         return view('evidence.createandedit', ['evidence' => $evidence, 'instance' => $instance,
             'comittees' => $comittees,
@@ -245,12 +250,8 @@ class EvidenceController extends Controller
         $evidence_new->points_to = $evidence_header->id;
         $evidence_new->save();
 
-        // nos traemos los archivos de la evidencia anterior y los copiamos
-        $this->copy_files($evidence_previous,$evidence_new,$request->removed_files);
-
-        // si el usuario decide meter archivos nuevos
-        if($request->hasFile('files'))
-            $this->new_files($request,$evidence_new);
+        // copiamos ahora los archivos de la carpeta temporal a la nueva evidencia
+        $this->save_files($request,$evidence_new);
 
         if($status == "DRAFT") {
             return redirect()->route('evidence.list', $instance)->with('success', 'Evidencia editada con éxito.');

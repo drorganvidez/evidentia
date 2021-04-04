@@ -605,7 +605,7 @@
 }
 
 .filepond--item-panel {
-    background-color: #74605e;
+    background-color: #A8AAA9;
 }
 
 [data-filepond-item-state='processing-complete'] .filepond--item-panel {
@@ -770,7 +770,9 @@
 
 .filepond--panel-root {
     border-radius: .25rem;
-    background-color: #f1f0ef;
+    background-color: #F8F9FA;
+    border: 1px;
+    border-color: grey;
 }
 
 .filepond--panel {
@@ -911,7 +913,7 @@
     /* layout*/
     box-sizing: border-box;
     position: relative;
-    margin-bottom: 1em;
+    margin: 0px;
     /* base font size for whole component */
     font-size: 1rem;
     /* base line height */

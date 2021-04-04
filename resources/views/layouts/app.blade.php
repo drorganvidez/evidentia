@@ -350,6 +350,8 @@
 
 </script>
 
+<script src="{{asset('dist/js/filepond-plugin-file-validate-size.js')}}"></script>
+<script src="{{asset('dist/js/filepond-plugin-file-validate-type.js')}}"></script>
 <script src="{{asset('dist/js/filepond.js')}}"></script>
 
 @yield('scripts')
