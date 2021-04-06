@@ -1,8 +1,8 @@
 ---
-nombre: Nueva funcionalidad
-acerca de: Sugerir una nueva idea
-título: ''
-etiquetas: ''
+name: Nueva funcionalidad
+about: Sugerir una nueva idea
+title: ''
+tags: ''
 
 ---
 
