@@ -12,7 +12,6 @@ Una descripción concisa y clara del problema. E.g: Siempre me frustra que... [.
 
 **Describe la solución que te gustaría**
 
-
 Una descripción concisa y clara de lo que te gustaría que ocurriese.
 
 **Describe alternativas que hayas considerado**
