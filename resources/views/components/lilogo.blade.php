@@ -1,3 +1,3 @@
-<a href="/" class="brand-link">
-    <span class="brand-text font-weight-light" style="padding-left: 15px;">evidentia.<b>cloud</b><sup>v1.4</sup></span>
+<a href="/" class="brand-link text-center" style="background-color: #343a40; border-bottom: 0px">
+    <img class="img-fluid" width="100px" src="{{asset('dist/img/logo_dark.svg')}}">
 </a>

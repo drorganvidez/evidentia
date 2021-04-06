@@ -4,23 +4,31 @@
 
 @section('content')
 
-    <div class="card shadow-sm">
+    <div class="card shadow-lg">
 
-        <div class="card-body login-card-body">
+        <div class="card-body">
 
             <form action="{{route('instance.login_p',\Instantiation::instance())}}" method="post">
                 @csrf
 
-                <div class="input-group mb-3">
-                    <select id="subject" onchange="location = '/' + this.value;" class="selectpicker form-control @error('subject') is-invalid @enderror" name="subject" value="{{ old('subject') }}" required autofocus>
+                <div class="row">
 
-                        @foreach($instances as $i)
+                    <div class="col-lg-6">
+                        <div class="input-group mb-3">
+                            <select id="subject" onchange="location = '/' + this.value;" class="selectpicker form-control @error('subject') is-invalid @enderror" name="subject" value="{{ old('subject') }}" required>
 
-                            <option @if($i->route ==  \Instantiation::instance()) selected @endif value="{{$i->route}}">{{$i->name}}</option>
+                                @foreach($instances as $i)
 
-                        @endforeach
+                                    <option @if($i->route ==  \Instantiation::instance()) selected @endif value="{{$i->route}}">{{$i->name}}</option>
 
-                    </select>
+                                @endforeach
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 text-md-right">
+
+                    </div>
                 </div>
 
                 <div class="input-group mb-3">
@@ -32,13 +40,19 @@
                     </div>
                 </div>
 
-                <div class="input-group mb-3">
+                <div class="input-group mb">
                     <input name="password" required type="password" class="form-control" placeholder="Contraseña" autocomplete="password">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-lock"></span>
                         </div>
                     </div>
+                </div>
+
+                <div class="input-group">
+                <a href="{{route('password.reset',\Instantiation::instance())}}" class="text-sm mt-2 mb-3">
+                    He olvidado mi contraseña
+                </a>
                 </div>
 
                 <div class="row">
@@ -56,11 +70,8 @@
                 </div>
             </form>
 
-            <a href="{{route('password.reset',\Instantiation::instance())}}" class="btn btn-block btn-light mt-3">
-                He olvidado mi contraseña
-            </a>
-
         </div>
         <!-- /.login-card-body -->
     </div>
+
 @endsection

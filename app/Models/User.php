@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 
 
 class User extends Authenticatable
@@ -301,8 +302,13 @@ class User extends Authenticatable
 
     public function avatar_route()
     {
-        $instance = \Instantiation::instance();
-        return route('avatar',['instance' => $instance, 'id' => Auth::id()]);
+
+        if($this->avatar == null){
+            return URL::to('/').'/uploads/avatars/default.png';
+        }
+
+        return URL::to('/').'/uploads/avatars/'.$this->avatar->file->name.'.'.$this->avatar->file->type;
+
     }
 
     public function associate_comittee()

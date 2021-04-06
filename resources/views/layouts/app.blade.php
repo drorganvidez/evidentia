@@ -14,8 +14,6 @@
     <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 
-
-
     <!-- Theme style -->
     <link href="{{ asset('dist/css/adminlte.min.css') }}" rel="stylesheet">
 
@@ -53,7 +51,7 @@
 
 
 
-<body class="hold-transition sidebar-mini">
+<body class="hold-transition sidebar-mini layout-navbar-fixed layout-footer-fixed">
 
 <div class="wrapper">
 
@@ -73,7 +71,7 @@
     {{-- MAIN MENU --}}
     {{---------------------------------------------------}}
 
-    <aside class="main-sidebar sidebar-dark-lightblue  elevation-4">
+    <aside class="main-sidebar sidebar-dark-lightblue">
 
         <x-lilogo/>
 

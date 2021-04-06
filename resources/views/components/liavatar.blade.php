@@ -1,4 +1,4 @@
-<div class="user-panel  d-flex">
+<!-- <div class="user-panel  d-flex">
     <div class="image">
         <img width="33" height="33" src="{{Auth::user()->avatar_route()}}" class="img-circle elevation-2" style="margin: 10px 0px"
              alt="User Image">
@@ -11,13 +11,11 @@
             </span>
 
             <span style="font-size: 16px; display: block; line-height : 15px;">
-            {!!Auth::user()->name!!}
-</span>
+                {!!Auth::user()->name!!}
+            </span>
 
-</a>
+        </a>
 
-
-
-
+    </div>
 </div>
-</div>
+-->

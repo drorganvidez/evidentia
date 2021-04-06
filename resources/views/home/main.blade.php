@@ -34,13 +34,16 @@
     <!-- Bootstrap4 Duallistbox -->
     <link rel="stylesheet" href="{{ asset('plugins/bootstrap4-duallistbox/bootstrap-duallistbox.css')}}">
 
+    <!-- Toastr -->
+    <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css')}}">
+
 </head>
 
 <body class="hold-transition login-page">
 <div class="login-box">
 
     <div class="login-logo">
-        <h2><a href="{{route('instances.home')}}">evidentia.<b>cloud</b></a></h2>
+        <a href="{{route('instances.home')}}"><img width="200px" src="{{asset('dist/img/logo_light.svg')}}"></a>
     </div>
 
     @yield('content')
@@ -64,7 +67,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h2>evidentia.<b>cloud</b></h2>
+                    <img width="100px" src="{{asset('dist/img/logo_light.svg')}}">
                     <p class="text-muted">
                         <b>evidentia.cloud</b> es un sistema de gestión automática de evidencias de trabajos de alumnos
                         y alumnas. Fue originalmente pensado para las Jornadas InnoSoft Days organizadas en el ámbito de la asignatura
@@ -128,6 +131,9 @@
 <!-- Bootstrap4 Duallistbox -->
 <script src="{{asset('plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.js')}}"></script>
 
+<!-- Toastr -->
+<script src="{{asset('plugins/toastr/toastr.min.js')}}"></script>
+
 <!-- AdminLTE App -->
 <script src="{{asset('dist/js/adminlte.min.js')}}"></script>
 
@@ -146,6 +152,61 @@
 <script src="{{asset('dist/themes/fas/theme.js')}}"></script>
 <script src="{{asset('dist/themes/explorer/theme.js')}}"></script>
 <script src="{{asset('dist/js/fileinput_locales/es.js')}}"></script>
+
+<script>
+    // estados
+    @if (session('success'))
+
+    $(document).Toasts('create', {
+        title: '¡Felicidades!',
+        icon: 'fas fa-check-circle',
+        class: 'bg-success',
+        autohide: true,
+        delay: 7000,
+        body: '{!!  session("success") !!}'
+    });
+
+    @endif
+
+    @if (session('error'))
+
+    $(document).Toasts('create', {
+        title: '¡Error!',
+        icon: 'icon fas fa-ban',
+        class: 'bg-danger',
+        autohide: true,
+        delay: 7000,
+        body: '{!!  session("error") !!}'
+    });
+
+    @endif
+
+    @if (session('warning'))
+
+    $(document).Toasts('create', {
+        title: '¡Aviso!',
+        icon: 'icon fas fa-ban',
+        class: 'bg-danger',
+        autohide: true,
+        delay: 7000,
+        body: '{!!  session("warning") !!}'
+    });
+
+    @endif
+
+    @if (session('light'))
+
+    $(document).Toasts('create', {
+        title: 'Restablecer contraseña',
+        icon: 'fas fa-info',
+        class: 'bg-light',
+        autohide: true,
+        delay: 7000,
+        body: '{!!  session("light") !!}'
+    });
+
+    @endif
+</script>
 
 </body>
 

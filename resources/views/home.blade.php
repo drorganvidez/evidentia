@@ -219,6 +219,8 @@
 
                 <div class="col-lg-12">
 
+                    Avatar: {{\Illuminate\Support\Facades\Auth::user()->avatar_route()}}
+
 
                     <div class="timeline">
                         <div class="time-label">
