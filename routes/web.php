@@ -357,4 +357,9 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/suggestionsmailbox','SuggestionsMailboxController@suggestionsmailbox')->name('suggestionsmailbox');
     Route::post('/suggestionsmailbox_p','SuggestionsMailboxController@suggestionsmailbox_p')->name('suggestionsmailbox_p');
 
+    /**
+     *  GIT
+     */
+    Route::get('/updates','GitController@list')->name('updates.list');
+
 });

@@ -14,7 +14,9 @@
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.2",
-        "maatwebsite/excel": "^3.1"
+        "maatwebsite/excel": "^3.1",
+        "nyholm/psr7": "^1.4",
+        "symfony/psr-http-message-bridge": "^2.1"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

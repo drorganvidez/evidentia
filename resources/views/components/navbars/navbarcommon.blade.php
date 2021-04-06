@@ -6,11 +6,16 @@
             <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
         </li>
 
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="{{route('updates.list',\Instantiation::instance())}}" class="nav-link">Actualizaciones</a>
+        </li>
+
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="{{route('suggestionsmailbox',\Instantiation::instance())}}" class="nav-link">Buzón</a>
+        </li>
+
     </ul>
 
-
-
-    {{\Instantiation::instance_entity()->name}}
 
     <ul class="navbar-nav ml-auto">
 

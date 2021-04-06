@@ -51,7 +51,7 @@
 
 
 
-<body class="hold-transition sidebar-mini layout-navbar-fixed layout-footer-fixed">
+<body class="hold-transition sidebar-mini layout-navbar-fixed">
 
 <div class="wrapper">
 
