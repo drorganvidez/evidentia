@@ -25,7 +25,7 @@
     <div class="row">
         <div class="col-lg-12">
 
-            <div class="card">
+            <div class="card shadow-lg">
 
                 <div class="card-body">
                     <form method="POST" enctype="multipart/form-data" action="{{$route}}">

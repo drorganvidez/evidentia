@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-lg-6 col-sm-12">
 
-            <div class="card">
+            <div class="card shadow-lg">
                 <div class="card-body">
 
                     Bienvenido, administrador

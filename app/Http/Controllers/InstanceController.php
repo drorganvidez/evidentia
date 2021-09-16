@@ -63,7 +63,7 @@ class InstanceController extends Controller
 
             \Instantiation::set_default_connection();
             DB::statement("DROP DATABASE `{$instance->database}`");
-            return back()->withInput()->with('error', 'Conexión fallida, revise los parámetros de configuración de la base de datos.'.$e)->setStatusCode(422);
+            return back()->withInput()->with('error', 'Conexión fallida, revise los parámetros de configuración de la base de datos.')->setStatusCode(422);
 
         }
 

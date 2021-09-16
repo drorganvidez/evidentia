@@ -22,7 +22,7 @@
             </div>
             @endif
 
-            <div class="card">
+            <div class="card shadow-lg">
 
 
                 <div class="card-body">

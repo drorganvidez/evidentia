@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-12">
 
-            <div class="card">
+            <div class="card shadow-lg">
 
                 <div class="card-body">
                     <table id="dataset" class="table table-hover">
