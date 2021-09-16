@@ -39,15 +39,15 @@
 
                             <x-input col="4" attr="route" :value="$instance->route ?? ''" label="Ruta por defecto" description="Define una ruta de acceso para el curso"/>
 
-                            <x-input col="4" attr="host" :value="$instance->host ?? 'localhost'" label="Host" placeholder="localhost"/>
+                            <x-input col="4" attr="host" :value="$instance->host ?? env('DB_HOST') " label="Host" placeholder="{{env('DB_HOST')}}"/>
 
-                            <x-input col="4" attr="port" :value="$instance->port ?? '33060'" label="Puerto" placeholder="3306"/>
+                            <x-input col="4" attr="port" :value="$instance->port ?? env('DB_PORT') " label="Puerto" placeholder="{{env('DB_PORT')}}"/>
 
                             <x-input col="4" attr="database" disabled="true" :edit="$edit ?? ''" :value="$instance->database ?? ''" label="Base de datos" description="Nombre de la base de datos para la instancia"/>
 
-                            <x-input col="4" attr="username" :value="$instance->username ?? 'homestead'" label="Nombre de usuario" description="Nombre de usuario que gestiona la base"/>
+                            <x-input col="4" attr="username" :value="$instance->username ?? env('DB_USERNAME') " label="Nombre de usuario" description="Nombre de usuario que gestiona la base" placeholder="{{env('DB_USERNAME')}}"/>
 
-                            <x-input col="4" attr="password" :value="$instance->password ?? 'secret'" label="Contraseña" description="Contraseña del usuario que gestiona la base"/>
+                            <x-input col="4" attr="password" :value="$instance->password ?? env('DB_PASSWORD') " label="Contraseña" description="Contraseña del usuario que gestiona la base" placeholder="{{env('DB_PASSWORD')}}"/>
 
                         </div>
 
