@@ -62,10 +62,6 @@
 
                                         <div class="form-row">
 
-                                            <div>
-                                                <img id="image" src="http://evidentia.test/21/avatar/3">
-                                            </div>
-
                                         </div>
 
                                     </div>
@@ -155,39 +151,6 @@
         </div>
 
     </div>
-
-    @section('scripts')
-    <script>
-        $(function() {
-            var $image = $('#image'),
-                height = $image.height() + 4;
-
-            $('.preview').css({
-                width: '100%', //width,  sets the starting size to the same as orig image
-                overflow: 'hidden',
-                height:    height,
-                maxWidth:  $image.width(),
-                maxHeight: height
-            });
-
-            $image.cropper({
-                preview: '.preview',
-                ready: function (e) {
-                    $(this).cropper('setData', {
-                        height: 467,
-                        rotate: 0,
-                        scaleX: 1,
-                        scaleY: 1,
-                        width:  573,
-                        x:      469,
-                        y:      19
-                    });
-                }
-            });
-        });
-
-    </script>
-    @endsection
 
 
 @endsection
