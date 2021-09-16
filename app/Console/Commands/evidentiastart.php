@@ -48,7 +48,7 @@ class evidentiastart extends Command
         $this->line('Setting environment file');
         exec("cat /dev/null > .env");
         exec('echo "APP_NAME=Laravel" >> .env');
-        exec('echo "APP_ENV=localhost.local" >> .env');
+        exec('echo "APP_ENV=local" >> .env');
         exec('echo "APP_KEY=" >> .env');
         exec('echo "APP_DEBUG=true" >> .env');
         exec('echo "APP_URL=http://localhost" >> .env');
@@ -101,6 +101,12 @@ class evidentiastart extends Command
         exec('echo "LECTURE_NEW_INSTANCE_EMAIL=profesor1@profesor1.com" >> .env');
         exec('echo "LECTURE_NEW_INSTANCE_USERNAME=profesor1" >> .env');
         exec('echo "LECTURE_NEW_INSTANCE_PASSWORD=profesor1" >> .env');
+        exec('echo "" >> .env');
+        exec('echo "ADMIN_NAME=David" >> .env');
+        exec('echo "ADMIN_SURNAME=Romero" >> .env');
+        exec('echo "ADMIN_EMAIL=admin@admin.com" >> .env');
+        exec('echo "ADMIN_USERNAME=admin@admin.com" >> .env');
+        exec('echo "ADMIN_PASSWORD=admin" >> .env');
         $this->line('Setting environment file ... [OK]');
 
         $this->line('Generating key');
