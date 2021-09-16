@@ -96,6 +96,11 @@ class evidentiastart extends Command
         exec('echo "MIX_PUSHER_APP_KEY=\"${PUSHER_APP_KEY}\"" >> .env');
         exec('echo "MIX_PUSHER_APP_CLUSTER=\"${PUSHER_APP_CLUSTER}\"" >> .env');
         exec('echo "" >> .env');
+        exec('echo "LECTURE_NEW_INSTANCE_NAME=Profesor" >> .env');
+        exec('echo "LECTURE_NEW_INSTANCE_SURNAME=Profesor" >> .env');
+        exec('echo "LECTURE_NEW_INSTANCE_EMAIL=profesor1@profesor1.com" >> .env');
+        exec('echo "LECTURE_NEW_INSTANCE_USERNAME=profesor1" >> .env');
+        exec('echo "LECTURE_NEW_INSTANCE_PASSWORD=profesor1" >> .env');
         $this->line('Setting environment file ... [OK]');
 
         $this->line('Generating key');

@@ -71,7 +71,7 @@ class InstanceController extends Controller
 
         $instance->save();
 
-        $message = 'Instancia creada con éxito.<br><br>CREDENCIALES DE ACCESO</br>Usuario: <code style="color: white">profesor1</code><br>Contraseña: <code style="color: white">profesor1</code>';
+        $message = 'Instancia creada con éxito.<br><br>CREDENCIALES DE ACCESO</br>Usuario: <code style="color: white">'.env('LECTURE_NEW_INSTANCE_USERNAME','profesor1').'</code><br>Contraseña: <code style="color: white">'.env('LECTURE_NEW_INSTANCE_PASSWORD','profesor1').'</code>';
 
         return redirect()->route('admin.instance.manage')->with('success', $message)->setStatusCode(200);
     }

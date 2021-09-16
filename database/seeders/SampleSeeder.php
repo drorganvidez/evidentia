@@ -64,11 +64,11 @@ class SampleSeeder extends Seeder
         DB::table('users')->insert([
             'id' => 1,
             'dni' => 110011001,
-            'name' => 'Profesor',
-            'surname' => 'Profesor',
-            'email' => 'profesor1@profesor1.com',
-            'username' => 'profesor1',
-            'password' => Hash::make('profesor1'),
+            'name' => env('LECTURE_NEW_INSTANCE_NAME','Profesor'),
+            'surname' => env('LECTURE_NEW_INSTANCE_SURNAME','Profesor'),
+            'email' => env('LECTURE_NEW_INSTANCE_EMAIL','profesor1@profesor1.com'),
+            'username' => env('LECTURE_NEW_INSTANCE_USERNAME','profesor1'),
+            'password' => Hash::make(env('LECTURE_NEW_INSTANCE_PASSWORD','profesor1')),
         ]);
 
         /*
