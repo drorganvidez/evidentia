@@ -218,11 +218,7 @@
             <div class="row">
 
                 <div class="col-lg-12">
-
-                    Avatar: {{\Illuminate\Support\Facades\Auth::user()->avatar_route()}}
-
-
-                    <div class="timeline">
+                    <div class="timeline" style="margin-left: 10px">
                         <div class="time-label">
                             <span class="bg-default">24 Nov. 2020</span>
                         </div>
@@ -267,7 +263,7 @@
                             <div>
                                 <i class="fas fa-clock bg-gray"></i>
                             </div>
-                        </div>
+                        </div style=>
 
                 </div>
 

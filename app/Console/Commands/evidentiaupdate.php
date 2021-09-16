@@ -38,6 +38,8 @@ class evidentiaupdate extends Command
      */
     public function handle()
     {
+        Artisan::call('down');
+
         exec("git pull");
 
         exec("sudo composer update");
@@ -45,5 +47,7 @@ class evidentiaupdate extends Command
         Artisan::call("optimize:clear");
 
         $this->info("Evidentia has been updated successfully!");
+
+        Artisan::call('up');
     }
 }

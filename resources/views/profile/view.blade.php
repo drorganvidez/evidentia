@@ -28,7 +28,7 @@
                             <li class="nav-item"><a class="nav-link" href="#biografia" data-toggle="tab">Biografía</a></li>
                         @endif
 
-                        <li class="nav-item"><a class="nav-link" href="#pass" data-toggle="tab">Contraseña</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#pass" data-toggle="tab">Cambiar contraseña</a></li>
                     </ul>
                 </div>
                 <div class="card-body">
@@ -62,7 +62,9 @@
 
                                         <div class="form-row">
 
-                                            <x-input col="12" attr="avatar" id="files" type="file" :required="false" label="Avatar" description="Cambia la imagen de avatar por defecto."/>
+                                            <div>
+                                                <img id="image" src="http://evidentia.test/21/avatar/3">
+                                            </div>
 
                                         </div>
 
@@ -153,6 +155,39 @@
         </div>
 
     </div>
+
+    @section('scripts')
+    <script>
+        $(function() {
+            var $image = $('#image'),
+                height = $image.height() + 4;
+
+            $('.preview').css({
+                width: '100%', //width,  sets the starting size to the same as orig image
+                overflow: 'hidden',
+                height:    height,
+                maxWidth:  $image.width(),
+                maxHeight: height
+            });
+
+            $image.cropper({
+                preview: '.preview',
+                ready: function (e) {
+                    $(this).cropper('setData', {
+                        height: 467,
+                        rotate: 0,
+                        scaleX: 1,
+                        scaleY: 1,
+                        width:  573,
+                        x:      469,
+                        y:      19
+                    });
+                }
+            });
+        });
+
+    </script>
+    @endsection
 
 
 @endsection
