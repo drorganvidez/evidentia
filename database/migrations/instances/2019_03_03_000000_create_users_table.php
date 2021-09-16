@@ -27,8 +27,8 @@ class CreateUsersTable extends Migration
             $table->text('biography')->nullable();
             $table->enum('participation',['ORGANIZATION','INTERMEDIATE','ASSISTANCE'])->default('ASSISTANCE');
             $table->boolean('block')->default(0);
-            $table->string('clean_name');
-            $table->string('clean_surname');
+            $table->string('clean_name')->default('');
+            $table->string('clean_surname')->default('');
             $table->rememberToken();
             $table->timestamps();
         });
