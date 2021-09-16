@@ -8,61 +8,21 @@ use App\Models\Instance;
 
 class DeployController extends Controller
 {
-    public function validate_token($token){
-        $path = base_path();
-        $handle = fopen($path."/token.txt", "r");
-        $validate = False;
-        if ($handle) {
-            while (($line = fgets($handle)) !== false) {
-                if(strcmp(strval($token), strval($line)) == 0){
-                    $validate = True;
-                }
-            }
 
-            fclose($handle);
-        } else {
-            echo "error";
+    public function deploy(Request $request){
+
+        $username = $request->input('username');
+        $password = $request->input('password');
+
+        $username_env = env('DB_USERNAME');
+        $passsword_env = env('DB_PASSWORD');
+
+        $check_username = strcmp($username,$username_env) == 0;
+        $check_password = strcmp($password,$passsword_env) == 0;
+
+        if($check_username && $check_password){
+            Artisan::call('evidentia:update');
         }
 
-        return $validate;
-    }
-
-    public function deploy($token){
-
-        if($this->validate_token($token)){
-            Artisan::call("optimize:clear");
-            Artisan::call("migrate");
-            Artisan::call("db:seed");
-        }
-
-        return redirect()->route('instances.home');
-    }
-
-    public function deploy_default_instance($token){
-
-        if($this->validate_token($token)) {
-            $instance = Instance::all()->first();
-            \Instantiation::set($instance);
-
-            // creamos las tablas
-            Artisan::call('migrate',
-                [
-                    '--path' => 'database/migrations/instances',
-                    '--database' => 'instance'
-                ]);
-            $output = Artisan::output();
-
-            // la populamos con SampleSeeder
-            Artisan::call('db:seed',
-                [
-                    '--class' => 'SampleSeeder',
-                    '--database' => 'instance'
-                ]);
-            $output = Artisan::output();
-
-            \Instantiation::set_default_connection();
-        }
-
-        return redirect()->route('instances.home');
     }
 }

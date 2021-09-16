@@ -46,3 +46,13 @@ jobs:
           php artisan db:seed --class=InstancesTableSeeder
       - name: Run Testsuite
         run: vendor/bin/phpunit tests/
+
+  deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Stage
+        with:
+          url: 'https://www.evidentia.cloud/deploy'
+          method: 'POST'
+          username: ${{ secrets.EVIDENTIA_DEPLOY_USER }}
+          password: ${{ secrets.EVIDENTIA_DEPLOY_PASSWORD }}
