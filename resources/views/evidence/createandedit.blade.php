@@ -227,8 +227,10 @@
                     server: {
                         url: '{{route('upload.process',Instantiation::instance())}}',
                         process: {
-                            url: '/',
-                            method: 'POST'
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
                         },
                         load: (source, load, error, progress, abort, headers) => {
 
