@@ -112,6 +112,8 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/evidence/upload/load/{file_name}','UploadController@load')->name('upload.load');
     Route::get('/evidence/upload/remove/{file_name}','UploadController@remove')->name('upload.remove');
 
+    Route::get('/xls/upload/remove/{file_name}','UploadController@remove')->name('xls.upload.remove');
+
     /**
      *  EVIDENCES
      */
