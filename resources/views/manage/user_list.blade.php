@@ -28,9 +28,16 @@
                                 </button>
                                 <div class="dropdown-menu" role="menu" style="">
 
-                                    <a class="dropdown-item" href="#">Avisar por email de nuevas cuentas</a>
+                                    @if(\Illuminate\Support\Facades\Auth::user()->hasRole('LECTURE'))
+
+                                        <a class="dropdown-item" href="{{route('lecture.import',\Instantiation::instance())}}">Importación masiva de usuarios</a>
+
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Borrar todos los usuarios</a>
+                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#borrar_todo">
+                                        Borrar todos los usuarios
+                                    </a>
+
+                                    @endif
                                 </div>
                             </div>
                             <br>
@@ -100,9 +107,8 @@
 
                     <h4>Añadir nuevo usuario</h4>
 
-                    <form method="POST" enctype="multipart/form-data" action="">
+                    <form method="POST" enctype="multipart/form-data" action="{{route('management.user.new',\Instantiation::instance())}}">
                         @csrf
-
 
                         <div class="form-row">
                             <x-input col="6" attr="name" label="Nombre"/>
@@ -115,7 +121,8 @@
                         </div>
 
                         <div class="form-row">
-                            <x-input col="6" attr="username"  label="UVUS"/>
+                            <x-input col="6" attr="username"  label="UVUS" description="El UVUS será el nombre de usuario"/>
+                            <x-input col="6" attr="password" disabled="true" :edit="true" label="Password" description="La contraseña por defecto es el DNI"/>
                         </div>
                         <div class="form-row">
 
@@ -132,6 +139,53 @@
                     </form>
 
                 </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="borrar_todo">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="overflow: visible">
+
+                <div class="modal-header">
+                    <h4 class="modal-title text-wrap">Borrar todos los usuarios</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+
+                <form action="{{route('management.user.delete.all',\Instantiation::instance())}}" method="POST">
+                    @csrf
+                    <div class="modal-body text-wrap">
+                        <h2>Aviso</h2>
+                        <p>
+                            Esta acción está pensada al principio del uso de este software, cuando se
+                            acaban de importar todos los usuarios mediante un archivo XLS y/o se están haciendo pruebas. Esta función es <b>muy destructiva.</b>
+                        </p>
+
+                        <p>Se borrarán:</p>
+
+                        <ul>
+                            <li>Todos los usuarios excepto el tuyo</li>
+                            <li>Todas las evidencias asociadas</li>
+                            <li>Todos los mensajes y notificaciones asociadas</li>
+                            <li>Todas las asistencias</li>
+                            <li>Todas las reuniones registradas por los secretarios</li>
+                        </ul>
+
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> &nbsp;Lo comprendo, eliminar todos los usuarios
+                        </button>
+                    </div>
+                </form>
+
+
+
 
             </div>
         </div>

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers;
 
 /*
 |--------------------------------------------------------------------------
@@ -254,6 +255,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/registercoordinator/attendee/list','EventbriteController@attendee_list')->name('registercoordinator.attendee.list');
 
     Route::get('/registercoordinator/attendee/export','EventbriteController@attendee_export')->name('registercoordinator.attendee.export');
+
     /**
      *  PRESIDENT
      */
@@ -317,6 +319,14 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
     Route::get('/lecture/instances','QuickInstances@list')->name('lecture.instances.list');
     Route::post('/lecture/instances/save','QuickInstances@save')->name('lecture.instances.save');
+
+    /*
+     *  User Management
+     */
+    Route::middleware(['checkroles:LECTURE'])->group(function () {
+        Route::post('/management/user/delete/all',['App\Http\Controllers\ManagementController','user_management_delete_all'])->name('management.user.delete.all');
+    });
+    Route::post('/management/user/new',['App\Http\Controllers\ManagementController','user_management_new'])->name('management.user.new');
 
     /**
      *  PROFILES
