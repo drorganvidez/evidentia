@@ -252,7 +252,7 @@
                         },
                         remove: function(source, load, errorCallback) {
                             var filename = source.split('/').pop()
-                            var url = 'http://evidentia.test/21/evidence/upload/remove/' + filename;
+                            var url = location.origin + '/' + '{{\Instantiation::instance()}}' + '/evidence/upload/remove/' + filename;
                             var request = new Request(url);
 
                             fetch(request).then(function(response) {
@@ -280,25 +280,6 @@
                     ]
                 }
             );
-
-
-            /*
-            const fieldsetElement = document.querySelector('fieldset');
-            const pond = FilePond.create( fieldsetElement );
-
-            FilePond.setOptions({
-                server: {
-                    url: '{{route('upload.process',Instantiation::instance())}}',
-                    process: '/',
-                    revert: '/',
-                    load: '/prueba',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                }
-            });
-            */
-
 
         </script>
 
