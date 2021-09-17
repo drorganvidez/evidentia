@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\UserService;
 use App\Models\Comittee;
 use App\Models\Coordinator;
 use App\Models\Evidence;
@@ -16,10 +17,14 @@ use Illuminate\Support\Facades\Hash;
 
 class ManagementController extends Controller
 {
+
+    private $user_service;
+
     public function __construct()
     {
         $this->middleware('auth');
         $this->middleware('checkroles:LECTURE|PRESIDENT');
+        $this->user_service = new UserService();
     }
 
     public function user_list()
@@ -295,5 +300,47 @@ class ManagementController extends Controller
         }
 
         return redirect()->route('lecture.user.management',['instance' => $instance, 'id' => $user->id])->with('success','Usuario actualizado con éxito');
+    }
+
+    public function user_management_new(Request $request)
+    {
+
+        $instance = \Instantiation::instance();
+
+        $request->validate([
+            'name' => 'required|max:255',
+            'surname' => 'required|max:255',
+            'email' => 'required|max:255|unique:users',
+            'dni' => 'required|max:255|unique:users',
+            'username' => 'required|max:255|unique:users'
+        ]);
+
+        $user = User::create([
+            'name' => $request->input('name'),
+            'surname' => $request->input('surname'),
+            'email' => $request->input('email'),
+            'dni' => $request->input('dni'),
+            'username' => $request->input('username'),
+            'password' => Hash::make($request->input('dni')),
+            'clean_name' => \StringUtilites::clean(trim($request->input('name'))),
+            'clean_surname' => \StringUtilites::clean(trim($request->input('surname'))),
+        ]);
+
+        $student_role = Role::where('rol','STUDENT')->get();
+        $user->roles()->attach($student_role);
+
+        return redirect()->route('lecture.user.list',['instance' => $instance, 'id' => $user->id])->with('success','Usuario creado con éxito');
+
+    }
+
+    public function user_management_delete_all(Request $request)
+    {
+        $users = $this->user_service->all_except_logged();
+
+        foreach($users as $user){
+            $this->user_service->delete($user->id);
+        }
+
+        return redirect()->route('lecture.user.list',['instance' => \Instantiation::instance()])->with('success','Usuarios borrados con éxito');
     }
 }

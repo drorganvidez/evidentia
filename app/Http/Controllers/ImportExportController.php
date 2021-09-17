@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Imports\UsersImport;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Mockery\Exception;
@@ -31,33 +32,29 @@ class ImportExportController extends Controller
 
     public function import_save(Request $request)
     {
+        $user = Auth::user();
         $instance = \Instantiation::instance();
-        $path = null;
+        $token = $request->session()->token();
+        $tmp = $instance.'/tmp/'.$user->username.'/'.$token.'/';
 
         try {
-            // almacenamos en disco el archivo XLS de importación
-            $file = $request->file('xls');
-            if($file != null) {
-                $path = Storage::putFileAs($instance . '/imports/', $file, $file->getClientOriginalName());
+            foreach (Storage::files($tmp) as $filename) {
+                $name = pathinfo($filename, PATHINFO_FILENAME);
+                $type = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+                $path = $tmp . $name.".".$type;
 
-                // importamos los usuarios a la base de datos
                 Excel::import(new UsersImport, $path);
-
-                // borramos el XLS subido
+                $this->set_student_rol();
                 Storage::delete($path);
 
-                // seteamos todos los usuarios como ESTUDIANTE por defecto
-                $this->set_student_rol();
-
-                return redirect()->route('lecture.user.list', $instance)->with('success', 'Alumnos importados con éxito');
-            }else{
-                return redirect()->route('lecture.import',$instance)->with('error', 'No se seleccionó ningún archivo');
+                break;
             }
-        }catch (\Exception $e){
-            // borramos cualquier archivo subido
-            Storage::delete($path);
+
+        }catch(\Exception $e){
             return redirect()->route('lecture.import',$instance)->with('error', 'Ocurrió un error: ' . $e->getMessage());
         }
+
+        return redirect()->route('lecture.user.list', $instance)->with('success', 'Alumnos importados con éxito');
 
     }
 

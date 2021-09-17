@@ -17,9 +17,6 @@
     <!-- Theme style -->
     <link href="{{ asset('dist/css/adminlte.min.css') }}" rel="stylesheet">
 
-    <!-- DataTables -->
-    <link rel="stylesheet" href="{{asset('plugins/datatables-bs4/css/dataTables.bootstrap4.css')}}">
-
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.css')}}">
 
@@ -174,6 +171,7 @@
 <script src="{{asset('plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 
 <!-- DataTables -->
+<link rel="stylesheet" href="{{asset('plugins/datatables-bs4/css/dataTables.bootstrap4.css')}}">
 <script src="{{asset('plugins/datatables/jquery.dataTables.js')}}"></script>
 <script src="{{asset('plugins/datatables-bs4/js/dataTables.bootstrap4.js')}}"></script>
 
@@ -212,8 +210,6 @@
 <script src="{{asset('plugins/sparklines/sparkline.js')}}"></script>
 <script src="{{asset('plugins/jquery-knob/jquery.knob.min.js')}}"></script>
 
-
-
 <!-- Summernote -->
 <script src="{{asset('plugins/summernote/summernote-bs4.js')}}"></script>
 
@@ -224,12 +220,22 @@
 
     $(document).ready(function(){
 
-
-
+        /*
         $('.knob').knob()
+
 
         $('tableSelector').DataTable({
             "dom": '<"pull-left"f><"pull-right"l>tip'
+        });
+         */
+
+        $('table').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
         });
 
         // Esto sirve para inicializar funcionalidades especiales JavaScript
@@ -260,27 +266,6 @@
         //Bootstrap Duallistbox
         var demo = $('.duallistbox').bootstrapDualListbox();
         demo.bootstrapDualListbox('setSelectOrMinimalHeight',200);
-
-        // Data set
-        $(function () {
-            $('#dataset').DataTable({
-                "paging": true,
-                "lengthChange": true,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-            });
-
-            $('#dataset2').DataTable({
-                "paging": true,
-                "lengthChange": true,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-            });
-        });
 
     });
 
