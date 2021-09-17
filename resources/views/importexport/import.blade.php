@@ -172,8 +172,9 @@
                     ],
                     labelFileTypeNotAllowed: 'Tipo de archivo no válido',
                     server: {
-                        url: '{{route('upload.process',Instantiation::instance())}}',
+                        url: '{{route('xls.upload.process',Instantiation::instance())}}',
                         process: '/',
+                        method: 'POST',
                         load: (source, load, error, progress, abort, headers) => {
 
                             var request = new Request(decodeURI(source));
