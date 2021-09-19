@@ -15,10 +15,13 @@ class CreateMeetingRequestTable extends Migration
     {
         Schema::create('meeting_request', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
             $table->timestamp('datetime')->nullable(true);
             $table->string('place');
             $table->enum('type',['ORDINARY','EXTRAORDINARY']);
             $table->enum('modality', ['F2F', 'TELEMATIC', 'MIXED','OTHER']);
+            $table->foreignId('comittee_id');
+            $table->foreignId('secretary_id');
             $table->timestamps();
         });
     }

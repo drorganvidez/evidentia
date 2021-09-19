@@ -22,4 +22,9 @@ class Secretary extends Model
     {
         return $this->hasMany('App\Models\DefaultList')->orderByDesc('created_at');
     }
+
+    public function meeting_requests()
+    {
+        return $this->hasMany('App\Models\MeetingRequest');
+    }
 }

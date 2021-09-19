@@ -7,7 +7,7 @@
 
 </style>
 
-<div style="margin: 50px" id="body">
+<div style="margin: 50px 50px 0px 50px" id="body">
 
     <div style="text-align: center">
 
@@ -22,10 +22,14 @@
         </h2>
 
         <h3 style="color: #79AED3">
-            Comité de {COMITÉ}
+            Comité de {{$meeting_request->comittee->name}}
         </h3>
 
-        <p style="margin-top: 50px">
+        <h3>
+            "{{$meeting_request->title}}"
+        </h3>
+
+        <p style="margin-top: 20px">
 
             Por medio del presente escrito, queda usted convocado/a a la reunión<b>
             @switch($meeting_request->type)
@@ -51,7 +55,7 @@
                 @break
 
             @endswitch
-            </b>del comité de <b>{COMITÉ}</b> que se celebrará el día <b>{{ \Carbon\Carbon::parse($meeting_request->datetime)->format('d/m/Y') }}</b>
+            </b>del comité de <b>{{$meeting_request->comittee->name}}</b>, que se celebrará el día <b>{{ \Carbon\Carbon::parse($meeting_request->datetime)->format('d/m/Y') }}</b>
             a las <b>{{ \Carbon\Carbon::parse($meeting_request->datetime)->format('H:i') }}</b> en <b>{{$meeting_request->place}}</b>, en la que
             se tratarán los asuntos que se expresan a continuación:
         </p>
@@ -72,18 +76,18 @@
     <div style="text-align: center">
 
 
-        <h3 style="margin-top: 100px">
+        <h3 style="margin-top: 50px">
             Le saluda cordialmente
         </h3>
 
         <h4>
-            {Nombre del secretario}
+            {{$meeting_request->secretary->user->name}} {{$meeting_request->secretary->user->surname}}
         </h4>
 
 
 
         <h3>
-            Secretario del comité de {COMITÉ}
+            Secretario del comité de {{$meeting_request->comittee->name}}
         </h3>
     </div>
 

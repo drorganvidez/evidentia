@@ -12,6 +12,7 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class MeetingSecretaryController extends Controller
 {
@@ -41,7 +42,7 @@ class MeetingSecretaryController extends Controller
         $request_http->validate([
             'title' => 'required|min:5|max:255',
             'place' => 'required|min:5|max:255',
-            'date' => 'required|date_format:Y-m-d|before:tomorrow',
+            'date' => 'required|date_format:Y-m-d|after:yesterday',
             'time' => 'required',
             'type' => 'required|numeric|min:1|max:2',
             'modality' => 'required|numeric|min:1|max:3',
@@ -53,7 +54,9 @@ class MeetingSecretaryController extends Controller
             'place' => $request_http->input('place'),
             'datetime' => $request_http->input('date')." ".$request_http->input('time'),
             'type' => $request_http->input('type'),
-            'modality' => $request_http->input('modality')
+            'modality' => $request_http->input('modality'),
+            'comittee_id' => Auth::user()->secretary->comittee->id,
+            'secretary_id' => Auth::user()->secretary->id
         ]);
 
         $diary = Diary::create([
@@ -68,16 +71,12 @@ class MeetingSecretaryController extends Controller
             ]);
         }
 
+        // Genera PDF de la convocatoria
         $pdf = PDF::loadView('meeting.request_template', ['meeting_request' => $meeting_request]);
+        $content = $pdf->download()->getOriginalContent();
+        Storage::put(\Instantiation::instance() .'/meeting_requests/meeting_request_' .$meeting_request->id . '.pdf',$content) ;
 
-        // limpiar búfer de salida
-        ob_end_clean();
-
-        return $pdf->download('archivo.pdf');
-
-        return $meeting_request->diary->id;
-
-        return $request_http->all();
+        //TODO: Redirigir a la vista de listar convocatorias (no existe todavía)
     }
 
     public function list()
