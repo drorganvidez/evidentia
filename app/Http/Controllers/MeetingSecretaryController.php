@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\DefaultList;
+use App\Models\Diary;
+use App\Models\DiaryPoints;
 use App\Models\Meeting;
+use App\Models\MeetingRequest;
 use App\Rules\CheckHoursAndMinutes;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,6 +19,65 @@ class MeetingSecretaryController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('checkroles:SECRETARY');
+    }
+
+    public function manage()
+    {
+        $instance = \Instantiation::instance();
+
+        return view('meeting.manage',['instance' => $instance]);
+    }
+
+    public function request()
+    {
+        $instance = \Instantiation::instance();
+
+        return view('meeting.request',['instance' => $instance]);
+    }
+
+    public function request_new(Request $request_http)
+    {
+
+        $request_http->validate([
+            'title' => 'required|min:5|max:255',
+            'place' => 'required|min:5|max:255',
+            'date' => 'required|date_format:Y-m-d|before:tomorrow',
+            'time' => 'required',
+            'type' => 'required|numeric|min:1|max:2',
+            'modality' => 'required|numeric|min:1|max:3',
+            'points_list' => 'required'
+        ]);
+
+        $meeting_request = MeetingRequest::create([
+            'title' => $request_http->input('title'),
+            'place' => $request_http->input('place'),
+            'datetime' => $request_http->input('date')." ".$request_http->input('time'),
+            'type' => $request_http->input('type'),
+            'modality' => $request_http->input('modality')
+        ]);
+
+        $diary = Diary::create([
+            "meeting_request_id" => $meeting_request->id
+        ]);
+
+        foreach (json_decode($request_http->input('points_list'),1) as $key => $value) {
+
+            DiaryPoints::create([
+                "diary_id" => $diary->id,
+                "point" => $value
+            ]);
+        }
+
+        $pdf = PDF::loadView('meeting.request_template', ['meeting_request' => $meeting_request]);
+
+        // limpiar búfer de salida
+        ob_end_clean();
+
+        return $pdf->download('archivo.pdf');
+
+        return $meeting_request->diary->id;
+
+        return $request_http->all();
     }
 
     public function list()

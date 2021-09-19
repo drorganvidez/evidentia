@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MeetingSecretaryController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers;
@@ -180,6 +181,17 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         /*
          * MEETINGS
          */
+
+        // Refactorización de rutas
+        Route::prefix('meeting/manage')->group(function () {
+            Route::get('/', [MeetingSecretaryController::class, 'manage'])->name('secretary.meeting.manage');
+
+            // Convocatorias
+            Route::get('/request', [MeetingSecretaryController::class, 'request'])->name('secretary.meeting.manage.request');
+            Route::post('/request/new', [MeetingSecretaryController::class, 'request_new'])->name('secretary.meeting.manage.request.new');
+        });
+
+
         Route::get('/meeting/list/', 'MeetingSecretaryController@list')->name('secretary.meeting.list');
 
         Route::middleware(['checkregistermeetings'])->group(function () {

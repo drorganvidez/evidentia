@@ -9,7 +9,7 @@ class MeetingRequest extends Model
     protected $table = "meeting_request";
 
     protected $fillable = [
-      'meeting_id','date','place'
+      'meeting_id','datetime','place','type','modality'
     ];
 
     public function meeting()

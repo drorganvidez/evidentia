@@ -17,6 +17,7 @@ class CreateMeetingRequestTable extends Migration
             $table->id();
             $table->timestamp('date');
             $table->string('place');
+            $table->enum('type', ['F2F', 'TELEMATIC', 'MIXED','OTHER']);
             $table->timestamps();
         });
     }

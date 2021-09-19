@@ -13,9 +13,9 @@ class CreateDiaryTable extends Migration
      */
     public function up()
     {
-        Schema::create('diary', function (Blueprint $table) {
+        Schema::create('diaries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('meetingrequest_id');
+            $table->foreignId('meeting_request_id');
             $table->timestamps();
         });
     }

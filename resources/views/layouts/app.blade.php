@@ -167,6 +167,9 @@
 <!-- jQuery -->
 <script src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
 
+<!-- jQuery UI -->
+<script src="{{asset('plugins/jquery-ui/jquery-ui.min.js')}}"></script>
+
 <!-- Bootstrap 4 -->
 <script src="{{asset('plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 
@@ -197,6 +200,9 @@
 <!-- File Input -->
 <!-- <link href="{{asset('dist/css/fileinput.css')}}" media="all" rel="stylesheet" type="text/css" /> -->
 <!-- <link href="{{asset('dist/themes/explorer/theme.css')}}" media="all" rel="stylesheet" type="text/css" /> -->
+
+<!-- Handlebars -->
+<script src="{{asset('dist/js/handlebars-v4.7.7.js')}}" type="text/javascript"></script>
 
 <script src="{{asset('dist/js/plugins/piexif.min.js')}}" type="text/javascript"></script>
 <script src="{{asset('dist/js/plugins/sortable.min.js')}}" type="text/javascript"></script>
@@ -237,6 +243,13 @@
             "info": true,
             "autoWidth": false,
         });
+
+        $('.todo-list').sortable({
+            placeholder: 'sort-highlight',
+            handle: '.handle',
+            forcePlaceholderSize: true,
+            zIndex: 999999
+        })
 
         // Esto sirve para inicializar funcionalidades especiales JavaScript
 
@@ -330,6 +343,17 @@
     $('.filepond--action-revert-item-processing').on('click',function(){
         printData();
     })
+
+    function make_id(length) {
+        var result           = '';
+        var characters       = '123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() *
+                charactersLength));
+        }
+        return result;
+    }
 
 </script>
 
