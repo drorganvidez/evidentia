@@ -17,4 +17,9 @@ class MeetingMinutes extends Model
     {
         return $this->hasMany('App\Models\Point');
     }
+
+    public function signature_sheet()
+    {
+        return $this->hasOne('App\Models\SignatureSheet');
+    }
 }

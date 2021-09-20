@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDiaryTable extends Migration
+class CreateSignatureSheetUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateDiaryTable extends Migration
      */
     public function up()
     {
-        Schema::create('diaries', function (Blueprint $table) {
+        Schema::create('signature_sheet_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('meeting_request_id');
+            $table->foreignId('signature_sheet_id');
+            $table->foreignId('user_id');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ class CreateDiaryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('diary');
+        Schema::dropIfExists('signature_sheet_user');
     }
 }
