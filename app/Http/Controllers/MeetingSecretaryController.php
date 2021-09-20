@@ -7,6 +7,7 @@ use App\Models\Diary;
 use App\Models\DiaryPoints;
 use App\Models\Meeting;
 use App\Models\MeetingRequest;
+use App\Models\SignatureSheet;
 use App\Rules\CheckHoursAndMinutes;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -100,6 +101,66 @@ class MeetingSecretaryController extends Controller
         ob_end_clean();
 
         return $response;
+    }
+
+    public function signaturesheet_list()
+    {
+        $instance = \Instantiation::instance();
+
+        $signature_sheets = Auth::user()->secretary->signature_sheets;
+
+        return view('meeting.signaturesheet_list',["instance" => $instance, 'signature_sheets' => $signature_sheets]);
+    }
+
+    public function signaturesheet_create()
+    {
+        $instance = \Instantiation::instance();
+
+        $available_meeting_requests = Auth::user()->secretary->meeting_requests;
+
+        $available_meeting_requests = $available_meeting_requests->filter(function($value,$key){
+            return $value->signature_sheet == null;
+        });
+
+        return view('meeting.signaturesheet_create',['instance' => $instance, 'available_meeting_requests' => $available_meeting_requests]);
+    }
+
+    private function generate_random_identifier_for_signature($number)
+    {
+        $random_identifier = \Random::getRandomIdentifier('4');
+        $signature_sheet_with_random_identifier = SignatureSheet::where('random_identifier', $random_identifier)->first();
+
+        if($signature_sheet_with_random_identifier != null){
+            return $this->generate_random_identifier_for_signature($number);
+        }
+
+        return $random_identifier;
+    }
+
+    public function signaturesheet_new(Request $request)
+    {
+        $instance = \Instantiation::instance();
+
+        $request->validate([
+            'title' => 'required|min:5|max:255'
+        ]);
+
+        // generamos identificador aleatorio y comprobamos si ya está ocupado
+        $random_identifier = \Random::getRandomIdentifier('4');
+        $signature_sheet_with_random_identifier = SignatureSheet::where('random_identifier', $random_identifier)->first();
+        if($signature_sheet_with_random_identifier != null){
+
+        }
+
+        $signature_sheet = SignatureSheet::create([
+            'title' => $request->input('title'),
+            'random_identifier' => $this->generate_random_identifier_for_signature(4),
+            'meeting_request_id' => $request->input('meeting_request'),
+            'secretary_id' => Auth::user()->secretary->id
+        ]);
+
+        return redirect()->route('secretary.meeting.manage.signaturesheet.list',$instance)->with('success', 'Reunión creada con éxito.');
+
     }
 
     public function list()

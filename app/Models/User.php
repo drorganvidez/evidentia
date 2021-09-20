@@ -108,7 +108,7 @@ class User extends Authenticatable
 
     public function signature_sheets()
     {
-        return $this->hasMany('App\Models\SignatureSheets');
+        return $this->belongsToMany('App\Models\SignatureSheet');
     }
 
     public function evidence_rand(){

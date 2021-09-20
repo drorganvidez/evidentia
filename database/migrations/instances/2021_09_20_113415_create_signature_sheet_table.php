@@ -15,9 +15,11 @@ class CreateSignatureSheetTable extends Migration
     {
         Schema::create('signature_sheets', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
             $table->string('random_identifier');
             $table->foreignId('meeting_request_id')->nullable();
             $table->foreignId('meeting_minutes_id')->nullable();
+            $table->foreignId('secretary_id');
             $table->timestamps();
         });
     }

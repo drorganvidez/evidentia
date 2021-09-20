@@ -27,4 +27,9 @@ class Secretary extends Model
     {
         return $this->hasMany('App\Models\MeetingRequest')->orderByDesc('created_at');
     }
+
+    public function signature_sheets()
+    {
+        return $this->hasMany('App\Models\SignatureSheet')->orderByDesc('created_at');
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MeetingSecretaryController;
+use App\Http\Controllers\SignController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers;
@@ -70,6 +71,12 @@ Route::group(['prefix' => 'admin'], function(){
 /*
  *  ALL ROUTES
  */
+
+// Sign
+Route::get('/{instance}/sign/{random_identifier}',[SignController::class,'sign'])->name('sign');
+Route::post('/{instance}/sign_p',[SignController::class,'sign_p'])->name('sign_p');
+Route::get('/{instance}/finish',[SignController::class,'finish'])->name('sign.finish');
+
 Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], function(){
 
     Route::get('/change/{evidence}', function (Request $request) {
@@ -191,6 +198,13 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
             Route::get('/request/create', [MeetingSecretaryController::class, 'request_create'])->name('secretary.meeting.manage.request.create');
             Route::post('/request/new', [MeetingSecretaryController::class, 'request_new'])->name('secretary.meeting.manage.request.new');
             Route::get('/request/download/{id}', [MeetingSecretaryController::class, 'request_download'])->name('secretary.meeting.manage.request.download');
+
+            // Hojas de firmas
+            Route::get('/signaturesheet/list', [MeetingSecretaryController::class, 'signaturesheet_list'])->name('secretary.meeting.manage.signaturesheet.list');
+            Route::get('/signaturesheet/create', [MeetingSecretaryController::class, 'signaturesheet_create'])->name('secretary.meeting.manage.signaturesheet.create');
+            Route::post('/signaturesheet/new', [MeetingSecretaryController::class, 'signaturesheet_new'])->name('secretary.meeting.manage.signaturesheet.new');
+
+
         });
 
 
