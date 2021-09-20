@@ -4,17 +4,18 @@
         <div class="card-body p-0">
             <ul class="nav nav-pills flex-column">
                 <li class="nav-item">
-                    <a href="{{route('secretary.meeting.manage.request',\Instantiation::instance())}}" class="nav-link">
+                    <a href="{{route('secretary.meeting.manage.request.create',\Instantiation::instance())}}" class="nav-link">
 
-                        @if(Route::currentRouteName() == 'secretary.meeting.manage.request')
+                        @if(Route::currentRouteName() == 'secretary.meeting.manage.request.create')
                             <b>
                         @endif
 
                          Crear convocatoria
 
-                        @if(Route::currentRouteName() == 'secretary.meeting.manage.request')
+                        @if(Route::currentRouteName() == 'secretary.meeting.manage.request.create')
                             </b>
                         @endif
+
                     </a>
                 </li>
                 <li class="nav-item">
@@ -30,8 +31,19 @@
         <div class="card-body p-0">
             <ul class="nav nav-pills flex-column">
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        Mis convocatorias
+                    <a href="{{route('secretary.meeting.manage.request.list',\Instantiation::instance())}}" class="nav-link">
+
+
+                        @if(Route::currentRouteName() == 'secretary.meeting.manage.request.list')
+                            <b>
+                        @endif
+
+                    Mis convocatorias
+
+                        @if(Route::currentRouteName() == 'secretary.meeting.manage.request.list')
+                            </b>
+                        @endif
+
                     </a>
                 </li>
                 <li class="nav-item">

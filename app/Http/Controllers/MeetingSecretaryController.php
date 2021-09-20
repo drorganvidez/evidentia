@@ -29,7 +29,17 @@ class MeetingSecretaryController extends Controller
         return view('meeting.manage',['instance' => $instance]);
     }
 
-    public function request()
+    public function request_list()
+    {
+
+        $instance = \Instantiation::instance();
+
+        $meeting_requests = Auth::user()->secretary->meeting_requests;
+
+        return view('meeting.request_list',["meeting_requests" => $meeting_requests, "instance" => $instance]);
+    }
+
+    public function request_create()
     {
         $instance = \Instantiation::instance();
 
@@ -38,6 +48,7 @@ class MeetingSecretaryController extends Controller
 
     public function request_new(Request $request_http)
     {
+        $instance = \Instantiation::instance();
 
         $request_http->validate([
             'title' => 'required|min:5|max:255',
@@ -76,7 +87,19 @@ class MeetingSecretaryController extends Controller
         $content = $pdf->download()->getOriginalContent();
         Storage::put(\Instantiation::instance() .'/meeting_requests/meeting_request_' .$meeting_request->id . '.pdf',$content) ;
 
-        //TODO: Redirigir a la vista de listar convocatorias (no existe todavía)
+        return redirect()->route('secretary.meeting.manage.request.list',$instance)->with('success', 'Convocatoria de reunión creada con éxito.');
+    }
+
+    public function request_download($instance, $id)
+    {
+        $meeting_request = MeetingRequest::findOrFail($id);
+
+        $response = Storage::download(\Instantiation::instance() .'/meeting_requests/meeting_request_' .$meeting_request->id . '.pdf');
+
+        // limpiar búfer de salida
+        ob_end_clean();
+
+        return $response;
     }
 
     public function list()

@@ -25,6 +25,6 @@ class Secretary extends Model
 
     public function meeting_requests()
     {
-        return $this->hasMany('App\Models\MeetingRequest');
+        return $this->hasMany('App\Models\MeetingRequest')->orderByDesc('created_at');
     }
 }
