@@ -2,7 +2,7 @@
 
 @section('title', 'Mis hojas de firmas')
 
-@section('title-icon', 'fas fa-signature')
+@section('title-icon', 'fas fa-list')
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>

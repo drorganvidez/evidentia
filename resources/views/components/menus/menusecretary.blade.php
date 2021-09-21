@@ -5,7 +5,7 @@
 
             <li class="nav-header">REUNIONES Y BONOS</li>
 
-            <x-li route="secretary.meeting.manage" icon='far fa-handshake' name="Gestionar reuniones" secondaries="secretary.meeting.manage.request.create,secretary.meeting.manage.request.list,secretary.meeting.manage.signaturesheet.create,secretary.meeting.manage.signaturesheet.list"/>
+            <x-li route="secretary.meeting.manage" icon='far fa-handshake' name="Gestionar reuniones" secondaries="secretary.meeting.manage.request.create,secretary.meeting.manage.request.list,secretary.meeting.manage.signaturesheet.create,secretary.meeting.manage.signaturesheet.list,secretary.meeting.manage.minutes.list,secretary.meeting.manage.minutes.create,secretary.meeting.manage.minutes.create.step1,secretary.meeting.manage.minutes.create.step2,secretary.meeting.manage.minutes.create.step3"/>
             <x-li route="secretary.bonus.list" secondaries="secretary.bonus.create,secretary.bonus.edit" icon='fas fa-puzzle-piece' name="Gestionar bonos"/>
             <x-li route="secretary.defaultlist.list" secondaries="secretary.defaultlist.create,secretary.defaultlist.edit" icon='far fa-list-alt' name="Gestionar listas"/>
 

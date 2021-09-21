@@ -39,10 +39,11 @@
     <!-- Filepond -->
     <link rel="stylesheet" href="{{ asset('dist/css/filepond.css') }}" >
 
+    <!-- BS Stepper -->
+    <link rel="stylesheet" href="{{ asset('plugins/bs-stepper/css/bs-stepper.min.css') }}" >
+
     <!-- Own style -->
     <link rel="stylesheet" href="{{ asset('dist/css/style.css') }}" >
-
-
 
 </head>
 
@@ -197,6 +198,9 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
 
+<!-- BS-Stepper -->
+<script src="{{asset('plugins/bs-stepper/js/bs-stepper.min.js')}}"></script>
+
 <!-- File Input -->
 <!-- <link href="{{asset('dist/css/fileinput.css')}}" media="all" rel="stylesheet" type="text/css" /> -->
 <!-- <link href="{{asset('dist/themes/explorer/theme.css')}}" media="all" rel="stylesheet" type="text/css" /> -->
@@ -255,7 +259,7 @@
 
         $(function () {
             // Summernote
-            $('.textarea').summernote()
+            $('textarea').summernote()
         })
 
 

@@ -30,6 +30,9 @@ class MeetingSecretaryController extends Controller
         return view('meeting.manage',['instance' => $instance]);
     }
 
+    /*
+     *  Requests
+     */
     public function request_list()
     {
 
@@ -103,6 +106,9 @@ class MeetingSecretaryController extends Controller
         return $response;
     }
 
+    /*
+     *  Signature sheets
+     */
     public function signaturesheet_list()
     {
         $instance = \Instantiation::instance();
@@ -123,18 +129,6 @@ class MeetingSecretaryController extends Controller
         });
 
         return view('meeting.signaturesheet_create',['instance' => $instance, 'available_meeting_requests' => $available_meeting_requests]);
-    }
-
-    private function generate_random_identifier_for_signature($number)
-    {
-        $random_identifier = \Random::getRandomIdentifier('4');
-        $signature_sheet_with_random_identifier = SignatureSheet::where('random_identifier', $random_identifier)->first();
-
-        if($signature_sheet_with_random_identifier != null){
-            return $this->generate_random_identifier_for_signature($number);
-        }
-
-        return $random_identifier;
     }
 
     public function signaturesheet_new(Request $request)
@@ -163,6 +157,114 @@ class MeetingSecretaryController extends Controller
 
     }
 
+    private function generate_random_identifier_for_signature($number)
+    {
+        $random_identifier = \Random::getRandomIdentifier('4');
+        $signature_sheet_with_random_identifier = SignatureSheet::where('random_identifier', $random_identifier)->first();
+
+        if($signature_sheet_with_random_identifier != null){
+            return $this->generate_random_identifier_for_signature($number);
+        }
+
+        return $random_identifier;
+    }
+
+    /*
+     *  Minutes
+     */
+    public function minutes_create()
+    {
+        $instance = \Instantiation::instance();
+
+        return redirect()->route('secretary.meeting.manage.minutes.create.step1',['instance' => $instance]);
+    }
+
+    public function minutes_create_step1()
+    {
+        $instance = \Instantiation::instance();
+
+        $meeting_requests = Auth::user()->secretary->meeting_requests;
+
+        return view('meeting.minutes_create_step1',[
+            'instance' => $instance,
+            'meeting_requests' => $meeting_requests
+        ]);
+    }
+
+    public function minutes_create_step1_p(Request $request)
+    {
+        $instance = \Instantiation::instance();
+
+        $meeting_request = MeetingRequest::find($request->input('meeting_request'));
+
+        return redirect()->route('secretary.meeting.manage.minutes.create.step2',[
+            'instance' => $instance,
+            'meeting_request' => $meeting_request
+        ]);
+    }
+
+    public function minutes_create_step2(Request $request)
+    {
+        $instance = \Instantiation::instance();
+
+        $meeting_request = MeetingRequest::find($request->input('meeting_request'));
+
+        $signature_sheets = Auth::user()->secretary->signature_sheets;
+
+        return view('meeting.minutes_create_step2',[
+            'instance' => $instance,
+            'meeting_request' => $meeting_request,
+            'signature_sheets' => $signature_sheets
+        ]);
+    }
+
+    public function minutes_create_step2_p(Request $request)
+    {
+        $instance = \Instantiation::instance();
+
+        $meeting_request_input = $request->input('meeting_request');
+        $signature_sheet_input = $request->input('signature_sheet');
+
+        $meeting_request = MeetingRequest::find($meeting_request_input);
+        $signature_sheet = SignatureSheet::find($signature_sheet_input);
+
+        if($signature_sheet != null){
+
+            // si la hoja de firmas tiene una convocatoria asociada, se descarta cualquier otra elegida
+            // por el secretario
+            if($signature_sheet->meeting_request != null){
+                $meeting_request = $signature_sheet->meeting_request;
+            }
+
+        }
+
+        return redirect()->route('secretary.meeting.manage.minutes.create.step3',[
+            'instance' => $instance,
+            'meeting_request' => $meeting_request,
+            'signature_sheet' => $signature_sheet
+        ]);
+    }
+
+    public function minutes_create_step3(Request $request)
+    {
+        $instance = \Instantiation::instance();
+
+        $meeting_request = MeetingRequest::find($request->input('meeting_request'));
+        $signature_sheet = SignatureSheet::find($request->input('signature_sheet'));
+
+        $users = User::orderBy('surname')->get();
+        $defaultlists = Auth::user()->secretary->default_lists;
+
+        return view('meeting.minutes_create_step3',[
+            'instance' => $instance,
+            'meeting_request' => $meeting_request,
+            'signature_sheet' => $signature_sheet,
+            'users' => $users,
+            'defaultlists' => $defaultlists
+        ]);
+    }
+
+    /*
     public function list()
     {
         $instance = \Instantiation::instance();
@@ -172,7 +274,9 @@ class MeetingSecretaryController extends Controller
         return view('meeting.list',
             ['instance' => $instance, 'meetings' => $meetings]);
     }
+    */
 
+    /*
     public function create()
     {
         $instance = \Instantiation::instance();
@@ -183,7 +287,9 @@ class MeetingSecretaryController extends Controller
         return view('meeting.createandedit',
             ['instance' => $instance, 'users' => $users, 'defaultlists' => $defaultlists, 'route' => route('secretary.meeting.new',$instance)]);
     }
+    */
 
+    /*
     public function new(Request $request)
     {
 
@@ -227,7 +333,9 @@ class MeetingSecretaryController extends Controller
         return redirect()->route('secretary.meeting.list',$instance)->with('success', 'Reunión creada con éxito.');
 
     }
+    */
 
+    /*
     public function edit($instance,$id)
     {
         $meeting = Meeting::find($id);
@@ -237,12 +345,14 @@ class MeetingSecretaryController extends Controller
         return view('meeting.createandedit',
             ['instance' => $instance, 'meeting' => $meeting, 'edit' => true, 'users' => $users, 'defaultlists' => $defaultlists, 'route' => route('secretary.meeting.save',$instance)]);
     }
+    */
 
     public function defaultlist($instance,$id)
     {
         return DefaultList::find($id)->users;
     }
 
+    /*
     public function save(Request $request)
     {
 
@@ -288,7 +398,9 @@ class MeetingSecretaryController extends Controller
         return redirect()->route('secretary.meeting.list',$instance)->with('success', 'Reunión editada con éxito.');
 
     }
+    */
 
+    /*
     public function remove(Request $request)
     {
         $meeting = Meeting::find($request->_id);
@@ -298,4 +410,5 @@ class MeetingSecretaryController extends Controller
 
         return redirect()->route('secretary.meeting.list',$instance)->with('success', 'Reunión eliminada con éxito.');
     }
+    */
 }

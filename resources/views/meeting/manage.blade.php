@@ -26,8 +26,11 @@
                     <p>Este apartado ha sido rediseñado por completo para dar un mejor servicio a las reuniones de las
                     Jornadas.</p>
 
-                    <p>Por favor, siéntete libre de expresar tu opinión a través del
-                        <a href="{{route('suggestionsmailbox',\Instantiation::instance())}}">buzón de sugerencias</a></p>
+                    <p>
+                        Por favor, siéntete libre de expresar tu opinión a través del
+                        <a href="{{route('suggestionsmailbox',\Instantiation::instance())}}">buzón de sugerencias</a>.
+                        Es anónimo.
+                    </p>
 
                     <hr>
 
@@ -45,10 +48,6 @@
                         <dd>Puedes crear el acta de reunión usando la convocatoria y la hoja de firmas: tanto los puntos del día como las firmas se
                         incorporan automáticamente al acta.</dd>
                     </dl>
-
-                    <ol>
-                        <li>Crear convocatoria de reunión</li>
-                    </ol>
 
                 </div>
 

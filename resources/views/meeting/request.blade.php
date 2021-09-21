@@ -2,7 +2,7 @@
 
 @section('title', 'Crear convocatoria')
 
-@section('title-icon', 'far fa-handshake')
+@section('title-icon', 'fas fa-child')
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>
@@ -221,7 +221,12 @@
 
                     if(code == 13){
                         e.preventDefault();
-                        add_point();
+
+                        let point = $("#add_point").val();
+                        point = point.trim();
+                        if(point !== ""){
+                            add_point();
+                        }
                         return false;
                     }
                 });

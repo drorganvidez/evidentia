@@ -2,7 +2,7 @@
 
 @section('title', 'Mis convocatorias')
 
-@section('title-icon', 'far fa-handshake')
+@section('title-icon', 'fas fa-list')
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>

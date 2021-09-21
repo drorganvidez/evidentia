@@ -87,7 +87,7 @@
 
 
         <h3>
-            Secretario del comité de {{$meeting_request->comittee->name}}
+            Secretario de {{$meeting_request->comittee->name}}
         </h3>
     </div>
 

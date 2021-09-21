@@ -64,6 +64,15 @@
             <dd class="col-sm-8">{{$signature_sheet->meeting_request->comittee->name}}</dd>
 
         </dl>
+
+    @else
+
+       <p>
+           Esta hoja de firmas no tiene asociada ninguna convocatoria de reunión.
+       </p>
+
+        <br>
+
     @endif
 
     <form action="{{route('sign_p',\Instantiation::instance())}}" method="post">
@@ -101,7 +110,7 @@
 
         <div class="row">
             <div class="col-sm-12 col-lg-12">
-                <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-signature"></i> Firmar asistencia</button>
+                <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-signature"></i>&nbsp;&nbsp;Firmar asistencia</button>
             </div>
         </div>
 
