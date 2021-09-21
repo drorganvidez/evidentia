@@ -264,6 +264,38 @@ class MeetingSecretaryController extends Controller
         ]);
     }
 
+    public function minutes_create_step3_p(Request $request)
+    {
+        $instance = \Instantiation::instance();
+        $minutes = $request->input('minutes');
+
+        return json_decode($request->input('points_json'));
+
+        $request->validate([
+            'title' => 'required|min:5|max:255',
+            'type' => 'required|numeric|min:1|max:2',
+            'hours' => ['required_without:minutes','nullable','numeric','sometimes','max:99',new CheckHoursAndMinutes($request->input('minutes'))],
+            'minutes' => ['required_without:hours','nullable','numeric','sometimes','max:60',new CheckHoursAndMinutes($request->input('hours'))],
+            'place' => 'required|min:5|max:255',
+            'date' => 'required|date_format:Y-m-d',
+            'time' => 'required',
+            'users' => 'required|array|min:1'
+        ]);
+
+        $meeting = Meeting::create([
+            'title' => $request->input('title'),
+            'hours' => $request->input('hours') + floor(($minutes*100)/60)/100,
+            'type' => $request->input('type'),
+            'place' => $request->input('place'),
+            'datetime' => $request->input('date')." ".$request->input('time'),
+            'meeting_request_id' => $request->input('meeting_request')
+        ]);
+
+        $meeting->comittee()->associate(Auth::user()->secretary->comittee);
+
+        $meeting->save();
+    }
+
     /*
     public function list()
     {

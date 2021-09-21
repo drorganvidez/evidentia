@@ -55,8 +55,12 @@
 
                         <div id="step_3" class="content active" role="tabpanel">
 
-                            <form method="POST" action="{{route('secretary.meeting.manage.minutes.create.step3_p',\Instantiation::instance())}}">
+                            <form method="POST" action="{{route('secretary.meeting.manage.minutes.create.step3_p',\Instantiation::instance())}}" id="request_form">
                                 @csrf
+
+                                <input type="hidden" name="meeting_request" value="{{$meeting_request->id ?? ''}}"/>
+
+                                <input type="hidden" name="points_json" id="points_json"/>
 
                                 <h4>Información de la reunión</h4>
 
@@ -87,7 +91,7 @@
 
 
                                                @endif
-                                               required autofocus>
+                                                autofocus>
                                         <small class="form-text text-muted">Indica el día de la reunión.
                                         </small>
 
@@ -114,7 +118,7 @@
 
 
                                                @endif
-                                               required autofocus>
+                                                autofocus>
                                         <small class="form-text text-muted">Indica la hora de la reunión.
                                         </small>
 
@@ -132,8 +136,8 @@
                                     <x-input col="6" attr="place" :value="$meeting_request->place ?? ''" label="Lugar" description="Indica el lugar de la reunión."/>
 
                                     <div class="form-group col-md-3">
-                                        <label for="type">Tipo de reunión</label>
-                                        <select id="type" class="selectpicker form-control @error('type') is-invalid @enderror" name="type" value="{{ old('type') }}" required autofocus>
+                                        <label for="type">Tipo</label>
+                                        <select id="type" class="selectpicker form-control @error('type') is-invalid @enderror" name="type" value="{{ old('type') }}"  autofocus>
 
                                             @isset($meeting_request)
                                                 <option {{$meeting_request->type  == old('type') || $meeting_request->type == 'ORDINARY' ? 'selected' : ''}} value="1">ORDINARIA</option>
@@ -155,8 +159,8 @@
                                     </div>
 
                                     <div class="form-group col-md-3">
-                                        <label for="modality">Tipo de modalidad</label>
-                                        <select id="modality" class="selectpicker form-control @error('modality') is-invalid @enderror" name="modality" value="{{ old('modality') }}" required autofocus>
+                                        <label for="modality">Modalidad</label>
+                                        <select id="modality" class="selectpicker form-control @error('modality') is-invalid @enderror" name="modality" value="{{ old('modality') }}"  autofocus>
 
                                             @isset($meeting_request)
                                                 <option {{$meeting_request->modality  == old('modality') || $meeting_request->modality == 'F2F' ? 'selected' : ''}} value="1">PRESENCIAL</option>
@@ -221,7 +225,7 @@
 
                                     <div class="form-group col-md-6">
                                         <label for="defaultlist">Elige una lista predeterminada</label>
-                                        <select id="defaultlist" onchange="getLista(this);" class="selectpicker form-control @error('defaultlist') is-invalid @enderror" value="{{ old('type') }}" required autofocus>
+                                        <select id="defaultlist" onchange="getLista(this);" class="selectpicker form-control @error('defaultlist') is-invalid @enderror" value="{{ old('type') }}"  autofocus>
 
                                             <option value="-1">Selecciona una lista</option>
                                             @foreach($defaultlists as $defaultlist)
@@ -281,21 +285,57 @@
                                     </div>
                                 @endif
 
-                                @foreach($meeting_request->diary->diary_points as $diary_point)
-                                    punto: {{$diary_point->point}}
-                                @endforeach
+                                @if($meeting_request)
+
+                                    @foreach($meeting_request->diary->diary_points as $diary_point)
+
+                                        <div class="card card-info point_body">
+
+                                            <div class="card-header">
+                                                <h3 class="card-title">{{$diary_point->id}}. {{$diary_point->point}}</h3>
+                                            </div>
+
+                                            <div class="card-body">
+
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <!-- text input -->
+                                                        <div class="form-group">
+                                                            <label>Editar nombre</label>
+                                                            <input type="text" class="form-control point_title" value="{{$diary_point->point}}" placeholder="Escribe un nombre">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-3">
+                                                        <!-- text input -->
+                                                        <div class="form-group">
+                                                            <label>Duración</label>
+                                                            <input type="number" class="form-control point_duration">
+                                                            <small class="form-text text-muted">Minutos que han llevado desarrollar este punto.
+                                                            </small>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div id="agreements_{{$diary_point->id}}">
+
+                                                </div>
+
+                                                <button type="button" onclick="add_agreement({{$diary_point->id}})" class="btn btn-light"><i class="fas fa-plus"></i> Añadir acuerdo</button>
+
+                                            </div>
+
+                                        </div>
+
+                                    @endforeach
+
+                                @endif
 
                                 <div class="form-row">
-
-                                    <div class="form-group col-md-6">
-                                        <input id="" type="text" class="form-control" placeholder="" name="title" value="Nueva convocatoria" required="" autocomplete="title" autofocus="">
-                                        <small class="form-text text-muted">Punto del día</small>
+                                    <div class="col-lg-3 mt-1">
+                                        <button type="submit" class="btn btn-primary"><i class="fas fa-scroll"></i>&nbsp;&nbsp;Crear acta</button>
                                     </div>
-
-                                    <div class="form-group col-md-6">
-                                        <textarea class="textarea form-control name=" required></textarea>
-                                    </div>
-
                                 </div>
 
                             </form>
@@ -360,6 +400,93 @@
 
             }
         }
+
+        $(document).ready(function(){
+
+            var form = $("#request_form");
+
+            form.submit(function (){
+
+                jsonObj = [];
+
+                // para cada punto...
+                $(".point_body").each(function(){
+
+                    item = {}
+
+                    var $this = $(this);
+
+                    // título del punto
+                    let point_title = $this.find('.point_title').val();
+                    item ["title"] = point_title;
+
+                    // duración del punto
+                    let point_duration = $this.find('.point_duration').val();
+                    item ["duration"] = point_duration;
+
+                    // acuerdos del punto
+                    agreements = []
+                    $this.find('.point_agreement').each(function(){
+                        agreement_item = {}
+                        let agreement = $(this).find('textarea').val();
+                        agreement_item["description"] = agreement
+                        agreements.push(agreement_item);
+                    });
+
+                    item ["agreements"] = agreements;
+
+                    jsonObj.push(item);
+
+                });
+
+                $("#points_json").val(JSON.stringify(jsonObj));
+
+                return true;
+            });
+
+            $(".point_title").keypress(function(e) {
+                var code = (e.keyCode ? e.keyCode : e.which);
+                if(code == 13){
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            $(".point_duration").keypress(function(e) {
+                var code = (e.keyCode ? e.keyCode : e.which);
+                if(code == 13){
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+        });
+
+        function add_agreement(point_id){
+            var source = document.getElementById("agreement_template").innerHTML;
+            var template = Handlebars.compile(source);
+            var context = { id: make_id(16)};
+            var html = template(context);
+            $("#agreements_"+point_id).append(html);
+        }
+
+        function delete_agreement(agreement_id){
+            $("#agreement_"+agreement_id).remove();
+        }
+
+    </script>
+
+    <script id="agreement_template" type="text/x-handlebars-template">
+
+        <div class="row point_agreement" id="agreement_@{{ id }}">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>Acuerdo</label>
+                    <textarea class="form-control" rows="3" placeholder="Describe el acuerdo tomado en la reunión."></textarea>
+                    <button type="button" onclick="delete_agreement(@{{ id }})" class="btn btn-default btn-xs"><i class="fas fa-trash"></i> Borrar</button>
+                </div>
+            </div>
+        </div>
 
     </script>
 

@@ -259,7 +259,10 @@
 
         $(function () {
             // Summernote
-            $('textarea').summernote()
+            $('.textarea').summernote({
+                height: 150,
+                minHeight: 150
+            })
         })
 
 

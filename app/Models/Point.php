@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Point extends Model
 {
-    public function meetingMinutes()
+    protected $table = "points";
+
+    public function meeting_minutes()
     {
         return $this->belongsTo('App\Models\MeetingMinutes');
     }
