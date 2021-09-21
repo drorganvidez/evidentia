@@ -9,7 +9,7 @@ class Meeting extends Model
     protected $table = "meeting";
 
     protected $fillable = [
-      'id','title','datetime','place','type','hours'
+      'id','title','datetime','place','type','hours','meeting_request_id'
     ];
 
     public function users()
@@ -22,12 +22,12 @@ class Meeting extends Model
         return $this->belongsTo('App\Models\Comittee');
     }
 
-    public function meetingRequest()
+    public function meeting_request()
     {
         return $this->belongsTo('App\Models\MeetingRequest');
     }
 
-    public function meetingMinutes()
+    public function meeting_minutes()
     {
         return $this->hasMany('App\Models\MeetingMinutes');
     }

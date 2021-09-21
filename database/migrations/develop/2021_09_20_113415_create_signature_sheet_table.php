@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMeetingRequestTable extends Migration
+class CreateSignatureSheetTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreateMeetingRequestTable extends Migration
      */
     public function up()
     {
-        Schema::create('meeting_request', function (Blueprint $table) {
+        Schema::create('signature_sheets', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->timestamp('datetime')->nullable(true);
-            $table->string('place');
-            $table->enum('type',['ORDINARY','EXTRAORDINARY']);
-            $table->enum('modality', ['F2F', 'TELEMATIC', 'MIXED','OTHER']);
-            $table->foreignId('comittee_id');
+            $table->string('random_identifier');
+            $table->foreignId('meeting_request_id')->nullable();
+            $table->foreignId('meeting_minutes_id')->nullable();
             $table->foreignId('secretary_id');
             $table->timestamps();
         });
@@ -33,6 +31,6 @@ class CreateMeetingRequestTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('meeting_request');
+        Schema::dropIfExists('signature_sheets');
     }
 }

@@ -12,9 +12,4 @@ class MeetingMinutes extends Model
     {
         return $this->belongsTo('App\Models\Meeting');
     }
-
-    public function points()
-    {
-        return $this->hasMany('App\Models\Point');
-    }
 }

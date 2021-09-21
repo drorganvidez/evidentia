@@ -39,10 +39,11 @@
     <!-- Filepond -->
     <link rel="stylesheet" href="{{ asset('dist/css/filepond.css') }}" >
 
+    <!-- BS Stepper -->
+    <link rel="stylesheet" href="{{ asset('plugins/bs-stepper/css/bs-stepper.min.css') }}" >
+
     <!-- Own style -->
     <link rel="stylesheet" href="{{ asset('dist/css/style.css') }}" >
-
-
 
 </head>
 
@@ -167,6 +168,9 @@
 <!-- jQuery -->
 <script src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
 
+<!-- jQuery UI -->
+<script src="{{asset('plugins/jquery-ui/jquery-ui.min.js')}}"></script>
+
 <!-- Bootstrap 4 -->
 <script src="{{asset('plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 
@@ -194,9 +198,15 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
 
+<!-- BS-Stepper -->
+<script src="{{asset('plugins/bs-stepper/js/bs-stepper.min.js')}}"></script>
+
 <!-- File Input -->
 <!-- <link href="{{asset('dist/css/fileinput.css')}}" media="all" rel="stylesheet" type="text/css" /> -->
 <!-- <link href="{{asset('dist/themes/explorer/theme.css')}}" media="all" rel="stylesheet" type="text/css" /> -->
+
+<!-- Handlebars -->
+<script src="{{asset('dist/js/handlebars-v4.7.7.js')}}" type="text/javascript"></script>
 
 <script src="{{asset('dist/js/plugins/piexif.min.js')}}" type="text/javascript"></script>
 <script src="{{asset('dist/js/plugins/sortable.min.js')}}" type="text/javascript"></script>
@@ -238,11 +248,21 @@
             "autoWidth": false,
         });
 
+        $('.todo-list').sortable({
+            placeholder: 'sort-highlight',
+            handle: '.handle',
+            forcePlaceholderSize: true,
+            zIndex: 999999
+        })
+
         // Esto sirve para inicializar funcionalidades especiales JavaScript
 
         $(function () {
             // Summernote
-            $('.textarea').summernote()
+            $('.textarea').summernote({
+                height: 150,
+                minHeight: 150
+            })
         })
 
 
@@ -330,6 +350,25 @@
     $('.filepond--action-revert-item-processing').on('click',function(){
         printData();
     })
+
+    function make_id(length) {
+        var result           = '';
+        var characters       = '123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() *
+                charactersLength));
+        }
+        return result;
+    }
+
+    function copyToClipboard(element) {
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($(element).text()).select();
+        document.execCommand("copy");
+        $temp.remove();
+    }
 
 </script>
 

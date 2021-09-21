@@ -13,11 +13,10 @@ class CreatePointTable extends Migration
      */
     public function up()
     {
-        Schema::create('point', function (Blueprint $table) {
+        Schema::create('points', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('meetingminutes_id');
-            $table->string('title');
-            $table->integer('duration');
+            $table->foreignId('meeting_minutes_id');
+            $table->string('point');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreatePointTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('point');
+        Schema::dropIfExists('points');
     }
 }

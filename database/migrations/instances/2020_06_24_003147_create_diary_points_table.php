@@ -16,7 +16,7 @@ class CreateDiaryPointsTable extends Migration
         Schema::create('diary_points', function (Blueprint $table) {
             $table->id();
             $table->foreignId('diary_id');
-            $table->string('points');
+            $table->string('point');
             $table->timestamps();
         });
     }

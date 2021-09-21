@@ -16,11 +16,12 @@ class CreateMeetingTable extends Migration
         Schema::create('meeting', function (Blueprint $table) {
             $table->id();
             $table->foreignId('comittee_id')->nullable(true);
-            $table->foreignId('meetingrequest_id')->nullable(true);
+            $table->foreignId('meeting_request_id')->nullable(true);
             $table->string('title');
             $table->timestamp('datetime')->nullable(true);
             $table->string('place');
             $table->enum('type',['ORDINARY','EXTRAORDINARY']);
+            $table->enum('modality', ['F2F', 'TELEMATIC', 'MIXED','OTHER']);
             $table->float('hours');
             $table->timestamps();
         });
