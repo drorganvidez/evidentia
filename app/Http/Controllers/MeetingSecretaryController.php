@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Agreement;
 use App\Models\DefaultList;
 use App\Models\Diary;
 use App\Models\DiaryPoints;
 use App\Models\Meeting;
+use App\Models\MeetingMinutes;
 use App\Models\MeetingRequest;
+use App\Models\Point;
 use App\Models\SignatureSheet;
 use App\Rules\CheckHoursAndMinutes;
 use App\Models\User;
@@ -14,6 +17,7 @@ use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class MeetingSecretaryController extends Controller
 {
@@ -269,9 +273,7 @@ class MeetingSecretaryController extends Controller
         $instance = \Instantiation::instance();
         $minutes = $request->input('minutes');
 
-        return json_decode($request->input('points_json'));
-
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'title' => 'required|min:5|max:255',
             'type' => 'required|numeric|min:1|max:2',
             'hours' => ['required_without:minutes','nullable','numeric','sometimes','max:99',new CheckHoursAndMinutes($request->input('minutes'))],
@@ -281,6 +283,14 @@ class MeetingSecretaryController extends Controller
             'time' => 'required',
             'users' => 'required|array|min:1'
         ]);
+
+        if ($validator->fails()) {
+            $points = json_decode($request->input('points_json'),true);
+            return back()->withErrors($validator)->withInput()->with([
+                'error' => 'Hay errores en el formulario.',
+                'points' => collect($points)
+            ]);
+        }
 
         $meeting = Meeting::create([
             'title' => $request->input('title'),
@@ -294,6 +304,31 @@ class MeetingSecretaryController extends Controller
         $meeting->comittee()->associate(Auth::user()->secretary->comittee);
 
         $meeting->save();
+
+        // Guardamos los puntos y los acuerdos tomados
+        $meeting_minutes = MeetingMinutes::create([
+            'meeting_id' => $meeting->id
+        ]);
+
+        $points = json_decode($request->input('points_json'),true);
+        $points = collect($points);
+
+        foreach($points as $point){
+            $new_point = Point::create([
+                'meeting_minutes_id' => $meeting_minutes->id,
+                'title' => $point['title'],
+                'duration' => $point['duration']
+            ]);
+
+            foreach($point['agreements'] as $agreement){
+                $new_agreement = Agreement::create([
+                    'point_id' => $new_point->id,
+                    'identificator' => "1234",
+                    'description' => $agreement['description']
+                ]);
+            }
+        }
+
     }
 
     /*
