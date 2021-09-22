@@ -230,7 +230,13 @@
         <div style="padding-left: 20px">
             @foreach($meeting_minutes->points as $key => $point)
 
-                <h3>2.{{ ++$key }} {{$point->title}} ({{$point->duration}} {{$point->duration > 1 ? 'minutos' : 'minuto'}})</h3>
+                <h3>
+                    2.{{ ++$key }} {{$point->title}}
+
+                    @if($point->duration)
+                        ({{$point->duration}} {{$point->duration > 1 ? 'minutos' : 'minuto'}})
+                    @endif
+                </h3>
 
                 @if($point->description)
                     <p style="text-align: justify">

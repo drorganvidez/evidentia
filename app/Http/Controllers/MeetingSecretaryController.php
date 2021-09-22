@@ -328,7 +328,6 @@ class MeetingSecretaryController extends Controller
 
         // Asociamos los usuarios a la reunión
         $users_ids = $request->input('users',[]);
-
         foreach($users_ids as $user_id)
         {
 
@@ -336,6 +335,9 @@ class MeetingSecretaryController extends Controller
             $meeting->users()->attach($user);
 
         }
+
+        // Añadimos el secretario a la reunión
+        $meeting->users()->attach(Auth::user()->secretary->user);
 
         // Guardamos los puntos y los acuerdos tomados
         $meeting_minutes = MeetingMinutes::create([
@@ -350,7 +352,7 @@ class MeetingSecretaryController extends Controller
             $new_point = Point::create([
                 'meeting_minutes_id' => $meeting_minutes->id,
                 'title' => $point['title'],
-                'duration' => $point['duration'],
+                'duration' => $point['duration'] == '' ? 0 : $point['duration'],
                 'description' => $point['description']
             ]);
 
