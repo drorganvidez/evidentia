@@ -8,6 +8,11 @@ class MeetingMinutes extends Model
 {
     protected $table = "meeting_minutes";
 
+    protected $fillable = [
+        'meeting_id',
+        'secretary_id'
+    ];
+
     public function meeting()
     {
         return $this->belongsTo('App\Models\Meeting');
@@ -16,5 +21,10 @@ class MeetingMinutes extends Model
     public function points()
     {
         return $this->hasMany('App\Models\Point');
+    }
+
+    public function secretary()
+    {
+        return $this->belongsTo('App\Models\Secretary');
     }
 }

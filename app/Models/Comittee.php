@@ -55,6 +55,11 @@ class Comittee extends Model
         return $this->hasMany('App\Models\Meeting')->orderByDesc('datetime');
     }
 
+    public function meetings_requests()
+    {
+        return $this->hasMany('App\Models\MeetingRequest')->orderByDesc('datetime');
+    }
+
     public function bonus()
     {
         return $this->hasMany('App\Models\Bonus')->orderByDesc('created_at');

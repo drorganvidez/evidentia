@@ -16,8 +16,7 @@ class CreateMeetingMinutesTable extends Migration
         Schema::create('meeting_minutes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('meeting_id');
-            $table->timestamp('date');
-            $table->string('place');
+            $table->foreignId('secretary_id');
             $table->timestamps();
         });
     }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\MeetingSecretaryController;
+use App\Http\Controllers\SignController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers;
@@ -69,6 +71,12 @@ Route::group(['prefix' => 'admin'], function(){
 /*
  *  ALL ROUTES
  */
+
+// Sign
+Route::get('/{instance}/sign/{random_identifier}',[SignController::class,'sign'])->name('sign');
+Route::post('/{instance}/sign_p',[SignController::class,'sign_p'])->name('sign_p');
+Route::get('/{instance}/finish',[SignController::class,'finish'])->name('sign.finish');
+
 Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], function(){
 
     Route::get('/change/{evidence}', function (Request $request) {
@@ -107,7 +115,6 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
      *
      *  UPLOADS
      */
-    Route::get('/evidence/upload/process','UploadController@process')->name('upload.process');
     Route::post('/evidence/upload/process','UploadController@process')->name('upload.process');
     Route::delete('/evidence/upload/process','UploadController@delete')->name('upload.revert');
 
@@ -181,12 +188,47 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         /*
          * MEETINGS
          */
+
+        Route::prefix('meeting/manage')->group(function () {
+            Route::get('/', [MeetingSecretaryController::class, 'manage'])->name('secretary.meeting.manage');
+
+            // Convocatorias
+            Route::get('/request/list', [MeetingSecretaryController::class, 'request_list'])->name('secretary.meeting.manage.request.list');
+            Route::get('/request/create', [MeetingSecretaryController::class, 'request_create'])->name('secretary.meeting.manage.request.create');
+            Route::post('/request/new', [MeetingSecretaryController::class, 'request_new'])->name('secretary.meeting.manage.request.new');
+            Route::get('/request/download/{id}', [MeetingSecretaryController::class, 'request_download'])->name('secretary.meeting.manage.request.download');
+
+            // Hojas de firmas
+            Route::get('/signaturesheet/list', [MeetingSecretaryController::class, 'signaturesheet_list'])->name('secretary.meeting.manage.signaturesheet.list');
+            Route::get('/signaturesheet/create', [MeetingSecretaryController::class, 'signaturesheet_create'])->name('secretary.meeting.manage.signaturesheet.create');
+            Route::post('/signaturesheet/new', [MeetingSecretaryController::class, 'signaturesheet_new'])->name('secretary.meeting.manage.signaturesheet.new');
+
+            // Actas
+            Route::get('/minutes/list', [MeetingSecretaryController::class, 'minutes_list'])->name('secretary.meeting.manage.minutes.list');
+            Route::get('/minutes/create', [MeetingSecretaryController::class, 'minutes_create'])->name('secretary.meeting.manage.minutes.create');
+
+            Route::get('/minutes/create/step1', [MeetingSecretaryController::class, 'minutes_create_step1'])->name('secretary.meeting.manage.minutes.create.step1');
+            Route::post('/minutes/create/step1_p', [MeetingSecretaryController::class, 'minutes_create_step1_p'])->name('secretary.meeting.manage.minutes.create.step1_p');
+
+            Route::get('/minutes/create/step2', [MeetingSecretaryController::class, 'minutes_create_step2'])->name('secretary.meeting.manage.minutes.create.step2');
+            Route::post('/minutes/create/step2_p', [MeetingSecretaryController::class, 'minutes_create_step2_p'])->name('secretary.meeting.manage.minutes.create.step2_p');
+
+            Route::get('/minutes/create/step3', [MeetingSecretaryController::class, 'minutes_create_step3'])->name('secretary.meeting.manage.minutes.create.step3');
+            Route::post('/minutes/create/step3_p', [MeetingSecretaryController::class, 'minutes_create_step3_p'])->name('secretary.meeting.manage.minutes.create.step3_p');
+
+            Route::get('/minutes/download/{id}', [MeetingSecretaryController::class, 'minutes_download'])->name('secretary.meeting.manage.minutes.download');
+
+
+        });
+
+        /*
         Route::get('/meeting/list/', 'MeetingSecretaryController@list')->name('secretary.meeting.list');
 
         Route::middleware(['checkregistermeetings'])->group(function () {
             Route::get('/meeting/create/', 'MeetingSecretaryController@create')->name('secretary.meeting.create');
             Route::post('/meeting/new', 'MeetingSecretaryController@new')->name('secretary.meeting.new');
         });
+        */
 
         // Consulta AJAX
         Route::get('/meeting/defaultlist/{id}', 'MeetingSecretaryController@defaultlist')->name('secretary.meeting.defaultlist');

@@ -6,7 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Point extends Model
 {
-    public function meetingMinutes()
+    protected $table = "points";
+
+    protected $fillable = [
+        'meeting_minutes_id',
+        'title',
+        'duration',
+        'description'
+    ];
+
+    public function meeting_minutes()
     {
         return $this->belongsTo('App\Models\MeetingMinutes');
     }
