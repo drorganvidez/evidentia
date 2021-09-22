@@ -17,7 +17,8 @@ class CreatePointTable extends Migration
             $table->id();
             $table->foreignId('meeting_minutes_id')->nullable();
             $table->string('title');
-            $table->integer('duration');
+            $table->integer('duration')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

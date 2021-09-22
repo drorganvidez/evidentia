@@ -111,6 +111,18 @@ class MeetingSecretaryController extends Controller
         return $response;
     }
 
+    public function minutes_download($instance, $id)
+    {
+        $meeting_minutes = MeetingMinutes::findOrFail($id);
+
+        $response = Storage::download(\Instantiation::instance() .'/meeting_minutes/meeting_minutes_' .$meeting_minutes->id . '.pdf');
+
+        // limpiar búfer de salida
+        ob_end_clean();
+
+        return $response;
+    }
+
     /*
      *  Signature sheets
      */
@@ -177,6 +189,14 @@ class MeetingSecretaryController extends Controller
     /*
      *  Minutes
      */
+    public function minutes_list()
+    {
+        $instance = \Instantiation::instance();
+
+        $meeting_minutes = Auth::user()->secretary->meeting_minutes;
+
+        return view('meeting.minutes_list',["instance" => $instance, 'meeting_minutes' => $meeting_minutes]);
+    }
     public function minutes_create()
     {
         $instance = \Instantiation::instance();
@@ -319,7 +339,8 @@ class MeetingSecretaryController extends Controller
 
         // Guardamos los puntos y los acuerdos tomados
         $meeting_minutes = MeetingMinutes::create([
-            'meeting_id' => $meeting->id
+            'meeting_id' => $meeting->id,
+            'secretary_id' => Auth::user()->secretary->id
         ]);
 
         $points = json_decode($request->input('points_json'),true);
@@ -329,7 +350,8 @@ class MeetingSecretaryController extends Controller
             $new_point = Point::create([
                 'meeting_minutes_id' => $meeting_minutes->id,
                 'title' => $point['title'],
-                'duration' => $point['duration']
+                'duration' => $point['duration'],
+                'description' => $point['description']
             ]);
 
             foreach($point['agreements'] as $agreement){
@@ -357,17 +379,12 @@ class MeetingSecretaryController extends Controller
             }
         }
 
-        // Genera PDF de la convocatoria
+        // Genera PDF del acta
         $pdf = PDF::loadView('meeting.minutes_template', ['meeting_minutes' => $meeting_minutes]);
-        ob_end_clean();
-        return $pdf->download();
-        // TODO
-        /*
-
-        $pdf = PDF::loadView('meeting.request_template', ['meeting_request' => $meeting_request]);
         $content = $pdf->download()->getOriginalContent();
-        Storage::put(\Instantiation::instance() .'/meeting_requests/meeting_request_' .$meeting_request->id . '.pdf',$content) ;
-        */
+        Storage::put(\Instantiation::instance() .'/meeting_minutes/meeting_minutes_' .$meeting_minutes->id . '.pdf',$content) ;
+
+        return redirect()->route('secretary.meeting.manage.minutes.list',$instance)->with('success', 'Acta de reunión creada con éxito.');
 
     }
 

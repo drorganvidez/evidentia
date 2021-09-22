@@ -67,7 +67,7 @@
                                 @if($meeting_request)
                                     <div class="callout callout-info">
                                         <p>La información que detallaste en la convocatoria se ha volcado automáticamente en el formulario.</p>
-                                        <p>Recuerda rellenar <b>las horas y los minutos empleados</b> en la reunión.</p>
+                                        <p>Recuerda rellenar <b>las horas y/o los minutos empleados</b> en la reunión.</p>
                                     </div>
                                 @endif
 
@@ -300,7 +300,7 @@
                                             <div class="card-body">
 
                                                 <div class="row">
-                                                    <div class="col-sm-6">
+                                                    <div class="col-sm-4">
                                                         <!-- text input -->
                                                         <div class="form-group">
                                                             <label>Editar nombre</label>
@@ -308,8 +308,14 @@
                                                         </div>
                                                     </div>
 
+                                                    <div class="col-sm-5">
+                                                        <div class="form-group">
+                                                            <label>Descripción</label>
+                                                            <textarea class="form-control point_description" rows="3" placeholder="Añade una descripción concisa del desarrollo de este punto">{{$point['description']}}</textarea>
+                                                        </div>
+                                                    </div>
+
                                                     <div class="col-sm-3">
-                                                        <!-- text input -->
                                                         <div class="form-group">
                                                             <label>Duración</label>
                                                             <input type="number" class="form-control point_duration" value="{{$point['duration']}}">
@@ -362,7 +368,7 @@
                                                 <div class="card-body">
 
                                                     <div class="row">
-                                                        <div class="col-sm-6">
+                                                        <div class="col-sm-4">
                                                             <!-- text input -->
                                                             <div class="form-group">
                                                                 <label>Editar nombre</label>
@@ -370,8 +376,14 @@
                                                             </div>
                                                         </div>
 
+                                                        <div class="col-sm-5">
+                                                            <div class="form-group">
+                                                                <label>Descripción</label>
+                                                                <textarea class="form-control point_description" rows="3" placeholder="Añade una descripción concisa del desarrollo de este punto"></textarea>
+                                                            </div>
+                                                        </div>
+
                                                         <div class="col-sm-3">
-                                                            <!-- text input -->
                                                             <div class="form-group">
                                                                 <label>Duración</label>
                                                                 <input type="number" class="form-control point_duration">
@@ -499,6 +511,10 @@
                     // duración del punto
                     let point_duration = $this.find('.point_duration').val();
                     item ["duration"] = point_duration;
+
+                    // descripción del punto
+                    let point_description = $this.find('.point_description').val();
+                    item ["description"] = point_description;
 
                     // acuerdos del punto
                     agreements = []

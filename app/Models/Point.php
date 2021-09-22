@@ -11,7 +11,8 @@ class Point extends Model
     protected $fillable = [
         'meeting_minutes_id',
         'title',
-        'duration'
+        'duration',
+        'description'
     ];
 
     public function meeting_minutes()
