@@ -14,6 +14,7 @@ use App\Models\SignatureSheet;
 use App\Rules\CheckHoursAndMinutes;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -321,13 +322,37 @@ class MeetingSecretaryController extends Controller
             ]);
 
             foreach($point['agreements'] as $agreement){
+
                 $new_agreement = Agreement::create([
                     'point_id' => $new_point->id,
-                    'identificator' => "1234",
                     'description' => $agreement['description']
                 ]);
+
+                // generamos el identificador único para este acuerdo
+                $identificator = "ISD";
+                $identificator .= '-';
+                $identificator .= Carbon::now()->format('Y-m-d');
+                $identificator .= '-';
+                $identificator .= Auth::user()->secretary->comittee->id;
+                $identificator .= '-';
+                $identificator .= $meeting->id;
+                $identificator .= '-';
+                $identificator .= $new_point->id;
+                $identificator .= '-';
+                $identificator .= $new_agreement->id;
+
+                $new_agreement->identificator = $identificator;
+                $new_agreement->save();
             }
         }
+
+        // TODO
+        /*
+        // Genera PDF de la convocatoria
+        $pdf = PDF::loadView('meeting.request_template', ['meeting_request' => $meeting_request]);
+        $content = $pdf->download()->getOriginalContent();
+        Storage::put(\Instantiation::instance() .'/meeting_requests/meeting_request_' .$meeting_request->id . '.pdf',$content) ;
+        */
 
     }
 
