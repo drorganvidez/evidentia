@@ -312,7 +312,7 @@
                                                         <!-- text input -->
                                                         <div class="form-group">
                                                             <label>Duración</label>
-                                                            <input type="number" class="form-control point_duration">
+                                                            <input type="number" class="form-control point_duration" value="{{$point['duration']}}">
                                                             <small class="form-text text-muted">Minutos que han llevado desarrollar este punto.
                                                             </small>
                                                         </div>

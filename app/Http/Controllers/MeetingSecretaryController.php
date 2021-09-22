@@ -306,6 +306,17 @@ class MeetingSecretaryController extends Controller
 
         $meeting->save();
 
+        // Asociamos los usuarios a la reunión
+        $users_ids = $request->input('users',[]);
+
+        foreach($users_ids as $user_id)
+        {
+
+            $user = User::find($user_id);
+            $meeting->users()->attach($user);
+
+        }
+
         // Guardamos los puntos y los acuerdos tomados
         $meeting_minutes = MeetingMinutes::create([
             'meeting_id' => $meeting->id
@@ -346,9 +357,13 @@ class MeetingSecretaryController extends Controller
             }
         }
 
+        // Genera PDF de la convocatoria
+        $pdf = PDF::loadView('meeting.minutes_template', ['meeting_minutes' => $meeting_minutes]);
+        ob_end_clean();
+        return $pdf->download();
         // TODO
         /*
-        // Genera PDF de la convocatoria
+
         $pdf = PDF::loadView('meeting.request_template', ['meeting_request' => $meeting_request]);
         $content = $pdf->download()->getOriginalContent();
         Storage::put(\Instantiation::instance() .'/meeting_requests/meeting_request_' .$meeting_request->id . '.pdf',$content) ;
