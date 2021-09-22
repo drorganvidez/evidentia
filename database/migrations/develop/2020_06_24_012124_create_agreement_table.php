@@ -15,8 +15,8 @@ class CreateAgreementTable extends Migration
     {
         Schema::create('agreements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('point_id');
-            $table->string('identificator');
+            $table->foreignId('point_id')->nullable();
+            $table->string('identificator')->nullable();
             $table->text('description');
             $table->timestamps();
         });

@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Agreement;
 use App\Models\DefaultList;
 use App\Models\Diary;
 use App\Models\DiaryPoints;
 use App\Models\Meeting;
+use App\Models\MeetingMinutes;
 use App\Models\MeetingRequest;
+use App\Models\Point;
 use App\Models\SignatureSheet;
 use App\Rules\CheckHoursAndMinutes;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class MeetingSecretaryController extends Controller
 {
@@ -106,6 +111,18 @@ class MeetingSecretaryController extends Controller
         return $response;
     }
 
+    public function minutes_download($instance, $id)
+    {
+        $meeting_minutes = MeetingMinutes::findOrFail($id);
+
+        $response = Storage::download(\Instantiation::instance() .'/meeting_minutes/meeting_minutes_' .$meeting_minutes->id . '.pdf');
+
+        // limpiar búfer de salida
+        ob_end_clean();
+
+        return $response;
+    }
+
     /*
      *  Signature sheets
      */
@@ -172,6 +189,14 @@ class MeetingSecretaryController extends Controller
     /*
      *  Minutes
      */
+    public function minutes_list()
+    {
+        $instance = \Instantiation::instance();
+
+        $meeting_minutes = Auth::user()->secretary->meeting_minutes;
+
+        return view('meeting.minutes_list',["instance" => $instance, 'meeting_minutes' => $meeting_minutes]);
+    }
     public function minutes_create()
     {
         $instance = \Instantiation::instance();
@@ -269,9 +294,7 @@ class MeetingSecretaryController extends Controller
         $instance = \Instantiation::instance();
         $minutes = $request->input('minutes');
 
-        return json_decode($request->input('points_json'));
-
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'title' => 'required|min:5|max:255',
             'type' => 'required|numeric|min:1|max:2',
             'hours' => ['required_without:minutes','nullable','numeric','sometimes','max:99',new CheckHoursAndMinutes($request->input('minutes'))],
@@ -281,6 +304,14 @@ class MeetingSecretaryController extends Controller
             'time' => 'required',
             'users' => 'required|array|min:1'
         ]);
+
+        if ($validator->fails()) {
+            $points = json_decode($request->input('points_json'),true);
+            return back()->withErrors($validator)->withInput()->with([
+                'error' => 'Hay errores en el formulario.',
+                'points' => collect($points)
+            ]);
+        }
 
         $meeting = Meeting::create([
             'title' => $request->input('title'),
@@ -294,6 +325,67 @@ class MeetingSecretaryController extends Controller
         $meeting->comittee()->associate(Auth::user()->secretary->comittee);
 
         $meeting->save();
+
+        // Asociamos los usuarios a la reunión
+        $users_ids = $request->input('users',[]);
+
+        foreach($users_ids as $user_id)
+        {
+
+            $user = User::find($user_id);
+            $meeting->users()->attach($user);
+
+        }
+
+        // Guardamos los puntos y los acuerdos tomados
+        $meeting_minutes = MeetingMinutes::create([
+            'meeting_id' => $meeting->id,
+            'secretary_id' => Auth::user()->secretary->id
+        ]);
+
+        $points = json_decode($request->input('points_json'),true);
+        $points = collect($points);
+
+        foreach($points as $point){
+            $new_point = Point::create([
+                'meeting_minutes_id' => $meeting_minutes->id,
+                'title' => $point['title'],
+                'duration' => $point['duration'],
+                'description' => $point['description']
+            ]);
+
+            foreach($point['agreements'] as $agreement){
+
+                $new_agreement = Agreement::create([
+                    'point_id' => $new_point->id,
+                    'description' => $agreement['description']
+                ]);
+
+                // generamos el identificador único para este acuerdo
+                $identificator = "ISD";
+                $identificator .= '-';
+                $identificator .= Carbon::now()->format('Y-m-d');
+                $identificator .= '-';
+                $identificator .= Auth::user()->secretary->comittee->id;
+                $identificator .= '-';
+                $identificator .= $meeting->id;
+                $identificator .= '-';
+                $identificator .= $new_point->id;
+                $identificator .= '-';
+                $identificator .= $new_agreement->id;
+
+                $new_agreement->identificator = $identificator;
+                $new_agreement->save();
+            }
+        }
+
+        // Genera PDF del acta
+        $pdf = PDF::loadView('meeting.minutes_template', ['meeting_minutes' => $meeting_minutes]);
+        $content = $pdf->download()->getOriginalContent();
+        Storage::put(\Instantiation::instance() .'/meeting_minutes/meeting_minutes_' .$meeting_minutes->id . '.pdf',$content) ;
+
+        return redirect()->route('secretary.meeting.manage.minutes.list',$instance)->with('success', 'Acta de reunión creada con éxito.');
+
     }
 
     /*

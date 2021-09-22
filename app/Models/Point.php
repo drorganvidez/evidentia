@@ -8,6 +8,13 @@ class Point extends Model
 {
     protected $table = "points";
 
+    protected $fillable = [
+        'meeting_minutes_id',
+        'title',
+        'duration',
+        'description'
+    ];
+
     public function meeting_minutes()
     {
         return $this->belongsTo('App\Models\MeetingMinutes');

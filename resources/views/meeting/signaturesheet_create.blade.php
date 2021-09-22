@@ -24,14 +24,14 @@
 
                     <div class="row">
 
-                        <div class="col-lg-6">
-                            <p>
-                                Puedes crear una hoja de firma virtual para una reunión.
-                                <br>
-                                Esto generará una URL del tipo <u>evidentia.cloud/{{$instance}}/sign/<b>identificador</b></u>.
-                                <br>
-                                Con esta URL, todos los asistentes podrán firmar con su usuario y contraseña y quedarán registrados.
-                            </p>
+                        <div class="col-lg-12">
+
+                            <div class="callout callout-info">
+                                <p>Puedes crear una hoja de firma virtual para una reunión.</p>
+                                <p>Esto generará una URL del tipo <u>evidentia.cloud/{{$instance}}/sign/<b>identificador</b></u>.</p>
+                                <p>Con esta URL, todos los asistentes podrán firmar con su usuario y contraseña y quedarán registrados.</p>
+                            </div>
+
                         </div>
 
                     </div>

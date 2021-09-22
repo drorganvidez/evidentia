@@ -15,8 +15,10 @@ class CreatePointTable extends Migration
     {
         Schema::create('points', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('meeting_minutes_id');
-            $table->string('point');
+            $table->foreignId('meeting_minutes_id')->nullable();
+            $table->string('title');
+            $table->integer('duration')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

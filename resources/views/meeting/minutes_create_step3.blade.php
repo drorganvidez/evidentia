@@ -67,7 +67,7 @@
                                 @if($meeting_request)
                                     <div class="callout callout-info">
                                         <p>La información que detallaste en la convocatoria se ha volcado automáticamente en el formulario.</p>
-                                        <p>Recuerda rellenar <b>las horas y los minutos empleados</b> en la reunión.</p>
+                                        <p>Recuerda rellenar <b>las horas y/o los minutos empleados</b> en la reunión.</p>
                                     </div>
                                 @endif
 
@@ -238,7 +238,7 @@
                                             Puedes elegir una lista predeterminada.
 
                                             @if($signature_sheet)
-                                                Ten en cuenta que esto <b>eliminará</b> las asistencias volcadas de la hoja de firmas.
+                                                Ten en cuenta que esto <b>eliminará</b> las asistencias volcadas desde la hoja de firmas.
                                             @endif
 
                                         </small>
@@ -285,32 +285,40 @@
                                     </div>
                                 @endif
 
-                                @if($meeting_request)
+                                @if (session('points'))
 
-                                    @foreach($meeting_request->diary->diary_points as $diary_point)
+                                    @foreach(session('points') as $point)
 
                                         <div class="card card-info point_body">
 
+                                            <span class="point_id" style="display: none">{{$point['id']}}</span>
+
                                             <div class="card-header">
-                                                <h3 class="card-title">{{$diary_point->id}}. {{$diary_point->point}}</h3>
+                                                <h3 class="card-title">{{$point['id']}}. {{$point['title']}}</h3>
                                             </div>
 
                                             <div class="card-body">
 
                                                 <div class="row">
-                                                    <div class="col-sm-6">
+                                                    <div class="col-sm-4">
                                                         <!-- text input -->
                                                         <div class="form-group">
                                                             <label>Editar nombre</label>
-                                                            <input type="text" class="form-control point_title" value="{{$diary_point->point}}" placeholder="Escribe un nombre">
+                                                            <input type="text" class="form-control point_title" value="{{$point['title']}}" placeholder="Escribe un nombre">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-5">
+                                                        <div class="form-group">
+                                                            <label>Descripción</label>
+                                                            <textarea class="form-control point_description" rows="3" placeholder="Añade una descripción concisa del desarrollo de este punto">{{$point['description']}}</textarea>
                                                         </div>
                                                     </div>
 
                                                     <div class="col-sm-3">
-                                                        <!-- text input -->
                                                         <div class="form-group">
                                                             <label>Duración</label>
-                                                            <input type="number" class="form-control point_duration">
+                                                            <input type="number" class="form-control point_duration" value="{{$point['duration']}}">
                                                             <small class="form-text text-muted">Minutos que han llevado desarrollar este punto.
                                                             </small>
                                                         </div>
@@ -318,11 +326,24 @@
 
                                                 </div>
 
-                                                <div id="agreements_{{$diary_point->id}}">
+                                                <div id="agreements_{{$point['id']}}">
+
+                                                    @foreach($point['agreements'] as $agreement)
+                                                        @php ($random_id = \Random::getRandomIdentifier())
+                                                        <div class="row point_agreement" id="agreement_{{$random_id}}">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Acuerdo</label>
+                                                                    <textarea class="form-control" rows="3" placeholder="Describe el acuerdo tomado en la reunión.">{{trim($agreement['description'])}}</textarea>
+                                                                    <button type="button" onclick="delete_agreement({{$random_id}})" class="btn btn-default btn-xs"><i class="fas fa-trash"></i> Borrar</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
 
                                                 </div>
 
-                                                <button type="button" onclick="add_agreement({{$diary_point->id}})" class="btn btn-light"><i class="fas fa-plus"></i> Añadir acuerdo</button>
+                                                <button type="button" onclick="add_agreement({{$point['id']}})" class="btn btn-light"><i class="fas fa-plus"></i> Añadir acuerdo</button>
 
                                             </div>
 
@@ -330,7 +351,70 @@
 
                                     @endforeach
 
+                                @else
+
+                                    @if($meeting_request)
+
+                                        @foreach($meeting_request->diary->diary_points as $diary_point)
+
+                                            <div class="card card-info point_body">
+
+                                                <span class="point_id" style="display: none">{{$diary_point->id}}</span>
+
+                                                <div class="card-header">
+                                                    <h3 class="card-title">{{$diary_point->id}}. {{$diary_point->point}}</h3>
+                                                </div>
+
+                                                <div class="card-body">
+
+                                                    <div class="row">
+                                                        <div class="col-sm-4">
+                                                            <!-- text input -->
+                                                            <div class="form-group">
+                                                                <label>Editar nombre</label>
+                                                                <input type="text" class="form-control point_title" value="{{$diary_point->point}}" placeholder="Escribe un nombre">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-sm-5">
+                                                            <div class="form-group">
+                                                                <label>Descripción</label>
+                                                                <textarea class="form-control point_description" rows="3" placeholder="Añade una descripción concisa del desarrollo de este punto"></textarea>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-sm-3">
+                                                            <div class="form-group">
+                                                                <label>Duración</label>
+                                                                <input type="number" class="form-control point_duration">
+                                                                <small class="form-text text-muted">Minutos que han llevado desarrollar este punto.
+                                                                </small>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div id="agreements_{{$diary_point->id}}">
+
+                                                    </div>
+
+                                                    <button type="button" onclick="add_agreement({{$diary_point->id}})" class="btn btn-light"><i class="fas fa-plus"></i> Añadir acuerdo</button>
+
+                                                </div>
+
+                                            </div>
+
+                                        @endforeach
+
+                                    @endif
+
                                 @endif
+
+
+
+
+
+
 
                                 <div class="form-row">
                                     <div class="col-lg-3 mt-1">
@@ -416,6 +500,10 @@
 
                     var $this = $(this);
 
+                    // id del punto
+                    let point_id = $this.find('.point_id').html();
+                    item["id"] = point_id;
+
                     // título del punto
                     let point_title = $this.find('.point_title').val();
                     item ["title"] = point_title;
@@ -423,6 +511,10 @@
                     // duración del punto
                     let point_duration = $this.find('.point_duration').val();
                     item ["duration"] = point_duration;
+
+                    // descripción del punto
+                    let point_description = $this.find('.point_description').val();
+                    item ["description"] = point_description;
 
                     // acuerdos del punto
                     agreements = []

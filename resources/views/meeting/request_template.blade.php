@@ -84,8 +84,6 @@
             {{$meeting_request->secretary->user->name}} {{$meeting_request->secretary->user->surname}}
         </h4>
 
-
-
         <h3>
             Secretario de {{$meeting_request->comittee->name}}
         </h3>

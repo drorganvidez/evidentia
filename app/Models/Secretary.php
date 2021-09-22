@@ -32,4 +32,9 @@ class Secretary extends Model
     {
         return $this->hasMany('App\Models\SignatureSheet')->orderByDesc('created_at');
     }
+
+    public function meeting_minutes()
+    {
+        return $this->hasMany('App\Models\MeetingMinutes')->orderByDesc('created_at');
+    }
 }
