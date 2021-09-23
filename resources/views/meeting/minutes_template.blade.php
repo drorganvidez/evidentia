@@ -96,7 +96,7 @@
 
             <tr>
                 <td>Convoca</td>
-                <td>{{$meeting_minutes->meeting->meeting_request->secretary->user->name}} {{$meeting_minutes->meeting->meeting_request->secretary->user->surname}}</td>
+                <td>{{$meeting_minutes->secretary->user->name}} {{$meeting_minutes->secretary->user->surname}}</td>
             </tr>
 
             <tr>
@@ -288,7 +288,7 @@
                 del día {{ \Carbon\Carbon::parse($meeting_minutes->meeting->datetime)->day }}
                 de {{ \Carbon\Carbon::parse($meeting_minutes->meeting->datetime)->monthName }}
                 de {{ \Carbon\Carbon::parse($meeting_minutes->meeting->datetime)->year }}
-                por {{$meeting_minutes->meeting->meeting_request->secretary->user->name}} {{$meeting_minutes->meeting->meeting_request->secretary->user->surname}}.
+                por {{$meeting_minutes->secretary->user->name}} {{$meeting_minutes->secretary->user->surname}}.
             </p>
 
         </div>
@@ -299,7 +299,7 @@
             </p>
 
             <h3>
-                {{$meeting_minutes->meeting->meeting_request->secretary->user->name}} {{$meeting_minutes->meeting->meeting_request->secretary->user->surname}}
+                {{$meeting_minutes->secretary->user->name}} {{$meeting_minutes->secretary->user->surname}}
             </h3>
 
             <h4>

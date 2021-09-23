@@ -176,11 +176,11 @@
                                                     @isset($meeting_request)
                                                         <option {{$meeting_request->modality  == old('modality') || $meeting_request->modality == 'F2F' ? 'selected' : ''}} value="1">PRESENCIAL</option>
                                                         <option {{$meeting_request->modality  == old('modality') || $meeting_request->modality == 'TELEMATIC' ? 'selected' : ''}} value="2">TELEMÁTICA</option>
-                                                        <option {{$meeting_request->modality  == old('modality') || $meeting_request->modality == 'MIXED' ? 'selected' : ''}} value="2">HÍBRIDA</option>
+                                                        <option {{$meeting_request->modality  == old('modality') || $meeting_request->modality == 'MIXED' ? 'selected' : ''}} value="3">HÍBRIDA</option>
                                                     @else
                                                         <option value="1">PRESENCIAL</option>
                                                         <option value="2">TELEMÁTICA</option>
-                                                        <option value="2">HÍBRIDA</option>
+                                                        <option value="3">HÍBRIDA</option>
                                                     @endisset
 
                                                 </select>
@@ -203,9 +203,9 @@
                                                 <input id="" type="number" class="form-control" placeholder="" name="hours" value="{{\Time::complex_shape_hours($meeting->hours ?? '')}}" autocomplete="hours" autofocus="" step="0.01">
                                                 <small class="form-text text-muted">Enteros o decimales</small>
                                                 @error("hours")
-                                                <span class="invalid-feedback d-block" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
+                                                    <span class="invalid-feedback d-block" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
                                                 @enderror
                                             </div>
 
@@ -214,9 +214,9 @@
                                                 <input id="" type="number" min="0" max="60" class="form-control" placeholder="" name="minutes" value="{{\Time::complex_shape_minutes($meeting->hours ?? '') }}" autocomplete="minutes" autofocus="">
                                                 <small class="form-text text-muted">Enteros</small>
                                                 @error("minutes")
-                                                <span class="invalid-feedback d-block" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
+                                                    <span class="invalid-feedback d-block" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
                                                 @enderror
                                             </div>
 
@@ -254,9 +254,9 @@
 
                                                 </small>
                                                 @error('defaultlist')
-                                                <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                        </span>
                                                 @enderror
                                             </div>
 
@@ -391,7 +391,7 @@
 
                                                 @if($meeting_request)
 
-                                                    @foreach($meeting_request->diary->diary_points as $diary_point)
+                                                    @foreach($meeting_request->diary->diary_points as $key => $diary_point)
 
                                                         <div class="card card-info point_body" id="point_{{$diary_point->id}}">
 
@@ -400,7 +400,7 @@
                                                             <div class="card-header">
                                                                 <div class="d-flex justify-content-between">
                                                                     <div>
-                                                                        <h3 class="card-title">{{$diary_point->id}}. {{$diary_point->point}}</h3>
+                                                                        <h3 class="card-title">{{++$key}}. {{$diary_point->point}}</h3>
                                                                     </div>
                                                                     <div>
                                                                         <button type="button" onclick="delete_point({{$diary_point->id}})" class="btn btn-xs btn-warning"><i class="fas fa-trash"></i></button>

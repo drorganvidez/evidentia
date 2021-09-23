@@ -27,7 +27,7 @@
                         <tr>
                             <th scope="col">Título</th>
                             <th scope="col">Creada</th>
-                            <th scope="col">PDF</th>
+                            <th scope="col">Opciones</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -41,6 +41,8 @@
                                 </td>
                                 <td>
                                     <a class="btn btn-primary btn-sm" href="{{route('secretary.meeting.manage.minutes.download',['instance' => $instance, 'id' => $m->id])}}"><i class="fas fa-file-pdf"></i> Descargar</a>
+
+                                    <a class="btn btn-info btn-sm" href="{{route('secretary.meeting.manage.minutes.edit',['instance' => $instance, 'id' => $m->id])}}"><i class="fas fa-edit"></i> Editar</a>
                                 </td>
                             </tr>
                         @endforeach

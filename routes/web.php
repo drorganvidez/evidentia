@@ -218,6 +218,10 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
             Route::get('/minutes/download/{id}', [MeetingSecretaryController::class, 'minutes_download'])->name('secretary.meeting.manage.minutes.download');
 
+            Route::get('/minutes/edit/{id}', [MeetingSecretaryController::class, 'minutes_edit'])->name('secretary.meeting.manage.minutes.edit');
+            Route::post('/minutes/save/', [MeetingSecretaryController::class, 'minutes_save'])->name('secretary.meeting.manage.minutes.save');
+
+
 
         });
 
