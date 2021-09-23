@@ -34,13 +34,13 @@
                         <tbody>
                         @foreach($signature_sheets as $signature_sheet)
                             <tr scope="row">
-                                <td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
                                     {{$signature_sheet->title}}
                                 </td>
-                                <td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
                                     {{ \Carbon\Carbon::parse($signature_sheet->created_at)->diffForHumans() }}
                                 </td>
-                                <td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
 
                                     <span id="signature_sheets_{{$signature_sheet->id}}">
                                         <a href="{{URL::to('/')}}/{{$instance}}/sign/{{$signature_sheet->random_identifier}}" target="_blank">
