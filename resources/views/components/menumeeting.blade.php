@@ -96,13 +96,15 @@ or Route::currentRouteName() == 'secretary.meeting.manage.minutes.create.step3')
                     <a href="{{route('secretary.meeting.manage.signaturesheet.list',\Instantiation::instance())}}" class="nav-link">
 
 
-                        @if(Route::currentRouteName() == 'secretary.meeting.manage.signaturesheet.list')
+                        @if(Route::currentRouteName() == 'secretary.meeting.manage.signaturesheet.list'
+or Route::currentRouteName() == 'secretary.meeting.manage.signaturesheet.view')
                             <b>
                         @endif
 
                                 <i class="fas fa-list"></i>&nbsp;&nbsp;Mis hojas de firmas
 
-                        @if(Route::currentRouteName() == 'secretary.meeting.manage.signaturesheet.list')
+                        @if(Route::currentRouteName() == 'secretary.meeting.manage.signaturesheet.list'
+or Route::currentRouteName() == 'secretary.meeting.manage.signaturesheet.view')
                             </b>
                         @endif
 

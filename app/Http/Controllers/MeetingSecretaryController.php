@@ -191,6 +191,13 @@ class MeetingSecretaryController extends Controller
         return $random_identifier;
     }
 
+    public function signaturesheet_view($instance,$signature_sheet)
+    {
+        $signature_sheet = SignatureSheet::findOrFail($signature_sheet);
+
+        return view('meeting.signaturesheet_view',["instance" => $instance, 'signature_sheet' => $signature_sheet]);
+    }
+
     /*
      *  Minutes
      */

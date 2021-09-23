@@ -202,6 +202,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
             Route::get('/signaturesheet/list', [MeetingSecretaryController::class, 'signaturesheet_list'])->name('secretary.meeting.manage.signaturesheet.list');
             Route::get('/signaturesheet/create', [MeetingSecretaryController::class, 'signaturesheet_create'])->name('secretary.meeting.manage.signaturesheet.create');
             Route::post('/signaturesheet/new', [MeetingSecretaryController::class, 'signaturesheet_new'])->name('secretary.meeting.manage.signaturesheet.new');
+            Route::get('/signaturesheet/view/{signature_sheet}', [MeetingSecretaryController::class, 'signaturesheet_view'])->name('secretary.meeting.manage.signaturesheet.view');
 
             // Actas
             Route::get('/minutes/list', [MeetingSecretaryController::class, 'minutes_list'])->name('secretary.meeting.manage.minutes.list');
@@ -223,27 +224,10 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
             Route::post('/minutes/remove/', [MeetingSecretaryController::class, 'minutes_remove'])->name('secretary.meeting.manage.minutes.remove');
 
-
-
         });
-
-        /*
-        Route::get('/meeting/list/', 'MeetingSecretaryController@list')->name('secretary.meeting.list');
-
-        Route::middleware(['checkregistermeetings'])->group(function () {
-            Route::get('/meeting/create/', 'MeetingSecretaryController@create')->name('secretary.meeting.create');
-            Route::post('/meeting/new', 'MeetingSecretaryController@new')->name('secretary.meeting.new');
-        });
-        */
 
         // Consulta AJAX
         Route::get('/meeting/defaultlist/{id}', 'MeetingSecretaryController@defaultlist')->name('secretary.meeting.defaultlist');
-
-        Route::middleware(['checknotnull:Meeting','checkregistermeetings'])->group(function () {
-            Route::get('/meeting/edit/{id}', 'MeetingSecretaryController@edit')->name('secretary.meeting.edit');
-            Route::post('/meeting/save', 'MeetingSecretaryController@save')->name('secretary.meeting.save');
-            Route::post('/meeting/remove', 'MeetingSecretaryController@remove')->name('secretary.meeting.remove');
-        });
 
         /*
          * BONUS

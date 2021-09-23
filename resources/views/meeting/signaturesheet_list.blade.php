@@ -26,6 +26,7 @@
                         <thead>
                         <tr>
                             <th scope="col">Título</th>
+                            <th scope="col">Convocatoria</th>
                             <th scope="col">Creada</th>
                             <th scope="col">URL para firmar</th>
                             <th scope="col">Opciones</th>
@@ -35,7 +36,12 @@
                         @foreach($signature_sheets as $signature_sheet)
                             <tr scope="row">
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                    {{$signature_sheet->title}}
+                                    <a href="{{route('secretary.meeting.manage.signaturesheet.view',['instance' => $instance, 'signature_sheet' => $signature_sheet])}}">
+                                        {{$signature_sheet->title}}
+                                    </a>
+                                </td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                    {{$signature_sheet->meeting_request->title ?? ''}}
                                 </td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
                                     {{ \Carbon\Carbon::parse($signature_sheet->created_at)->diffForHumans() }}
@@ -52,6 +58,9 @@
                                 <td>
                                     <button onclick="copyToClipboard('#signature_sheets_{{$signature_sheet->id}}')"
                                             type="button" class="btn btn-light btn-xs"><i class="far fa-copy"></i> Copiar URL</button>
+                                    <a class="btn btn-primary btn-xs" href="{{route('secretary.meeting.manage.signaturesheet.view',['instance' => $instance, 'signature_sheet' => $signature_sheet])}}">
+                                        <i class="fas fa-signature"></i> Ver firmas
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach
