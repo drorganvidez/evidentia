@@ -19,6 +19,8 @@
     <form method="POST" action="{{$route}}">
         @csrf
 
+        <input type="hidden" name="user_id" value="{{$user->id}}">
+
         <div class="row">
 
 
@@ -59,8 +61,8 @@
                             <h3>Configuración</h3>
 
                             <div class="icheck-primary d-inline">
-                                <input type="checkbox" name="block" id="block" @if($user->block == false) checked @endif>
-                                <label for="block">
+                                <input type="checkbox" name="pass" id="pass" @if($user->block == false) checked @endif>
+                                <label for="pass">
                                     Permitir acceso a la aplicación
                                 </label>
                             </div>
