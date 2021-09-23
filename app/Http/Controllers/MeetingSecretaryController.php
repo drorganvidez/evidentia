@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\UserService;
 use App\Models\Agreement;
 use App\Models\DefaultList;
 use App\Models\Diary;
@@ -22,10 +23,14 @@ use Illuminate\Support\Facades\Validator;
 
 class MeetingSecretaryController extends Controller
 {
+
+    private $user_service;
+
     public function __construct()
     {
         $this->middleware('auth');
         $this->middleware('checkroles:SECRETARY');
+        $this->user_service = new UserService();
     }
 
     public function manage()
@@ -277,7 +282,7 @@ class MeetingSecretaryController extends Controller
         $meeting_request = MeetingRequest::find($request->input('meeting_request'));
         $signature_sheet = SignatureSheet::find($request->input('signature_sheet'));
 
-        $users = User::orderBy('surname')->get();
+        $users = $this->user_service->all_except_logged();
         $defaultlists = Auth::user()->secretary->default_lists;
 
         return view('meeting.minutes_create_step3',[

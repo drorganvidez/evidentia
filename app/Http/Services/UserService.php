@@ -18,7 +18,7 @@ class UserService extends Service
 
     public function all_except_logged()
     {
-        return User::where('id', '!=', auth()->id())->get();
+        return User::where('id', '!=', auth()->id())->orderBy('surname')->get();
     }
 
 }

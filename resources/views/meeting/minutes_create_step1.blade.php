@@ -20,7 +20,9 @@
 
             <div class="card shadow-sm">
 
-                <div class="bs-stepper linear">
+                <div class="card-body">
+
+                    <div class="bs-stepper linear">
 
                     <div class="bs-stepper-header" role="tablist">
 
@@ -103,6 +105,8 @@
 
                         </div>
                     </div>
+                </div>
+
                 </div>
 
             </div>
