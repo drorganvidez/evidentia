@@ -177,7 +177,7 @@ class ManagementController extends Controller
     public function user_management($instance,$id)
     {
         $instance = \Instantiation::instance();
-        $user = User::find($id);
+        $user = User::findOrFail($id);
 
         $route = null;
         if(Auth::user()->hasRole('PRESIDENT')){
@@ -205,13 +205,13 @@ class ManagementController extends Controller
     {
 
         $instance = \Instantiation::instance();
-        $user = User::find($request->input('_id'));
+        $user = User::find($request->input('user_id'));
 
         // guardar bloqueo
-        if($request->input('block') == 'on'){
-            $user->block = true;
-        }else{
+        if($request->input('pass') == 'on'){
             $user->block = false;
+        }else{
+            $user->block = true;
         }
         $user->save();
 
@@ -299,7 +299,11 @@ class ManagementController extends Controller
 
         }
 
-        return redirect()->route('lecture.user.management',['instance' => $instance, 'id' => $user->id])->with('success','Usuario actualizado con éxito');
+        if($user->hasRole('PRESIDENT')){
+            return redirect()->route('president.user.list',['instance' => $instance, 'id' => $user->id])->with('success','Usuario actualizado con éxito');
+        }
+
+        return redirect()->route('lecture.user.list',['instance' => $instance, 'id' => $user->id])->with('success','Usuario actualizado con éxito');
     }
 
     public function user_management_new(Request $request)
