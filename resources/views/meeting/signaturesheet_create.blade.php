@@ -28,7 +28,7 @@
 
                             <div class="callout callout-info">
                                 <p>Puedes crear una hoja de firma virtual para una reunión.</p>
-                                <p>Esto generará una URL del tipo <u>evidentia.cloud/{{$instance}}/sign/<b>identificador</b></u>.</p>
+                                <p>Esto generará una URL del tipo <u>evidentia.cloud/{{$instance}}/sign/<b>XXXX</b></u>.</p>
                                 <p>Con esta URL, todos los asistentes podrán firmar con su usuario y contraseña y quedarán registrados.</p>
                             </div>
 

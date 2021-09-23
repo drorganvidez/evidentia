@@ -96,7 +96,7 @@
 
             <tr>
                 <td>Convoca</td>
-                <td>{{$meeting_minutes->meeting->meeting_request->secretary->user->name}} {{$meeting_minutes->meeting->meeting_request->secretary->user->surname}}</td>
+                <td>{{$meeting_minutes->secretary->user->name}} {{$meeting_minutes->secretary->user->surname}}</td>
             </tr>
 
             <tr>
@@ -230,7 +230,13 @@
         <div style="padding-left: 20px">
             @foreach($meeting_minutes->points as $key => $point)
 
-                <h3>2.{{ ++$key }} {{$point->title}} ({{$point->duration}} {{$point->duration > 1 ? 'minutos' : 'minuto'}})</h3>
+                <h3>
+                    2.{{ ++$key }} {{$point->title}}
+
+                    @if($point->duration)
+                        ({{$point->duration}} {{$point->duration > 1 ? 'minutos' : 'minuto'}})
+                    @endif
+                </h3>
 
                 @if($point->description)
                     <p style="text-align: justify">
@@ -282,7 +288,7 @@
                 del día {{ \Carbon\Carbon::parse($meeting_minutes->meeting->datetime)->day }}
                 de {{ \Carbon\Carbon::parse($meeting_minutes->meeting->datetime)->monthName }}
                 de {{ \Carbon\Carbon::parse($meeting_minutes->meeting->datetime)->year }}
-                por {{$meeting_minutes->meeting->meeting_request->secretary->user->name}} {{$meeting_minutes->meeting->meeting_request->secretary->user->surname}}.
+                por {{$meeting_minutes->secretary->user->name}} {{$meeting_minutes->secretary->user->surname}}.
             </p>
 
         </div>
@@ -293,7 +299,7 @@
             </p>
 
             <h3>
-                {{$meeting_minutes->meeting->meeting_request->secretary->user->name}} {{$meeting_minutes->meeting->meeting_request->secretary->user->surname}}
+                {{$meeting_minutes->secretary->user->name}} {{$meeting_minutes->secretary->user->surname}}
             </h3>
 
             <h4>

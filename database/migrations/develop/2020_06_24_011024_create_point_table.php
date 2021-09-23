@@ -15,7 +15,8 @@ class CreatePointTable extends Migration
     {
         Schema::create('points', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('meeting_minutes_id')->nullable();
+            $table->foreignId('meeting_minutes_id')->nullable()->references('id')
+                ->on('meeting_minutes')->onDelete('cascade');
             $table->string('title');
             $table->integer('duration')->nullable();
             $table->text('description')->nullable();

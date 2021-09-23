@@ -1,4 +1,4 @@
-<div class="col-3">
+<div class="col-lg-3">
 
     <div class="card shadow-sm">
         <div class="card-header">
@@ -96,13 +96,15 @@ or Route::currentRouteName() == 'secretary.meeting.manage.minutes.create.step3')
                     <a href="{{route('secretary.meeting.manage.signaturesheet.list',\Instantiation::instance())}}" class="nav-link">
 
 
-                        @if(Route::currentRouteName() == 'secretary.meeting.manage.signaturesheet.list')
+                        @if(Route::currentRouteName() == 'secretary.meeting.manage.signaturesheet.list'
+or Route::currentRouteName() == 'secretary.meeting.manage.signaturesheet.view')
                             <b>
                         @endif
 
                                 <i class="fas fa-list"></i>&nbsp;&nbsp;Mis hojas de firmas
 
-                        @if(Route::currentRouteName() == 'secretary.meeting.manage.signaturesheet.list')
+                        @if(Route::currentRouteName() == 'secretary.meeting.manage.signaturesheet.list'
+or Route::currentRouteName() == 'secretary.meeting.manage.signaturesheet.view')
                             </b>
                         @endif
 
@@ -113,13 +115,15 @@ or Route::currentRouteName() == 'secretary.meeting.manage.minutes.create.step3')
                     <a href="{{route('secretary.meeting.manage.minutes.list',\Instantiation::instance())}}" class="nav-link">
 
 
-                        @if(Route::currentRouteName() == 'secretary.meeting.manage.minutes.list')
+                        @if(Route::currentRouteName() == 'secretary.meeting.manage.minutes.list'
+or Route::currentRouteName() == 'secretary.meeting.manage.minutes.edit')
                             <b>
                         @endif
 
                             <i class="fas fa-list"></i>&nbsp;&nbsp;Mis actas
 
-                        @if(Route::currentRouteName() == 'secretary.meeting.manage.minutes.list')
+                        @if(Route::currentRouteName() == 'secretary.meeting.manage.minutes.list'
+or Route::currentRouteName() == 'secretary.meeting.manage.minutes.edit')
                             </b>
                         @endif
 

@@ -15,7 +15,7 @@ class SignatureSheet extends Model
 
     public function users()
     {
-        return $this->belongsToMany('App\Models\User')->withTimestamps();
+        return $this->belongsToMany('App\Models\User')->withTimestamps()->orderByDesc('created_at');
     }
 
     public function meeting_request()

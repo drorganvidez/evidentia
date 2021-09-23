@@ -35,6 +35,6 @@ class Secretary extends Model
 
     public function meeting_minutes()
     {
-        return $this->hasMany('App\Models\MeetingMinutes')->orderByDesc('created_at');
+        return $this->hasMany('App\Models\MeetingMinutes')->orderByDesc('updated_at');
     }
 }
