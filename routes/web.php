@@ -310,10 +310,9 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         Route::post('/president/comittee/management/remove', 'ManagementController@comittee_remove')->name('president.comittee.management.remove');
     });
 
-    Route::middleware(['checknotnull:User'])->group(function () {
-        Route::get('/president/user/management/{id}','ManagementController@user_management')->name('president.user.management');
-        Route::post('/president/user/management/save','ManagementController@user_management_save')->name('president.user.management.save');
-    });
+    Route::get('/president/user/management/{id}','ManagementController@user_management')->name('president.user.management');
+    Route::post('/president/user/management/save','ManagementController@user_management_save')->name('president.user.management.save');
+
 
     Route::get('/president/export','ImportExportController@export')->name('president.export');
     Route::post('/president/export/save','ImportExportController@export_save')->name('president.export.save');
@@ -346,10 +345,8 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/lecture/export','ImportExportController@export')->name('lecture.export');
     Route::post('/lecture/export/save','ImportExportController@export_save')->name('lecture.export.save');
 
-    Route::middleware(['checknotnull:User'])->group(function () {
-        Route::get('/lecture/user/management/{id}','ManagementController@user_management')->name('lecture.user.management');
-        Route::post('/lecture/user/management/save','ManagementController@user_management_save')->name('lecture.user.management.save');
-    });
+    Route::get('/lecture/user/management/{id}','ManagementController@user_management')->name('lecture.user.management');
+    Route::post('/lecture/user/management/save','ManagementController@user_management_save')->name('lecture.user.management.save');
 
     Route::get('/lecture/instances','QuickInstances@list')->name('lecture.instances.list');
     Route::post('/lecture/instances/save','QuickInstances@save')->name('lecture.instances.save');

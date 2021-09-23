@@ -38,6 +38,10 @@
                                     </a>
 
                                     @endif
+
+                                    @if(\Illuminate\Support\Facades\Auth::user()->hasRole('PRESIDENT'))
+                                            <a class="dropdown-item" href="#">Coming soon...</a>
+                                    @endif
                                 </div>
                             </div>
                             <br>
