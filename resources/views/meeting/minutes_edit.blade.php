@@ -114,15 +114,11 @@
                                 <label for="modality">Modalidad</label>
                                 <select id="modality" class="selectpicker form-control @error('modality') is-invalid @enderror" name="modality" value="{{ old('modality') }}"  autofocus>
 
-                                    @isset($meeting_minutes->meeting)
+
                                         <option {{$meeting_minutes->meeting->modality  == old('modality') || $meeting_minutes->meeting->modality == 'F2F' ? 'selected' : ''}} value="1">PRESENCIAL</option>
                                         <option {{$meeting_minutes->meeting->modality  == old('modality') || $meeting_minutes->meeting->modality == 'TELEMATIC' ? 'selected' : ''}} value="2">TELEMÁTICA</option>
                                         <option {{$meeting_minutes->meeting->modality  == old('modality') || $meeting_minutes->meeting->modality == 'MIXED' ? 'selected' : ''}} value="3">HÍBRIDA</option>
-                                    @else
-                                        <option value="1">PRESENCIAL</option>
-                                        <option value="2">TELEMÁTICA</option>
-                                        <option value="3">HÍBRIDA</option>
-                                    @endisset
+
 
                                 </select>
 

@@ -221,6 +221,8 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
             Route::get('/minutes/edit/{id}', [MeetingSecretaryController::class, 'minutes_edit'])->name('secretary.meeting.manage.minutes.edit');
             Route::post('/minutes/save/', [MeetingSecretaryController::class, 'minutes_save'])->name('secretary.meeting.manage.minutes.save');
 
+            Route::post('/minutes/remove/', [MeetingSecretaryController::class, 'minutes_remove'])->name('secretary.meeting.manage.minutes.remove');
+
 
 
         });

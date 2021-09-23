@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MeetingRequest extends Model
 {
-    protected $table = "meeting_request";
+    protected $table = "meeting_requests";
 
     protected $fillable = [
       'meeting_id','datetime','place','type','modality', 'comittee_id', 'secretary_id', 'title'

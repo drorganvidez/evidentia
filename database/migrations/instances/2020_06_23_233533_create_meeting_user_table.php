@@ -16,7 +16,7 @@ class CreateMeetingUserTable extends Migration
         Schema::create('meeting_user', function (Blueprint $table) {
             $table->id();
             $table->foreignId('meeting_id')->references('id')
-                ->on('meeting')->onDelete('cascade');;
+                ->on('meeting')->onDelete('cascade');
             $table->foreignId('user_id');
             $table->timestamps();
         });

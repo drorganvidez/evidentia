@@ -562,6 +562,22 @@ class MeetingSecretaryController extends Controller
         return redirect()->route('secretary.meeting.manage.minutes.list',$instance)->with('success', 'Acta de reunión editada con éxito.');
     }
 
+    public function minutes_remove(Request $request)
+    {
+        $meeting_minutes = Meetingminutes::where('id',$request->input('meeting_minutes_id'))->first();
+
+        $instance = \Instantiation::instance();
+
+        // borramos el pdf del acta antigua
+        Storage::delete(\Instantiation::instance() .'/meeting_minutes/meeting_minutes_' .$meeting_minutes->id . '.pdf');
+
+        $meeting_minutes->meeting->delete();
+        $meeting_minutes->delete();
+
+        return redirect()->route('secretary.meeting.manage.minutes.list',$instance)->with('success', 'Acta de reunión eliminada con éxito.');
+
+    }
+
     /*
     public function list()
     {
