@@ -13,10 +13,11 @@ class CreateAgreementTable extends Migration
      */
     public function up()
     {
-        Schema::create('agreement', function (Blueprint $table) {
+        Schema::create('agreements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('point_id');
-            $table->string('identificator');
+            $table->foreignId('point_id')->nullable()->references('id')
+                ->on('points')->onDelete('cascade');
+            $table->string('identificator')->nullable();
             $table->text('description');
             $table->timestamps();
         });
@@ -29,6 +30,6 @@ class CreateAgreementTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('agreement');
+        Schema::dropIfExists('agreements');
     }
 }

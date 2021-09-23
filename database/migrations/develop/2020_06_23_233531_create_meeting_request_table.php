@@ -13,7 +13,7 @@ class CreateMeetingRequestTable extends Migration
      */
     public function up()
     {
-        Schema::create('meeting_request', function (Blueprint $table) {
+        Schema::create('meeting_requests', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->timestamp('datetime')->nullable(true);

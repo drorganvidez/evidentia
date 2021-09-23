@@ -108,7 +108,7 @@ class User extends Authenticatable
 
     public function signature_sheets()
     {
-        return $this->belongsToMany('App\Models\SignatureSheet')->withTimestamps();
+        return $this->belongsToMany('App\Models\SignatureSheet')->withTimestamps()->orderByDesc('created_at');
     }
 
     public function evidence_rand(){

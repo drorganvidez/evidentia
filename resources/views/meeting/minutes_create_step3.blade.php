@@ -16,416 +16,486 @@
 
         <x-menumeeting/>
 
-        <div class="col-md-9">
+        <div class="col-lg-9">
 
             <div class="card shadow-sm">
 
-                <div class="bs-stepper linear">
+                <div class="card-body">
 
-                    <div class="bs-stepper-header" role="tablist">
+                    <div class="bs-stepper linear">
 
-                        <div class="step" data-target="#step_1">
-                            <button type="button" class="step-trigger" role="tab" aria-controls="logins-part" id="logins-part-trigger" aria-selected="true" disabled="disabled">
-                                <span class="bs-stepper-circle" style="background-color: #1aa179">1</span>
-                                <span class="bs-stepper-label">Asociar convocatoria</span>
-                            </button>
-                        </div>
+                    <div class="row">
 
-                        <div class="line"></div>
+                        <div class="col-lg-12">
+                            <div class="bs-stepper-header" role="tablist">
 
-                        <div class="step">
-                            <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger" aria-selected="true" disabled="disabled">
-                                <span class="bs-stepper-circle" style="background-color: #1aa179">2</span>
-                                <span class="bs-stepper-label">Asociar asistencias</span>
-                            </button>
-                        </div>
+                                <div class="step" data-target="#step_1">
+                                    <button type="button" class="step-trigger" role="tab" aria-controls="logins-part" id="logins-part-trigger" aria-selected="true" disabled="disabled">
+                                        <span class="bs-stepper-circle" style="background-color: #1aa179">1</span>
+                                        <span class="bs-stepper-label">Asociar convocatoria</span>
+                                    </button>
+                                </div>
 
-                        <div class="line"></div>
+                                <div class="line"></div>
 
-                        <div class="step active">
-                            <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger" aria-selected="true" >
-                                <span class="bs-stepper-circle">3</span>
-                                <span class="bs-stepper-label">Redactar acta</span>
-                            </button>
+                                <div class="step">
+                                    <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger" aria-selected="true" disabled="disabled">
+                                        <span class="bs-stepper-circle" style="background-color: #1aa179">2</span>
+                                        <span class="bs-stepper-label">Asociar asistencias</span>
+                                    </button>
+                                </div>
+
+                                <div class="line"></div>
+
+                                <div class="step active">
+                                    <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger" aria-selected="true" >
+                                        <span class="bs-stepper-circle">3</span>
+                                        <span class="bs-stepper-label">Redactar acta</span>
+                                    </button>
+                                </div>
+
+                            </div>
                         </div>
 
                     </div>
 
-                    <div class="bs-stepper-content">
+                    <div class="row">
 
-                        <div id="step_3" class="content active" role="tabpanel">
+                        <div class="col-lg-12">
+                            <div class="bs-stepper-content">
 
-                            <form method="POST" action="{{route('secretary.meeting.manage.minutes.create.step3_p',\Instantiation::instance())}}" id="request_form">
-                                @csrf
+                                <div id="step_3" class="content active" role="tabpanel">
 
-                                <input type="hidden" name="meeting_request" value="{{$meeting_request->id ?? ''}}"/>
+                                    <form method="POST" action="{{route('secretary.meeting.manage.minutes.create.step3_p',\Instantiation::instance())}}" id="request_form">
+                                        @csrf
 
-                                <input type="hidden" name="points_json" id="points_json"/>
+                                        <input type="hidden" name="meeting_request" value="{{$meeting_request->id ?? ''}}"/>
 
-                                <h4>Información de la reunión</h4>
+                                        <input type="hidden" name="points_json" id="points_json"/>
 
-                                @if($meeting_request)
-                                    <div class="callout callout-info">
-                                        <p>La información que detallaste en la convocatoria se ha volcado automáticamente en el formulario.</p>
-                                        <p>Recuerda rellenar <b>las horas y/o los minutos empleados</b> en la reunión.</p>
-                                    </div>
-                                @endif
+                                        <h4>Información de la reunión</h4>
 
-                                <div class="form-row">
+                                        @if($meeting_request)
+                                            <div class="callout callout-info">
+                                                <p>La información que detallaste en la convocatoria se ha volcado automáticamente en el formulario.</p>
+                                                <p>Recuerda rellenar <b>las horas y/o los minutos empleados</b> en la reunión.</p>
+                                            </div>
+                                        @endif
 
-                                    <x-input col="6" attr="title" :value="$meeting_request->title ?? ''" label="Título" description="Escribe un título para tu reunión."/>
+                                        <div class="form-row">
 
-                                    <div class="form-group col-md-3">
-                                        <label for="date">Día</label>
-                                        <input id="date" type="date"
-                                               class="form-control @error('date') is-invalid @enderror" name="date"
-                                               @if(old('date'))
-                                               value="{{old('date')}}"
-                                               @else
+                                            <x-input col="6" attr="title" :value="$meeting_request->title ?? ''" label="Título" description="Escribe un título para tu reunión."/>
 
-                                                   @if($meeting_request != null)
-                                                        value="{{\Carbon\Carbon::parse($meeting_request->datetime)->format('Y-m-d')}}"
-                                                    @else
-                                                        value=""
-                                                   @endif
+                                            <div class="form-group col-md-3">
+                                                <label for="date">Día</label>
+                                                <input id="date" type="date"
+                                                       class="form-control @error('date') is-invalid @enderror" name="date"
+                                                       @if(old('date'))
+                                                       value="{{old('date')}}"
+                                                       @else
+
+                                                       @if($meeting_request != null)
+                                                       value="{{\Carbon\Carbon::parse($meeting_request->datetime)->format('Y-m-d')}}"
+                                                       @else
+                                                       value=""
+                                                       @endif
 
 
-                                               @endif
-                                                autofocus>
-                                        <small class="form-text text-muted">Indica el día de la reunión.
-                                        </small>
+                                                       @endif
+                                                       autofocus>
+                                                <small class="form-text text-muted">Indica el día de la reunión.
+                                                </small>
 
-                                        @error('date')
-                                        <span class="invalid-feedback" role="alert">
+                                                @error('date')
+                                                <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
-                                        @enderror
-                                    </div>
-
-                                    <div class="form-group col-md-3">
-                                        <label for="time">Hora</label>
-                                        <input id="time" type="time"
-                                               class="form-control @error('time') is-invalid @enderror" name="time"
-                                               @if(old('time'))
-                                               value="{{old('time')}}"
-                                               @else
-
-                                               @if($meeting_request != null)
-                                               value="{{\Carbon\Carbon::parse($meeting_request->datetime)->format('H:i')}}"
-                                               @else
-                                               value=""
-                                               @endif
-
-
-                                               @endif
-                                                autofocus>
-                                        <small class="form-text text-muted">Indica la hora de la reunión.
-                                        </small>
-
-                                        @error('time')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-
-                                </div>
-
-                                <div class="form-row">
-
-                                    <x-input col="6" attr="place" :value="$meeting_request->place ?? ''" label="Lugar" description="Indica el lugar de la reunión."/>
-
-                                    <div class="form-group col-md-3">
-                                        <label for="type">Tipo</label>
-                                        <select id="type" class="selectpicker form-control @error('type') is-invalid @enderror" name="type" value="{{ old('type') }}"  autofocus>
-
-                                            @isset($meeting_request)
-                                                <option {{$meeting_request->type  == old('type') || $meeting_request->type == 'ORDINARY' ? 'selected' : ''}} value="1">ORDINARIA</option>
-                                                <option {{$meeting_request->type  == old('type') || $meeting_request->type == 'EXTRAORDINARY' ? 'selected' : ''}} value="2">EXTRAORDINARIA</option>
-                                            @else
-                                                <option value="1">ORDINARIA</option>
-                                                <option value="2">EXTRAORDINARIA</option>
-                                            @endisset
-
-                                        </select>
-
-                                        <small class="form-text text-muted">Elige el tipo de reunión.</small>
-
-                                        @error('type')
-                                        <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-
-                                    <div class="form-group col-md-3">
-                                        <label for="modality">Modalidad</label>
-                                        <select id="modality" class="selectpicker form-control @error('modality') is-invalid @enderror" name="modality" value="{{ old('modality') }}"  autofocus>
-
-                                            @isset($meeting_request)
-                                                <option {{$meeting_request->modality  == old('modality') || $meeting_request->modality == 'F2F' ? 'selected' : ''}} value="1">PRESENCIAL</option>
-                                                <option {{$meeting_request->modality  == old('modality') || $meeting_request->modality == 'TELEMATIC' ? 'selected' : ''}} value="2">TELEMÁTICA</option>
-                                                <option {{$meeting_request->modality  == old('modality') || $meeting_request->modality == 'MIXED' ? 'selected' : ''}} value="2">HÍBRIDA</option>
-                                            @else
-                                                <option value="1">PRESENCIAL</option>
-                                                <option value="2">TELEMÁTICA</option>
-                                                <option value="2">HÍBRIDA</option>
-                                            @endisset
-
-                                        </select>
-
-                                        <small class="form-text text-muted">Elige la modalidad de reunión.</small>
-
-                                        @error('type')
-                                        <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-
-                                </div>
-
-                                <div class="form-row">
-
-                                    <div class="form-group col-md-3">
-                                        <label for="hours">Horas invertidas</label>
-                                        <input id="" type="number" class="form-control" placeholder="" name="hours" value="{{\Time::complex_shape_hours($meeting->hours ?? '')}}" autocomplete="hours" autofocus="" step="0.01">
-                                        <small class="form-text text-muted">Enteros o decimales</small>
-                                        @error("hours")
-                                        <span class="invalid-feedback d-block" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-
-                                    <div class="form-group col-md-3">
-                                        <label for="minutes">Minutos invertidos</label>
-                                        <input id="" type="number" min="0" max="60" class="form-control" placeholder="" name="minutes" value="{{\Time::complex_shape_minutes($meeting->hours ?? '') }}" autocomplete="minutes" autofocus="">
-                                        <small class="form-text text-muted">Enteros</small>
-                                        @error("minutes")
-                                        <span class="invalid-feedback d-block" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-
-                                </div>
-
-                                <hr>
-
-                                <h4>Asistencias</h4>
-
-                                @if($signature_sheet)
-                                    <div class="callout callout-info">
-                                        <p>Las asistencias firmadas se han volcado automáticamente en el formulario.</p>
-                                    </div>
-                                @endif
-
-                                <div class="form-row">
-
-                                    <div class="form-group col-md-6">
-                                        <label for="defaultlist">Elige una lista predeterminada</label>
-                                        <select id="defaultlist" onchange="getLista(this);" class="selectpicker form-control @error('defaultlist') is-invalid @enderror" value="{{ old('type') }}"  autofocus>
-
-                                            <option value="-1">Selecciona una lista</option>
-                                            @foreach($defaultlists as $defaultlist)
-                                                <option value="{{trim($defaultlist->id)}}">{{trim($defaultlist->name)}}</option>
-                                            @endforeach
-
-                                        </select>
-
-                                        <small class="form-text text-muted">
-                                            Puedes elegir una lista predeterminada.
-
-                                            @if($signature_sheet)
-                                                Ten en cuenta que esto <b>eliminará</b> las asistencias volcadas desde la hoja de firmas.
-                                            @endif
-
-                                        </small>
-                                        @error('defaultlist')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-
-                                    <div class="form-group col-md-12">
-                                        <label>Seleccionar alumnos</label>
-                                        <select id="users" name="users[]" class="duallistbox" multiple="multiple @error('users') is-invalid @enderror">
-                                            @foreach($users as $user)
-                                                <option
-
-                                                    @isset($signature_sheet)
-                                                        @if($signature_sheet->users->contains($user))
-                                                        selected
-                                                        @endif
-                                                    @endisset
-
-                                                    {{$user->id == old('user') ? 'selected' : ''}} value="{{$user->id}}">
-                                                    {{trim($user->surname)}}, {{trim($user->name)}}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('users')
-                                            <span class="invalid-feedback d-block" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-
-                                </div>
-
-                                <hr>
-
-                                <h4>Acuerdos tomados</h4>
-
-                                @if($meeting_request)
-                                    <div class="callout callout-info">
-                                        <p>Los puntos de la orden del día se han volcado automáticamente en el formulario.</p>
-                                    </div>
-                                @endif
-
-                                @if (session('points'))
-
-                                    @foreach(session('points') as $point)
-
-                                        <div class="card card-info point_body">
-
-                                            <span class="point_id" style="display: none">{{$point['id']}}</span>
-
-                                            <div class="card-header">
-                                                <h3 class="card-title">{{$point['id']}}. {{$point['title']}}</h3>
+                                                @enderror
                                             </div>
 
-                                            <div class="card-body">
+                                            <div class="form-group col-md-3">
+                                                <label for="time">Hora</label>
+                                                <input id="time" type="time"
+                                                       class="form-control @error('time') is-invalid @enderror" name="time"
+                                                       @if(old('time'))
+                                                       value="{{old('time')}}"
+                                                       @else
 
-                                                <div class="row">
-                                                    <div class="col-sm-4">
-                                                        <!-- text input -->
-                                                        <div class="form-group">
-                                                            <label>Editar nombre</label>
-                                                            <input type="text" class="form-control point_title" value="{{$point['title']}}" placeholder="Escribe un nombre">
-                                                        </div>
-                                                    </div>
+                                                       @if($meeting_request != null)
+                                                       value="{{\Carbon\Carbon::parse($meeting_request->datetime)->format('H:i')}}"
+                                                       @else
+                                                       value=""
+                                                       @endif
 
-                                                    <div class="col-sm-5">
-                                                        <div class="form-group">
-                                                            <label>Descripción</label>
-                                                            <textarea class="form-control point_description" rows="3" placeholder="Añade una descripción concisa del desarrollo de este punto">{{$point['description']}}</textarea>
-                                                        </div>
-                                                    </div>
 
-                                                    <div class="col-sm-3">
-                                                        <div class="form-group">
-                                                            <label>Duración</label>
-                                                            <input type="number" class="form-control point_duration" value="{{$point['duration']}}">
-                                                            <small class="form-text text-muted">Minutos que han llevado desarrollar este punto.
-                                                            </small>
-                                                        </div>
-                                                    </div>
+                                                       @endif
+                                                       autofocus>
+                                                <small class="form-text text-muted">Indica la hora de la reunión.
+                                                </small>
 
-                                                </div>
-
-                                                <div id="agreements_{{$point['id']}}">
-
-                                                    @foreach($point['agreements'] as $agreement)
-                                                        @php ($random_id = \Random::getRandomIdentifier())
-                                                        <div class="row point_agreement" id="agreement_{{$random_id}}">
-                                                            <div class="col-sm-6">
-                                                                <div class="form-group">
-                                                                    <label>Acuerdo</label>
-                                                                    <textarea class="form-control" rows="3" placeholder="Describe el acuerdo tomado en la reunión.">{{trim($agreement['description'])}}</textarea>
-                                                                    <button type="button" onclick="delete_agreement({{$random_id}})" class="btn btn-default btn-xs"><i class="fas fa-trash"></i> Borrar</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-
-                                                </div>
-
-                                                <button type="button" onclick="add_agreement({{$point['id']}})" class="btn btn-light"><i class="fas fa-plus"></i> Añadir acuerdo</button>
-
+                                                @error('time')
+                                                <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                                @enderror
                                             </div>
 
                                         </div>
 
-                                    @endforeach
+                                        <div class="form-row">
 
-                                @else
+                                            <x-input col="6" attr="place" :value="$meeting_request->place ?? ''" label="Lugar" description="Indica el lugar de la reunión."/>
 
-                                    @if($meeting_request)
+                                            <div class="form-group col-md-3">
+                                                <label for="type">Tipo</label>
+                                                <select id="type" class="selectpicker form-control @error('type') is-invalid @enderror" name="type" value="{{ old('type') }}"  autofocus>
 
-                                        @foreach($meeting_request->diary->diary_points as $diary_point)
+                                                    @isset($meeting_request)
+                                                        <option {{$meeting_request->type  == old('type') || $meeting_request->type == 'ORDINARY' ? 'selected' : ''}} value="1">ORDINARIA</option>
+                                                        <option {{$meeting_request->type  == old('type') || $meeting_request->type == 'EXTRAORDINARY' ? 'selected' : ''}} value="2">EXTRAORDINARIA</option>
+                                                    @else
+                                                        <option value="1">ORDINARIA</option>
+                                                        <option value="2">EXTRAORDINARIA</option>
+                                                    @endisset
 
-                                            <div class="card card-info point_body">
+                                                </select>
 
-                                                <span class="point_id" style="display: none">{{$diary_point->id}}</span>
+                                                <small class="form-text text-muted">Elige el tipo de reunión.</small>
 
-                                                <div class="card-header">
-                                                    <h3 class="card-title">{{$diary_point->id}}. {{$diary_point->point}}</h3>
-                                                </div>
-
-                                                <div class="card-body">
-
-                                                    <div class="row">
-                                                        <div class="col-sm-4">
-                                                            <!-- text input -->
-                                                            <div class="form-group">
-                                                                <label>Editar nombre</label>
-                                                                <input type="text" class="form-control point_title" value="{{$diary_point->point}}" placeholder="Escribe un nombre">
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-sm-5">
-                                                            <div class="form-group">
-                                                                <label>Descripción</label>
-                                                                <textarea class="form-control point_description" rows="3" placeholder="Añade una descripción concisa del desarrollo de este punto"></textarea>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-sm-3">
-                                                            <div class="form-group">
-                                                                <label>Duración</label>
-                                                                <input type="number" class="form-control point_duration">
-                                                                <small class="form-text text-muted">Minutos que han llevado desarrollar este punto.
-                                                                </small>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-
-                                                    <div id="agreements_{{$diary_point->id}}">
-
-                                                    </div>
-
-                                                    <button type="button" onclick="add_agreement({{$diary_point->id}})" class="btn btn-light"><i class="fas fa-plus"></i> Añadir acuerdo</button>
-
-                                                </div>
-
+                                                @error('type')
+                                                <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                                @enderror
                                             </div>
 
-                                        @endforeach
+                                            <div class="form-group col-md-3">
+                                                <label for="modality">Modalidad</label>
+                                                <select id="modality" class="selectpicker form-control @error('modality') is-invalid @enderror" name="modality" value="{{ old('modality') }}"  autofocus>
 
-                                    @endif
+                                                    @isset($meeting_request)
+                                                        <option {{$meeting_request->modality  == old('modality') || $meeting_request->modality == 'F2F' ? 'selected' : ''}} value="1">PRESENCIAL</option>
+                                                        <option {{$meeting_request->modality  == old('modality') || $meeting_request->modality == 'TELEMATIC' ? 'selected' : ''}} value="2">TELEMÁTICA</option>
+                                                        <option {{$meeting_request->modality  == old('modality') || $meeting_request->modality == 'MIXED' ? 'selected' : ''}} value="3">HÍBRIDA</option>
+                                                    @else
+                                                        <option value="1">PRESENCIAL</option>
+                                                        <option value="2">TELEMÁTICA</option>
+                                                        <option value="3">HÍBRIDA</option>
+                                                    @endisset
 
-                                @endif
+                                                </select>
 
+                                                <small class="form-text text-muted">Elige la modalidad de reunión.</small>
 
+                                                @error('type')
+                                                <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                                @enderror
+                                            </div>
 
+                                        </div>
 
+                                        <div class="form-row">
 
+                                            <div class="form-group col-md-3">
+                                                <label for="hours">Horas invertidas</label>
+                                                <input id="" type="number" class="form-control" placeholder="" name="hours" value="{{\Time::complex_shape_hours($meeting->hours ?? '')}}" autocomplete="hours" autofocus="" step="0.01">
+                                                <small class="form-text text-muted">Enteros o decimales</small>
+                                                @error("hours")
+                                                    <span class="invalid-feedback d-block" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
 
+                                            <div class="form-group col-md-3">
+                                                <label for="minutes">Minutos invertidos</label>
+                                                <input id="" type="number" min="0" max="60" class="form-control" placeholder="" name="minutes" value="{{\Time::complex_shape_minutes($meeting->hours ?? '') }}" autocomplete="minutes" autofocus="">
+                                                <small class="form-text text-muted">Enteros</small>
+                                                @error("minutes")
+                                                    <span class="invalid-feedback d-block" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
 
-                                <div class="form-row">
-                                    <div class="col-lg-3 mt-1">
-                                        <button type="submit" class="btn btn-primary"><i class="fas fa-scroll"></i>&nbsp;&nbsp;Crear acta</button>
-                                    </div>
+                                        </div>
+
+                                        <hr>
+
+                                        <h4>Asistencias</h4>
+
+                                        @if($signature_sheet)
+                                            <div class="callout callout-info">
+                                                <p>Las asistencias firmadas se han volcado automáticamente en el formulario.</p>
+                                            </div>
+                                        @endif
+
+                                        <div class="form-row">
+
+                                            <div class="form-group col-md-6">
+                                                <label for="defaultlist">Elige una lista predeterminada</label>
+                                                <select id="defaultlist" onchange="getLista(this);" class="selectpicker form-control @error('defaultlist') is-invalid @enderror" value="{{ old('type') }}"  autofocus>
+
+                                                    <option value="-1">Selecciona una lista</option>
+                                                    @foreach($defaultlists as $defaultlist)
+                                                        <option value="{{trim($defaultlist->id)}}">{{trim($defaultlist->name)}}</option>
+                                                    @endforeach
+
+                                                </select>
+
+                                                <small class="form-text text-muted">
+                                                    Puedes elegir una lista predeterminada.
+
+                                                    @if($signature_sheet)
+                                                        Ten en cuenta que esto <b>eliminará</b> las asistencias volcadas desde la hoja de firmas.
+                                                    @endif
+
+                                                </small>
+                                                @error('defaultlist')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                        </span>
+                                                @enderror
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label>Seleccionar alumnos</label>
+                                                <select id="users" name="users[]" class="duallistbox" multiple="multiple @error('users') is-invalid @enderror">
+                                                    @foreach($users as $user)
+                                                        <option
+
+                                                            @isset($signature_sheet)
+                                                            @if($signature_sheet->users->contains($user))
+                                                            selected
+                                                            @endif
+                                                            @endisset
+
+                                                            {{$user->id == old('user') ? 'selected' : ''}} value="{{$user->id}}">
+                                                            {{trim($user->surname)}}, {{trim($user->name)}}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('users')
+                                                <span class="invalid-feedback d-block" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                                @enderror
+                                            </div>
+
+                                        </div>
+
+                                        <hr>
+
+                                        <h4>Acuerdos tomados</h4>
+
+                                        @if($meeting_request)
+                                            <div class="callout callout-info">
+                                                <p>Los puntos de la orden del día se han volcado automáticamente en el formulario.</p>
+                                            </div>
+                                        @endif
+
+                                        <div id="points_list">
+
+                                            @if (session('points'))
+
+                                                @foreach(session('points') as $point)
+
+                                                    <div class="card card-info point_body" id="point_{{$point['id']}}">
+
+                                                        <span class="point_id" style="display: none">{{$point['id']}}</span>
+
+                                                        <div class="card-header">
+                                                            <div class="d-flex justify-content-between">
+                                                                <div>
+                                                                    <h3 class="card-title">{{$point['id']}}. {{$point['title']}}</h3>
+                                                                </div>
+                                                                <div>
+                                                                    <button type="button" onclick="delete_point({{$point['id']}})" class="btn btn-xs btn-warning"><i class="fas fa-trash"></i></button>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="card-body">
+
+                                                            <div class="row">
+
+                                                                <div class="col-lg-6">
+
+                                                                    <div class="row">
+                                                                        <div class="col-sm-12">
+                                                                            <div class="form-group">
+                                                                                <label>Editar nombre</label>
+                                                                                <input type="text" class="form-control point_title" value="{{$point['title']}}" placeholder="Escribe un nombre">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-12">
+                                                                            <div class="form-group">
+                                                                                <label>Descripción</label>
+                                                                                <textarea class="form-control point_description" rows="3" placeholder="Añade una descripción concisa del desarrollo de este punto">{{$point['description']}}</textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+
+                                                                <div class="col-lg-6">
+
+                                                                    <div class="row">
+
+                                                                        <div class="col-lg-6">
+
+                                                                            <div class="form-group">
+                                                                                <label>Duración</label>
+                                                                                <input type="number" class="form-control point_duration" value="{{$point['duration']}}">
+                                                                                <small class="form-text text-muted">Minutos que han llevado desarrollar este punto.
+                                                                                </small>
+                                                                            </div>
+
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div id="agreements_{{$point['id']}}">
+
+                                                                @foreach($point['agreements'] as $agreement)
+                                                                    @php ($random_id = \Random::getRandomIdentifier())
+                                                                    <div class="row point_agreement" id="agreement_{{$random_id}}">
+                                                                        <div class="col-sm-6">
+                                                                            <div class="form-group">
+                                                                                <label>Acuerdo</label>
+                                                                                <textarea class="form-control" rows="3" placeholder="Describe el acuerdo tomado en la reunión.">{{trim($agreement['description'])}}</textarea>
+                                                                                <button type="button" onclick="delete_agreement({{$random_id}})" class="btn btn-default btn-xs"><i class="fas fa-trash"></i> Borrar</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                @endforeach
+
+                                                            </div>
+
+                                                            <button type="button" onclick="add_agreement({{$point['id']}})" class="btn btn-light"><i class="fas fa-plus"></i> Añadir acuerdo</button>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                @endforeach
+
+                                            @else
+
+                                                @if($meeting_request)
+
+                                                    @foreach($meeting_request->diary->diary_points as $key => $diary_point)
+
+                                                        <div class="card card-info point_body" id="point_{{$diary_point->id}}">
+
+                                                            <span class="point_id" style="display: none">{{$diary_point->id}}</span>
+
+                                                            <div class="card-header">
+                                                                <div class="d-flex justify-content-between">
+                                                                    <div>
+                                                                        <h3 class="card-title">{{++$key}}. {{$diary_point->point}}</h3>
+                                                                    </div>
+                                                                    <div>
+                                                                        <button type="button" onclick="delete_point({{$diary_point->id}})" class="btn btn-xs btn-warning"><i class="fas fa-trash"></i></button>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="card-body">
+
+                                                                <div class="row">
+
+                                                                    <div class="col-lg-6">
+
+                                                                        <div class="row">
+                                                                            <div class="col-sm-12">
+                                                                                <div class="form-group">
+                                                                                    <label>Editar nombre</label>
+                                                                                    <input type="text" class="form-control point_title" value="{{$diary_point->point}}" placeholder="Escribe un nombre">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-sm-12">
+                                                                                <div class="form-group">
+                                                                                    <label>Descripción</label>
+                                                                                    <textarea class="form-control point_description" rows="3" placeholder="Añade una descripción concisa del desarrollo de este punto"></textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                    <div class="col-lg-6">
+
+                                                                        <div class="row">
+
+                                                                            <div class="col-lg-6">
+
+                                                                                <div class="form-group">
+                                                                                    <label>Duración</label>
+                                                                                    <input type="number" class="form-control point_duration">
+                                                                                    <small class="form-text text-muted">Minutos que han llevado desarrollar este punto.
+                                                                                    </small>
+                                                                                </div>
+
+                                                                            </div>
+
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                </div>
+
+                                                                <div id="agreements_{{$diary_point->id}}">
+
+                                                                </div>
+
+                                                                <button type="button" onclick="add_agreement({{$diary_point->id}})" class="btn btn-light"><i class="fas fa-plus"></i> Añadir acuerdo</button>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                    @endforeach
+
+                                                @endif
+
+                                            @endif
+
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="col-lg-3 col-xs-12 mt-1">
+                                                <button type="button" onclick="add_point()" class="btn btn-info btn-block"><i class="fas fa-sticky-note"></i>&nbsp;&nbsp;Añadir punto al acta</button>
+                                            </div>
+                                        </div>
+
+                                        <br>
+
+                                        <div class="form-row">
+                                            <div class="col-lg-6 mt-1">
+                                                <button type="submit" class="btn btn-primary"><i class="fas fa-scroll"></i>&nbsp;&nbsp;Crear acta</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+
                                 </div>
-
-                            </form>
-
+                            </div>
                         </div>
+
                     </div>
+
+
+                </div>
+
                 </div>
 
             </div>
@@ -566,18 +636,106 @@
             $("#agreement_"+agreement_id).remove();
         }
 
+        function add_point(){
+            let number_of_points = $(".point_body").length + 1;
+            var source = document.getElementById("point_template").innerHTML;
+            var template = Handlebars.compile(source);
+            var context = { point_id: number_of_points};
+            var html = template(context);
+            $("#points_list").append(html);
+        }
+
+        function delete_point(point_id){
+            $("#point_"+point_id).remove();
+        }
+
     </script>
 
     <script id="agreement_template" type="text/x-handlebars-template">
 
         <div class="row point_agreement" id="agreement_@{{ id }}">
-            <div class="col-sm-6">
+            <div class="col-lg-6">
                 <div class="form-group">
                     <label>Acuerdo</label>
                     <textarea class="form-control" rows="3" placeholder="Describe el acuerdo tomado en la reunión."></textarea>
                     <button type="button" onclick="delete_agreement(@{{ id }})" class="btn btn-default btn-xs"><i class="fas fa-trash"></i> Borrar</button>
                 </div>
             </div>
+        </div>
+
+    </script>
+
+    <script id="point_template" type="text/x-handlebars-template">
+
+        <div class="card card-info point_body" id="point_@{{ point_id }}">
+
+            <span class="point_id" style="display: none">@{{ point_id }}</span>
+
+            <div class="card-header">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h3 class="card-title">@{{ point_id }}. <i>Nuevo punto</i></h3>
+                    </div>
+                    <div>
+                        <button type="button" onclick="delete_point(@{{ point_id }})" class="btn btn-xs btn-warning"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="row">
+
+                    <div class="col-lg-6">
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Editar nombre</label>
+                                    <input type="text" class="form-control point_title" placeholder="Escribe un nombre">
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Descripción</label>
+                                    <textarea class="form-control point_description" rows="3" placeholder="Añade una descripción concisa del desarrollo de este punto"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-6">
+
+                        <div class="row">
+
+                            <div class="col-lg-6">
+
+                                <div class="form-group">
+                                    <label>Duración</label>
+                                    <input type="number" class="form-control point_duration">
+                                    <small class="form-text text-muted">Minutos que han llevado desarrollar este punto.
+                                    </small>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div id="agreements_@{{ point_id }}">
+
+
+                </div>
+
+                <button type="button" onclick="add_agreement(@{{ point_id }})" class="btn btn-light"><i class="fas fa-plus"></i> Añadir acuerdo</button>
+
+            </div>
+
         </div>
 
     </script>
