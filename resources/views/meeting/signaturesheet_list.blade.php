@@ -16,13 +16,13 @@
 
         <x-menumeeting/>
 
-        <div class="col-md-9">
+        <div class="col-lg-9">
 
             <div class="card shadow-sm">
 
                 <div class="card-body">
 
-                    <table id="dataset" class="table table-hover">
+                    <table id="dataset" class="table table-hover table-responsive">
                         <thead>
                         <tr>
                             <th scope="col">Título</th>

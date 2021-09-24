@@ -156,6 +156,29 @@
 
                                 <ul class="todo-list ui-sortable" data-widget="todo-list" id="points">
 
+                                    @if(session('points') or isset($points))
+                                        @foreach(session('points') as $point)
+
+                                            @php ($random_id = \Random::getRandomIdentifier())
+
+                                            <li class="rounded" style="" id="{{$random_id}}">
+
+                                                <span class="handle ui-sortable-handle">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </span>
+
+                                                <span class="text point_title">{{$point}}</span>
+
+                                                <div class="tools">
+                                                    <i class="fas fa-trash" onclick="remove({{$random_id}})"></i>
+                                                </div>
+
+                                            </li>
+
+                                        @endforeach
+                                    @endif
+
                                 </ul>
 
                                 <br>

@@ -57,14 +57,14 @@ class MeetingSecretaryController extends Controller
     {
         $instance = \Instantiation::instance();
 
-        return view('meeting.request',['instance' => $instance]);
+        return view('meeting.request_createandedit',['instance' => $instance]);
     }
 
     public function request_new(Request $request_http)
     {
         $instance = \Instantiation::instance();
 
-        $request_http->validate([
+        $validator = Validator::make($request_http->all(), [
             'title' => 'required|min:5|max:255',
             'place' => 'required|min:5|max:255',
             'date' => 'required|date_format:Y-m-d|after:yesterday',
@@ -73,6 +73,14 @@ class MeetingSecretaryController extends Controller
             'modality' => 'required|numeric|min:1|max:3',
             'points_list' => 'required'
         ]);
+
+        if ($validator->fails()) {
+            $points = json_decode($request_http->input('points_list'),true);
+            return back()->withErrors($validator)->withInput()->with([
+                'error' => 'Hay errores en el formulario.',
+                'points' => collect($points)
+            ]);
+        }
 
         $meeting_request = MeetingRequest::create([
             'title' => $request_http->input('title'),

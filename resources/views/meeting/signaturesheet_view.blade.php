@@ -68,7 +68,7 @@
                             <i class="fas fa-signature"></i> Firmas ({{$signature_sheet->users->count()}})
                         </h4>
 
-                    <table id="dataset" class="table table-hover">
+                    <table id="dataset" class="table table-hover table-responsive">
                         <thead>
                         <tr>
                             <th scope="col">UVUS</th>

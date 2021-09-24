@@ -41,7 +41,7 @@
                         </div>
                     </form>
 
-                    <table id="dataset" class="table table-hover">
+                    <table id="dataset" class="table table-hover table-responsive">
                         <thead>
                         <tr>
                             <th scope="col">Curso</th>

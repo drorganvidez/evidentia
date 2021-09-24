@@ -30,7 +30,7 @@
 
 
                 <div class="card-body">
-                    <table id="dataset" class="table table-hover">
+                    <table id="dataset" class="table table-hover table-responsive">
                             <thead>
                             <tr>
                                 <th scope="col">Razón</th>
