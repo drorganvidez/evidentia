@@ -45,7 +45,7 @@
                                     <a class="btn btn-info btn-sm" href="{{route('secretary.meeting.manage.minutes.edit',['instance' => $instance, 'id' => $m->id])}}"><i class="fas fa-edit"></i> Editar</a>
 
                                     <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-confirm-REMOVE-{{$m->id}}">
-                                        <i class="fas fa-trash"></i> Eliminar </span>
+                                        <i class="fas fa-trash"></i> Eliminar
                                     </a>
 
                                 </td>

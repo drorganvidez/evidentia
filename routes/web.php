@@ -193,36 +193,45 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
             Route::get('/', [MeetingSecretaryController::class, 'manage'])->name('secretary.meeting.manage');
 
             // Convocatorias
-            Route::get('/request/list', [MeetingSecretaryController::class, 'request_list'])->name('secretary.meeting.manage.request.list');
-            Route::get('/request/create', [MeetingSecretaryController::class, 'request_create'])->name('secretary.meeting.manage.request.create');
-            Route::post('/request/new', [MeetingSecretaryController::class, 'request_new'])->name('secretary.meeting.manage.request.new');
-            Route::get('/request/download/{id}', [MeetingSecretaryController::class, 'request_download'])->name('secretary.meeting.manage.request.download');
+            Route::prefix('request')->group(function () {
+                Route::get('list', [MeetingSecretaryController::class, 'request_list'])->name('secretary.meeting.manage.request.list');
+                Route::get('create', [MeetingSecretaryController::class, 'request_create'])->name('secretary.meeting.manage.request.create');
+                Route::post('new', [MeetingSecretaryController::class, 'request_new'])->name('secretary.meeting.manage.request.new');
+                Route::get('download/{id}', [MeetingSecretaryController::class, 'request_download'])->name('secretary.meeting.manage.request.download');
+                Route::post('remove', [MeetingSecretaryController::class, 'request_remove'])->name('secretary.meeting.manage.request.remove');
+            });
+
 
             // Hojas de firmas
-            Route::get('/signaturesheet/list', [MeetingSecretaryController::class, 'signaturesheet_list'])->name('secretary.meeting.manage.signaturesheet.list');
-            Route::get('/signaturesheet/create', [MeetingSecretaryController::class, 'signaturesheet_create'])->name('secretary.meeting.manage.signaturesheet.create');
-            Route::post('/signaturesheet/new', [MeetingSecretaryController::class, 'signaturesheet_new'])->name('secretary.meeting.manage.signaturesheet.new');
-            Route::get('/signaturesheet/view/{signature_sheet}', [MeetingSecretaryController::class, 'signaturesheet_view'])->name('secretary.meeting.manage.signaturesheet.view');
+            Route::prefix('signaturesheet')->group(function () {
+                Route::get('list', [MeetingSecretaryController::class, 'signaturesheet_list'])->name('secretary.meeting.manage.signaturesheet.list');
+                Route::get('create', [MeetingSecretaryController::class, 'signaturesheet_create'])->name('secretary.meeting.manage.signaturesheet.create');
+                Route::post('new', [MeetingSecretaryController::class, 'signaturesheet_new'])->name('secretary.meeting.manage.signaturesheet.new');
+                Route::get('view/{signature_sheet}', [MeetingSecretaryController::class, 'signaturesheet_view'])->name('secretary.meeting.manage.signaturesheet.view');
+            });
 
             // Actas
-            Route::get('/minutes/list', [MeetingSecretaryController::class, 'minutes_list'])->name('secretary.meeting.manage.minutes.list');
-            Route::get('/minutes/create', [MeetingSecretaryController::class, 'minutes_create'])->name('secretary.meeting.manage.minutes.create');
+            Route::prefix('minutes')->group(function () {
+                Route::get('list', [MeetingSecretaryController::class, 'minutes_list'])->name('secretary.meeting.manage.minutes.list');
+                Route::get('create', [MeetingSecretaryController::class, 'minutes_create'])->name('secretary.meeting.manage.minutes.create');
 
-            Route::get('/minutes/create/step1', [MeetingSecretaryController::class, 'minutes_create_step1'])->name('secretary.meeting.manage.minutes.create.step1');
-            Route::post('/minutes/create/step1_p', [MeetingSecretaryController::class, 'minutes_create_step1_p'])->name('secretary.meeting.manage.minutes.create.step1_p');
+                Route::get('create/step1', [MeetingSecretaryController::class, 'minutes_create_step1'])->name('secretary.meeting.manage.minutes.create.step1');
+                Route::post('create/step1_p', [MeetingSecretaryController::class, 'minutes_create_step1_p'])->name('secretary.meeting.manage.minutes.create.step1_p');
 
-            Route::get('/minutes/create/step2', [MeetingSecretaryController::class, 'minutes_create_step2'])->name('secretary.meeting.manage.minutes.create.step2');
-            Route::post('/minutes/create/step2_p', [MeetingSecretaryController::class, 'minutes_create_step2_p'])->name('secretary.meeting.manage.minutes.create.step2_p');
+                Route::get('create/step2', [MeetingSecretaryController::class, 'minutes_create_step2'])->name('secretary.meeting.manage.minutes.create.step2');
+                Route::post('create/step2_p', [MeetingSecretaryController::class, 'minutes_create_step2_p'])->name('secretary.meeting.manage.minutes.create.step2_p');
 
-            Route::get('/minutes/create/step3', [MeetingSecretaryController::class, 'minutes_create_step3'])->name('secretary.meeting.manage.minutes.create.step3');
-            Route::post('/minutes/create/step3_p', [MeetingSecretaryController::class, 'minutes_create_step3_p'])->name('secretary.meeting.manage.minutes.create.step3_p');
+                Route::get('create/step3', [MeetingSecretaryController::class, 'minutes_create_step3'])->name('secretary.meeting.manage.minutes.create.step3');
+                Route::post('create/step3_p', [MeetingSecretaryController::class, 'minutes_create_step3_p'])->name('secretary.meeting.manage.minutes.create.step3_p');
 
-            Route::get('/minutes/download/{id}', [MeetingSecretaryController::class, 'minutes_download'])->name('secretary.meeting.manage.minutes.download');
+                Route::get('download/{id}', [MeetingSecretaryController::class, 'minutes_download'])->name('secretary.meeting.manage.minutes.download');
 
-            Route::get('/minutes/edit/{id}', [MeetingSecretaryController::class, 'minutes_edit'])->name('secretary.meeting.manage.minutes.edit');
-            Route::post('/minutes/save/', [MeetingSecretaryController::class, 'minutes_save'])->name('secretary.meeting.manage.minutes.save');
+                Route::get('edit/{id}', [MeetingSecretaryController::class, 'minutes_edit'])->name('secretary.meeting.manage.minutes.edit');
+                Route::post('save', [MeetingSecretaryController::class, 'minutes_save'])->name('secretary.meeting.manage.minutes.save');
 
-            Route::post('/minutes/remove/', [MeetingSecretaryController::class, 'minutes_remove'])->name('secretary.meeting.manage.minutes.remove');
+                Route::post('remove', [MeetingSecretaryController::class, 'minutes_remove'])->name('secretary.meeting.manage.minutes.remove');
+            });
+
 
         });
 

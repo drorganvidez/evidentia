@@ -116,16 +116,24 @@ class MeetingSecretaryController extends Controller
         return $response;
     }
 
-    public function minutes_download($instance, $id)
+    public function request_remove(Request $request)
     {
-        $meeting_minutes = MeetingMinutes::findOrFail($id);
+        $meeting_request = MeetingRequest::where('id',$request->input('meeting_request_id'))->first();
 
-        $response = Storage::download(\Instantiation::instance() .'/meeting_minutes/meeting_minutes_' .$meeting_minutes->id . '.pdf');
+        $instance = \Instantiation::instance();
 
-        // limpiar búfer de salida
-        ob_end_clean();
+        // borramos el pdf del acta antigua
+        Storage::delete(\Instantiation::instance() .'/meeting_requests/meeting_request_' .$meeting_request->id . '.pdf');
 
-        return $response;
+        // desemparejamos signature sheet
+        $signature_sheet = $meeting_request->signature_sheet;
+        $signature_sheet->meeting_request_id = null;
+        $signature_sheet->save();
+
+        // eliminamos la entidad en sí
+        $meeting_request->delete();
+
+        return redirect()->route('secretary.meeting.manage.request.list',$instance)->with('success', 'Convocatoria eliminada con éxito.');
     }
 
     /*
@@ -332,8 +340,7 @@ class MeetingSecretaryController extends Controller
             'type' => $request->input('type'),
             'modality' => $request->input('modality'),
             'place' => $request->input('place'),
-            'datetime' => $request->input('date')." ".$request->input('time'),
-            'meeting_request_id' => $request->input('meeting_request')
+            'datetime' => $request->input('date')." ".$request->input('time')
         ]);
 
         $meeting->comittee()->associate(Auth::user()->secretary->comittee);
@@ -571,7 +578,7 @@ class MeetingSecretaryController extends Controller
 
     public function minutes_remove(Request $request)
     {
-        $meeting_minutes = Meetingminutes::where('id',$request->input('meeting_minutes_id'))->first();
+        $meeting_minutes = MeetingMinutes::where('id',$request->input('meeting_minutes_id'))->first();
 
         $instance = \Instantiation::instance();
 
@@ -583,6 +590,18 @@ class MeetingSecretaryController extends Controller
 
         return redirect()->route('secretary.meeting.manage.minutes.list',$instance)->with('success', 'Acta de reunión eliminada con éxito.');
 
+    }
+
+    public function minutes_download($instance, $id)
+    {
+        $meeting_minutes = MeetingMinutes::findOrFail($id);
+
+        $response = Storage::download(\Instantiation::instance() .'/meeting_minutes/meeting_minutes_' .$meeting_minutes->id . '.pdf');
+
+        // limpiar búfer de salida
+        ob_end_clean();
+
+        return $response;
     }
 
     /*
