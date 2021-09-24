@@ -113,17 +113,12 @@
             <div class="container-fluid">
                 <div class="row">
 
-                    <div class="col-12 col-md-6">
+                    <div class="col-12">
                         <ol class="breadcrumb mb-2">
                             @section('breadcrumb')
                             @show
                         </ol>
                         <h1 class="m-0 text-dark"><i class="@yield('title-icon')"></i>&nbsp;&nbsp;@yield('title')</h1>
-                    </div>
-
-                    <div class="col-12 col-md-6 mt-2">
-                        @section('info')
-                        @show
                     </div>
 
                 </div><!-- /.row -->

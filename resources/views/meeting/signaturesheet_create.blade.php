@@ -62,7 +62,8 @@
                                     @endforeach
                                 </select>
 
-                                <small class="form-text text-muted">Elige una convocatoria a la que quieres asociar tu hoja de firmas</small>
+                                <small class="form-text text-muted">Elige una convocatoria a la que quieres asociar tu hoja de firmas.
+                                    Solo puedes asociar convocatorias que <b>no tengan</b> una hoja de firmas.</small>
 
                                 @error('meeting_request')
                                 <span class="invalid-feedback" role="alert">

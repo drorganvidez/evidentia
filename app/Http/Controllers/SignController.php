@@ -14,7 +14,8 @@ class SignController extends Controller
         $signature_sheet = SignatureSheet::where('random_identifier',$random_identifier)->first();
 
         if($signature_sheet == null){
-            return redirect('/');
+
+            abort(404);
         }
 
         $instance = \Instantiation::instance();
