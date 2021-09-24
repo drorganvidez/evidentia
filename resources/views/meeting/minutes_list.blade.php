@@ -16,16 +16,19 @@
 
         <x-menumeeting/>
 
-        <div class="col-md-9">
+        <div class="col-lg-9">
 
             <div class="card shadow-sm">
 
                 <div class="card-body">
 
-                    <table id="dataset" class="table table-hover">
+                    <table id="dataset" class="table table-hover table-responsive">
                         <thead>
                         <tr>
                             <th scope="col">Título</th>
+                            <th scope="col">Lugar</th>
+                            <th scope="col">Realizada</th>
+                            <th scope="col">Duración</th>
                             <th scope="col">Última modificación</th>
                             <th scope="col">Opciones</th>
                         </tr>
@@ -37,15 +40,25 @@
                                     {{$m->meeting->title}}
                                 </td>
                                 <td>
+                                    {{$m->meeting->place}}
+                                </td>
+                                <td>
+                                    {{\Carbon\Carbon::parse($m->meeting->datetime)->format('d/m/Y')}}
+                                    {{\Carbon\Carbon::parse($m->meeting->datetime)->format('H:i')}}
+                                </td>
+                                <td>
+                                    {{$m->meeting->hours}} horas
+                                </td>
+                                <td>
                                     {{ \Carbon\Carbon::parse($m->updated_at)->diffForHumans() }}
                                 </td>
                                 <td>
-                                    <a class="btn btn-primary btn-sm" href="{{route('secretary.meeting.manage.minutes.download',['instance' => $instance, 'id' => $m->id])}}"><i class="fas fa-file-pdf"></i> Descargar</a>
+                                    <a class="btn btn-primary btn-sm" href="{{route('secretary.meeting.manage.minutes.download',['instance' => $instance, 'id' => $m->id])}}"><i class="fas fa-file-pdf"></i></a>
 
-                                    <a class="btn btn-info btn-sm" href="{{route('secretary.meeting.manage.minutes.edit',['instance' => $instance, 'id' => $m->id])}}"><i class="fas fa-edit"></i> Editar</a>
+                                    <a class="btn btn-info btn-sm" href="{{route('secretary.meeting.manage.minutes.edit',['instance' => $instance, 'id' => $m->id])}}"><i class="fas fa-edit"></i></a>
 
                                     <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-confirm-REMOVE-{{$m->id}}">
-                                        <i class="fas fa-trash"></i> Eliminar </span>
+                                        <i class="fas fa-trash"></i>
                                     </a>
 
                                 </td>

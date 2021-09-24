@@ -22,7 +22,7 @@
                     <form method="POST" action="{{$route}}">
                 @csrf
 
-                <table id="dataset" class="table table-hover">
+                <table id="dataset" class="table table-hover table-responsive">
                     <thead>
                     <tr>
                         <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Previsualización</th>

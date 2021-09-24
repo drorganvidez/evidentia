@@ -57,14 +57,14 @@ class MeetingSecretaryController extends Controller
     {
         $instance = \Instantiation::instance();
 
-        return view('meeting.request',['instance' => $instance]);
+        return view('meeting.request_createandedit',['instance' => $instance]);
     }
 
     public function request_new(Request $request_http)
     {
         $instance = \Instantiation::instance();
 
-        $request_http->validate([
+        $validator = Validator::make($request_http->all(), [
             'title' => 'required|min:5|max:255',
             'place' => 'required|min:5|max:255',
             'date' => 'required|date_format:Y-m-d|after:yesterday',
@@ -73,6 +73,14 @@ class MeetingSecretaryController extends Controller
             'modality' => 'required|numeric|min:1|max:3',
             'points_list' => 'required'
         ]);
+
+        if ($validator->fails()) {
+            $points = json_decode($request_http->input('points_list'),true);
+            return back()->withErrors($validator)->withInput()->with([
+                'error' => 'Hay errores en el formulario.',
+                'points' => collect($points)
+            ]);
+        }
 
         $meeting_request = MeetingRequest::create([
             'title' => $request_http->input('title'),
@@ -94,6 +102,7 @@ class MeetingSecretaryController extends Controller
                 "diary_id" => $diary->id,
                 "point" => $value
             ]);
+
         }
 
         // Genera PDF de la convocatoria
@@ -102,6 +111,95 @@ class MeetingSecretaryController extends Controller
         Storage::put(\Instantiation::instance() .'/meeting_requests/meeting_request_' .$meeting_request->id . '.pdf',$content) ;
 
         return redirect()->route('secretary.meeting.manage.request.list',$instance)->with('success', 'Convocatoria de reunión creada con éxito.');
+    }
+
+    public function request_edit($instance, $id)
+    {
+        $instance = \Instantiation::instance();
+
+        $meeting_request = MeetingRequest::findOrFail($id);
+
+        $points_array = array();
+
+        foreach($meeting_request->diary->diary_points as $point){
+            array_push($points_array,$point->point);
+        }
+
+        return view('meeting.request_createandedit',[
+            'instance' => $instance,
+            'meeting_request' => $meeting_request,
+            'edit' => true,
+            'points' => collect($points_array)
+        ]);
+    }
+
+    public function request_save(Request $request_http)
+    {
+        $instance = \Instantiation::instance();
+
+        $validator = Validator::make($request_http->all(), [
+            'title' => 'required|min:5|max:255',
+            'place' => 'required|min:5|max:255',
+            'date' => 'required|date_format:Y-m-d|after:yesterday',
+            'time' => 'required',
+            'type' => 'required|numeric|min:1|max:2',
+            'modality' => 'required|numeric|min:1|max:3',
+            'points_list' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            $points = json_decode($request_http->input('points_list'),true);
+            return back()->withErrors($validator)->withInput()->with([
+                'error' => 'Hay errores en el formulario.',
+                'points' => collect($points)
+            ]);
+        }
+
+        $meeting_request = MeetingRequest::findOrFail($request_http->input('_id'));
+
+        $meeting_request->title = $request_http->input('title');
+        $meeting_request->place = $request_http->input('place');
+        $meeting_request->datetime = $request_http->input('date')." ".$request_http->input('time');
+
+        $meeting_request->save();
+
+        // borramos los puntos del día anteriores
+        $old_diary = $meeting_request->diary;
+        $old_diary?->delete();
+
+        // añadimos los nuevos puntos
+        $diary = Diary::create([
+            "meeting_request_id" => $meeting_request->id
+        ]);
+
+        foreach (json_decode($request_http->input('points_list'),1) as $key => $value) {
+
+            $diary->diary_points()->create([
+                'diary_id' => $diary->id,
+                'point' => $value
+            ]);
+
+        }
+
+        /*
+         *  Por alguna extraña razón de Laravel, no es capaz de remapear el objeto meeting_request, pese a que
+         *  se ha modificado correctamente y las referencias de las entidades que apuntan a él son correctas
+         *  en la base de datos. Hay que volver a traerse de la base la entidad mediante el id (obviamente, el id
+         *  sigue siendo el mismo) y ya es correcta la asociación.
+         *
+         *  No sé, es muy extraño.
+         */
+        $meeting_request = MeetingRequest::findOrFail($request_http->input('_id'));
+
+        // borramos el PDF de la convocatoria anterior
+        Storage::delete(\Instantiation::instance() .'/meeting_requests/meeting_request_' .$meeting_request->id . '.pdf') ;
+
+        // Genera PDF de la convocatoria
+        $pdf = PDF::loadView('meeting.request_template', ['meeting_request' => $meeting_request]);
+        $content = $pdf->download()->getOriginalContent();
+        Storage::put(\Instantiation::instance() .'/meeting_requests/meeting_request_' .$meeting_request->id . '.pdf',$content) ;
+
+        return redirect()->route('secretary.meeting.manage.request.list',$instance)->with('success', 'Convocatoria de reunión editada con éxito.');
     }
 
     public function request_download($instance, $id)
@@ -116,16 +214,26 @@ class MeetingSecretaryController extends Controller
         return $response;
     }
 
-    public function minutes_download($instance, $id)
+    public function request_remove(Request $request)
     {
-        $meeting_minutes = MeetingMinutes::findOrFail($id);
+        $meeting_request = MeetingRequest::where('id',$request->input('meeting_request_id'))->first();
 
-        $response = Storage::download(\Instantiation::instance() .'/meeting_minutes/meeting_minutes_' .$meeting_minutes->id . '.pdf');
+        $instance = \Instantiation::instance();
 
-        // limpiar búfer de salida
-        ob_end_clean();
+        // borramos el pdf del acta antigua
+        Storage::delete(\Instantiation::instance() .'/meeting_requests/meeting_request_' .$meeting_request->id . '.pdf');
 
-        return $response;
+        // desemparejamos signature sheet (si la hubiera)
+        $signature_sheet = $meeting_request->signature_sheet;
+        if($signature_sheet != null){
+            $signature_sheet->meeting_request_id = null;
+            $signature_sheet->save();
+        }
+
+        // eliminamos la entidad en sí
+        $meeting_request->delete();
+
+        return redirect()->route('secretary.meeting.manage.request.list',$instance)->with('success', 'Convocatoria eliminada con éxito.');
     }
 
     /*
@@ -161,27 +269,23 @@ class MeetingSecretaryController extends Controller
             'title' => 'required|min:5|max:255'
         ]);
 
-        // generamos identificador aleatorio y comprobamos si ya está ocupado
-        $random_identifier = \Random::getRandomIdentifier('4');
-        $signature_sheet_with_random_identifier = SignatureSheet::where('random_identifier', $random_identifier)->first();
-        if($signature_sheet_with_random_identifier != null){
-
-        }
-
-        $signature_sheet = SignatureSheet::create([
+        SignatureSheet::create([
             'title' => $request->input('title'),
             'random_identifier' => $this->generate_random_identifier_for_signature(4),
             'meeting_request_id' => $request->input('meeting_request'),
             'secretary_id' => Auth::user()->secretary->id
         ]);
 
-        return redirect()->route('secretary.meeting.manage.signaturesheet.list',$instance)->with('success', 'Reunión creada con éxito.');
+        return redirect()->route('secretary.meeting.manage.signaturesheet.list',$instance)->with('success', 'Hoja de firmas creada con éxito.');
 
     }
 
-    private function generate_random_identifier_for_signature($number)
+    private function generate_random_identifier_for_signature($number): string
     {
-        $random_identifier = \Random::getRandomIdentifier('4');
+
+        // generdor de identificador aleatorio (comprueba si ya está ocupado)
+
+        $random_identifier = \Random::getRandomIdentifier($number);
         $signature_sheet_with_random_identifier = SignatureSheet::where('random_identifier', $random_identifier)->first();
 
         if($signature_sheet_with_random_identifier != null){
@@ -196,6 +300,68 @@ class MeetingSecretaryController extends Controller
         $signature_sheet = SignatureSheet::findOrFail($signature_sheet);
 
         return view('meeting.signaturesheet_view',["instance" => $instance, 'signature_sheet' => $signature_sheet]);
+    }
+
+    public function signaturesheet_edit($instance, $id)
+    {
+        $instance = \Instantiation::instance();
+
+        $signature_sheet = SignatureSheet::findOrFail($id);
+
+        $available_meeting_requests = Auth::user()->secretary->meeting_requests;
+
+        $available_meeting_requests = $available_meeting_requests->filter(function($value,$key){
+            return $value->signature_sheet == null;
+        });
+
+        return view('meeting.signaturesheet_edit',[
+            'instance' => $instance,
+            'signature_sheet' => $signature_sheet,
+            'available_meeting_requests' => $available_meeting_requests,
+            'edit' => true
+        ]);
+    }
+
+    public function signaturesheet_save(Request $request)
+    {
+        $instance = \Instantiation::instance();
+
+        $signature_sheet = SignatureSheet::findOrFail($request->input('_id'));
+
+        $request->validate([
+            'title' => 'required|min:5|max:255'
+        ]);
+
+        // actualizamos el título
+        $signature_sheet->title = $request->input('title');
+        $signature_sheet->save();
+
+        // actualizamos la convocatoria asociada
+        $meeting_request = MeetingRequest::find($request->input('meeting_request_id'));
+
+        if($meeting_request != null){
+            if($meeting_request->signature_sheet == null){
+                $signature_sheet->meeting_request_id = $meeting_request->id;
+                $signature_sheet->save();
+            }
+        }
+
+        return redirect()->route('secretary.meeting.manage.signaturesheet.list',$instance)->with('success', 'Hoja de firmas actualizada con éxito.');
+
+    }
+
+
+
+    public function signaturesheet_remove(Request $request)
+    {
+        $signature_sheet = SignatureSheet::where('id',$request->input('signature_sheet_id'))->first();
+
+        $instance = \Instantiation::instance();
+
+        // eliminamos la entidad en sí
+        $signature_sheet->delete();
+
+        return redirect()->route('secretary.meeting.manage.signaturesheet.list',$instance)->with('success', 'Hoja de firmas eliminada con éxito.');
     }
 
     /*
@@ -332,8 +498,7 @@ class MeetingSecretaryController extends Controller
             'type' => $request->input('type'),
             'modality' => $request->input('modality'),
             'place' => $request->input('place'),
-            'datetime' => $request->input('date')." ".$request->input('time'),
-            'meeting_request_id' => $request->input('meeting_request')
+            'datetime' => $request->input('date')." ".$request->input('time')
         ]);
 
         $meeting->comittee()->associate(Auth::user()->secretary->comittee);
@@ -571,7 +736,7 @@ class MeetingSecretaryController extends Controller
 
     public function minutes_remove(Request $request)
     {
-        $meeting_minutes = Meetingminutes::where('id',$request->input('meeting_minutes_id'))->first();
+        $meeting_minutes = MeetingMinutes::where('id',$request->input('meeting_minutes_id'))->first();
 
         $instance = \Instantiation::instance();
 
@@ -583,6 +748,18 @@ class MeetingSecretaryController extends Controller
 
         return redirect()->route('secretary.meeting.manage.minutes.list',$instance)->with('success', 'Acta de reunión eliminada con éxito.');
 
+    }
+
+    public function minutes_download($instance, $id)
+    {
+        $meeting_minutes = MeetingMinutes::findOrFail($id);
+
+        $response = Storage::download(\Instantiation::instance() .'/meeting_minutes/meeting_minutes_' .$meeting_minutes->id . '.pdf');
+
+        // limpiar búfer de salida
+        ob_end_clean();
+
+        return $response;
     }
 
     /*

@@ -16,8 +16,6 @@ class CreateMeetingTable extends Migration
         Schema::create('meeting', function (Blueprint $table) {
             $table->id();
             $table->foreignId('comittee_id')->nullable(true);
-            $table->foreignId('meeting_request_id')->nullable(true)->references('id')
-                ->on('meeting_requests')->onDelete('cascade');
             $table->string('title');
             $table->timestamp('datetime')->nullable(true);
             $table->string('place');
