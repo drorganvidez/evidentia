@@ -169,27 +169,23 @@ class MeetingSecretaryController extends Controller
             'title' => 'required|min:5|max:255'
         ]);
 
-        // generamos identificador aleatorio y comprobamos si ya está ocupado
-        $random_identifier = \Random::getRandomIdentifier('4');
-        $signature_sheet_with_random_identifier = SignatureSheet::where('random_identifier', $random_identifier)->first();
-        if($signature_sheet_with_random_identifier != null){
-
-        }
-
-        $signature_sheet = SignatureSheet::create([
+        SignatureSheet::create([
             'title' => $request->input('title'),
             'random_identifier' => $this->generate_random_identifier_for_signature(4),
             'meeting_request_id' => $request->input('meeting_request'),
             'secretary_id' => Auth::user()->secretary->id
         ]);
 
-        return redirect()->route('secretary.meeting.manage.signaturesheet.list',$instance)->with('success', 'Reunión creada con éxito.');
+        return redirect()->route('secretary.meeting.manage.signaturesheet.list',$instance)->with('success', 'Hoja de firmas creada con éxito.');
 
     }
 
-    private function generate_random_identifier_for_signature($number)
+    private function generate_random_identifier_for_signature($number): string
     {
-        $random_identifier = \Random::getRandomIdentifier('4');
+
+        // generdor de identificador aleatorio (comprueba si ya está ocupado)
+
+        $random_identifier = \Random::getRandomIdentifier($number);
         $signature_sheet_with_random_identifier = SignatureSheet::where('random_identifier', $random_identifier)->first();
 
         if($signature_sheet_with_random_identifier != null){
@@ -204,6 +200,18 @@ class MeetingSecretaryController extends Controller
         $signature_sheet = SignatureSheet::findOrFail($signature_sheet);
 
         return view('meeting.signaturesheet_view',["instance" => $instance, 'signature_sheet' => $signature_sheet]);
+    }
+
+    public function signaturesheet_remove(Request $request)
+    {
+        $signature_sheet = SignatureSheet::where('id',$request->input('signature_sheet_id'))->first();
+
+        $instance = \Instantiation::instance();
+
+        // eliminamos la entidad en sí
+        $signature_sheet->delete();
+
+        return redirect()->route('secretary.meeting.manage.signaturesheet.list',$instance)->with('success', 'Hoja de firmas eliminada con éxito.');
     }
 
     /*

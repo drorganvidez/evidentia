@@ -57,9 +57,13 @@
                                 </td>
                                 <td>
                                     <button onclick="copyToClipboard('#signature_sheets_{{$signature_sheet->id}}')"
-                                            type="button" class="btn btn-light btn-xs"><i class="far fa-copy"></i> Copiar URL</button>
+                                            type="button" class="btn btn-light btn-xs"><i class="far fa-copy"></i> Copiar</button>
                                     <a class="btn btn-primary btn-xs" href="{{route('secretary.meeting.manage.signaturesheet.view',['instance' => $instance, 'signature_sheet' => $signature_sheet])}}">
-                                        <i class="fas fa-signature"></i> Ver firmas
+                                        <i class="fas fa-signature"></i>
+                                    </a>
+
+                                    <a class="btn btn-danger btn-xs" href="#" data-toggle="modal" data-target="#modal-confirm-REMOVE-{{$signature_sheet->id}}">
+                                        <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -74,6 +78,41 @@
 
         </div>
     </div>
+
+    @foreach($signature_sheets as $signature_sheet)
+        <div class="modal fade" id="modal-confirm-REMOVE-{{$signature_sheet->id}}">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="overflow: visible">
+                    <div class="modal-header">
+                        <h4 class="modal-title text-wrap">¿Seguro?</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-wrap">
+                        <p>Las firmas <b>se borrarán permanentemente.</b></p>
+                        <p>Si hay alguna convocatoria asociada, no se verá afectada, solo se desparejará.</p>
+                        <p>Ningún acta se verá afectada.</p>
+                        <p>¿Deseas continuar?</p>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+                        <form id="buttonconfirm-form-{{$signature_sheet->id}}" action="{{route('secretary.meeting.manage.signaturesheet.remove',$instance)}}" method="post">
+                            @csrf
+
+                            <input type="hidden" name="signature_sheet_id" value="{{$signature_sheet->id}}"/>
+
+                        </form>
+
+                        <button type="buton" onclick="event.preventDefault(); document.getElementById('buttonconfirm-form-{{$signature_sheet->id}}').submit();" class="btn btn-danger" data-dismiss="modal">
+                            <i class="fas fa-trash"></i> &nbsp;Sí, eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
 
 
 @endsection

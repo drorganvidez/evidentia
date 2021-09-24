@@ -10,7 +10,7 @@ class SignatureSheet extends Model
     use HasFactory;
 
     protected $fillable = [
-      'title','random_identifier', 'meeting_request_id', 'meeting_minutes_id', 'secretary_id'
+      'title','random_identifier', 'meeting_request_id', 'secretary_id'
     ];
 
     public function users()
@@ -21,11 +21,6 @@ class SignatureSheet extends Model
     public function meeting_request()
     {
         return $this->belongsTo('App\Models\MeetingRequest');
-    }
-
-    public function meeting_minutes()
-    {
-        return $this->belongsTo('App\Models\MeetingMinutes');
     }
 
     public function secretary()
