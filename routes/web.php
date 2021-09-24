@@ -211,9 +211,15 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
             // Hojas de firmas
             Route::prefix('signaturesheet')->group(function () {
                 Route::get('list', [MeetingSecretaryController::class, 'signaturesheet_list'])->name('secretary.meeting.manage.signaturesheet.list');
+
                 Route::get('create', [MeetingSecretaryController::class, 'signaturesheet_create'])->name('secretary.meeting.manage.signaturesheet.create');
                 Route::post('new', [MeetingSecretaryController::class, 'signaturesheet_new'])->name('secretary.meeting.manage.signaturesheet.new');
+
+                Route::get('edit/{id}', [MeetingSecretaryController::class, 'signaturesheet_edit'])->name('secretary.meeting.manage.signaturesheet.edit');
+                Route::post('save', [MeetingSecretaryController::class, 'signaturesheet_save'])->name('secretary.meeting.manage.signaturesheet.save');
+
                 Route::get('view/{signature_sheet}', [MeetingSecretaryController::class, 'signaturesheet_view'])->name('secretary.meeting.manage.signaturesheet.view');
+
                 Route::post('remove', [MeetingSecretaryController::class, 'signaturesheet_remove'])->name('secretary.meeting.manage.signaturesheet.remove');
             });
 

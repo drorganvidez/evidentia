@@ -26,7 +26,7 @@
                         <thead>
                         <tr>
                             <th scope="col">Título</th>
-                            <th scope="col">Creada</th>
+                            <th scope="col">Última modificación</th>
                             <th scope="col">Programada para</th>
                             <th scope="col">PDF</th>
                         </tr>
@@ -38,7 +38,7 @@
                                     {{$meeting_request->title}}
                                 </td>
                                 <td>
-                                    {{ \Carbon\Carbon::parse($meeting_request->created_at)->diffForHumans() }}
+                                    {{ \Carbon\Carbon::parse($meeting_request->updated_at)->diffForHumans() }}
                                 </td>
                                 <td>
                                     {{ \Carbon\Carbon::parse($meeting_request->datetime)->format('d/m/Y') }}

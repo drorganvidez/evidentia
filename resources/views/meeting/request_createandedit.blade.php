@@ -12,9 +12,9 @@
     <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>
     <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage',\Instantiation::instance())}}">Gestionar reuniones</a></li>
 
-    @if($edit)
+    @isset($edit)
         <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage.request.list',\Instantiation::instance())}}">Mis convocatorias</a></li>
-    @endif
+    @endisset
 
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection

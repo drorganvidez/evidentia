@@ -302,6 +302,56 @@ class MeetingSecretaryController extends Controller
         return view('meeting.signaturesheet_view',["instance" => $instance, 'signature_sheet' => $signature_sheet]);
     }
 
+    public function signaturesheet_edit($instance, $id)
+    {
+        $instance = \Instantiation::instance();
+
+        $signature_sheet = SignatureSheet::findOrFail($id);
+
+        $available_meeting_requests = Auth::user()->secretary->meeting_requests;
+
+        $available_meeting_requests = $available_meeting_requests->filter(function($value,$key){
+            return $value->signature_sheet == null;
+        });
+
+        return view('meeting.signaturesheet_edit',[
+            'instance' => $instance,
+            'signature_sheet' => $signature_sheet,
+            'available_meeting_requests' => $available_meeting_requests,
+            'edit' => true
+        ]);
+    }
+
+    public function signaturesheet_save(Request $request)
+    {
+        $instance = \Instantiation::instance();
+
+        $signature_sheet = SignatureSheet::findOrFail($request->input('_id'));
+
+        $request->validate([
+            'title' => 'required|min:5|max:255'
+        ]);
+
+        // actualizamos el título
+        $signature_sheet->title = $request->input('title');
+        $signature_sheet->save();
+
+        // actualizamos la convocatoria asociada
+        $meeting_request = MeetingRequest::find($request->input('meeting_request_id'));
+
+        if($meeting_request != null){
+            if($meeting_request->signature_sheet == null){
+                $signature_sheet->meeting_request_id = $meeting_request->id;
+                $signature_sheet->save();
+            }
+        }
+
+        return redirect()->route('secretary.meeting.manage.signaturesheet.list',$instance)->with('success', 'Hoja de firmas actualizada con éxito.');
+
+    }
+
+
+
     public function signaturesheet_remove(Request $request)
     {
         $signature_sheet = SignatureSheet::where('id',$request->input('signature_sheet_id'))->first();

@@ -99,14 +99,16 @@ or Route::currentRouteName() == 'secretary.meeting.manage.request.edit')
 
 
                         @if(Route::currentRouteName() == 'secretary.meeting.manage.signaturesheet.list'
-or Route::currentRouteName() == 'secretary.meeting.manage.signaturesheet.view')
+or Route::currentRouteName() == 'secretary.meeting.manage.signaturesheet.view'
+or Route::currentRouteName() == 'secretary.meeting.manage.signaturesheet.edit')
                             <b>
                         @endif
 
                                 <i class="fas fa-list"></i>&nbsp;&nbsp;Mis hojas de firmas
 
                         @if(Route::currentRouteName() == 'secretary.meeting.manage.signaturesheet.list'
-or Route::currentRouteName() == 'secretary.meeting.manage.signaturesheet.view')
+or Route::currentRouteName() == 'secretary.meeting.manage.signaturesheet.view'
+or Route::currentRouteName() == 'secretary.meeting.manage.signaturesheet.edit')
                             </b>
                         @endif
 

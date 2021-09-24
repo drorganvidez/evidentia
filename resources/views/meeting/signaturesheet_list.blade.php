@@ -27,7 +27,7 @@
                         <tr>
                             <th scope="col">Título</th>
                             <th scope="col">Convocatoria</th>
-                            <th scope="col">Creada</th>
+                            <th scope="col">Última modificación</th>
                             <th scope="col">URL para firmar</th>
                             <th scope="col">Opciones</th>
                         </tr>
@@ -44,7 +44,7 @@
                                     {{$signature_sheet->meeting_request->title ?? ''}}
                                 </td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                    {{ \Carbon\Carbon::parse($signature_sheet->created_at)->diffForHumans() }}
+                                    {{ \Carbon\Carbon::parse($signature_sheet->updated_at)->diffForHumans() }}
                                 </td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
 
@@ -58,9 +58,12 @@
                                 <td>
                                     <button onclick="copyToClipboard('#signature_sheets_{{$signature_sheet->id}}')"
                                             type="button" class="btn btn-light btn-xs"><i class="far fa-copy"></i> Copiar</button>
+
                                     <a class="btn btn-primary btn-xs" href="{{route('secretary.meeting.manage.signaturesheet.view',['instance' => $instance, 'signature_sheet' => $signature_sheet])}}">
                                         <i class="fas fa-signature"></i>
                                     </a>
+
+                                    <a class="btn btn-info btn-xs" href="{{route('secretary.meeting.manage.signaturesheet.edit',['instance' => $instance, 'id' => $signature_sheet->id])}}"><i class="fas fa-edit"></i></a>
 
                                     <a class="btn btn-danger btn-xs" href="#" data-toggle="modal" data-target="#modal-confirm-REMOVE-{{$signature_sheet->id}}">
                                         <i class="fas fa-trash"></i>
