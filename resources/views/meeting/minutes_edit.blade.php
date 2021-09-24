@@ -229,17 +229,17 @@
 
                             @foreach($points as $key => $point)
 
-                                <div class="card card-info point_body" id="point_{{$point['id']}}">
+                                <div class="card card-info point_body" id="point_{{++$key}}">
 
-                                    <span class="point_id" style="display: none">{{$point['id']}}</span>
+                                    <span class="point_id" style="display: none">{{$key}}</span>
 
                                     <div class="card-header">
                                         <div class="d-flex justify-content-between">
                                             <div>
-                                                <h3 class="card-title">{{++$key}}. {{$point['title']}}</h3>
+                                                <h3 class="card-title">{{$point['title']}}</h3>
                                             </div>
                                             <div>
-                                                <button type="button" onclick="delete_point({{$point['id']}})" class="btn btn-xs btn-warning"><i class="fas fa-trash"></i></button>
+                                                <button type="button" onclick="delete_point({{$key}})" class="btn btn-xs btn-warning"><i class="fas fa-trash"></i></button>
                                             </div>
                                         </div>
 
@@ -255,7 +255,7 @@
                                                     <div class="col-sm-12">
                                                         <div class="form-group">
                                                             <label>Editar nombre</label>
-                                                            <input type="text" class="form-control point_title" value="{{$point['title']}}" placeholder="Escribe un nombre">
+                                                            <input type="text" class="form-control point_title" value="{{$point['title']}}" placeholder="Escribe un nombre" required>
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-12">
@@ -289,7 +289,7 @@
 
                                         </div>
 
-                                        <div id="agreements_{{$point['id']}}">
+                                        <div id="agreements_{{$key}}">
 
                                             @foreach($point['agreements'] as $agreement)
                                                 @php ($random_id = \Random::getRandomIdentifier())
@@ -306,7 +306,7 @@
 
                                         </div>
 
-                                        <button type="button" onclick="add_agreement({{$point['id']}})" class="btn btn-light"><i class="fas fa-plus"></i> Añadir acuerdo</button>
+                                        <button type="button" onclick="add_agreement({{$key}})" class="btn btn-light"><i class="fas fa-plus"></i> Añadir acuerdo</button>
 
                                     </div>
 
@@ -474,7 +474,7 @@
                     let number_of_points = $(".point_body").length + 1;
                     var source = document.getElementById("point_template").innerHTML;
                     var template = Handlebars.compile(source);
-                    var context = { point_id: number_of_points};
+                    var context = { id: make_id(16), point_id: number_of_points};
                     var html = template(context);
                     $("#points_list").append(html);
                 }
@@ -501,17 +501,17 @@
 
             <script id="point_template" type="text/x-handlebars-template">
 
-                <div class="card card-info point_body" id="point_@{{ point_id }}">
+                <div class="card card-info point_body" id="point_@{{ id }}">
 
                     <span class="point_id" style="display: none">@{{ point_id }}</span>
 
                     <div class="card-header">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <h3 class="card-title">@{{ point_id }}. <i>Nuevo punto</i></h3>
+                                <h3 class="card-title"><i>Nuevo punto</i></h3>
                             </div>
                             <div>
-                                <button type="button" onclick="delete_point(@{{ point_id }})" class="btn btn-xs btn-warning"><i class="fas fa-trash"></i></button>
+                                <button type="button" onclick="delete_point(@{{ id }})" class="btn btn-xs btn-warning"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>
 
@@ -527,7 +527,7 @@
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label>Editar nombre</label>
-                                            <input type="text" class="form-control point_title" placeholder="Escribe un nombre">
+                                            <input type="text" class="form-control point_title" placeholder="Escribe un nombre" required>
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
@@ -561,12 +561,12 @@
 
                         </div>
 
-                        <div id="agreements_@{{ point_id }}">
+                        <div id="agreements_@{{ id }}">
 
 
                         </div>
 
-                        <button type="button" onclick="add_agreement(@{{ point_id }})" class="btn btn-light"><i class="fas fa-plus"></i> Añadir acuerdo</button>
+                        <button type="button" onclick="add_agreement(@{{ id }})" class="btn btn-light"><i class="fas fa-plus"></i> Añadir acuerdo</button>
 
                     </div>
 
