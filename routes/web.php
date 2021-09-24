@@ -195,9 +195,15 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
             // Convocatorias
             Route::prefix('request')->group(function () {
                 Route::get('list', [MeetingSecretaryController::class, 'request_list'])->name('secretary.meeting.manage.request.list');
+
                 Route::get('create', [MeetingSecretaryController::class, 'request_create'])->name('secretary.meeting.manage.request.create');
                 Route::post('new', [MeetingSecretaryController::class, 'request_new'])->name('secretary.meeting.manage.request.new');
+
                 Route::get('download/{id}', [MeetingSecretaryController::class, 'request_download'])->name('secretary.meeting.manage.request.download');
+
+                Route::get('edit/{id}', [MeetingSecretaryController::class, 'request_edit'])->name('secretary.meeting.manage.request.edit');
+                Route::post('save', [MeetingSecretaryController::class, 'request_save'])->name('secretary.meeting.manage.request.save');
+
                 Route::post('remove', [MeetingSecretaryController::class, 'request_remove'])->name('secretary.meeting.manage.request.remove');
             });
 

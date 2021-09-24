@@ -1,12 +1,21 @@
 @extends('layouts.app')
 
-@section('title', 'Crear convocatoria')
+@isset($edit)
+    @section('title', 'Editar convocatoria: '.$meeting_request->title)
+@else
+    @section('title', 'Crear convocatoria')
+@endisset
 
 @section('title-icon', 'fas fa-child')
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>
     <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage',\Instantiation::instance())}}">Gestionar reuniones</a></li>
+
+    @if($edit)
+        <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage.request.list',\Instantiation::instance())}}">Mis convocatorias</a></li>
+    @endif
+
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
 
@@ -22,16 +31,22 @@
 
                 <div class="card-body">
 
-                    <form method="POST" action="{{route('secretary.meeting.manage.request.new',\Instantiation::instance())}}" id="request_form">
+                    @php
+
+                      $verb = isset($edit) ? 'save' : 'new';
+
+                    @endphp
+
+                    <form method="POST" action="{{route('secretary.meeting.manage.request.'.$verb,\Instantiation::instance())}}" id="request_form">
                         @csrf
 
                         <input type="hidden" name="points_list" id="points_list"/>
 
-                        <x-id :id="$request->id ?? ''" :edit="$edit ?? ''"/>
+                        <x-id :id="$meeting_request->id ?? ''" :edit="$edit ?? ''"/>
 
                         <div class="form-row">
 
-                            <x-input col="6" attr="title" :value="$request->title ?? ''" label="Título" description="Escribe un título para tu reunión."/>
+                            <x-input col="6" attr="title" :value="$meeting_request->title ?? ''" label="Título" description="Escribe un título para tu reunión."/>
 
 
                             <div class="form-group col-md-3">
@@ -42,7 +57,7 @@
                                        value="{{old('date')}}"
                                        @else
                                        @isset($edit)
-                                       value="{{\Carbon\Carbon::parse($request->datetime)->format('Y-m-d')}}"
+                                       value="{{\Carbon\Carbon::parse($meeting_request->datetime)->format('Y-m-d')}}"
                                        @endisset
 
                                        @endif
@@ -65,7 +80,7 @@
                                        value="{{old('time')}}"
                                        @else
                                        @isset($edit)
-                                       value="{{\Carbon\Carbon::parse($request->datetime)->format('H:i')}}"
+                                       value="{{\Carbon\Carbon::parse($meeting_request->datetime)->format('H:i')}}"
                                        @endisset
 
                                        @endif
@@ -84,15 +99,15 @@
 
                         <div class="form-row">
 
-                            <x-input col="6" attr="place" :value="$request->place ?? ''" label="Lugar" description="Indica el lugar de la reunión."/>
+                            <x-input col="6" attr="place" :value="$meeting_request->place ?? ''" label="Lugar" description="Indica el lugar de la reunión."/>
 
                             <div class="form-group col-md-3">
                                 <label for="type">Tipo</label>
                                 <select id="type" class="selectpicker form-control @error('type') is-invalid @enderror" name="type" value="{{ old('type') }}" required autofocus>
 
-                                    @isset($request)
-                                        <option {{$request->type  == old('type') || $request->type == '1' ? 'selected' : ''}} value="1">ORDINARIA</option>
-                                        <option {{$request->type  == old('type') || $request->type == '2' ? 'selected' : ''}} value="2">EXTRAORDINARIA</option>
+                                    @isset($meeting_request)
+                                        <option {{$meeting_request->type  == old('type') || $meeting_request->type == '1' ? 'selected' : ''}} value="1">ORDINARIA</option>
+                                        <option {{$meeting_request->type  == old('type') || $meeting_request->type == '2' ? 'selected' : ''}} value="2">EXTRAORDINARIA</option>
                                     @else
                                         <option value="1">ORDINARIA</option>
                                         <option value="2">EXTRAORDINARIA</option>
@@ -113,10 +128,10 @@
                                 <label for="modality">Modalidad</label>
                                 <select id="modality" class="selectpicker form-control @error('modality') is-invalid @enderror" name="modality" value="{{ old('modality') }}" required autofocus>
 
-                                    @isset($request)
-                                        <option {{$request->type  == old('modality') || $request->type == '1' ? 'selected' : ''}} value="1">PRESENCIAL</option>
-                                        <option {{$request->type  == old('modality') || $request->type == '2' ? 'selected' : ''}} value="2">TELEMÁTICA</option>
-                                        <option {{$request->type  == old('modality') || $request->type == '2' ? 'selected' : ''}} value="2">HÍBRIDA</option>
+                                    @isset($meeting_request)
+                                        <option {{$meeting_request->type  == old('modality') || $meeting_request->type == '1' ? 'selected' : ''}} value="1">PRESENCIAL</option>
+                                        <option {{$meeting_request->type  == old('modality') || $meeting_request->type == '2' ? 'selected' : ''}} value="2">TELEMÁTICA</option>
+                                        <option {{$meeting_request->type  == old('modality') || $meeting_request->type == '2' ? 'selected' : ''}} value="2">HÍBRIDA</option>
                                     @else
                                         <option value="1">PRESENCIAL</option>
                                         <option value="2">TELEMÁTICA</option>
@@ -156,28 +171,37 @@
 
                                 <ul class="todo-list ui-sortable" data-widget="todo-list" id="points">
 
-                                    @if(session('points') or isset($points))
-                                        @foreach(session('points') as $point)
+                                    @php
 
-                                            @php ($random_id = \Random::getRandomIdentifier())
+                                        // este trozo de código es una vergüenza, pero es lo más rápido
+                                        if(session('points')){
+                                            $points = session('points');
+                                        }
 
-                                            <li class="rounded" style="" id="{{$random_id}}">
+                                    @endphp
 
-                                                <span class="handle ui-sortable-handle">
-                                                    <i class="fas fa-ellipsis-v"></i>
-                                                    <i class="fas fa-ellipsis-v"></i>
-                                                </span>
+                                    @isset($points)
+                                        @foreach($points as $point)
 
-                                                <span class="text point_title">{{$point}}</span>
+                                        @php ($random_id = \Random::getRandomIdentifier())
 
-                                                <div class="tools">
-                                                    <i class="fas fa-trash" onclick="remove({{$random_id}})"></i>
-                                                </div>
+                                        <li class="rounded" style="" id="{{$random_id}}">
 
-                                            </li>
+                                            <span class="handle ui-sortable-handle">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                                <i class="fas fa-ellipsis-v"></i>
+                                            </span>
 
-                                        @endforeach
-                                    @endif
+                                            <span class="text point_title">{{$point}}</span>
+
+                                            <div class="tools">
+                                                <i class="fas fa-trash" onclick="remove({{$random_id}})"></i>
+                                            </div>
+
+                                        </li>
+
+                                    @endforeach
+                                    @endisset
 
                                 </ul>
 
@@ -186,8 +210,22 @@
                         </div>
 
                         <div class="form-row">
-                            <div class="col-lg-3 mt-1">
-                                <button type="submit"  class="btn btn-primary btn-block">Crear convocatoria</button>
+                            <div class="col-lg-4 mt-1">
+                                <button type="submit"  class="btn btn-primary btn-block">
+
+                                    <i class="fas fa-child"></i>
+
+                                    @isset($edit)
+
+                                        Guardar
+
+                                    @else
+
+                                        Crear
+
+                                    @endif
+
+                                    convocatoria</button>
                             </div>
                         </div>
 

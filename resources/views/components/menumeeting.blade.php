@@ -79,13 +79,15 @@ or Route::currentRouteName() == 'secretary.meeting.manage.minutes.create.step3')
                     <a href="{{route('secretary.meeting.manage.request.list',\Instantiation::instance())}}" class="nav-link">
 
 
-                        @if(Route::currentRouteName() == 'secretary.meeting.manage.request.list')
+                        @if(Route::currentRouteName() == 'secretary.meeting.manage.request.list'
+or Route::currentRouteName() == 'secretary.meeting.manage.request.edit')
                             <b>
                         @endif
 
                                 <i class="fas fa-list"></i>&nbsp;&nbsp;Mis convocatorias
 
-                        @if(Route::currentRouteName() == 'secretary.meeting.manage.request.list')
+                        @if(Route::currentRouteName() == 'secretary.meeting.manage.request.list'
+or Route::currentRouteName() == 'secretary.meeting.manage.request.edit')
                             </b>
                         @endif
 

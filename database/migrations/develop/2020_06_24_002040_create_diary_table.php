@@ -15,7 +15,8 @@ class CreateDiaryTable extends Migration
     {
         Schema::create('diaries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('meeting_request_id');
+            $table->foreignId('meeting_request_id')->references('id')
+                ->on('meeting_requests')->onDelete('cascade');;
             $table->timestamps();
         });
     }

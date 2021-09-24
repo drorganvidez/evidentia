@@ -49,6 +49,8 @@
                                 <td>
                                     <a class="btn btn-primary btn-sm" href="{{route('secretary.meeting.manage.request.download',['instance' => $instance, 'id' => $meeting_request->id])}}"><i class="fas fa-file-pdf"></i></a>
 
+                                    <a class="btn btn-info btn-sm" href="{{route('secretary.meeting.manage.request.edit',['instance' => $instance, 'id' => $meeting_request->id])}}"><i class="fas fa-edit"></i></a>
+
                                     <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-confirm-REMOVE-{{$meeting_request->id}}">
                                         <i class="fas fa-trash"></i>
                                     </a>
