@@ -33,7 +33,7 @@ class MeetingMinutesMine
 
         $meeting_minutes = MeetingMinutes::findOrFail($id);
 
-        if($meeting_minutes->secretary_id == Auth::user()->secretary->id)
+        if($meeting_minutes->secretary_id != Auth::user()->secretary->id)
         {
             abort('404');
         }
