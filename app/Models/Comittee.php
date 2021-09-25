@@ -92,4 +92,17 @@ class Comittee extends Model
         return true;
 
     }
+
+    public function get_all_meeting_request(){
+        $collection = collect();
+
+        foreach($this->secretaries as $secretary){
+            $meeting_requests = $secretary->meeting_requests;
+            foreach($meeting_requests as $meeting_request){
+                $collection->push($meeting_request);
+            }
+        }
+
+        return $collection;
+    }
 }

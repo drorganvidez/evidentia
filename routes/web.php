@@ -170,6 +170,8 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
     Route::get('/meeting/list/', 'MeetingController@list')->name('meeting.list');
 
+    Route::get('meeting/request/download/{id}', [MeetingSecretaryController::class, 'request_download'])->name('meeting.request.download');
+
     Route::prefix('secretary')->group(function () {
 
         /*
