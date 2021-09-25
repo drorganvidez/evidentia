@@ -153,6 +153,23 @@
 
                         <div class="form-row">
 
+                            <div class="form-group col-lg-6">
+
+                                <div class="icheck-primary d-inline">
+                                    <input type="checkbox" name="create_signature_sheet" id="create_signature_sheet" checked>
+                                    <label for="create_signature_sheet">
+                                        Crear una hoja de firmas y asociarla
+                                    </label>
+                                    <small class="form-text text-muted">Asocia de forma automática una nueva hoja de firmas para que los alumnos puedan
+                                    hacer constancia de su asistencia.</small>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-row">
+
 
                             <div class="col-lg-6">
 
