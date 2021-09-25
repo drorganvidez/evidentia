@@ -2,6 +2,9 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\MeetingMinutesMine;
+use App\Http\Middleware\MeetingRequestMine;
+use App\Http\Middleware\SignatureSheetMine;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -75,6 +78,9 @@ class Kernel extends HttpKernel
         'checkregisterbonus' => \App\Http\Middleware\CheckRegisterBonus::class,
         'checkregistereventsandattendings' => \App\Http\Middleware\CheckRegisterEventsAndAttendings::class,
         'checkproofdownload' => \App\Http\Middleware\CheckProofDownload::class,
-        'checkisadministrator' => \App\Http\Middleware\CheckIsAdministrator::class
+        'checkisadministrator' => \App\Http\Middleware\CheckIsAdministrator::class,
+        'meetingrequestmine' => MeetingRequestMine::class,
+        'signaturesheetmine' => SignatureSheetMine::class,
+        'meetingminutesmine' => MeetingMinutesMine::class
     ];
 }
