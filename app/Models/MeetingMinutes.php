@@ -10,7 +10,7 @@ class MeetingMinutes extends Model
 
     protected $fillable = [
         'meeting_id',
-        'secretary_id'
+        'secretary_idç'
     ];
 
     public function meeting()

@@ -2,7 +2,6 @@
     color: white;
 }
 
-
 .progress-bar{
     border-top-right-radius: 40px !important;
     border-bottom-right-radius: 40px !important;
@@ -12,8 +11,6 @@
 }
 
 .progress{
-
-
 
     border-radius: 40px !important;
     background-color: white !important;
@@ -45,4 +42,7 @@ filepond--root.filepond--hopper{
 
 .filepond--drop-label{
     font-size: 12px!important;
+}
+
+.biography{
 }

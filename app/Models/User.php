@@ -256,6 +256,11 @@ class User extends Authenticatable
         return $this->collection_count($this->meetings);
     }
 
+    public function meetings_total_count()
+    {
+        return Meeting::all()->count();
+    }
+
     // Asistencias totales pendientes
     public function attendees_pending_count()
     {
@@ -303,6 +308,11 @@ class User extends Authenticatable
     public function bonus_hours()
     {
         return $this->collection_hours($this->bonus);
+    }
+
+    // Total de horas computadas
+    public function total_computed_hours(){
+        return $this->evidences_accepted_hours() + $this->meetings_hours() + $this->events_hours() + $this->bonus_hours();
     }
 
     public function avatar_route()
