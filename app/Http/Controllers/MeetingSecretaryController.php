@@ -110,6 +110,16 @@ class MeetingSecretaryController extends Controller
         $content = $pdf->download()->getOriginalContent();
         Storage::put(\Instantiation::instance() .'/meeting_requests/meeting_request_' .$meeting_request->id . '.pdf',$content) ;
 
+        // creamos una hoja de firmas (si el usuario lo ha querido así)
+        if($request_http->input('create_signature_sheet') == 'on'){
+            SignatureSheet::create([
+                'title' => 'Hoja de firmas de '.$request_http->input('title'),
+                'random_identifier' => $this->generate_random_identifier_for_signature(4),
+                'meeting_request_id' => $meeting_request->id,
+                'secretary_id' => Auth::user()->secretary->id
+            ]);
+        }
+
         return redirect()->route('secretary.meeting.manage.request.list',$instance)->with('success', 'Convocatoria de reunión creada con éxito.');
     }
 
