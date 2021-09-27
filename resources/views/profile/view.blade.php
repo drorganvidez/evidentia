@@ -25,7 +25,7 @@
                         <li class="nav-item"><a class="nav-link active" href="#data" data-toggle="tab">Personal</a></li>
 
                         @if(!Auth::user()->hasRole('LECTURE'))
-                            <li class="nav-item"><a class="nav-link" href="#biografia" data-toggle="tab">Biografía</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#biografia" data-toggle="tab">Resumen de trabajo en jornadas</a></li>
                         @endif
 
                         <li class="nav-item"><a class="nav-link" href="#pass" data-toggle="tab">Cambiar contraseña</a></li>

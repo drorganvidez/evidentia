@@ -92,4 +92,32 @@ class Comittee extends Model
         return true;
 
     }
+
+    public function get_all_meeting_requests(): \Illuminate\Support\Collection
+    {
+        $collection = collect();
+
+        foreach($this->secretaries as $secretary){
+            $meeting_requests = $secretary->meeting_requests;
+            foreach($meeting_requests as $meeting_request){
+                $collection->push($meeting_request);
+            }
+        }
+
+        return $collection;
+    }
+
+    public function get_all_meeting_minutes(): \Illuminate\Support\Collection
+    {
+        $collection = collect();
+
+        foreach($this->secretaries as $secretary){
+            $meeting_minutes = $secretary->meeting_minutes;
+            foreach($meeting_minutes as $mm){
+                $collection->push($mm);
+            }
+        }
+
+        return $collection;
+    }
 }

@@ -73,10 +73,59 @@
 
                 <div class="card-body">
 
+                    <div class="callout callout-info">
+                        <h4>
+
+                            Fecha límite para la validación de evidencias
+
+                        </h4>
+
+                        <h4>
+
+                            <i class="fas fa-stopwatch"></i>
+
+                            {{\Carbon\Carbon::parse(Config::validate_evidences_timestamp())->format('d/m/Y')}}
+
+                            a las
+
+                            {{\Carbon\Carbon::parse(Config::validate_evidences_timestamp())->format('H:i')}}
+
+                        </h4>
+
+                        <div class="countdown_container" style="display: none">
+
+                            <p>
+
+                                Quedan
+
+                                <b>
+                                    <span id="countdown"></span>
+                                </b>
+
+                                para validar las evidencias de tu comité.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
                 </div>
             </div>
 
         </div>
     </div>
+
+@section('scripts')
+
+    <script>
+
+        $(document).ready(function(){
+            countdown("{{\Carbon\Carbon::create(\Carbon\Carbon::now())->diffInSeconds(Config::validate_evidences_timestamp(),false)}}");
+        });
+
+    </script>
+
+@endsection
 
 @endsection
