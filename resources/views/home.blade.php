@@ -81,7 +81,7 @@
                                                                     @foreach($committee->get_all_meeting_minutes() as $meeting_minutes)
 
                                                                         <li>
-                                                                            <a href="{{route('download.minutes',['instance' => \Instantiation::instance(), 'id' => $meeting_minutes->id])}}">{{$meeting_minutes->meetingapp->title}}</a>
+                                                                            <a href="{{route('download.minutes',['instance' => \Instantiation::instance(), 'id' => $meeting_minutes->id])}}">{{$meeting_minutes->meeting->title}}</a>
 
                                                                             ({{\Carbon\Carbon::parse($meeting_minutes->datetime)->format('d/m/Y')}})
                                                                         </li>
