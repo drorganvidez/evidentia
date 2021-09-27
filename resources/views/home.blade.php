@@ -64,10 +64,10 @@
                                                                 <h6><b>Convocatorias</b></h6>
 
                                                                 <ul>
-                                                                @foreach($committee->get_all_meeting_request() as $meeting_request)
+                                                                @foreach($committee->get_all_meeting_requests() as $meeting_request)
 
                                                                     <li>
-                                                                        <a href="{{route('meeting.request.download',['instance' => \Instantiation::instance(), 'id' => $meeting_request->id])}}">{{$meeting_request->title}}</a>
+                                                                        <a href="{{route('download.request',['instance' => \Instantiation::instance(), 'id' => $meeting_request->id])}}">{{$meeting_request->title}}</a>
 
                                                                         ({{\Carbon\Carbon::parse($meeting_request->datetime)->format('d/m/Y')}})
                                                                     </li>
@@ -76,6 +76,18 @@
                                                                 </ul>
 
                                                                 <h6><b>Actas</b></h6>
+
+                                                                <ul>
+                                                                    @foreach($committee->get_all_meeting_minutes() as $meeting_minutes)
+
+                                                                        <li>
+                                                                            <a href="{{route('download.minutes',['instance' => \Instantiation::instance(), 'id' => $meeting_minutes->id])}}">{{$meeting_minutes->meetingapp->title}}</a>
+
+                                                                            ({{\Carbon\Carbon::parse($meeting_minutes->datetime)->format('d/m/Y')}})
+                                                                        </li>
+
+                                                                    @endforeach
+                                                                </ul>
                                                             </div>
                                                         </div>
                                                     </div>

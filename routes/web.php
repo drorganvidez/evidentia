@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\MeetingSecretaryController;
 use App\Http\Controllers\SignController;
 use Illuminate\Support\Facades\Auth;
@@ -82,6 +83,12 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/change/{evidence}', function (Request $request) {
         // ...
     });
+
+    /*
+     *  DOWNLOADS
+     */
+    Route::get('download/request/{id}', [DownloadController::class, 'request_download'])->name('download.request');
+    Route::get('download/minutes/{id}', [DownloadController::class, 'minutes_download'])->name('download.minutes');
 
     /**
      *  BLOCK
@@ -169,8 +176,6 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
      */
 
     Route::get('/meeting/list/', 'MeetingController@list')->name('meeting.list');
-
-    Route::get('meeting/request/download/{id}', [MeetingSecretaryController::class, 'request_download'])->name('meeting.request.download');
 
     Route::prefix('secretary')->group(function () {
 
