@@ -6,6 +6,11 @@
             <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
         </li>
 
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="{{ route('updates.list',['instance' => \Instantiation::instance()]) }}" class="nav-link">
+                <i class="fab fa-github"></i> Versión del software: {{env('EVIDENTIA_VERSION','')}}</a>
+        </li>
+
         <!--
         <li class="nav-item d-none d-sm-inline-block">
             <a href="{{route('updates.list',\Instantiation::instance())}}" class="nav-link">Actualizaciones</a>

@@ -67,6 +67,81 @@
 
                 <div class="card-body">
 
+                    <div class="callout callout-info">
+                        <h4>
+
+                            Fecha límite de subidas
+
+                        </h4>
+
+                        <h4>
+
+                            <i class="fas fa-stopwatch"></i>
+
+                            {{\Carbon\Carbon::parse(Config::upload_evidences_timestamp())->format('d/m/Y')}}
+
+                            a las
+
+                            {{\Carbon\Carbon::parse(Config::upload_evidences_timestamp())->format('H:i')}}
+
+                        </h4>
+
+                        <div class="countdown_container" style="display: none">
+
+                            <p>
+
+                                Te quedan
+
+                                <b>
+                                    <span id="countdown"></span>
+                                </b>
+
+                                para subir evidencias.
+
+                            </p>
+
+                        </div>
+
+
+
+                    </div>
+
+                    <div id="accordion">
+
+                        <div class="card card-light">
+                            <div class="card-header">
+                                <h4 class="card-title w-100">
+                                    <a class="d-block w-100 collapsed" data-toggle="collapse" href="#acercade" aria-expanded="false">
+                                        Acerca de la validación de evidencias
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="acercade" class="collapse" data-parent="#accordion" style="">
+                                <div class="card-body">
+
+                                    <p class="text-justify">Todas las evidencias de las jornadas tienen que ser validadas por los respectivos
+                                        coordinadores de cada comité.</p>
+
+                                    <p class="text-justify">
+                                        Considera que el coordinador de tu comité tiene que valorar tus evidencias y eso
+                                        requiere un tiempo.
+
+                                        En caso de que alguna sea rechazada, ten en cuenta que existe un tiempo adicional
+                                        desde que modificas tu evidencia y la mandas
+                                        hasta que el coordinador la valida.
+                                    </p>
+
+                                    <p class="text-justify">
+                                        Te recomendamos que no apures al máximo la subida de tus evidencias para que al coordinador
+                                        le dé tiempo a subsanar cualquier posible error dentro de plazo.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
                 </div>
 
             </div>
@@ -74,5 +149,17 @@
         </div>
 
     </div>
+
+    @section('scripts')
+
+        <script>
+
+            $(document).ready(function(){
+                countdown("{{\Carbon\Carbon::create(\Carbon\Carbon::now())->diffInSeconds(Config::upload_evidences_timestamp(),false)}}");
+            });
+
+        </script>
+
+    @endsection
 
 @endsection
