@@ -79,6 +79,16 @@
 
             @auth
 
+                <div class="user-panel d-flex">
+                    <div class="info" >
+                        <p style="color: white; margin: 0px; font-size: 15px">
+                            {{Auth::user()->surname}}, 
+                            <br>
+                            {{Auth::user()->name}}
+                        </p>
+                    </div>
+                </div>
+
                 @if(Request::is('admin') || Request::is('admin/*'))
 
                     <x-menus.menuadmin/>
@@ -363,6 +373,39 @@
         $temp.val($(element).text()).select();
         document.execCommand("copy");
         $temp.remove();
+    }
+
+    function countdown(distance){
+
+        var distance_int = parseInt(distance);
+
+        // Update the count down every 1 second
+        var x = setInterval(function() {
+
+            // Time calculations for days, hours, minutes and seconds
+            var seconds = parseInt(distance_int, 10);
+
+            var days = Math.floor(seconds / (3600*24));
+            seconds  -= days*3600*24;
+            var hrs   = Math.floor(seconds / 3600);
+            seconds  -= hrs*3600;
+            var mnts = Math.floor(seconds / 60);
+            seconds  -= mnts*60;
+
+            document.getElementById("countdown").innerHTML = days+" días, "+hrs+" horas, "+mnts+" minutos y" +
+                " "+seconds+" segundos";
+
+            $(".countdown_container").fadeIn();
+
+            // If the count down is over, write some text
+            if (distance_int < 0) {
+                clearInterval(x);
+                document.getElementById("countdown").innerHTML = "Tiempo finalizado";
+            }
+
+            distance_int = distance_int-1;
+
+        }, 1000);
     }
 
 </script>

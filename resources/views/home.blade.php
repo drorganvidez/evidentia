@@ -188,60 +188,73 @@
 
                                 <div class="widget-user-header text-white" style="background: url({{ asset('dist/img/abstract.jpg') }}); height: auto">
                                     <h5 class="widget-user-desc text-left" style="margin-bottom: 0px">
-                                        <i class="fas fa-clock"></i>
+                                        <i class="fas fa-stopwatch"></i>
                                         &nbsp;&nbsp;
-                                        Línea temporal
+                                        Fechas límite
                                     </h5>
                                 </div>
 
                                 <div class="card-footer" style="padding-top: 10px">
 
-                                    <div class="timeline mt-3" style="margin-left: 10px">
-                                        <div class="time-label">
-                                            <span class="bg-default shadow-sm">24 Nov. 2020</span>
-                                        </div>
-                                        <div>
-                                            <i class="fas fa-envelope bg-default"></i>
-                                            <div class="timeline-item shadow-sm">
-                                                <span class="time"><i class="fas fa-clock"></i> 12:05</span>
-                                                <div class="timeline-body">¡Se te ha añadido un bono de horas!</div>
-                                            </div>
-                                        </div>
-                                        <div class="time-label">
-                                            <span class="bg-default shadow-sm">22 Nov. 2020</span>
-                                        </div>
-                                        <div>
-                                            <i class="fas fa-envelope bg-default"></i>
-                                            <div class="timeline-item shadow-sm">
-                                                <span class="time"><i class="fas fa-clock"></i> 12:05</span>
-                                                <h3 class="timeline-header">Notificación</h3>
+                                    <div class="callout callout-info mt-3">
+                                        <h5>Subida de evidencias</h5>
 
-                                                <div class="timeline-body">
-                                                    Descripción (si procede)
-                                                </div>
-                                                <div class="timeline-footer">
-                                                    footer
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <i class="fas fa-envelope bg-default"></i>
-                                            <div class="timeline-item shadow-sm">
-                                                <span class="time"><i class="fas fa-clock"></i> 12:05</span>
-                                                <h3 class="timeline-header">Notificación</h3>
+                                        <p>
+                                            {{\Carbon\Carbon::parse(Config::upload_evidences_timestamp())->format('d/m/Y')}}
 
-                                                <div class="timeline-body">
-                                                    Descripción (si procede)
-                                                </div>
-                                                <div class="timeline-footer">
-                                                    footer
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <i class="fas fa-clock bg-gray"></i>
-                                        </div>
-                                    </div style=>
+                                            a las
+
+                                            {{\Carbon\Carbon::parse(Config::upload_evidences_timestamp())->format('H:i')}}
+                                        </p>
+                                    </div>
+
+                                    <div class="callout callout-info mt-3">
+                                        <h5>Validación de evidencias</h5>
+
+                                        <p>
+                                            {{\Carbon\Carbon::parse(Config::validate_evidences_timestamp())->format('d/m/Y')}}
+
+                                            a las
+
+                                            {{\Carbon\Carbon::parse(Config::validate_evidences_timestamp())->format('H:i')}}
+                                        </p>
+                                    </div>
+
+                                    <div class="callout callout-info mt-3">
+                                        <h5>Registro de reuniones</h5>
+
+                                        <p>
+                                            {{\Carbon\Carbon::parse(Config::meetings_timestamp())->format('d/m/Y')}}
+
+                                            a las
+
+                                            {{\Carbon\Carbon::parse(Config::meetings_timestamp())->format('H:i')}}
+                                        </p>
+                                    </div>
+
+                                    <div class="callout callout-info mt-3">
+                                        <h5>Registro de bonos</h5>
+
+                                        <p>
+                                            {{\Carbon\Carbon::parse(Config::bonus_timestamp())->format('d/m/Y')}}
+
+                                            a las
+
+                                            {{\Carbon\Carbon::parse(Config::bonus_timestamp())->format('H:i')}}
+                                        </p>
+                                    </div>
+
+                                    <div class="callout callout-info mt-3">
+                                        <h5>Importación de eventos y asistencias</h5>
+
+                                        <p>
+                                            {{\Carbon\Carbon::parse(Config::attendee_timestamp())->format('d/m/Y')}}
+
+                                            a las
+
+                                            {{\Carbon\Carbon::parse(Config::attendee_timestamp())->format('H:i')}}
+                                        </p>
+                                    </div>
 
                                 </div>
                             </div>

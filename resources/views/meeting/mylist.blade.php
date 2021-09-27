@@ -54,6 +54,43 @@
 
                 <div class="card-body">
 
+                    <div class="callout callout-info">
+                        <h4>
+
+                            Fecha límite para registrar reuniones
+
+                        </h4>
+
+                        <h4>
+
+                            <i class="fas fa-stopwatch"></i>
+
+                            {{\Carbon\Carbon::parse(Config::meetings_timestamp())->format('d/m/Y')}}
+
+                            a las
+
+                            {{\Carbon\Carbon::parse(Config::meetings_timestamp())->format('H:i')}}
+
+                        </h4>
+
+                        <div class="countdown_container" style="display: none">
+
+                            <p>
+
+                                Quedan
+
+                                <b>
+                                    <span id="countdown"></span>
+                                </b>
+
+                                para registrar reuniones en Evidentia.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
             </div>
@@ -62,5 +99,17 @@
 
 
     </div>
+
+@section('scripts')
+
+    <script>
+
+        $(document).ready(function(){
+            countdown("{{\Carbon\Carbon::create(\Carbon\Carbon::now())->diffInSeconds(Config::meetings_timestamp(),false)}}");
+        });
+
+    </script>
+
+@endsection
 
 @endsection

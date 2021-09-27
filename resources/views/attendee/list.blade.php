@@ -50,13 +50,60 @@
             <div class="card shadow-sm">
 
                 <div class="card-body">
-                    Última actualización de eventos: {{ \Carbon\Carbon::parse($events_update)->diffForHumans() }}
-                    <br>
-                    Última actualización de asistencias: {{ \Carbon\Carbon::parse($attendees_update)->diffForHumans() }}
+
+                    <div class="callout callout-info">
+                        <h4>
+
+                            Fecha límite para el registro de eventos y asistencias
+
+                        </h4>
+
+                        <h4>
+
+                            <i class="fas fa-stopwatch"></i>
+
+                            {{\Carbon\Carbon::parse(Config::attendee_timestamp())->format('d/m/Y')}}
+
+                            a las
+
+                            {{\Carbon\Carbon::parse(Config::attendee_timestamp())->format('H:i')}}
+
+                        </h4>
+
+                        <div class="countdown_container" style="display: none">
+
+                            <p>
+
+                                Quedan
+
+                                <b>
+                                    <span id="countdown"></span>
+                                </b>
+
+                                para registrar eventos y asistencias desde Eventbrite.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
                 </div>
             </div>
 
         </div>
     </div>
+
+@section('scripts')
+
+    <script>
+
+        $(document).ready(function(){
+            countdown("{{\Carbon\Carbon::create(\Carbon\Carbon::now())->diffInSeconds(Config::attendee_timestamp(),false)}}");
+        });
+
+    </script>
+
+@endsection
 
 @endsection
