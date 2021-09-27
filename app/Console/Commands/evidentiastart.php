@@ -107,6 +107,8 @@ class evidentiastart extends Command
         exec('echo "ADMIN_EMAIL=admin@admin.com" >> .env');
         exec('echo "ADMIN_USERNAME=admin@admin.com" >> .env');
         exec('echo "ADMIN_PASSWORD=admin" >> .env');
+        exec('echo "" >> .env');
+        exec('echo "EVIDENTIA_VERSION=" >> .env');
         $this->line('Setting environment file ... [OK]');
 
         $this->line('Generating key');

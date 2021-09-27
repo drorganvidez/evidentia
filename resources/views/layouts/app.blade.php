@@ -81,8 +81,8 @@
 
                 <div class="user-panel d-flex">
                     <div class="info" >
-                        <p style="color: white; margin: 0px; font-size: 15px">
-                            {{Auth::user()->surname}}, 
+                        <p style="color: #D0D4DA; margin: 0px; font-size: 15px">
+                            {{Auth::user()->surname}},
                             <br>
                             {{Auth::user()->name}}
                         </p>
@@ -163,7 +163,7 @@
             Hecho con <i class="fas fa-heart"></i>
         </div>
         <!-- Default to the left -->
-        GNU/GPL 3.0 · <a href="https://github.com/drorganvidez/evidentia"><i class="fab fa-github"></i> Repositorio en GitHub</a>
+        VERSIÓN {{env('EVIDENTIA_VERSION','')}} · GNU/GPL 3.0 · <a href="https://github.com/drorganvidez/evidentia"><i class="fab fa-github"></i> Repositorio en GitHub</a>
     </footer>
 </div>
 <!-- ./wrapper -->

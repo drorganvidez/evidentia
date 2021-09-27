@@ -1,7 +1,7 @@
 <div class="card card-widget widget-user shadow-sm">
     <div class="widget-user-header text-white" style="background: url({{ asset('dist/img/abstract.jpg') }})">
-        <h3 class="widget-user-username text-left">{!!$user->name!!} {!!$user->surname!!}</h3>
-        <h5 class="widget-user-desc text-left">
+        <h5 class="widget-user-username text-left" style="font-size: 20px">{!!$user->name!!} {!!$user->surname!!}</h5>
+        <h5 class="widget-user-desc text-left" style="font-size: 15px">
             @foreach($user->roles as $role)
                 @if (!$loop->first)
                     -
