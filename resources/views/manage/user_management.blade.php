@@ -38,8 +38,6 @@
 
                                 <x-input col="6" attr="username" :value="$user->username" label="Uvus"/>
 
-                                <x-input col="6" attr="dni" :value="$user->dni" label="DNI"/>
-
                             </div>
 
                             <div class="form-row">

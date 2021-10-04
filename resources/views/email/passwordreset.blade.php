@@ -50,18 +50,20 @@
 
                         <div class="callout">
 
-                            <h2>evidentia.<b>cloud</b></h2>
+                            <img class="img-fluid" width="200px" alt="blablabla" src="https://www.evidentia.cloud/dist/img/logo_light.svg">
+
+                            <br>
 
                             <p>Hola, {{$user->name}}:</p>
 
-                            <p>Se ha solicitado un restablecimiento de la contraseña de su cuenta de Evidentia Cloud.
-                            Si no es usted la persona que lo ha solicitado, ignore este mensaje.</p>
+                            <p>Has solicitado un restablecimiento de la contraseña de tu cuenta de Evidentia Cloud.
+                            Si no eres tú la persona que lo ha solicitado, ignora este mensaje.</p>
 
-                            <p><a style="color: #2e6da4; text-decoration: none;" href="https://www.evidentia.cloud/{{$instance}}/password/update/{{$token->token}}">Haga click aquí para restablecer su contraseña.</a></p>
+                            <p><a style="color: #2e6da4; text-decoration: none;" href="https://www.evidentia.cloud/{{$instance}}/password/update/{{$token->token}}">Haz click aquí para restablecer tu contraseña.</a></p>
 
                             <p>Nota: El link de restablecimiento caducará a las 24 horas.</p>
 
-                            <p><i>Por favor, no responda a este mensaje, es una cuenta desatendida.</i></p>
+                            <p><i>Por favor, no respondas a este mensaje, es una cuenta desatendida.</i></p>
 
                         </div>
 

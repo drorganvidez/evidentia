@@ -73,7 +73,6 @@ class DevelopSeeder extends Seeder
 
         DB::table('users')->insert([
             'id' => 1,
-            'dni' => 111111111,
             'name' => 'John',
             'surname' => 'Doe',
             'email' => 'alumno1@alumno1.com',
@@ -91,7 +90,6 @@ class DevelopSeeder extends Seeder
 
         DB::table('users')->insert([
             'id' => 2,
-            'dni' => 222222222,
             'name' => 'Jess',
             'surname' => 'Ahmad',
             'email' => 'alumno2@alumno2.com',
@@ -109,7 +107,6 @@ class DevelopSeeder extends Seeder
 
         DB::table('users')->insert([
             'id' => 3,
-            'dni' => 333333333,
             'name' => 'Tim',
             'surname' => 'Strong',
             'email' => 'secretario1@secretario1.com',
@@ -127,7 +124,6 @@ class DevelopSeeder extends Seeder
 
         DB::table('users')->insert([
             'id' => 4,
-            'dni' => 444444444,
             'name' => 'Diogo',
             'surname' => 'Chadwick',
             'email' => 'secretario2@secretario2.com',
@@ -145,7 +141,6 @@ class DevelopSeeder extends Seeder
 
         DB::table('users')->insert([
             'id' => 5,
-            'dni' => 555555555,
             'name' => 'Margaret',
             'surname' => 'Hendricks',
             'email' => 'coordinador1@coordinador1.com',
@@ -163,7 +158,6 @@ class DevelopSeeder extends Seeder
 
         DB::table('users')->insert([
             'id' => 6,
-            'dni' => 666666666,
             'name' => 'Diana',
             'surname' => 'Rowley',
             'email' => 'coordinador2@coordinador2.com',
@@ -181,7 +175,6 @@ class DevelopSeeder extends Seeder
 
         DB::table('users')->insert([
             'id' => 7,
-            'dni' => 777777777,
             'name' => 'Karl',
             'surname' => 'Clayton',
             'email' => 'coordinadorregistro1@coordinadorregistro1.com',
@@ -199,7 +192,6 @@ class DevelopSeeder extends Seeder
 
         DB::table('users')->insert([
             'id' => 8,
-            'dni' => 888888888,
             'name' => 'Clara',
             'surname' => 'Hart',
             'email' => 'coordinadorregistro2@coordinadorregistro2.com',
@@ -217,7 +209,6 @@ class DevelopSeeder extends Seeder
 
         DB::table('users')->insert([
             'id' => 9,
-            'dni' => 999999999,
             'name' => 'Jamie-Leigh',
             'surname' => 'Liu',
             'email' => 'presidente1@presidente1.com',
@@ -235,7 +226,6 @@ class DevelopSeeder extends Seeder
 
         DB::table('users')->insert([
             'id' => 10,
-            'dni' => 101010101,
             'name' => 'Kathryn',
             'surname' => 'Cordova',
             'email' => 'presidente2@presidente2.com',
@@ -253,7 +243,6 @@ class DevelopSeeder extends Seeder
 
         DB::table('users')->insert([
             'id' => 11,
-            'dni' => 110011001,
             'name' => 'Samara',
             'surname' => 'Woolley',
             'email' => 'profesor1@profesor1.com',
@@ -265,7 +254,6 @@ class DevelopSeeder extends Seeder
 
         DB::table('users')->insert([
             'id' => 12,
-            'dni' => 121212121,
             'name' => 'Stephan',
             'surname' => 'Bennett',
             'email' => 'profesor2@profesor2com',

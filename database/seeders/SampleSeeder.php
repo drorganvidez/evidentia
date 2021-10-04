@@ -63,7 +63,6 @@ class SampleSeeder extends Seeder
 
         DB::table('users')->insert([
             'id' => 1,
-            'dni' => 110011001,
             'name' => env('LECTURE_NEW_INSTANCE_NAME','Profesor'),
             'surname' => env('LECTURE_NEW_INSTANCE_SURNAME','Profesor'),
             'email' => env('LECTURE_NEW_INSTANCE_EMAIL','profesor1@profesor1.com'),
