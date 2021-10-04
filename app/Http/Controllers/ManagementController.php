@@ -264,13 +264,6 @@ class ManagementController extends Controller
                 ]);
             }
 
-            // si se cambia el dni, comprueba que el nuevo sea único
-            if ($request->input('dni') != $user->dni) {
-                $request->validate([
-                    'dni' => 'required|max:255|unique:users',
-                ]);
-            }
-
             // si se cambia el email, comprueba que el nuevo sea único
             if ($request->input('email') != $user->email) {
                 $request->validate([
@@ -279,7 +272,6 @@ class ManagementController extends Controller
             }
 
             $user->username = $request->input('username');
-            $user->dni = $request->input('dni');
             $user->name = $request->input('name');
             $user->surname = $request->input('surname');
             $user->email = $request->input('email');
@@ -315,7 +307,6 @@ class ManagementController extends Controller
             'name' => 'required|max:255',
             'surname' => 'required|max:255',
             'email' => 'required|max:255|unique:users',
-            'dni' => 'required|max:255|unique:users',
             'username' => 'required|max:255|unique:users'
         ]);
 
@@ -323,9 +314,8 @@ class ManagementController extends Controller
             'name' => $request->input('name'),
             'surname' => $request->input('surname'),
             'email' => $request->input('email'),
-            'dni' => $request->input('dni'),
             'username' => $request->input('username'),
-            'password' => Hash::make($request->input('dni')),
+            'password' => Hash::make(\Random::getRandomIdentifier(16)),
             'clean_name' => \StringUtilites::clean(trim($request->input('name'))),
             'clean_surname' => \StringUtilites::clean(trim($request->input('surname'))),
         ]);

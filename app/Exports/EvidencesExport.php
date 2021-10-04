@@ -37,7 +37,6 @@ class EvidencesExport implements FromCollection, WithHeadings, ShouldAutoSize
             if(!$user->hasRole('LECTURE')) {
 
                 $array = [
-                    'dni' => $user->dni,
                     'apellidos' => $user->surname,
                     'nombre' => $user->name,
                     'uvus' => $user->username,

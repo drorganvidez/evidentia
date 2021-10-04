@@ -51,7 +51,7 @@
 
                 <div class="input-group">
                 <a href="{{route('password.reset',\Instantiation::instance())}}" class="text-sm mt-2 mb-3">
-                    He olvidado mi contraseña
+                    He olvidado mi contraseña o soy nuev@ en Evidentia
                 </a>
                 </div>
 
