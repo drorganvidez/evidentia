@@ -121,12 +121,11 @@
 
                         <div class="form-row">
                             <x-input col="6" attr="email" label="Email"/>
-                            <x-input col="6" attr="dni"  label="DNI"/>
                         </div>
 
                         <div class="form-row">
                             <x-input col="6" attr="username"  label="UVUS" description="El UVUS será el nombre de usuario"/>
-                            <x-input col="6" attr="password" disabled="true" :edit="true" label="Password" description="La contraseña por defecto es el DNI"/>
+                            <x-input col="6" attr="password" disabled="true" :edit="true" label="Password" description="La contraseña por defecto es aleatoria y debe ser restablecida"/>
                         </div>
                         <div class="form-row">
 
