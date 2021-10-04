@@ -44,9 +44,7 @@
 
                                         <div class="form-row">
 
-                                            <x-input col="6" attr="username" :value="Auth::user()->username" disabled="true" :edit="true" label="Uvus" description="El Uvus no puede ser editado."/>
-
-                                            <x-input col="6" attr="dni" :value="Auth::user()->dni" disabled="true" :edit="true" label="DNI" description="El DNI no puede ser editado."/>
+                                            <x-input col="12" attr="username" :value="Auth::user()->username" disabled="true" :edit="true" label="Uvus" description="El Uvus no puede ser editado."/>
 
                                             <x-input col="6" attr="name" :value="Auth::user()->name" label="Nombre"/>
 

@@ -20,11 +20,10 @@ class UsersImport implements ToModel, WithHeadingRow
         if(!array_filter($row)) return null;
 
         return new User([
-            'dni' => trim($row['dni']),
             'surname' => trim($row['apellidos']),
             'name' => trim($row['nombre']),
             'username' => trim($row['uvus']),
-            'password' => Hash::make(trim($row['dni'])),
+            'password' => Hash::make(\Random::getRandomIdentifier(16)),
             'email' => trim($row['email']),
             'clean_name' => \StringUtilites::clean(trim($row['nombre'])),
             'clean_surname' => \StringUtilites::clean(trim($row['apellidos'])),
