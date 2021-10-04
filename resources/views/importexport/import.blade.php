@@ -88,7 +88,6 @@
                         <table class="table table-hover m-0">
                             <thead>
                             <tr>
-                                <th scope="col">dni</th>
                                 <th scope="col">apellidos</th>
                                 <th scope="col">nombre</th>
                                 <th scope="col">uvus</th>
@@ -98,7 +97,6 @@
                             </thead>
                             <tbody>
                             <tr scope="row">
-                                <td>77777777</td>
                                 <td>Polo Polo</td>
                                 <td>Marco</td>
                                 <td>marpolpol</td>
@@ -114,7 +112,7 @@
                     <ul>
                         <li>Las columnas se tienen que llamar <b>exactamente igual</b> a como aparecen ahí.</li>
                         <li>No subir XLS con celdas combinadas.</li>
-                        <li>Los campos <i>DNI, UVUS, EMAIL</i> deben ser <b>únicos</b>.</li>
+                        <li>Los campos <i>UVUS y EMAIL</i> deben ser <b>únicos</b>.</li>
                     </ul>
 
 
