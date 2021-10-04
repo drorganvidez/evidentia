@@ -99,7 +99,6 @@ class EvidencesExport implements FromCollection, WithHeadings, ShouldAutoSize
     {
         $events_select = $this->events_select;
         $cabeceras =  [
-            'D.N.I.',
             'Apellidos',
             'Nombre',
             'Uvus',
