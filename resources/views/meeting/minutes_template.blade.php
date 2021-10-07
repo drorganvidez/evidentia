@@ -76,7 +76,7 @@
 
             <tr>
                 <td>Fecha</td>
-                <td>{{\Carbon\Carbon::now()->format('d/m/Y')}}</td>
+                <td>{{ \Carbon\Carbon::parse($meeting_minutes->meeting->datetime)->format('d/m/Y') }}</td>
             </tr>
 
             <tr>
