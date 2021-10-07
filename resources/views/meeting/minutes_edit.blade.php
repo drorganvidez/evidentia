@@ -28,6 +28,8 @@
 
                         <input type="hidden" name="meeting_id" value="{{$meeting_minutes->meeting->id}}"/>
 
+                        <input type="hidden" name="meeting_minutes_id" value="{{$meeting_minutes->id}}"/>
+
                         <input type="hidden" name="points_json" id="points_json"/>
 
                         <h4>Información de la reunión</h4>
