@@ -83,7 +83,7 @@
                                                                         <li>
                                                                             <a href="{{route('download.minutes',['instance' => \Instantiation::instance(), 'id' => $meeting_minutes->id])}}">{{$meeting_minutes->meeting->title}}</a>
 
-                                                                            ({{\Carbon\Carbon::parse($meeting_minutes->datetime)->format('d/m/Y')}})
+                                                                            ({{\Carbon\Carbon::parse($meeting_minutes->meeting->datetime)->format('d/m/Y')}})
                                                                         </li>
 
                                                                     @endforeach
