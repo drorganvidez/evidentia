@@ -33,29 +33,26 @@
 
             Por medio del presente escrito, queda usted convocado/a a la reunión<b>
             @switch($meeting_request->type)
-                @case(1)
+                @case('ORDINARY')
                 ordinaria
                 @break
-                @case(2)
+                @case('EXTRAORDINARY')
                 extraordinaria
                 @break
             @endswitch
-            </b>con modalidad<b>
+            </b> con modalidad<b>
             @switch($meeting_request->modality)
-                @case(1)
+                @case('F2F')
                 presencial
                 @break
-
-                @case(2)
+                @case('TELEMATIC')
                 telemática
                 @break
-
-                @case(2)
+                @case('MIXED')
                 híbrida
                 @break
-
             @endswitch
-            </b>del comité de <b>{{$meeting_request->comittee->name}}</b>, que se celebrará el día <b>{{ \Carbon\Carbon::parse($meeting_request->datetime)->format('d/m/Y') }}</b>
+            </b> del comité de <b>{{$meeting_request->comittee->name}}</b>, que se celebrará el día <b>{{ \Carbon\Carbon::parse($meeting_request->datetime)->format('d/m/Y') }}</b>
             a las <b>{{ \Carbon\Carbon::parse($meeting_request->datetime)->format('H:i') }}</b> en <b>{{$meeting_request->place}}</b>, en la que
             se tratarán los asuntos que se expresan a continuación:
         </p>
