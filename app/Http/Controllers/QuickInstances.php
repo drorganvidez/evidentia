@@ -59,10 +59,10 @@ class QuickInstances extends Controller
         $instance = new Instance();
         $instance->name = $name;
         $instance->route = $route;
-        $instance->host = 'localhost';
-        $instance->port = '33060';
+        $instance->host = env('DB_HOST');
+        $instance->port = env('DB_PORT');
         $instance->database = 'evidentia_' . $fecha;
-        $instance->username = 'homestead';
+        $instance->username = env('DB_USERNAME');
         $instance->password = 'secret';
         $instance->active = true;
 

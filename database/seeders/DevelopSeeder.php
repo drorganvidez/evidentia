@@ -18,10 +18,10 @@ class DevelopSeeder extends Seeder
      */
     public function run()
     {
-        Config::set('database.connections.instance.host', 'localhost');
-        Config::set('database.connections.instance.port', '33060');
-        Config::set('database.connections.instance.username', 'homestead');
-        Config::set('database.connections.instance.password', 'secret');
+        Config::set('database.connections.instance.host', env('DB_HOST'));
+        Config::set('database.connections.instance.port', env('DB_PORT'));
+        Config::set('database.connections.instance.username', env('DB_USERNAME'));
+        Config::set('database.connections.instance.password', env('DB_PASSWORD'));
         Config::set('database.connections.instance.database', 'base21');
         Config::set('database.connections.instance.charset', 'utf8mb4');
         Config::set('database.connections.instance.collation', 'utf8mb4_unicode_ci');

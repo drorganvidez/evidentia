@@ -16,10 +16,10 @@ class CreateUsersTable extends Migration
     {
         config(['database.connections.instance' => [
             'driver'   => 'mysql',
-            'host' => 'localhost',
+            'host' => env('DB_HOST'),
             'database' => 'base21',
-            'port' => '33060',
-            'username' => 'homestead',
+            'port' => env('DB_PORT'),
+            'username' => env('DB_USERNAME'),
             'password' => 'secret'
         ]]);
 

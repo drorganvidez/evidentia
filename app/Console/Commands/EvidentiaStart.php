@@ -7,14 +7,14 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
-class evidentiastart extends Command
+class EvidentiaStart extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'evidentia:start';
+    protected $signature = 'evidentia:start_homestead';
 
     /**
      * The console command description.
@@ -47,7 +47,7 @@ class evidentiastart extends Command
 
         $this->line('Setting environment file');
         exec("cat /dev/null > .env");
-        exec('echo "APP_NAME=Laravel" >> .env');
+        exec('echo "APP_NAME=Evidentia" >> .env');
         exec('echo "APP_ENV=local" >> .env');
         exec('echo "APP_KEY=" >> .env');
         exec('echo "APP_DEBUG=true" >> .env');
@@ -112,14 +112,15 @@ class evidentiastart extends Command
         $this->line('Setting environment file ... [OK]');
 
         $this->line('Generating key');
-        exec("php artisan config:cache");
         exec("php artisan key:generate");
         exec("php artisan config:cache");
+        exec("php artisan config:clear");
+        exec("php artisan cache:clear");
         $this->line('Generating key ... [OK]');
 
         // Borramos la instancia por defecto
         $this->line('Dropping default instance');
-        DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `base20`;");
+        DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `base21`;");
         $this->line('Dropping default instance ... [OK]');
 
         // Borramos las demás instancias
@@ -157,5 +158,9 @@ class evidentiastart extends Command
         $this->line('Migrating ... [OK]');
 
         $this->info("Evidentia has started successfully. Enjoy!");
+
+        exec("php artisan config:cache");
+        exec("php artisan config:clear");
+        exec("php artisan cache:clear");
     }
 }

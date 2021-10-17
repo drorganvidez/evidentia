@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
-class createdefaultinstance extends Command
+class CreateDefaultInstance extends Command
 {
     /**
      * The name and signature of the console command.
@@ -40,6 +40,10 @@ class createdefaultinstance extends Command
     public function handle()
     {
 
+        exec("php artisan config:cache");
+        exec("php artisan config:clear");
+        exec("php artisan cache:clear");
+
         try{
             $this->line('Creating default instance');
             DB::connection()->getPdo()->exec("CREATE DATABASE `base21`");
@@ -68,7 +72,7 @@ class createdefaultinstance extends Command
 
             $this->info('Instance created successfully.');
         }catch (\Exception $e){
-            $this->error('There seems to be a problem creating the instance. Check that it has not been previously instantiated.');
+            $this->error($e.' There seems to be a problem creating the instance. Check that it has not been previously instantiated.');
             $this->comment("Tip: use 'php artisan evidentia:reloadinstance' if you want to reload instance settings and database.");
         }
 
