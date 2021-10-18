@@ -1,4 +1,6 @@
 #!/bin/bash
+rm -r .gitmodules
+git submodule add -f https://www.github.com/drorganvidez/laradock.git laradock
 cd laradock
 cp .env.example .env
 docker-compose up -d nginx mysql phpmyadmin redis workspace
