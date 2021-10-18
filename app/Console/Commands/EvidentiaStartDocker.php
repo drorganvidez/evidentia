@@ -140,17 +140,17 @@ class EvidentiaStartDocker extends Command
 
         // Borramos la base de datos principal
         $this->line('Dropping main database');
-        DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `homestead`;");
+        DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `evidentia`;");
         $this->line('Dropping main database ... [OK]');
 
         // Creamos la base de datos principal
         $this->line('Creating main database');
-        DB::connection()->getPdo()->exec("CREATE DATABASE IF NOT EXISTS `homestead`");
+        DB::connection()->getPdo()->exec("CREATE DATABASE IF NOT EXISTS `evidentia`");
         $this->line('Creating main database ... [OK]');
 
         // Codificación UTF8 MB4
         $this->line('Setting character set to UTF8MB4');
-        DB::connection()->getPdo()->exec("ALTER SCHEMA `homestead`  DEFAULT CHARACTER SET utf8mb4  DEFAULT COLLATE utf8mb4_unicode_ci");
+        DB::connection()->getPdo()->exec("ALTER SCHEMA `evidentia`  DEFAULT CHARACTER SET utf8mb4  DEFAULT COLLATE utf8mb4_unicode_ci");
         $this->line('Setting character set to UTF8MB4 ... [OK]');
 
         // Migraciones y seeders
