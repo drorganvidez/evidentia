@@ -1,5 +1,6 @@
 @echo off
 rm -r .gitmodules
+rmdir laradock /s /q
 git submodule add -f https://github.com/drorganvidez/laradock.git laradock
 cd laradock
 COPY .env.example .env
