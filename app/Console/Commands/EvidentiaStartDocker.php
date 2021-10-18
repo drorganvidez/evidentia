@@ -7,14 +7,14 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
-class EvidentiaStart extends Command
+class EvidentiaStartDocker extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'evidentia:start_homestead';
+    protected $signature = 'evidentia:start_docker';
 
     /**
      * The console command description.
@@ -36,7 +36,7 @@ class EvidentiaStart extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
      */
     public function handle()
     {
@@ -56,10 +56,10 @@ class EvidentiaStart extends Command
         exec('echo "LOG_CHANNEL=stack" >> .env');
         exec('echo "" >> .env');
         exec('echo "DB_CONNECTION=mysql" >> .env');
-        exec('echo "DB_HOST=localhost" >> .env');
-        exec('echo "DB_PORT=33060" >> .env');
-        exec('echo "DB_DATABASE=homestead" >> .env');
-        exec('echo "DB_USERNAME=homestead" >> .env');
+        exec('echo "DB_HOST=mysql" >> .env');
+        exec('echo "DB_PORT=3306" >> .env');
+        exec('echo "DB_DATABASE=evidentia" >> .env');
+        exec('echo "DB_USERNAME=evidentia" >> .env');
         exec('echo "DB_PASSWORD=secret" >> .env');
         exec('echo "DB_CHARSET=utf8" >> .env');
         exec('echo "DB_COLLATION=utf8_unicode_ci" >> .env');
@@ -70,7 +70,7 @@ class EvidentiaStart extends Command
         exec('echo "SESSION_DRIVER=file" >> .env');
         exec('echo "SESSION_LIFETIME=120" >> .env');
         exec('echo "" >> .env');
-        exec('echo "REDIS_HOST=127.0.0.1" >> .env');
+        exec('echo "REDIS_HOST=redis" >> .env');
         exec('echo "REDIS_PASSWORD=null" >> .env');
         exec('echo "REDIS_PORT=6379" >> .env');
         exec('echo "" >> .env');
@@ -95,6 +95,8 @@ class EvidentiaStart extends Command
         exec('echo "" >> .env');
         exec('echo "MIX_PUSHER_APP_KEY=\"${PUSHER_APP_KEY}\"" >> .env');
         exec('echo "MIX_PUSHER_APP_CLUSTER=\"${PUSHER_APP_CLUSTER}\"" >> .env');
+        exec('echo "" >> .env');
+        exec('echo "QUEUE_HOST=beanstalkd" >> .env');
         exec('echo "" >> .env');
         exec('echo "LECTURE_NEW_INSTANCE_NAME=Profesor" >> .env');
         exec('echo "LECTURE_NEW_INSTANCE_SURNAME=Profesor" >> .env');
