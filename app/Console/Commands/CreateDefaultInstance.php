@@ -45,6 +45,10 @@ class CreateDefaultInstance extends Command
         exec("php artisan cache:clear");
 
         try{
+
+            $this->line('Dropping default instance if exists');
+            DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `base21`;");
+
             $this->line('Creating default instance');
             DB::connection()->getPdo()->exec("CREATE DATABASE `base21`");
             $this->line('Creating default instance ... [OK]');
