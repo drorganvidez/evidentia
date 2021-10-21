@@ -1,0 +1,6 @@
+[submodule "laradock"]
+	path = laradock
+	url = https://www.github.com/drorganvidez/laradock.git
+[submodule "homestead"]
+	path = homestead
+	url = https://www.github.com/drorganvidez/homestead.git

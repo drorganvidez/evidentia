@@ -4,6 +4,7 @@
 /storage/*.key
 /vendor
 /homestead
+/laradock
 .env
 .env.backup
 .phpunit.result.cache
