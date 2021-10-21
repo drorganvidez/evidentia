@@ -1,7 +1,5 @@
 #!/bin/bash
-rm -r .gitmodules
-rm -r laradock
-git submodule add -f https://www.github.com/drorganvidez/laradock.git laradock
+git submodule update --init --recursive
 cd laradock
 cp .env.example .env
 docker-compose up -d nginx mysql phpmyadmin redis workspace
