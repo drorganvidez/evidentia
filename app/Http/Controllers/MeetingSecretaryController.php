@@ -170,6 +170,8 @@ class MeetingSecretaryController extends Controller
         $meeting_request->title = $request_http->input('title');
         $meeting_request->place = $request_http->input('place');
         $meeting_request->datetime = $request_http->input('date')." ".$request_http->input('time');
+        $meeting_request->modality = $request_http->input('modality');
+        $meeting_request->type = $request_http->input('type');
 
         $meeting_request->save();
 
