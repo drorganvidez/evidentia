@@ -19,7 +19,7 @@ echo .########....###....####.########..########.##....##....##....####.##.....#
 echo
 
 echo Open in a new browser:
-echo http://localhost
+echo http://192.168.10.10
 
 echo
 echo The installation has been completed successfully. Enjoy!
