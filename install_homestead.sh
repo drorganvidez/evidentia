@@ -1,6 +1,7 @@
 #!/bin/bash
 git submodule update --init --recursive
 cd homestead
+git pull origin master
 vagrant box remove laravel/homestead --all
 vagrant box add laravel/homestead -c
 vagrant up

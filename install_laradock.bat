@@ -1,6 +1,7 @@
 @echo off
 git submodule update --init --recursive
 cd laradock
+git pull origin master
 COPY .env.example .env
 docker-compose up -d nginx mysql phpmyadmin redis workspace
 docker exec laradock_workspace rm -f composer.lock
