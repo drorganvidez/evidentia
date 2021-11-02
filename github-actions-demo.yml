@@ -1,0 +1,42 @@
+on: push
+name: CI
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: secret
+          MYSQL_DATABASE: homestead
+          MYSQL_USER: homestead
+          MYSQL_PASSWORD: secret
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Verify MySQL connection from host
+        run: |
+          sudo apt-get install -y mysql-client
+          mysql --host 127.0.0.1 --port 33306 -uroot -psecret -e "GRANT ALL ON *.*  TO 'homestead'@'%' identified by 'secret'; FLUSH PRIVILEGES;"
+
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Install composer dependencies
+        run: |
+          composer install --no-scripts
+
+      - name: Prepare Laravel Application
+        run: |
+          cp .env.ci .env
+          php artisan key:generate
+          php artisan migrate
+          php artisan db:seed
+          php artisan db:seed --class=InstancesTableSeeder
+
+      - name: Run Testsuite
+        run: vendor/bin/phpunit tests/
