@@ -26,6 +26,7 @@
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Comité</th>
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Nº de asistentes</th>
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Realizada</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Acta</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -40,6 +41,12 @@
                                 </td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$meeting->users->count()}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ \Carbon\Carbon::parse($meeting->datetime)->diffForHumans() }}</td>
+                                <td>
+                                    <a class="btn btn-primary btn-sm" href="{{route('download.minutes',['instance' => \Instantiation::instance(), 'id' => $meeting->meeting_minutes->id])}}">
+                                        <i class="nav-icon nav-icon far fa-file-pdf"></i>
+                                    </a>
+                                </td>
+
                             </tr>
                         @endforeach
 
