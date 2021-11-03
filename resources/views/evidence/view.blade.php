@@ -96,7 +96,7 @@
                         @foreach($evidence->proofs as $proof)
 
                             <div class="col-auto mt-3">
-                                <a class="btn btn-default btn-sm" href="{{route('proof.download',['instance' => $instance, 'id' => $proof->id])}}">
+                                <a style="margin-bottom: 10px" class="btn btn-default btn-sm" href="{{route('proof.download',['instance' => $instance, 'id' => $proof->id])}}">
                                     <i class="fas fa-download"></i>
                                     {{$proof->file->name}} ({{$proof->file->sizeForHuman()}})
                                 </a>
