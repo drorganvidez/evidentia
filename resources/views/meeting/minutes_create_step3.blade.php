@@ -201,7 +201,7 @@
                                             <div class="form-group col-md-3">
                                                 <label for="hours">Horas invertidas</label>
                                                 <input id="" type="number" class="form-control" placeholder="" name="hours"
-                                                       value={{old('hours') ? old('hours') : \Time::complex_shape_hours($meeting->hours ?? '')}}
+                                                       value="{{old('hours') ? old('hours') : \Time::complex_shape_hours($meeting->hours ?? '')}}"
                                                         autocomplete="hours" autofocus="" step="0.01">
 
                                                 <small class="form-text text-muted">Enteros o decimales</small>
@@ -215,7 +215,7 @@
                                             <div class="form-group col-md-3">
                                                 <label for="minutes">Minutos invertidos</label>
                                                 <input id="" type="number" min="0" max="60" class="form-control" placeholder="" name="minutes"
-                                                       value={{old('minutes') ? old('minutes') : \Time::complex_shape_minutes($meeting->hours ?? '')}}
+                                                       value="{{old('minutes') ? old('minutes') : \Time::complex_shape_minutes($meeting->hours ?? '')}}"
                                                         autocomplete="minutes" autofocus="">
 
                                                 <small class="form-text text-muted">Enteros</small>
