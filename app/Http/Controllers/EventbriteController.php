@@ -197,8 +197,6 @@ class EventbriteController extends Controller
 
                     foreach($attendees_page as $attendee){
 
-                        echo $attendee->profile->first_name." ".$attendee->profile->last_name."<br>";
-
                         // limpiamos el nombre de caracteres problemáticos
                         $first_name = $attendee->profile->first_name;
                         $first_name = strtoupper(trim(preg_replace('~[^0-9a-z]+~i', '', preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($first_name, ENT_QUOTES, 'UTF-8'))), ' '));
