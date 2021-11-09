@@ -161,21 +161,6 @@
 
                                             @endforelse
 
-
-
-                                            <ul>
-
-                                                @foreach(\App\Models\Event::all() as $event)
-                                                    <li>
-                                                        {{$event->name}}
-                                                    </li>
-                                                    <li>
-                                                        {{$event}}
-                                                    </li>
-                                                @endforeach
-
-                                            </ul>
-
                                         </div>
                                     </div>
 
