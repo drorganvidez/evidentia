@@ -176,6 +176,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
      */
 
     Route::get('/meeting/list/', 'MeetingController@list')->name('meeting.list');
+    Route::get('/president/meeting/export/{ext}','MeetingController@meeting_export')->name('president.manage.meeting.export');
 
     Route::prefix('secretary')->group(function () {
 
@@ -396,6 +397,8 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         Route::post('/management/user/delete/all',['App\Http\Controllers\ManagementController','user_management_delete_all'])->name('management.user.delete.all');
     });
     Route::post('/management/user/new',['App\Http\Controllers\ManagementController','user_management_new'])->name('management.user.new');
+    Route::get('/president/user/export/{ext}','ManagementController@management_student_export')->name('president.manage.student.export');
+
 
     /**
      *  PROFILES

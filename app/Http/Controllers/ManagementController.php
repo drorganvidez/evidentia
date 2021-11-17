@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ManagementStudentExport;
 use App\Http\Services\UserService;
 use App\Models\Comittee;
 use App\Models\Coordinator;
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ManagementController extends Controller
 {
@@ -336,5 +338,19 @@ class ManagementController extends Controller
         }
 
         return redirect()->route('lecture.user.list',['instance' => \Instantiation::instance()])->with('success','Usuarios borrados con éxito');
+    }
+
+
+    public function management_student_export($instance, $ext)
+    {
+        try {
+            ob_end_clean();
+            if(!in_array($ext, ['csv', 'pdf', 'xlsx'])){
+                return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
+            }
+            return Excel::download(new ManagementStudentExport(), 'alumnos-' . \Illuminate\Support\Carbon::now() . '.' . $ext);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
+        }
     }
 }
