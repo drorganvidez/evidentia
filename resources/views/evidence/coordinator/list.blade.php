@@ -11,9 +11,28 @@
 
 @section('content')
 
-    <x-evidencelistcoordinator />
-
+    <x-evidencelistcoordinator/>
+    <br>
+    <div class="row mb-3">
+        <p style="padding: 5px 25px 0px 15px">Exportar tabla:</p>
+        <div class="col-lg-1 mt-12">
+            <a href="{{route('coordinator.evidence.export',['instance' => $instance, 'type' => $type, 'ext' => 'xlsx'])}}"
+               class="btn btn-info btn-block" role="button">
+                XLSX</a>
+        </div>
+        <div class="col-lg-1 mt-12">
+            <a href="{{route('coordinator.evidence.export',['instance' => $instance, 'type' => $type, 'ext' => 'csv'])}}"
+               class="btn btn-info btn-block" role="button">
+                CSV</a>
+        </div>
+        <div class="col-lg-1 mt-12">
+            <a href="{{route('coordinator.evidence.export',['instance' => $instance, 'type' => $type, 'ext' => 'pdf'])}}"
+               class="btn btn-info btn-block" role="button">
+                PDF</a>
+        </div>
+    </div>
     <div class="row">
+
         <div class="col-lg-8 mt-3">
 
             <div class="card shadow-lg">
@@ -42,7 +61,8 @@
                                         {{$evidence->title}}
                                     </a>
                                 </td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$evidence->user->surname}}, {{$evidence->user->name}}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$evidence->user->surname}}
+                                    , {{$evidence->user->name}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$evidence->hours}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"> {{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }} </td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
@@ -120,7 +140,7 @@
 
     <script>
 
-        $(document).ready(function(){
+        $(document).ready(function () {
             countdown("{{\Carbon\Carbon::create(\Carbon\Carbon::now())->diffInSeconds(Config::validate_evidences_timestamp(),false)}}");
         });
 

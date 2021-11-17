@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ManagementEvidencesExport;
 use App\Http\Services\UserService;
 use App\Models\Comittee;
-use App\Models\Coordinator;
 use App\Models\Evidence;
 use App\Models\Meeting;
 use App\Models\Role;
-use App\Models\Secretary;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ManagementController extends Controller
 {
@@ -34,13 +34,13 @@ class ManagementController extends Controller
 
         // el presidente no puede editar los usuarios de tipo profesor
         $filtered_users = collect();
-        if(Auth::user()->hasRole('PRESIDENT')) {
+        if (Auth::user()->hasRole('PRESIDENT')) {
             $users->each(function ($item, $key) use ($filtered_users) {
                 if (!$item->hasRole('LECTURE')) {
                     $filtered_users->push($item);
                 }
             });
-        }else{
+        } else {
             $filtered_users = $users;
         }
 
@@ -74,11 +74,11 @@ class ManagementController extends Controller
         $route = null;
         $route_new = null;
         $route_remove = null;
-        if(Auth::user()->hasRole('PRESIDENT')){
+        if (Auth::user()->hasRole('PRESIDENT')) {
             $route = route('president.comittee.management.save', $instance);
             $route_new = route('president.comittee.management.new', $instance);
             $route_remove = route('president.comittee.management.remove', $instance);
-        }else{
+        } else {
             $route = route('lecture.comittee.management.save', $instance);
             $route_new = route('lecture.comittee.management.new', $instance);
             $route_remove = route('lecture.comittee.management.remove', $instance);
@@ -101,9 +101,9 @@ class ManagementController extends Controller
             'name' => $request->input('name')
         ]);
 
-        if(Auth::user()->hasRole('PRESIDENT')){
+        if (Auth::user()->hasRole('PRESIDENT')) {
             return redirect()->route('president.comittee.list', $instance)->with('success', 'Comité creado con éxito.');
-        }else{
+        } else {
             return redirect()->route('lecture.comittee.list', $instance)->with('success', 'Comité creado con éxito.');
         }
     }
@@ -112,20 +112,19 @@ class ManagementController extends Controller
     {
         $instance = \Instantiation::instance();
         $returned_route = null;
-        if(Auth::user()->hasRole('PRESIDENT')){
+        if (Auth::user()->hasRole('PRESIDENT')) {
             $returned_route = "president.comittee.list";
-        }else{
+        } else {
             $returned_route = "lecture.comittee.list";
         }
 
         // por sl algún usuario avispao modifica los ID en el HTML
-        try{
+        try {
             foreach (Comittee::all() as $comittee) {
 
 
-
             }
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return redirect()->route($returned_route, $instance)->with('error', 'Error en la integridad de los comités.' . $e->getMessage());
         }
 
@@ -141,7 +140,7 @@ class ManagementController extends Controller
             $new_icon = $request->input('icon_' . $comittee->id);
             $new_name = $request->input('name_' . $comittee->id);
 
-            if($new_name != "") {
+            if ($new_name != "") {
 
                 $saved_comittee = Comittee::find($comittee->id);
                 $saved_comittee->icon = $new_icon;
@@ -158,40 +157,40 @@ class ManagementController extends Controller
     {
         $instance = \Instantiation::instance();
         $returned_route = null;
-        if(Auth::user()->hasRole('PRESIDENT')){
+        if (Auth::user()->hasRole('PRESIDENT')) {
             $returned_route = "president.comittee.list";
-        }else{
+        } else {
             $returned_route = "lecture.comittee.list";
         }
 
         $comittee = Comittee::find($request->input('_id'));
-        if($comittee->can_be_removed()){
+        if ($comittee->can_be_removed()) {
             $comittee->delete();
             return redirect()->route($returned_route, $instance)->with('success', 'Comité eliminado con éxito.');
-        }else{
+        } else {
             return redirect()->route($returned_route, $instance)->with('error', 'El comité no ha podido ser eliminado.');
         }
 
     }
 
-    public function user_management($instance,$id)
+    public function user_management($instance, $id)
     {
         $instance = \Instantiation::instance();
         $user = User::findOrFail($id);
 
         $route = null;
-        if(Auth::user()->hasRole('PRESIDENT')){
+        if (Auth::user()->hasRole('PRESIDENT')) {
             $route = route('president.user.management.save', $instance);
-        }else{
+        } else {
             $route = route('lecture.user.management.save', $instance);
         }
 
 
         // el presidente no puede crear usuarios de tipo profesor
         $roles = null;
-        if(Auth::user()->hasRole('PRESIDENT')){
-            $roles = Role::where('rol','!=','LECTURE')->get();
-        }else{
+        if (Auth::user()->hasRole('PRESIDENT')) {
+            $roles = Role::where('rol', '!=', 'LECTURE')->get();
+        } else {
             $roles = Role::all();
         }
 
@@ -208,18 +207,18 @@ class ManagementController extends Controller
         $user = User::find($request->input('user_id'));
 
         // guardar bloqueo
-        if($request->input('pass') == 'on'){
+        if ($request->input('pass') == 'on') {
             $user->block = false;
-        }else{
+        } else {
             $user->block = true;
         }
         $user->save();
 
         // aqui se cambian los roles
-        $roles_id = $request->input('roles',[]);
+        $roles_id = $request->input('roles', []);
         $comittee_id = $request->input('comittee');
-        if(Comittee::find($comittee_id) == null){
-            return redirect()->route('lecture.user.management',['instance' => $instance, 'id' => $user->id])->with('error','Comité no válido.');
+        if (Comittee::find($comittee_id) == null) {
+            return redirect()->route('lecture.user.management', ['instance' => $instance, 'id' => $user->id])->with('error', 'Comité no válido.');
         }
 
         // elimino toda asociación previa
@@ -230,27 +229,26 @@ class ManagementController extends Controller
         $user->roles()->detach();
 
         // asigno los nuevos roles
-        foreach($roles_id as $rol_id)
-        {
+        foreach ($roles_id as $rol_id) {
             $rol = Role::find($rol_id);
             $user->roles()->attach($rol);
             $user->save();
         }
 
         // ¿tiene rol de coordinador?
-        if($user->hasRole('COORDINATOR')){
+        if ($user->hasRole('COORDINATOR')) {
             DB::table('coordinators')->insert(['comittee_id' => $comittee_id, 'user_id' => $user->id]);
         }
 
         // ¿tiene rol de secretario?
-        if($user->hasRole('SECRETARY')){
+        if ($user->hasRole('SECRETARY')) {
             DB::table('secretaries')->insert(['comittee_id' => $comittee_id, 'user_id' => $user->id]);
         }
 
         $user->save();
 
         // el profesor tiene potestad para cambiar datos sensibles de un alumno
-        if(Auth::user()->hasRole('LECTURE')) {
+        if (Auth::user()->hasRole('LECTURE')) {
 
             $request->validate([
                 'name' => 'required|max:255',
@@ -291,11 +289,11 @@ class ManagementController extends Controller
 
         }
 
-        if($user->hasRole('PRESIDENT')){
-            return redirect()->route('president.user.list',['instance' => $instance, 'id' => $user->id])->with('success','Usuario actualizado con éxito');
+        if ($user->hasRole('PRESIDENT')) {
+            return redirect()->route('president.user.list', ['instance' => $instance, 'id' => $user->id])->with('success', 'Usuario actualizado con éxito');
         }
 
-        return redirect()->route('lecture.user.list',['instance' => $instance, 'id' => $user->id])->with('success','Usuario actualizado con éxito');
+        return redirect()->route('lecture.user.list', ['instance' => $instance, 'id' => $user->id])->with('success', 'Usuario actualizado con éxito');
     }
 
     public function user_management_new(Request $request)
@@ -320,10 +318,10 @@ class ManagementController extends Controller
             'clean_surname' => \StringUtilites::clean(trim($request->input('surname'))),
         ]);
 
-        $student_role = Role::where('rol','STUDENT')->get();
+        $student_role = Role::where('rol', 'STUDENT')->get();
         $user->roles()->attach($student_role);
 
-        return redirect()->route('lecture.user.list',['instance' => $instance, 'id' => $user->id])->with('success','Usuario creado con éxito');
+        return redirect()->route('lecture.user.list', ['instance' => $instance, 'id' => $user->id])->with('success', 'Usuario creado con éxito');
 
     }
 
@@ -331,10 +329,23 @@ class ManagementController extends Controller
     {
         $users = $this->user_service->all_except_logged();
 
-        foreach($users as $user){
+        foreach ($users as $user) {
             $this->user_service->delete($user->id);
         }
 
-        return redirect()->route('lecture.user.list',['instance' => \Instantiation::instance()])->with('success','Usuarios borrados con éxito');
+        return redirect()->route('lecture.user.list', ['instance' => \Instantiation::instance()])->with('success', 'Usuarios borrados con éxito');
+    }
+
+    public function evidences_export($instance, $ext)
+    {
+        try {
+            ob_end_clean();
+            if (!in_array($ext, ['csv', 'pdf', 'xlsx'])) {
+                return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
+            }
+            return Excel::download(new ManagementEvidencesExport(), 'evidencias-' . \Illuminate\Support\Carbon::now() . '.' . $ext);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
+        }
     }
 }

@@ -159,6 +159,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         Route::get('/evidence/list/pending', 'EvidenceCoordinatorController@pending')->name('coordinator.evidence.list.pending');
         Route::get('/evidence/list/accepted', 'EvidenceCoordinatorController@accepted')->name('coordinator.evidence.list.accepted');
         Route::get('/evidence/list/rejected', 'EvidenceCoordinatorController@rejected')->name('coordinator.evidence.list.rejected');
+        Route::get('/evidence/export/{type}/{ext}','EvidenceCoordinatorController@evidences_export')->name('coordinator.evidence.export');
 
         Route::middleware(['checknotnull:Evidence','evidencefrommycommittee'])->group(function () {
             Route::get('/evidence/view/{id}', 'EvidenceController@view')->name('coordinator.evidence.view');
@@ -328,6 +329,9 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
     Route::get('/registercoordinator/attendee/export','EventbriteController@attendee_export')->name('registercoordinator.attendee.export');
 
+    Route::get('/registercoordinator/event/export/{ext}','EventbriteController@events_export')->name('registercoordinator.events.export');
+
+
     /**
      *  PRESIDENT
      */
@@ -353,6 +357,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
 
     Route::get('/president/export','ImportExportController@export')->name('president.export');
+    Route::get('/management/export/{ext}','ManagementController@evidences_export')->name('management.export');
     Route::post('/president/export/save','ImportExportController@export_save')->name('president.export.save');
 
     /**
