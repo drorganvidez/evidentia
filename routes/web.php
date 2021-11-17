@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\AttendeeController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\MeetingSecretaryController;
+use App\Http\Controllers\MeetingController;
+use App\Http\Controllers\EvidenceController;
 use App\Http\Controllers\SignController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -143,6 +146,8 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         Route::post('/evidence/publish/edit', 'EvidenceController@publish_edit')->name('evidence.publish.edit');
     });
 
+    Route::get('/evidence/list/export/{ext}',[EvidenceController::class , 'export'])->name('evidence.list.export');
+
     Route::middleware(['checknotnull:Evidence','evidencemine'])->group(function () {
         Route::get('/evidence/view/{id}', 'EvidenceController@view')->name('evidence.view');
 
@@ -177,6 +182,9 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
      */
 
     Route::get('/meeting/list/', 'MeetingController@list')->name('meeting.list');
+    Route::get('/president/meeting/export/{ext}','MeetingController@meeting_export')->name('president.manage.meeting.export');
+
+    Route::get('/meeting/list/export/{ext}',[MeetingController::class , 'export'])->name('meeting.list.export');
 
     Route::prefix('secretary')->group(function () {
 
@@ -233,7 +241,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
                 });
 
                 Route::get('view/{signature_sheet}', [MeetingSecretaryController::class, 'signaturesheet_view'])->name('secretary.meeting.manage.signaturesheet.view');
-
+                Route::get('export/{ext}',[MeetingSecretaryController::class , 'signaturesheet_export'])->name('secretary.meeting.manage.signaturesheet.export');
             });
 
             // Actas
@@ -251,6 +259,8 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
                 Route::post('create/step3_p', [MeetingSecretaryController::class, 'minutes_create_step3_p'])->name('secretary.meeting.manage.minutes.create.step3_p');
 
                 Route::get('download/{id}', [MeetingSecretaryController::class, 'minutes_download'])->name('secretary.meeting.manage.minutes.download');
+                Route::get('export/{ext}',[MeetingSecretaryController::class , 'meeting_minutes_export'])->name('secretary.meeting.manage.minutes.export');
+
 
                 Route::middleware(['meetingminutesmine'])->group(function () {
                     Route::get('edit/{id}', [MeetingSecretaryController::class, 'minutes_edit'])->name('secretary.meeting.manage.minutes.edit');
@@ -290,7 +300,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
      */
     Route::get('/attendee/list/', 'AttendeeController@list')->name('attendee.list');
 
-
+    Route::get('/attendee/list/export/{ext}',[AttendeeController::class , 'export'])->name('attendee.list.export');
 
     /**
      *  PROOFS
@@ -401,6 +411,8 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         Route::post('/management/user/delete/all',['App\Http\Controllers\ManagementController','user_management_delete_all'])->name('management.user.delete.all');
     });
     Route::post('/management/user/new',['App\Http\Controllers\ManagementController','user_management_new'])->name('management.user.new');
+    Route::get('/president/user/export/{ext}','ManagementController@management_student_export')->name('president.manage.student.export');
+
 
     /**
      *  PROFILES

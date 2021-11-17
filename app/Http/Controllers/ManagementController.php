@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ManagementEvidencesExport;
+use App\Exports\ManagementStudentExport;
 use App\Http\Services\UserService;
 use App\Models\Comittee;
+use App\Models\Coordinator;
 use App\Models\Evidence;
 use App\Models\Meeting;
 use App\Models\Role;
+use App\Models\Secretary;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -344,6 +347,20 @@ class ManagementController extends Controller
                 return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
             }
             return Excel::download(new ManagementEvidencesExport(), 'evidencias-' . \Illuminate\Support\Carbon::now() . '.' . $ext);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
+        }
+    }
+
+
+    public function management_student_export($instance, $ext)
+    {
+        try {
+            ob_end_clean();
+            if(!in_array($ext, ['csv', 'pdf', 'xlsx'])){
+                return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
+            }
+            return Excel::download(new ManagementStudentExport(), 'alumnos-' . \Illuminate\Support\Carbon::now() . '.' . $ext);
         } catch (\Exception $e) {
             return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
         }

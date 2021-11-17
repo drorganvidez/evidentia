@@ -16,7 +16,6 @@ class MeetingRequestExport implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        $session_id = session_id();
         $meeting_requests= MeetingRequest::where("secretary_id","=",Auth::User()->secretary->id)->get();
         $res = collect();
         foreach($meeting_requests as $request){
