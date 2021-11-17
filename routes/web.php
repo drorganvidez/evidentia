@@ -214,7 +214,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
                     Route::post('remove', [MeetingSecretaryController::class, 'request_remove'])->name('secretary.meeting.manage.request.remove');
                 });
-
+                Route::get('export/{ext}',[MeetingSecretaryController::class , 'meeting_requests_export'])->name('secretary.meeting.manage.request.export');
             });
 
 
@@ -288,6 +288,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
      *  ATTENDEES
      */
     Route::get('/attendee/list/', 'AttendeeController@list')->name('attendee.list');
+
 
 
     /**

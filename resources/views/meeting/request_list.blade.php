@@ -17,6 +17,24 @@
         <x-menumeeting/>
 
         <div class="col-lg-9">
+            <div class="row mb-3">
+                <p style="padding: 5px 50px 0px 315px">Exportar tabla:</p>
+                <div class="col-lg-1 mt-12">
+                    <a href="{{route('secretary.meeting.manage.request.export',['instance' => $instance, 'ext' => 'xlsx'])}}"
+                       class="btn btn-info btn-block" role="button">
+                        XLSX</a>
+                </div>
+                <div class="col-lg-1 mt-12">
+                    <a href="{{route('secretary.meeting.manage.request.export',['instance' => $instance, 'ext' => 'csv'])}}"
+                       class="btn btn-info btn-block" role="button">
+                        CSV</a>
+                </div>
+                <div class="col-lg-1 mt-12">
+                    <a href="{{route('secretary.meeting.manage.request.export',['instance' => $instance, 'ext' => 'pdf'])}}"
+                       class="btn btn-info btn-block" role="button">
+                        PDF</a>
+                </div>
+            </div>
 
             <div class="card shadow-sm">
 
@@ -24,6 +42,7 @@
 
                     <table id="dataset" class="table table-hover table-responsive">
                         <thead>
+
                         <tr>
                             <th scope="col">Título</th>
                             <th scope="col">Última modificación</th>
@@ -31,6 +50,7 @@
                             <th scope="col">PDF</th>
                         </tr>
                         </thead>
+
                         <tbody>
                         @foreach($meeting_requests as $meeting_request)
                             <tr scope="row">
@@ -46,6 +66,7 @@
                                     {{ \Carbon\Carbon::parse($meeting_request->datetime)->format('H:i') }}
                                     ({{ \Carbon\Carbon::parse($meeting_request->datetime)->diffForHumans() }})
                                 </td>
+
                                 <td>
                                     <a class="btn btn-primary btn-sm" href="{{route('secretary.meeting.manage.request.download',['instance' => $instance, 'id' => $meeting_request->id])}}"><i class="fas fa-file-pdf"></i></a>
 
