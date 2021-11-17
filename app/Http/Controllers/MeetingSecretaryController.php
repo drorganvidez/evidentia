@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Exports\MeetingRequestExport;
+use App\Exports\MeetingMinutesExport;
+use App\Exports\SignaturesheetExport;
 use App\Http\Services\UserService;
 use App\Models\Agreement;
 use App\Models\DefaultList;
@@ -786,6 +788,33 @@ class MeetingSecretaryController extends Controller
             return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
         }
     }
+
+    public function signaturesheet_export($instance, $ext)
+    {
+        try {
+            ob_end_clean();
+            if(!in_array($ext, ['csv', 'pdf', 'xlsx'])){
+                return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
+            }
+            return Excel::download(new SignaturesheetExport(), 'firmas-' . \Illuminate\Support\Carbon::now() . '.' . $ext);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
+        }
+    }
+
+    public function meeting_minutes_export($instance, $ext)
+    {
+        try {
+            ob_end_clean();
+            if(!in_array($ext, ['csv', 'pdf', 'xlsx'])){
+                return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
+            }
+            return Excel::download(new MeetingMinutesExport(), 'actas-' . \Illuminate\Support\Carbon::now() . '.' . $ext);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
+        }
+    }
+
     /*
     public function list()
     {

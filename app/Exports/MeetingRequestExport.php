@@ -9,7 +9,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Illuminate\Support\Facades\Auth;
 
-class MeetingRequestExport implements FromCollection, WithHeadings, ShouldAutoSize
+class MeetingRequestExport implements FromCollection, WithHeadings
 {
     /**
      * @return \Illuminate\Support\Collection
