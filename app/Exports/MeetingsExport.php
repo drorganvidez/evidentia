@@ -14,21 +14,6 @@ class MeetingsExport implements FromCollection, WithHeadings
      * @return \Illuminate\Support\Collection
      */
 
-    public function user_list()
-    {
-        $users = User::all();
-
-        // el presidente no puede editar los usuarios de tipo profesor
-        $filtered_users = collect();
-        $users->each(function ($item, $key) use ($filtered_users) {
-            if (!$item->hasRole('LECTURE')) {
-                $filtered_users->push($item);
-            }
-        });
-
-        return $filtered_users;
-    }
-
     public function collection()
     {
         $meetings= Meeting::all();

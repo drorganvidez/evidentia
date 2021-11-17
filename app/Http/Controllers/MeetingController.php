@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\MeetingsExport;
+use App\Exports\MyMeetingsExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MeetingController extends Controller
 {
@@ -23,6 +26,7 @@ class MeetingController extends Controller
         return view('meeting.mylist',
             ['instance' => $instance, 'meetings' => $meetings]);
     }
+
 
     public function meeting_export($instance, $ext)
     {

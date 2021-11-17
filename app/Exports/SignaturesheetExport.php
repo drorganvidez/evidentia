@@ -19,12 +19,17 @@ class SignaturesheetExport implements FromCollection, WithHeadings
         $signatures = SignatureSheet::where("secretary_id","=",Auth::User()->secretary->id)->get();
         $res = collect();
         foreach($signatures as $signature){
+            if($signature->meeting_request) {
+                $convocatoria = $signature->meeting_request->title;
+            } else {
+                $convocatoria = "Sin asociar";
+            }
 
             if(Auth::User()->hasRole('SECRETARY')) {
 
                 $array = [
                     'Titulo' => strtoupper(trim($signature->title)),
-                    'Convocatoria' => strtoupper(trim($signature->meeting_request->title)),
+                    'Convocatoria' => strtoupper(trim($convocatoria)),
                     'Ultima_modificacion' => strtoupper(trim($signature->updated_at)),
                     'URL_para_firmar' =>  URL::to('/') . "/21/sign/$signature->random_identifier"
                 ];
