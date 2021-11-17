@@ -9,14 +9,13 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Illuminate\Support\Facades\Auth;
 
-class MeetingRequestExport implements FromCollection, WithHeadings, ShouldAutoSize
+class MeetingRequestExport implements FromCollection, WithHeadings
 {
     /**
      * @return \Illuminate\Support\Collection
      */
     public function collection()
     {
-        $session_id = session_id();
         $meeting_requests= MeetingRequest::where("secretary_id","=",Auth::User()->secretary->id)->get();
         $res = collect();
         foreach($meeting_requests as $request){
