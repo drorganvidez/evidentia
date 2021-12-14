@@ -13,12 +13,11 @@
 
 @section('content')
 
-    <form method="POST" enctype="multipart/form-data">
-        @csrf
+    <form method="GET" enctype="multipart/form-data">
 
         <x-id :id="$evidence->id ?? ''" :edit="$edit ?? ''"/>
 
-        <input type="hidden" name="removed_files" id="removed_files"/>
+        <!-- <input type="hidden" name="removed_files" id="removed_files"/> -->
 
 
         <div class="row">
@@ -31,9 +30,13 @@
 
                         <div class="form-row">
 
-                            <x-input col="5" attr="title" :value="$evidence->title ?? ''" label="Título" description="Escribe un título que describa el diploma que vas a generar (mínimo 5 caracteres)"/>
+                            <x-input col="5" attr="nombreDiploma" :value="$evidence->title ?? ''" label="Nombre Diploma" description="Escribe un título que describa el diploma que vas a generar (mínimo 5 caracteres)"/>
                             <x-input col="5" attr="name" :value="$evidence->title ?? ''" label="Nombre del premiado" description="Escribe el nombre de la persona premiada"/>
-                            <x-input col="5" attr="mail" :value="$evidence->title ?? ''" label="Correo electrónico del premiado" description="Escribe el mail de la persona premiada"/>
+                            <x-input col="5" attr="mailto" :value="$evidence->title ?? ''" label="Correo electrónico del premiado" description="Escribe el mail de la persona premiada"/>
+                            <x-input col="5" attr="course" :value="$evidence->title ?? ''" label="Curso realizado" description="Escribe el mail de la persona premiada"/>
+                            <x-input col="5" attr="diplomaGenerar" :value="$evidence->title ?? ''" label="diploma a generar" description="Escribe el mail de la persona premiada"/>
+                            <x-input col="5" attr="score" :value="$evidence->title ?? ''" label="Puntuación" description="Escribe el mail de la persona premiada"/>
+                            <x-input col="5" attr="date" :value="$evidence->title ?? ''" label="Fecha (10/2/12)" description="Escribe el mail de la persona premiada"/>
 
                             <!-- <div class="form-group col-md-2">
                                 <label for="hours">Nombre de la persona</label>
@@ -59,10 +62,10 @@
 
                             
 
-                            <x-textarea col="12" attr="description" :value="$evidence->description ?? ''"
+                            <!-- <x-textarea col="12" attr="description" :value="$evidence->description ?? ''"
                                         label="Descripción de la evidencia"
                                         description="Escribe una descripción concisa de tu evidencia (entre 10 y 20000 caracteres)."
-                            />
+                            /> -->
 
 
                             <div class="form-group col-md-4">
@@ -83,7 +86,7 @@
                                         </div>
                                         <div class="modal-footer justify-content-between">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                            <button type="submit" formaction="http://127.0.0.1:5000/diploma?diplomaGenerar=diploma_comite_registro&nombreDiploma=Diploma Ganador Capture The Flag&name=Antonio Campuzano Martinez&course=Innosoft 2021&score=nº1&date=10/2/12&mailto=sergiorojasjimenez8@gmail.com" class="btn btn-primary" data-toggle="modal" data-target="#modal-default"><i class="fas fa-external-link-square-alt"></i> &nbsp;Sí, publicar evidencia</button>
+                                            <button type="submit" formaction="http://127.0.0.1:5000/diploma" class="btn btn-primary" data-toggle="modal" data-target="#modal-default"><i class="fas fa-external-link-square-alt"></i> &nbsp;Sí, publicar evidencia</button>
                                         </div>
                                     </div>
                                 </div>
