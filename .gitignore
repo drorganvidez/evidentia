@@ -4,6 +4,7 @@
 /storage/*.key
 /vendor
 /homestead
+/laradock
 .env
 .env.backup
 .phpunit.result.cache
@@ -13,3 +14,4 @@ yarn-error.log
 resources/.DS_Store
 .idea/
 .editorconfig
+.gitmodules

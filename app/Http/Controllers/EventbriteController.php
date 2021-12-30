@@ -175,7 +175,6 @@ class EventbriteController extends Controller
 
             foreach($events as $event) {
 
-
                 // obtenemos la paginación
                 $attendees = $client->request('GET', 'events/' . $event->id_eventbrite .'/attendees', [
                     'query' => ['token' => $token]
@@ -195,6 +194,7 @@ class EventbriteController extends Controller
 
                     $attendees_page = json_decode($attendees_page->getBody());
                     $attendees_page = (array)$attendees_page->attendees;
+
                     foreach($attendees_page as $attendee){
 
                         // limpiamos el nombre de caracteres problemáticos
@@ -221,12 +221,17 @@ class EventbriteController extends Controller
                             $exits = Attendee::where("event_id", $event->id)->where("user_id", $user->id)->first();
 
                             if($exits == null){
-                                $new_attendee = Attendee::create([
-                                    'event_id' => $event->id,
-                                    'user_id' => $user->id,
-                                    'status' => $status
-                                ]);
-                                $new_attendee->save();
+                                try{
+
+                                    Attendee::create([
+                                        'event_id' => $event->id,
+                                        'user_id' => $user->id,
+                                        'status' => $status
+                                    ]);
+
+                                }catch (\Exception $e){
+                                    echo $e;
+                                }
                             }
 
 

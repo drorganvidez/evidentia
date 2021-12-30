@@ -17,7 +17,7 @@ class CreateAttendeeTable extends Migration
             $table->id();
             $table->foreignId('event_id');
             $table->foreignId('user_id');
-            $table->enum('status',['Attending','Checked In','Guests Attended','Guests Attending','Not Attending (Refunded/Canceled)']);
+            $table->enum('status',['Attending','Checked In','Guests Attended','Guests Attending','Not Attending (Refunded/Canceled)','Not Attending']);
             $table->timestamps();
         });
     }

@@ -286,7 +286,8 @@
         <div style="padding-left: 20px">
 
             <p>
-                Se levantó la sesión de la reunión a las {{ \Carbon\Carbon::parse($meeting_minutes->meeting->datetime)->addHours($meeting_minutes->meeting->hours)->format('H:i') }}
+                Se levantó la sesión de la reunión a las
+                {{ \Carbon\Carbon::parse($meeting_minutes->meeting->datetime)->addHours(Time::complex_shape_hours($meeting_minutes->meeting->hours))->addMinutes(Time::complex_shape_minutes($meeting_minutes->meeting->hours))->format('H:i') }}
                 del día {{ \Carbon\Carbon::parse($meeting_minutes->meeting->datetime)->day }}
                 de {{ \Carbon\Carbon::parse($meeting_minutes->meeting->datetime)->monthName }}
                 de {{ \Carbon\Carbon::parse($meeting_minutes->meeting->datetime)->year }}

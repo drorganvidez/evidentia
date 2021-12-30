@@ -15,13 +15,14 @@ class InstancesTableSeeder extends Seeder
      */
     public function run()
     {
+
         DB::table('instances')->insert([
             'name' => 'Curso 2021/22',
             'route' => '21',
-            'host' => 'localhost',
-            'port' => '33060',
-            'username' => 'homestead',
-            'password' => 'secret',
+            'host' => env('DB_HOST'),
+            'port' => env('DB_PORT'),
+            'username' => env('DB_USERNAME'),
+            'password' => env('DB_PASSWORD'),
             'database' => 'base21',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
