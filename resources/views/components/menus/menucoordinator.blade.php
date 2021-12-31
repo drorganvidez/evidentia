@@ -9,6 +9,8 @@
                   icon='fas fa-clipboard-check' name="Gestionar evidencias"/>
             <x-li route="coordinator.certificate.generate"
                   icon='fas fa-certificate' name="Generar diploma"/>
+            <x-li route="coordinator.certificate.create_template_init"
+                  icon='fas fa-file' name="Crear plantilla diploma"/>
 
         </ul>
     </nav>
