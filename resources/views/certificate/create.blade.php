@@ -34,7 +34,21 @@
                             <x-input col="5" attr="name" :value="$evidence->title ?? ''" label="Nombre del premiado" description="Escribe el nombre de la persona premiada"/>
                             <x-input col="5" attr="mailto" :value="$evidence->title ?? ''" label="Correo electrónico del premiado" description="Escribe el mail de la persona premiada"/>
                             <x-input col="5" attr="course" :value="$evidence->title ?? ''" label="Curso realizado" description="Escribe el mail de la persona premiada"/>
-                            <x-input col="5" attr="diplomaGenerar" :value="$evidence->title ?? ''" label="diploma a generar" description="Escribe el mail de la persona premiada"/>
+                            <!-- <x-selectfield col="5" attr="diplomaGenerar" slot="@foreach($certificates as $c) <option value='$c->html ?? ""'> {{$c->title ?? ''}} </option>@endforeach" label="Diploma a generar" description="Escribe el mail de la persona premiada" id="certificates"/>
+ -->                        <div class="form-group col-md-5">
+                                <label>Seleccionar diploma a generar</label>
+                                <select id="certificates" name="diplomaGenerar" class="selectpicker form-control">
+                                    @foreach($certificates as $c)
+                                        <option value='{{$c->html}}'> {{$c->title ?? ''}} </option>
+                                    @endforeach
+                                </select>
+                                <small class="form-text text-muted">Selecciona el diploma que quieres generar con los datos del formulario.</small>
+                                <!-- @error('users')
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror -->
+                            </div>
                             <x-input col="5" attr="score" :value="$evidence->title ?? ''" label="Puntuación" description="Escribe el mail de la persona premiada"/>
                             <x-input col="5" attr="date" :value="$evidence->title ?? ''" label="Fecha (10/2/12)" description="Escribe el mail de la persona premiada"/>
 
