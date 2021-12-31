@@ -507,5 +507,39 @@ class DevelopSeeder extends Seeder
             'secret' => Str::random(10),
         ]);
 
+        /*
+         *  DIPLOMAS
+         */
+
+        DB::table('certificates')->insert([
+            'title' => "Diploma Comité Registro",
+            'html' => "<!DOCTYPE html> <html> <head> <style> @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap'); html,body{height: 70%;} body{ background-image: url('https://img2.rtve.es/imagenes/como-utilizar-codigo-qr/1605265250290.jpg'); font-family: 'Poppins'; font-weight: 300; height: 100%; text-align: center; color: #ffffff; } .bold{ font-weight: 300; } </style> </head> <body> <div class='contenido' style= 'padding-top: 80px;'> <div> <h1 style='margin-right: 160px;' class='bold'>DIPLOMA DE ORGANIZACIÓN</h1> <p style='margin-bottom: 0px;margin-top: 25px;margin-right: 160px;' class='light'>Certifica a:</p> <p style='font-size: 2.4em;margin-right:160px;' class='bold'>{{name}}</p> <br> <br> <p style='margin-right:160px;'>A los miembros del comité de registro:</p> <h2 style='max-width: 600px;margin-right: 160px;font-size: 3em;' class='bold'>{{course}}</h2> <p style='margin-right:160px;'>Por su labor y entrega:</p> <p style='font-size: 2.7em; margin-right: 160px;' class='bold'>{{score}}</p> <p style='margin-right:160px;'>Con fecha:</p> <p style='font-size: 0.9em; margin-right: 160px;' class='bold'>{{date}}</p> </div> </div> </body> </html>",
+        ]);
+
+        DB::table('certificates')->insert([
+            'title' => "Diploma de Participación",
+            'html' => "<!DOCTYPE html> <html> <head> <style> @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap'); html,body{height: 70%;} body{ background-image: url('https://wallpapercave.com/wp/wp2691479.jpg'); font-family: 'Poppins'; font-weight: 300; height: 100%; text-align: center; color: #ffffff; } .bold{ font-weight: 300; } </style> </head> <body> <div class='contenido' style= 'padding-top: 80px;'> <div> <h1 class='bold'>DIPLOMA DE PARTICIPACIÓN</h1> <p style='margin-bottom: 0px;margin-top: 25px;' class='light'>Certifica a:</p> <p style='font-size: 2.4em;margin:0px' class='bold'>{{name}}</p> <br> <br> <p style='margin:0px;'>Por participar en la actividad :</p> <h2 style='max-width: 600px;margin:25px auto;font-size: 3em;' class='bold'>{{course}}</h2> <p style='margin:0px;'>Quedando en la posición:</p> <p style='font-size: 2.7em;' class='bold'>{{score}}</p> <br> <br> <p style='margin:0px;'>Con fecha:</p> <p style='font-size: 0.9em;' class='bold'>{{date}}</p> </div> </div> </body> </html>",
+        ]);
+
+        DB::table('certificates')->insert([
+            'title' => "Diploma Rocket League",
+            'html' => "<!DOCTYPE html> <html> <head> <style> @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap'); html,body{height: 70%;} body{ background-image: url('https://images6.alphacoders.com/863/thumb-1920-863542.png'); background-size: 135% 100%; font-family: 'Poppins'; font-weight: 300; height: 100%; text-align: center; color: #ffffff; } .bold{ font-weight: 300; } </style> </head> <body> <div class='contenido' style= 'padding-top: 80px;'> <div> <h1 class='bold'>DIPLOMA DE PARTICIPACIÓN</h1> <p style='margin-bottom: 0px;margin-top: 25px;' class='light'>Certifica a:</p> <p style='font-size: 2.4em;margin:0px' class='bold'>{{name}}</p> <br> <br> <p style='margin:0px;'>Por participar en el torneo de :</p> <h2 style='max-width: 600px;margin:25px auto;font-size: 3em;' class='bold'>{{course}}</h2> <p style='margin:0px;'>Quedando en la posición:</p> <p style='font-size: 2.7em;' class='bold'>{{score}}</p> <br> <br> <p style='margin:0px;'>Con fecha:</p> <p style='font-size: 0.9em;' class='bold'>{{date}}</p> </div> </div> </body> </html>",
+        ]);
+
+        DB::table('certificates')->insert([
+            'title' => "Diploma Mayor Participación",
+            'html' => "<!DOCTYPE html> <html> <head> <style> @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap'); html,body{height: 70%;} body{ background-image: url('https://www.incimages.com/uploaded_files/image/1920x1080/shutterstock_184867352_350731.jpg'); background-size: 200% 100%; font-family: 'Poppins'; font-weight: 300; height: 100%; text-align: center; color: #000000; } .bold{ font-weight: 300; } </style> </head> <body> <div class='contenido' style= 'padding-top: 80px;'> <div> <h1 class='bold'>DIPLOMA DE PARTICIPACIÓN</h1> <p style='margin-bottom: 0px;margin-top: 25px;' class='light'>Certifica a:</p> <p style='font-size: 2.4em;margin:0px' class='bold'>{{name}}</p> <br> <br> <p style='margin:0px;'>A la persona que más ha participado:</p> <h2 style='max-width: 600px;margin:25px auto;font-size: 3em;' class='bold'>{{course}}</h2> <p style='margin:0px;'>Con un total de horas de:</p> <p style='font-size: 2.7em;' class='bold'>{{score}}</p> <br> <br> <p style='margin:0px;'>Con fecha:</p> <p style='font-size: 0.9em;' class='bold'>{{date}}</p> </div> </div> </body> </html>",
+        ]);
+
+        DB::table('certificates')->insert([
+            'title' => "Diploma Mejor Comité",
+            'html' => "<!DOCTYPE html> <html> <head> <style> @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap'); html,body{height: 70%;} body{ background-image: url('https://www.detoxpobyt.sk/wp-content/uploads/2017/07/response.jpg'); background-size: cover; background-repeat: no-repeat; font-family: 'Poppins'; font-weight: 300; height: 100%; text-align: center; color: #2a7a31; text-shadow: 3px 3px 4px #000000; } .bold{ font-weight: 300; } </style> </head> <body> <div style= 'padding-top: 80px;'> <div> <h1 class='bold'>DIPLOMA AL MEJOR COMITÉ</h1> <p style='margin-bottom: 0px;margin-top: 25px;' class='light'>Da la enhorabuena a:</p> <p style='font-size: 2.4em;margin:0px' class='bold'>{{name}}</p> <br> <br> <p style='margin:0px;'>Por formar parte de:</p> <h2 style='max-width: 600px;margin:25px auto;font-size: 3em;' class='bold'>{{course}}</h2> <br> <br> <br> <br> <p style='font-size: 2.4em;margin:0px;'>Nombrado el mejor comité de la edición:</p> <p style='font-size: 1.5em;' class='bold'>{{date}}</p> </div> </div> </body> </html>",
+        ]);
+
+        DB::table('certificates')->insert([
+            'title' => "Diploma Ponencia",
+            'html' => "<!DOCTYPE html> <html> <head> <style> @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap'); html,body{height: 70%;} body{ background-image: url('https://th.bing.com/th/id/R.ffeca8d50a4a2182120490bbd33c059d?rik=UI0cFlFDE0B8ZA&riu=http%3a%2f%2fwww.groupeamplify.com%2fuploads%2f2018%2f01%2fBusiness-Presentation-Skills.jpg&ehk=uFeLdzPvJRZHcH%2bOhA27rAA65BBm2VSYfSJXgPwwOUY%3d&risl=&pid=ImgRaw&r=0');       font-family: 'Poppins'; background-size: cover; font-weight: 300; height: 100%; text-align: center; color: #1BBC9B; text-shadow: 3px 3px 4px #000000; } .bold{ font-weight: 300; } </style> </head> <body> <div style= 'padding-top: 80px;'> <div> <h1 class='bold'>DIPLOMA DE PONENCIA</h1> <p style='margin-bottom: 0px;margin-top: 25px;' class='light'>Agradece a:</p> <p style='font-size: 2.4em;color:#1BBC9B;margin:0px' class='bold'>{{name}}</p> <br> <br> <p style='margin:0px;'>Por realizar la ponencia:</p> <h2 style='max-width: 600px;margin:25px auto;font-size: 3em;' class='bold'>{{course}}</h2> <!-- <p style='margin:0px;'>Con la nota de:</p> <p style='font-size: 2.7em;' class='bold'>{{score}}</p> --> <br> <br> <br> <br> <p style='margin:0px;'>En la fecha:</p> <p style='font-size: 0.9em;' class='bold'>{{date}}</p> </div> </div> </body> </html>"
+        ]); 
+
     }
 }
