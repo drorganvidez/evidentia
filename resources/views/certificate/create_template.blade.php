@@ -27,8 +27,7 @@
                     <div class="card-body">
 
                         <div class="form-row">
-
-                            <x-input col="10" attr="title" :value="$evidence->title ?? ''" label="Título del Diploma" description="Escribe un título que describa la plantilla de diploma que vas a generar"/>
+                            <x-input col="10" attr="title" :value="$evidence->title ?? ''" label="Título del Diploma" description="Escribe un título que describa la plantilla de diploma que vas a generar" required/>
                             <x-textareasimple col="10" attr="html" :value="$evidence->title ?? ''" label="Html del Diploma" description="Contenido de la plantilla en html"/>
 
                             <div class="form-group col-md-4">
