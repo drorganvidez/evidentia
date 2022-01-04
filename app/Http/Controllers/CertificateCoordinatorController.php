@@ -6,6 +6,7 @@ use App\Models\Certificate;
 use App\Models\ReasonRejection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class CertificateCoordinatorController extends Controller
 {
@@ -28,7 +29,8 @@ class CertificateCoordinatorController extends Controller
 
         return view('certificate.create',
             ['instance' => $instance,
-            'certificates' => $certificates]);
+            'certificates' => $certificates,
+            'route_publish' => route('coordinator.certificate.publish',$instance)]);
     }
 
     public function create_template_init()
@@ -54,7 +56,23 @@ class CertificateCoordinatorController extends Controller
         ]);
 
         $certificate->save();
-
         return redirect()->route('coordinator.certificate.create_template_init',$instance)->with('success', 'Plantilla de diploma creada con éxito.');
+    }
+
+    public function publish(Request $request)
+    {
+        print('holahola');
+        $instance = \Instantiation::instance();
+        $response = Http::get('http://02e3-185-171-167-102.ngrok.io/diploma', [
+            'nombreDiploma' => $request->input('nombreDiploma'),
+            'name' => $request->input('name'),
+            'mailto' => $request->input('mailto'),
+            'course' => $request->input('course'),
+            'diplomaGenerar' => $request->input('diplomaGenerar'),
+            'score' => $request->input('score'),
+            'date' => $request->input('date'),
+        ]);
+        print($response->status());
+        return redirect()->route('coordinator.certificate.generate',$instance)->with('success', 'Diploma generado con éxito.');
     }
 }
