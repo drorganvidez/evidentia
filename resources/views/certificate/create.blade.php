@@ -13,6 +13,7 @@
 
 @section('content')
     
+
     <form method="GET" enctype="multipart/form-data" )>
 
         <x-id :id="$evidence->id ?? ''" :edit="$edit ?? ''"/>
@@ -39,10 +40,21 @@
 
                         <div class="form-row">
 
-                            <x-input col="5" attr="nombreDiploma" :value="$evidence->title ?? ''" label="Nombre del Diploma" description="Nombre del archivo pdf que contendrá el diploma"/>
+                            
+                            <div class="form-group col-md-5">
+                                <label for="nombreDiploma">Nombre del diploma generado</label>
+                                <input id="nombreDiploma" type="string" minlength= 10 class="form-control" placeholder="diploma_joseluis" name="nombreDiploma"  description="Nombre del archivo pdf que contendrá el diploma" required>
+                                <small class="form-text text-muted">Nombre del diploma a generar</small>
+                                @error("nombreDiploma")
+                                <span class="invalid-feedback d-block" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div> 
+                            
                             <div class="form-group col-md-5">
                                 <label for="name">Nombre del premiado</label>
-                                <input id="name" type="ctype_alpha" class="form-control" placeholder="Jose Luis Gomez Parejo" name="name"   description="Nombre de la persona premiada" required>
+                                <input id="name" type="ctype_alpha" minlength= 10 class="form-control" placeholder="Jose Luis Gomez Parejo" name="name"   description="Nombre de la persona premiada" required>
                                 <small class="form-text text-muted">Nombre del premiado</small>
                                 @error("name")
                                 <span class="invalid-feedback d-block" role="alert">
@@ -62,8 +74,18 @@
                                 @enderror
                             </div>
 
-                            <x-input col="5" attr="course" :value="$evidence->title ?? ''" label="Curso realizado" description="Nombre del curso que ha realizado"/>
                             
+                            <div class="form-group col-md-5">
+                                <label for="course">Nombre del curso realizado</label>
+                                <input id="course" type="string" class="form-control" placeholder="Ciberseguridad III: inicio" name="course"   description="Nombre del curso que ha realizado" required>
+                                <small class="form-text text-muted">Curso realizado</small>
+                                @error("course")
+                                <span class="invalid-feedback d-block" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div> 
+
                             <div class="form-group col-md-5">
                                 <label>Seleccionar diploma a generar</label>
                                 <select id="certificates" name="diplomaGenerar" class="selectpicker form-control">
@@ -77,8 +99,8 @@
                             
                             <div class="form-group col-md-5">
                                 <label for="score">Puntuación</label>
-                                <input id="score" type="number" min="0" max="10" class="form-control" placeholder="1-10" name="score" value="$evidence->score ?? ''"  step="1" description="Puntuación obtenida por el ganador en el curso" required>
-                                <small class="form-text text-muted">Enteros</small>
+                                <input id="score" type="string" placeholder="nº1" class="form-control"  name="score"  description="Evaluación obtenida por el ganador del diploma" required>
+                                <small class="form-text text-muted">Evaluación obtenida por el ganador del diploma</small>
                                 @error("score")
                                 <span class="invalid-feedback d-block" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -111,37 +133,28 @@
 
 
                             <div class="form-group col-md-4">
-                                <button type="button"  formaction="http://127.0.0.1:5000/diploma" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-default" style = "margin-top:60px; margin-left: 120px"><i class="fas fa-external-link-square-alt"></i> &nbsp;Generar diploma</button>
+                                <button type="submit"  formaction="{{$route_publish}}" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-default" style = "margin-top:60px; margin-left: 120px"><i class="fas fa-external-link-square-alt"></i> &nbsp;Generar diploma</button>
                             </div>
-
-                            <div class="modal fade" id="modal-default">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Generar diploma</h4>
-                                        </div>
-                                       <!-- <div class="modal-body">
-                                            <p>Cuando se genera un diploma, este se envía al email de la persona premiada
-                                                por lo que
-                                                <b>no podrá ser eliminado.</b></p>
-                                            <p>¿Deseas continuar?</p>
-                                        </div> -->
-                                        <div class="modal-footer justify-content-between">
-                                           <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button> -->
-                                            <button type="submit" formaction="http://127.0.0.1:5000/diploma" class="btn btn-primary" data-toggle="modal" data-target="#modal-default"><i class="fas fa-external-link-square-alt"></i> &nbsp;Sí, generar diploma</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
- 
 
                         </div>
 
                     </div>
 
                 </div>
+                </div>
+                <div class="widget-user-header text-white" style="background: url(http://localhost/dist/img/abstract.jpg); height: 395px; width:250px; margin-top:75px; margin-left:40px" bis_skin_checked="1">
+
+                    <h5 class="widget-user-desc text-left" style="margin-bottom: 0px; margin-top: 12px; margin-left: 7px; font-size:xx-large">
+                        
+                        &nbsp;&nbsp;
+                        ¡Enhorabuena, vas a generar un diploma para &nbsp;&nbsp;&nbsp;  un afortunado!
+                    </h5>
+
+                </div>
                 
             </div>
+            
+</div>
         
         
         </div>
@@ -149,6 +162,7 @@
     </form>
 
 
+    
     @section('scripts')
 
     
