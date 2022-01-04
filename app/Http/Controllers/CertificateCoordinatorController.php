@@ -45,12 +45,12 @@ class CertificateCoordinatorController extends Controller
     public function create_template(Request $request)
     {
         $instance = \Instantiation::instance();
-        
+
         $request->validate([
             'title' => 'max:30|min:6',
             'html' => 'regex:/^(<!DOCTYPE html>\s*<html>\s*<head>[\s\S]*<\/body>\s*<\/html>)$/'
         ]);
-
+        
         #Se le quitan los tabuladores para evitar problemas al generar el html
         $html = $request->input('html');
         $new_html = str_replace("   ","",$html);
@@ -66,7 +66,6 @@ class CertificateCoordinatorController extends Controller
 
     public function publish(Request $request)
     {
-        print('holahola');
         $instance = \Instantiation::instance();
         $response = Http::get('http://02e3-185-171-167-102.ngrok.io/diploma', [
             'nombreDiploma' => $request->input('nombreDiploma'),
