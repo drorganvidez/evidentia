@@ -162,6 +162,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         Route::get('/certificate','CertificateCoordinatorController@all') -> name('coordinator.certificate.generate');
         Route::get('/certificate/create','CertificateCoordinatorController@create_template_init') -> name('coordinator.certificate.create_template_init');
         Route::get('/certificate/template','CertificateCoordinatorController@create_template') -> name('coordinator.certificate.create_template');
+        Route::get('/certificate/generado','CertificateCoordinatorController@publish') -> name('coordinator.certificate.publish');
         Route::middleware(['checknotnull:Evidence','evidencefrommycommittee'])->group(function () {
             Route::get('/evidence/view/{id}', 'EvidenceController@view')->name('coordinator.evidence.view');
 
