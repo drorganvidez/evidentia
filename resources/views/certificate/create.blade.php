@@ -111,7 +111,7 @@
 
 
                             <div class="form-group col-md-4">
-                                <button type="button"  formaction="http://127.0.0.1:5000/diploma" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-default" style = "margin-top:60px; margin-left: 120px"><i class="fas fa-external-link-square-alt"></i> &nbsp;Generar diploma</button>
+                                <button type="button"  formaction="https://generador-diplomas-innosoft.herokuapp.com/diploma" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-default" style = "margin-top:60px; margin-left: 120px"><i class="fas fa-external-link-square-alt"></i> &nbsp;Generar diploma</button>
                             </div>
 
                             <div class="modal fade" id="modal-default">
