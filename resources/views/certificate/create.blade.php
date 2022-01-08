@@ -143,11 +143,12 @@
                 </div>
                 </div>
                 <div class="widget-user-header text-white" style="background: url(http://localhost/dist/img/abstract.jpg); height: 395px; width:250px; margin-top:75px; margin-left:40px" bis_skin_checked="1">
-
-                    <h5 class="widget-user-desc text-left" style="margin-bottom: 0px; margin-top: 12px; margin-left: 7px; font-size:xx-large">
+                    <img src="https://institucional.us.es/innosoft/wp-content/uploads/2018/10/logo_2_negro-e1540204473260.png" style="margin-left: 85px; margin-top:90px">
+                    <h5 class="widget-user-desc text-left" style="margin-bottom: 30px; margin-top: 40px; margin-left: 33px; font-size:xx-large; ">
                         
-                        &nbsp;&nbsp;
-                        ¡Enhorabuena, vas a generar un diploma para &nbsp;&nbsp;&nbsp;  un afortunado!
+                        
+                        Innosoft Days 
+                        &nbsp;&nbsp;&nbsp;&nbsp;2021-2022
                     </h5>
 
                 </div>
