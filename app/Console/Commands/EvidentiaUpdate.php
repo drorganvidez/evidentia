@@ -42,7 +42,7 @@ class EvidentiaUpdate extends Command
 
         exec("git pull");
 
-        exec("sudo composer update");
+        exec("composer update");
 
         Artisan::call("optimize:clear");
 

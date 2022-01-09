@@ -22,7 +22,7 @@ use App\Http\Controllers;
  *  DEPLOY ROUTE
  */
 
-Route::post('/deploy', 'DeployController@deploy')->name('deploy');
+Route::get('/deploy', 'DeployController@deploy')->name('deploy');
 
 Auth::routes();
 

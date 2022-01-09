@@ -10,19 +10,23 @@ class DeployController extends Controller
 {
 
     public function deploy(Request $request){
-        system("cmd /c C:\\Users\\Sergio\\Desktop\\evidentia\\redeploy.bat");
-        // $username = $request->input('username');
-        // $password = $request->input('password');
 
-        // $username_env = env('DB_USERNAME');
-        // $passsword_env = env('DB_PASSWORD');
+        $username = $request->input('username');
+        $password = $request->input('password');
 
-        // $check_username = strcmp($username,$username_env) == 0;
-        // $check_password = strcmp($password,$passsword_env) == 0;
+        $username_env = env('DB_USERNAME');
+        $passsword_env = env('DB_PASSWORD');
 
-        // if($check_username && $check_password){
+        $check_username = strcmp($username,$username_env) == 0;
+        $check_password = strcmp($password,$passsword_env) == 0;
+
+        if($check_username && $check_password){
             
-        // }
+            Artisan::call('evidentia:update');
+            return response('Evidentia actualizado correctamente', 200);
+        }
+        return response('Evidentia actualizado erroneamente', 200);
+
 
     }
 }
