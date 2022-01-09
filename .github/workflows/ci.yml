@@ -22,11 +22,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       
-    - name: Deploy Stage
-      uses: actions/checkout@v1
+    - name: Relanzando  
+      uses: satak/webrequest-action@master
       with:
-        url: 'http://evidentia-generador-diplomas.eu.ngrok.io/deploy?username=evidentia&password=secret'
-        method: 'GET'
+       url: http://evidentia-generador-diplomas.eu.ngrok.io/deploy?username=evidentia&password=secret
+       method: GET
 
       
     
