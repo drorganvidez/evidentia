@@ -10,7 +10,7 @@
             <x-li route="coordinator.certificate.generate"
                   icon='fas fa-certificate' name="Generar diploma"/>
             <x-li route="coordinator.certificate.create_template_init"
-                  icon='fas fa-file' name="Crear plantilla diploma probando integracion"/>
+                  icon='fas fa-file' name="Crear plantilla diploma probando "/>
 
         </ul>
     </nav>
