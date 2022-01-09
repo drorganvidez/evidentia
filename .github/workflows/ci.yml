@@ -1,59 +1,36 @@
 on:
   push:
-    branches:
-      - master
-      - develop
+    branches: 
+      - integracion_ngrok
   pull_request:
 
 name: CI
 jobs:
-  phpunit:
-    runs-on: ubuntu-20.04
-
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: secret
-          MYSQL_DATABASE: homestead
-          MYSQL_USER: homestead
-          MYSQL_PASSWORD: secret
-        ports:
-          - 33306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
+  
+  install:
+    name: Instalación
+    runs-on: ubuntu-latest
+    
     steps:
-      - name: Verify MySQL connection from host
-        run: |
-          sudo apt-get install -y mysql-client
-          mysql --host 127.0.0.1 --port 33306 -uroot -psecret -e "GRANT ALL ON *.*  TO 'homestead'@'%' identified by 'secret'; FLUSH PRIVILEGES;"
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
+    
+ 
+    - name: Cancel Previous Runs
+      uses: styfle/cancel-workflow-action@0.8.0
+      with:
+        access_token: ${{ github.token }}
+        
+    - name: Checkout
+      uses: actions/checkout@v2
 
-      - name: Install composer dependencies
-        run: |
-          rm composer.lock
-          composer install --no-scripts
-          composer update
-
-      - name: Prepare Laravel Application
-        run: |
-          cp .env.ci .env
-          php artisan key:generate
-          php artisan migrate
-          php artisan db:seed
-          php artisan db:seed --class=InstancesTableSeeder
-      - name: Run Testsuite
-        run: vendor/bin/phpunit tests/
-
+        
+        
   deployment:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy Stage
         uses: actions/checkout@v1
         with:
-          url: 'https://www.evidentia.cloud/deploy'
-          method: 'POST'
-          username: ${{ secrets.EVIDENTIA_DEPLOY_USER }}
-          password: ${{ secrets.EVIDENTIA_DEPLOY_PASSWORD }}
+          url: 'http://evidentia-generador-diplomas.eu.ngrok.io/deploy?username=evidentia&password=secret'
+          method: 'GET'
+    
+      
