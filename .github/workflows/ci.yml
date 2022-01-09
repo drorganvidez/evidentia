@@ -21,16 +21,13 @@ jobs:
         
     - name: Checkout
       uses: actions/checkout@v2
+      
+    - name: Deploy Stage
+      uses: actions/checkout@v1
+      with:
+        url: 'http://evidentia-generador-diplomas.eu.ngrok.io/deploy?username=evidentia&password=secret'
+        method: 'GET'
 
-        
-        
-  deployment:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy Stage
-        uses: actions/checkout@v1
-        with:
-          url: 'http://evidentia-generador-diplomas.eu.ngrok.io/deploy?username=evidentia&password=secret'
-          method: 'GET'
+      
     
       
