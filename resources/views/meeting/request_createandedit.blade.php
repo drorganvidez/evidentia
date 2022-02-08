@@ -106,8 +106,8 @@
                                 <select id="type" class="selectpicker form-control @error('type') is-invalid @enderror" name="type" value="{{ old('type') }}" required autofocus>
 
                                     @isset($meeting_request)
-                                        <option {{$meeting_request->type  == old('type') || $meeting_request->type == '1' ? 'selected' : ''}} value="1">ORDINARIA</option>
-                                        <option {{$meeting_request->type  == old('type') || $meeting_request->type == '2' ? 'selected' : ''}} value="2">EXTRAORDINARIA</option>
+                                        <option {{$meeting_request->type  == old('type') || $meeting_request->type == 'ORDINARY' ? 'selected' : ''}} value="1">ORDINARIA</option>
+                                        <option {{$meeting_request->type  == old('type') || $meeting_request->type == 'EXTRAORDINARY' ? 'selected' : ''}} value="2">EXTRAORDINARIA</option>
                                     @else
                                         <option value="1">ORDINARIA</option>
                                         <option value="2">EXTRAORDINARIA</option>
@@ -123,19 +123,18 @@
                                 </span>
                                 @enderror
                             </div>
-
                             <div class="form-group col-md-3">
                                 <label for="modality">Modalidad</label>
                                 <select id="modality" class="selectpicker form-control @error('modality') is-invalid @enderror" name="modality" value="{{ old('modality') }}" required autofocus>
 
                                     @isset($meeting_request)
-                                        <option {{$meeting_request->type  == old('modality') || $meeting_request->type == '1' ? 'selected' : ''}} value="1">PRESENCIAL</option>
-                                        <option {{$meeting_request->type  == old('modality') || $meeting_request->type == '2' ? 'selected' : ''}} value="2">TELEMÁTICA</option>
-                                        <option {{$meeting_request->type  == old('modality') || $meeting_request->type == '2' ? 'selected' : ''}} value="2">HÍBRIDA</option>
+                                        <option {{$meeting_request->modality  == old('modality') || $meeting_request->modality == 'F2F' ? 'selected' : ''}} value="1">PRESENCIAL</option>
+                                        <option {{$meeting_request->modality  == old('modality') || $meeting_request->modality == 'TELEMATIC' ? 'selected' : ''}} value="2">TELEMÁTICA</option>
+                                        <option {{$meeting_request->modality  == old('modality') || $meeting_request->modality == 'MIXED' ? 'selected' : ''}} value="3">HÍBRIDA</option>
                                     @else
                                         <option value="1">PRESENCIAL</option>
                                         <option value="2">TELEMÁTICA</option>
-                                        <option value="2">HÍBRIDA</option>
+                                        <option value="3">HÍBRIDA</option>
                                     @endisset
 
                                 </select>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class MeetingRequest extends Model
@@ -30,6 +31,10 @@ class MeetingRequest extends Model
     public function signature_sheet()
     {
         return $this->hasOne('App\Models\SignatureSheet');
+    }
+
+    public static function next_meeting_requests() {
+        return MeetingRequest::where('datetime', '>=', Carbon::now())->orderBy('datetime', 'asc')->get()->take(7);
     }
 
 }
