@@ -25,7 +25,7 @@ jobs:
     steps:
       - name: Verify MySQL connection from host
         run: |
-          sudo apt-get install -y mysql-client
+          sudo apt-get install -y mysql-client-5.7
           mysql --host 127.0.0.1 --port 33306 -uroot -psecret -e "GRANT ALL ON *.*  TO 'homestead'@'%' identified by 'secret'; FLUSH PRIVILEGES;"
       - uses: actions/checkout@v1
         with:
