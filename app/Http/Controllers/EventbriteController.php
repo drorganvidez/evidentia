@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\EventsExport;
 use App\Models\Attendee;
 use App\Models\Configuration;
 use App\Models\Event;
-use App\Exports\AttendeesExport;
-use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -26,9 +24,9 @@ class EventbriteController extends Controller
     {
         $instance = \Instantiation::instance();
         $token = \Config::eventbrite_token();
-        $route = route('registercoordinator.token.save',$instance);
+        $route = route('registercoordinator.token.save', $instance);
 
-        return view('eventbrite.token',['instance' => $instance, 'token' => $token, 'route' => $route]);
+        return view('eventbrite.token', ['instance' => $instance, 'token' => $token, 'route' => $route]);
     }
 
     private static function validate_token($token)
@@ -53,13 +51,13 @@ class EventbriteController extends Controller
         $token = $request->input('token');
 
         try {
-            if(EventbriteController::validate_token($token)){
+            if (EventbriteController::validate_token($token)) {
                 $configuration = Configuration::find(1);
                 $configuration->eventbrite_token = $token;
                 $configuration->save();
                 return redirect()->route('registercoordinator.token', $instance)->with('success', 'Token validado y guardado con éxito.');
             }
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return back()->withInput()->with('error', 'Ups, parece que hay un problema con el token. Comprueba que es válido.');
         }
 
@@ -112,8 +110,8 @@ class EventbriteController extends Controller
                         // Cálculo de las horas
                         $start = new Carbon($saved_event->start_datetime);
                         $end = new Carbon($saved_event->end_datetime);
-                        $hours = $end->diffInMinutes($start,true);
-                        $hours = $hours/60;
+                        $hours = $end->diffInMinutes($start, true);
+                        $hours = $hours / 60;
                         $saved_event->hours = $hours;
 
                         $saved_event->save();
@@ -132,8 +130,8 @@ class EventbriteController extends Controller
                         // Cálculo de las horas
                         $start = new Carbon($new_event->start_datetime);
                         $end = new Carbon($new_event->end_datetime);
-                        $hours = $end->diffInMinutes($start,true);
-                        $hours = $hours/60;
+                        $hours = $end->diffInMinutes($start, true);
+                        $hours = $hours / 60;
                         $new_event->hours = $hours;
 
                         $new_event->save();
@@ -149,7 +147,7 @@ class EventbriteController extends Controller
 
             return redirect()->route('registercoordinator.event.list', $instance)->with('success', 'Eventos cargados con éxito.');
 
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return back()->with('error', 'Ups, parece que hay un problema con el token. Comprueba que es válido.' . $e->getMessage());
         }
     }
@@ -163,7 +161,7 @@ class EventbriteController extends Controller
         $events = Event::all();
 
         // PRUEBA DE CONEXIÓN CON TOKEN
-        if(!EventbriteController::validate_token($token)){
+        if (!EventbriteController::validate_token($token)) {
             return back()->with('error', 'Ups, parece que hay un problema con el token. Comprueba que es válido...');
         }
 
@@ -173,10 +171,10 @@ class EventbriteController extends Controller
         try {
             $client = new Client(['base_uri' => 'https://www.eventbriteapi.com/v3/']);
 
-            foreach($events as $event) {
+            foreach ($events as $event) {
 
                 // obtenemos la paginación
-                $attendees = $client->request('GET', 'events/' . $event->id_eventbrite .'/attendees', [
+                $attendees = $client->request('GET', 'events/' . $event->id_eventbrite . '/attendees', [
                     'query' => ['token' => $token]
                 ]);
 
@@ -185,17 +183,17 @@ class EventbriteController extends Controller
 
                 $page_contador = 1;
 
-                while($page_contador <= $page_count){
+                while ($page_contador <= $page_count) {
 
                     // obtenemos las asistencias a cada evento
-                    $attendees_page = $client->request('GET', 'events/' . $event->id_eventbrite .'/attendees', [
+                    $attendees_page = $client->request('GET', 'events/' . $event->id_eventbrite . '/attendees', [
                         'query' => ['token' => $token, 'page' => $page_contador]
                     ]);
 
                     $attendees_page = json_decode($attendees_page->getBody());
                     $attendees_page = (array)$attendees_page->attendees;
 
-                    foreach($attendees_page as $attendee){
+                    foreach ($attendees_page as $attendee) {
 
                         // limpiamos el nombre de caracteres problemáticos
                         $first_name = $attendee->profile->first_name;
@@ -211,34 +209,35 @@ class EventbriteController extends Controller
                         $user = DB::table('users')->where('clean_name', 'like', '%' . $first_name . '%')->where('clean_surname', 'like', '%' . $last_name . '%')->first();
 
                         // si no hemos encontrado al usuario por nombres y apellidos, lo intentamos por el email
-                        if($user == null){
+                        if ($user == null) {
                             $user = DB::table('users')->where('email', 'like', '%' . $email . '%')->first();
                         }
 
                         // usuario encontrado
-                        if($user != null){
+                        if ($user != null) {
 
                             $exits = Attendee::where("event_id", $event->id)->where("user_id", $user->id)->first();
-
+                          
                             if($exits == null){
                                 try{
 
-                                    Attendee::create([
-                                        'event_id' => $event->id,
-                                        'user_id' => $user->id,
-                                        'status' => $status
-                                    ]);
+                                  $new_attendee = Attendee::create([
+                                      'event_id' => $event->id,
+                                      'user_id' => $user->id,
+                                      'status' => $status
+                                  ]);
+                                  $new_attendee->save();
 
                                 }catch (\Exception $e){
                                     echo $e;
                                 }
+
                             }
-
-
+                          
                         }
                     }
 
-                    $page_contador = $page_contador +1;
+                    $page_contador = $page_contador + 1;
 
                 }
 
@@ -250,7 +249,7 @@ class EventbriteController extends Controller
 
             return redirect()->route('registercoordinator.attendee.list', $instance)->with('success', 'Asistencias actualizadas con éxito.');
 
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return back()->with('error', $e);
         }
     }
@@ -277,11 +276,24 @@ class EventbriteController extends Controller
 
     public function attendee_export()
     {
-        try{
+        try {
             // limpiar búfer de salida
             ob_end_clean();
             return Excel::download(new AttendeesExport(), 'asistencias' . \Illuminate\Support\Carbon::now() . '.xlsx');
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
+            return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
+        }
+    }
+
+    public function events_export($instance, $ext)
+    {
+        try {
+            ob_end_clean();
+            if (!in_array($ext, ['csv', 'pdf', 'xlsx'])) {
+                return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
+            }
+            return Excel::download(new EventsExport(), 'eventos-' . \Illuminate\Support\Carbon::now() . '.' . $ext);
+        } catch (\Exception $e) {
             return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
         }
     }
