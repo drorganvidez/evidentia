@@ -1,7 +1,7 @@
 @echo off
 git submodule update --init --recursive
-cp .env.laradock .env
-cp createdb.sql laradock/mysql/docker-entrypoint-initdb.d/createdb.sql
+COPY .env.laradock laradock/.env
+COPY createdb.sql laradock/mysql/docker-entrypoint-initdb.d/createdb.sql
 cd laradock
 git pull origin master
 COPY .env.example .env
