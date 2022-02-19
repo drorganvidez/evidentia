@@ -1,5 +1,6 @@
 #!/bin/bash
 git submodule update --init --recursive
+cp Homestead.yaml homestead/Homestead.yaml
 cd homestead
 git pull origin main
 vagrant box remove laravel/homestead --all
