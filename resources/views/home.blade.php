@@ -144,7 +144,7 @@
                                             @forelse(\App\Models\Event::all() as $event)
 
                                                 <div class="callout callout-info">
-                                                    <h5>{{$event->name}}</h5>
+                                                    <h5>{!! $event->name !!}</h5>
                                                     <a target="_blank" href="{{$event->url}}">{{$event->url}}</a>
 
                                                     <p>{!! $event->description !!}</p>
@@ -170,7 +170,6 @@
                                                 </div>
 
                                             @endforelse
-
 
                                             <ul>
 

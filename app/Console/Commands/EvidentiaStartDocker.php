@@ -119,6 +119,9 @@ class EvidentiaStartDocker extends Command
         exec("php artisan config:clear");
         exec("php artisan cache:clear");
         $this->line('Generating key ... [OK]');
+        exec("php artisan config:cache");
+        exec("php artisan config:clear");
+        exec("php artisan cache:clear");
 
         // Borramos la instancia por defecto
         $this->line('Dropping default instance');
