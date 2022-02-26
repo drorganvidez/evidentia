@@ -8,8 +8,8 @@
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon"/>
 
-    <!-- Map CSS -->
-    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css" />
+    <!-- Base CSS -->
+    <link rel="stylesheet" href="{{asset('css/app.css')}}" />
 
     <!-- Libs CSS -->
     <link rel="stylesheet" href="{{ asset('css/libs.bundle.css') }}" />
@@ -21,6 +21,8 @@
     <title>@yield('title') | Evidentia Cloud</title>
 </head>
 <body class="d-flex align-items-center bg-auth border-top border-top-2 border-primary">
+
+<x-alert></x-alert>
 
 <div class="container">
     <div class="row justify-content-center">
@@ -194,9 +196,13 @@
 <!-- Show password -->
 <script src="{{asset('js/show-password.js')}}"></script>
 
+<!-- Alerts -->
+<script src="{{asset('js/alerts.js')}}"></script>
+
 @yield('scripts')
 
 <script>
+
     @if (session('error'))
 
     throw_alert('error');
