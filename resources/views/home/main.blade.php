@@ -6,6 +6,29 @@
     <meta name="description" content="Software libre para la gestión de evidencias de trabajo en jornadas docentes" />
 
     <title>@yield('title') | Evidentia Cloud</title>
+    <link href="{{asset('css/app.css')}}" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <h1>Bla bla bla</h1>
+
+    <script src="{{asset('js/app.js')}}"></script>
+
+</body>
+
+</html>
+
+{{-- This comment will not be present in the rendered HTML 
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Software libre para la gestión de evidencias de trabajo en jornadas docentes" />
+
+    <title>@yield('title') | Evidentia Cloud</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -211,3 +234,4 @@
 </body>
 
 </html>
+--}}
