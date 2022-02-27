@@ -6,14 +6,14 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
-class CreateDefaultInstance extends Command
+class EvidentiaInstance extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'evidentia:createinstance';
+    protected $signature = 'evidentia:instance';
 
     /**
      * The console command description.
@@ -72,17 +72,6 @@ class CreateDefaultInstance extends Command
             $this->line('Seeding');
             exec('php artisan db:seed --class=DevelopSeeder');
             $this->line('Seeding ... [OK]');
-
-            /*
-
-
-
-            // Migración y seeder
-            $this->line('Migrating');
-            exec('php artisan migrate --path database/migrations/develop');
-            exec('php artisan db:seed --class=DevelopSeeder');
-            $this->line('Migrating ... [OK]');
-            */
 
             $this->info('Instance created successfully.');
         }catch (\Exception $e){

@@ -6,7 +6,7 @@ git pull origin main
 vagrant box remove laravel/homestead --all
 vagrant box add laravel/homestead -c
 vagrant up
-vagrant ssh -c 'cd evidentia; composer install; php artisan evidentia:start_homestead; php artisan evidentia:createinstance'
+vagrant ssh -c 'cd evidentia; composer install; npm install; npx mix; php artisan evidentia:start vagrant; php artisan evidentia:instance'
 
 echo ""
 echo "WELCOME TO"
