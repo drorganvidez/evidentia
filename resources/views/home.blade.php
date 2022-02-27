@@ -1,9 +1,8 @@
 @extends('root')
 
-@section('subtitle', 'Bienvenid@')
+@section('title', 'Dashboard')
 
-@section('title', 'Dashboard de administración')
-
+@section('subtitle', 'Bienvenid@');
 
 @section('title-icon', 'fas fa-door-open')
 
@@ -16,7 +15,7 @@
     <div class="row">
         <div class="col-lg-12">
 
-            Hola
+
 
         </div>
 

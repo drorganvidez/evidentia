@@ -40,6 +40,19 @@ Route::group(['prefix' => 'admin'], function(){
 
 });
 
+// App routes
+Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], function(){
+
+    // App login routes
+    Route::get('/login', 'LoginInstanceController@login')->name('instance.login');
+    Route::post('/login_p', 'LoginInstanceController@login_p')->name('instance.login_p');
+    Route::post('/logout', 'LoginInstanceController@logout')->name('instance.logout');
+
+    // Main routes
+    Route::get('/', 'HomeController@index')->name('home');
+
+});
+
 
 
 /*
