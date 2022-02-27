@@ -1,8 +1,8 @@
-@extends('root')
+@extends('app')
 
 @section('title', 'Dashboard')
 
-@section('subtitle', 'Bienvenid@');
+@section('subtitle', 'Bienvenid@')
 
 @section('title-icon', 'fas fa-door-open')
 
