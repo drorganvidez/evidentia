@@ -30,7 +30,7 @@
 
             <!-- Logo -->
             <div class="display-4 text-center mb-3">
-                <a href="{{route('instances.home')}}">
+                <a href="{{route('root')}}">
                     <img width="100px" src="{{asset('img/logo_light.svg')}}">
                 </a>
             </div>

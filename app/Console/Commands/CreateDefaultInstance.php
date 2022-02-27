@@ -40,14 +40,11 @@ class CreateDefaultInstance extends Command
     public function handle()
     {
 
-        exec("php artisan config:cache");
-        exec("php artisan config:clear");
-        exec("php artisan cache:clear");
-
         try{
 
             $this->line('Dropping default instance if exists');
             DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `base21`;");
+            $this->line('Dropping default instance if exists ... [OK]');
 
             $this->line('Creating default instance');
             DB::connection()->getPdo()->exec("CREATE DATABASE `base21`");
@@ -68,11 +65,24 @@ class CreateDefaultInstance extends Command
                 ]);
             $this->line('Registering instance ... [OK]');
 
+            $this->line('Migrating');
+            exec('php artisan migrate --path=database/migrations/develop');
+            $this->line('Migrating ... [OK]');
+
+            $this->line('Seeding');
+            exec('php artisan db:seed --class=DevelopSeeder');
+            $this->line('Seeding ... [OK]');
+
+            /*
+
+
+
             // Migración y seeder
             $this->line('Migrating');
             exec('php artisan migrate --path database/migrations/develop');
             exec('php artisan db:seed --class=DevelopSeeder');
             $this->line('Migrating ... [OK]');
+            */
 
             $this->info('Instance created successfully.');
         }catch (\Exception $e){

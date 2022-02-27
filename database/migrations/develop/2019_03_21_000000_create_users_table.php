@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateUsersTable extends Migration
 {
+
+    protected $connection = 'base21';
+
     /**
      * Run the migrations.
      *
@@ -14,6 +17,7 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
+        /*
         config(['database.connections.instance' => [
             'driver'   => 'mysql',
             'host' => env('DB_HOST'),
@@ -24,6 +28,7 @@ class CreateUsersTable extends Migration
         ]]);
 
         config(['database.default' => 'instance']);
+        */
 
         Schema::create('users', function (Blueprint $table) {
             $table->id();

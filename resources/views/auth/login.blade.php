@@ -1,4 +1,4 @@
-@extends('auth.main')
+@extends('auth.root')
 
 @section('title', 'Bienvenid@ a Evidentia')
 

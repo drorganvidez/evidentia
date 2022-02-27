@@ -4,7 +4,7 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class menuoptions extends Component
+class ItemMenu extends Component
 {
     /**
      * Create a new component instance.
@@ -13,16 +13,16 @@ class menuoptions extends Component
      */
     public function __construct()
     {
-        //
+
     }
 
     /**
      * Get the view / contents that represent the component.
      *
-     * @return \Illuminate\View\View|string
+     * @return \Illuminate\Contracts\View\View|\Closure|string
      */
     public function render()
     {
-        return view('components.menus.menuoptions');
+        return view('components.item-menu');
     }
 }

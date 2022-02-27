@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Instance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class LoginAdminController extends Controller
+class AdminController extends Controller
 {
     public function login()
     {
@@ -36,5 +35,10 @@ class LoginAdminController extends Controller
         Auth::logout();
 
         return redirect()->route('instances.home');
+    }
+
+    public function home()
+    {
+        return view('admin.home');
     }
 }

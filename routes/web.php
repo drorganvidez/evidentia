@@ -21,13 +21,28 @@ use App\Http\oldControllers;
 |
 */
 
-
-
-
 Auth::routes();
 
-Route::get('/', 'MetaHomeController@home')->name('instances.home');
+Route::get('/', 'RootController@root')->name('root');
 
+// Admin routes
+Route::group(['prefix' => 'admin'], function(){
+
+    // Admin login routes
+    Route::get('login', 'AdminController@login')->name('admin.login');
+    Route::post('login_p', 'AdminController@login_p')->name('admin.login_p');
+
+    // Admin main routes
+    Route::group(['middleware' => ['checkisadministrator']], function(){
+        Route::get('/', 'AdminController@home')->name('admin.home');
+    });
+
+
+});
+
+
+
+/*
 
 Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], function(){
 
@@ -41,10 +56,10 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
 Route::group(['prefix' => 'admin'], function(){
 
-    Route::get('', 'AdminController@home')->name('admin.home');
+    //Route::get('', 'AdminController@home')->name('admin.home');
     Route::get('login', 'LoginAdminController@login')->name('admin.login');
-    Route::post('login_p', 'LoginAdminController@login_p')->name('admin.login_p');
-    Route::post('logout', 'LoginAdminController@logout')->name('admin.logout');
+    //Route::post('login_p', 'LoginAdminController@login_p')->name('admin.login_p');
+    //Route::post('logout', 'LoginAdminController@logout')->name('admin.logout');
 
     Route::group(['middleware' => ['checkisadministrator']], function(){
 
@@ -69,3 +84,4 @@ Route::group(['prefix' => 'admin'], function(){
 
 });
 
+*/

@@ -18,6 +18,7 @@ class SelectDatabase
      */
     public function handle($request, Closure $next)
     {
+
         $param = $request->segment(1);
 
         $admin_routes = array("", "admin","logout", "deploy");
