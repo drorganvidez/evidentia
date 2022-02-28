@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use App\Http\oldControllers\AttendeeController;
 use App\Http\oldControllers\DownloadController;
 use App\Http\oldControllers\MeetingSecretaryController;
@@ -50,6 +51,17 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
     // Main routes
     Route::get('/', 'HomeController@index')->name('home');
+    Route::get('/configuration', 'HomeController@configuration')->name('configuration');
+
+    // Profile routes
+    Route::group(['prefix' => 'profile'], function(){
+        Route::controller(ProfileController::class)->group(function () {
+            Route::get('data', 'data')->name('profile.data');;
+            Route::get('password', 'password')->name('profile.password');;
+        });
+    });
+
+
 
 });
 
