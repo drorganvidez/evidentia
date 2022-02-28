@@ -1,27 +1,22 @@
 @php
 
-    // obtenemos rutas y subrutas
+    // obtenemos rutas, subrutas y badges
     $subitems_names = [];
     $subitems_routes = [];
+    $badges = [];
     $i = 0;
     foreach (explode(';', $subitems) as $item){
         $parts = explode(',', $item);
         $subitems_names[$i] = trim($parts[0]);
         $subitems_routes[$i] = trim($parts[1]);
-        $i = $i + 1;
-    }
 
-    // comprobamos si alguna ruta actual es un subitem de este menú
-    $parent_collapsed = "collapsed";
-    $aria_expanded = "false";
-    $show = "";
-    for($i = 0; $i < count($subitems_routes); $i++){
-        if(Route::currentRouteName() == $subitems_routes[$i]){
-            $parent_collapsed = "";
-            $aria_expanded = "true";
-            $show = "show";
-            break;
+        if(count($parts) == 3){
+            $badges[$i] = trim($parts[2]);
+        }else{
+            $badges[$i] = "";
         }
+
+        $i = $i + 1;
     }
 
 @endphp
@@ -45,7 +40,12 @@
 
                     echo '<li class="nav-item">';
                         echo '<a href="'.route($subitems_routes[$i], \Instantiation::instance()).'" class="nav-link '.$active.'">';
-                            echo $subitems_names[$i];
+                            echo " $subitems_names[$i] ";
+
+                            if($badges[$i] != ""){
+                                echo '<span class="badge rounded-pill bg-secondary-soft">'.$badges[$i].'</span>';
+                            }
+
                         echo '</a>';
                     echo '</li>';
                 }

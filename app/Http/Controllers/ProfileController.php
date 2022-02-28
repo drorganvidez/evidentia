@@ -11,6 +11,11 @@ class ProfileController extends Controller
         return view('profile.data');
     }
 
+    public function avatar()
+    {
+        return view('profile.avatar');
+    }
+
     public function password()
     {
         return view('profile.password');
