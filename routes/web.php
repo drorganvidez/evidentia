@@ -1,15 +1,10 @@
 <?php
 
+use App\Http\Controllers\EvidencesController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ProfileController;
-use App\Http\oldControllers\AttendeeController;
-use App\Http\oldControllers\DownloadController;
-use App\Http\oldControllers\MeetingSecretaryController;
-use App\Http\oldControllers\MeetingController;
-use App\Http\oldControllers\EvidenceController;
-use App\Http\oldControllers\SignController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\oldControllers;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,14 +49,31 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
     // Main routes
     Route::get('/', 'HomeController@index')->name('home');
-    Route::get('/configuration', 'HomeController@configuration')->name('configuration');
 
     // Profile routes
     Route::group(['prefix' => 'profile'], function(){
         Route::controller(ProfileController::class)->group(function () {
-            Route::get('data', 'data')->name('profile.data');;
+            Route::get('data', 'data')->name('profile.data');
             Route::get('avatar', 'avatar')->name('profile.avatar');
             Route::get('password', 'password')->name('profile.password');
+        });
+    });
+
+    // Settings
+    Route::group(['prefix' => 'settings'], function() {
+        Route::controller(SettingsController::class)->group(function () {
+            Route::get('notifications', 'notifications')->name('settings.notifications');
+        });
+    });
+
+    // Evidences
+    Route::group(['prefix' => 'evidences'], function() {
+        Route::controller(EvidencesController::class)->group(function () {
+            Route::get('create', 'create')->name('evidences.create');
+            Route::get('draft', 'draft')->name('evidences.draft');
+            Route::get('pending', 'pending')->name('evidences.pending');
+            Route::get('accepted', 'accepted')->name('evidences.accepted');
+            Route::get('rejected', 'rejected')->name('evidences.rejected');
         });
     });
 

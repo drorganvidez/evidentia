@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="{{ asset('css/theme.bundle.css') }}" />
 
     <!-- Title -->
-    <title>@yield('title') | Evidentia Cloud</title>
+    <title>@yield('title') @yield('parent') | Evidentia Cloud</title>
 </head>
 <body>
 
@@ -1696,6 +1696,7 @@
             <!-- Navigation -->
 
             <x-menucommon/>
+            <x-menustudent/>
 
 
 

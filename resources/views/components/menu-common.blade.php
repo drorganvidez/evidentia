@@ -39,6 +39,9 @@
         <x-slot:name>
             Ajustes
         </x-slot>
+        <x-slot:subitems>
+            Notificaciones, settings.notifications
+        </x-slot>
     </x-item-menu>
 
 </ul>
