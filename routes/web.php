@@ -30,8 +30,11 @@ Route::get('/', 'RootController@root')->name('root');
 Route::group(['prefix' => 'admin'], function(){
 
     // Admin login routes
-    Route::get('login', 'AdminController@login')->name('admin.login');
-    Route::post('login_p', 'AdminController@login_p')->name('admin.login_p');
+    Route::controller(AdminController::class)->group(function () {
+        Route::get('login', 'login')->name('admin.login');
+        Route::post('login_p', 'login_p')->name('admin.login_p');
+    });
+    
 
     // Admin main routes
     Route::group(['middleware' => ['checkisadministrator']], function(){
