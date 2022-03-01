@@ -10,6 +10,7 @@ docker exec laradock_workspace_1 composer install
 docker exec laradock_workspace_1 npm install
 docker exec laradock_workspace_1 npx mix
 docker exec laradock_workspace_1 php artisan evidentia:start docker
+docker exec laradock_workspace_1 php artisan evidentia:start docker
 docker exec laradock_workspace_1 php artisan evidentia:instance
 docker exec laradock_workspace_1 php artisan key:generate
 docker exec laradock_workspace_1 php artisan config:cache

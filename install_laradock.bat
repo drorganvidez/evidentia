@@ -1,18 +1,19 @@
 @echo off
 git submodule update --init --recursive
-COPY .env.laradock laradock/.env
-COPY createdb.sql laradock/mysql/docker-entrypoint-initdb.d/createdb.sql
+COPY .env.laradock laradock\.env
+COPY createdb.sql laradock\mysql\docker-entrypoint-initdb.d\createdb.sql
 cd laradock
 git pull origin master
 docker-compose up -d nginx mysql phpmyadmin redis workspace
-docker exec laradock_workspace_1 rm -f composer.lock
-docker exec laradock_workspace_1 composer install
-docker exec laradock_workspace_1 npm install
-docker exec laradock_workspace_1 npx mix
-docker exec laradock_workspace_1 php artisan evidentia:start docker
-docker exec laradock_workspace_1 php artisan evidentia:instance
-docker exec laradock_workspace_1 php artisan key:generate
-docker exec laradock_workspace_1 php artisan config:cache
+docker exec laradock-workspace-1 rm -f composer.lock
+docker exec laradock-workspace-1 composer install
+docker exec laradock-workspace-1 npm install
+docker exec laradock-workspace-1 npx mix
+docker exec laradock-workspace-1 php artisan evidentia:start docker
+docker exec laradock-workspace-1 php artisan evidentia:start docker
+docker exec laradock-workspace-1 php artisan evidentia:instance
+docker exec laradock-workspace-1 php artisan key:generate
+docker exec laradock-workspace-1 php artisan config:cache
 
 echo
 echo WELCOME TO
