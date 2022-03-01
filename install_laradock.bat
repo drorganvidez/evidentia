@@ -31,3 +31,5 @@ echo http://localhost
 
 echo
 echo The installation has been completed successfully. Enjoy!
+
+pause
