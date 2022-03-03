@@ -1,4 +1,4 @@
-@extends('app')
+@extends('layouts.app')
 
 @section('title', 'Perfil')
 
@@ -14,6 +14,8 @@
         <div class="col-lg-12">
 
             Edita tu info personal
+
+            @livewire('dark-mode')
 
         </div>
 

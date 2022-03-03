@@ -21,7 +21,7 @@ class SelectDatabase
 
         $param = $request->segment(1);
 
-        $admin_routes = array("", "admin","logout", "deploy");
+        $admin_routes = array("", "admin", "logout", "deploy", "livewire");
 
         // si es una de las rutas permitidas en el array, dejo pasar
         if (in_array($param, $admin_routes))
@@ -35,7 +35,7 @@ class SelectDatabase
         // if database doesn't exist
         if($instance == null)
         {
-            return redirect('/');
+            abort('404');
         }
 
         \Instantiation::set($instance);
