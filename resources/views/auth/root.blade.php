@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{{ asset('css/libs.bundle.css') }}" />
 
     <!-- Theme CSS -->
-    <link rel="stylesheet" href="{{ asset('css/theme.bundle.css') }}" />
+    <x-dark-mode-css/>
 
     <!-- Title -->
     <title>@yield('title') | Evidentia Cloud</title>
@@ -29,9 +29,9 @@
         <div class="col-12 col-md-5 col-xl-4 my-5">
 
             <!-- Logo -->
-            <div class="display-4 text-center mb-3">
+            <div class="display-3 text-center mb-3">
                 <a href="{{route('root')}}">
-                    <img width="100px" src="{{asset('img/logo_light.svg')}}">
+                    <x-logo-css/>
                 </a>
             </div>
 

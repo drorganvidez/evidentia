@@ -77,7 +77,8 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         });
     });
 
-
+    Route::get('/cookie/set','CookiesController@setDarkMode');
+    Route::get('/cookie/get','CookiesController@getCookie');
 
 });
 
