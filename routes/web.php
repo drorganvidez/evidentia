@@ -54,6 +54,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::group(['prefix' => 'profile'], function(){
         Route::controller(ProfileController::class)->group(function () {
             Route::get('data', 'data')->name('profile.data');
+            Route::post('data_p', 'data_p')->name('profile.data_p');
             Route::get('avatar', 'avatar')->name('profile.avatar');
             Route::get('password', 'password')->name('profile.password');
         });

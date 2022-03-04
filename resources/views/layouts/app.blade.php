@@ -1659,8 +1659,8 @@
 
                 <!-- Menu -->
                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="sidebarIcon">
-                    <a href="./profile-posts.html" class="dropdown-item">Profile</a>
-                    <a href="./account-general.html" class="dropdown-item">Settings</a>
+                    <a href="{{route('profile.data',\Instantiation::instance())}}" class="dropdown-item">Perfil</a>
+                    <a href="{{route('settings.notifications',\Instantiation::instance())}}" class="dropdown-item">Ajustes</a>
                     <hr class="dropdown-divider">
 
                     <a href="{{ route('instance.logout',['instance' => \Instantiation::instance()]) }}"  class="dropdown-item"
@@ -1722,8 +1722,9 @@
 
                     <!-- Menu -->
                     <div class="dropdown-menu" aria-labelledby="sidebarIconCopy">
-                        <a href="./profile-posts.html" class="dropdown-item">Profile</a>
-                        <a href="./account-general.html" class="dropdown-item">Settings</a>
+
+                        <a href="{{route('profile.data',\Instantiation::instance())}}" class="dropdown-item">Perfil</a>
+                        <a href="{{route('settings.notifications',\Instantiation::instance())}}" class="dropdown-item">Ajustes</a>
 
                         <hr class="dropdown-divider">
 
@@ -2210,8 +2211,8 @@
 
                     <!-- Menu -->
                     <div class="dropdown-menu dropdown-menu-end">
-                        <a href="./profile-posts.html" class="dropdown-item">Profile</a>
-                        <a href="./account-general.html" class="dropdown-item">Settings</a>
+                        <a href="{{route('profile.data',\Instantiation::instance())}}" class="dropdown-item">Perfil</a>
+                        <a href="{{route('settings.notifications',\Instantiation::instance())}}" class="dropdown-item">Ajustes</a>
                         <hr class="dropdown-divider">
 
                         <a href="{{ route('instance.logout',['instance' => \Instantiation::instance()]) }}"  class="dropdown-item"
@@ -2233,8 +2234,11 @@
     </nav>
 
     <div class="container-fluid">
+
+        <x-alert></x-alert>
+
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 mb-3">
 
                 <!-- Header -->
                 <div class="header">
@@ -2289,6 +2293,29 @@
 
 <!-- Alerts -->
 <script src="{{asset('js/alerts.js')}}"></script>
+
+@yield('scripts')
+
+<script>
+
+    @if (session('error'))
+
+    throw_alert('error');
+
+    @endif
+
+    @if (session('success'))
+
+    throw_alert('success');
+
+    @endif
+
+    @if (session('light'))
+
+    throw_alert('light', delay = 7000);
+
+    @endif
+</script>
 
 @livewireScripts
 
