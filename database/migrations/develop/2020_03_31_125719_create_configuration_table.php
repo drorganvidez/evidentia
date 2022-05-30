@@ -7,6 +7,8 @@ use Illuminate\Support\Str;
 
 class CreateConfigurationTable extends Migration
 {
+    protected $connection = 'base21';
+    
     /**
      * Run the migrations.
      *

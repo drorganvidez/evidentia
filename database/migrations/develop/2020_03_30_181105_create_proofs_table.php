@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateProofsTable extends Migration
 {
+    protected $connection = 'base21';
+    
     /**
      * Run the migrations.
      *

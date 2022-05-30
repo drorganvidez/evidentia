@@ -1,12 +1,12 @@
 @echo off
 git submodule update --init --recursive
-COPY Homestead.yaml homestead/Homestead.yaml
+COPY Homestead.yaml homestead\Homestead.yaml
 cd homestead
 git pull origin main
 vagrant box remove laravel/homestead --all
 vagrant box add laravel/homestead -c
 vagrant up
-vagrant ssh -c 'cd evidentia; composer install; php artisan evidentia:start_homestead; php artisan evidentia:createinstance'
+vagrant ssh -c 'cd evidentia; composer install; npm install; npx mix; php artisan evidentia:start vagrant; php artisan evidentia:instance'
 
 echo
 echo WELCOME TO
@@ -24,3 +24,5 @@ echo http://192.168.10.10
 
 echo
 echo The installation has been completed successfully. Enjoy!
+
+pause

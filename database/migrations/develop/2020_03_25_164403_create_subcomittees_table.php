@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateSubcomitteesTable extends Migration
 {
+
+    protected $connection = 'base21';
+    
     /**
      * Run the migrations.
      *

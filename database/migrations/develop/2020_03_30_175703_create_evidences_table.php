@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateEvidencesTable extends Migration
 {
+
+    protected $connection = 'base21';
+    
     /**
      * Run the migrations.
      *

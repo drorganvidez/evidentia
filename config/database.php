@@ -79,11 +79,11 @@ return [
 
         'base21' => [
             'driver' => 'mysql',
-            'host' =>  'localhost',
-            'port' => '33060',
+            'host' => env('DB_HOST'),
+            'port' => env('DB_PORT'),
             'database' => 'base21',
-            'username' => 'homestead',
-            'password' => 'secret'
+            'username' => env('DB_USERNAME'),
+            'password' => env('DB_PASSWORD'),
         ],
 
         'quickinstance' => [
