@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -18,10 +19,9 @@ class InstanceTest extends TestCase
 
     public function testSettingUp() :void {
 
-        DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `homestead`;");
-        DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `basetest`;");
-        DB::connection()->getPdo()->exec("CREATE DATABASE IF NOT EXISTS `homestead`");
-        DB::connection()->getPdo()->exec("ALTER SCHEMA `homestead`  DEFAULT CHARACTER SET utf8mb4  DEFAULT COLLATE utf8mb4_unicode_ci");
+        DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `evidentia`;");
+        DB::connection()->getPdo()->exec("CREATE DATABASE IF NOT EXISTS `evidentia`");
+        DB::connection()->getPdo()->exec("ALTER SCHEMA `evidentia`  DEFAULT CHARACTER SET utf8mb4  DEFAULT COLLATE utf8mb4_unicode_ci");
         exec("php artisan migrate");
         exec("php artisan db:seed");
         exec('php artisan db:seed --class=InstancesTableSeeder');
@@ -76,6 +76,7 @@ class InstanceTest extends TestCase
 
     public function testCreateInstance()
     {
+        $this->withoutMiddleware([VerifyCsrfToken::class]);
         $this->testAdminLoginTrue();
 
         $request = [
@@ -83,8 +84,8 @@ class InstanceTest extends TestCase
             'route' => '21',
             'host' => env("DB_HOST"),
             'port' => env('DB_PORT'),
-            'database' => 'basetest',
-            'username' => 'homestead',
+            'database' => 'evidentia',
+            'username' => 'evidentia',
             'password' => 'secret',
         ];
 
