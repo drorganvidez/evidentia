@@ -8,9 +8,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
@@ -370,5 +371,15 @@ class User extends Authenticatable
         $comittees_names = $comittees_names->implode(" | ");
 
         return $comittees_names;
+    }
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }
