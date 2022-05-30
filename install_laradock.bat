@@ -1,7 +1,7 @@
 @echo off
 git submodule update --init --recursive
-COPY .env.laradock laradock/.env
-COPY createdb.sql laradock/mysql/docker-entrypoint-initdb.d/createdb.sql
+COPY .env.laradock laradock\.env
+COPY createdb.sql laradock\mysql\docker-entrypoint-initdb.d\createdb.sql
 cd laradock
 git pull origin master
 docker-compose up -d nginx mysql phpmyadmin redis workspace

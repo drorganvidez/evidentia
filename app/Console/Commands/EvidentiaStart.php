@@ -6,15 +6,16 @@ use App\Models\Instance;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use function PHPUnit\Framework\throwException;
 
-class EvidentiaStartDocker extends Command
+class EvidentiaStart extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'evidentia:start_docker';
+    protected $signature = 'evidentia:start {type}';
 
     /**
      * The console command description.
@@ -41,6 +42,14 @@ class EvidentiaStartDocker extends Command
     public function handle()
     {
 
+        $type = $this->argument('type');
+
+        if($type != "docker" && $type != "vagrant"){
+            throw new \InvalidArgumentException("Missing type
+            \nHere you are valid examples:
+            \nphp artisan evidentia:start docker\nphp artisan evidentia:start vagrant");
+        }
+
         $this->line('Optimizing');
         Artisan::call("optimize:clear");
         $this->line('Optimizing ... [OK]');
@@ -56,8 +65,18 @@ class EvidentiaStartDocker extends Command
         exec('echo "LOG_CHANNEL=stack" >> .env');
         exec('echo "" >> .env');
         exec('echo "DB_CONNECTION=mysql" >> .env');
-        exec('echo "DB_HOST=mysql" >> .env');
-        exec('echo "DB_PORT=3306" >> .env');
+
+        if($type == "docker"){
+            exec('echo "DB_HOST=mysql" >> .env');
+            exec('echo "DB_PORT=3306" >> .env');
+        }
+
+        if($type == "vagrant"){
+            exec('echo "DB_HOST=localhost" >> .env');
+            exec('echo "DB_PORT=33060" >> .env');
+        }
+
+
         exec('echo "DB_DATABASE=evidentia" >> .env');
         exec('echo "DB_USERNAME=evidentia" >> .env');
         exec('echo "DB_PASSWORD=secret" >> .env');
@@ -70,7 +89,15 @@ class EvidentiaStartDocker extends Command
         exec('echo "SESSION_DRIVER=file" >> .env');
         exec('echo "SESSION_LIFETIME=120" >> .env');
         exec('echo "" >> .env');
-        exec('echo "REDIS_HOST=redis" >> .env');
+
+        if($type == "docker"){
+            exec('echo "REDIS_HOST=redis" >> .env');
+        }
+
+        if($type == "vagrant"){
+            exec('echo "REDIS_HOST=127.0.0.1" >> .env');
+        }
+
         exec('echo "REDIS_PASSWORD=null" >> .env');
         exec('echo "REDIS_PORT=6379" >> .env');
         exec('echo "" >> .env');
