@@ -5,7 +5,7 @@ COPY createdb.sql laradock\mysql\docker-entrypoint-initdb.d\createdb.sql
 cd laradock
 git pull origin master
 docker-compose up -d nginx mysql phpmyadmin redis workspace
-docker exec laradock_php-fpm-1 chown -R www-data:www-data /var/www/storage
+docker exec laradock_php-fpm_1 chown -R www-data:www-data /var/www/storage
 docker exec laradock_workspace_1 rm -f composer.lock
 docker exec laradock_workspace_1 composer install
 docker exec laradock_workspace_1 npm install
