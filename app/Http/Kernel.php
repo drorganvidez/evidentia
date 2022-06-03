@@ -45,6 +45,7 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:60,1',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\SelectDatabaseApi::class,
         ],
     ];
 
@@ -81,6 +82,7 @@ class Kernel extends HttpKernel
         'checkisadministrator' => \App\Http\Middleware\CheckIsAdministrator::class,
         'meetingrequestmine' => MeetingRequestMine::class,
         'signaturesheetmine' => SignatureSheetMine::class,
-        'meetingminutesmine' => MeetingMinutesMine::class
+        'meetingminutesmine' => MeetingMinutesMine::class,
+        'jwt.verify' => \App\Http\Middleware\JwtMiddleware::class,
     ];
 }

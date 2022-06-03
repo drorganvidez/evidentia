@@ -138,6 +138,8 @@ class EvidentiaStart extends Command
         exec('echo "ADMIN_PASSWORD=admin" >> .env');
         exec('echo "" >> .env');
         exec('echo "EVIDENTIA_VERSION=" >> .env');
+        exec('echo "" >> .env');
+        exec('echo "JWT_SECRET=" >> .env');
         $this->line('Setting environment file ... [OK]');
 
         $this->line('Generating key');
@@ -146,6 +148,12 @@ class EvidentiaStart extends Command
         exec("php artisan config:clear");
         exec("php artisan cache:clear");
         $this->line('Generating key ... [OK]');
+        $this->line('Generating API token');
+        exec("php artisan jwt:secret");
+        exec("php artisan config:cache");
+        exec("php artisan config:clear");
+        exec("php artisan cache:clear");
+        $this->line('Generating API token ... [OK]');
         exec("php artisan config:cache");
         exec("php artisan config:clear");
         exec("php artisan cache:clear");

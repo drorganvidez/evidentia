@@ -16,7 +16,8 @@
         "laravel/ui": "^3.2",
         "maatwebsite/excel": "^3.1",
         "nyholm/psr7": "^1.4",
-        "symfony/psr-http-message-bridge": "^2.1"
+        "symfony/psr-http-message-bridge": "^2.1",
+        "tymon/jwt-auth": "1.*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
