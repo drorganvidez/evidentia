@@ -52,9 +52,9 @@ Route::group(['prefix' => '{instance}'], function () {
             Route::delete('evidence/{id}', [EvidenceController::class, 'deleteById']);
 
             Route::get('user', [UserController::class, 'getAll']);
-            Route::put('user', [UserController::class, 'create']);
+            Route::post('user', [UserController::class, 'create']);
             Route::get('user/{id}', [UserController::class, 'getById']);
-            Route::post('user/{id}', [UserController::class, 'updateById']);
+            Route::put('user/{id}', [UserController::class, 'updateById']);
             Route::delete('user/{id}', [UserController::class, 'deleteById']);
 
             Route::get('meeting', [MeetingController::class, 'getAll']);

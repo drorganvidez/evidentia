@@ -19,6 +19,12 @@ class EvidentiaTest extends TestCase
     public function setUp() : void
     {
         parent::setUp();
+        // write code that runs at the start of each test
+    }
+
+    public function tearDown() : void
+    {
+        // write code that runs at the end of each test
     }
 
     /**

@@ -5,6 +5,7 @@ namespace Tests\Feature\Api\v1;
 use Tests\TestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use \Illuminate\Testing\AssertableJsonString;
+use Throwable;
 
 class CommitteeTest extends TestCase
 {
@@ -17,10 +18,16 @@ class CommitteeTest extends TestCase
     public function setUp() : void
     {
         parent::setUp();
+        // write code that runs at the start of each test
+    }
+
+    public function tearDown() : void
+    {
+        // write code that runs at the end of each test
     }
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     private function createCommittee() : AssertableJsonString
     {
@@ -126,7 +133,7 @@ class CommitteeTest extends TestCase
 
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function testUpdateCommitteeSuccess()
     {
@@ -151,7 +158,7 @@ class CommitteeTest extends TestCase
 
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function testUpdateCommitteeFail()
     {
@@ -174,7 +181,7 @@ class CommitteeTest extends TestCase
 
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function testDeleteCommitteeSuccess()
     {

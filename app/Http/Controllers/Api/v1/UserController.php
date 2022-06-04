@@ -15,10 +15,10 @@ class UserController extends Controller
 
     public function create(Request $request) {
         $validator = Validator::make($request->all(), [
-            'surname' => ['required', 'numeric'],
+            'surname' => ['required', 'string'],
             'name' => ['required', 'string'],
             'username' => ['required', 'string'],
-            'password' => ['required', 'numeric'],
+            'password' => ['required', 'string'],
             'email' => ['required', 'email'],
             'block' => ['required', 'boolean'],
             'biography' => ['required', 'string'],
@@ -53,10 +53,10 @@ class UserController extends Controller
 
     public function updateById(Request $request) {
         $validator = Validator::make($request->all(), [
-            'surname' => ['required', 'numeric'],
+            'surname' => ['required', 'string'],
             'name' => ['required', 'string'],
             'username' => ['required', 'string'],
-            'password' => ['required', 'numeric'],
+            'password' => ['required', 'string'],
             'email' => ['required', 'email'],
             'block' => ['required', 'boolean'],
             'biography' => ['required', 'string'],

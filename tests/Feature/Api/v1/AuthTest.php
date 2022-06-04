@@ -7,6 +7,7 @@ use Illuminate\Testing\Fluent\AssertableJson;
 
 class AuthTest extends TestCase
 {
+
     /**
      * Functional testing for the authentication module of the REST API.
      *
@@ -16,6 +17,12 @@ class AuthTest extends TestCase
     public function setUp() : void
     {
         parent::setUp();
+        // write code that runs at the start of each test
+    }
+
+    public function tearDown() : void
+    {
+        // write code that runs at the end of each test
     }
 
     public function testLoginSuccess()

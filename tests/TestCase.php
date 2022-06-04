@@ -12,7 +12,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * @throws Throwable
      */
-    protected function login($email = 'alumno1@alumno1.com', $password = 'alumno1') : String
+    protected function login($email = 'alumno1@alumno1.com', $password = 'alumno1')
     {
         return $this->postJson('/api/21/v1/auth/login', [
             'email' => $email,
