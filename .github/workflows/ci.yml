@@ -16,8 +16,8 @@ jobs:
         image: mysql:5.7
         env:
           MYSQL_ROOT_PASSWORD: secret
-          MYSQL_DATABASE: homestead
-          MYSQL_USER: homestead
+          MYSQL_DATABASE: evidentia
+          MYSQL_USER: evidentia
           MYSQL_PASSWORD: secret
         ports:
           - 3306:3306
@@ -27,7 +27,7 @@ jobs:
       - name: Verify MySQL connection from host
         run: |
           sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get install mysql-server
-          mysql --host 127.0.0.1 --port 3306 -uroot -psecret -e "GRANT ALL ON *.*  TO 'homestead'@'%' identified by 'secret'; FLUSH PRIVILEGES;"
+          mysql --host 127.0.0.1 --port 3306 -uroot -psecret -e "GRANT ALL ON *.*  TO 'evidentia'@'%' identified by 'secret'; FLUSH PRIVILEGES;"
           mysql --host 127.0.0.1 --port 3306 -uroot -psecret -e "CREATE DATABASE base21;"
       - uses: actions/checkout@v1
         with:
