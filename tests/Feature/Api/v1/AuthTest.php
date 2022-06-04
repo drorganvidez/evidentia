@@ -24,14 +24,6 @@ class AuthTest extends TestCase
         parent::setUp();
     }
 
-    private function login($email = 'alumno1@alumno1.com', $password = 'alumno1')
-    {
-        return $this->postJson('/api/21/v1/auth/login', [
-            'email' => $email,
-            'password' => $password
-        ])->decodeResponseJson()['token'];
-    }
-
     public function testLoginSuccess()
     {
         $response = $this->postJson('/api/21/v1/auth/login', [

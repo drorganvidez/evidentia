@@ -20,6 +20,13 @@ use App\Http\Controllers\Api\v1\MeetingController;
 |
 */
 
+/*
+|--------------------------------------------------------------------------
+| API V1
+|--------------------------------------------------------------------------
+|
+*/
+
 Route::group(['prefix' => '{instance}'], function () {
     Route::group(['prefix' => 'v1'], function () {
         Route::group(['prefix' => 'auth'], function () {

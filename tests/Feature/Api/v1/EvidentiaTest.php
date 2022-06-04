@@ -7,14 +7,16 @@ use Illuminate\Testing\Fluent\AssertableJson;
 
 class EvidentiaTest extends TestCase
 {
-    private function login($email = 'alumno1@alumno1.com', $password = 'alumno1')
-    {
-        return $this->postJson('/api/21/v1/auth/login', [
-            'email' => $email,
-            'password' => $password
-        ])->decodeResponseJson()['token'];
-    }
 
+    /**
+     * Functional testing for the evidences of the REST API.
+     *
+     * @return void
+     */
+
+    public function setUp() : void {
+        parent::setUp();
+    }
 
     public function createEvidence()
     {
