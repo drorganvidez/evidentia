@@ -4,6 +4,7 @@ namespace Tests\Feature\Api\v1;
 
 use Tests\TestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
+use \Illuminate\Testing\AssertableJsonString;
 
 class CommitteeTest extends TestCase
 {
@@ -13,11 +14,15 @@ class CommitteeTest extends TestCase
      * @return void
      */
 
-    public function setUp() : void {
+    public function setUp() : void
+    {
         parent::setUp();
     }
 
-    private function createCommittee()
+    /**
+     * @throws \Throwable
+     */
+    private function createCommittee() : AssertableJsonString
     {
         return $this->putJson('/api/21/v1/commitee', [
             'icon' => '<i class="fas fa-piggy-bank"></i>',
@@ -120,6 +125,9 @@ class CommitteeTest extends TestCase
     }
 
 
+    /**
+     * @throws \Throwable
+     */
     public function testUpdateCommitteeSuccess()
     {
         $committee = $this->createCommittee();
@@ -142,6 +150,9 @@ class CommitteeTest extends TestCase
     }
 
 
+    /**
+     * @throws \Throwable
+     */
     public function testUpdateCommitteeFail()
     {
         $committee = $this->createCommittee();
@@ -162,6 +173,9 @@ class CommitteeTest extends TestCase
     }
 
 
+    /**
+     * @throws \Throwable
+     */
     public function testDeleteCommitteeSuccess()
     {
         $committee = $this->createCommittee();

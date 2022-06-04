@@ -4,6 +4,8 @@ namespace Tests\Feature\Api\v1;
 
 use Tests\TestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
+use \Illuminate\Testing\AssertableJsonString;
+use Throwable;
 
 class EvidentiaTest extends TestCase
 {
@@ -14,11 +16,15 @@ class EvidentiaTest extends TestCase
      * @return void
      */
 
-    public function setUp() : void {
+    public function setUp() : void
+    {
         parent::setUp();
     }
 
-    public function createEvidence()
+    /**
+     * @throws Throwable
+     */
+    public function createEvidence() : AssertableJsonString
     {
 
         return $this->putJson('/api/21/v1/evidence', [
@@ -141,6 +147,9 @@ class EvidentiaTest extends TestCase
             );
     }
 
+    /**
+     * @throws Throwable
+     */
     public function testGetEvidenceSuccess()
     {
         $evidence = $this->createEvidence();
@@ -177,6 +186,9 @@ class EvidentiaTest extends TestCase
             ->assertJson([]);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function testUpdateEvidenceSuccess()
     {
         $evidence = $this->createEvidence();
@@ -191,9 +203,11 @@ class EvidentiaTest extends TestCase
             'stamp' => '423f234g5345h465g74j6467j',
             'rand' => false
         ];
+
         $response = $this->postJson('/api/21/v1/evidence/' . $evidence['id'], $updatedEvidence, [
             'Authorization' => 'Bearer ' . $this->login()
         ]);
+
         $response
             ->assertStatus(200)
             ->assertJson(
@@ -211,6 +225,9 @@ class EvidentiaTest extends TestCase
             );
     }
 
+    /**
+     * @throws Throwable
+     */
     public function testUpdateEvidenceWithMissingAttribute()
     {
         $evidence = $this->createEvidence();
@@ -224,9 +241,11 @@ class EvidentiaTest extends TestCase
             'stamp' => '423f234g5345h465g74j6467j',
             'rand' => false
         ];
+
         $response = $this->postJson('/api/21/v1/evidence/' . $evidence['id'], $updatedEvidence, [
             'Authorization' => 'Bearer ' . $this->login()
         ]);
+
         $response
             ->assertStatus(200)
             ->assertJson(
@@ -236,6 +255,9 @@ class EvidentiaTest extends TestCase
             );
     }
 
+    /**
+     * @throws Throwable
+     */
     public function testDeleteEvidenceSuccess()
     {
         $evidence = $this->createEvidence();
@@ -243,11 +265,13 @@ class EvidentiaTest extends TestCase
         $response = $this->deleteJson('/api/21/v1/evidence/' . $evidence['id'], [], [
             'Authorization' => 'Bearer ' . $this->login()
         ]);
+
         $response
             ->assertStatus(200);
 
         $response = $this->getJson('/api/21/v1/evidence/' . $evidence['id'], [
             'Authorization' => 'Bearer ' . $this->login()]);
+
         $response
             ->assertStatus(200)
             ->assertJson([]);

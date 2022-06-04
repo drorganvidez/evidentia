@@ -2,15 +2,8 @@
 
 namespace Tests\Feature\Api\v1;
 
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Testing\Assert;
-use Mockery;
-use Mockery\MockInterface;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Artisan;
 
 class AuthTest extends TestCase
 {
@@ -20,7 +13,8 @@ class AuthTest extends TestCase
      * @return void
      */
 
-    public function setUp() : void {
+    public function setUp() : void
+    {
         parent::setUp();
     }
 

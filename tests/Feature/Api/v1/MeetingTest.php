@@ -4,6 +4,8 @@ namespace Tests\Feature\Api\v1;
 
 use Tests\TestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
+use \Illuminate\Testing\AssertableJsonString;
+use Throwable;
 
 class MeetingTest extends TestCase
 {
@@ -13,11 +15,15 @@ class MeetingTest extends TestCase
      * @return void
      */
 
-    public function setUp() : void {
+    public function setUp() : void
+    {
         parent::setUp();
     }
 
-    private function createMeeting()
+    /**
+     * @throws Throwable
+     */
+    private function createMeeting(): AssertableJsonString
     {
         return $this->putJson('/api/21/v1/meeting', [
             'title' => 'Meeting1',
@@ -127,6 +133,9 @@ class MeetingTest extends TestCase
             );
     }
 
+    /**
+     * @throws Throwable
+     */
     public function testGetMeetingFail()
     {
         $this->createMeeting();
@@ -140,6 +149,9 @@ class MeetingTest extends TestCase
             ->assertJson([]);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function testUpdateMeetingSuccess()
     {
         $meeting = $this->createMeeting();
@@ -169,6 +181,9 @@ class MeetingTest extends TestCase
             );
     }
 
+    /**
+     * @throws Throwable
+     */
     public function testUpdateMeetingFail()
     {
         $meeting = $this->createMeeting();
@@ -192,6 +207,9 @@ class MeetingTest extends TestCase
             );
     }
 
+    /**
+     * @throws Throwable
+     */
     public function testDeleteMeetingSuccess()
     {
         $meeting = $this->createMeeting();
@@ -204,6 +222,9 @@ class MeetingTest extends TestCase
             ->assertStatus(200);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function testDeleteMeetingFail()
     {
         $meeting = $this->createMeeting();
