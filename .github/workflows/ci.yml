@@ -20,14 +20,14 @@ jobs:
           MYSQL_USER: homestead
           MYSQL_PASSWORD: secret
         ports:
-          - 33306:3306
+          - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - name: Verify MySQL connection from host
         run: |
           sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get install mysql-server
-          mysql --host 127.0.0.1 --port 33306 -uroot -psecret -e "GRANT ALL ON *.*  TO 'homestead'@'%' identified by 'secret'; FLUSH PRIVILEGES;"
+          mysql --host 127.0.0.1 --port 3306 -uroot -psecret -e "GRANT ALL ON *.*  TO 'homestead'@'%' identified by 'secret'; FLUSH PRIVILEGES;"
       - uses: actions/checkout@v1
         with:
           fetch-depth: 1
@@ -41,12 +41,13 @@ jobs:
       - name: Prepare Laravel Application
         run: |
           cp .env.ci .env
-          php artisan key:generate
           php artisan migrate
           php artisan db:seed
           php artisan db:seed --class=InstancesTableSeeder
+          php artisan migrate --path=database/migrations/develop
+          php artisan db:seed --class=DevelopSeeder
       - name: Run Testsuite
-        run: vendor/bin/phpunit tests/
+        run: php artisan test
 
   deployment:
     runs-on: ubuntu-latest

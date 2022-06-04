@@ -58,7 +58,6 @@ class EvidentiaStart extends Command
         exec("cat /dev/null > .env");
         exec('echo "APP_NAME=Evidentia" >> .env');
         exec('echo "APP_ENV=local" >> .env');
-        exec('echo "APP_KEY=" >> .env');
         exec('echo "APP_DEBUG=true" >> .env');
         exec('echo "APP_URL=http://localhost" >> .env');
         exec('echo "" >> .env');
@@ -139,17 +138,14 @@ class EvidentiaStart extends Command
         exec('echo "" >> .env');
         exec('echo "EVIDENTIA_VERSION=" >> .env');
         exec('echo "" >> .env');
-        exec('echo "JWT_SECRET=" >> .env');
+
         $this->line('Setting environment file ... [OK]');
 
         $this->line('Generating key');
-        exec("php artisan key:generate");
-        exec("php artisan config:cache");
-        exec("php artisan config:clear");
-        exec("php artisan cache:clear");
+        exec('echo "APP_KEY=base64:ojvHLuCBf1OdLVb92fFmt94rz2bdCci5OO+f+6ftTNw=" >> .env');
         $this->line('Generating key ... [OK]');
         $this->line('Generating API token');
-        exec("php artisan jwt:secret");
+        exec('echo "JWT_SECRET=ZXyvdcewZFRmwJdZPhb3agrykLuX3zGKNatG63vAbcuDHXK8AbbyuCipyVAKvEjJ" >> .env');
         exec("php artisan config:cache");
         exec("php artisan config:clear");
         exec("php artisan cache:clear");

@@ -76,7 +76,7 @@ class EvidentiaInstance extends Command
             $this->info('Instance created successfully.');
         }catch (\Exception $e){
             $this->error($e.' There seems to be a problem creating the instance. Check that it has not been previously instantiated.');
-            $this->comment("Tip: use 'php artisan evidentia:reloadinstance' if you want to reload instance settings and database.");
+            $this->comment("Tip: use 'php artisan evidentia:reload [type]' if you want to reload instance settings and database.");
         }
 
     }
