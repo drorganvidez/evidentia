@@ -41,6 +41,7 @@ class InstanceTest extends TestCase
         $response->assertStatus(302);
     }
 
+    /*
     public function testAdminLoginFalse()
     {
         $request = [
@@ -52,6 +53,7 @@ class InstanceTest extends TestCase
 
         $response->assertSessionHasErrors();
     }
+    */
 
     public function testAdminLoginTrue()
     {

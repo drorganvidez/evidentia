@@ -17,7 +17,7 @@ class CommitteeTest extends TestCase
         parent::setUp();
     }
 
-    public function createCommittee()
+    private function createCommittee()
     {
         return $this->putJson('/api/21/v1/commitee', [
             'icon' => '<i class="fas fa-piggy-bank"></i>',
