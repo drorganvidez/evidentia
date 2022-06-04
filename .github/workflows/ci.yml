@@ -51,6 +51,7 @@ jobs:
         run: vendor/bin/phpunit tests/
 
   deployment:
+    needs: phpunit
     runs-on: ubuntu-latest
     steps:
       - name: Deploy Stage
