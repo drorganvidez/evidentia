@@ -48,7 +48,7 @@ jobs:
           php artisan migrate --path=database/migrations/develop
           php artisan db:seed --class=DevelopSeeder
       - name: Run Testsuite
-        run: php artisan test
+        run: vendor/bin/phpunit tests/
 
   deployment:
     runs-on: ubuntu-latest
