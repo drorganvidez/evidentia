@@ -29,8 +29,6 @@ jobs:
           sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get install mysql-server
           mysql --host 127.0.0.1 --port 3306 -uroot -psecret -e "GRANT ALL ON *.*  TO 'homestead'@'%' identified by 'secret'; FLUSH PRIVILEGES;"
           mysql --host 127.0.0.1 --port 3306 -uroot -psecret -e "CREATE DATABASE 'base21';"
-          mysql --host 127.0.0.1 --port 3306 -uroot -psecret -e "ALTER SCHEMA 'base21' DEFAULT CHARACTER SET utf8mb4  DEFAULT COLLATE utf8mb4_unicode_ci;"
-          mysql --host 127.0.0.1 --port 3306 -uroot -psecret -e "CREATE TABLE 'base21'.'migrations' ('id' INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,'migration' VARCHAR(255) NOT NULL,'batch' INT(11) NOT NULL, PRIMARY KEY ('id'));"
       - uses: actions/checkout@v1
         with:
           fetch-depth: 1
