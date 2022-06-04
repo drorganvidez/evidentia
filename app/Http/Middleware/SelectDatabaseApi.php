@@ -18,6 +18,9 @@ class SelectDatabaseApi
      */
     public function handle($request, Closure $next)
     {
+
+        \Instantiation::set_default_connection();
+
         $param = $request->segment(2);
         $instance = Instance::where('route', $param)->first();
 

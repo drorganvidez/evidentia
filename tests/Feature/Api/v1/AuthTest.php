@@ -2,14 +2,15 @@
 
 namespace Tests\Feature\Api\v1;
 
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
-use App\Service;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Testing\Assert;
 use Mockery;
 use Mockery\MockInterface;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Artisan;
 
 class AuthTest extends TestCase
 {
@@ -44,11 +45,6 @@ class AuthTest extends TestCase
             $json->whereType('token', 'string')
             );
     }
-
-    /*
-
-
-
 
     public function testLoginInvalidMailFail()
     {
@@ -98,6 +94,7 @@ class AuthTest extends TestCase
 
     public function testLogoutSuccess()
     {
+
         $response = $this->postJson('/api/21/v1/auth/logout', [], [
             'Authorization' => 'Bearer '.$this->login()
         ]);
@@ -122,7 +119,8 @@ class AuthTest extends TestCase
 
     public function testMeSuccess()
     {
-        $response = $this->getJson('/api/21/v1/auth/me', [], [
+
+        $response = $this->getJson('/api/21/v1/auth/me',  [
             'Authorization' => 'Bearer '.$this->login()
         ]);
 
@@ -164,5 +162,5 @@ class AuthTest extends TestCase
             $json->where('status', 'Authorization token not found')
             );
     }
-    */
+
 }
