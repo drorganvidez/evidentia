@@ -2,11 +2,9 @@
 
 namespace App\Http\Services;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 
 abstract class Service
 {
@@ -94,24 +92,24 @@ abstract class Service
      *  Update
      */
 
-    public function update($id, $array)
+    public function update($id, $new_data)
     {
-        $json_response = $this->update_json_response($id, $array);
+        $json_response = $this->update_json_response($id, $new_data);
         return $this->entity($json_response);
     }
 
-    public function update_json_response($id,$array)
+    public function update_json_response($id,$new_data): JsonResponse
     {
 
         $entity_res = null;
 
-        $json_response = $this->validate($array);
+        $json_response = $this->validate($new_data);
 
         if($json_response->getData()->oh == "no") {
             return $json_response;
         }
 
-        $bool = $this->model::where('id', $id)->update($array);
+        $bool = $this->model::where('id', $id)->update($new_data);
 
         if($bool)
             $entity_res = $this->find($id);

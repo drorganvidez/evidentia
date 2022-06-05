@@ -3,10 +3,6 @@
 namespace App\Http\Services;
 
 use App\Models\Evidence;
-use App\Models\User;
-use App\Rules\CheckHoursAndMinutes;
-use App\Rules\MaxCharacters;
-use App\Rules\MinCharacters;
 
 class EvidenceService extends Service
 {
