@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Http\Services\CommitteeService;
 use App\Http\Services\EvidenceService;
 use App\Http\Services\Service;
 use App\Models\Evidence;
@@ -9,15 +10,15 @@ use App\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
-class EvidenceTest extends TestCase
+class CommitteeTest extends TestCase
 {
 
-    private Service $evidenceService;
+    private Service $committeeService;
 
     public function __construct()
     {
         parent::__construct();
-        $this->evidenceService = new EvidenceService();
+        $this->committeeService = new CommitteeService();
     }
 
     public function setUp() : void
@@ -31,98 +32,44 @@ class EvidenceTest extends TestCase
         // write code that runs at the end of each test
     }
 
-    public function testCreateEvidenceSuccess()
+    public function testCreateCommitteeSuccess()
     {
 
-        $evidence_data = [
-            'title' => 'Evidence Test',
-            'description' => 'This is an evidence test',
-            'hours' => 3.5,
-            'user_id' => 1,
-            'comittee_id' => 2,
-            'points_to' => 3,
-            'status' => 1,
-            'stamp' => '423f234g5345h465g74j6467j',
-            'rand' => 0];
+        $committee_data = [
+            'name' => 'Nuevo comité',
+            'icon' => 'fa fas-envelope'];
 
-        $evidence = $this->evidenceService->create($evidence_data);
+        $committee = $this->committeeService->create($committee_data);
 
-        $this->assertNotNull($evidence->title);
+        $this->assertNotNull($committee->name);
 
-        $evidence->delete();
+        $committee->delete();
 
     }
 
-    public function testCreateEvidenceFail()
+    public function testCreateCommitteeFailNoName()
     {
 
-        $evidence_data = [
-            'title' => '55',
-            'description' => 'This is an evidence test',
-            'hours' => 3.5,
-            'user_id' => 1,
-            'comittee_id' => 2,
-            'points_to' => 3,
-            'status' => 1,
-            'stamp' => '423f234g5345h465g74j6467j',
-            'rand' => 0];
+        $committee_data = [
+            'name' => '',
+            'icon' => 'fa fas-envelope'];
 
-        $evidence = $this->evidenceService->create($evidence_data);
-        $this->assertNull($evidence);
+        $committee = $this->committeeService->create($committee_data);
+
+        $this->assertNull($committee);
 
     }
 
-    public function testUpdateEvicenceSuccess()
+    public function testCreateCommitteeFailNoIcon()
     {
 
-        $evidence_data = [
-            'title' => 'Evidence Test',
-            'description' => 'This is an evidence test',
-            'hours' => 3.5,
-            'user_id' => 1,
-            'comittee_id' => 2,
-            'points_to' => 3,
-            'status' => 1,
-            'stamp' => '423f234g5345h465g74j6467j',
-            'rand' => 0];
+        $committee_data = [
+            'name' => 'Nuevo titulo',
+            'icon' => ''];
 
-        $evidence = $this->evidenceService->create($evidence_data);
+        $committee = $this->committeeService->create($committee_data);
 
-        $new_data = [
-          'title' => 'Nuevo titulo',
-          'hours' => 10
-        ];
-
-        $updated_evidence = $this->evidenceService->update($evidence->id, $new_data);
-
-        $this->assertEquals("Nuevo titulo", $updated_evidence->title);
-
-    }
-
-    public function testUpdateEvicenceFail()
-    {
-
-        $evidence_data = [
-            'title' => 'Evidence Test',
-            'description' => 'This is an evidence test',
-            'hours' => 3.5,
-            'user_id' => 1,
-            'comittee_id' => 2,
-            'points_to' => 3,
-            'status' => 1,
-            'stamp' => '423f234g5345h465g74j6467j',
-            'rand' => 0];
-
-        $evidence = $this->evidenceService->create($evidence_data);
-
-        $new_data = [
-            'title' => 'N',
-            'hours' => 10
-        ];
-
-        $updated_evidence = $this->evidenceService->update($evidence->id, $new_data);
-
-        $this->assertNull($updated_evidence);
+        $this->assertNull($committee);
 
     }
 
