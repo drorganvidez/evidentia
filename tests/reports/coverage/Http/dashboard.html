@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /var/www/app/Http</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../_css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="../_css/nv.d3.min.css" rel="stylesheet" type="text/css">
+  <link href="../_css/style.css" rel="stylesheet" type="text/css">
+  <link href="../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../index.html">/var/www/app</a></li>
+         <li class="breadcrumb-item"><a href="index.html">Http</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Controllers/AdminController.php.html#8">App\Http\Controllers\AdminController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/AttendeeController.php.html#10">App\Http\Controllers\AttendeeController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/Auth/ConfirmPasswordController.php.html#9">App\Http\Controllers\Auth\ConfirmPasswordController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/Auth/LoginController.php.html#9">App\Http\Controllers\Auth\LoginController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/Auth/RegisterController.php.html#12">App\Http\Controllers\Auth\RegisterController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/Auth/VerificationController.php.html#9">App\Http\Controllers\Auth\VerificationController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/AvatarController.php.html#13">App\Http\Controllers\AvatarController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/BlockController.php.html#8">App\Http\Controllers\BlockController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/BonusSecretaryController.php.html#11">App\Http\Controllers\BonusSecretaryController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ConfigController.php.html#9">App\Http\Controllers\ConfigController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DefaultListSecretaryController.php.html#10">App\Http\Controllers\DefaultListSecretaryController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DeployController.php.html#9">App\Http\Controllers\DeployController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DownloadController.php.html#10">App\Http\Controllers\DownloadController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EventbriteController.php.html#15">App\Http\Controllers\EventbriteController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#21">App\Http\Controllers\EvidenceController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceCoordinatorController.php.html#12">App\Http\Controllers\EvidenceCoordinatorController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/FileController.php.html#9">App\Http\Controllers\FileController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/GeneralPurposeController.php.html#8">App\Http\Controllers\GeneralPurposeController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/GitController.php.html#8">App\Http\Controllers\GitController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/HomeController.php.html#8">App\Http\Controllers\HomeController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ImportExportController.php.html#16">App\Http\Controllers\ImportExportController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/IntegrityController.php.html#10">App\Http\Controllers\IntegrityController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/LoginAdminController.php.html#9">App\Http\Controllers\LoginAdminController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/LoginInstanceController.php.html#11">App\Http\Controllers\LoginInstanceController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#21">App\Http\Controllers\ManagementController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingController.php.html#11">App\Http\Controllers\MeetingController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#29">App\Http\Controllers\MeetingSecretaryController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MessageController.php.html#8">App\Http\Controllers\MessageController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/PasswordResetController.php.html#14">App\Http\Controllers\PasswordResetController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProfileController.php.html#17">App\Http\Controllers\ProfileController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProofController.php.html#10">App\Http\Controllers\ProofController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/QuickInstances.php.html#13">App\Http\Controllers\QuickInstances</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/RandomizeController.php.html#10">App\Http\Controllers\RandomizeController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/SignController.php.html#10">App\Http\Controllers\SignController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/SuggestionsMailboxController.php.html#11">App\Http\Controllers\SuggestionsMailboxController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/UploadController.php.html#11">App\Http\Controllers\UploadController</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/CheckBlock.php.html#8">App\Http\Middleware\CheckBlock</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/CheckIsAdministrator.php.html#8">App\Http\Middleware\CheckIsAdministrator</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/CheckNotNull.php.html#7">App\Http\Middleware\CheckNotNull</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/CheckProofDownload.php.html#9">App\Http\Middleware\CheckProofDownload</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/CheckRegisterBonus.php.html#8">App\Http\Middleware\CheckRegisterBonus</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/CheckRegisterEventsAndAttendings.php.html#8">App\Http\Middleware\CheckRegisterEventsAndAttendings</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/CheckRegisterMeeting.php.html#8">App\Http\Middleware\CheckRegisterMeeting</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/CheckRoles.php.html#8">App\Http\Middleware\CheckRoles</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/CheckUploadEvidences.php.html#8">App\Http\Middleware\CheckUploadEvidences</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/CheckValidateEvidences.php.html#8">App\Http\Middleware\CheckValidateEvidences</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/EvidenceCanBeEdited.php.html#8">App\Http\Middleware\EvidenceCanBeEdited</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/EvidenceFromMyComittee.php.html#9">App\Http\Middleware\EvidenceFromMyComittee</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/EvidenceMine.php.html#9">App\Http\Middleware\EvidenceMine</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/MeetingMinutesMine.php.html#10">App\Http\Middleware\MeetingMinutesMine</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/MeetingRequestMine.php.html#10">App\Http\Middleware\MeetingRequestMine</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/RedirectIfAuthenticated.php.html#9">App\Http\Middleware\RedirectIfAuthenticated</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/SignatureSheetMine.php.html#11">App\Http\Middleware\SignatureSheetMine</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/Service.php.html#10">App\Http\Services\Service</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/UserService.php.html#7">App\Http\Services\UserService</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/InstanceController.php.html#11">App\Http\Controllers\InstanceController</a></td><td class="text-right">1%</td></tr>
+       <tr><td><a href="Controllers/MetaHomeController.php.html#11">App\Http\Controllers\MetaHomeController</a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Middleware/JwtMiddleware.php.html#9">App\Http\Middleware\JwtMiddleware</a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="Middleware/SelectDatabase.php.html#10">App\Http\Middleware\SelectDatabase</a></td><td class="text-right">77%</td></tr>
+       <tr><td><a href="Middleware/Authenticate.php.html#7">App\Http\Middleware\Authenticate</a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="Middleware/SelectDatabaseApi.php.html#10">App\Http\Middleware\SelectDatabaseApi</a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="Controllers/Api/v1/CommiteeController.php.html#10">App\Http\Controllers\Api\v1\CommiteeController</a></td><td class="text-right">86%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#29">App\Http\Controllers\MeetingSecretaryController</a></td><td class="text-right">4556</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#21">App\Http\Controllers\ManagementController</a></td><td class="text-right">1806</td></tr>
+       <tr><td><a href="Controllers/EventbriteController.php.html#15">App\Http\Controllers\EventbriteController</a></td><td class="text-right">870</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#21">App\Http\Controllers\EvidenceController</a></td><td class="text-right">812</td></tr>
+       <tr><td><a href="Controllers/ProfileController.php.html#17">App\Http\Controllers\ProfileController</a></td><td class="text-right">240</td></tr>
+       <tr><td><a href="Controllers/ImportExportController.php.html#16">App\Http\Controllers\ImportExportController</a></td><td class="text-right">132</td></tr>
+       <tr><td><a href="Controllers/PasswordResetController.php.html#14">App\Http\Controllers\PasswordResetController</a></td><td class="text-right">132</td></tr>
+       <tr><td><a href="Controllers/BonusSecretaryController.php.html#11">App\Http\Controllers\BonusSecretaryController</a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="Controllers/DefaultListSecretaryController.php.html#10">App\Http\Controllers\DefaultListSecretaryController</a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="Controllers/EvidenceCoordinatorController.php.html#12">App\Http\Controllers\EvidenceCoordinatorController</a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="Controllers/InstanceController.php.html#11">App\Http\Controllers\InstanceController</a></td><td class="text-right">104</td></tr>
+       <tr><td><a href="Controllers/SignController.php.html#10">App\Http\Controllers\SignController</a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="Controllers/MeetingController.php.html#11">App\Http\Controllers\MeetingController</a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="Controllers/AvatarController.php.html#13">App\Http\Controllers\AvatarController</a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Controllers/LoginInstanceController.php.html#11">App\Http\Controllers\LoginInstanceController</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Middleware/CheckProofDownload.php.html#9">App\Http\Middleware\CheckProofDownload</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Controllers/AttendeeController.php.html#10">App\Http\Controllers\AttendeeController</a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Controllers/ConfigController.php.html#9">App\Http\Controllers\ConfigController</a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Controllers/LoginAdminController.php.html#9">App\Http\Controllers\LoginAdminController</a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Controllers/QuickInstances.php.html#13">App\Http\Controllers\QuickInstances</a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Controllers/RandomizeController.php.html#10">App\Http\Controllers\RandomizeController</a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Controllers/GitController.php.html#8">App\Http\Controllers\GitController</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Middleware/MeetingMinutesMine.php.html#10">App\Http\Middleware\MeetingMinutesMine</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Middleware/MeetingRequestMine.php.html#10">App\Http\Middleware\MeetingRequestMine</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Middleware/SignatureSheetMine.php.html#11">App\Http\Middleware\SignatureSheetMine</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Controllers/BlockController.php.html#8">App\Http\Controllers\BlockController</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/DeployController.php.html#9">App\Http\Controllers\DeployController</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Middleware/CheckBlock.php.html#8">App\Http\Middleware\CheckBlock</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Middleware/CheckIsAdministrator.php.html#8">App\Http\Middleware\CheckIsAdministrator</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Middleware/CheckNotNull.php.html#7">App\Http\Middleware\CheckNotNull</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Middleware/CheckRoles.php.html#8">App\Http\Middleware\CheckRoles</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Middleware/EvidenceCanBeEdited.php.html#8">App\Http\Middleware\EvidenceCanBeEdited</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Middleware/EvidenceFromMyComittee.php.html#9">App\Http\Middleware\EvidenceFromMyComittee</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Middleware/EvidenceMine.php.html#9">App\Http\Middleware\EvidenceMine</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/Api/v1/CommiteeController.php.html#10">App\Http\Controllers\Api\v1\CommiteeController</a></td><td class="text-right">9</td></tr>
+       <tr><td><a href="Controllers/AdminController.php.html#8">App\Http\Controllers\AdminController</a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Middleware/CheckRegisterBonus.php.html#8">App\Http\Middleware\CheckRegisterBonus</a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Middleware/CheckRegisterEventsAndAttendings.php.html#8">App\Http\Middleware\CheckRegisterEventsAndAttendings</a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Middleware/CheckRegisterMeeting.php.html#8">App\Http\Middleware\CheckRegisterMeeting</a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Middleware/CheckUploadEvidences.php.html#8">App\Http\Middleware\CheckUploadEvidences</a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Middleware/CheckValidateEvidences.php.html#8">App\Http\Middleware\CheckValidateEvidences</a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Middleware/RedirectIfAuthenticated.php.html#9">App\Http\Middleware\RedirectIfAuthenticated</a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Middleware/JwtMiddleware.php.html#9">App\Http\Middleware\JwtMiddleware</a></td><td class="text-right">4</td></tr>
+       <tr><td><a href="Controllers/MetaHomeController.php.html#11">App\Http\Controllers\MetaHomeController</a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Middleware/SelectDatabase.php.html#10">App\Http\Middleware\SelectDatabase</a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Middleware/Authenticate.php.html#7">App\Http\Middleware\Authenticate</a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Middleware/SelectDatabaseApi.php.html#10">App\Http\Middleware\SelectDatabaseApi</a></td><td class="text-right">2</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Controllers/AdminController.php.html#10"><abbr title="App\Http\Controllers\AdminController::home">home</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/AttendeeController.php.html#12"><abbr title="App\Http\Controllers\AttendeeController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/AttendeeController.php.html#18"><abbr title="App\Http\Controllers\AttendeeController::list">list</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/AttendeeController.php.html#31"><abbr title="App\Http\Controllers\AttendeeController::export">export</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/Auth/ConfirmPasswordController.php.html#36"><abbr title="App\Http\Controllers\Auth\ConfirmPasswordController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/Auth/LoginController.php.html#36"><abbr title="App\Http\Controllers\Auth\LoginController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/Auth/RegisterController.php.html#39"><abbr title="App\Http\Controllers\Auth\RegisterController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/Auth/RegisterController.php.html#50"><abbr title="App\Http\Controllers\Auth\RegisterController::validator">validator</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/Auth/RegisterController.php.html#65"><abbr title="App\Http\Controllers\Auth\RegisterController::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/Auth/VerificationController.php.html#36"><abbr title="App\Http\Controllers\Auth\VerificationController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/AvatarController.php.html#15"><abbr title="App\Http\Controllers\AvatarController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/AvatarController.php.html#20"><abbr title="App\Http\Controllers\AvatarController::avatar">avatar</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/BlockController.php.html#10"><abbr title="App\Http\Controllers\BlockController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/BlockController.php.html#15"><abbr title="App\Http\Controllers\BlockController::block">block</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/BonusSecretaryController.php.html#13"><abbr title="App\Http\Controllers\BonusSecretaryController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/BonusSecretaryController.php.html#19"><abbr title="App\Http\Controllers\BonusSecretaryController::list">list</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/BonusSecretaryController.php.html#29"><abbr title="App\Http\Controllers\BonusSecretaryController::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/BonusSecretaryController.php.html#40"><abbr title="App\Http\Controllers\BonusSecretaryController::new">new</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/BonusSecretaryController.php.html#75"><abbr title="App\Http\Controllers\BonusSecretaryController::edit">edit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/BonusSecretaryController.php.html#85"><abbr title="App\Http\Controllers\BonusSecretaryController::save">save</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/BonusSecretaryController.php.html#121"><abbr title="App\Http\Controllers\BonusSecretaryController::remove">remove</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ConfigController.php.html#11"><abbr title="App\Http\Controllers\ConfigController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ConfigController.php.html#18"><abbr title="App\Http\Controllers\ConfigController::config">config</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ConfigController.php.html#34"><abbr title="App\Http\Controllers\ConfigController::config_save">config_save</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DefaultListSecretaryController.php.html#13"><abbr title="App\Http\Controllers\DefaultListSecretaryController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DefaultListSecretaryController.php.html#19"><abbr title="App\Http\Controllers\DefaultListSecretaryController::list">list</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DefaultListSecretaryController.php.html#29"><abbr title="App\Http\Controllers\DefaultListSecretaryController::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DefaultListSecretaryController.php.html#39"><abbr title="App\Http\Controllers\DefaultListSecretaryController::new">new</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DefaultListSecretaryController.php.html#73"><abbr title="App\Http\Controllers\DefaultListSecretaryController::edit">edit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DefaultListSecretaryController.php.html#86"><abbr title="App\Http\Controllers\DefaultListSecretaryController::save">save</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DefaultListSecretaryController.php.html#118"><abbr title="App\Http\Controllers\DefaultListSecretaryController::remove">remove</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DeployController.php.html#12"><abbr title="App\Http\Controllers\DeployController::deploy">deploy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DownloadController.php.html#12"><abbr title="App\Http\Controllers\DownloadController::request_download">request_download</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/DownloadController.php.html#24"><abbr title="App\Http\Controllers\DownloadController::minutes_download">minutes_download</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EventbriteController.php.html#17"><abbr title="App\Http\Controllers\EventbriteController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EventbriteController.php.html#23"><abbr title="App\Http\Controllers\EventbriteController::token">token</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EventbriteController.php.html#32"><abbr title="App\Http\Controllers\EventbriteController::validate_token">validate_token</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EventbriteController.php.html#43"><abbr title="App\Http\Controllers\EventbriteController::token_save">token_save</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EventbriteController.php.html#67"><abbr title="App\Http\Controllers\EventbriteController::event_load">event_load</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EventbriteController.php.html#155"><abbr title="App\Http\Controllers\EventbriteController::attendee_load">attendee_load</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EventbriteController.php.html#257"><abbr title="App\Http\Controllers\EventbriteController::event_list">event_list</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EventbriteController.php.html#267"><abbr title="App\Http\Controllers\EventbriteController::attendee_list">attendee_list</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EventbriteController.php.html#277"><abbr title="App\Http\Controllers\EventbriteController::attendee_export">attendee_export</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EventbriteController.php.html#288"><abbr title="App\Http\Controllers\EventbriteController::events_export">events_export</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#24"><abbr title="App\Http\Controllers\EvidenceController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#30"><abbr title="App\Http\Controllers\EvidenceController::view">view</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#39"><abbr title="App\Http\Controllers\EvidenceController::list">list</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#54"><abbr title="App\Http\Controllers\EvidenceController::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#65"><abbr title="App\Http\Controllers\EvidenceController::draft">draft</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#70"><abbr title="App\Http\Controllers\EvidenceController::publish">publish</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#75"><abbr title="App\Http\Controllers\EvidenceController::new">new</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#88"><abbr title="App\Http\Controllers\EvidenceController::new_evidence">new_evidence</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#119"><abbr title="App\Http\Controllers\EvidenceController::save_files">save_files</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#166"><abbr title="App\Http\Controllers\EvidenceController::copy_files_into_temporary_folder">copy_files_into_temporary_folder</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#198"><abbr title="App\Http\Controllers\EvidenceController::edit">edit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#225"><abbr title="App\Http\Controllers\EvidenceController::draft_edit">draft_edit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#230"><abbr title="App\Http\Controllers\EvidenceController::publish_edit">publish_edit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#235"><abbr title="App\Http\Controllers\EvidenceController::save">save</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#269"><abbr title="App\Http\Controllers\EvidenceController::remove">remove</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#281"><abbr title="App\Http\Controllers\EvidenceController::delete_evidence">delete_evidence</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#300"><abbr title="App\Http\Controllers\EvidenceController::delete_files">delete_files</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#312"><abbr title="App\Http\Controllers\EvidenceController::reedit">reedit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#326"><abbr title="App\Http\Controllers\EvidenceController::export">export</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceCoordinatorController.php.html#15"><abbr title="App\Http\Controllers\EvidenceCoordinatorController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceCoordinatorController.php.html#25"><abbr title="App\Http\Controllers\EvidenceCoordinatorController::all">all</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceCoordinatorController.php.html#37"><abbr title="App\Http\Controllers\EvidenceCoordinatorController::pending">pending</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceCoordinatorController.php.html#49"><abbr title="App\Http\Controllers\EvidenceCoordinatorController::accepted">accepted</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceCoordinatorController.php.html#61"><abbr title="App\Http\Controllers\EvidenceCoordinatorController::rejected">rejected</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceCoordinatorController.php.html#73"><abbr title="App\Http\Controllers\EvidenceCoordinatorController::accept">accept</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceCoordinatorController.php.html#84"><abbr title="App\Http\Controllers\EvidenceCoordinatorController::reject">reject</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/EvidenceCoordinatorController.php.html#101"><abbr title="App\Http\Controllers\EvidenceCoordinatorController::evidences_export">evidences_export</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/FileController.php.html#12"><abbr title="App\Http\Controllers\FileController::remove">remove</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/GeneralPurposeController.php.html#11"><abbr title="App\Http\Controllers\GeneralPurposeController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/GeneralPurposeController.php.html#16"><abbr title="App\Http\Controllers\GeneralPurposeController::users_all">users_all</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/GitController.php.html#10"><abbr title="App\Http\Controllers\GitController::list">list</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/HomeController.php.html#15"><abbr title="App\Http\Controllers\HomeController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/HomeController.php.html#25"><abbr title="App\Http\Controllers\HomeController::index">index</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ImportExportController.php.html#18"><abbr title="App\Http\Controllers\ImportExportController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ImportExportController.php.html#24"><abbr title="App\Http\Controllers\ImportExportController::import">import</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ImportExportController.php.html#33"><abbr title="App\Http\Controllers\ImportExportController::import_save">import_save</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ImportExportController.php.html#61"><abbr title="App\Http\Controllers\ImportExportController::set_student_rol">set_student_rol</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ImportExportController.php.html#74"><abbr title="App\Http\Controllers\ImportExportController::export">export</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ImportExportController.php.html#83"><abbr title="App\Http\Controllers\ImportExportController::export_save">export_save</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/InstanceController.php.html#19"><abbr title="App\Http\Controllers\InstanceController::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/InstanceController.php.html#25"><abbr title="App\Http\Controllers\InstanceController::new">new</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/InstanceController.php.html#79"><abbr title="App\Http\Controllers\InstanceController::edit">edit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/InstanceController.php.html#85"><abbr title="App\Http\Controllers\InstanceController::save">save</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/InstanceController.php.html#122"><abbr title="App\Http\Controllers\InstanceController::manage">manage</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/InstanceController.php.html#130"><abbr title="App\Http\Controllers\InstanceController::delete">delete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/InstanceController.php.html#136"><abbr title="App\Http\Controllers\InstanceController::remove">remove</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/IntegrityController.php.html#12"><abbr title="App\Http\Controllers\IntegrityController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/IntegrityController.php.html#18"><abbr title="App\Http\Controllers\IntegrityController::integrity">integrity</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/LoginAdminController.php.html#11"><abbr title="App\Http\Controllers\LoginAdminController::login">login</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/LoginAdminController.php.html#21"><abbr title="App\Http\Controllers\LoginAdminController::login_p">login_p</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/LoginAdminController.php.html#33"><abbr title="App\Http\Controllers\LoginAdminController::logout">logout</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/LoginInstanceController.php.html#14"><abbr title="App\Http\Controllers\LoginInstanceController::login">login</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/LoginInstanceController.php.html#32"><abbr title="App\Http\Controllers\LoginInstanceController::login_p">login_p</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/LoginInstanceController.php.html#44"><abbr title="App\Http\Controllers\LoginInstanceController::logout">logout</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#26"><abbr title="App\Http\Controllers\ManagementController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#33"><abbr title="App\Http\Controllers\ManagementController::user_list">user_list</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#54"><abbr title="App\Http\Controllers\ManagementController::evidence_list">evidence_list</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#63"><abbr title="App\Http\Controllers\ManagementController::meeting_list">meeting_list</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#72"><abbr title="App\Http\Controllers\ManagementController::comittee_list">comittee_list</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#94"><abbr title="App\Http\Controllers\ManagementController::comittee_new">comittee_new</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#114"><abbr title="App\Http\Controllers\ManagementController::comittee_save">comittee_save</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#159"><abbr title="App\Http\Controllers\ManagementController::comittee_remove">comittee_remove</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#179"><abbr title="App\Http\Controllers\ManagementController::user_management">user_management</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#206"><abbr title="App\Http\Controllers\ManagementController::user_management_save">user_management_save</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#302"><abbr title="App\Http\Controllers\ManagementController::user_management_new">user_management_new</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#331"><abbr title="App\Http\Controllers\ManagementController::user_management_delete_all">user_management_delete_all</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#342"><abbr title="App\Http\Controllers\ManagementController::evidences_export">evidences_export</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#356"><abbr title="App\Http\Controllers\ManagementController::management_student_export">management_student_export</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingController.php.html#14"><abbr title="App\Http\Controllers\MeetingController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingController.php.html#20"><abbr title="App\Http\Controllers\MeetingController::list">list</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingController.php.html#31"><abbr title="App\Http\Controllers\MeetingController::meeting_export">meeting_export</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingController.php.html#44"><abbr title="App\Http\Controllers\MeetingController::export">export</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#34"><abbr title="App\Http\Controllers\MeetingSecretaryController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#41"><abbr title="App\Http\Controllers\MeetingSecretaryController::manage">manage</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#51"><abbr title="App\Http\Controllers\MeetingSecretaryController::request_list">request_list</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#61"><abbr title="App\Http\Controllers\MeetingSecretaryController::request_create">request_create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#68"><abbr title="App\Http\Controllers\MeetingSecretaryController::request_new">request_new</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#131"><abbr title="App\Http\Controllers\MeetingSecretaryController::request_edit">request_edit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#151"><abbr title="App\Http\Controllers\MeetingSecretaryController::request_save">request_save</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#222"><abbr title="App\Http\Controllers\MeetingSecretaryController::request_download">request_download</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#234"><abbr title="App\Http\Controllers\MeetingSecretaryController::request_remove">request_remove</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#259"><abbr title="App\Http\Controllers\MeetingSecretaryController::signaturesheet_list">signaturesheet_list</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#268"><abbr title="App\Http\Controllers\MeetingSecretaryController::signaturesheet_create">signaturesheet_create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#281"><abbr title="App\Http\Controllers\MeetingSecretaryController::signaturesheet_new">signaturesheet_new</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#300"><abbr title="App\Http\Controllers\MeetingSecretaryController::generate_random_identifier_for_signature">generate_random_identifier_for_signature</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#315"><abbr title="App\Http\Controllers\MeetingSecretaryController::signaturesheet_view">signaturesheet_view</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#322"><abbr title="App\Http\Controllers\MeetingSecretaryController::signaturesheet_edit">signaturesheet_edit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#342"><abbr title="App\Http\Controllers\MeetingSecretaryController::signaturesheet_save">signaturesheet_save</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#371"><abbr title="App\Http\Controllers\MeetingSecretaryController::signaturesheet_remove">signaturesheet_remove</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#386"><abbr title="App\Http\Controllers\MeetingSecretaryController::minutes_list">minutes_list</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#395"><abbr title="App\Http\Controllers\MeetingSecretaryController::minutes_create">minutes_create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#402"><abbr title="App\Http\Controllers\MeetingSecretaryController::minutes_create_step1">minutes_create_step1</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#414"><abbr title="App\Http\Controllers\MeetingSecretaryController::minutes_create_step1_p">minutes_create_step1_p</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#426"><abbr title="App\Http\Controllers\MeetingSecretaryController::minutes_create_step2">minutes_create_step2</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#441"><abbr title="App\Http\Controllers\MeetingSecretaryController::minutes_create_step2_p">minutes_create_step2_p</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#468"><abbr title="App\Http\Controllers\MeetingSecretaryController::minutes_create_step3">minutes_create_step3</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#487"><abbr title="App\Http\Controllers\MeetingSecretaryController::minutes_create_step3_p">minutes_create_step3_p</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#588"><abbr title="App\Http\Controllers\MeetingSecretaryController::minutes_edit">minutes_edit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#633"><abbr title="App\Http\Controllers\MeetingSecretaryController::minutes_save">minutes_save</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#751"><abbr title="App\Http\Controllers\MeetingSecretaryController::minutes_remove">minutes_remove</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#767"><abbr title="App\Http\Controllers\MeetingSecretaryController::minutes_download">minutes_download</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#779"><abbr title="App\Http\Controllers\MeetingSecretaryController::meeting_requests_export">meeting_requests_export</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#792"><abbr title="App\Http\Controllers\MeetingSecretaryController::signaturesheet_export">signaturesheet_export</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#805"><abbr title="App\Http\Controllers\MeetingSecretaryController::meeting_minutes_export">meeting_minutes_export</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#901"><abbr title="App\Http\Controllers\MeetingSecretaryController::defaultlist">defaultlist</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/MessageController.php.html#10"><abbr title="App\Http\Controllers\MessageController::mailbox">mailbox</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/PasswordResetController.php.html#17"><abbr title="App\Http\Controllers\PasswordResetController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/PasswordResetController.php.html#22"><abbr title="App\Http\Controllers\PasswordResetController::reset">reset</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/PasswordResetController.php.html#30"><abbr title="App\Http\Controllers\PasswordResetController::reset_p">reset_p</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/PasswordResetController.php.html#69"><abbr title="App\Http\Controllers\PasswordResetController::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/PasswordResetController.php.html#89"><abbr title="App\Http\Controllers\PasswordResetController::update_p">update_p</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProfileController.php.html#19"><abbr title="App\Http\Controllers\ProfileController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProfileController.php.html#24"><abbr title="App\Http\Controllers\ProfileController::view">view</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProfileController.php.html#38"><abbr title="App\Http\Controllers\ProfileController::upload_info">upload_info</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProfileController.php.html#111"><abbr title="App\Http\Controllers\ProfileController::file_name_parser">file_name_parser</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProfileController.php.html#123"><abbr title="App\Http\Controllers\ProfileController::upload_biography">upload_biography</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProfileController.php.html#143"><abbr title="App\Http\Controllers\ProfileController::upload_pass">upload_pass</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProfileController.php.html#162"><abbr title="App\Http\Controllers\ProfileController::profiles_view">profiles_view</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProfileController.php.html#171"><abbr title="App\Http\Controllers\ProfileController::evidences_view">evidences_view</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/ProofController.php.html#13"><abbr title="App\Http\Controllers\ProofController::download">download</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/QuickInstances.php.html#15"><abbr title="App\Http\Controllers\QuickInstances::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/QuickInstances.php.html#21"><abbr title="App\Http\Controllers\QuickInstances::list">list</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/QuickInstances.php.html#31"><abbr title="App\Http\Controllers\QuickInstances::save">save</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/RandomizeController.php.html#12"><abbr title="App\Http\Controllers\RandomizeController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/RandomizeController.php.html#17"><abbr title="App\Http\Controllers\RandomizeController::randomize">randomize</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/RandomizeController.php.html#25"><abbr title="App\Http\Controllers\RandomizeController::randomize_save">randomize_save</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/SignController.php.html#12"><abbr title="App\Http\Controllers\SignController::sign">sign</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/SignController.php.html#27"><abbr title="App\Http\Controllers\SignController::sign_p">sign_p</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/SignController.php.html#68"><abbr title="App\Http\Controllers\SignController::finish">finish</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/SuggestionsMailboxController.php.html#13"><abbr title="App\Http\Controllers\SuggestionsMailboxController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/SuggestionsMailboxController.php.html#18"><abbr title="App\Http\Controllers\SuggestionsMailboxController::suggestionsmailbox">suggestionsmailbox</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/SuggestionsMailboxController.php.html#27"><abbr title="App\Http\Controllers\SuggestionsMailboxController::suggestionsmailbox_p">suggestionsmailbox_p</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/UploadController.php.html#16"><abbr title="App\Http\Controllers\UploadController::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/UploadController.php.html#21"><abbr title="App\Http\Controllers\UploadController::process">process</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/UploadController.php.html#39"><abbr title="App\Http\Controllers\UploadController::delete">delete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/UploadController.php.html#52"><abbr title="App\Http\Controllers\UploadController::load">load</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/UploadController.php.html#69"><abbr title="App\Http\Controllers\UploadController::remove">remove</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/CheckBlock.php.html#17"><abbr title="App\Http\Middleware\CheckBlock::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/CheckIsAdministrator.php.html#17"><abbr title="App\Http\Middleware\CheckIsAdministrator::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/CheckNotNull.php.html#16"><abbr title="App\Http\Middleware\CheckNotNull::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/CheckProofDownload.php.html#18"><abbr title="App\Http\Middleware\CheckProofDownload::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/CheckRegisterBonus.php.html#17"><abbr title="App\Http\Middleware\CheckRegisterBonus::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/CheckRegisterEventsAndAttendings.php.html#17"><abbr title="App\Http\Middleware\CheckRegisterEventsAndAttendings::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/CheckRegisterMeeting.php.html#17"><abbr title="App\Http\Middleware\CheckRegisterMeeting::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/CheckRoles.php.html#17"><abbr title="App\Http\Middleware\CheckRoles::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/CheckUploadEvidences.php.html#17"><abbr title="App\Http\Middleware\CheckUploadEvidences::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/CheckValidateEvidences.php.html#17"><abbr title="App\Http\Middleware\CheckValidateEvidences::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/EvidenceCanBeEdited.php.html#17"><abbr title="App\Http\Middleware\EvidenceCanBeEdited::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/EvidenceFromMyComittee.php.html#18"><abbr title="App\Http\Middleware\EvidenceFromMyComittee::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/EvidenceMine.php.html#18"><abbr title="App\Http\Middleware\EvidenceMine::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/MeetingMinutesMine.php.html#19"><abbr title="App\Http\Middleware\MeetingMinutesMine::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/MeetingRequestMine.php.html#19"><abbr title="App\Http\Middleware\MeetingRequestMine::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/RedirectIfAuthenticated.php.html#19"><abbr title="App\Http\Middleware\RedirectIfAuthenticated::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Middleware/SignatureSheetMine.php.html#20"><abbr title="App\Http\Middleware\SignatureSheetMine::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/Service.php.html#17"><abbr title="App\Http\Services\Service::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/Service.php.html#23"><abbr title="App\Http\Services\Service::validate">validate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/Service.php.html#28"><abbr title="App\Http\Services\Service::set_validation_rules">set_validation_rules</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/Service.php.html#33"><abbr title="App\Http\Services\Service::validation_rules">validation_rules</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/Service.php.html#38"><abbr title="App\Http\Services\Service::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/Service.php.html#44"><abbr title="App\Http\Services\Service::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/Service.php.html#50"><abbr title="App\Http\Services\Service::delete">delete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/Service.php.html#56"><abbr title="App\Http\Services\Service::find">find</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/Service.php.html#61"><abbr title="App\Http\Services\Service::find_or_fail">find_or_fail</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/Service.php.html#66"><abbr title="App\Http\Services\Service::find_by">find_by</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/Service.php.html#71"><abbr title="App\Http\Services\Service::find_all_by">find_all_by</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/Service.php.html#76"><abbr title="App\Http\Services\Service::all">all</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/Service.php.html#81"><abbr title="App\Http\Services\Service::all_sorted_by">all_sorted_by</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/Service.php.html#86"><abbr title="App\Http\Services\Service::all_sorted_by_desc">all_sorted_by_desc</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/UserService.php.html#10"><abbr title="App\Http\Services\UserService::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Services/UserService.php.html#19"><abbr title="App\Http\Services\UserService::all_except_logged">all_except_logged</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controllers/Api/v1/CommiteeController.php.html#67"><abbr title="App\Http\Controllers\Api\v1\CommiteeController::deleteById">deleteById</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Controllers/MetaHomeController.php.html#13"><abbr title="App\Http\Controllers\MetaHomeController::home">home</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Middleware/JwtMiddleware.php.html#18"><abbr title="App\Http\Middleware\JwtMiddleware::handle">handle</abbr></a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="Middleware/SelectDatabase.php.html#19"><abbr title="App\Http\Middleware\SelectDatabase::handle">handle</abbr></a></td><td class="text-right">77%</td></tr>
+       <tr><td><a href="Middleware/Authenticate.php.html#15"><abbr title="App\Http\Middleware\Authenticate::redirectTo">redirectTo</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="Controllers/Api/v1/CommiteeController.php.html#40"><abbr title="App\Http\Controllers\Api\v1\CommiteeController::updateById">updateById</abbr></a></td><td class="text-right">84%</td></tr>
+       <tr><td><a href="Middleware/SelectDatabaseApi.php.html#19"><abbr title="App\Http\Middleware\SelectDatabaseApi::handle">handle</abbr></a></td><td class="text-right">85%</td></tr>
+       <tr><td><a href="Controllers/Api/v1/MeetingController.php.html#48"><abbr title="App\Http\Controllers\Api\v1\MeetingController::updateById">updateById</abbr></a></td><td class="text-right">88%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Controllers/ManagementController.php.html#206"><abbr title="App\Http\Controllers\ManagementController::user_management_save">user_management_save</abbr></a></td><td class="text-right">132</td></tr>
+       <tr><td><a href="Controllers/EventbriteController.php.html#155"><abbr title="App\Http\Controllers\EventbriteController::attendee_load">attendee_load</abbr></a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#633"><abbr title="App\Http\Controllers\MeetingSecretaryController::minutes_save">minutes_save</abbr></a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="Controllers/AvatarController.php.html#20"><abbr title="App\Http\Controllers\AvatarController::avatar">avatar</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#114"><abbr title="App\Http\Controllers\ManagementController::comittee_save">comittee_save</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#487"><abbr title="App\Http\Controllers\MeetingSecretaryController::minutes_create_step3_p">minutes_create_step3_p</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Middleware/CheckProofDownload.php.html#18"><abbr title="App\Http\Middleware\CheckProofDownload::handle">handle</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Controllers/EventbriteController.php.html#67"><abbr title="App\Http\Controllers\EventbriteController::event_load">event_load</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Controllers/ProfileController.php.html#38"><abbr title="App\Http\Controllers\ProfileController::upload_info">upload_info</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Controllers/SignController.php.html#27"><abbr title="App\Http\Controllers\SignController::sign_p">sign_p</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Controllers/GitController.php.html#10"><abbr title="App\Http\Controllers\GitController::list">list</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#68"><abbr title="App\Http\Controllers\MeetingSecretaryController::request_new">request_new</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Controllers/PasswordResetController.php.html#30"><abbr title="App\Http\Controllers\PasswordResetController::reset_p">reset_p</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Middleware/MeetingMinutesMine.php.html#19"><abbr title="App\Http\Middleware\MeetingMinutesMine::handle">handle</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Middleware/MeetingRequestMine.php.html#19"><abbr title="App\Http\Middleware\MeetingRequestMine::handle">handle</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Middleware/SignatureSheetMine.php.html#20"><abbr title="App\Http\Middleware\SignatureSheetMine::handle">handle</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Controllers/AttendeeController.php.html#31"><abbr title="App\Http\Controllers\AttendeeController::export">export</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/BonusSecretaryController.php.html#85"><abbr title="App\Http\Controllers\BonusSecretaryController::save">save</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/DefaultListSecretaryController.php.html#86"><abbr title="App\Http\Controllers\DefaultListSecretaryController::save">save</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/DeployController.php.html#12"><abbr title="App\Http\Controllers\DeployController::deploy">deploy</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/EventbriteController.php.html#43"><abbr title="App\Http\Controllers\EventbriteController::token_save">token_save</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/EventbriteController.php.html#288"><abbr title="App\Http\Controllers\EventbriteController::events_export">events_export</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#119"><abbr title="App\Http\Controllers\EvidenceController::save_files">save_files</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#166"><abbr title="App\Http\Controllers\EvidenceController::copy_files_into_temporary_folder">copy_files_into_temporary_folder</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#326"><abbr title="App\Http\Controllers\EvidenceController::export">export</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/EvidenceCoordinatorController.php.html#101"><abbr title="App\Http\Controllers\EvidenceCoordinatorController::evidences_export">evidences_export</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/ImportExportController.php.html#33"><abbr title="App\Http\Controllers\ImportExportController::import_save">import_save</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/ImportExportController.php.html#61"><abbr title="App\Http\Controllers\ImportExportController::set_student_rol">set_student_rol</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/LoginInstanceController.php.html#14"><abbr title="App\Http\Controllers\LoginInstanceController::login">login</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#33"><abbr title="App\Http\Controllers\ManagementController::user_list">user_list</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#159"><abbr title="App\Http\Controllers\ManagementController::comittee_remove">comittee_remove</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#179"><abbr title="App\Http\Controllers\ManagementController::user_management">user_management</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#342"><abbr title="App\Http\Controllers\ManagementController::evidences_export">evidences_export</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#356"><abbr title="App\Http\Controllers\ManagementController::management_student_export">management_student_export</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/MeetingController.php.html#31"><abbr title="App\Http\Controllers\MeetingController::meeting_export">meeting_export</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/MeetingController.php.html#44"><abbr title="App\Http\Controllers\MeetingController::export">export</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#151"><abbr title="App\Http\Controllers\MeetingSecretaryController::request_save">request_save</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#342"><abbr title="App\Http\Controllers\MeetingSecretaryController::signaturesheet_save">signaturesheet_save</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#441"><abbr title="App\Http\Controllers\MeetingSecretaryController::minutes_create_step2_p">minutes_create_step2_p</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#588"><abbr title="App\Http\Controllers\MeetingSecretaryController::minutes_edit">minutes_edit</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#779"><abbr title="App\Http\Controllers\MeetingSecretaryController::meeting_requests_export">meeting_requests_export</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#792"><abbr title="App\Http\Controllers\MeetingSecretaryController::signaturesheet_export">signaturesheet_export</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#805"><abbr title="App\Http\Controllers\MeetingSecretaryController::meeting_minutes_export">meeting_minutes_export</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/PasswordResetController.php.html#69"><abbr title="App\Http\Controllers\PasswordResetController::update">update</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/ProfileController.php.html#171"><abbr title="App\Http\Controllers\ProfileController::evidences_view">evidences_view</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/QuickInstances.php.html#31"><abbr title="App\Http\Controllers\QuickInstances::save">save</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/RandomizeController.php.html#25"><abbr title="App\Http\Controllers\RandomizeController::randomize_save">randomize_save</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Middleware/CheckBlock.php.html#17"><abbr title="App\Http\Middleware\CheckBlock::handle">handle</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Middleware/CheckIsAdministrator.php.html#17"><abbr title="App\Http\Middleware\CheckIsAdministrator::handle">handle</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Middleware/CheckNotNull.php.html#16"><abbr title="App\Http\Middleware\CheckNotNull::handle">handle</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Middleware/CheckRoles.php.html#17"><abbr title="App\Http\Middleware\CheckRoles::handle">handle</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Middleware/EvidenceCanBeEdited.php.html#17"><abbr title="App\Http\Middleware\EvidenceCanBeEdited::handle">handle</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Middleware/EvidenceFromMyComittee.php.html#18"><abbr title="App\Http\Middleware\EvidenceFromMyComittee::handle">handle</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Middleware/EvidenceMine.php.html#18"><abbr title="App\Http\Middleware\EvidenceMine::handle">handle</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controllers/AdminController.php.html#10"><abbr title="App\Http\Controllers\AdminController::home">home</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/BlockController.php.html#15"><abbr title="App\Http\Controllers\BlockController::block">block</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/BonusSecretaryController.php.html#40"><abbr title="App\Http\Controllers\BonusSecretaryController::new">new</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/ConfigController.php.html#18"><abbr title="App\Http\Controllers\ConfigController::config">config</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/ConfigController.php.html#34"><abbr title="App\Http\Controllers\ConfigController::config_save">config_save</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/DefaultListSecretaryController.php.html#39"><abbr title="App\Http\Controllers\DefaultListSecretaryController::new">new</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/EventbriteController.php.html#32"><abbr title="App\Http\Controllers\EventbriteController::validate_token">validate_token</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/EventbriteController.php.html#277"><abbr title="App\Http\Controllers\EventbriteController::attendee_export">attendee_export</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#235"><abbr title="App\Http\Controllers\EvidenceController::save">save</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#281"><abbr title="App\Http\Controllers\EvidenceController::delete_evidence">delete_evidence</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/EvidenceController.php.html#300"><abbr title="App\Http\Controllers\EvidenceController::delete_files">delete_files</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/ImportExportController.php.html#83"><abbr title="App\Http\Controllers\ImportExportController::export_save">export_save</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/InstanceController.php.html#25"><abbr title="App\Http\Controllers\InstanceController::new">new</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/InstanceController.php.html#85"><abbr title="App\Http\Controllers\InstanceController::save">save</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/LoginAdminController.php.html#11"><abbr title="App\Http\Controllers\LoginAdminController::login">login</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/LoginAdminController.php.html#21"><abbr title="App\Http\Controllers\LoginAdminController::login_p">login_p</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/LoginInstanceController.php.html#32"><abbr title="App\Http\Controllers\LoginInstanceController::login_p">login_p</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#72"><abbr title="App\Http\Controllers\ManagementController::comittee_list">comittee_list</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#94"><abbr title="App\Http\Controllers\ManagementController::comittee_new">comittee_new</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/ManagementController.php.html#331"><abbr title="App\Http\Controllers\ManagementController::user_management_delete_all">user_management_delete_all</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#131"><abbr title="App\Http\Controllers\MeetingSecretaryController::request_edit">request_edit</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#234"><abbr title="App\Http\Controllers\MeetingSecretaryController::request_remove">request_remove</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/MeetingSecretaryController.php.html#300"><abbr title="App\Http\Controllers\MeetingSecretaryController::generate_random_identifier_for_signature">generate_random_identifier_for_signature</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/PasswordResetController.php.html#89"><abbr title="App\Http\Controllers\PasswordResetController::update_p">update_p</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/ProfileController.php.html#111"><abbr title="App\Http\Controllers\ProfileController::file_name_parser">file_name_parser</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/SignController.php.html#12"><abbr title="App\Http\Controllers\SignController::sign">sign</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controllers/SignController.php.html#68"><abbr title="App\Http\Controllers\SignController::finish">finish</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Middleware/CheckRegisterBonus.php.html#17"><abbr title="App\Http\Middleware\CheckRegisterBonus::handle">handle</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Middleware/CheckRegisterEventsAndAttendings.php.html#17"><abbr title="App\Http\Middleware\CheckRegisterEventsAndAttendings::handle">handle</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Middleware/CheckRegisterMeeting.php.html#17"><abbr title="App\Http\Middleware\CheckRegisterMeeting::handle">handle</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Middleware/CheckUploadEvidences.php.html#17"><abbr title="App\Http\Middleware\CheckUploadEvidences::handle">handle</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Middleware/CheckValidateEvidences.php.html#17"><abbr title="App\Http\Middleware\CheckValidateEvidences::handle">handle</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Middleware/RedirectIfAuthenticated.php.html#19"><abbr title="App\Http\Middleware\RedirectIfAuthenticated::handle">handle</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Middleware/JwtMiddleware.php.html#18"><abbr title="App\Http\Middleware\JwtMiddleware::handle">handle</abbr></a></td><td class="text-right">4</td></tr>
+       <tr><td><a href="Controllers/MetaHomeController.php.html#13"><abbr title="App\Http\Controllers\MetaHomeController::home">home</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Middleware/SelectDatabase.php.html#19"><abbr title="App\Http\Middleware\SelectDatabase::handle">handle</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Middleware/Authenticate.php.html#15"><abbr title="App\Http\Middleware\Authenticate::redirectTo">redirectTo</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Controllers/Api/v1/CommiteeController.php.html#40"><abbr title="App\Http\Controllers\Api\v1\CommiteeController::updateById">updateById</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Controllers/Api/v1/MeetingController.php.html#48"><abbr title="App\Http\Controllers\Api\v1\MeetingController::updateById">updateById</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Controllers/Api/v1/CommiteeController.php.html#67"><abbr title="App\Http\Controllers\Api\v1\CommiteeController::deleteById">deleteById</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Middleware/SelectDatabaseApi.php.html#19"><abbr title="App\Http\Middleware\SelectDatabaseApi::handle">handle</abbr></a></td><td class="text-right">2</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 9.2.15</a> using <a href="https://secure.php.net/" target="_top">PHP 8.1.6</a> and <a href="https://phpunit.de/">PHPUnit 9.5.20</a> at Sun Jun 5 14:06:28 CEST 2022.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../_js/jquery.min.js" type="text/javascript"></script>
+  <script src="../_js/d3.min.js" type="text/javascript"></script>
+  <script src="../_js/nv.d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([55,1,0,0,0,0,0,1,2,3,4,10], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([214,0,0,0,0,0,0,2,2,4,3,19], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[0,2,"<a href=\"Controllers\/AdminController.php.html#8\">App\\Http\\Controllers\\AdminController<\/a>"],[94.11764705882352,8,"<a href=\"Controllers\/Api\/v1\/AuthController.php.html#11\">App\\Http\\Controllers\\Api\\v1\\AuthController<\/a>"],[86.66666666666667,9,"<a href=\"Controllers\/Api\/v1\/CommiteeController.php.html#10\">App\\Http\\Controllers\\Api\\v1\\CommiteeController<\/a>"],[95.55555555555556,9,"<a href=\"Controllers\/Api\/v1\/EvidenceController.php.html#10\">App\\Http\\Controllers\\Api\\v1\\EvidenceController<\/a>"],[94.73684210526315,9,"<a href=\"Controllers\/Api\/v1\/MeetingController.php.html#10\">App\\Http\\Controllers\\Api\\v1\\MeetingController<\/a>"],[95.45454545454545,9,"<a href=\"Controllers\/Api\/v1\/UserController.php.html#10\">App\\Http\\Controllers\\Api\\v1\\UserController<\/a>"],[0,5,"<a href=\"Controllers\/AttendeeController.php.html#10\">App\\Http\\Controllers\\AttendeeController<\/a>"],[0,1,"<a href=\"Controllers\/Auth\/ConfirmPasswordController.php.html#9\">App\\Http\\Controllers\\Auth\\ConfirmPasswordController<\/a>"],[100,0,"<a href=\"Controllers\/Auth\/ForgotPasswordController.php.html#8\">App\\Http\\Controllers\\Auth\\ForgotPasswordController<\/a>"],[0,1,"<a href=\"Controllers\/Auth\/LoginController.php.html#9\">App\\Http\\Controllers\\Auth\\LoginController<\/a>"],[0,3,"<a href=\"Controllers\/Auth\/RegisterController.php.html#12\">App\\Http\\Controllers\\Auth\\RegisterController<\/a>"],[100,0,"<a href=\"Controllers\/Auth\/ResetPasswordController.php.html#9\">App\\Http\\Controllers\\Auth\\ResetPasswordController<\/a>"],[0,1,"<a href=\"Controllers\/Auth\/VerificationController.php.html#9\">App\\Http\\Controllers\\Auth\\VerificationController<\/a>"],[0,7,"<a href=\"Controllers\/AvatarController.php.html#13\">App\\Http\\Controllers\\AvatarController<\/a>"],[0,3,"<a href=\"Controllers\/BlockController.php.html#8\">App\\Http\\Controllers\\BlockController<\/a>"],[100,0,"<a href=\"Controllers\/BonusController.php.html#7\">App\\Http\\Controllers\\BonusController<\/a>"],[0,10,"<a href=\"Controllers\/BonusSecretaryController.php.html#11\">App\\Http\\Controllers\\BonusSecretaryController<\/a>"],[0,5,"<a href=\"Controllers\/ConfigController.php.html#9\">App\\Http\\Controllers\\ConfigController<\/a>"],[100,0,"<a href=\"Controllers\/Controller.php.html#10\">App\\Http\\Controllers\\Controller<\/a>"],[0,10,"<a href=\"Controllers\/DefaultListSecretaryController.php.html#10\">App\\Http\\Controllers\\DefaultListSecretaryController<\/a>"],[0,3,"<a href=\"Controllers\/DeployController.php.html#9\">App\\Http\\Controllers\\DeployController<\/a>"],[0,2,"<a href=\"Controllers\/DownloadController.php.html#10\">App\\Http\\Controllers\\DownloadController<\/a>"],[0,29,"<a href=\"Controllers\/EventbriteController.php.html#15\">App\\Http\\Controllers\\EventbriteController<\/a>"],[0,28,"<a href=\"Controllers\/EvidenceController.php.html#21\">App\\Http\\Controllers\\EvidenceController<\/a>"],[0,10,"<a href=\"Controllers\/EvidenceCoordinatorController.php.html#12\">App\\Http\\Controllers\\EvidenceCoordinatorController<\/a>"],[0,1,"<a href=\"Controllers\/FileController.php.html#9\">App\\Http\\Controllers\\FileController<\/a>"],[0,2,"<a href=\"Controllers\/GeneralPurposeController.php.html#8\">App\\Http\\Controllers\\GeneralPurposeController<\/a>"],[0,4,"<a href=\"Controllers\/GitController.php.html#8\">App\\Http\\Controllers\\GitController<\/a>"],[0,2,"<a href=\"Controllers\/HomeController.php.html#8\">App\\Http\\Controllers\\HomeController<\/a>"],[0,11,"<a href=\"Controllers\/ImportExportController.php.html#16\">App\\Http\\Controllers\\ImportExportController<\/a>"],[1.7543859649122806,10,"<a href=\"Controllers\/InstanceController.php.html#11\">App\\Http\\Controllers\\InstanceController<\/a>"],[0,2,"<a href=\"Controllers\/IntegrityController.php.html#10\">App\\Http\\Controllers\\IntegrityController<\/a>"],[0,5,"<a href=\"Controllers\/LoginAdminController.php.html#9\">App\\Http\\Controllers\\LoginAdminController<\/a>"],[0,6,"<a href=\"Controllers\/LoginInstanceController.php.html#11\">App\\Http\\Controllers\\LoginInstanceController<\/a>"],[0,42,"<a href=\"Controllers\/ManagementController.php.html#21\">App\\Http\\Controllers\\ManagementController<\/a>"],[0,8,"<a href=\"Controllers\/MeetingController.php.html#11\">App\\Http\\Controllers\\MeetingController<\/a>"],[0,67,"<a href=\"Controllers\/MeetingSecretaryController.php.html#29\">App\\Http\\Controllers\\MeetingSecretaryController<\/a>"],[0,1,"<a href=\"Controllers\/MessageController.php.html#8\">App\\Http\\Controllers\\MessageController<\/a>"],[66.66666666666666,3,"<a href=\"Controllers\/MetaHomeController.php.html#11\">App\\Http\\Controllers\\MetaHomeController<\/a>"],[0,11,"<a href=\"Controllers\/PasswordResetController.php.html#14\">App\\Http\\Controllers\\PasswordResetController<\/a>"],[0,15,"<a href=\"Controllers\/ProfileController.php.html#17\">App\\Http\\Controllers\\ProfileController<\/a>"],[0,1,"<a href=\"Controllers\/ProofController.php.html#10\">App\\Http\\Controllers\\ProofController<\/a>"],[0,5,"<a href=\"Controllers\/QuickInstances.php.html#13\">App\\Http\\Controllers\\QuickInstances<\/a>"],[0,5,"<a href=\"Controllers\/RandomizeController.php.html#10\">App\\Http\\Controllers\\RandomizeController<\/a>"],[0,9,"<a href=\"Controllers\/SignController.php.html#10\">App\\Http\\Controllers\\SignController<\/a>"],[0,3,"<a href=\"Controllers\/SuggestionsMailboxController.php.html#11\">App\\Http\\Controllers\\SuggestionsMailboxController<\/a>"],[0,5,"<a href=\"Controllers\/UploadController.php.html#11\">App\\Http\\Controllers\\UploadController<\/a>"],[100,0,"<a href=\"Kernel.php.html#10\">App\\Http\\Kernel<\/a>"],[80,3,"<a href=\"Middleware\/Authenticate.php.html#7\">App\\Http\\Middleware\\Authenticate<\/a>"],[0,3,"<a href=\"Middleware\/CheckBlock.php.html#8\">App\\Http\\Middleware\\CheckBlock<\/a>"],[100,0,"<a href=\"Middleware\/CheckForMaintenanceMode.php.html#7\">App\\Http\\Middleware\\CheckForMaintenanceMode<\/a>"],[0,3,"<a href=\"Middleware\/CheckIsAdministrator.php.html#8\">App\\Http\\Middleware\\CheckIsAdministrator<\/a>"],[0,3,"<a href=\"Middleware\/CheckNotNull.php.html#7\">App\\Http\\Middleware\\CheckNotNull<\/a>"],[0,6,"<a href=\"Middleware\/CheckProofDownload.php.html#9\">App\\Http\\Middleware\\CheckProofDownload<\/a>"],[0,2,"<a href=\"Middleware\/CheckRegisterBonus.php.html#8\">App\\Http\\Middleware\\CheckRegisterBonus<\/a>"],[0,2,"<a href=\"Middleware\/CheckRegisterEventsAndAttendings.php.html#8\">App\\Http\\Middleware\\CheckRegisterEventsAndAttendings<\/a>"],[0,2,"<a href=\"Middleware\/CheckRegisterMeeting.php.html#8\">App\\Http\\Middleware\\CheckRegisterMeeting<\/a>"],[0,3,"<a href=\"Middleware\/CheckRoles.php.html#8\">App\\Http\\Middleware\\CheckRoles<\/a>"],[0,2,"<a href=\"Middleware\/CheckUploadEvidences.php.html#8\">App\\Http\\Middleware\\CheckUploadEvidences<\/a>"],[0,2,"<a href=\"Middleware\/CheckValidateEvidences.php.html#8\">App\\Http\\Middleware\\CheckValidateEvidences<\/a>"],[100,0,"<a href=\"Middleware\/EncryptCookies.php.html#7\">App\\Http\\Middleware\\EncryptCookies<\/a>"],[0,3,"<a href=\"Middleware\/EvidenceCanBeEdited.php.html#8\">App\\Http\\Middleware\\EvidenceCanBeEdited<\/a>"],[0,3,"<a href=\"Middleware\/EvidenceFromMyComittee.php.html#9\">App\\Http\\Middleware\\EvidenceFromMyComittee<\/a>"],[0,3,"<a href=\"Middleware\/EvidenceMine.php.html#9\">App\\Http\\Middleware\\EvidenceMine<\/a>"],[75,4,"<a href=\"Middleware\/JwtMiddleware.php.html#9\">App\\Http\\Middleware\\JwtMiddleware<\/a>"],[0,4,"<a href=\"Middleware\/MeetingMinutesMine.php.html#10\">App\\Http\\Middleware\\MeetingMinutesMine<\/a>"],[0,4,"<a href=\"Middleware\/MeetingRequestMine.php.html#10\">App\\Http\\Middleware\\MeetingRequestMine<\/a>"],[0,2,"<a href=\"Middleware\/RedirectIfAuthenticated.php.html#9\">App\\Http\\Middleware\\RedirectIfAuthenticated<\/a>"],[77.77777777777779,3,"<a href=\"Middleware\/SelectDatabase.php.html#10\">App\\Http\\Middleware\\SelectDatabase<\/a>"],[85.71428571428571,2,"<a href=\"Middleware\/SelectDatabaseApi.php.html#10\">App\\Http\\Middleware\\SelectDatabaseApi<\/a>"],[0,4,"<a href=\"Middleware\/SignatureSheetMine.php.html#11\">App\\Http\\Middleware\\SignatureSheetMine<\/a>"],[100,0,"<a href=\"Middleware\/TrimStrings.php.html#7\">App\\Http\\Middleware\\TrimStrings<\/a>"],[100,0,"<a href=\"Middleware\/TrustProxies.php.html#8\">App\\Http\\Middleware\\TrustProxies<\/a>"],[100,0,"<a href=\"Middleware\/VerifyCsrfToken.php.html#7\">App\\Http\\Middleware\\VerifyCsrfToken<\/a>"],[0,14,"<a href=\"Services\/Service.php.html#10\">App\\Http\\Services\\Service<\/a>"],[0,2,"<a href=\"Services\/UserService.php.html#7\">App\\Http\\Services\\UserService<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[0,2,"<a href=\"Controllers\/AdminController.php.html#10\">App\\Http\\Controllers\\AdminController::home<\/a>"],[90.9090909090909,5,"<a href=\"Controllers\/Api\/v1\/AuthController.php.html#13\">App\\Http\\Controllers\\Api\\v1\\AuthController::login<\/a>"],[100,1,"<a href=\"Controllers\/Api\/v1\/AuthController.php.html#48\">App\\Http\\Controllers\\Api\\v1\\AuthController::logout<\/a>"],[100,1,"<a href=\"Controllers\/Api\/v1\/AuthController.php.html#56\">App\\Http\\Controllers\\Api\\v1\\AuthController::me<\/a>"],[100,1,"<a href=\"Controllers\/Api\/v1\/AuthController.php.html#63\">App\\Http\\Controllers\\Api\\v1\\AuthController::refresh<\/a>"],[100,1,"<a href=\"Controllers\/Api\/v1\/CommiteeController.php.html#12\">App\\Http\\Controllers\\Api\\v1\\CommiteeController::getAll<\/a>"],[100,2,"<a href=\"Controllers\/Api\/v1\/CommiteeController.php.html#16\">App\\Http\\Controllers\\Api\\v1\\CommiteeController::create<\/a>"],[100,1,"<a href=\"Controllers\/Api\/v1\/CommiteeController.php.html#36\">App\\Http\\Controllers\\Api\\v1\\CommiteeController::getById<\/a>"],[84.61538461538461,3,"<a href=\"Controllers\/Api\/v1\/CommiteeController.php.html#40\">App\\Http\\Controllers\\Api\\v1\\CommiteeController::updateById<\/a>"],[66.66666666666666,2,"<a href=\"Controllers\/Api\/v1\/CommiteeController.php.html#67\">App\\Http\\Controllers\\Api\\v1\\CommiteeController::deleteById<\/a>"],[100,1,"<a href=\"Controllers\/Api\/v1\/EvidenceController.php.html#12\">App\\Http\\Controllers\\Api\\v1\\EvidenceController::getAll<\/a>"],[100,2,"<a href=\"Controllers\/Api\/v1\/EvidenceController.php.html#16\">App\\Http\\Controllers\\Api\\v1\\EvidenceController::create<\/a>"],[100,1,"<a href=\"Controllers\/Api\/v1\/EvidenceController.php.html#51\">App\\Http\\Controllers\\Api\\v1\\EvidenceController::getById<\/a>"],[90,3,"<a href=\"Controllers\/Api\/v1\/EvidenceController.php.html#55\">App\\Http\\Controllers\\Api\\v1\\EvidenceController::updateById<\/a>"],[100,2,"<a href=\"Controllers\/Api\/v1\/EvidenceController.php.html#96\">App\\Http\\Controllers\\Api\\v1\\EvidenceController::deleteById<\/a>"],[100,1,"<a href=\"Controllers\/Api\/v1\/MeetingController.php.html#12\">App\\Http\\Controllers\\Api\\v1\\MeetingController::getAll<\/a>"],[100,2,"<a href=\"Controllers\/Api\/v1\/MeetingController.php.html#16\">App\\Http\\Controllers\\Api\\v1\\MeetingController::create<\/a>"],[100,1,"<a href=\"Controllers\/Api\/v1\/MeetingController.php.html#44\">App\\Http\\Controllers\\Api\\v1\\MeetingController::getById<\/a>"],[88.23529411764706,3,"<a href=\"Controllers\/Api\/v1\/MeetingController.php.html#48\">App\\Http\\Controllers\\Api\\v1\\MeetingController::updateById<\/a>"],[100,2,"<a href=\"Controllers\/Api\/v1\/MeetingController.php.html#83\">App\\Http\\Controllers\\Api\\v1\\MeetingController::deleteById<\/a>"],[100,1,"<a href=\"Controllers\/Api\/v1\/UserController.php.html#12\">App\\Http\\Controllers\\Api\\v1\\UserController::getAll<\/a>"],[100,2,"<a href=\"Controllers\/Api\/v1\/UserController.php.html#16\">App\\Http\\Controllers\\Api\\v1\\UserController::create<\/a>"],[100,1,"<a href=\"Controllers\/Api\/v1\/UserController.php.html#50\">App\\Http\\Controllers\\Api\\v1\\UserController::getById<\/a>"],[90,3,"<a href=\"Controllers\/Api\/v1\/UserController.php.html#54\">App\\Http\\Controllers\\Api\\v1\\UserController::updateById<\/a>"],[100,2,"<a href=\"Controllers\/Api\/v1\/UserController.php.html#95\">App\\Http\\Controllers\\Api\\v1\\UserController::deleteById<\/a>"],[0,1,"<a href=\"Controllers\/AttendeeController.php.html#12\">App\\Http\\Controllers\\AttendeeController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/AttendeeController.php.html#18\">App\\Http\\Controllers\\AttendeeController::list<\/a>"],[0,3,"<a href=\"Controllers\/AttendeeController.php.html#31\">App\\Http\\Controllers\\AttendeeController::export<\/a>"],[0,1,"<a href=\"Controllers\/Auth\/ConfirmPasswordController.php.html#36\">App\\Http\\Controllers\\Auth\\ConfirmPasswordController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/Auth\/LoginController.php.html#36\">App\\Http\\Controllers\\Auth\\LoginController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/Auth\/RegisterController.php.html#39\">App\\Http\\Controllers\\Auth\\RegisterController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/Auth\/RegisterController.php.html#50\">App\\Http\\Controllers\\Auth\\RegisterController::validator<\/a>"],[0,1,"<a href=\"Controllers\/Auth\/RegisterController.php.html#65\">App\\Http\\Controllers\\Auth\\RegisterController::create<\/a>"],[0,1,"<a href=\"Controllers\/Auth\/VerificationController.php.html#36\">App\\Http\\Controllers\\Auth\\VerificationController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/AvatarController.php.html#15\">App\\Http\\Controllers\\AvatarController::__construct<\/a>"],[0,6,"<a href=\"Controllers\/AvatarController.php.html#20\">App\\Http\\Controllers\\AvatarController::avatar<\/a>"],[0,1,"<a href=\"Controllers\/BlockController.php.html#10\">App\\Http\\Controllers\\BlockController::__construct<\/a>"],[0,2,"<a href=\"Controllers\/BlockController.php.html#15\">App\\Http\\Controllers\\BlockController::block<\/a>"],[0,1,"<a href=\"Controllers\/BonusSecretaryController.php.html#13\">App\\Http\\Controllers\\BonusSecretaryController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/BonusSecretaryController.php.html#19\">App\\Http\\Controllers\\BonusSecretaryController::list<\/a>"],[0,1,"<a href=\"Controllers\/BonusSecretaryController.php.html#29\">App\\Http\\Controllers\\BonusSecretaryController::create<\/a>"],[0,2,"<a href=\"Controllers\/BonusSecretaryController.php.html#40\">App\\Http\\Controllers\\BonusSecretaryController::new<\/a>"],[0,1,"<a href=\"Controllers\/BonusSecretaryController.php.html#75\">App\\Http\\Controllers\\BonusSecretaryController::edit<\/a>"],[0,3,"<a href=\"Controllers\/BonusSecretaryController.php.html#85\">App\\Http\\Controllers\\BonusSecretaryController::save<\/a>"],[0,1,"<a href=\"Controllers\/BonusSecretaryController.php.html#121\">App\\Http\\Controllers\\BonusSecretaryController::remove<\/a>"],[0,1,"<a href=\"Controllers\/ConfigController.php.html#11\">App\\Http\\Controllers\\ConfigController::__construct<\/a>"],[0,2,"<a href=\"Controllers\/ConfigController.php.html#18\">App\\Http\\Controllers\\ConfigController::config<\/a>"],[0,2,"<a href=\"Controllers\/ConfigController.php.html#34\">App\\Http\\Controllers\\ConfigController::config_save<\/a>"],[0,1,"<a href=\"Controllers\/DefaultListSecretaryController.php.html#13\">App\\Http\\Controllers\\DefaultListSecretaryController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/DefaultListSecretaryController.php.html#19\">App\\Http\\Controllers\\DefaultListSecretaryController::list<\/a>"],[0,1,"<a href=\"Controllers\/DefaultListSecretaryController.php.html#29\">App\\Http\\Controllers\\DefaultListSecretaryController::create<\/a>"],[0,2,"<a href=\"Controllers\/DefaultListSecretaryController.php.html#39\">App\\Http\\Controllers\\DefaultListSecretaryController::new<\/a>"],[0,1,"<a href=\"Controllers\/DefaultListSecretaryController.php.html#73\">App\\Http\\Controllers\\DefaultListSecretaryController::edit<\/a>"],[0,3,"<a href=\"Controllers\/DefaultListSecretaryController.php.html#86\">App\\Http\\Controllers\\DefaultListSecretaryController::save<\/a>"],[0,1,"<a href=\"Controllers\/DefaultListSecretaryController.php.html#118\">App\\Http\\Controllers\\DefaultListSecretaryController::remove<\/a>"],[0,3,"<a href=\"Controllers\/DeployController.php.html#12\">App\\Http\\Controllers\\DeployController::deploy<\/a>"],[0,1,"<a href=\"Controllers\/DownloadController.php.html#12\">App\\Http\\Controllers\\DownloadController::request_download<\/a>"],[0,1,"<a href=\"Controllers\/DownloadController.php.html#24\">App\\Http\\Controllers\\DownloadController::minutes_download<\/a>"],[0,1,"<a href=\"Controllers\/EventbriteController.php.html#17\">App\\Http\\Controllers\\EventbriteController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/EventbriteController.php.html#23\">App\\Http\\Controllers\\EventbriteController::token<\/a>"],[0,2,"<a href=\"Controllers\/EventbriteController.php.html#32\">App\\Http\\Controllers\\EventbriteController::validate_token<\/a>"],[0,3,"<a href=\"Controllers\/EventbriteController.php.html#43\">App\\Http\\Controllers\\EventbriteController::token_save<\/a>"],[0,5,"<a href=\"Controllers\/EventbriteController.php.html#67\">App\\Http\\Controllers\\EventbriteController::event_load<\/a>"],[0,10,"<a href=\"Controllers\/EventbriteController.php.html#155\">App\\Http\\Controllers\\EventbriteController::attendee_load<\/a>"],[0,1,"<a href=\"Controllers\/EventbriteController.php.html#257\">App\\Http\\Controllers\\EventbriteController::event_list<\/a>"],[0,1,"<a href=\"Controllers\/EventbriteController.php.html#267\">App\\Http\\Controllers\\EventbriteController::attendee_list<\/a>"],[0,2,"<a href=\"Controllers\/EventbriteController.php.html#277\">App\\Http\\Controllers\\EventbriteController::attendee_export<\/a>"],[0,3,"<a href=\"Controllers\/EventbriteController.php.html#288\">App\\Http\\Controllers\\EventbriteController::events_export<\/a>"],[0,1,"<a href=\"Controllers\/EvidenceController.php.html#24\">App\\Http\\Controllers\\EvidenceController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/EvidenceController.php.html#30\">App\\Http\\Controllers\\EvidenceController::view<\/a>"],[0,1,"<a href=\"Controllers\/EvidenceController.php.html#39\">App\\Http\\Controllers\\EvidenceController::list<\/a>"],[0,1,"<a href=\"Controllers\/EvidenceController.php.html#54\">App\\Http\\Controllers\\EvidenceController::create<\/a>"],[0,1,"<a href=\"Controllers\/EvidenceController.php.html#65\">App\\Http\\Controllers\\EvidenceController::draft<\/a>"],[0,1,"<a href=\"Controllers\/EvidenceController.php.html#70\">App\\Http\\Controllers\\EvidenceController::publish<\/a>"],[0,1,"<a href=\"Controllers\/EvidenceController.php.html#75\">App\\Http\\Controllers\\EvidenceController::new<\/a>"],[0,1,"<a href=\"Controllers\/EvidenceController.php.html#88\">App\\Http\\Controllers\\EvidenceController::new_evidence<\/a>"],[0,3,"<a href=\"Controllers\/EvidenceController.php.html#119\">App\\Http\\Controllers\\EvidenceController::save_files<\/a>"],[0,3,"<a href=\"Controllers\/EvidenceController.php.html#166\">App\\Http\\Controllers\\EvidenceController::copy_files_into_temporary_folder<\/a>"],[0,1,"<a href=\"Controllers\/EvidenceController.php.html#198\">App\\Http\\Controllers\\EvidenceController::edit<\/a>"],[0,1,"<a href=\"Controllers\/EvidenceController.php.html#225\">App\\Http\\Controllers\\EvidenceController::draft_edit<\/a>"],[0,1,"<a href=\"Controllers\/EvidenceController.php.html#230\">App\\Http\\Controllers\\EvidenceController::publish_edit<\/a>"],[0,2,"<a href=\"Controllers\/EvidenceController.php.html#235\">App\\Http\\Controllers\\EvidenceController::save<\/a>"],[0,1,"<a href=\"Controllers\/EvidenceController.php.html#269\">App\\Http\\Controllers\\EvidenceController::remove<\/a>"],[0,2,"<a href=\"Controllers\/EvidenceController.php.html#281\">App\\Http\\Controllers\\EvidenceController::delete_evidence<\/a>"],[0,2,"<a href=\"Controllers\/EvidenceController.php.html#300\">App\\Http\\Controllers\\EvidenceController::delete_files<\/a>"],[0,1,"<a href=\"Controllers\/EvidenceController.php.html#312\">App\\Http\\Controllers\\EvidenceController::reedit<\/a>"],[0,3,"<a href=\"Controllers\/EvidenceController.php.html#326\">App\\Http\\Controllers\\EvidenceController::export<\/a>"],[0,1,"<a href=\"Controllers\/EvidenceCoordinatorController.php.html#15\">App\\Http\\Controllers\\EvidenceCoordinatorController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/EvidenceCoordinatorController.php.html#25\">App\\Http\\Controllers\\EvidenceCoordinatorController::all<\/a>"],[0,1,"<a href=\"Controllers\/EvidenceCoordinatorController.php.html#37\">App\\Http\\Controllers\\EvidenceCoordinatorController::pending<\/a>"],[0,1,"<a href=\"Controllers\/EvidenceCoordinatorController.php.html#49\">App\\Http\\Controllers\\EvidenceCoordinatorController::accepted<\/a>"],[0,1,"<a href=\"Controllers\/EvidenceCoordinatorController.php.html#61\">App\\Http\\Controllers\\EvidenceCoordinatorController::rejected<\/a>"],[0,1,"<a href=\"Controllers\/EvidenceCoordinatorController.php.html#73\">App\\Http\\Controllers\\EvidenceCoordinatorController::accept<\/a>"],[0,1,"<a href=\"Controllers\/EvidenceCoordinatorController.php.html#84\">App\\Http\\Controllers\\EvidenceCoordinatorController::reject<\/a>"],[0,3,"<a href=\"Controllers\/EvidenceCoordinatorController.php.html#101\">App\\Http\\Controllers\\EvidenceCoordinatorController::evidences_export<\/a>"],[0,1,"<a href=\"Controllers\/FileController.php.html#12\">App\\Http\\Controllers\\FileController::remove<\/a>"],[0,1,"<a href=\"Controllers\/GeneralPurposeController.php.html#11\">App\\Http\\Controllers\\GeneralPurposeController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/GeneralPurposeController.php.html#16\">App\\Http\\Controllers\\GeneralPurposeController::users_all<\/a>"],[0,4,"<a href=\"Controllers\/GitController.php.html#10\">App\\Http\\Controllers\\GitController::list<\/a>"],[0,1,"<a href=\"Controllers\/HomeController.php.html#15\">App\\Http\\Controllers\\HomeController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/HomeController.php.html#25\">App\\Http\\Controllers\\HomeController::index<\/a>"],[0,1,"<a href=\"Controllers\/ImportExportController.php.html#18\">App\\Http\\Controllers\\ImportExportController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/ImportExportController.php.html#24\">App\\Http\\Controllers\\ImportExportController::import<\/a>"],[0,3,"<a href=\"Controllers\/ImportExportController.php.html#33\">App\\Http\\Controllers\\ImportExportController::import_save<\/a>"],[0,3,"<a href=\"Controllers\/ImportExportController.php.html#61\">App\\Http\\Controllers\\ImportExportController::set_student_rol<\/a>"],[0,1,"<a href=\"Controllers\/ImportExportController.php.html#74\">App\\Http\\Controllers\\ImportExportController::export<\/a>"],[0,2,"<a href=\"Controllers\/ImportExportController.php.html#83\">App\\Http\\Controllers\\ImportExportController::export_save<\/a>"],[100,1,"<a href=\"Controllers\/InstanceController.php.html#14\">App\\Http\\Controllers\\InstanceController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/InstanceController.php.html#19\">App\\Http\\Controllers\\InstanceController::create<\/a>"],[0,2,"<a href=\"Controllers\/InstanceController.php.html#25\">App\\Http\\Controllers\\InstanceController::new<\/a>"],[0,1,"<a href=\"Controllers\/InstanceController.php.html#79\">App\\Http\\Controllers\\InstanceController::edit<\/a>"],[0,2,"<a href=\"Controllers\/InstanceController.php.html#85\">App\\Http\\Controllers\\InstanceController::save<\/a>"],[0,1,"<a href=\"Controllers\/InstanceController.php.html#122\">App\\Http\\Controllers\\InstanceController::manage<\/a>"],[0,1,"<a href=\"Controllers\/InstanceController.php.html#130\">App\\Http\\Controllers\\InstanceController::delete<\/a>"],[0,1,"<a href=\"Controllers\/InstanceController.php.html#136\">App\\Http\\Controllers\\InstanceController::remove<\/a>"],[0,1,"<a href=\"Controllers\/IntegrityController.php.html#12\">App\\Http\\Controllers\\IntegrityController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/IntegrityController.php.html#18\">App\\Http\\Controllers\\IntegrityController::integrity<\/a>"],[0,2,"<a href=\"Controllers\/LoginAdminController.php.html#11\">App\\Http\\Controllers\\LoginAdminController::login<\/a>"],[0,2,"<a href=\"Controllers\/LoginAdminController.php.html#21\">App\\Http\\Controllers\\LoginAdminController::login_p<\/a>"],[0,1,"<a href=\"Controllers\/LoginAdminController.php.html#33\">App\\Http\\Controllers\\LoginAdminController::logout<\/a>"],[0,3,"<a href=\"Controllers\/LoginInstanceController.php.html#14\">App\\Http\\Controllers\\LoginInstanceController::login<\/a>"],[0,2,"<a href=\"Controllers\/LoginInstanceController.php.html#32\">App\\Http\\Controllers\\LoginInstanceController::login_p<\/a>"],[0,1,"<a href=\"Controllers\/LoginInstanceController.php.html#44\">App\\Http\\Controllers\\LoginInstanceController::logout<\/a>"],[0,1,"<a href=\"Controllers\/ManagementController.php.html#26\">App\\Http\\Controllers\\ManagementController::__construct<\/a>"],[0,3,"<a href=\"Controllers\/ManagementController.php.html#33\">App\\Http\\Controllers\\ManagementController::user_list<\/a>"],[0,1,"<a href=\"Controllers\/ManagementController.php.html#54\">App\\Http\\Controllers\\ManagementController::evidence_list<\/a>"],[0,1,"<a href=\"Controllers\/ManagementController.php.html#63\">App\\Http\\Controllers\\ManagementController::meeting_list<\/a>"],[0,2,"<a href=\"Controllers\/ManagementController.php.html#72\">App\\Http\\Controllers\\ManagementController::comittee_list<\/a>"],[0,2,"<a href=\"Controllers\/ManagementController.php.html#94\">App\\Http\\Controllers\\ManagementController::comittee_new<\/a>"],[0,6,"<a href=\"Controllers\/ManagementController.php.html#114\">App\\Http\\Controllers\\ManagementController::comittee_save<\/a>"],[0,3,"<a href=\"Controllers\/ManagementController.php.html#159\">App\\Http\\Controllers\\ManagementController::comittee_remove<\/a>"],[0,3,"<a href=\"Controllers\/ManagementController.php.html#179\">App\\Http\\Controllers\\ManagementController::user_management<\/a>"],[0,11,"<a href=\"Controllers\/ManagementController.php.html#206\">App\\Http\\Controllers\\ManagementController::user_management_save<\/a>"],[0,1,"<a href=\"Controllers\/ManagementController.php.html#302\">App\\Http\\Controllers\\ManagementController::user_management_new<\/a>"],[0,2,"<a href=\"Controllers\/ManagementController.php.html#331\">App\\Http\\Controllers\\ManagementController::user_management_delete_all<\/a>"],[0,3,"<a href=\"Controllers\/ManagementController.php.html#342\">App\\Http\\Controllers\\ManagementController::evidences_export<\/a>"],[0,3,"<a href=\"Controllers\/ManagementController.php.html#356\">App\\Http\\Controllers\\ManagementController::management_student_export<\/a>"],[0,1,"<a href=\"Controllers\/MeetingController.php.html#14\">App\\Http\\Controllers\\MeetingController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/MeetingController.php.html#20\">App\\Http\\Controllers\\MeetingController::list<\/a>"],[0,3,"<a href=\"Controllers\/MeetingController.php.html#31\">App\\Http\\Controllers\\MeetingController::meeting_export<\/a>"],[0,3,"<a href=\"Controllers\/MeetingController.php.html#44\">App\\Http\\Controllers\\MeetingController::export<\/a>"],[0,1,"<a href=\"Controllers\/MeetingSecretaryController.php.html#34\">App\\Http\\Controllers\\MeetingSecretaryController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/MeetingSecretaryController.php.html#41\">App\\Http\\Controllers\\MeetingSecretaryController::manage<\/a>"],[0,1,"<a href=\"Controllers\/MeetingSecretaryController.php.html#51\">App\\Http\\Controllers\\MeetingSecretaryController::request_list<\/a>"],[0,1,"<a href=\"Controllers\/MeetingSecretaryController.php.html#61\">App\\Http\\Controllers\\MeetingSecretaryController::request_create<\/a>"],[0,4,"<a href=\"Controllers\/MeetingSecretaryController.php.html#68\">App\\Http\\Controllers\\MeetingSecretaryController::request_new<\/a>"],[0,2,"<a href=\"Controllers\/MeetingSecretaryController.php.html#131\">App\\Http\\Controllers\\MeetingSecretaryController::request_edit<\/a>"],[0,3,"<a href=\"Controllers\/MeetingSecretaryController.php.html#151\">App\\Http\\Controllers\\MeetingSecretaryController::request_save<\/a>"],[0,1,"<a href=\"Controllers\/MeetingSecretaryController.php.html#222\">App\\Http\\Controllers\\MeetingSecretaryController::request_download<\/a>"],[0,2,"<a href=\"Controllers\/MeetingSecretaryController.php.html#234\">App\\Http\\Controllers\\MeetingSecretaryController::request_remove<\/a>"],[0,1,"<a href=\"Controllers\/MeetingSecretaryController.php.html#259\">App\\Http\\Controllers\\MeetingSecretaryController::signaturesheet_list<\/a>"],[0,1,"<a href=\"Controllers\/MeetingSecretaryController.php.html#268\">App\\Http\\Controllers\\MeetingSecretaryController::signaturesheet_create<\/a>"],[0,1,"<a href=\"Controllers\/MeetingSecretaryController.php.html#281\">App\\Http\\Controllers\\MeetingSecretaryController::signaturesheet_new<\/a>"],[0,2,"<a href=\"Controllers\/MeetingSecretaryController.php.html#300\">App\\Http\\Controllers\\MeetingSecretaryController::generate_random_identifier_for_signature<\/a>"],[0,1,"<a href=\"Controllers\/MeetingSecretaryController.php.html#315\">App\\Http\\Controllers\\MeetingSecretaryController::signaturesheet_view<\/a>"],[0,1,"<a href=\"Controllers\/MeetingSecretaryController.php.html#322\">App\\Http\\Controllers\\MeetingSecretaryController::signaturesheet_edit<\/a>"],[0,3,"<a href=\"Controllers\/MeetingSecretaryController.php.html#342\">App\\Http\\Controllers\\MeetingSecretaryController::signaturesheet_save<\/a>"],[0,1,"<a href=\"Controllers\/MeetingSecretaryController.php.html#371\">App\\Http\\Controllers\\MeetingSecretaryController::signaturesheet_remove<\/a>"],[0,1,"<a href=\"Controllers\/MeetingSecretaryController.php.html#386\">App\\Http\\Controllers\\MeetingSecretaryController::minutes_list<\/a>"],[0,1,"<a href=\"Controllers\/MeetingSecretaryController.php.html#395\">App\\Http\\Controllers\\MeetingSecretaryController::minutes_create<\/a>"],[0,1,"<a href=\"Controllers\/MeetingSecretaryController.php.html#402\">App\\Http\\Controllers\\MeetingSecretaryController::minutes_create_step1<\/a>"],[0,1,"<a href=\"Controllers\/MeetingSecretaryController.php.html#414\">App\\Http\\Controllers\\MeetingSecretaryController::minutes_create_step1_p<\/a>"],[0,1,"<a href=\"Controllers\/MeetingSecretaryController.php.html#426\">App\\Http\\Controllers\\MeetingSecretaryController::minutes_create_step2<\/a>"],[0,3,"<a href=\"Controllers\/MeetingSecretaryController.php.html#441\">App\\Http\\Controllers\\MeetingSecretaryController::minutes_create_step2_p<\/a>"],[0,1,"<a href=\"Controllers\/MeetingSecretaryController.php.html#468\">App\\Http\\Controllers\\MeetingSecretaryController::minutes_create_step3<\/a>"],[0,6,"<a href=\"Controllers\/MeetingSecretaryController.php.html#487\">App\\Http\\Controllers\\MeetingSecretaryController::minutes_create_step3_p<\/a>"],[0,3,"<a href=\"Controllers\/MeetingSecretaryController.php.html#588\">App\\Http\\Controllers\\MeetingSecretaryController::minutes_edit<\/a>"],[0,10,"<a href=\"Controllers\/MeetingSecretaryController.php.html#633\">App\\Http\\Controllers\\MeetingSecretaryController::minutes_save<\/a>"],[0,1,"<a href=\"Controllers\/MeetingSecretaryController.php.html#751\">App\\Http\\Controllers\\MeetingSecretaryController::minutes_remove<\/a>"],[0,1,"<a href=\"Controllers\/MeetingSecretaryController.php.html#767\">App\\Http\\Controllers\\MeetingSecretaryController::minutes_download<\/a>"],[0,3,"<a href=\"Controllers\/MeetingSecretaryController.php.html#779\">App\\Http\\Controllers\\MeetingSecretaryController::meeting_requests_export<\/a>"],[0,3,"<a href=\"Controllers\/MeetingSecretaryController.php.html#792\">App\\Http\\Controllers\\MeetingSecretaryController::signaturesheet_export<\/a>"],[0,3,"<a href=\"Controllers\/MeetingSecretaryController.php.html#805\">App\\Http\\Controllers\\MeetingSecretaryController::meeting_minutes_export<\/a>"],[0,1,"<a href=\"Controllers\/MeetingSecretaryController.php.html#901\">App\\Http\\Controllers\\MeetingSecretaryController::defaultlist<\/a>"],[0,1,"<a href=\"Controllers\/MessageController.php.html#10\">App\\Http\\Controllers\\MessageController::mailbox<\/a>"],[66.66666666666666,3,"<a href=\"Controllers\/MetaHomeController.php.html#13\">App\\Http\\Controllers\\MetaHomeController::home<\/a>"],[0,1,"<a href=\"Controllers\/PasswordResetController.php.html#17\">App\\Http\\Controllers\\PasswordResetController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/PasswordResetController.php.html#22\">App\\Http\\Controllers\\PasswordResetController::reset<\/a>"],[0,4,"<a href=\"Controllers\/PasswordResetController.php.html#30\">App\\Http\\Controllers\\PasswordResetController::reset_p<\/a>"],[0,3,"<a href=\"Controllers\/PasswordResetController.php.html#69\">App\\Http\\Controllers\\PasswordResetController::update<\/a>"],[0,2,"<a href=\"Controllers\/PasswordResetController.php.html#89\">App\\Http\\Controllers\\PasswordResetController::update_p<\/a>"],[0,1,"<a href=\"Controllers\/ProfileController.php.html#19\">App\\Http\\Controllers\\ProfileController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/ProfileController.php.html#24\">App\\Http\\Controllers\\ProfileController::view<\/a>"],[0,5,"<a href=\"Controllers\/ProfileController.php.html#38\">App\\Http\\Controllers\\ProfileController::upload_info<\/a>"],[0,2,"<a href=\"Controllers\/ProfileController.php.html#111\">App\\Http\\Controllers\\ProfileController::file_name_parser<\/a>"],[0,1,"<a href=\"Controllers\/ProfileController.php.html#123\">App\\Http\\Controllers\\ProfileController::upload_biography<\/a>"],[0,1,"<a href=\"Controllers\/ProfileController.php.html#143\">App\\Http\\Controllers\\ProfileController::upload_pass<\/a>"],[0,1,"<a href=\"Controllers\/ProfileController.php.html#162\">App\\Http\\Controllers\\ProfileController::profiles_view<\/a>"],[0,3,"<a href=\"Controllers\/ProfileController.php.html#171\">App\\Http\\Controllers\\ProfileController::evidences_view<\/a>"],[0,1,"<a href=\"Controllers\/ProofController.php.html#13\">App\\Http\\Controllers\\ProofController::download<\/a>"],[0,1,"<a href=\"Controllers\/QuickInstances.php.html#15\">App\\Http\\Controllers\\QuickInstances::__construct<\/a>"],[0,1,"<a href=\"Controllers\/QuickInstances.php.html#21\">App\\Http\\Controllers\\QuickInstances::list<\/a>"],[0,3,"<a href=\"Controllers\/QuickInstances.php.html#31\">App\\Http\\Controllers\\QuickInstances::save<\/a>"],[0,1,"<a href=\"Controllers\/RandomizeController.php.html#12\">App\\Http\\Controllers\\RandomizeController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/RandomizeController.php.html#17\">App\\Http\\Controllers\\RandomizeController::randomize<\/a>"],[0,3,"<a href=\"Controllers\/RandomizeController.php.html#25\">App\\Http\\Controllers\\RandomizeController::randomize_save<\/a>"],[0,2,"<a href=\"Controllers\/SignController.php.html#12\">App\\Http\\Controllers\\SignController::sign<\/a>"],[0,5,"<a href=\"Controllers\/SignController.php.html#27\">App\\Http\\Controllers\\SignController::sign_p<\/a>"],[0,2,"<a href=\"Controllers\/SignController.php.html#68\">App\\Http\\Controllers\\SignController::finish<\/a>"],[0,1,"<a href=\"Controllers\/SuggestionsMailboxController.php.html#13\">App\\Http\\Controllers\\SuggestionsMailboxController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/SuggestionsMailboxController.php.html#18\">App\\Http\\Controllers\\SuggestionsMailboxController::suggestionsmailbox<\/a>"],[0,1,"<a href=\"Controllers\/SuggestionsMailboxController.php.html#27\">App\\Http\\Controllers\\SuggestionsMailboxController::suggestionsmailbox_p<\/a>"],[0,1,"<a href=\"Controllers\/UploadController.php.html#16\">App\\Http\\Controllers\\UploadController::__construct<\/a>"],[0,1,"<a href=\"Controllers\/UploadController.php.html#21\">App\\Http\\Controllers\\UploadController::process<\/a>"],[0,1,"<a href=\"Controllers\/UploadController.php.html#39\">App\\Http\\Controllers\\UploadController::delete<\/a>"],[0,1,"<a href=\"Controllers\/UploadController.php.html#52\">App\\Http\\Controllers\\UploadController::load<\/a>"],[0,1,"<a href=\"Controllers\/UploadController.php.html#69\">App\\Http\\Controllers\\UploadController::remove<\/a>"],[80,3,"<a href=\"Middleware\/Authenticate.php.html#15\">App\\Http\\Middleware\\Authenticate::redirectTo<\/a>"],[0,3,"<a href=\"Middleware\/CheckBlock.php.html#17\">App\\Http\\Middleware\\CheckBlock::handle<\/a>"],[0,3,"<a href=\"Middleware\/CheckIsAdministrator.php.html#17\">App\\Http\\Middleware\\CheckIsAdministrator::handle<\/a>"],[0,3,"<a href=\"Middleware\/CheckNotNull.php.html#16\">App\\Http\\Middleware\\CheckNotNull::handle<\/a>"],[0,6,"<a href=\"Middleware\/CheckProofDownload.php.html#18\">App\\Http\\Middleware\\CheckProofDownload::handle<\/a>"],[0,2,"<a href=\"Middleware\/CheckRegisterBonus.php.html#17\">App\\Http\\Middleware\\CheckRegisterBonus::handle<\/a>"],[0,2,"<a href=\"Middleware\/CheckRegisterEventsAndAttendings.php.html#17\">App\\Http\\Middleware\\CheckRegisterEventsAndAttendings::handle<\/a>"],[0,2,"<a href=\"Middleware\/CheckRegisterMeeting.php.html#17\">App\\Http\\Middleware\\CheckRegisterMeeting::handle<\/a>"],[0,3,"<a href=\"Middleware\/CheckRoles.php.html#17\">App\\Http\\Middleware\\CheckRoles::handle<\/a>"],[0,2,"<a href=\"Middleware\/CheckUploadEvidences.php.html#17\">App\\Http\\Middleware\\CheckUploadEvidences::handle<\/a>"],[0,2,"<a href=\"Middleware\/CheckValidateEvidences.php.html#17\">App\\Http\\Middleware\\CheckValidateEvidences::handle<\/a>"],[0,3,"<a href=\"Middleware\/EvidenceCanBeEdited.php.html#17\">App\\Http\\Middleware\\EvidenceCanBeEdited::handle<\/a>"],[0,3,"<a href=\"Middleware\/EvidenceFromMyComittee.php.html#18\">App\\Http\\Middleware\\EvidenceFromMyComittee::handle<\/a>"],[0,3,"<a href=\"Middleware\/EvidenceMine.php.html#18\">App\\Http\\Middleware\\EvidenceMine::handle<\/a>"],[75,4,"<a href=\"Middleware\/JwtMiddleware.php.html#18\">App\\Http\\Middleware\\JwtMiddleware::handle<\/a>"],[0,4,"<a href=\"Middleware\/MeetingMinutesMine.php.html#19\">App\\Http\\Middleware\\MeetingMinutesMine::handle<\/a>"],[0,4,"<a href=\"Middleware\/MeetingRequestMine.php.html#19\">App\\Http\\Middleware\\MeetingRequestMine::handle<\/a>"],[0,2,"<a href=\"Middleware\/RedirectIfAuthenticated.php.html#19\">App\\Http\\Middleware\\RedirectIfAuthenticated::handle<\/a>"],[77.77777777777779,3,"<a href=\"Middleware\/SelectDatabase.php.html#19\">App\\Http\\Middleware\\SelectDatabase::handle<\/a>"],[85.71428571428571,2,"<a href=\"Middleware\/SelectDatabaseApi.php.html#19\">App\\Http\\Middleware\\SelectDatabaseApi::handle<\/a>"],[0,4,"<a href=\"Middleware\/SignatureSheetMine.php.html#20\">App\\Http\\Middleware\\SignatureSheetMine::handle<\/a>"],[0,1,"<a href=\"Services\/Service.php.html#17\">App\\Http\\Services\\Service::__construct<\/a>"],[0,1,"<a href=\"Services\/Service.php.html#23\">App\\Http\\Services\\Service::validate<\/a>"],[0,1,"<a href=\"Services\/Service.php.html#28\">App\\Http\\Services\\Service::set_validation_rules<\/a>"],[0,1,"<a href=\"Services\/Service.php.html#33\">App\\Http\\Services\\Service::validation_rules<\/a>"],[0,1,"<a href=\"Services\/Service.php.html#38\">App\\Http\\Services\\Service::create<\/a>"],[0,1,"<a href=\"Services\/Service.php.html#44\">App\\Http\\Services\\Service::update<\/a>"],[0,1,"<a href=\"Services\/Service.php.html#50\">App\\Http\\Services\\Service::delete<\/a>"],[0,1,"<a href=\"Services\/Service.php.html#56\">App\\Http\\Services\\Service::find<\/a>"],[0,1,"<a href=\"Services\/Service.php.html#61\">App\\Http\\Services\\Service::find_or_fail<\/a>"],[0,1,"<a href=\"Services\/Service.php.html#66\">App\\Http\\Services\\Service::find_by<\/a>"],[0,1,"<a href=\"Services\/Service.php.html#71\">App\\Http\\Services\\Service::find_all_by<\/a>"],[0,1,"<a href=\"Services\/Service.php.html#76\">App\\Http\\Services\\Service::all<\/a>"],[0,1,"<a href=\"Services\/Service.php.html#81\">App\\Http\\Services\\Service::all_sorted_by<\/a>"],[0,1,"<a href=\"Services\/Service.php.html#86\">App\\Http\\Services\\Service::all_sorted_by_desc<\/a>"],[0,1,"<a href=\"Services\/UserService.php.html#10\">App\\Http\\Services\\UserService::__construct<\/a>"],[0,1,"<a href=\"Services\/UserService.php.html#19\">App\\Http\\Services\\UserService::all_except_logged<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

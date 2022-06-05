@@ -1,6 +1,1227 @@
 Escaped mutants:
 ================
 
+1) /var/www/app/Http/Controllers/Api/v1/AuthController.php:48    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+         }
+         return response()->json(['token' => $token]);
+     }
+-    public function logout(Request $request)
++    protected function logout(Request $request)
+     {
+         auth('api')->logout();
+         return response()->json(['success' => true]);
+
+
+2) /var/www/app/Http/Controllers/Api/v1/AuthController.php:50    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function logout(Request $request)
+     {
+-        auth('api')->logout();
++        
+         return response()->json(['success' => true]);
+     }
+     public function me(Request $request)
+
+
+3) /var/www/app/Http/Controllers/Api/v1/AuthController.php:56    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+         auth('api')->logout();
+         return response()->json(['success' => true]);
+     }
+-    public function me(Request $request)
++    protected function me(Request $request)
+     {
+         return response()->json(['user' => auth("api")->user()]);
+     }
+
+
+4) /var/www/app/Http/Controllers/Api/v1/AuthController.php:58    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function me(Request $request)
+     {
+-        return response()->json(['user' => auth("api")->user()]);
++        return response()->json([]);
+     }
+     public function refresh(Request $request)
+     {
+
+
+5) /var/www/app/Http/Controllers/Api/v1/AuthController.php:59    [M] ArrayItem
+
+--- Original
++++ New
+@@ @@
+     }
+     public function me(Request $request)
+     {
+-        return response()->json(['user' => auth("api")->user()]);
++        return response()->json(['user' > auth("api")->user()]);
+     }
+     public function refresh(Request $request)
+     {
+
+
+6) /var/www/app/Http/Controllers/Api/v1/AuthController.php:63    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return response()->json(['user' => auth("api")->user()]);
+     }
+-    public function refresh(Request $request)
++    protected function refresh(Request $request)
+     {
+         return response()->json(['token' => auth('api')->refresh()]);
+     }
+ }
+
+
+7) /var/www/app/Http/Controllers/Api/v1/CommiteeController.php:12    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+ use Illuminate\Support\Facades\Validator;
+ class CommiteeController extends Controller
+ {
+-    public function getAll()
++    protected function getAll()
+     {
+         return response()->json(Comittee::paginate());
+     }
+
+
+8) /var/www/app/Http/Controllers/Api/v1/CommiteeController.php:16    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return response()->json(Comittee::paginate());
+     }
+-    public function create(Request $request)
++    protected function create(Request $request)
+     {
+         $validator = Validator::make($request->all(), ['name' => ['required', 'string'], 'icon' => ['required', 'string']]);
+         if ($validator->fails()) {
+
+
+9) /var/www/app/Http/Controllers/Api/v1/CommiteeController.php:19    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['name' => ['required', 'string'], 'icon' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['name' => ['required', 'string'], 'icon' => ['string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+10) /var/www/app/Http/Controllers/Api/v1/CommiteeController.php:36    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+         $committee = Comittee::create(['name' => $request['name'], 'icon' => $request['icon']]);
+         return response()->json($committee);
+     }
+-    public function getById(Request $request)
++    protected function getById(Request $request)
+     {
+         return response()->json(Comittee::find($request['id']));
+     }
+
+
+11) /var/www/app/Http/Controllers/Api/v1/CommiteeController.php:40    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return response()->json(Comittee::find($request['id']));
+     }
+-    public function updateById(Request $request)
++    protected function updateById(Request $request)
+     {
+         $validator = Validator::make($request->all(), ['name' => ['required', 'string'], 'icon' => ['required', 'string']]);
+         if ($validator->fails()) {
+
+
+12) /var/www/app/Http/Controllers/Api/v1/CommiteeController.php:43    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['name' => ['required', 'string'], 'icon' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['name' => ['required', 'string'], 'icon' => ['string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+13) /var/www/app/Http/Controllers/Api/v1/CommiteeController.php:67    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+         $committee->update(['name' => $request['name'], 'icon' => $request['icon']]);
+         return response()->json($committee);
+     }
+-    public function deleteById(Request $request)
++    protected function deleteById(Request $request)
+     {
+         $committee = Comittee::find($request['id']);
+         if (!$committee) {
+
+
+14) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:12    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+ use Illuminate\Support\Facades\Validator;
+ class EvidenceController extends Controller
+ {
+-    public function getAll()
++    protected function getAll()
+     {
+         return response()->json(Evidence::paginate());
+     }
+
+
+15) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:16    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return response()->json(Evidence::paginate());
+     }
+-    public function create(Request $request)
++    protected function create(Request $request)
+     {
+         $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
+         if ($validator->fails()) {
+
+
+16) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:19    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+17) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:20    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+18) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:21    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+19) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:22    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+20) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:23    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+21) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:24    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+22) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:25    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['string'], 'rand' => ['required', 'boolean']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+23) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:26    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['boolean']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+24) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:35    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+-        $evidence = Evidence::create(['id' => $request['id'], 'title' => $request['title'], 'description' => $request['description'], 'hours' => $request['hours'], 'user_id' => $request['user_id'], 'comittee_id' => $request['comittee_id'], 'points_to' => $request['points_to'], 'status' => $request['status'], 'stamp' => $request['stamp'], 'rand' => $request['rand']]);
++        $evidence = Evidence::create(['title' => $request['title'], 'description' => $request['description'], 'hours' => $request['hours'], 'user_id' => $request['user_id'], 'comittee_id' => $request['comittee_id'], 'points_to' => $request['points_to'], 'status' => $request['status'], 'stamp' => $request['stamp'], 'rand' => $request['rand']]);
+         return response()->json($evidence);
+     }
+     public function getById(Request $request)
+
+
+25) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:51    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+         $evidence = Evidence::create(['id' => $request['id'], 'title' => $request['title'], 'description' => $request['description'], 'hours' => $request['hours'], 'user_id' => $request['user_id'], 'comittee_id' => $request['comittee_id'], 'points_to' => $request['points_to'], 'status' => $request['status'], 'stamp' => $request['stamp'], 'rand' => $request['rand']]);
+         return response()->json($evidence);
+     }
+-    public function getById(Request $request)
++    protected function getById(Request $request)
+     {
+         return response()->json(Evidence::find($request['id']));
+     }
+
+
+26) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:55    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return response()->json(Evidence::find($request['id']));
+     }
+-    public function updateById(Request $request)
++    protected function updateById(Request $request)
+     {
+         $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
+         if ($validator->fails()) {
+
+
+27) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:56    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
++        $validator = Validator::make($request->all(), ['description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+28) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:57    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
++        $validator = Validator::make($request->all(), ['title' => ['string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+29) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:59    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+30) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:60    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+31) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:61    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+32) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:62    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+33) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:63    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+34) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:64    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['string'], 'rand' => ['required', 'boolean']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+35) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:65    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['boolean']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+36) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:96    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+         $evidence->update(['title' => $request['title'], 'description' => $request['description'], 'hours' => $request['hours'], 'user_id' => $request['user_id'], 'comittee_id' => $request['comittee_id'], 'points_to' => $request['points_to'], 'status' => $request['status'], 'stamp' => $request['stamp'], 'rand' => $request['rand']]);
+         return response()->json($evidence);
+     }
+-    public function deleteById(Request $request)
++    protected function deleteById(Request $request)
+     {
+         $evidence = Evidence::find($request['id']);
+         if (!$evidence) {
+
+
+37) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:104    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         if (!$evidence) {
+             return response()->json(['error' => ['id' => 'Invalid id']]);
+         }
+-        $evidence->delete();
++        
+         return response()->json($evidence);
+     }
+ }
+
+
+38) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:12    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+ use Illuminate\Support\Facades\Validator;
+ class MeetingController extends Controller
+ {
+-    public function getAll()
++    protected function getAll()
+     {
+         return response()->json(Meeting::paginate());
+     }
+
+
+39) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:16    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return response()->json(Meeting::paginate());
+     }
+-    public function create(Request $request)
++    protected function create(Request $request)
+     {
+         $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
+         if ($validator->fails()) {
+
+
+40) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:19    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+41) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:20    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+42) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:21    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+43) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:22    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['numeric'], 'hours' => ['required', 'numeric']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+44) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:23    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['numeric']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+45) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:44    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+         $meeting = Meeting::create(['title' => $request['title'], 'datetime' => $request['datetime'], 'place' => $request['place'], 'type' => $request['type'], 'modality' => $request['modality'], 'hours' => $request['hours']]);
+         return response()->json($meeting);
+     }
+-    public function getById(Request $request)
++    protected function getById(Request $request)
+     {
+         return response()->json(Meeting::find($request['id']));
+     }
+
+
+46) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:48    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return response()->json(Meeting::find($request['id']));
+     }
+-    public function updateById(Request $request)
++    protected function updateById(Request $request)
+     {
+         $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
+         if ($validator->fails()) {
+
+
+47) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:49    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
++        $validator = Validator::make($request->all(), ['datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+48) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:50    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
++        $validator = Validator::make($request->all(), ['title' => ['string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+49) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:51    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+50) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:52    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+51) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:53    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+52) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:54    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
++        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['numeric'], 'hours' => ['required', 'numeric']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+53) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:83    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+         $meeting->update(['title' => $request['title'], 'datetime' => $request['datetime'], 'place' => $request['place'], 'type' => $request['type'], 'modality' => $request['modality'], 'hours' => $request['hours']]);
+         return response()->json($meeting);
+     }
+-    public function deleteById(Request $request)
++    protected function deleteById(Request $request)
+     {
+         $meeting = Meeting::find($request['id']);
+         if (!$meeting) {
+
+
+54) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:91    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         if (!$meeting) {
+             return response()->json(['error' => ['id' => 'Invalid id']]);
+         }
+-        $meeting->delete();
++        
+         return response()->json($meeting);
+     }
+ }
+
+
+55) /var/www/app/Http/Controllers/Api/v1/UserController.php:12    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+ use Illuminate\Support\Facades\Validator;
+ class UserController extends Controller
+ {
+-    public function getAll()
++    protected function getAll()
+     {
+         return response()->json(User::paginate());
+     }
+
+
+56) /var/www/app/Http/Controllers/Api/v1/UserController.php:16    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return response()->json(User::paginate());
+     }
+-    public function create(Request $request)
++    protected function create(Request $request)
+     {
+         $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
+         if ($validator->fails()) {
+
+
+57) /var/www/app/Http/Controllers/Api/v1/UserController.php:17    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+58) /var/www/app/Http/Controllers/Api/v1/UserController.php:18    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['surname' => ['string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+59) /var/www/app/Http/Controllers/Api/v1/UserController.php:20    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+60) /var/www/app/Http/Controllers/Api/v1/UserController.php:21    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+61) /var/www/app/Http/Controllers/Api/v1/UserController.php:22    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+62) /var/www/app/Http/Controllers/Api/v1/UserController.php:23    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+63) /var/www/app/Http/Controllers/Api/v1/UserController.php:24    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+64) /var/www/app/Http/Controllers/Api/v1/UserController.php:25    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['string'], 'clean_surname' => ['required', 'string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+65) /var/www/app/Http/Controllers/Api/v1/UserController.php:26    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function create(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+66) /var/www/app/Http/Controllers/Api/v1/UserController.php:50    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+         $user = User::create(['surname' => $request['surname'], 'name' => $request['name'], 'username' => $request['username'], 'password' => $request['password'], 'email' => $request['email'], 'block' => $request['block'], 'biography' => $request['biography'], 'clean_name' => $request['clean_name'], 'clean_surname' => $request['clean_surname']]);
+         return response()->json($user);
+     }
+-    public function getById(Request $request)
++    protected function getById(Request $request)
+     {
+         return response()->json(User::find($request['id']));
+     }
+
+
+67) /var/www/app/Http/Controllers/Api/v1/UserController.php:54    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return response()->json(User::find($request['id']));
+     }
+-    public function updateById(Request $request)
++    protected function updateById(Request $request)
+     {
+         $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
+         if ($validator->fails()) {
+
+
+68) /var/www/app/Http/Controllers/Api/v1/UserController.php:55    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+69) /var/www/app/Http/Controllers/Api/v1/UserController.php:56    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['surname' => ['string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+70) /var/www/app/Http/Controllers/Api/v1/UserController.php:57    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+71) /var/www/app/Http/Controllers/Api/v1/UserController.php:58    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+72) /var/www/app/Http/Controllers/Api/v1/UserController.php:59    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+73) /var/www/app/Http/Controllers/Api/v1/UserController.php:60    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+74) /var/www/app/Http/Controllers/Api/v1/UserController.php:61    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+75) /var/www/app/Http/Controllers/Api/v1/UserController.php:62    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+76) /var/www/app/Http/Controllers/Api/v1/UserController.php:63    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['string'], 'clean_surname' => ['required', 'string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+77) /var/www/app/Http/Controllers/Api/v1/UserController.php:64    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+     }
+     public function updateById(Request $request)
+     {
+-        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
++        $validator = Validator::make($request->all(), ['surname' => ['required', 'string'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'string'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['string']]);
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->messages()]);
+         }
+
+
+78) /var/www/app/Http/Controllers/InstanceController.php:16    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+ {
+     public function __construct()
+     {
+-        $this->middleware('auth');
++        
+     }
+     public function create()
+     {
+
+
+79) /var/www/app/Http/Controllers/MetaHomeController.php:13    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+ use Illuminate\Support\Facades\Auth;
+ class MetaHomeController extends Controller
+ {
+-    public function home()
++    protected function home()
+     {
+         // obtenemos la última instancia creada
+         $instance = Instance::orderBy('created_at', 'desc')->first();
+
+
+80) /var/www/app/Http/Controllers/MetaHomeController.php:21    [M] Equal
+
+--- Original
++++ New
+@@ @@
+         $instance = Instance::orderBy('created_at', 'desc')->first();
+         // si la instancia es null, es que no hay ninguna creada, así que redirigimos al panel
+         // del admin
+-        if ($instance == null) {
++        if ($instance != null) {
+             return redirect()->route('admin.login');
+         }
+         // si estoy logueado
+
+
+81) /var/www/app/Http/Controllers/MetaHomeController.php:31    [M] ArrayItem
+
+--- Original
++++ New
+@@ @@
+         if (Auth::check()) {
+             return redirect()->route('instance.login', ['instance' => $instance->route]);
+         }
+-        return redirect()->route('instance.login', ['instance' => $instance->route]);
++        return redirect()->route('instance.login', ['instance' > $instance->route]);
+     }
+ }
+
+
+Timed Out mutants:
+==================
+
+Skipped mutants:
+================
+
 1) /var/www/app/Http/Controllers/Api/v1/AuthController.php:13    [M] PublicVisibility
 
 --- Original
@@ -61,1121 +1282,80 @@ Escaped mutants:
          }
 
 
-5) /var/www/app/Http/Controllers/Api/v1/AuthController.php:48    [M] PublicVisibility
+5) /var/www/app/Http/Controllers/Api/v1/AuthController.php:29    [M] LogicalNot
 
 --- Original
 +++ New
 @@ @@
+             return response()->json(['status' => false, 'error' => $validator->messages()], 200);
+         }
+         $attemptedUser = User::where('email', '=', $request['email'])->first();
+-        if (!$attemptedUser || !Hash::check($request['password'], $attemptedUser->password)) {
++        if ($attemptedUser || !Hash::check($request['password'], $attemptedUser->password)) {
+             return response()->json(['status' => false, 'error' => 'Invalid credentials']);
+         }
+         if (!($token = auth('api')->login($attemptedUser))) {
+
+
+6) /var/www/app/Http/Controllers/Api/v1/AuthController.php:29    [M] LogicalNot
+
+--- Original
++++ New
+@@ @@
+             return response()->json(['status' => false, 'error' => $validator->messages()], 200);
+         }
+         $attemptedUser = User::where('email', '=', $request['email'])->first();
+-        if (!$attemptedUser || !Hash::check($request['password'], $attemptedUser->password)) {
++        if (!$attemptedUser || Hash::check($request['password'], $attemptedUser->password)) {
+             return response()->json(['status' => false, 'error' => 'Invalid credentials']);
+         }
+         if (!($token = auth('api')->login($attemptedUser))) {
+
+
+7) /var/www/app/Http/Controllers/Api/v1/AuthController.php:29    [M] LogicalOr
+
+--- Original
++++ New
+@@ @@
+             return response()->json(['status' => false, 'error' => $validator->messages()], 200);
+         }
+         $attemptedUser = User::where('email', '=', $request['email'])->first();
+-        if (!$attemptedUser || !Hash::check($request['password'], $attemptedUser->password)) {
++        if (!$attemptedUser && !Hash::check($request['password'], $attemptedUser->password)) {
+             return response()->json(['status' => false, 'error' => 'Invalid credentials']);
+         }
+         if (!($token = auth('api')->login($attemptedUser))) {
+
+
+8) /var/www/app/Http/Controllers/Api/v1/AuthController.php:36    [M] LogicalNot
+
+--- Original
++++ New
+@@ @@
+         if (!$attemptedUser || !Hash::check($request['password'], $attemptedUser->password)) {
+             return response()->json(['status' => false, 'error' => 'Invalid credentials']);
+         }
+-        if (!($token = auth('api')->login($attemptedUser))) {
++        if ($token = auth('api')->login($attemptedUser)) {
+             return response()->json(['status' => false, 'error' => 'Could not login. Please try later'], 401);
          }
          return response()->json(['token' => $token]);
-     }
--    public function logout(Request $request)
-+    protected function logout(Request $request)
-     {
-         auth('api')->logout();
-         return response()->json(['success' => true]);
 
 
-6) /var/www/app/Http/Controllers/Api/v1/AuthController.php:50    [M] MethodCallRemoval
+9) /var/www/app/Http/Controllers/Api/v1/AuthController.php:43    [M] ArrayItemRemoval
 
 --- Original
 +++ New
 @@ @@
+         if (!($token = auth('api')->login($attemptedUser))) {
+             return response()->json(['status' => false, 'error' => 'Could not login. Please try later'], 401);
+         }
+-        return response()->json(['token' => $token]);
++        return response()->json([]);
      }
      public function logout(Request $request)
      {
--        auth('api')->logout();
-+        
-         return response()->json(['success' => true]);
-     }
-     public function me(Request $request)
 
-
-7) /var/www/app/Http/Controllers/Api/v1/AuthController.php:56    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
-         auth('api')->logout();
-         return response()->json(['success' => true]);
-     }
--    public function me(Request $request)
-+    protected function me(Request $request)
-     {
-         return response()->json(['user' => auth("api")->user()]);
-     }
-
-
-8) /var/www/app/Http/Controllers/Api/v1/AuthController.php:58    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function me(Request $request)
-     {
--        return response()->json(['user' => auth("api")->user()]);
-+        return response()->json([]);
-     }
-     public function refresh(Request $request)
-     {
-
-
-9) /var/www/app/Http/Controllers/Api/v1/AuthController.php:59    [M] ArrayItem
-
---- Original
-+++ New
-@@ @@
-     }
-     public function me(Request $request)
-     {
--        return response()->json(['user' => auth("api")->user()]);
-+        return response()->json(['user' > auth("api")->user()]);
-     }
-     public function refresh(Request $request)
-     {
-
-
-10) /var/www/app/Http/Controllers/Api/v1/AuthController.php:63    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
-     {
-         return response()->json(['user' => auth("api")->user()]);
-     }
--    public function refresh(Request $request)
-+    protected function refresh(Request $request)
-     {
-         return response()->json(['token' => auth('api')->refresh()]);
-     }
- }
-
-
-11) /var/www/app/Http/Controllers/Api/v1/CommiteeController.php:12    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
- use Illuminate\Support\Facades\Validator;
- class CommiteeController extends Controller
- {
--    public function getAll()
-+    protected function getAll()
-     {
-         return response()->json(Comittee::paginate());
-     }
-
-
-12) /var/www/app/Http/Controllers/Api/v1/CommiteeController.php:16    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
-     {
-         return response()->json(Comittee::paginate());
-     }
--    public function create(Request $request)
-+    protected function create(Request $request)
-     {
-         $validator = Validator::make($request->all(), ['name' => ['required', 'string'], 'icon' => ['required', 'string']]);
-         if ($validator->fails()) {
-
-
-13) /var/www/app/Http/Controllers/Api/v1/CommiteeController.php:19    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['name' => ['required', 'string'], 'icon' => ['required', 'string']]);
-+        $validator = Validator::make($request->all(), ['name' => ['required', 'string'], 'icon' => ['string']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-14) /var/www/app/Http/Controllers/Api/v1/CommiteeController.php:36    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
-         $committee = Comittee::create(['name' => $request['name'], 'icon' => $request['icon']]);
-         return response()->json($committee);
-     }
--    public function getById(Request $request)
-+    protected function getById(Request $request)
-     {
-         return response()->json(Comittee::find($request['id']));
-     }
-
-
-15) /var/www/app/Http/Controllers/Api/v1/CommiteeController.php:40    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
-     {
-         return response()->json(Comittee::find($request['id']));
-     }
--    public function updateById(Request $request)
-+    protected function updateById(Request $request)
-     {
-         $validator = Validator::make($request->all(), ['name' => ['required', 'string'], 'icon' => ['required', 'string']]);
-         if ($validator->fails()) {
-
-
-16) /var/www/app/Http/Controllers/Api/v1/CommiteeController.php:43    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function updateById(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['name' => ['required', 'string'], 'icon' => ['required', 'string']]);
-+        $validator = Validator::make($request->all(), ['name' => ['required', 'string'], 'icon' => ['string']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-17) /var/www/app/Http/Controllers/Api/v1/CommiteeController.php:67    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
-         $committee->update(['name' => $request['name'], 'icon' => $request['icon']]);
-         return response()->json($committee);
-     }
--    public function deleteById(Request $request)
-+    protected function deleteById(Request $request)
-     {
-         $committee = Comittee::find($request['id']);
-         if (!$committee) {
-
-
-18) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:12    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
- use Illuminate\Support\Facades\Validator;
- class EvidenceController extends Controller
- {
--    public function getAll()
-+    protected function getAll()
-     {
-         return response()->json(Evidence::paginate());
-     }
-
-
-19) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:16    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
-     {
-         return response()->json(Evidence::paginate());
-     }
--    public function create(Request $request)
-+    protected function create(Request $request)
-     {
-         $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-         if ($validator->fails()) {
-
-
-20) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:19    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-21) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:20    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-22) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:21    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-23) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:22    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-24) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:23    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-25) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:24    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-26) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:25    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['string'], 'rand' => ['required', 'boolean']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-27) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:26    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['boolean']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-28) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:35    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
--        $evidence = Evidence::create(['id' => $request['id'], 'title' => $request['title'], 'description' => $request['description'], 'hours' => $request['hours'], 'user_id' => $request['user_id'], 'comittee_id' => $request['comittee_id'], 'points_to' => $request['points_to'], 'status' => $request['status'], 'stamp' => $request['stamp'], 'rand' => $request['rand']]);
-+        $evidence = Evidence::create(['title' => $request['title'], 'description' => $request['description'], 'hours' => $request['hours'], 'user_id' => $request['user_id'], 'comittee_id' => $request['comittee_id'], 'points_to' => $request['points_to'], 'status' => $request['status'], 'stamp' => $request['stamp'], 'rand' => $request['rand']]);
-         return response()->json($evidence);
-     }
-     public function getById(Request $request)
-
-
-29) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:51    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
-         $evidence = Evidence::create(['id' => $request['id'], 'title' => $request['title'], 'description' => $request['description'], 'hours' => $request['hours'], 'user_id' => $request['user_id'], 'comittee_id' => $request['comittee_id'], 'points_to' => $request['points_to'], 'status' => $request['status'], 'stamp' => $request['stamp'], 'rand' => $request['rand']]);
-         return response()->json($evidence);
-     }
--    public function getById(Request $request)
-+    protected function getById(Request $request)
-     {
-         return response()->json(Evidence::find($request['id']));
-     }
-
-
-30) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:55    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
-     {
-         return response()->json(Evidence::find($request['id']));
-     }
--    public function updateById(Request $request)
-+    protected function updateById(Request $request)
-     {
-         $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-         if ($validator->fails()) {
-
-
-31) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:56    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function updateById(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-+        $validator = Validator::make($request->all(), ['description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-32) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:57    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function updateById(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-+        $validator = Validator::make($request->all(), ['title' => ['string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-33) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:59    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function updateById(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-34) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:60    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function updateById(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-35) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:61    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function updateById(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-36) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:62    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function updateById(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-37) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:63    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function updateById(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-38) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:64    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function updateById(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['string'], 'rand' => ['required', 'boolean']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-39) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:65    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function updateById(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['required', 'boolean']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'description' => ['required', 'string'], 'hours' => ['required', 'numeric'], 'user_id' => ['required', 'numeric'], 'comittee_id' => ['required', 'numeric'], 'points_to' => ['required', 'numeric'], 'status' => ['required', 'numeric'], 'stamp' => ['required', 'string'], 'rand' => ['boolean']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-40) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:96    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
-         $evidence->update(['title' => $request['title'], 'description' => $request['description'], 'hours' => $request['hours'], 'user_id' => $request['user_id'], 'comittee_id' => $request['comittee_id'], 'points_to' => $request['points_to'], 'status' => $request['status'], 'stamp' => $request['stamp'], 'rand' => $request['rand']]);
-         return response()->json($evidence);
-     }
--    public function deleteById(Request $request)
-+    protected function deleteById(Request $request)
-     {
-         $evidence = Evidence::find($request['id']);
-         if (!$evidence) {
-
-
-41) /var/www/app/Http/Controllers/Api/v1/EvidenceController.php:104    [M] MethodCallRemoval
-
---- Original
-+++ New
-@@ @@
-         if (!$evidence) {
-             return response()->json(['error' => ['id' => 'Invalid id']]);
-         }
--        $evidence->delete();
-+        
-         return response()->json($evidence);
-     }
- }
-
-
-42) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:12    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
- use Illuminate\Support\Facades\Validator;
- class MeetingController extends Controller
- {
--    public function getAll()
-+    protected function getAll()
-     {
-         return response()->json(Meeting::paginate());
-     }
-
-
-43) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:16    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
-     {
-         return response()->json(Meeting::paginate());
-     }
--    public function create(Request $request)
-+    protected function create(Request $request)
-     {
-         $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-         if ($validator->fails()) {
-
-
-44) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:19    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-45) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:20    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-46) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:21    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-47) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:22    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['numeric'], 'hours' => ['required', 'numeric']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-48) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:23    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['numeric']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-49) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:44    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
-         $meeting = Meeting::create(['title' => $request['title'], 'datetime' => $request['datetime'], 'place' => $request['place'], 'type' => $request['type'], 'modality' => $request['modality'], 'hours' => $request['hours']]);
-         return response()->json($meeting);
-     }
--    public function getById(Request $request)
-+    protected function getById(Request $request)
-     {
-         return response()->json(Meeting::find($request['id']));
-     }
-
-
-50) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:48    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
-     {
-         return response()->json(Meeting::find($request['id']));
-     }
--    public function updateById(Request $request)
-+    protected function updateById(Request $request)
-     {
-         $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-         if ($validator->fails()) {
-
-
-51) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:49    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function updateById(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-+        $validator = Validator::make($request->all(), ['datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-52) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:50    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function updateById(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-+        $validator = Validator::make($request->all(), ['title' => ['string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-53) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:51    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function updateById(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-54) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:52    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function updateById(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-55) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:53    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function updateById(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-56) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:54    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function updateById(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['required', 'numeric'], 'hours' => ['required', 'numeric']]);
-+        $validator = Validator::make($request->all(), ['title' => ['required', 'string'], 'datetime' => ['required', 'string'], 'place' => ['required', 'string'], 'type' => ['required', 'numeric'], 'modality' => ['numeric'], 'hours' => ['required', 'numeric']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-57) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:83    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
-         $meeting->update(['title' => $request['title'], 'datetime' => $request['datetime'], 'place' => $request['place'], 'type' => $request['type'], 'modality' => $request['modality'], 'hours' => $request['hours']]);
-         return response()->json($meeting);
-     }
--    public function deleteById(Request $request)
-+    protected function deleteById(Request $request)
-     {
-         $meeting = Meeting::find($request['id']);
-         if (!$meeting) {
-
-
-58) /var/www/app/Http/Controllers/Api/v1/MeetingController.php:91    [M] MethodCallRemoval
-
---- Original
-+++ New
-@@ @@
-         if (!$meeting) {
-             return response()->json(['error' => ['id' => 'Invalid id']]);
-         }
--        $meeting->delete();
-+        
-         return response()->json($meeting);
-     }
- }
-
-
-59) /var/www/app/Http/Controllers/Api/v1/UserController.php:12    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
- use Illuminate\Support\Facades\Validator;
- class UserController extends Controller
- {
--    public function getAll()
-+    protected function getAll()
-     {
-         return response()->json(User::paginate());
-     }
-
-
-60) /var/www/app/Http/Controllers/Api/v1/UserController.php:16    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
-     {
-         return response()->json(User::paginate());
-     }
--    public function create(Request $request)
-+    protected function create(Request $request)
-     {
-         $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-         if ($validator->fails()) {
-
-
-61) /var/www/app/Http/Controllers/Api/v1/UserController.php:17    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-+        $validator = Validator::make($request->all(), ['name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-62) /var/www/app/Http/Controllers/Api/v1/UserController.php:18    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-+        $validator = Validator::make($request->all(), ['surname' => ['numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-63) /var/www/app/Http/Controllers/Api/v1/UserController.php:20    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-+        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-64) /var/www/app/Http/Controllers/Api/v1/UserController.php:21    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-+        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-65) /var/www/app/Http/Controllers/Api/v1/UserController.php:22    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-+        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-66) /var/www/app/Http/Controllers/Api/v1/UserController.php:23    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-+        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-67) /var/www/app/Http/Controllers/Api/v1/UserController.php:24    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-+        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-68) /var/www/app/Http/Controllers/Api/v1/UserController.php:25    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-+        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['string'], 'clean_surname' => ['required', 'string']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-69) /var/www/app/Http/Controllers/Api/v1/UserController.php:26    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function create(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-+        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['string']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-70) /var/www/app/Http/Controllers/Api/v1/UserController.php:50    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
-         $user = User::create(['surname' => $request['surname'], 'name' => $request['name'], 'username' => $request['username'], 'password' => $request['password'], 'email' => $request['email'], 'block' => $request['block'], 'biography' => $request['biography'], 'clean_name' => $request['clean_name'], 'clean_surname' => $request['clean_surname']]);
-         return response()->json($user);
-     }
--    public function getById(Request $request)
-+    protected function getById(Request $request)
-     {
-         return response()->json(User::find($request['id']));
-     }
-
-
-71) /var/www/app/Http/Controllers/Api/v1/UserController.php:56    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function updateById(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-+        $validator = Validator::make($request->all(), ['surname' => ['numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-72) /var/www/app/Http/Controllers/Api/v1/UserController.php:57    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function updateById(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-+        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-73) /var/www/app/Http/Controllers/Api/v1/UserController.php:58    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function updateById(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-+        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-74) /var/www/app/Http/Controllers/Api/v1/UserController.php:59    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function updateById(Request $request)
-     {
--        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['required', 'numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-+        $validator = Validator::make($request->all(), ['surname' => ['required', 'numeric'], 'name' => ['required', 'string'], 'username' => ['required', 'string'], 'password' => ['numeric'], 'email' => ['required', 'email'], 'block' => ['required', 'boolean'], 'biography' => ['required', 'string'], 'clean_name' => ['required', 'string'], 'clean_surname' => ['required', 'string']]);
-         if ($validator->fails()) {
-             return response()->json(['error' => $validator->messages()]);
-         }
-
-
-75) /var/www/app/Http/Controllers/InstanceController.php:16    [M] MethodCallRemoval
-
---- Original
-+++ New
-@@ @@
- {
-     public function __construct()
-     {
--        $this->middleware('auth');
-+        
-     }
-     public function create()
-     {
-
-
-76) /var/www/app/Http/Controllers/MetaHomeController.php:13    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
- use Illuminate\Support\Facades\Auth;
- class MetaHomeController extends Controller
- {
--    public function home()
-+    protected function home()
-     {
-         // obtenemos la última instancia creada
-         $instance = Instance::orderBy('created_at', 'desc')->first();
-
-
-77) /var/www/app/Http/Controllers/MetaHomeController.php:21    [M] Equal
-
---- Original
-+++ New
-@@ @@
-         $instance = Instance::orderBy('created_at', 'desc')->first();
-         // si la instancia es null, es que no hay ninguna creada, así que redirigimos al panel
-         // del admin
--        if ($instance == null) {
-+        if ($instance != null) {
-             return redirect()->route('admin.login');
-         }
-         // si estoy logueado
-
-
-78) /var/www/app/Http/Controllers/MetaHomeController.php:31    [M] ArrayItem
-
---- Original
-+++ New
-@@ @@
-         if (Auth::check()) {
-             return redirect()->route('instance.login', ['instance' => $instance->route]);
-         }
--        return redirect()->route('instance.login', ['instance' => $instance->route]);
-+        return redirect()->route('instance.login', ['instance' > $instance->route]);
-     }
- }
-
-
-Timed Out mutants:
-==================
-
-Skipped mutants:
-================
 
 Not Covered mutants:
 ====================
