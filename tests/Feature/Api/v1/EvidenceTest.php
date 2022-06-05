@@ -7,7 +7,7 @@ use Illuminate\Testing\Fluent\AssertableJson;
 use \Illuminate\Testing\AssertableJsonString;
 use Throwable;
 
-class EvidentiaTest extends TestCase
+class EvidenceTest extends TestCase
 {
 
     /**

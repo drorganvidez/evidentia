@@ -15,9 +15,19 @@ abstract class TestCase extends BaseTestCase
     protected function init() : void
     {
         if($this->init){
-            \Instantiation::set_default_connection();
-            exec('php artisan evidentia:start docker');
-            exec('php artisan evidentia:instance');
+            config(['database.connections.instance' => [
+                'driver' => 'mysql',
+                'host' => 'mysql',
+                'database' => 'base21',
+                'port' => '3306',
+                'username' => 'evidentia',
+                'password' => 'secret',
+                'charset' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci',
+                'engine' => 'InnoDB',
+            ]]);
+
+            config(['database.default' => 'instance']);
             $this->init = false;
         }
     }
