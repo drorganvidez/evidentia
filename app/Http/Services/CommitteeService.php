@@ -21,8 +21,6 @@ class CommitteeService extends Service
             'icon' => ['required', 'string']
         ];
 
-
     }
-
 
 }

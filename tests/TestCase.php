@@ -17,11 +17,11 @@ abstract class TestCase extends BaseTestCase
         if($this->init){
             config(['database.connections.instance' => [
                 'driver' => 'mysql',
-                'host' => 'mysql',
-                'database' => 'base21',
-                'port' => '3306',
-                'username' => 'evidentia',
-                'password' => 'secret',
+                'host' => env('DB_HOST_TESTING'),
+                'database' => env('DB_DATABASE_TESTING'),
+                'port' => env('DB_PORT_TESTING'),
+                'username' => env('DB_USERNAME_TESTING'),
+                'password' => env('DB_PASSWORD_TESTING'),
                 'charset' => 'utf8mb4',
                 'collation' => 'utf8mb4_unicode_ci',
                 'engine' => 'InnoDB',

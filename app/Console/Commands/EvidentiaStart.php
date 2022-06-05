@@ -138,6 +138,12 @@ class EvidentiaStart extends Command
         exec('echo "" >> .env');
         exec('echo "EVIDENTIA_VERSION=" >> .env');
         exec('echo "" >> .env');
+        exec('echo "DB_HOST_TESTING=mysql" >> .env');
+        exec('echo "DB_DATABASE_TESTING=base21" >> .env');
+        exec('echo "DB_PORT_TESTING=3306" >> .env');
+        exec('echo "DB_USERNAME_TESTING=evidentia" >> .env');
+        exec('echo "DB_PASSWORD_TESTING=secret" >> .env');
+        exec('echo "" >> .env');
 
         $this->line('Setting environment file ... [OK]');
 
