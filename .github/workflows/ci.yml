@@ -7,14 +7,6 @@ on:
 name: CI
 jobs:
 
-  setup:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository and submodules
-        uses: actions/checkout@v2
-        with:
-          submodules: recursive
-
   phpunit:
     runs-on: ubuntu-20.04
 
@@ -55,12 +47,16 @@ jobs:
       - name: Run Testsuite
         run: vendor/bin/phpunit tests/
 
-
   deployment:
-    needs: setup
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     steps:
+
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
       - name: Check out the repo
         uses: actions/checkout@v2
 
