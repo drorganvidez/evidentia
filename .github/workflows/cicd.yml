@@ -4,7 +4,8 @@ on:
       - master
   pull_request:
 
-name: CI
+name: CI / CD Pipeline
+
 jobs:
 
   phpunit:
@@ -15,8 +16,8 @@ jobs:
         image: mysql:5.7
         env:
           MYSQL_ROOT_PASSWORD: secret
-          MYSQL_DATABASE: homestead
-          MYSQL_USER: homestead
+          MYSQL_DATABASE: evidentia
+          MYSQL_USER: evidentia
           MYSQL_PASSWORD: secret
         ports:
           - 3306:3306
@@ -26,7 +27,7 @@ jobs:
       - name: Verify MySQL connection from host
         run: |
           sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get install mysql-server
-          mysql --host 127.0.0.1 --port 3306 -uroot -psecret -e "GRANT ALL ON *.*  TO 'homestead'@'%' identified by 'secret'; FLUSH PRIVILEGES;"
+          mysql --host 127.0.0.1 --port 3306 -uroot -psecret -e "GRANT ALL ON *.*  TO 'evidentia'@'%' identified by 'secret'; FLUSH PRIVILEGES;"
       - uses: actions/checkout@v1
         with:
           fetch-depth: 1
@@ -48,6 +49,7 @@ jobs:
         run: vendor/bin/phpunit tests/
 
   deployment:
+    needs: phpunit
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     steps:
@@ -76,9 +78,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./laradock/workspace/Dockerfile
+          file: ./build/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args:
-            LARADOCK_PHP_VERSION=8.1
