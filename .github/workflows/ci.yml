@@ -7,6 +7,15 @@ on:
 
 name: CI
 jobs:
+
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
   phpunit:
     runs-on: ubuntu-20.04
 
@@ -19,14 +28,14 @@ jobs:
           MYSQL_USER: homestead
           MYSQL_PASSWORD: secret
         ports:
-          - 33306:3306
+          - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - name: Verify MySQL connection from host
         run: |
           sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get install mysql-server
-          mysql --host 127.0.0.1 --port 33306 -uroot -psecret -e "GRANT ALL ON *.*  TO 'homestead'@'%' identified by 'secret'; FLUSH PRIVILEGES;"
+          mysql --host 127.0.0.1 --port 3306 -uroot -psecret -e "GRANT ALL ON *.*  TO 'homestead'@'%' identified by 'secret'; FLUSH PRIVILEGES;"
       - uses: actions/checkout@v1
         with:
           fetch-depth: 1
@@ -46,7 +55,8 @@ jobs:
           php artisan db:seed --class=InstancesTableSeeder
       - name: Run Testsuite
         run: vendor/bin/phpunit tests/
-          
+
+
   deployment:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
@@ -69,7 +79,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
-          context: .
+          context: laradock/workspace/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
