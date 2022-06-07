@@ -28,6 +28,7 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get install mysql-server
           mysql --host 127.0.0.1 --port 3306 -uroot -psecret -e "GRANT ALL ON *.*  TO 'evidentia'@'%' identified by 'secret'; FLUSH PRIVILEGES;"
+          mysql --host 127.0.0.1 --port 3306 -uroot -psecret -e "CREATE DATABASE base21;"
       - uses: actions/checkout@v1
         with:
           fetch-depth: 1
