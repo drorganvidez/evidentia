@@ -26,7 +26,6 @@ jobs:
     steps:
       - name: Verify MySQL connection from host
         run: |
-          sudo /etc/init.d/mysql start
           mysql --port 3306 -uroot -psecret -e "GRANT ALL ON *.*  TO 'evidentia'@'%' identified by 'secret'; FLUSH PRIVILEGES;"
           mysql --port 3306 -uroot -psecret -e "CREATE DATABASE base21;"
       - uses: actions/checkout@v1
