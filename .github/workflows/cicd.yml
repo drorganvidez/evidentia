@@ -9,6 +9,7 @@ name: CI / CD Pipeline
 jobs:
 
   phpunit:
+    name: Test Suite with PHPUnit
     runs-on: ubuntu-20.04
 
     services:
@@ -49,9 +50,10 @@ jobs:
         run: vendor/bin/phpunit tests/
 
   deployment:
-    needs: phpunit
     name: Push Docker image to Docker Hub
+    needs: phpunit
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
     steps:
 
       - name: Check out the repo
