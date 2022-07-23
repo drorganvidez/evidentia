@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\EvidencesController;
-use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\EvidenceController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -62,14 +62,14 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
     // Settings
     Route::group(['prefix' => 'settings'], function() {
-        Route::controller(SettingsController::class)->group(function () {
+        Route::controller(SettingController::class)->group(function () {
             Route::get('notifications', 'notifications')->name('settings.notifications');
         });
     });
 
     // Evidences
     Route::group(['prefix' => 'evidences'], function() {
-        Route::controller(EvidencesController::class)->group(function () {
+        Route::controller(EvidenceController::class)->group(function () {
             Route::get('create', 'create')->name('evidences.create');
             Route::get('draft', 'draft')->name('evidences.draft');
             Route::get('pending', 'pending')->name('evidences.pending');

@@ -20,6 +20,9 @@
     <!-- Theme CSS -->
     <x-dark-mode-css/>
 
+    <!-- Own CSS -->
+    <link rel="stylesheet" href="{{ asset('css/own.css') }}" />
+
     <!-- Title -->
     <title>@yield('title') @yield('parent') | Evidentia Cloud</title>
 
@@ -507,7 +510,7 @@
         </button>
 
         <!-- Brand -->
-        <a class="navbar-brand" href="{{route('root')}}">
+        <a class="oldnavbar-brand" href="{{route('root')}}">
             <x-logo-css/>
         </a>
 
@@ -525,20 +528,23 @@
                 </a>
 
                 <!-- Menu -->
+
                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="sidebarIcon">
-                    <a href="{{route('profile.data',\Instantiation::instance())}}" class="dropdown-item">Perfil</a>
-                    <a href="{{route('settings.notifications',\Instantiation::instance())}}" class="dropdown-item">Ajustes</a>
-                    <hr class="dropdown-divider">
+                        <a href="{{route('profile.data',\Instantiation::instance())}}" class="dropdown-item">Perfil</a>
+                        <a href="{{route('settings.notifications',\Instantiation::instance())}}" class="dropdown-item">Ajustes</a>
 
-                    <a href="{{ route('instance.logout',['instance' => \Instantiation::instance()]) }}"  class="dropdown-item"
-                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        Salir
-                    </a>
+                        <hr class="dropdown-divider">
 
-                    <form id="logout-form" action="{{ route('instance.logout',['instance' => \Instantiation::instance()]) }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
-                </div>
+                        <a href="{{ route('instance.logout',['instance' => \Instantiation::instance()]) }}"  class="dropdown-item"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            Salir
+                        </a>
+
+                        <form id="logout-form" action="{{ route('instance.logout',['instance' => \Instantiation::instance()]) }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                    </div>
+
 
             </div>
 

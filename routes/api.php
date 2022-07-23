@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\EvidenceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,3 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::group(['prefix' => 'v1'], function () {
+
+    Route::group(['prefix' => '{instance}'], function () {
+
+        // evidences
+        Route::group(['prefix' => 'evidences'], function () {
+            Route::get('', [EvidenceController::class, 'index']);
+        });
+
+    });
+});

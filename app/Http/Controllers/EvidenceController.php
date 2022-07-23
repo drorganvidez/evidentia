@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class EvidencesController extends Controller
+class EvidenceController extends Controller
 {
     public function create()
     {
