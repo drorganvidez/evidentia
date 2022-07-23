@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Bienvenid@ a Evidentia')
+@section('subtitle', 'Bienvenid@')
+
+@section('title', 'Dashboard de administración')
+
 
 @section('title-icon', 'fas fa-door-open')
 
@@ -11,16 +14,9 @@
 @section('content')
 
     <div class="row">
-        <div class="col-lg-6 col-sm-12">
+        <div class="col-lg-12">
 
-            <div class="card shadow-lg">
-                <div class="card-body">
-
-                    Bienvenido, administrador
-
-                </div>
-
-            </div>
+            Hola
 
         </div>
 

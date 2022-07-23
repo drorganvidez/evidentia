@@ -1,0 +1,58 @@
+@php
+
+    // obtenemos rutas, subrutas y badges
+    $subitems_names = [];
+    $subitems_routes = [];
+    $badges = [];
+    $i = 0;
+    foreach (explode(';', $subitems) as $item){
+        $parts = explode(',', $item);
+        $subitems_names[$i] = trim($parts[0]);
+        $subitems_routes[$i] = trim($parts[1]);
+
+        if(count($parts) == 3){
+            $badges[$i] = trim($parts[2]);
+        }else{
+            $badges[$i] = "";
+        }
+
+        $i = $i + 1;
+    }
+
+@endphp
+
+<div class="row align-items-center">
+    <div class="col">
+
+        <!-- Nav -->
+        <ul class="nav nav-tabs nav-overflow header-tabs">
+
+            @php
+
+                for($i = 0; $i < count($subitems_names); $i++){
+
+                    // activar la ruta actual
+                    $active = "";
+
+                    if(Route::currentRouteName() == $subitems_routes[$i]){
+                        $active = "active";
+                    }
+
+                    echo '<li class="nav-item">';
+                        echo '<a href="'.route($subitems_routes[$i], \Instantiation::instance()).'" class="nav-link '.$active.'">';
+                            echo " $subitems_names[$i] ";
+
+                            if($badges[$i] != ""){
+                                echo '<span class="badge rounded-pill bg-secondary-soft">'.$badges[$i].'</span>';
+                            }
+
+                        echo '</a>';
+                    echo '</li>';
+                }
+
+            @endphp
+
+        </ul>
+
+    </div>
+</div>

@@ -1,52 +1,78 @@
-<div class="form-group col-md-{{ $col }}">
-    <label for="{{ $attr }}">{!!  $label  !!}</label>
-    <input id="{{ $id }}" type="{{ $type }}"
+@php
 
-           class="
+$is_invalid = "";
 
-           @if($type == "file")
-               file
-           @endif
+@endphp
 
-           form-control"
+@error("$name")
+@php
 
-           @if($type == "file")
-           accept="image/png, image/jpeg, application/pdf, .zip,.rar,.7zip"
-           multiple
-           @endif
+    $is_invalid = " is-invalid";
 
-           placeholder="{{ $placeholder }}"
-           @error($attr) is-invalid @enderror
-           name="{{ $attr }}"
+@endphp
+@enderror
 
-           @if(old($attr))
-           value="{{ old($attr) }}"
-           @else
-           value="{{$value}}"
-           @endif
+<div class="{{$col}}">
 
-           @if($required)
-                required
-           @endif
+    <div class="form-group">
 
-           autocomplete="{{ $attr }}" autofocus
+        <!-- Label -->
+        @isset($description)
+            @php
+                $label_class = 'form-class mb-1';
+            @endphp
+        @else
+            @php
+                $label_class = "form-class mb-3"
+            @endphp
+        @endisset
+        <label class="{{$label_class}}">
+            {{$label}}
+        </label>
 
-           @if($edit == true)
-                @if($disabled == true)
-                    disabled
-                @endif
-           @endif
+        @isset($description)
+        <!-- Description -->
+        <small class="form-text text-muted">
+            {{$description}}
+        </small>
+        @endisset
 
-        @if($step != "")
-            step="{{$step}}"
+        @isset($disabled)
+            @php
+                $disabled = 'disabled="true"';
+            @endphp
+        @else
+            @php
+                $disabled = ""
+            @endphp
+        @endisset
+
+        @isset($type)
+            @php
+
+            @endphp
+        @else
+            @php
+                $type = "text"
+            @endphp
+        @endisset
+
+        @if(old("$name"))
+            @php
+                $value = old("$name")
+            @endphp
         @endif
 
-           >
-    <small class="form-text text-muted">{{ $description }}</small>
+        <!-- Input -->
+        <input type="{{$type}}" name="{{$name}}" value="{{$value}}" class="form-control{{$is_invalid}}" {{$disabled}}>
 
-    @error($attr)
-    <span class="invalid-feedback d-block" role="alert">
-        <strong>{{ $message }}</strong>
+        @error("$name")
+        <div class="invalid-feedback">
+            {{$message}}
+        </div>
+        @enderror
     </span>
-    @enderror
+
+    </div>
+
 </div>

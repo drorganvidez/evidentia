@@ -25,7 +25,7 @@ class CheckIsAdministrator
         }
 
         $instance = \Instantiation::instance();
-        return redirect()->route('home',$instance);
+        return redirect()->route('root',$instance);
 
     }
 }

@@ -1,12 +1,74 @@
-@extends('home.main')
+@extends('auth.root')
 
-@section('title', 'Acceder')
+@section('title', 'Bienvenid@ a Evidentia')
 
 @section('content')
 
-    <div class="card shadow-lg">
+    <!-- Form -->
+    <form action="{{route('instance.login_p',\Instantiation::instance())}}" method="post">
+    @csrf
+
+    <!-- Email address -->
+        <div class="form-group">
+
+            <!-- Label -->
+            <label class="form-label">
+                UVUS
+            </label>
+
+            <!-- Input -->
+            <input name="username" class="form-control"
+                   placeholder="Introduce tu usuario" autofocus>
+
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+
+                    <!-- Label -->
+                    <label class="form-label">
+                        Contraseña
+                    </label>
+
+                </div>
+                <div class="col-auto">
+
+                    <!-- Help text -->
+                    <a href="{{route('password.reset',\Instantiation::instance())}}" class="form-text small text-muted">
+                        ¿Has olvidado la contraseña?
+                    </a>
+
+                </div>
+            </div> <!-- / .row -->
+
+            <!-- Input group -->
+            <div class="input-group input-group-merge">
+
+                <!-- Input -->
+                <input class="form-control" id="password" name="password" type="password" placeholder="Introduce tu contraseña">
+
+                <!-- Icon -->
+                <x-show-password/>
+
+            </div>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-lg w-100 btn-primary mb-3">
+            Acceder
+        </button>
+
+    </form>
+
+    {{--
+
+    <div class="card">
 
         <div class="card-body">
+
+            ddddd
 
             <form action="{{route('instance.login_p',\Instantiation::instance())}}" method="post">
                 @csrf
@@ -73,5 +135,7 @@
         </div>
         <!-- /.login-card-body -->
     </div>
+
+    --}}
 
 @endsection

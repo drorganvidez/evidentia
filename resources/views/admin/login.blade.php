@@ -1,52 +1,67 @@
-@extends('home.main')
+@extends('auth.root')
 
-@section('title', 'Acceder')
+@section('title', 'Administración')
 
 @section('content')
 
-    <div class="card shadow-lg">
+    <!-- Form -->
+    <form action="{{route('admin.login_p')}}" method="post">
+    @csrf
 
-        <div class="card-body">
+    <!-- Email address -->
+        <div class="form-group">
 
-            <p class="login-box-msg">Acceso a la administración</p>
+            <!-- Label -->
+            <label class="form-label">
+                Correo
+            </label>
 
-            <form method="POST" action="{{ route('admin.login_p') }}">
-                @csrf
-
-                <div class="input-group mb-3">
-                    <input name="email" required type="email" class="form-control" placeholder="Email"  autocomplete="email" autofocus>
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                            <span class="fas fa-envelope"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="input-group mb-3">
-                    <input name="password" required type="password" class="form-control" placeholder="Contraseña" autocomplete="password">
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                            <span class="fas fa-lock"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-6">
-                        <div class="icheck-primary">
-                            <input type="checkbox" id="remember">
-                            <label for="remember">
-                                Recuérdame
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-lg-6">
-                        <button type="submit" class="btn btn-primary btn-block">Acceder</button>
-                    </div>
-                </div>
-            </form>
+            <!-- Input -->
+            <input name="email" class="form-control"
+                   placeholder="Introduce tu correo" autofocus>
 
         </div>
-    </div>
+
+        <!-- Password -->
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+
+                    <!-- Label -->
+                    <label class="form-label">
+                        Contraseña
+                    </label>
+
+                </div>
+                <div class="col-auto">
+
+                    <!-- Help text -->
+                    <a href="{{route('password.reset',\Instantiation::instance())}}" class="form-text small text-muted">
+                        ¿Has olvidado la contraseña?
+                    </a>
+
+                </div>
+            </div> <!-- / .row -->
+
+            <!-- Input group -->
+            <div class="input-group input-group-merge">
+
+                <!-- Input -->
+                <input class="form-control" id="password" name="password" type="password" placeholder="Introduce tu contraseña">
+
+                <!-- Icon -->
+                <x-show-password/>
+
+            </div>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-lg w-100 btn-primary mb-3">
+            Acceder
+        </button>
+
+    </form>
+
+
 @endsection
 

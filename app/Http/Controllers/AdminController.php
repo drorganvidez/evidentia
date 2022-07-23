@@ -7,12 +7,38 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
-    public function home()
+    public function login()
     {
+
         if(Auth::check()){
-            return view('admin.home');
+            return redirect()->route('admin.home');
         }
 
-        return redirect()->route('admin.login');
+        return view('admin.login');
+    }
+
+    public function login_p(Request $request)
+    {
+
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            return redirect()->route('admin.home');
+        }
+
+        return back()->withInput()->with('error', 'Las credenciales no son válidas.');
+    }
+
+    public function logout(Request $request)
+    {
+
+        Auth::logout();
+
+        return redirect()->route('instances.home');
+    }
+
+    public function home()
+    {
+        return view('admin.home');
     }
 }

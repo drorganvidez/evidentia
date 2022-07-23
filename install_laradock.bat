@@ -9,6 +9,7 @@ docker exec laradock_php-fpm_1 chown -R www-data:www-data /var/www/storage
 docker exec laradock_workspace_1 rm -f composer.lock
 docker exec laradock_workspace_1 composer install
 docker exec laradock_workspace_1 npm install
+docker exec laradock_workspace_1 npx mix
 docker exec laradock_workspace_1 php artisan evidentia:start docker
 docker exec laradock_workspace_1 php artisan evidentia:start docker
 docker exec laradock_workspace_1 php artisan evidentia:instance
