@@ -17,18 +17,6 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        /*
-        config(['database.connections.instance' => [
-            'driver'   => 'mysql',
-            'host' => env('DB_HOST'),
-            'database' => 'base21',
-            'port' => env('DB_PORT'),
-            'username' => env('DB_USERNAME'),
-            'password' => 'secret'
-        ]]);
-
-        config(['database.default' => 'instance']);
-        */
 
         Schema::create('users', function (Blueprint $table) {
             $table->id();
