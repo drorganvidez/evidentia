@@ -15,9 +15,9 @@ class EvidenceController extends Controller
      */
     public function index()
     {
-        $evidences = Evidence::all();
+        //$evidences = Evidence::all();
         return response()->json([
-            'evidences' => $evidences
+            'evidences' => "ahora si"
         ]);
     }
 

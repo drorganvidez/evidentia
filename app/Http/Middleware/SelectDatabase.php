@@ -21,10 +21,10 @@ class SelectDatabase
 
         $param = $request->segment(1);
 
-        $admin_routes = array("", "admin", "logout", "deploy", "livewire", "api");
+        $allow_routes = array("", "admin", "logout", "deploy", "livewire", "api");
 
         // si es una de las rutas permitidas en el array, dejo pasar
-        if (in_array($param, $admin_routes))
+        if (in_array($param, $allow_routes))
         {
             return $next($request);
         }

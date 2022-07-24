@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\v1\EvidenceController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,14 +15,43 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::middleware('selectdatabaseapi')->group( function () {
+
+    Route::group(['prefix' => 'v1'], function () {
+
+        Route::group(['prefix' => '{instance}'], function () {
+
+            Route::controller(RegisterController::class)->group(function(){
+                Route::post('register', 'register');
+                Route::post('login', 'login');
+            });
+
+        });
+
+    });
+
+});
+
+
+
+
+
+Route::get('prueba', [EvidenceController::class, 'index'])->middleware('auth:sanctum');
+
 Route::group(['prefix' => 'v1'], function () {
 
     Route::group(['prefix' => '{instance}'], function () {
 
-        // evidences
-        Route::group(['prefix' => 'evidences'], function () {
-            Route::get('', [EvidenceController::class, 'index']);
+        Route::middleware('auth:sanctum')->group( function () {
+
+            // evidences
+            Route::group(['prefix' => 'evidences'], function () {
+                Route::get('', [EvidenceController::class, 'index']);
+            });
+
         });
 
     });
 });
+
+

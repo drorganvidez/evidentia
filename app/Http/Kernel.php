@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\MeetingMinutesMine;
 use App\Http\Middleware\MeetingRequestMine;
+use App\Http\Middleware\SelectDatabaseApi;
 use App\Http\Middleware\SignatureSheetMine;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -43,9 +44,11 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:60,1',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \App\Http\Middleware\SelectDatabaseApi::class,
+            //\App\Http\Middleware\SelectDatabaseApi::class,
+
         ],
     ];
 
@@ -82,6 +85,7 @@ class Kernel extends HttpKernel
         'checkisadministrator' => \App\Http\Middleware\CheckIsAdministrator::class,
         'meetingrequestmine' => MeetingRequestMine::class,
         'signaturesheetmine' => SignatureSheetMine::class,
-        'meetingminutesmine' => MeetingMinutesMine::class
+        'meetingminutesmine' => MeetingMinutesMine::class,
+        'selectdatabaseapi' => SelectDatabaseApi::class
     ];
 }

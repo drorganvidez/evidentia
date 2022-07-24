@@ -47,6 +47,16 @@ $is_invalid = "";
             @endphp
         @endisset
 
+        @isset($autofocus)
+            @php
+                $autofocus = 'autofocus';
+            @endphp
+        @else
+            @php
+                $autofocus = ""
+            @endphp
+        @endisset
+
         @isset($type)
             @php
 
@@ -64,7 +74,7 @@ $is_invalid = "";
         @endif
 
         <!-- Input -->
-        <input type="{{$type}}" name="{{$name}}" value="{{$value}}" class="form-control{{$is_invalid}}" {{$disabled}}>
+        <input type="{{$type}}" name="{{$name}}" value="{{$value}}" class="form-control{{$is_invalid}}" {{$disabled}} {{$autofocus}}>
 
         @error("$name")
         <div class="invalid-feedback">

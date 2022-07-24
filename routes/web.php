@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\EvidenceController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ProfileController;
@@ -64,6 +65,26 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::group(['prefix' => 'settings'], function() {
         Route::controller(SettingController::class)->group(function () {
             Route::get('notifications', 'notifications')->name('settings.notifications');
+        });
+    });
+
+    // Developer
+    Route::group(['prefix' => 'developer'], function() {
+        Route::controller(DeveloperController::class)->group(function () {
+
+            Route::group(['prefix' => 'api'], function(){
+
+                Route::get('docs', 'api_docs')->name('developer.apidocs');
+
+                Route::group(['prefix' => 'tokens'], function(){
+                    Route::get('create', 'create_api_token')->name('developer.createapitoken');
+                    Route::post('create_p', 'create_api_token_p')->name('developer.createapitoken_p');
+                    Route::get('', 'list_api_tokens')->name('developer.apitokens');
+                });
+
+            });
+
+
         });
     });
 

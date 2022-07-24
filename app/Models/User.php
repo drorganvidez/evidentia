@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Config;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\URL;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -109,6 +110,11 @@ class User extends Authenticatable
     public function signature_sheets()
     {
         return $this->belongsToMany('App\Models\SignatureSheet')->withTimestamps()->orderByDesc('created_at');
+    }
+
+    public function api_tokens()
+    {
+        return $this->hasMany('App\Models\ApiToken');
     }
 
     public function evidence_rand(){

@@ -3,5 +3,5 @@
         Datos personales, profile.data;
         Avatar, profile.avatar;
         Cambiar contraseña, profile.password
-    </x-slot>
+    </x-slot:subitems>
 </x-sub-menu>

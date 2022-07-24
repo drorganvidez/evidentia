@@ -2,11 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Instance;
 use Closure;
 use Illuminate\Http\Request;
 
-class SelectDatabaseApi
+class AuthApi
 {
     /**
      * Handle an incoming request.
@@ -15,20 +14,8 @@ class SelectDatabaseApi
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
-
-        \Instantiation::set_default_connection();
-
-        $param = $request->segment(3);
-        $instance = Instance::where('route', $param)->first();
-
-        if ($instance == null) {
-            abort('404');
-        }
-
-        \Instantiation::set($instance);
-
         return $next($request);
     }
 }
