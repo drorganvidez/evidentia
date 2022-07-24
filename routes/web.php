@@ -79,6 +79,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
                 Route::group(['prefix' => 'tokens'], function(){
                     Route::get('create', 'create_api_token')->name('developer.createapitoken');
                     Route::post('create_p', 'create_api_token_p')->name('developer.createapitoken_p');
+                    Route::post('delete', 'delete_api_token_p')->name('developer.deleteapitoken_p');
                     Route::get('', 'list_api_tokens')->name('developer.apitokens');
                 });
 

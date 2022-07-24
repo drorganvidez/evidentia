@@ -5,5 +5,5 @@
         Pendientes, evidences.pending;
         Aceptadas, evidences.accepted;
         Rechazadas, evidences.rejected
-    </x-slot>
+    </x-slot:subitems>
 </x-sub-menu>
