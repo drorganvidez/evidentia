@@ -105,7 +105,7 @@
             @endif
 
         @endforeach],
-     "page": 5,
+     "page": {{request()->query('pagination') ?? '5'}},
      "pagination": {
          "paginationClass": "list-pagination"
      }}'
@@ -131,12 +131,14 @@
             <div class="col-auto me-n3">
 
                 <!-- Select -->
-                <form>
-                    <select class="form-select form-select-sm form-control-flush"
+                <form href="{{request()->url()}}">
+                    <select id="pagination" class="form-select form-select-sm form-control-flush"
                             data-choices='{"searchEnabled": false}'>
-                        <option selected>5 por página</option>
-                        <option>10 por página</option>
-                        <option>Todos</option>
+                        <option value="5" {{request()->query('pagination') == '5' ? 'selected' : ''}}>5 por página</option>
+                        <option value="10" {{request()->query('pagination') == '10' ? 'selected' : ''}}>10 por página</option>
+                        <option value="25" {{request()->query('pagination') == '25' ? 'selected' : ''}}>25 por página</option>
+                        <option value="50" {{request()->query('pagination') == '50' ? 'selected' : ''}}>50 por página</option>
+                        <option value="100" {{request()->query('pagination') == '100' ? 'selected' : ''}}>100 por página</option>
                     </select>
                 </form>
 
@@ -443,7 +445,7 @@
             </div> <!-- / .row -->
 
             <!-- Close -->
-            <button type="button" class="list-alert-close btn-close" aria-label="Close"></button>
+            <button type="button" onclick="unselected_all_items();" class="list-alert-close btn-close" aria-label="Close"></button>
 
 
         </div>
@@ -493,10 +495,38 @@
             update_input_items_selected();
         }
 
+        function unselected_all_items()
+        {
+            items_selected = [];
+            selected_all = false;
+            console.log(items_selected);
+            update_input_items_selected();
+        }
+
         function update_input_items_selected()
         {
             $('#items_selected').val(items_selected);
         }
+
+        $('#pagination').change(function(){
+            let url = "{{request()->fullUrl()}}";
+            url = url.replaceAll("&amp;", "&");
+
+            @if(!empty(request()->getQueryString()))
+                url = url + "&pagination=";
+            @else
+                url = url + "?pagination=";
+            @endif
+
+            sel = $(this).val();
+
+            var url_on_change = new URL(url);
+            url_on_change.searchParams.set("pagination", sel);
+            var newUrl = url_on_change.href;
+
+            $(location).attr('href',newUrl);
+
+        });
 
     </script>
 @endpush
