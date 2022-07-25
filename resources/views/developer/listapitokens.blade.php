@@ -33,20 +33,24 @@
 
     <x-data-table>
 
+        {{-- Data --}}
         <x-slot:data>
             {{$api_tokens}}
         </x-slot:data>
 
+        {{-- Columns --}}
         <x-slot:columns>
-            Nombre del token, name;
-            Última vez usado, last_used_at;
-            Creado el, created_at
+            Nombre del token | name;
+            Última vez usado | last_used_at | {"type" : "ago", "default" : "Nunca"};
+            Creado el | created_at | {"type" : "datetime"}
         </x-slot:columns>
 
+        {{-- Filters --}}
         <x-slot:filters>
             Nombre, name, valor1:valor2:valor3;
             Última vez usado, last_used_at, valor1:valor2:valor3:valor4
         </x-slot:filters>
+
 
         <x-slot:edit_item_route>
             developer.editapitoken
@@ -67,6 +71,27 @@
         <x-slot:mass_delete_message>
             Todos los tokens seleccionados serán borrados.
         </x-slot:mass_delete_message>
+
+
+        <x-slot:actions>
+
+        </x-slot:actions>
+
+
+        {{--
+        <x-slot:disable_selection>
+        </x-slot:disable_selection>
+        --}}
+
+        {{--
+        <x-slot:disable_pagination>
+        </x-slot:disable_pagination>
+        --}}
+
+        {{--
+        <x-slot:disable_search>
+        </x-slot:disable_search>
+        --}}
 
     </x-data-table>
 

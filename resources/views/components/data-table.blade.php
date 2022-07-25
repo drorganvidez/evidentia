@@ -12,13 +12,23 @@
 
         $column_fields = [];
         $column_values = [];
+        $customizations = [];
+
         $i = 0;
         foreach (explode(';', $columns) as $item){
-            $parts = explode(',', $item);
+            $parts = explode('|', $item);
             $column_fields[$i] = trim($parts[0]);
             $column_values[$i] = trim($parts[1]);
+
+            if(count($parts) == 3) {
+                $customizations[$i] = json_decode(trim($parts[2]), true);
+            } else {
+                $customizations[$i] = json_decode("{}", true);
+            }
+
             $i = $i + 1;
         }
+
     @endphp
 @endisset
 
@@ -105,44 +115,71 @@
             @endif
 
         @endforeach],
-     "page": {{request()->query('pagination') ?? '5'}},
+
+        @isset($disable_pagination)
+        "page": "1000000000000000000000000000000000000000",
+        @else
+        "page": {{request()->query('pagination') ?? '5'}},
+        @endisset
+
+
      "pagination": {
          "paginationClass": "list-pagination"
      }}'
      id="dataList">
 
 
+    @php
 
-    <div class="card-header">
+        $disabled_card_header = isset($disable_search) && isset($disable_pagination) && !isset($filters);
+
+    @endphp
+
+    <div class="card-header {{$disabled_card_header ? 'd-none' : ''}}">
         <div class="row align-items-center">
-            <div class="col">
 
-                <!-- Form -->
-                <form>
-                    <div class="input-group input-group-flush input-group-merge input-group-reverse">
-                        <input class="form-control list-search" type="search" placeholder="Buscar">
-                        <span class="input-group-text">
+            @isset($disable_search)
+                <div class="col">
+                </div>
+            @else
+                <div class="col">
+
+                    <!-- Form -->
+                    <form>
+                        <div class="input-group input-group-flush input-group-merge input-group-reverse">
+                            <input class="form-control list-search" type="search" placeholder="Buscar">
+                            <span class="input-group-text">
                               <i class="fe fe-search"></i>
                             </span>
-                    </div>
-                </form>
+                        </div>
+                    </form>
 
-            </div>
-            <div class="col-auto me-n3">
+                </div>
+            @endisset
 
-                <!-- Select -->
-                <form href="{{request()->url()}}">
-                    <select id="pagination" class="form-select form-select-sm form-control-flush"
-                            data-choices='{"searchEnabled": false}'>
-                        <option value="5" {{request()->query('pagination') == '5' ? 'selected' : ''}}>5 por página</option>
-                        <option value="10" {{request()->query('pagination') == '10' ? 'selected' : ''}}>10 por página</option>
-                        <option value="25" {{request()->query('pagination') == '25' ? 'selected' : ''}}>25 por página</option>
-                        <option value="50" {{request()->query('pagination') == '50' ? 'selected' : ''}}>50 por página</option>
-                        <option value="100" {{request()->query('pagination') == '100' ? 'selected' : ''}}>100 por página</option>
-                    </select>
-                </form>
 
-            </div>
+
+            @isset($disable_pagination)
+
+            @else
+                <div class="col-auto me-n3">
+
+                    <!-- Select -->
+                    <form href="{{request()->url()}}">
+                        <select id="pagination" class="form-select form-select-sm form-control-flush"
+                                data-choices='{"searchEnabled": false}'>
+                            <option value="5" {{request()->query('pagination') == '5' ? 'selected' : ''}}>5 por página</option>
+                            <option value="10" {{request()->query('pagination') == '10' ? 'selected' : ''}}>10 por página</option>
+                            <option value="25" {{request()->query('pagination') == '25' ? 'selected' : ''}}>25 por página</option>
+                            <option value="50" {{request()->query('pagination') == '50' ? 'selected' : ''}}>50 por página</option>
+                            <option value="100" {{request()->query('pagination') == '100' ? 'selected' : ''}}>100 por página</option>
+                        </select>
+                    </form>
+
+                </div>
+            @endisset
+
+
 
             @isset($filters)
 
@@ -246,15 +283,22 @@
 
             <thead>
             <tr>
-                <th>
 
-                    <!-- Checkbox -->
-                    <div class="form-check mb-n2">
-                        <input class="form-check-input list-checkbox-all" id="listCheckboxAll" onclick="select_all()" type="checkbox">
-                        <label class="form-check-label" for="listCheckboxAll"></label>
-                    </div>
+                @isset($disable_selection)
 
-                </th>
+                @else
+                    <th>
+
+                        <!-- Checkbox -->
+                        <div class="form-check mb-n2">
+                            <input class="form-check-input list-checkbox-all" id="listCheckboxAll" onclick="select_all()" type="checkbox">
+                            <label class="form-check-label" for="listCheckboxAll"></label>
+                        </div>
+
+                    </th>
+                @endisset
+
+
 
                 @foreach($column_values as $field)
 
@@ -334,55 +378,149 @@
                 @endisset
 
                 <tr>
-                    <td>
 
-                        <!-- Checkbox -->
-                        <div class="form-check">
-                            <input class="form-check-input list-checkbox" onclick="item_selected({{$item['id']}})" type="checkbox" id="item_{{$item['id']}}">
-                            <label class="form-check-label" for="item_{{$item['id']}}"></label>
-                        </div>
+                    @isset($disable_selection)
 
-                    </td>
+                    @else
+                        <td>
+
+                            <!-- Checkbox -->
+                            <div class="form-check">
+                                <input class="form-check-input list-checkbox" onclick="item_selected({{$item['id']}})" type="checkbox" id="item_{{$item['id']}}">
+                                <label class="form-check-label" for="item_{{$item['id']}}"></label>
+                            </div>
+
+                        </td>
+                    @endisset
 
                     @foreach($column_values as $value)
                         <td>
 
                             <span class="item-{{$value}}">
-                                {{$item[$value]}}
+
+                                @php
+                                    $customization = $customizations[$loop->index];
+                                @endphp
+
+
+                                @if(empty($item[$value]))
+
+                                    {{-- Write default value --}}
+                                    @isset($customization['default'])
+                                        {{$customization['default']}}
+                                    @endisset
+
+                                @else
+
+                                    @if(count($customization) == 0)
+                                        {{$item[$value]}}
+                                    @else
+
+                                        {{-- Iterations over types --}}
+                                        @isset($customization['type'])
+
+                                            {{-- Date and times --}}
+                                            @if($customization['type'] === 'datetime')
+                                                {{ \Carbon\Carbon::parse($item[$value])->format('d/m/Y H:i')}}
+                                            @endif
+
+                                            @if($customization['type'] === 'date')
+                                                {{ \Carbon\Carbon::parse($item[$value])->format('d/m/Y')}}
+                                            @endif
+
+                                            @if($customization['type'] === 'time')
+                                                {{ \Carbon\Carbon::parse($item[$value])->format('H:i')}}
+                                            @endif
+
+                                            @if($customization['type'] === 'ago')
+                                                {{\Carbon\Carbon::parse($item[$value])->diffForHumans()}}
+                                            @endif
+
+                                            {{-- Email --}}
+                                            @if($customization['type'] === 'email')
+                                                <a class="text-reset" href="mailto:{{$item[$value]}}">
+                                                    {{$item[$value]}}
+                                                </a>
+                                            @endif
+
+                                            {{-- Badge --}}
+                                            @if($customization['type'] === 'badge')
+                                                <span class="badge bg-{{$customization['bg'] ?? 'primary'}}-soft">
+                                                    {{$item[$value]}}
+                                                </span>
+                                            @endif
+
+                                            {{-- HREF --}}
+                                            @if($customization['type'] === 'href')
+                                                <a class="text-reset" href="{{route($customization['route'], ['id' => $item['id'], 'instance' => \Instantiation::instance()])}}">
+                                                    {{$item[$value]}}
+                                                </a>
+                                            @endif
+
+                                        @endisset
+
+                                        {{-- Iterations over text --}}
+                                        @isset($customization['limit'])
+                                            {{Str::limit($item[$value], $customization['limit'])}}
+                                        @endisset
+
+                                        @php
+                                            if(!isset($customization['type']) && !isset($customization['limit'])){
+                                                echo $item[$value];
+                                            }
+                                        @endphp
+
+
+                                    @endif
+
+
+                                @endif
+
+
+
                             </span>
 
                         </td>
                     @endforeach
 
+                        @php
 
-                    <td class="text-end">
+                            $disabled_dropdown_menu = !isset($edit_item_route) && !isset($delete_item_route) && !isset($actions);
 
-                        <!-- Dropdown -->
-                        <div class="dropdown">
-                            <a class="dropdown-ellipses dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                               aria-haspopup="true" aria-expanded="false">
-                                <i class="fe fe-more-vertical"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end">
+                        @endphp
 
-                                @isset($edit_item_route)
-                                    <a href="{{route("$edit_item_route",['instance' => \Instantiation::instance(), 'id' => $item['id']])}}" class="dropdown-item">
-                                        Editar
+                        @if(!$disabled_dropdown_menu)
+                            <td class="text-end">
+
+                                <!-- Dropdown -->
+                                <div class="dropdown">
+                                    <a class="dropdown-ellipses dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                       aria-haspopup="true" aria-expanded="false">
+                                        <i class="fe fe-more-vertical"></i>
                                     </a>
-                                @endisset
+                                    <div class="dropdown-menu dropdown-menu-end">
 
-                                @isset($delete_item_route)
-                                    <a class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#modal_item_{{$item['id']}}" href="#">
-                                        Eliminar
-                                    </a>
-                                @endisset
+                                        @isset($edit_item_route)
+                                            <a href="{{route("$edit_item_route",['instance' => \Instantiation::instance(), 'id' => $item['id']])}}" class="dropdown-item">
+                                                Editar
+                                            </a>
+                                        @endisset
 
-                            </div>
-                        </div>
+                                        @isset($delete_item_route)
+                                            <a class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#modal_item_{{$item['id']}}" href="#">
+                                                Eliminar
+                                            </a>
+                                        @endisset
+
+                                    </div>
+                                </div>
 
 
 
-                    </td>
+                            </td>
+                        @endif
+
+
                 </tr>
 
             @endforeach
@@ -391,30 +529,31 @@
         </table>
     </div>
 
+    @isset($disable_pagination)
+        <div class="card-footer d-flex justify-content-between d-none">
 
+            <!-- Pagination (prev) -->
+            <ul class="list-pagination-prev pagination pagination-tabs card-pagination">
+                <li class="page-item">
+                    <a class="page-link ps-0 pe-4 border-end" href="#">
+                        <i class="fe fe-arrow-left me-1"></i> Ant
+                    </a>
+                </li>
+            </ul>
 
-    <div class="card-footer d-flex justify-content-between">
+            <!-- Pagination -->
+            <ul class="list-pagination pagination pagination-tabs card-pagination"></ul>
 
-        <!-- Pagination (prev) -->
-        <ul class="list-pagination-prev pagination pagination-tabs card-pagination">
-            <li class="page-item">
-                <a class="page-link ps-0 pe-4 border-end" href="#">
-                    <i class="fe fe-arrow-left me-1"></i> Ant
-                </a>
-            </li>
-        </ul>
+            <!-- Pagination (next) -->
+            <ul class="list-pagination-next pagination pagination-tabs card-pagination">
+                <li class="page-item">
+                    <a class="page-link ps-4 pe-0 border-start" href="#">
+                        Sig <i class="fe fe-arrow-right ms-1"></i>
+                    </a>
+                </li>
+            </ul>
 
-        <!-- Pagination -->
-        <ul class="list-pagination pagination pagination-tabs card-pagination"></ul>
-
-        <!-- Pagination (next) -->
-        <ul class="list-pagination-next pagination pagination-tabs card-pagination">
-            <li class="page-item">
-                <a class="page-link ps-4 pe-0 border-start" href="#">
-                    Sig <i class="fe fe-arrow-right ms-1"></i>
-                </a>
-            </li>
-        </ul>
+        </div>
 
         <!-- Alert -->
         <div class="list-alert alert alert-dark alert-dismissible border fade" role="alert">
@@ -449,8 +588,66 @@
 
 
         </div>
+    @else
+        <div class="card-footer d-flex justify-content-between">
 
-    </div>
+            <!-- Pagination (prev) -->
+            <ul class="list-pagination-prev pagination pagination-tabs card-pagination">
+                <li class="page-item">
+                    <a class="page-link ps-0 pe-4 border-end" href="#">
+                        <i class="fe fe-arrow-left me-1"></i> Ant
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Pagination -->
+            <ul class="list-pagination pagination pagination-tabs card-pagination"></ul>
+
+            <!-- Pagination (next) -->
+            <ul class="list-pagination-next pagination pagination-tabs card-pagination">
+                <li class="page-item">
+                    <a class="page-link ps-4 pe-0 border-start" href="#">
+                        Sig <i class="fe fe-arrow-right ms-1"></i>
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Alert -->
+            <div class="list-alert alert alert-dark alert-dismissible border fade" role="alert">
+
+
+                <!-- Content -->
+                <div class="row align-items-center">
+                    <div class="col">
+
+                        <!-- Checkbox -->
+                        <div class="form-check">
+                            <input class="form-check-input" id="listAlertCheckbox" type="checkbox" checked disabled>
+                            <label class="form-check-label text-white" for="listAlertCheckbox">
+                                <span class="list-alert-count">0</span> seleccionado(s)
+                            </label>
+                        </div>
+
+                    </div>
+                    <div class="col-auto me-n3">
+
+                        @isset($mass_delete_route)
+                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modal_mass_delete" >
+                                <i class="fe fe-trash-2"></i> Borrado masivo
+                            </button>
+                        @endisset
+
+                    </div>
+                </div> <!-- / .row -->
+
+                <!-- Close -->
+                <button type="button" onclick="unselected_all_items();" class="list-alert-close btn-close" aria-label="Close"></button>
+
+
+            </div>
+        </div>
+    @endisset
+
 </div>
 
 @push('scripts')
