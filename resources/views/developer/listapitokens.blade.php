@@ -59,6 +59,14 @@
             Esto borrará el token. Los endpoints de la API de Evidentia que estén enlazados a dicho token dejarán de ser accesibles.
         </x-slot:delete_item_message>
 
+        <x-slot:mass_delete_route>
+            developer.deletemassapitoken_p
+        </x-slot:mass_delete_route>
+
+        <x-slot:mass_delete_message>
+            Todos los tokens seleccionados serán borrados.
+        </x-slot:mass_delete_message>
+
     </x-data-table>
 
 

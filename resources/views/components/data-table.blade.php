@@ -41,6 +41,56 @@
 @endisset
 
 
+<div class="modal fade" id="modal_mass_delete" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-card card">
+                <div class="card-header">
+
+                    <!-- Title -->
+                    <h4 class="card-header-title" id="exampleModalCenterTitle">
+                        ¿Estás segur@?
+                    </h4>
+
+                    <!-- Close -->
+                    <i style="cursor: pointer" class="fe fe-x-circle" data-bs-dismiss="modal" aria-label="Close"></i>
+                </div>
+                <div class="card-body">
+
+
+                    @isset($mass_delete_message)
+                        <p> {{$mass_delete_message}} </p>
+                    @else
+                        <p> Los elementos seleccionados serán borrados en masa. </p>
+                    @endisset
+
+
+                    <p>
+                        <b>Esta acción es muy destructiva y no se puede deshacer.</b>
+                    </p>
+
+                    <form method="post" style="display:inline" action="{{route("$mass_delete_route",\Instantiation::instance())}}">
+                        @csrf
+
+                        <input type="hidden" id="items_selected" name="items_selected" value="">
+
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fe fe-trash-2"></i> Eliminar seleccionados
+                        </button>
+
+
+                    </form>
+
+                    <button class="btn btn-light" data-bs-dismiss="modal" aria-label="Close">
+                        Cancelar
+                    </button>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="card"
      data-list='{
@@ -60,6 +110,8 @@
          "paginationClass": "list-pagination"
      }}'
      id="dataList">
+
+
 
     <div class="card-header">
         <div class="row align-items-center">
@@ -100,7 +152,7 @@
                     <!-- Toggle -->
                     <button class="btn btn-sm btn-white" type="button" data-bs-toggle="dropdown"
                             data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
-                        <i class="fe fe-sliders me-1"></i> Filtro <span class="badge bg-primary ms-1 d-none">0</span>
+                        <i class="fe fe-sliders me-1"></i> Filtrar <span class="badge bg-primary ms-1 d-none">0</span>
                     </button>
 
                     <!-- Menu -->
@@ -183,6 +235,8 @@
         </div> <!-- / .row -->
     </div>
 
+
+
     <div class="table-responsive">
         <table class="table table-sm table-hover table-nowrap card-table">
 
@@ -194,7 +248,7 @@
 
                     <!-- Checkbox -->
                     <div class="form-check mb-n2">
-                        <input class="form-check-input list-checkbox-all" id="listCheckboxAll" type="checkbox">
+                        <input class="form-check-input list-checkbox-all" id="listCheckboxAll" onclick="select_all()" type="checkbox">
                         <label class="form-check-label" for="listCheckboxAll"></label>
                     </div>
 
@@ -217,6 +271,8 @@
             </thead>
 
             <tbody class="list fs-base">
+
+
 
             @foreach ($data_array as $item)
 
@@ -280,7 +336,7 @@
 
                         <!-- Checkbox -->
                         <div class="form-check">
-                            <input class="form-check-input list-checkbox" type="checkbox" id="item_{{$item['id']}}">
+                            <input class="form-check-input list-checkbox" onclick="item_selected({{$item['id']}})" type="checkbox" id="item_{{$item['id']}}">
                             <label class="form-check-label" for="item_{{$item['id']}}"></label>
                         </div>
 
@@ -332,6 +388,9 @@
             </tbody>
         </table>
     </div>
+
+
+
     <div class="card-footer d-flex justify-content-between">
 
         <!-- Pagination (prev) -->
@@ -358,6 +417,7 @@
         <!-- Alert -->
         <div class="list-alert alert alert-dark alert-dismissible border fade" role="alert">
 
+
             <!-- Content -->
             <div class="row align-items-center">
                 <div class="col">
@@ -373,10 +433,11 @@
                 </div>
                 <div class="col-auto me-n3">
 
-                    <!-- Button -->
-                    <button class="btn btn-sm btn-white-20">
-                        Borrado masivo
-                    </button>
+                    @isset($mass_delete_route)
+                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modal_mass_delete" >
+                            <i class="fe fe-trash-2"></i> Borrado masivo
+                        </button>
+                    @endisset
 
                 </div>
             </div> <!-- / .row -->
@@ -384,7 +445,62 @@
             <!-- Close -->
             <button type="button" class="list-alert-close btn-close" aria-label="Close"></button>
 
+
         </div>
 
     </div>
 </div>
+
+@push('scripts')
+    <script>
+
+        let items_selected = [];
+
+        function item_selected(id)
+        {
+
+            // if item is already in array
+            if($.inArray(id, items_selected) !== -1) {
+                items_selected = $.grep(items_selected, function(value) {
+                    return value != id;
+                });
+                selected_all = false;
+            } else {
+                items_selected.push(id);
+            }
+
+            console.log(items_selected);
+            update_input_items_selected();
+
+        }
+
+
+
+        let items_id = [@foreach ($data_array as $item){{$item['id']}}@if(!$loop->last), @endif @endforeach]
+
+        let selected_all = false;
+        function select_all()
+        {
+            if(!selected_all) {
+                items_selected = items_id;
+                selected_all = true;
+            } else {
+                items_selected = [];
+                selected_all = false;
+            }
+
+            console.log(items_selected);
+            update_input_items_selected();
+        }
+
+        function update_input_items_selected()
+        {
+            $('#items_selected').val(items_selected);
+        }
+
+    </script>
+@endpush
+
+<script>
+
+</script>

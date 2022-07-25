@@ -819,6 +819,8 @@
 <!-- Alerts -->
 <script src="{{asset('js/alerts.js')}}"></script>
 
+@stack('scripts')
+
 @yield('scripts')
 
 <script>
