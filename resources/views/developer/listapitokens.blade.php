@@ -29,7 +29,7 @@
 
     @endif
 
-    {{route('developer.deleteapitoken_p',\Instantiation::instance())}}
+
 
     <x-data-table>
 
@@ -47,9 +47,17 @@
             Última vez usado, last_used_at, valor1:valor2:valor3:valor4
         </x-slot:filters>
 
-        <x-slot:delete-item-message>
+        <x-slot:edit_item_route>
+            developer.editapitoken
+        </x-slot:edit_item_route>
 
-        </x-slot:delete-item-message>
+        <x-slot:delete_item_route>
+            developer.deleteapitoken_p
+        </x-slot:delete_item_route>
+
+        <x-slot:delete_item_message>
+            Esto borrará el token. Los endpoints de la API de Evidentia que estén enlazados a dicho token dejarán de ser accesibles.
+        </x-slot:delete_item_message>
 
     </x-data-table>
 

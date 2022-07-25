@@ -220,6 +220,61 @@
 
             @foreach ($data_array as $item)
 
+                @isset($delete_item_route)
+
+                <div class="modal fade" id="modal_item_{{$item['id']}}" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-card card">
+                                <div class="card-header">
+
+                                    <!-- Title -->
+                                    <h4 class="card-header-title" id="exampleModalCenterTitle">
+                                        ¿Estás segur@?
+                                    </h4>
+
+                                    <!-- Close -->
+                                    <i style="cursor: pointer" class="fe fe-x-circle" data-bs-dismiss="modal" aria-label="Close"></i>
+                                </div>
+                                <div class="card-body">
+
+
+                                    @isset($delete_item_message)
+                                    <p> {{$delete_item_message}} </p>
+                                    @else
+                                    <p> Este elemento se eliminará del sistema. </p>
+                                    @endisset
+
+
+                                    <p>
+                                        <b>Esta acción no se puede deshacer.</b>
+                                    </p>
+
+                                    <form method="post" action="{{route("$delete_item_route",\Instantiation::instance())}}">
+                                        @csrf
+
+                                        <input type="hidden" name="_id" value="{{$item["id"]}}">
+
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="fe fe-trash"></i> Eliminar
+                                        </button>
+
+
+                                    </form>
+
+                                    <button class="btn btn-light" data-bs-dismiss="modal" aria-label="Close">
+                                        Cancelar
+                                    </button>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @endisset
+
                 <tr>
                     <td>
 
@@ -238,8 +293,6 @@
                                 {{$item[$value]}}
                             </span>
 
-
-
                         </td>
                     @endforeach
 
@@ -253,17 +306,23 @@
                                 <i class="fe fe-more-vertical"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
-                                <a href="#!" class="dropdown-item">
-                                    Action
-                                </a>
-                                <a href="#!" class="dropdown-item">
-                                    Another action
-                                </a>
-                                <a href="#!" class="dropdown-item text-danger">
-                                    Eliminar {{$item['id']}}
-                                </a>
+
+                                @isset($edit_item_route)
+                                    <a href="{{route("$edit_item_route",['instance' => \Instantiation::instance(), 'id' => $item['id']])}}" class="dropdown-item">
+                                        Editar
+                                    </a>
+                                @endisset
+
+                                @isset($delete_item_route)
+                                    <a class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#modal_item_{{$item['id']}}" href="#">
+                                        Eliminar
+                                    </a>
+                                @endisset
+
                             </div>
                         </div>
+
+
 
                     </td>
                 </tr>
@@ -279,7 +338,7 @@
         <ul class="list-pagination-prev pagination pagination-tabs card-pagination">
             <li class="page-item">
                 <a class="page-link ps-0 pe-4 border-end" href="#">
-                    <i class="fe fe-arrow-left me-1"></i> Anterior
+                    <i class="fe fe-arrow-left me-1"></i> Ant
                 </a>
             </li>
         </ul>
@@ -291,7 +350,7 @@
         <ul class="list-pagination-next pagination pagination-tabs card-pagination">
             <li class="page-item">
                 <a class="page-link ps-4 pe-0 border-start" href="#">
-                    Siguiente <i class="fe fe-arrow-right ms-1"></i>
+                    Sig <i class="fe fe-arrow-right ms-1"></i>
                 </a>
             </li>
         </ul>
@@ -316,12 +375,7 @@
 
                     <!-- Button -->
                     <button class="btn btn-sm btn-white-20">
-                        Edit
-                    </button>
-
-                    <!-- Button -->
-                    <button class="btn btn-sm btn-white-20">
-                        Delete
+                        Borrado masivo
                     </button>
 
                 </div>
