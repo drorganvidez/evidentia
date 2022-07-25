@@ -29,11 +29,18 @@ class DeveloperController extends Controller
     public function create_api_token_p(Request $request)
     {
 
+        $api_token = ApiToken::where('name', $request->input('name'))->first();
+
+        if($api_token != null) {
+            return redirect()->route('developer.createapitoken', \Instantiation::instance())
+                ->with('error', "'".   $request->input('name')."' ya ha sido usado para un token. Prueba con otro nombre.");
+        }
+
         $request->validate([
-            'token_name' => 'required|min:5|max:255',
+            'name' => 'required|min:5|max:255',
         ]);
 
-        $token_name = $request->input('token_name');
+        $token_name = $request->input('name');
         $token = \Random::getRandomApiToken();
 
         ApiToken::create([
@@ -45,6 +52,20 @@ class DeveloperController extends Controller
         $request->session()->flash('token', $token);
 
         return redirect()->route('developer.apitokens', \Instantiation::instance());
+
+    }
+
+    public function delete_api_token_p(Request $request)
+    {
+        $id = $request->input("_id");
+
+        $api_token = ApiToken::find($id)->first();
+
+        if($api_token != null) {
+            $api_token->delete();
+        }
+
+        return redirect()->route('developer.apitokens', \Instantiation::instance())->with('success', 'El token fue borrado con éxito');
 
     }
 

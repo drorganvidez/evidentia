@@ -17,7 +17,7 @@
         <div class="row">
             <x-input>
                 <x-slot:name>
-                    token_name
+                    name
                 </x-slot:name>
                 <x-slot:value>
 

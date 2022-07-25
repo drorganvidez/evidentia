@@ -39,7 +39,8 @@
 
         <x-slot:columns>
             Nombre del token, name;
-            Última vez usado, last_used_at
+            Última vez usado, last_used_at;
+            Creado el, created_at
         </x-slot:columns>
 
         <x-slot:filters>
