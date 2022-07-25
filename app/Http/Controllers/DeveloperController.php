@@ -47,4 +47,27 @@ class DeveloperController extends Controller
         return redirect()->route('developer.apitokens', \Instantiation::instance());
 
     }
+
+    public function delete_mass_api_token_p(Request $request)
+    {
+        $items_selected = $request->input("items_selected");
+
+        foreach (explode(',', $items_selected) as $item){
+
+            $api_token = ApiToken::find($item);
+
+            if($api_token != null) {
+
+                if($api_token->user_id == Auth::id()){
+
+                    $api_token->delete();
+
+                }
+
+            }
+
+        }
+
+        return redirect()->route('developer.apitokens', \Instantiation::instance())->with('success', 'Los tokens seleccionados fueron borrados con éxito');
+    }
 }
