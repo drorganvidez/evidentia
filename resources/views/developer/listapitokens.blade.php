@@ -69,7 +69,7 @@
         </x-slot:mass_delete_route>
 
         <x-slot:mass_delete_message>
-            Todos los tokens seleccionados serán borrados.
+            Todos los tokens seleccionados serán borrados. Los endpoints de la API de Evidentia que estén enlazados a estos tokens dejarán de ser accesibles.
         </x-slot:mass_delete_message>
 
 
@@ -92,6 +92,14 @@
         <x-slot:disable_search>
         </x-slot:disable_search>
         --}}
+
+        <x-slot:create_item_route>
+            developer.createapitoken
+        </x-slot:create_item_route>
+
+        <x-slot:create_item_message>
+            No hemos encontrado ningún token tuyo en el sistema. ¡Así no vas a poder usar la fabulosa API de Evidentia! ¿Te animas a crear un API token?
+        </x-slot:create_item_message>
 
     </x-data-table>
 

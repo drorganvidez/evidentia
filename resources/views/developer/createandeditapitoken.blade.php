@@ -10,9 +10,13 @@
 
 @section('content')
 
-    <form method="post" action="{{route('developer.createapitoken_p',\Instantiation::instance())}}">
+    <form method="post" action="{{route("$action",\Instantiation::instance())}}">
 
         @csrf
+
+        @isset($item)
+            <input type="hidden" name="_id" value="{{$item->id}}">
+        @endisset
 
         <div class="row">
             <x-input>
@@ -20,7 +24,7 @@
                     name
                 </x-slot:name>
                 <x-slot:value>
-
+                    {{$item->name ?? ''}}
                 </x-slot:value>
                 <x-slot:label>
                     Nombre del token
@@ -37,7 +41,7 @@
 
         <x-submit>
             <x-slot:name>
-                Crear
+                Guardar
             </x-slot:name>
         </x-submit>
 

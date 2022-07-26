@@ -16,12 +16,14 @@ class DeveloperController extends Controller
 
     public function create_api_token()
     {
-        return view('developer.createapitoken');
+        return view('developer.createandeditapitoken', [
+            'action' => 'developer.createapitoken_p'
+        ]);
     }
 
     public function list_api_tokens()
     {
-        $api_tokens = Auth::user()->api_tokens;
+        $api_tokens = Auth::user()->api_tokens->sortByDesc('created_at');
 
         return view('developer.listapitokens', ['api_tokens' => $api_tokens]);
     }
@@ -52,6 +54,33 @@ class DeveloperController extends Controller
         $request->session()->flash('token', $token);
 
         return redirect()->route('developer.apitokens', \Instantiation::instance());
+
+    }
+
+    public function edit_api_token($instance, $id)
+    {
+
+        $api_token = ApiToken::findOrFail($id);
+
+        return view('developer.createandeditapitoken', [
+            'action' => 'developer.editapitoken_p',
+            'item' => $api_token
+        ]);
+    }
+
+    public function edit_api_token_p(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|min:5|max:255',
+        ]);
+
+        $api_token = ApiToken::findOrFail($request->input('_id'));
+
+        $api_token->name = $request->input('name');
+        $api_token->save();
+
+        return redirect()->route('developer.apitokens', \Instantiation::instance())->with('success', 'El token se ha editado correctamente');
+
 
     }
 
