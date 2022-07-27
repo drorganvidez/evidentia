@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateComitteesTable extends Migration
+class CreateCommitteesTable extends Migration
 {
 
     protected $connection = 'base21';
@@ -16,7 +16,7 @@ class CreateComitteesTable extends Migration
      */
     public function up()
     {
-        Schema::create('comittees', function (Blueprint $table) {
+        Schema::create('committees', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('icon')->nullable();

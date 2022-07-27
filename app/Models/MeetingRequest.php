@@ -20,7 +20,7 @@ class MeetingRequest extends Model
 
     public function comittee()
     {
-        return $this->belongsTo('App\Models\Comittee');
+        return $this->belongsTo('App\Models\Committee');
     }
 
     public function secretary()

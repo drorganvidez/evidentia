@@ -4,8 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSubcomitteesTable extends Migration
+class CreateSubcommitteesTable extends Migration
 {
+
+    protected $connection = 'base21';
+    
     /**
      * Run the migrations.
      *
@@ -13,9 +16,9 @@ class CreateSubcomitteesTable extends Migration
      */
     public function up()
     {
-        Schema::create('subcomittees', function (Blueprint $table) {
+        Schema::create('subcommittees', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('comittee_id');
+            $table->foreignId('committee_id');
             $table->string('name');
             $table->string('icon')->nullable();
             $table->timestamps();
@@ -29,6 +32,6 @@ class CreateSubcomitteesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('subcomittees');
+        Schema::dropIfExists('subcommittees');
     }
 }

@@ -23,9 +23,9 @@ class Evidence extends Model
         return $this->belongsTo('App\Models\User');
     }
 
-    public function comittee()
+    public function committee()
     {
-        return $this->belongsTo('App\Models\Comittee');
+        return $this->belongsTo('App\Models\Committee');
     }
 
     public function reason_rejection()

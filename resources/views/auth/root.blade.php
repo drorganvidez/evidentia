@@ -130,7 +130,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <img width="100px" src="{{asset('dist/img/logo_light.svg')}}">
+                            <img width="100px" src="{{asset('img/logo_light.svg')}}">
                             <p class="text-muted">
                                 <b>evidentia.cloud</b> es un sistema de gestión automática de evidencias de trabajos de alumnos
                                 y alumnas. Fue originalmente pensado para las Jornadas InnoSoft Days organizadas en el ámbito de la asignatura

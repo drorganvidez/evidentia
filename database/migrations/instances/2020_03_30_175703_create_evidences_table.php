@@ -16,15 +16,16 @@ class CreateEvidencesTable extends Migration
         Schema::create('evidences', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->foreignId('comittee_id');
-            $table->string('title');
-            $table->text('description');
-            $table->float('hours');
+            $table->foreignId('comittee_id')->nullable();
+            $table->string('title')->nullable();
+            $table->text('description')->nullable();
+            $table->float('hours')->nullable();
             $table->integer('points_to')->nullable($value = true);
-            $table->enum('status', ['DRAFT', 'PENDING', 'ACCEPTED', 'REJECTED', 'BIN', 'CLOSED']);
+            $table->enum('status', ['DRAFT', 'PENDING', 'ACCEPTED', 'REJECTED', 'BIN', 'CLOSED'])->nullable();;
             $table->string('stamp')->nullable($value = true);
             $table->boolean('last')->default(true);
             $table->boolean('rand')->default(false);
+            $table->boolean('temp')->default(true);
             $table->timestamps();
         });
     }

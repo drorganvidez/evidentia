@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\CheckSession;
 use App\Http\Middleware\MeetingMinutesMine;
 use App\Http\Middleware\MeetingRequestMine;
 use App\Http\Middleware\SelectDatabaseApi;
@@ -86,6 +87,7 @@ class Kernel extends HttpKernel
         'meetingrequestmine' => MeetingRequestMine::class,
         'signaturesheetmine' => SignatureSheetMine::class,
         'meetingminutesmine' => MeetingMinutesMine::class,
-        'selectdatabaseapi' => SelectDatabaseApi::class
+        'selectdatabaseapi' => SelectDatabaseApi::class,
+        'checksession' => CheckSession::class
     ];
 }

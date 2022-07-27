@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\Instance;
 use App\Models\SignatureSheet;
 use Closure;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
 class SelectDatabase

@@ -48,60 +48,80 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::post('/login_p', 'LoginInstanceController@login_p')->name('instance.login_p');
     Route::post('/logout', 'LoginInstanceController@logout')->name('instance.logout');
 
-    // Main routes
-    Route::get('/', 'HomeController@index')->name('home');
+    Route::group(['middleware' => ['checksession']], function(){
+        // Main routes
+        Route::get('/', 'HomeController@index')->name('home');
 
-    // Profile routes
-    Route::group(['prefix' => 'profile'], function(){
-        Route::controller(ProfileController::class)->group(function () {
-            Route::get('data', 'data')->name('profile.data');
-            Route::post('data_p', 'data_p')->name('profile.data_p');
-            Route::get('avatar', 'avatar')->name('profile.avatar');
-            Route::get('password', 'password')->name('profile.password');
+        // Profile routes
+        Route::group(['prefix' => 'profile'], function(){
+            Route::controller(ProfileController::class)->group(function () {
+                Route::get('data', 'data')->name('profile.data');
+                Route::post('data_p', 'data_p')->name('profile.data_p');
+                Route::get('avatar', 'avatar')->name('profile.avatar');
+                Route::get('password', 'password')->name('profile.password');
+            });
         });
-    });
 
-    // Settings
-    Route::group(['prefix' => 'settings'], function() {
-        Route::controller(SettingController::class)->group(function () {
-            Route::get('notifications', 'notifications')->name('settings.notifications');
+        // Settings
+        Route::group(['prefix' => 'settings'], function() {
+            Route::controller(SettingController::class)->group(function () {
+                Route::get('notifications', 'notifications')->name('settings.notifications');
+            });
         });
-    });
 
-    // Developer
-    Route::group(['prefix' => 'developer'], function() {
-        Route::controller(DeveloperController::class)->group(function () {
+        // Developer
+        Route::group(['prefix' => 'developer'], function() {
+            Route::controller(DeveloperController::class)->group(function () {
 
-            Route::group(['prefix' => 'api'], function(){
+                Route::group(['prefix' => 'api'], function(){
 
-                Route::get('docs', 'api_docs')->name('developer.apidocs');
+                    Route::get('docs', 'api_docs')->name('developer.apidocs');
 
-                Route::group(['prefix' => 'tokens'], function(){
-                    Route::get('create', 'create_api_token')->name('developer.createapitoken');
-                    Route::get('edit/{id}', 'edit_api_token')->name('developer.editapitoken');
-                    Route::post('edit', 'edit_api_token_p')->name('developer.editapitoken_p');
-                    Route::post('create_p', 'create_api_token_p')->name('developer.createapitoken_p');
-                    Route::post('delete', 'delete_api_token_p')->name('developer.deleteapitoken_p');
-                    Route::post('delete/mass', 'delete_mass_api_token_p')->name('developer.deletemassapitoken_p');
-                    Route::get('', 'list_api_tokens')->name('developer.apitokens');
+                    Route::group(['prefix' => 'tokens'], function(){
+                        Route::get('create', 'create_api_token')->name('developer.createapitoken');
+                        Route::get('edit/{id}', 'edit_api_token')->name('developer.editapitoken');
+                        Route::post('edit', 'edit_api_token_p')->name('developer.editapitoken_p');
+                        Route::post('create_p', 'create_api_token_p')->name('developer.createapitoken_p');
+                        Route::post('delete', 'delete_api_token_p')->name('developer.deleteapitoken_p');
+                        Route::post('delete/mass', 'delete_mass_api_token_p')->name('developer.deletemassapitoken_p');
+                        Route::get('', 'list_api_tokens')->name('developer.apitokens');
+                    });
+
                 });
 
+
             });
+        });
 
+        // Evidences
+        Route::group(['prefix' => 'evidences'], function() {
+            Route::controller(EvidenceController::class)->group(function () {
 
+                // Create evidence
+                Route::group(['prefix' => 'create'], function() {
+                    Route::get('', 'create')->name('evidences.create');
+                    Route::post('draft', 'draft')->name('evidences.create.draft');
+                    Route::post('publish', 'publish')->name('evidences.create.publish');
+                });
+
+                // Edit evidence
+                Route::group(['prefix' => 'edit'], function() {
+                    Route::get('', 'edit')->name('evidences.edit');
+                    Route::post('draft', 'draft')->name('evidences.edit.draft');
+                    Route::post('publish', 'publish')->name('evidences.edit.publish');
+                });
+
+                // List evidences
+                Route::get('draft', 'list_draft')->name('evidences.draft');
+                Route::get('pending', 'list_pending')->name('evidences.pending');
+                Route::get('accepted', 'list_accepted')->name('evidences.accepted');
+                Route::get('rejected', 'list_rejected')->name('evidences.rejected');
+
+            });
         });
     });
 
-    // Evidences
-    Route::group(['prefix' => 'evidences'], function() {
-        Route::controller(EvidenceController::class)->group(function () {
-            Route::get('create', 'create')->name('evidences.create');
-            Route::get('draft', 'draft')->name('evidences.draft');
-            Route::get('pending', 'pending')->name('evidences.pending');
-            Route::get('accepted', 'accepted')->name('evidences.accepted');
-            Route::get('rejected', 'rejected')->name('evidences.rejected');
-        });
-    });
+
 
 });
 

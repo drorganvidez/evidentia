@@ -11,7 +11,7 @@ class Coordinator extends Model
 
     public function comittee()
     {
-        return $this->belongsTo('App\Models\Comittee','comittee_id');
+        return $this->belongsTo('App\Models\Committee','comittee_id');
     }
 
     public function user()

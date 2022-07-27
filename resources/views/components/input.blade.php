@@ -67,6 +67,16 @@ $is_invalid = "";
             @endphp
         @endisset
 
+        @isset($required)
+            @php
+                $required = "required"
+            @endphp
+        @else
+            @php
+                $required = ""
+            @endphp
+        @endisset
+
         @if(old("$name"))
             @php
                 $value = old("$name")
@@ -74,7 +84,7 @@ $is_invalid = "";
         @endif
 
         <!-- Input -->
-        <input type="{{$type}}" name="{{$name}}" value="{{$value}}" class="form-control{{$is_invalid}}" {{$disabled}} {{$autofocus}}>
+        <input type="{{$type}}" name="{{$name}}" value="{{$value}}" class="form-control{{$is_invalid}}" {{$disabled}} {{$autofocus}} {{$required}}>
 
         @error("$name")
         <div class="invalid-feedback">

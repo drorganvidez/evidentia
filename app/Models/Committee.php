@@ -4,15 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Comittee extends Model
+class Committee extends Model
 {
-    protected $table = 'comittees';
+    protected $table = 'committees';
 
     protected $fillable = ["icon","name"];
 
-    public function subcomittees()
+    public function subcommittees()
     {
-        return $this->hasMany('App\Models\Subcomittee');
+        return $this->hasMany('App\Models\Subcommittee');
     }
 
     public function evidences()

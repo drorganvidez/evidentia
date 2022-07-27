@@ -4,6 +4,7 @@ use App\Models\Instance;
 use Dotenv\Exception\InvalidPathException;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;use Illuminate\Support\Str;
 use App\Models\Configuration;
@@ -42,6 +43,9 @@ class Instantiation
             'engine' => 'InnoDB',
         ]]);
         config(['database.default' => 'instance']);
+
+        Cookie::queue('instance', $instance->route, 60*24*30*3);
+
     }
 
     public static function instance()
@@ -89,7 +93,7 @@ class Stamp
     public static function compute_file($file)
     {
         $salt =  \Config::secret();
-        $hash_file = hash_file('sha256', storage_path('/app/'.$file->route));
+        $hash_file = hash_file('sha256', storage_path('app/'.$file->route));
         $file->stamp = hash('sha256',
             $file->name.
             $file->size.
@@ -105,7 +109,7 @@ class Stamp
     public static function get_stamp_file($file)
     {
         $salt =  \Config::secret();
-        $hash_file = hash_file('sha256', storage_path('/app/'.$file->route));
+        $hash_file = hash_file('sha256', storage_path('app/'.$file->route));
         return hash('sha256',
             $file->name.
             $file->size.

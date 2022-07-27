@@ -762,7 +762,7 @@
 
         <x-alert></x-alert>
 
-        <div class="row">
+        <div class="row justify-content-center">
             <div class="col-12 mb-3">
 
                 <!-- Header -->

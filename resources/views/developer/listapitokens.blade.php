@@ -42,7 +42,7 @@
         <x-slot:columns>
             Nombre del token | name;
             Última vez usado | last_used_at | {"type" : "ago", "default" : "Nunca"};
-            Creado el | created_at | {"type" : "datetime"}
+            Fecha de creación | created_at | {"type" : "datetime"}
         </x-slot:columns>
 
         {{-- Filters --}}
