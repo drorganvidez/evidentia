@@ -3,7 +3,7 @@
 
         @error('files.*') <span class="error">{{ $message }}</span> @enderror
 
-        <div class="card" data-list='{"valueNames": ["name"]}'>
+        <div class="card" @if(count($proofs) > 0) data-list='{"valueNames": ["name"]}' @endif>
 
             <div class="card-header">
 

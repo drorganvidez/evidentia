@@ -24,7 +24,48 @@
             </small>
         @endisset
 
-        <div data-quill=''>{{$evidence->description ?? ''}}</div>
+        @if(old("$name"))
+            @php
+                $value = old("$name")
+            @endphp
+        @else
+            @php
+                $value = old("$name")
+            @endphp
+        @endif
+
+        <div id="editor" data-quill>{!! $value !!}</div>
+
+        @error("$name")
+        error {{$message}}
+        <div class="invalid-feedback">
+            {{$message}}
+        </div>
+        @enderror
+
+        <input type='hidden' name='{{$name}}' id='hidden_input'/>
+
+        @push('scripts')
+
+            @if(!empty($value))
+
+                <script>
+                    $('#hidden_input').val("{!! $value !!}");
+                </script>
+
+            @endif
+
+            <script>
+
+                $('.ql-editor').bind('DOMSubtreeModified', function(){
+                    let data = $('.ql-editor').html();
+                    data = data.replaceAll('"', "'");
+                    $('#hidden_input').val(data);
+                });
+
+            </script>
+
+        @endpush
 
     </div>
 

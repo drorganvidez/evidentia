@@ -22,7 +22,7 @@ class EvidenceService extends Service
             'title' => 'required|min:5|max:255',
             'hours' => ['required_without:minutes','nullable','numeric','sometimes','max:99',new CheckHoursAndMinutes(request()->input('minutes'))],
             'minutes' => ['required_without:hours','nullable','numeric','sometimes','max:60',new CheckHoursAndMinutes(request()->input('hours'))],
-            //'description' => ['required',new MinCharacters(10),new MaxCharacters(20000)],
+            'description' => ['required',new MinCharacters(10),new MaxCharacters(20000)],
         ];
 
     }

@@ -104,6 +104,12 @@
                         <x-slot:label>
                             Descripción
                         </x-slot:label>
+                        <x-slot:name>
+                            description
+                        </x-slot:name>
+                        <x-slot:value>
+                            {{$evidence->description ?? ''}}
+                        </x-slot:value>
                         <x-slot:description>
                             Escribe una descripción concisa de tu evidencia (entre 10 y 20000 caracteres)
                         </x-slot:description>
