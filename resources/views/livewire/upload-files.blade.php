@@ -28,29 +28,6 @@
             </div>
 
             @if(count($proofs) > 0)
-                <div class="card-header">
-
-                    <!-- Form -->
-                    <form>
-                        <div class="input-group input-group-flush input-group-merge input-group-reverse">
-
-                            <!-- Input -->
-                            <input class="form-control list-search" type="search" placeholder="Buscar en tus archivos">
-
-                            <!-- Prepend -->
-                            <div class="input-group-text">
-                                <span class="fe fe-search"></span>
-                            </div>
-
-                        </div>
-                    </form>
-
-                    <!-- Button -->
-                    <a href="#!" class="btn btn-outline-danger btn-sm">
-                        <i class="fe fe-trash-2"></i> Eliminar todos
-                    </a>
-
-                </div>
 
                 <div class="card-body">
 
@@ -62,14 +39,17 @@
                                 <div class="row align-items-center">
                                     <div class="col-auto">
 
-                                        <a href="#!" class="avatar avatar-lg">
+                                        <a href="#!" style="cursor: default" class="avatar avatar-lg">
                                             <span class="avatar-title rounded bg-white text-secondary">
 
                                                 @php
 
                                                     $type = $proof->file->type;
+
                                                     $images = array("png", "jpg", "jpeg", "svg");
                                                     $folders = array("zip", "rar", "tar.gz");
+                                                    $docs = array("docs", "docx", "txt" ,"pdf");
+                                                    $xls = array("xls", "xlsx");
 
                                                 @endphp
 
@@ -80,6 +60,18 @@
                                                 @elseif(in_array($type, $folders))
 
                                                     <span class="fe fe-folder"></span>
+
+                                                @elseif(in_array($type, $docs))
+
+                                                    <span class="fe fe-file-text"></span>
+
+                                                @elseif(in_array($type, $xls))
+
+                                                    <span class="fe fe-pie-chart"></span>
+
+                                                @else
+
+                                                    <span class="fe fe-file"></span>
 
                                                 @endif
 
@@ -92,9 +84,9 @@
 
                                         <!-- Title -->
                                         <h4 class="mb-1 name">
-                                            <a href="#!">
+                                            <a href="{{route('download.file', ['instance' => \Instantiation::instance(), 'file_id' => $proof->file->id])}}">
 
-                                                {{\Illuminate\Support\Str::limit($proof->file->name, 30)}}
+                                                {{\Illuminate\Support\Str::limit($proof->file->name, 20)}}
 
                                             </a>
                                         </h4>
@@ -108,37 +100,17 @@
                                     <div class="col-auto">
 
                                         <!-- Button -->
-                                        <a href="#!" class="btn btn-sm btn-white d-none d-md-inline-block">
+                                        <a href="{{route('download.file', ['instance' => \Instantiation::instance(), 'file_id' => $proof->file->id])}}" class="btn btn-sm btn-white d-none d-md-inline-block">
                                             <i class="fe fe-download"></i> Descargar
                                         </a>
 
-                                    </div>
-                                    <div class="col-auto">
-
-                                        <!-- Dropdown -->
-                                        <div class="dropdown">
-
-                                            <!-- Toggle -->
-                                            <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fe fe-more-vertical"></i>
-                                            </a>
-
-                                            <!-- Menu -->
-                                            <div class="dropdown-menu dropdown-menu-end">
-                                                <a href="#!" class="dropdown-item">
-                                                    Action
-                                                </a>
-                                                <a href="#!" class="dropdown-item">
-                                                    Another action
-                                                </a>
-                                                <a href="#!" class="dropdown-item">
-                                                    Something else here
-                                                </a>
-                                            </div>
-
-                                        </div>
+                                        <!-- Button -->
+                                        <a href="#!" wire:click="delete_file({{ $proof->file->id }})" class="btn btn-sm btn-outline-danger d-none d-md-inline-block">
+                                            <i class="fe fe-trash"></i> Eliminar
+                                        </a>
 
                                     </div>
+
                                 </div> <!-- / .row -->
                             </li>
                         @endforeach
@@ -146,6 +118,12 @@
                     </ul>
 
                 </div>
+            @else
+
+                <div class="card-body">
+                    Sin archivos
+                </div>
+
             @endif
 
 

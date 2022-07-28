@@ -2,90 +2,181 @@
 
 namespace App\Http\Services;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Resources\EvidenceResource;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
+use ReflectionClass;
 
 abstract class Service
 {
 
-    protected string $model;
+    protected $model;
+    protected $resource;
     protected array $validation_rules;
     protected Request $request;
 
-    public function __construct($model)
+    public function __construct($model, $resource)
     {
         $this->model = $model;
+        $this->resource = $resource;
         $this->request = Request::capture();
+        $this->validation_rules = [];
     }
 
-    public function validate()
+    public function validate(): void
     {
         $this->request->validate($this->validation_rules);
     }
 
-    protected function set_validation_rules($array)
+    private function validation($data): bool
     {
-        $this->validation_rules = $array;
+        $validator = $this->validator($data);
+        return !$validator->fails();
     }
 
-    public function validation_rules()
+    private function validator($data): \Illuminate\Contracts\Validation\Validator
+    {
+        return Validator::make($data, $this->validation_rules);
+    }
+
+    private function fails($messages) : JsonResponse
+    {
+        return response()->json([
+            'errors' => $messages
+        ]);
+    }
+
+    public function validation_rules(): array
     {
         return $this->validation_rules;
     }
 
-    public function create($array)
+    protected function set_validation_rules($array): void
     {
-        $this->validate();
-        return $this->model::create($array);
+        $this->validation_rules = $array;
     }
 
-    public function update($id,$array)
+    /**
+     *  Get JSON resource from entity
+     *
+     * @throws \ReflectionException
+     */
+
+    public function transform_to_resource($entity): object
     {
-        $this->validate();
-        return $this->model::where('id', $id)->update($array);
+        $resource = new ReflectionClass($this->resource);
+        return $resource->newInstance($entity);
     }
 
-    public function delete($id)
+    /**
+     *  Get JSON collection resource from entity
+     *
+     * @throws \ReflectionException
+     */
+
+    public function transform_to_resource_collection($entities): object
+    {
+        return $this->resource::collection($entities);
+    }
+
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function create($data): object
+    {
+
+        if(!$this->validation($data)){
+            return $this->fails($this->validator($data)->messages());
+        }
+
+        $entity = $this->model::create($data);
+
+        return $this->transform_to_resource($entity);
+    }
+
+
+    /**
+     *  Update
+     * @throws \ReflectionException
+     */
+
+    public function update($id, $new_data): object
+    {
+
+        if(!$this->validation($new_data)){
+            return $this->fails($this->validator($new_data)->messages());
+        }
+
+        $updated = $this->model::find($id)->update($new_data);
+
+        if($updated){
+            $entity = $this->model::find($id);
+            return $this->transform_to_resource($entity);
+        } else {
+            return response()->json([
+                'errors' => ['fatal' => $this->model::class . ' cannot be updated']
+            ]);
+        }
+
+    }
+
+    public function delete($id): void
     {
         $entity = $this->model::find($id);
         $entity->delete();
     }
 
-    public function find($id)
+    /**
+     *  Find
+     * @throws \ReflectionException
+     */
+    public function find($id): object
     {
+        $entity = $this->model::find($id);
+        return $this->transform_to_resource($entity);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function find_by($array): object
+    {
+        $entity =  $this->model::where($array)->first();
+        return $this->transform_to_resource($entity);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function find_all_by($array): object
+    {
+        $entities =  $this->model::where($array)->get();
+        return $this->transform_to_resource_collection($entities);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function all(): object
+    {
+        $entities =  $this->model::all();
+        return $this->transform_to_resource_collection($entities);
+    }
+
+    public function entity($entity_json)
+    {
+        $id = json_decode(json_encode($entity_json), false)->id;
         return $this->model::find($id);
     }
 
-    public function find_or_fail($id)
+    public function stringify_collection($collection)
     {
-        return $this->model::findOrFail($id);
+        $json = $this->transform_to_resource_collection($collection);
+        return json_encode($json, JSON_UNESCAPED_UNICODE, );
     }
 
-    public function find_by($array)
-    {
-        return $this->model::where($array)->first();
-    }
-
-    public function find_all_by($array)
-    {
-        return $this->model::where($array)->get();
-    }
-
-    public function all()
-    {
-        return $this->model::all();
-    }
-
-    public function all_sorted_by($field)
-    {
-        return $this->model::all()->sortBy($field);
-    }
-
-    public function all_sorted_by_desc($field)
-    {
-        return $this->model::all()->sortByDesc($field);
-    }
 
 }

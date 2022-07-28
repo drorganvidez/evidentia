@@ -16,7 +16,7 @@ class CreateEvidencesTable extends Migration
         Schema::create('evidences', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->foreignId('comittee_id')->nullable();
+            $table->foreignId('committee_id')->nullable();
             $table->string('title')->nullable();
             $table->text('description')->nullable();
             $table->float('hours')->nullable();

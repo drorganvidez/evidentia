@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DeveloperController;
+use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\EvidenceController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ProfileController;
@@ -100,15 +101,15 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
                 // Create evidence
                 Route::group(['prefix' => 'create'], function() {
                     Route::get('', 'create')->name('evidences.create');
-                    Route::post('draft', 'draft')->name('evidences.create.draft');
-                    Route::post('publish', 'publish')->name('evidences.create.publish');
+                    Route::post('draft', 'create_draft')->name('evidences.create.draft');
+                    Route::post('publish', 'create_publish')->name('evidences.create.publish');
                 });
 
                 // Edit evidence
                 Route::group(['prefix' => 'edit'], function() {
                     Route::get('', 'edit')->name('evidences.edit');
-                    Route::post('draft', 'draft')->name('evidences.edit.draft');
-                    Route::post('publish', 'publish')->name('evidences.edit.publish');
+                    Route::post('draft', 'edit_draft')->name('evidences.edit.draft');
+                    Route::post('publish', 'edit_publish')->name('evidences.edit.publish');
                 });
 
                 // List evidences
@@ -117,6 +118,13 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
                 Route::get('accepted', 'list_accepted')->name('evidences.accepted');
                 Route::get('rejected', 'list_rejected')->name('evidences.rejected');
 
+            });
+        });
+
+        // Settings
+        Route::group(['prefix' => 'download'], function() {
+            Route::controller(DownloadController::class)->group(function () {
+                Route::get('file/{file_id}', 'download_file')->name('download.file');
             });
         });
     });

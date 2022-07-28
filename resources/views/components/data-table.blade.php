@@ -51,7 +51,7 @@
         @endphp
     @endisset
 
-
+    @isset($mass_delete_route)
     <div class="modal fade" id="modal_mass_delete" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -102,7 +102,7 @@
             </div>
         </div>
     </div>
-
+    @endisset
     <div class="card"
          data-list='{
      "valueNames": [

@@ -30,7 +30,6 @@
     @endif
 
 
-
     <x-data-table>
 
         {{-- Data --}}

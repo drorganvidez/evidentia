@@ -106,6 +106,20 @@ class UploadFiles extends Component
 
         $this->emit('refreshComponent');
 
+        $this->render();
+
+    }
+
+    public function delete_file($file_id)
+    {
+        $file = File::findOrFail($file_id);
+
+        Storage::delete($file->route);
+
+        $file->delete();
+
+        $this->proofs = Evidence::find($this->evidence_id)->proofs->sortByDesc('created_at');
+        $this->render();
     }
 
     public function toggle_button()

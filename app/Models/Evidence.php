@@ -10,7 +10,7 @@ class Evidence extends Model
     protected $table="evidences";
 
     protected $fillable = [
-        'id', 'title', 'description', 'hours', 'user_id', 'comittee_id', 'points_to', 'status', 'stamp', 'rand'
+        'id', 'title', 'description', 'hours', 'user_id', 'committee_id', 'points_to', 'status', 'stamp', 'rand', 'temp'
     ];
 
     public function proofs()
@@ -141,6 +141,15 @@ class Evidence extends Model
     public function integrity()
     {
         return $this->stamp == \Stamp::get_stamp_evidence($this);
+    }
+
+    public function files()
+    {
+        $collect = collect();
+        foreach($this->proofs as $proof){
+            $collect->push($proof->file);
+        }
+        return $collect;
     }
 
 }
