@@ -111,9 +111,17 @@
                             {{$evidence->description ?? ''}}
                         </x-slot:value>
                         <x-slot:description>
-                            Escribe una descripción concisa de tu evidencia (entre 10 y 20000 caracteres)
+                            Escribe una descripción concisa de tu evidencia (entre 10 y 20.000 caracteres)
                         </x-slot:description>
                     </x-textarea>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="form-group col-md-6">
+                        <button type="submit" formaction="{{$route_draft}}" class="btn btn-secondary btn-block"><i class="fas fa-pencil-ruler"></i> &nbsp;Guardar como borrador</button>
+                    </div>
 
                 </div>
 
@@ -135,13 +143,7 @@
 
             </div>
 
-            <div class="row">
 
-                <div class="form-group col-md-4">
-                    <button type="submit" formaction="{{$route_draft}}" class="btn btn-secondary btn-block"><i class="fas fa-pencil-ruler"></i> &nbsp;Guardar como borrador</button>
-                </div>
-
-            </div>
 
         </div>
 

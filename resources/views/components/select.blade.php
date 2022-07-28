@@ -34,7 +34,16 @@
         <select class="form-select mb-3" name="{{$name}}" data-choices>
 
             @foreach ($data_array as $item)
-                <option value="{{$item['id']}}">{{$item["$option_name"]}}</option>
+
+                @isset($value)
+                    @if(!empty($value))
+                        <option @if($value == $item['id']) selected @endif value="{{$item['id']}}">{{$item["$option_name"]}}</option>
+                    @endif
+                @else
+                    <option @if(old("$name") == $item['id']) selected @endif value="{{$item['id']}}">{{$item["$option_name"]}}</option>
+                @endisset
+
+
             @endforeach
 
         </select>
