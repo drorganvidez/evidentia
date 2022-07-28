@@ -1,4 +1,18 @@
 
+@php
+
+    $is_invalid = "";
+
+@endphp
+
+@error("$name")
+@php
+
+    $is_invalid = " is-invalid";
+
+@endphp
+@enderror
+
 <div class="{{$col}}">
 
     <div class="form-group">
@@ -34,10 +48,14 @@
             @endphp
         @endif
 
+        <div class="form-control {{$is_invalid}} d-none">
+        </div>
+
         <div id="editor" data-quill>{!! $value !!}</div>
 
+
+
         @error("$name")
-        error {{$message}}
         <div class="invalid-feedback">
             {{$message}}
         </div>
@@ -45,29 +63,35 @@
 
         <input type='hidden' name='{{$name}}' id='hidden_input'/>
 
-        @push('scripts')
-
-            @if(!empty($value))
-
-                <script>
-                    $('#hidden_input').val("{!! $value !!}");
-                </script>
-
-            @endif
-
-            <script>
-
-                $('.ql-editor').bind('DOMSubtreeModified', function(){
-                    let data = $('.ql-editor').html();
-                    data = data.replaceAll('"', "'");
-                    $('#hidden_input').val(data);
-                });
-
-            </script>
-
-        @endpush
-
     </div>
 
 </div>
+
+@push('scripts')
+
+    @error("$name")
+        <script>
+            $('.ql-editor').css('border', '1px solid red');
+        </script>
+    @enderror
+
+    @if(!empty($value))
+
+        <script>
+            $('#hidden_input').val("{!! $value !!}");
+        </script>
+
+    @endif
+
+    <script>
+
+        $('.ql-editor').bind('DOMSubtreeModified', function(){
+            let data = $('.ql-editor').html();
+            data = data.replaceAll('"', "'");
+            $('#hidden_input').val(data);
+        });
+
+    </script>
+
+@endpush
 
