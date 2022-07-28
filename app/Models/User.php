@@ -142,23 +142,23 @@ class User extends Authenticatable
     }
 
     public function evidences_draft() {
-        return $this->evidences->where('status','=', 'DRAFT');
+        return $this->evidences->where('status','=', 'DRAFT')->sortByDesc('created_at');
     }
 
     public function evidences_not_draft() {
-        return $this->evidences->where('status','!=', 'DRAFT');
+        return $this->evidences->where('status','!=', 'DRAFT')->sortByDesc('created_at');
     }
 
     public function evidences_pending() {
-        return $this->evidences->where('status','=', 'PENDING');
+        return $this->evidences->where('status','=', 'PENDING')->sortByDesc('created_at');
     }
 
     public function evidences_accepted() {
-        return $this->evidences->where('status','=', 'ACCEPTED');
+        return $this->evidences->where('status','=', 'ACCEPTED')->sortByDesc('created_at');
     }
 
     public function evidences_rejected() {
-        return $this->evidences->where('status','=', 'REJECTED');
+        return $this->evidences->where('status','=', 'REJECTED')->sortByDesc('created_at');
     }
 
     // Asistencias pendientes

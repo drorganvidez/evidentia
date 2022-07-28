@@ -6,7 +6,7 @@
 
 @endphp
 
-@if(count($data_array) > 0)
+@if(count($data_array) > 0 or (count($data_array) === 0 and count(request()->query()) !== 0 ))
     @isset($columns)
 
         @php
@@ -237,7 +237,7 @@
                                                                 foreach (explode(':', $filter_values[$loop->index]) as $item){
 
 
-                                                                    if(request()->query($filter_names[$loop->index]) === $item){
+                                                                    if(strcmp(trim(request()->query($filter_names[$loop->index])), trim($item)) === 0){
                                                                         echo '<option value="'. $item .'" selected>'. $item .'</option>';
                                                                     }else {
                                                                         echo '<option value="'. $item .'">'. $item .'</option>';
@@ -318,8 +318,6 @@
                 </thead>
 
                 <tbody class="list fs-base">
-
-
 
                 @foreach ($data_array as $item)
 
@@ -732,7 +730,9 @@
     <script>
 
     </script>
-@else
+@endif
+
+@if(count($data_array) === 0 and count(request()->query()) === 0 )
 
     <div class="card">
         <div class="card-body">
@@ -745,7 +745,9 @@
                 @isset($create_item_message)
                     {{$create_item_message}}
                 @else
+
                     No se ha encontrado ningún resultado.
+
                 @endisset
             </p>
 

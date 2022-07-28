@@ -19,6 +19,7 @@ class EvidenceResource extends JsonResource
             'title' => $this->title,
             'hours' => $this->hours,
             'description' => $this->description,
+            'status' => $this->status,
             'committee' => $this->committee->name,
             'files_count' => count($this->files()),
             'files' => FileResource::collection($this->files()),

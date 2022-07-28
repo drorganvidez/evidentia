@@ -2,10 +2,8 @@
 
 namespace App\Http\Services;
 
-use App\Http\Resources\EvidenceResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Validator;
 use ReflectionClass;
 
@@ -14,7 +12,7 @@ abstract class Service
 
     protected $model;
     protected $resource;
-    protected array $validation_rules;
+    protected array $rules;
     protected Request $request;
 
     public function __construct($model, $resource)
@@ -22,12 +20,12 @@ abstract class Service
         $this->model = $model;
         $this->resource = $resource;
         $this->request = Request::capture();
-        $this->validation_rules = [];
+        $this->rules = [];
     }
 
     public function validate(): void
     {
-        $this->request->validate($this->validation_rules);
+        $this->request->validate($this->rules);
     }
 
     private function validation($data): bool
@@ -38,7 +36,7 @@ abstract class Service
 
     private function validator($data): \Illuminate\Contracts\Validation\Validator
     {
-        return Validator::make($data, $this->validation_rules);
+        return Validator::make($data, $this->rules);
     }
 
     private function fails($messages) : JsonResponse
@@ -48,14 +46,14 @@ abstract class Service
         ]);
     }
 
-    public function validation_rules(): array
+    public function rules(): array
     {
-        return $this->validation_rules;
+        return $this->rules;
     }
 
-    protected function set_validation_rules($array): void
+    protected function set__rules($array): void
     {
-        $this->validation_rules = $array;
+        $this->rules = $array;
     }
 
     /**
@@ -71,7 +69,7 @@ abstract class Service
     }
 
     /**
-     *  Get JSON collection resource from entity
+     *  Get JSON collection resource from entities
      *
      * @throws \ReflectionException
      */
@@ -110,14 +108,14 @@ abstract class Service
             return $this->fails($this->validator($new_data)->messages());
         }
 
-        $updated = $this->model::find($id)->update($new_data);
+        $updated = $this->model::find($id)?->update($new_data);
 
         if($updated){
             $entity = $this->model::find($id);
             return $this->transform_to_resource($entity);
         } else {
             return response()->json([
-                'errors' => ['fatal' => $this->model::class . ' cannot be updated']
+                'errors' => ['fatal' => $this->model. ' cannot be updated']
             ]);
         }
 
@@ -172,10 +170,22 @@ abstract class Service
         return $this->model::find($id);
     }
 
-    public function stringify_collection($collection)
+    /**
+     * @throws \ReflectionException
+     */
+    public function stringify_entity($entity): string
+    {
+        $json = $this->transform_to_resource($entity);
+        return json_encode($json, JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function stringify_collection($collection): string
     {
         $json = $this->transform_to_resource_collection($collection);
-        return json_encode($json, JSON_UNESCAPED_UNICODE, );
+        return json_encode($json, JSON_UNESCAPED_UNICODE);
     }
 
 

@@ -13,7 +13,28 @@
     <div class="row">
         <div class="col-lg-12">
 
-            Aceptadas
+            <x-data-table>
+
+                {{-- Data --}}
+                <x-slot:data>
+                    {{$evidences}}
+                </x-slot:data>
+
+                {{-- Columns --}}
+                <x-slot:columns>
+                    Título | title;
+                    Horas | hours;
+                    Comité | committee | {"type" : "badge"};
+                    Última modificación | updated_at | {"type" : "ago"}
+                </x-slot:columns>
+
+                {{-- Filters --}}
+                <x-slot:filters>
+                    Comité, committee, @foreach($committees as $committee) {{$committee->name}} @if(!$loop->last): @endif @endforeach
+                </x-slot:filters>
+
+
+            </x-data-table>
 
         </div>
 
