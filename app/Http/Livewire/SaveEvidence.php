@@ -38,24 +38,28 @@ class SaveEvidence extends Component
     public function saveTitle($title)
     {
         $this->evidence_temp->title = $title;
+        $this->evidence_temp->autosaved = true;
         $this->evidence_temp->save();
     }
 
     public function saveHours($hours)
     {
         $this->evidence_temp->hours = $hours;
+        $this->evidence_temp->autosaved = true;
         $this->evidence_temp->save();
     }
 
     public function saveCommittee($committee_id)
     {
         $this->evidence_temp->committee_id = $committee_id;
+        $this->evidence_temp->autosaved = true;
         $this->evidence_temp->save();
     }
 
     public function saveDescription($description)
     {
         $this->evidence_temp->description = $description;
+        $this->evidence_temp->autosaved = true;
         $this->evidence_temp->save();
     }
 

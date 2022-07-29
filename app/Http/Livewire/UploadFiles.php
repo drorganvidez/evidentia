@@ -7,6 +7,7 @@ use App\Models\Evidence;
 use App\Models\File;
 use App\Models\Instance;
 use App\Models\Proof;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Storage;
@@ -21,6 +22,7 @@ class UploadFiles extends Component
     public $files = [];
 
     public $evidence_id;
+    public $evidence;
     public $instance_route;
     public $proofs;
 
@@ -30,6 +32,10 @@ class UploadFiles extends Component
     public $iteration;
 
     public $show_button = false;
+
+    public $user_id;
+
+    public $user;
 
     protected $listeners = ['refreshComponent' => '$refresh'];
 
@@ -46,16 +52,14 @@ class UploadFiles extends Component
         $this->fix_database();
     }
 
-    public function mount($evidence_id)
+    public function mount($evidence_id, $user_id)
     {
         $this->instance_route = Cookie::get('instance');
         $this->evidence_id = $evidence_id;
+        $this->evidence = Evidence::find($evidence_id);
         $this->proofs = Evidence::find($this->evidence_id)->proofs->sortByDesc('created_at');
-    }
-
-    public function booted()
-    {
-
+        $this->user_id = $user_id;
+        $this->user = User::find($this->user_id);
     }
 
     public function upload()
@@ -65,7 +69,8 @@ class UploadFiles extends Component
             'files.*' => 'max:1024', // 1MB Max
         ]);
         */
-        $user = Auth::user();
+
+        $this->fix_database();
 
         foreach ($this->files as $file) {
 
@@ -73,8 +78,8 @@ class UploadFiles extends Component
             $type = $file->getClientOriginalExtension();
             $size = $file->getSize();
 
-            $path = $this->instance_route.'/proofs/'.$user->username.'/evidence_'.$this->evidence_id.'/';
-            $full_path = $this->instance_route.'/proofs/'.$user->username.'/evidence_'.$this->evidence_id.'/'.$name;
+            $path = $this->instance_route.'/proofs/'.$this->user->username.'/evidence_'.$this->evidence_id.'/';
+            $full_path = $this->instance_route.'/proofs/'.$this->user->username.'/evidence_'.$this->evidence_id.'/'.$name;
 
             Storage::putFileAs($path, $file, $name);
 
@@ -92,6 +97,9 @@ class UploadFiles extends Component
                 'evidence_id' => $this->evidence_id,
                 'file_id' => $file_entity->id
             ]);
+
+            $this->evidence->autosaved = true;
+            $this->evidence->save();
 
 
         }

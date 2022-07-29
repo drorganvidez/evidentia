@@ -29,6 +29,7 @@ class CreateEvidencesTable extends Migration
             $table->boolean('last')->default(true);
             $table->boolean('rand')->default(false);
             $table->boolean('temp')->default(true);
+            $table->boolean('autosaved')->default(false);
             $table->timestamps();
         });
     }

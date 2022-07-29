@@ -11,6 +11,7 @@ use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class EvidenceController extends Controller
 {
@@ -29,7 +30,10 @@ class EvidenceController extends Controller
         $instance = \Instantiation::instance();
         $committees = Committee::all();
 
-        $evidence_temp = Evidence::where(['user_id' => Auth::id(), 'temp' => true])->first();
+        $evidence_temp = Evidence::where([
+            'user_id' => Auth::id(),
+            'temp' => true
+        ])->first();
 
         if($evidence_temp == null){
             $evidence_temp = Evidence::create([
@@ -87,6 +91,26 @@ class EvidenceController extends Controller
             return redirect()->route('evidences.pending',\Instantiation::instance())->with('success', 'Evidencia publicada y pendiente de revisar.');
         }
 
+    }
+
+    public function delete_autosaved(Request $request){
+
+        $user = Auth::user();
+        $evidence = Evidence::find($request->input('_id'));
+
+        $this->delete_files($evidence);
+        Storage::deleteDirectory(\Instantiation::instance().'/proofs/'.$user->username.'/evidence_'.$evidence->id);
+        $evidence->delete();
+
+        return redirect()->route('evidences.create', \Instantiation::instance());
+    }
+
+    private function delete_files($evidence)
+    {
+        foreach($evidence->proofs as $proof)
+        {
+            $proof->file->delete();
+        }
     }
 
     public function list_draft(Request $request)

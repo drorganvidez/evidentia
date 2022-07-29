@@ -16,6 +16,7 @@
                     </div>
 
                     <div class="col-lg-3 col-md-12">
+
                         @if($show_button)
 
                             <button class="btn btn-primary btn-sm" type="submit"><i class="fe fe-upload"></i> Subir</button>

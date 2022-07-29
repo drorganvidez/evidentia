@@ -1,7 +1,7 @@
 
     <div class="col-lg-6" wire:ignore>
 
-        <form method="POST">
+        <form method="POST" id="form">
 
             @csrf
 
@@ -187,6 +187,17 @@
             <script>
                 $(document).ready(function(){
 
+                    // we start to do automatic saving when we detect any change in the form
+                    let must_save = false;
+
+                    $("#form").change(function(){
+                        must_save = true
+                    })
+
+                    $('.ql-editor').bind('DOMSubtreeModified', function(){
+                        must_save = true
+                    });
+
                     let interval = 1000*60;
 
                     function saveTitle(){
@@ -200,7 +211,7 @@
                     }
 
                     function saveCommittee(){
-                       let committee_id = $( "select[name=committee_id]").val();
+                        let committee_id = $( "select[name=committee_id]").val();
                         Livewire.emit('saveCommittee', committee_id)
                     }
 
@@ -210,24 +221,34 @@
                     }
 
                     function toSave(){
-                        $("#loaded").hide();
-                        $("#loading").show();
-                        saveTitle();
-                        saveHours();
-                        saveCommittee();
-                        saveDescription();
-                        setTimeout(() => {
 
-                            $("#loading").hide();
-                            $("#loaded").show();
+                        if(must_save){
+                            $("#loaded").hide();
+                            $("#loading").show();
+                            saveTitle();
+                            saveHours();
+                            saveCommittee();
+                            saveDescription();
+                            setTimeout(() => {
 
-                            var today = new Date();
-                            var datetime = today.getDate() + '/' + ( today.getMonth() + 1 ) + '/' + today.getFullYear() + " " + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+                                $("#loading").hide();
+                                $("#loaded").show();
 
-                            $("#datetime").html(datetime);
+                                var today = new Date();
+                                var datetime = today.getDate() + '/' + ( today.getMonth() + 1 ) + '/' + today.getFullYear() + " " + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
 
-                        }, 2000);
+                                $("#datetime").html(datetime);
+
+                            }, 2000);
+                        }
+
                     }
+
+                    @if(old('title'))
+                        must_save = true;
+                        toSave();
+                    @endif
+
 
                     setInterval(toSave, interval);
 

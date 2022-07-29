@@ -118,6 +118,9 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
                 Route::get('accepted', 'list_accepted')->name('evidences.accepted');
                 Route::get('rejected', 'list_rejected')->name('evidences.rejected');
 
+                // Delete autosaved
+                Route::post('autosaved', 'delete_autosaved')->name('evidences.delete.autosaved');
+
             });
         });
 
