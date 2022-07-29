@@ -192,7 +192,22 @@
                             <!-- Toggle -->
                             <button class="btn btn-sm btn-white" type="button" data-bs-toggle="dropdown"
                                     data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
-                                <i class="fe fe-sliders me-1"></i> Filtrar <span class="badge bg-primary ms-1 d-none">0</span>
+
+                                @php
+
+                                    $filter_count = 0;
+
+                                    foreach($filter_names as $filter_name){
+                                        if(!empty(request()->query($filter_name))){
+                                            if(strcmp(request()->query($filter_name),"*") !== 0){
+                                                $filter_count++;
+                                            }
+                                        }
+                                    }
+
+                                @endphp
+
+                                <i class="fe fe-sliders me-1"></i> Filtrar <span class="badge bg-primary @if($filter_count === 0) d-none @endif ms-1">{{$filter_count}}</span>
                             </button>
 
                             <!-- Menu -->
