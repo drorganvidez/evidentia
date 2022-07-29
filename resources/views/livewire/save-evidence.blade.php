@@ -225,6 +225,11 @@
                         if(must_save){
                             $("#loaded").hide();
                             $("#loading").show();
+
+                            var today = new Date();
+                            var datetime = today.getDate() + '/' + ( today.getMonth() + 1 ) + '/' + today.getFullYear() + " " + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+                            $("#datetime").html(datetime);
+                            
                             saveTitle();
                             saveHours();
                             saveCommittee();
@@ -234,10 +239,8 @@
                                 $("#loading").hide();
                                 $("#loaded").show();
 
-                                var today = new Date();
-                                var datetime = today.getDate() + '/' + ( today.getMonth() + 1 ) + '/' + today.getFullYear() + " " + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
 
-                                $("#datetime").html(datetime);
+
 
                             }, 2000);
                         }
