@@ -52,25 +52,25 @@ class UploadFiles extends Component
         $this->fix_database();
     }
 
-    public function mount($evidence_id, $user_id)
+    public function mount($evidence_id)
     {
         $this->instance_route = Cookie::get('instance');
         $this->evidence_id = $evidence_id;
         $this->evidence = Evidence::find($evidence_id);
-        $this->proofs = Evidence::find($this->evidence_id)->proofs->sortByDesc('created_at');
-        $this->user_id = $user_id;
+        $this->user_id = $this->evidence->user->id;
         $this->user = User::find($this->user_id);
     }
 
     public function upload()
     {
+
         /*
         $this->validate([
             'files.*' => 'max:1024', // 1MB Max
         ]);
         */
 
-        $this->fix_database();
+        //$this->fix_database();
 
         foreach ($this->files as $file) {
 
@@ -98,13 +98,7 @@ class UploadFiles extends Component
                 'file_id' => $file_entity->id
             ]);
 
-            $this->evidence->autosaved = true;
-            $this->evidence->save();
-
-
         }
-
-        $this->proofs = Evidence::find($this->evidence_id)->proofs->sortByDesc('created_at');
 
         //clean up
         $this->attachment=null;
@@ -112,9 +106,8 @@ class UploadFiles extends Component
 
         $this->toggle_button();
 
-        $this->emit('refreshComponent');
-
-        $this->render();
+        $this->evidence->autosaved = true;
+        $this->evidence->save();
 
     }
 
@@ -126,14 +119,9 @@ class UploadFiles extends Component
 
     public function delete_file($file_id)
     {
-        $file = File::findOrFail($file_id);
-
+        $file = File::find($file_id);
         Storage::delete($file->route);
-
         $file->delete();
-
-        $this->proofs = Evidence::find($this->evidence_id)->proofs->sortByDesc('created_at');
-        $this->render();
     }
 
     public function toggle_button()
@@ -143,6 +131,8 @@ class UploadFiles extends Component
 
     public function render()
     {
+
+        $this->proofs = Evidence::find($this->evidence_id)->proofs->sortByDesc('created_at');
 
         return view('livewire.upload-files', [
             'proofs' => $this->proofs

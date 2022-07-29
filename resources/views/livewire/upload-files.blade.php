@@ -1,5 +1,4 @@
 <div>
-    <form wire:submit.prevent="upload">
 
         @error('files.*') <span class="error">{{ $message }}</span> @enderror
 
@@ -7,24 +6,30 @@
 
             <div class="card-header">
 
+                <form wire:submit.prevent="upload">
+
                 <div class="row">
 
-                    <div class="col-lg-9 col-md-12">
+                    <div class="col-lg-8 col-sm-8">
                         <input class="form-control form-control-sm"
                                type="file" name="attachment" id="upload{{ $iteration }}"
                                wire:model="files" wire:change="toggle_button" multiple>
                     </div>
 
-                    <div class="col-lg-3 col-md-12">
+                    <div class="col-lg-4 col-sm-4">
 
                         @if($show_button)
 
-                            <button class="btn btn-primary btn-sm" type="submit"><i class="fe fe-upload"></i> Subir</button>
+                            <button class="btn btn-primary btn-sm btn-block" type="submit"><i class="fe fe-upload"></i> Subir</button>
 
                         @endif
                     </div>
 
+
+
                 </div>
+
+                </form>
 
             </div>
 
@@ -81,13 +86,13 @@
                                         </a>
 
                                     </div>
-                                    <div class="col ms-n2">
+                                    <div class="col w-25 ms-n2">
 
                                         <!-- Title -->
                                         <h4 class="mb-1 name">
-                                            <a href="{{route('download.file', ['instance' => \Instantiation::instance(), 'file_id' => $proof->file->id])}}">
+                                            <a href="#" wire:click="download_file({{ $proof->file->id }})">
 
-                                                {{\Illuminate\Support\Str::limit($proof->file->name, 20)}}
+                                                {{$proof->file->name}}
 
                                             </a>
                                         </h4>
@@ -98,16 +103,15 @@
                                         </p>
 
                                     </div>
-                                    <div class="col-auto">
+                                    <div class="col-auto text-end">
 
                                         <!-- Button -->
-                                        <button wire:click="download_file({{ $proof->file->id }})" class="btn btn-sm btn-white d-none d-md-inline-block">
-                                            <i class="fe fe-download"></i> Descargar
+                                        <button wire:click="download_file({{ $proof->file->id }})" class="btn btn-sm btn-white d-md-inline-block">
+                                            <i class="fe fe-download"></i>
                                         </button>
 
-
                                         <!-- Button -->
-                                        <button wire:click="delete_file({{ $proof->file->id }})" class="btn btn-sm btn-outline-danger d-none d-md-inline-block">
+                                        <button wire:click="delete_file({{ $proof->file->id }})" class="btn btn-sm btn-outline-danger d-md-inline-block">
                                             <i class="fe fe-trash"></i> Eliminar
                                         </button>
 
@@ -132,7 +136,4 @@
         </div>
 
 
-
-
-    </form>
 </div>

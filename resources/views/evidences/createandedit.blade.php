@@ -32,7 +32,7 @@
                         Subir archivos
                     </label>
 
-                    <livewire:upload-files user_id="{{\Illuminate\Support\Facades\Auth::id()}}" evidence_id="{{$evidence_temp->id}}"></livewire:upload-files>
+                    <livewire:upload-files evidence_id="{{$evidence_temp->id}}"></livewire:upload-files>
 
                 </div>
 
@@ -56,7 +56,9 @@
                                 <p>Hemos encontrado una versión reciente guardada el {{ \Carbon\Carbon::parse($evidence_temp->updated_at)->format('d/m/Y')}} a las {{\Carbon\Carbon::parse($evidence_temp->updated_at)->format('H:i:s')}} </p>
                                 <p>¿Deseas continuar escribiendo desde este guardado?</p>
 
-                                <button class="btn btn-success" onclick="close_modal()">
+
+
+                                <button class="btn btn-success mt-2" onclick="close_modal()">
                                     Sí, continuar
                                 </button>
 
@@ -65,7 +67,7 @@
 
                                     <input type="hidden" name="_id" value="{{$evidence_temp->id}}">
 
-                                    <button type="submit" class="btn btn-outline-danger">
+                                    <button type="submit" class="btn btn-outline-danger mt-2">
                                         No, borrar y empezar de nuevo
                                     </button>
 
