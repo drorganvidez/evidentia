@@ -101,14 +101,15 @@
                                     <div class="col-auto">
 
                                         <!-- Button -->
-                                        <a target="_blank" href="{{route('download.file', ['instance' => \Instantiation::instance(), 'file_id' => $proof->file->id])}}" class="btn btn-sm btn-white d-none d-md-inline-block">
+                                        <button wire:click="download_file({{ $proof->file->id }})" class="btn btn-sm btn-white d-none d-md-inline-block">
                                             <i class="fe fe-download"></i> Descargar
-                                        </a>
+                                        </button>
+
 
                                         <!-- Button -->
-                                        <a href="#!" wire:click="delete_file({{ $proof->file->id }})" class="btn btn-sm btn-outline-danger d-none d-md-inline-block">
+                                        <button wire:click="delete_file({{ $proof->file->id }})" class="btn btn-sm btn-outline-danger d-none d-md-inline-block">
                                             <i class="fe fe-trash"></i> Eliminar
-                                        </a>
+                                        </button>
 
                                     </div>
 

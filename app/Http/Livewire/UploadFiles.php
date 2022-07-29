@@ -118,6 +118,12 @@ class UploadFiles extends Component
 
     }
 
+    public function download_file($file_id)
+    {
+        $file = File::find($file_id);
+        return Storage::download($file->route);
+    }
+
     public function delete_file($file_id)
     {
         $file = File::findOrFail($file_id);
