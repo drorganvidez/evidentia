@@ -42,10 +42,6 @@
             @php
                 $value = old("$name")
             @endphp
-        @else
-            @php
-                $value = old("$name")
-            @endphp
         @endif
 
         <div class="form-control {{$is_invalid}} d-none">

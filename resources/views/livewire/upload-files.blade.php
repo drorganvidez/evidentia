@@ -100,7 +100,7 @@
                                     <div class="col-auto">
 
                                         <!-- Button -->
-                                        <a href="{{route('download.file', ['instance' => \Instantiation::instance(), 'file_id' => $proof->file->id])}}" class="btn btn-sm btn-white d-none d-md-inline-block">
+                                        <a target="_blank" href="{{route('download.file', ['instance' => \Instantiation::instance(), 'file_id' => $proof->file->id])}}" class="btn btn-sm btn-white d-none d-md-inline-block">
                                             <i class="fe fe-download"></i> Descargar
                                         </a>
 

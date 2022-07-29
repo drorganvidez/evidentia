@@ -35,13 +35,13 @@
 
             @foreach ($data_array as $item)
 
-                @isset($value)
-                    @if(!empty($value))
-                        <option @if($value == $item['id']) selected @endif value="{{$item['id']}}">{{$item["$option_name"]}}</option>
-                    @endif
+                @if(old("$name"))
+                    <option @if(strcmp(trim(old("$name")),$item['id']) === 0) selected @endif value="{{$item['id']}}">{{$item["$option_name"]}}</option>
                 @else
-                    <option @if(old("$name") == $item['id']) selected @endif value="{{$item['id']}}">{{$item["$option_name"]}}</option>
-                @endisset
+                    @isset($value)
+                        <option @if(strcmp(trim($value),$item['id']) === 0) selected @endif value="{{$item['id']}}">{{$item["$option_name"]}}</option>
+                    @endisset
+                @endif
 
 
             @endforeach
