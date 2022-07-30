@@ -1,14 +1,36 @@
 @extends('layouts.app')
 
-@section('title', 'Desarrollador')
+@isset($item)
+    @section('subtitle', 'Desarrollador')
+    @section('title', 'Editando: ' . $item->name)
+@else
+    @section('title', 'Desarrollador')
+@endisset
 
-@section('submenu')
+@if(!isset($item))
+    @section('submenu')
 
-    <x-submenus.developer-menu/>
+        <x-submenus.developer-menu/>
 
-@endsection
+    @endsection
+@endif
+
 
 @section('content')
+
+    @if(isset($item))
+
+        <div class="row">
+
+            <div class="col-lg-12">
+                <a href="{{route('developer.apitokens', \Instantiation::instance())}}" class="btn btn-outline-primary mb-4">
+                    <i class="fe fe-skip-back"></i> Volver a mis API tokens
+                </a>
+            </div>
+
+        </div>
+
+    @endisset
 
     <form method="post" action="{{route("$action",\Instantiation::instance())}}">
 

@@ -132,32 +132,6 @@ class EvidenceController extends Controller
             $this->copy_files($evidence, $evidence_temp);
         }
 
-        /*
-        $points_to = $evidence->points_to;
-
-        $evidence_temp = null;
-
-        // it's the first edition
-        if($points_to == null){
-            $evidence_temp = $this->clone_evidence($evidence);
-            $this->copy_files($evidence, $evidence_temp);
-        }
-        */
-
-        /*
-        $evidence_temp = Evidence::where([
-            'points_to' => $points_to,
-            'temp' => true
-        ])->first();
-
-        return $evidence;
-
-        if($evidence_temp == null){
-            $evidence_temp = $this->clone_evidence($evidence);
-            $this->copy_files($evidence, $evidence_temp);
-        }
-        */
-
         return view('evidences.createandedit', [
             'route_draft' => route('evidences.edit.draft',$instance),
             'route_publish' => route('evidences.edit.publish',$instance),

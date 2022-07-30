@@ -1,14 +1,38 @@
 @extends('layouts.app')
 
-@section('title', 'Evidencias')
+@if($evidence_temp->points_to == null)
+    @section('title', 'Evidencias')
+@else
+    @section('subtitle', 'Evidencias')
+    @section('title', 'Editando: ' . $evidence_temp->title)
+@endif
 
-@section('submenu')
 
-    <x-submenus.evidences-menu/>
 
-@endsection
+@if($evidence_temp->points_to == null)
+    @section('submenu')
+
+        <x-submenus.evidences-menu/>
+
+    @endsection
+@endif
 
 @section('content')
+
+    @if($evidence_temp->points_to != null)
+
+        <div class="row">
+
+            <div class="col-lg-12">
+                <a href="{{route('evidences.draft', \Instantiation::instance())}}" class="btn btn-outline-primary mb-4">
+                   <i class="fe fe-skip-back"></i> Volver a mis evidencias
+                </a>
+            </div>
+
+        </div>
+
+    @endif
+
 
         <div class="row">
 
