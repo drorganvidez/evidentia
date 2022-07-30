@@ -17,18 +17,17 @@ class EvidenceMine
      */
     public function handle($request, Closure $next)
     {
-        $instance = \Instantiation::instance();
 
         $id = $request->route('id');
-        if($id == null) // si se recibe por POST
+        if($id == null) // if it's a POST request
         {
             $id = $request->_id;
         }
-        $evidence = Evidence::find($id);
+        $evidence = Evidence::findOrFail($id);
 
         if($evidence->user->id != Auth::id())
         {
-            return redirect()->route('home',$instance);
+            return abort('404');
         }
 
         return $next($request);

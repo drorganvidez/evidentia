@@ -142,12 +142,20 @@ class User extends Authenticatable
     }
 
     public function evidences_draft() {
-        return $this->evidences->where('status','=', 'DRAFT')->sortByDesc('created_at');
+
+        return Evidence::where([
+            'user_id' => $this->id,
+            'status' => 'DRAFT',
+            'temp' => false,
+            'last' => true
+        ])->get()->sortByDesc('created_at');
     }
 
+    /*
     public function evidences_not_draft() {
         return $this->evidences->where('status','!=', 'DRAFT')->sortByDesc('created_at');
     }
+    */
 
     public function evidences_pending() {
         return $this->evidences->where('status','=', 'PENDING')->sortByDesc('created_at');

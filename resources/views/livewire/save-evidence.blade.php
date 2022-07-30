@@ -5,7 +5,8 @@
 
             @csrf
 
-            <input type="hidden" name="_id" value="{{$evidence_temp->id}}">
+            <input type="hidden" name="_id" value="{{$evidence_temp_id}}">
+            <input type="hidden" name="points_to" value="{{$evidence_temp->points_to}}">
 
             <div class="row">
 
@@ -21,7 +22,6 @@
                     </x-slot:name>
                     <x-slot:value>
                         {{$evidence_temp->title ?? ''}}
-                        {{$evidence->title ?? ''}}
                     </x-slot:value>
                     <x-slot:required></x-slot:required>
                     <x-slot:autofocus></x-slot:autofocus>
@@ -39,7 +39,6 @@
                     </x-slot:name>
                     <x-slot:value>
                         {{\Time::complex_shape_hours($evidence_temp->hours ?? '')}}
-                        {{\Time::complex_shape_hours($evidence->hours ?? '')}}
                     </x-slot:value>
                 </x-input>
 
@@ -55,7 +54,6 @@
                     </x-slot:name>
                     <x-slot:value>
                         {{\Time::complex_shape_minutes($evidence_temp->hours ?? '')}}
-                        {{\Time::complex_shape_minutes($evidence->hours ?? '')}}
                     </x-slot:value>
                 </x-input>
 
@@ -81,7 +79,6 @@
                     </x-slot:name>
                     <x-slot:value>
                         {{$evidence_temp->committee->id ?? ''}}
-                        {{$evidence->committee?->id ?? ''}}
                     </x-slot:value>
                 </x-select>
 
@@ -101,7 +98,6 @@
                     </x-slot:name>
                     <x-slot:value>
                         {!! $evidence_temp->description ?? '' !!}
-                        {!! $evidence->description ?? '' !!}
                     </x-slot:value>
                     <x-slot:description>
                         Escribe una descripción concisa de tu evidencia (entre 10 y 20.000 caracteres)

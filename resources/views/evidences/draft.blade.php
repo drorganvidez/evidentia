@@ -33,6 +33,11 @@
                     Comité, committee, @foreach($committees as $committee) {{$committee->name}} @if(!$loop->last): @endif @endforeach
                 </x-slot:filters>
 
+                {{-- Edit evidence --}}
+                <x-slot:edit_item_route>
+                    evidences.edit
+                </x-slot:edit_item_route>
+
 
             </x-data-table>
 

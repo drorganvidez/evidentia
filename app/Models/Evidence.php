@@ -10,7 +10,7 @@ class Evidence extends Model
     protected $table="evidences";
 
     protected $fillable = [
-        'id', 'title', 'description', 'hours', 'user_id', 'committee_id', 'points_to', 'status', 'stamp', 'rand', 'temp', 'autosaved'
+        'id', 'title', 'description', 'hours', 'user_id', 'committee_id', 'points_to', 'status', 'stamp', 'rand', 'temp', 'autosaved', 'last'
     ];
 
     public function proofs()

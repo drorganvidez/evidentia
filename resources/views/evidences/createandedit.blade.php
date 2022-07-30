@@ -14,14 +14,11 @@
 
             @php
 
-            if(!isset($evidence)){
-                $evidence = null;
-            }
-
-
+            if(!isset($points_to))
+                $points_to = null;
             @endphp
 
-            <livewire:save-evidence :evidence="$evidence" :evidence_temp="$evidence_temp" :route_draft="$route_draft" :route_publish="$route_publish" :committees="$committees"></livewire:save-evidence>
+            <livewire:save-evidence :evidence_temp="$evidence_temp" :evidence_temp_id="$evidence_temp_id" :route_draft="$route_draft" :route_publish="$route_publish" :committees="$committees"></livewire:save-evidence>
 
             <div class="col-lg-6">
 
@@ -32,7 +29,7 @@
                         Subir archivos
                     </label>
 
-                    <livewire:upload-files evidence_id="{{$evidence_temp->id}}"></livewire:upload-files>
+                    <livewire:upload-files evidence_id="{{$evidence_temp_id}}"></livewire:upload-files>
 
                 </div>
 

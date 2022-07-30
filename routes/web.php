@@ -106,8 +106,8 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
                 });
 
                 // Edit evidence
-                Route::group(['prefix' => 'edit'], function() {
-                    Route::get('', 'edit')->name('evidences.edit');
+                Route::group(['prefix' => 'edit', 'middleware' => 'evidencemine'], function() {
+                    Route::get('{id}', 'edit')->name('evidences.edit');
                     Route::post('draft', 'edit_draft')->name('evidences.edit.draft');
                     Route::post('publish', 'edit_publish')->name('evidences.edit.publish');
                 });
@@ -119,7 +119,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
                 Route::get('rejected', 'list_rejected')->name('evidences.rejected');
 
                 // Delete autosaved
-                Route::post('autosaved', 'delete_autosaved')->name('evidences.delete.autosaved');
+                Route::post('autosaved', 'delete_autosaved')->name('evidences.delete.autosaved')->middleware('evidencemine');
 
             });
         });

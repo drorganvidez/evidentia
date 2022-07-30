@@ -10,6 +10,7 @@ use Livewire\Component;
 class SaveEvidence extends Component
 {
     public $evidence_temp;
+    public $evidence_temp_id;
     public $committees;
     public $route_draft;
     public $route_publish;
@@ -21,8 +22,9 @@ class SaveEvidence extends Component
         'saveDescription' => 'saveDescription'
         ];
 
-    public function mount($evidence_temp, $committees, $route_draft, $route_publish){
-        $this->evidence_temp = Evidence::find($evidence_temp)->first();
+    public function mount($evidence_temp, $evidence_temp_id, $committees, $route_draft, $route_publish){
+        $this->evidence_temp_id = $evidence_temp_id;
+        $this->evidence_temp = $evidence_temp;
         $this->committees = $committees;
         $this->route_draft = $route_draft;
         $this->route_publish = $route_publish;
