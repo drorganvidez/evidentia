@@ -228,13 +228,24 @@ class EvidenceController extends Controller
      * DELETE AN EVIDENCE
      ****************************************************************************/
 
+    public function delete(Request $request)
+    {
+
+        $id = $request->_id;
+        $evidence = Evidence::findOrFail($id);
+        $instance = \Instantiation::instance();
+
+        $this->evidence_service->recursive_delete_evidence($evidence);
+
+        return redirect()->route('evidences.draft',$instance)->with('success', 'Evidencia borrada con éxito.');
+    }
+
     public function delete_autosaved(Request $request){
 
         $user = Auth::user();
         $evidence = Evidence::find($request->input('_id'));
 
-        $this->delete_files($evidence);
-        Storage::deleteDirectory(\Instantiation::instance().'/proofs/'.$user->username.'/evidence_'.$evidence->id);
+        $this->evidence_service->delete_files($evidence);
 
         $points_to = $evidence->points_to;
 
@@ -249,14 +260,6 @@ class EvidenceController extends Controller
         $evidence->delete();
 
         return redirect()->route('evidences.create', \Instantiation::instance());
-    }
-
-    private function delete_files($evidence)
-    {
-        foreach($evidence->proofs as $proof)
-        {
-            $proof->file->delete();
-        }
     }
 
     /****************************************************************************

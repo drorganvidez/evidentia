@@ -10,6 +10,7 @@ use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class EvidenceService extends Service
 {
@@ -19,7 +20,7 @@ class EvidenceService extends Service
         parent::__construct(Evidence::class, EvidenceResource::class);
 
         $this->rules = [
-            'title' => 'required|min:5|max:255',
+            'title' => 'required|min:5|max:255|unique:evidences',
             'hours' => ['required_without:minutes','nullable','numeric','sometimes','max:99',new CheckHoursAndMinutes(request()->input('minutes'))],
             'minutes' => ['required_without:hours','nullable','numeric','sometimes','max:60',new CheckHoursAndMinutes(request()->input('hours'))],
             'description' => ['required',new MinCharacters(10),new MaxCharacters(20000)],
@@ -46,5 +47,30 @@ class EvidenceService extends Service
 
     }
 
+    public function recursive_delete_evidence($evidence)
+    {
+
+        // por si la evidencia apunta a otra anterior
+        $evidence_previous = Evidence::find($evidence->points_to);
+
+        // we delete all files
+        $this->delete_files($evidence);
+        Storage::deleteDirectory(\Instantiation::instance().'/proofs/'.Auth::user()->username.'/evidence_'.$evidence->id);
+        $evidence->delete();
+
+        if($evidence_previous != null)
+        {
+            $this->recursive_delete_evidence($evidence_previous);
+        }
+    }
+
+    public function delete_files($evidence)
+    {
+        foreach($evidence->proofs as $proof)
+        {
+            $proof->file->delete();
+        }
+
+    }
 
 }

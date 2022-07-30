@@ -112,6 +112,11 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
                     Route::post('publish', 'edit_publish')->name('evidences.edit.publish');
                 });
 
+                // Delete evidence
+                Route::group(['prefix' => 'delete', 'middleware' => 'evidencemine'], function() {
+                    Route::post('', 'delete')->name('evidences.delete_p');
+                });
+
                 // List evidences
                 Route::get('draft', 'list_draft')->name('evidences.draft');
                 Route::get('pending', 'list_pending')->name('evidences.pending');

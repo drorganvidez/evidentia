@@ -38,6 +38,14 @@
                     evidences.edit
                 </x-slot:edit_item_route>
 
+                {{-- Delete evidence --}}
+                <x-slot:delete_item_message>
+                    Esto borrará la evidencia actual, las ediciones anteriores <b>y todos los archivos adjuntos</b>
+                </x-slot:delete_item_message>
+                <x-slot:delete_item_route>
+                    evidences.delete_p
+                </x-slot:delete_item_route>
+
 
             </x-data-table>
 
