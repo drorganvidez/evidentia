@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Services\EvidenceService;
 use Config;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -117,6 +118,32 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\ApiToken');
     }
 
+    public function evidences_draft_count(): int
+    {
+        $service = new EvidenceService();
+        return $service->count_evidences_in_draft_by_user($this);
+;    }
+
+    public function evidences_pending_count(): int
+    {
+        $service = new EvidenceService();
+        return $service->count_evidences_pending_by_user($this);
+    }
+
+    public function evidences_accepted_count(): int
+    {
+        $service = new EvidenceService();
+        return $service->count_evidences_accepted_by_user($this);
+    }
+
+    public function evidences_rejected_count(): int
+    {
+        $service = new EvidenceService();
+        return $service->count_evidences_rejected_by_user($this);
+    }
+
+    /*
+
     public function evidence_rand(){
         return $this->evidences->where('rand','=', '1')->first();
     }
@@ -141,34 +168,6 @@ class User extends Authenticatable
         }
     }
 
-    public function evidences_draft() {
-
-        return Evidence::where([
-            'user_id' => $this->id,
-            'status' => 'DRAFT',
-            'temp' => false,
-            'last' => true
-        ])->get()->sortByDesc('created_at');
-    }
-
-    /*
-    public function evidences_not_draft() {
-        return $this->evidences->where('status','!=', 'DRAFT')->sortByDesc('created_at');
-    }
-    */
-
-    public function evidences_pending() {
-        return $this->evidences->where('status','=', 'PENDING')->sortByDesc('created_at');
-    }
-
-    public function evidences_accepted() {
-        return $this->evidences->where('status','=', 'ACCEPTED')->sortByDesc('created_at');
-    }
-
-    public function evidences_rejected() {
-        return $this->evidences->where('status','=', 'REJECTED')->sortByDesc('created_at');
-    }
-
     // Asistencias pendientes
     public function attendees_pending()
     {
@@ -180,10 +179,6 @@ class User extends Authenticatable
     {
         return $this->attendees->where('status','=', 'Checked In');
     }
-
-    /*
-     *  MÉTODOS DERIVADOS DE INTERÉS
-     */
 
     private function collection_hours($collection)
     {
@@ -385,4 +380,6 @@ class User extends Authenticatable
 
         return $comittees_names;
     }
+
+    */
 }

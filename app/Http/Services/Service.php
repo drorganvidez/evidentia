@@ -2,8 +2,10 @@
 
 namespace App\Http\Services;
 
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Validator;
 use ReflectionClass;
 
@@ -51,11 +53,6 @@ abstract class Service
         return $this->rules;
     }
 
-    protected function set__rules($array): void
-    {
-        $this->rules = $array;
-    }
-
     /**
      *  Get JSON resource from entity
      *
@@ -74,7 +71,7 @@ abstract class Service
      * @throws \ReflectionException
      */
 
-    public function transform_to_resource_collection($entities): object
+    public function transform_to_resource_collection($entities)
     {
         return $this->resource::collection($entities);
     }
@@ -83,11 +80,13 @@ abstract class Service
     /**
      * @throws \ReflectionException
      */
-    public function create($data): object
+    public function create($data, $validate = true): object
     {
 
-        if(!$this->validation($data)){
-            return $this->fails($this->validator($data)->messages());
+        if($validate){
+            if(!$this->validation($data)){
+                return $this->fails($this->validator($data)->messages());
+            }
         }
 
         $entity = $this->model::create($data);
@@ -101,11 +100,13 @@ abstract class Service
      * @throws \ReflectionException
      */
 
-    public function update($id, $new_data): object
+    public function update($id, $new_data, $validate = true): object
     {
 
-        if(!$this->validation($new_data)){
-            return $this->fails($this->validator($new_data)->messages());
+        if($validate){
+            if(!$this->validation($new_data)){
+                return $this->fails($this->validator($new_data)->messages());
+            }
         }
 
         $updated = $this->model::find($id)?->update($new_data);

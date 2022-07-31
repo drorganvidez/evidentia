@@ -179,7 +179,7 @@ class EvidenceController extends Controller
             'last' => false
         ];
 
-        $evidence_json = $this->evidence_service->create($data);
+        $evidence_json = $this->evidence_service->create($data, $validate = false);
 
         return $this->evidence_service->entity($evidence_json);
 
@@ -192,7 +192,6 @@ class EvidenceController extends Controller
 
         $proofs_folder_from = $instance.'/proofs/'.$user->username.'/evidence_'.$evidence_from->id;
         $proofs_folder_to = $instance.'/proofs/'.$user->username.'/evidence_'.$evidence_to->id;
-
 
         foreach ($evidence_from->proofs as $proof){
 
@@ -264,23 +263,15 @@ class EvidenceController extends Controller
 
     /****************************************************************************
      * LIST EVIDENCES
-     ***************************************************************************
+     ****************************************************************************
      * @throws \ReflectionException
      */
 
     public function list_draft(Request $request)
     {
-
-        $evidences_res = collect();
         $committee_query = $request->query('committee');
-
-        if(!empty($committee_query) and $committee_query !== "*"){
-            $evidences_res = $this->evidence_service->get_evidences_by_committee_and_status($committee_query, 'DRAFT');
-        } else{
-            $evidences_res = Auth::user()->evidences_draft();
-        }
-
-        $stringify = $this->evidence_service->stringify_collection($evidences_res);
+        $evidences = $this->evidence_service->get_evidences_by_committee_and_status($committee_query, 'DRAFT');
+        $stringify = $this->evidence_service->stringify_collection($evidences);
 
         return view('evidences.draft', ['evidences' => $stringify, 'committees' => Committee::all()]);
     }
@@ -290,32 +281,18 @@ class EvidenceController extends Controller
      */
     public function list_pending(Request $request)
     {
-        $evidences_res = collect();
         $committee_query = $request->query('committee');
-
-        if(!empty($committee_query) and $committee_query !== "*"){
-            $evidences_res = $this->evidence_service->get_evidences_by_committee_and_status($committee_query, 'PENDING');
-        } else{
-            $evidences_res = Auth::user()->evidences_pending();
-        }
-
-        $stringify = $this->evidence_service->stringify_collection($evidences_res);
+        $evidences = $this->evidence_service->get_evidences_by_committee_and_status($committee_query, 'PENDING');
+        $stringify = $this->evidence_service->stringify_collection($evidences);
 
         return view('evidences.pending', ['evidences' => $stringify, 'committees' => Committee::all()]);
     }
 
     public function list_accepted(Request $request)
     {
-        $evidences_res = collect();
         $committee_query = $request->query('committee');
-
-        if(!empty($committee_query) and $committee_query !== "*"){
-            $evidences_res = $this->evidence_service->get_evidences_by_committee_and_status($committee_query, 'ACCEPTED');
-        } else{
-            $evidences_res = Auth::user()->evidences_accepted();
-        }
-
-        $stringify = $this->evidence_service->stringify_collection($evidences_res);
+        $evidences = $this->evidence_service->get_evidences_by_committee_and_status($committee_query, 'ACCEPTED');
+        $stringify = $this->evidence_service->stringify_collection($evidences);
 
         return view('evidences.accepted', ['evidences' => $stringify, 'committees' => Committee::all()]);
     }
@@ -325,16 +302,9 @@ class EvidenceController extends Controller
      */
     public function list_rejected(Request $request)
     {
-        $evidences_res = collect();
         $committee_query = $request->query('committee');
-
-        if(!empty($committee_query) and $committee_query !== "*"){
-            $evidences_res = $this->evidence_service->get_evidences_by_committee_and_status($committee_query, 'REJECTED');
-        } else{
-            $evidences_res = Auth::user()->evidences_rejected();
-        }
-
-        $stringify = $this->evidence_service->stringify_collection($evidences_res);
+        $evidences = $this->evidence_service->get_evidences_by_committee_and_status($committee_query, 'REJECTED');
+        $stringify = $this->evidence_service->stringify_collection($evidences);
 
         return view('evidences.rejected', ['evidences' => $stringify, 'committees' => Committee::all()]);
     }
