@@ -77,8 +77,6 @@
                                 <p>Hemos encontrado una versión reciente guardada el {{ \Carbon\Carbon::parse($evidence_temp->updated_at)->format('d/m/Y')}} a las {{\Carbon\Carbon::parse($evidence_temp->updated_at)->format('H:i:s')}} </p>
                                 <p>¿Deseas continuar escribiendo desde este guardado?</p>
 
-
-
                                 <button class="btn btn-success mt-2" onclick="close_modal()">
                                     Sí, continuar
                                 </button>
