@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Http\Services\EvidenceService;
 use App\Models\Committee;
 use App\Models\Evidence;
 use App\Models\File;
@@ -39,6 +40,8 @@ class UploadFiles extends Component
 
     protected $listeners = ['refreshComponent' => '$refresh'];
 
+    private $evidence_service;
+
     public function fix_database(){
 
         \Instantiation::set_default_connection();
@@ -59,6 +62,7 @@ class UploadFiles extends Component
         $this->evidence = Evidence::find($evidence_id);
         $this->user_id = $this->evidence->user->id;
         $this->user = User::find($this->user_id);
+        $this->evidence_service = new EvidenceService();
     }
 
     public function upload()
@@ -74,6 +78,11 @@ class UploadFiles extends Component
 
         foreach ($this->files as $file) {
 
+
+            $evidence_service = new EvidenceService();
+            $evidence_service->upload_file($file, $this->instance_route, $this->user, $this->evidence);
+
+            /*
             $name = $file->getClientOriginalName();
             $type = $file->getClientOriginalExtension();
             $size = $file->getSize();
@@ -97,6 +106,7 @@ class UploadFiles extends Component
                 'evidence_id' => $this->evidence_id,
                 'file_id' => $file_entity->id
             ]);
+            */
 
         }
 

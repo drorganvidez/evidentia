@@ -21,7 +21,13 @@
             @endphp
         @endisset
         <label class="{{$label_class}}">
+
             {{$label}}
+
+            @isset($info)
+                <i style="cursor: pointer" class="fe fe-info" data-bs-toggle="modal" data-bs-target="#modal_item_{{$name}}"></i>
+            @endisset
+
         </label>
 
         @isset($description)
@@ -33,21 +39,52 @@
 
         <select class="form-select mb-3" name="{{$name}}" data-choices>
 
+            @isset($default)
+                <option selected>{{$default}}</option>
+            @endisset
+
             @foreach ($data_array as $item)
 
                 @if(old("$name"))
                     <option @if(strcmp(trim(old("$name")),$item['id']) === 0) selected @endif value="{{$item['id']}}">{{$item["$option_name"]}}</option>
                 @else
-                    @isset($value)
+                    @if(strcmp($value, "") !== 0)
                         <option @if(strcmp(trim($value),$item['id']) === 0) selected @endif value="{{$item['id']}}">{{$item["$option_name"]}}</option>
-                    @endisset
+                    @else
+                        <option value="{{$item['id']}}">{{$item["$option_name"]}}</option>
+                    @endif
                 @endif
-
 
             @endforeach
 
         </select>
 
     </div>
+
+    @isset($info)
+        <div class="modal fade" id="modal_item_{{$name}}" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-card card">
+                        <div class="card-header">
+
+                            <!-- Title -->
+                            <h4 class="card-header-title" id="exampleModalCenterTitle">
+                                {{$label}}: para tu interés
+                            </h4>
+
+                            <!-- Close -->
+                            <i style="cursor: pointer" class="fe fe-x-circle" data-bs-dismiss="modal" aria-label="Close"></i>
+                        </div>
+                        <div class="card-body">
+
+                            {{$info}}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endisset
 
 </div>

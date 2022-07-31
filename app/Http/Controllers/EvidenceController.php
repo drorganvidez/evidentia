@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\EvidenceResource;
 use App\Http\Services\EvidenceService;
+use App\Http\Services\UserService;
 use App\Models\Committee;
 use App\Models\Evidence;
 use App\Models\File;
 use App\Models\Proof;
-use App\Rules\CheckHoursAndMinutes;
-use App\Rules\MaxCharacters;
-use App\Rules\MinCharacters;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use ReflectionException;
 
 class EvidenceController extends Controller
 {
 
     public $evidence_service;
+    public $user_service;
 
     public function __construct()
     {
         $this->evidence_service = new EvidenceService();
+        $this->user_service = new UserService();
         $this->middleware('auth');
         $this->middleware('checkroles:PRESIDENT|COORDINATOR|REGISTER_COORDINATOR|SECRETARY|STUDENT');
     }
@@ -33,8 +33,10 @@ class EvidenceController extends Controller
 
     public function create()
     {
+
         $instance = \Instantiation::instance();
         $committees = Committee::all();
+        $students = $this->user_service->get_all_students_except_me();
 
         $evidence_temp = Evidence::where([
             'user_id' => Auth::id(),
@@ -56,7 +58,9 @@ class EvidenceController extends Controller
             'instance' => $instance,
             'evidence_temp' => $evidence_temp,
             'evidence_temp_id' => $evidence_temp->id,
-            'committees' => $committees]);
+            'committees' => $committees,
+            'students' => $this->user_service->stringify_collection($students)
+        ]);
 
     }
 
@@ -82,7 +86,8 @@ class EvidenceController extends Controller
             'status' => $status,
             'temp' => false,
             'user_id' => Auth::id(),
-            'committee_id' => $request->input('committee_id')
+            'committee_id' => $request->input('committee_id'),
+            'guest_id' => $request->input('guest_id'),
         ];
 
         // we update because we had previously assigned a temporary evidence with a permanent ID
@@ -113,7 +118,7 @@ class EvidenceController extends Controller
     /****************************************************************************
      * EDIT AN EVIDENCE
      ***************************************************************************
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
 
     public function edit($instance, $id)
@@ -121,6 +126,7 @@ class EvidenceController extends Controller
 
         $committees = Committee::all();
         $evidence = Evidence::find($id);
+        $students = $this->user_service->get_all_students_except_me();
 
         $evidence_temp = Evidence::where([
             'points_to' => $evidence->id,
@@ -138,7 +144,8 @@ class EvidenceController extends Controller
             'instance' => $instance,
             'evidence_temp' => $evidence_temp,
             'evidence_temp_id' => $evidence_temp->id,
-            'committees' => $committees
+            'committees' => $committees,
+            'students' => $this->user_service->stringify_collection($students)
         ]);
     }
 
@@ -162,12 +169,13 @@ class EvidenceController extends Controller
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    private function clone_evidence($evidence)
+    private function clone_evidence($evidence): object
     {
         $data = [
             'user_id' => Auth::id(),
+            'guest_id' => $evidence->guest_id,
             'title' => $evidence->title,
             'hours' => $evidence->hours,
             'committee_id' => $evidence->committee->id,
@@ -239,9 +247,9 @@ class EvidenceController extends Controller
         return redirect()->route('evidences.draft',$instance)->with('success', 'Evidencia borrada con éxito.');
     }
 
-    public function delete_autosaved(Request $request){
+    public function delete_autosaved(Request $request)
+    {
 
-        $user = Auth::user();
         $evidence = Evidence::find($request->input('_id'));
 
         $this->evidence_service->delete_files($evidence);
@@ -264,7 +272,7 @@ class EvidenceController extends Controller
     /****************************************************************************
      * LIST EVIDENCES
      ****************************************************************************
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
 
     public function list_draft(Request $request)
@@ -277,7 +285,7 @@ class EvidenceController extends Controller
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function list_pending(Request $request)
     {
@@ -298,7 +306,7 @@ class EvidenceController extends Controller
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function list_rejected(Request $request)
     {

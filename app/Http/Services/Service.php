@@ -141,18 +141,18 @@ abstract class Service
     /**
      * @throws \ReflectionException
      */
-    public function find_by($array): object
+    public function find_by($array): JsonResource
     {
-        $entity =  $this->model::where($array)->first();
+        $entity = $this->model::where($array)->first();
         return $this->transform_to_resource($entity);
     }
 
     /**
      * @throws \ReflectionException
      */
-    public function find_all_by($array): object
+    public function find_all_by($array): JsonResource
     {
-        $entities =  $this->model::where($array)->get();
+        $entities = $this->model::where($array)->get();
         return $this->transform_to_resource_collection($entities);
     }
 
@@ -165,7 +165,7 @@ abstract class Service
         return $this->transform_to_resource_collection($entities);
     }
 
-    public function entity($entity_json)
+    public function entity($entity_json) : object
     {
         $id = json_decode(json_encode($entity_json), false)->id;
         return $this->model::find($id);

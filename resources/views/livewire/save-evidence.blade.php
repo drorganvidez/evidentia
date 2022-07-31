@@ -80,6 +80,61 @@
                     <x-slot:value>
                         {{$evidence_temp->committee->id ?? ''}}
                     </x-slot:value>
+                    <x-slot:info>
+                        <p>
+                            Es <b>obligatorio</b> asociar tu evidencia a algún comité existente.
+                        </p>
+                        <p>
+                            Asociando tu evidencia a un comité permitirá al coordinador correspondiente aceptar o rechazarla.
+                        </p>
+                        <p class="mb-0">
+                            Ten en cuenta que existe un tiempo desde que mandas tu evidencia a revisión y
+                            tu coordinador la acepta (o rechaza). Considera mandar tus evidencias con tiempo suficiente.
+                        </p>
+                    </x-slot:info>
+                </x-select>
+
+            </div>
+
+            <div class="row">
+
+                <x-select>
+                    <x-slot:data>
+                        {{$students}}
+                    </x-slot:data>
+                    <x-slot:col>
+                        col-12 col-md-12
+                    </x-slot:col>
+                    <x-slot:label>
+                        Estudiante asociado
+                    </x-slot:label>
+                    <x-slot:option_name>
+                        full_name_with_username
+                    </x-slot:option_name>
+                    <x-slot:name>
+                        guest_id
+                    </x-slot:name>
+                    <x-slot:value>
+                        {{$evidence_temp->guest_id ?? ''}}
+                    </x-slot:value>
+                    <x-slot:default>
+                        Sin estudiante asociado
+                    </x-slot:default>
+                    <x-slot:info>
+                        <p>
+                            Si has trabajo de forma conjunta con otro estudiante, puedes asociarlo a esta evidencia. Las horas que
+                            definas para esta evidencia serán contabilizadas para ambos. Será como si cada uno hubiera redactado
+                            la evidencia por separado.
+                        </p>
+                        <p>Esto evitará que existan evidencias por duplicado en el sistema, agilizando la corrección y minimizando
+                            los errores humanos.</p>
+                        <p class="mb-0">
+                            <b>
+                                Ten en cuenta que hasta que la evidencia no haya sido aceptada, al estudiante
+                                asociado no le aparecerá en su cuenta.
+                            </b>
+                        </p>
+                    </x-slot:info>
                 </x-select>
 
             </div>
@@ -211,6 +266,11 @@
                         Livewire.emit('saveCommittee', committee_id)
                     }
 
+                    function saveGuest(){
+                        let guest_id = $( "select[name=guest_id]").val();
+                        Livewire.emit('saveGuest', guest_id)
+                    }
+
                     function saveDescription(){
                         let description = $("input[name=description]").val();
                         Livewire.emit('saveDescription', description)
@@ -230,13 +290,12 @@
                             saveHours();
                             saveCommittee();
                             saveDescription();
+                            saveGuest();
+
                             setTimeout(() => {
 
                                 $("#loading").hide();
                                 $("#loaded").show();
-
-
-
 
                             }, 2000);
                         }
@@ -247,7 +306,6 @@
                         must_save = true;
                         toSave();
                     @endif
-
 
                     setInterval(toSave, interval);
 

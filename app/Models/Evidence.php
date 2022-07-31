@@ -10,27 +10,45 @@ class Evidence extends Model
     protected $table="evidences";
 
     protected $fillable = [
-        'id', 'title', 'description', 'hours', 'user_id', 'committee_id', 'points_to', 'status', 'stamp', 'rand', 'temp', 'autosaved', 'last'
+        'id',
+        'title',
+        'description',
+        'hours',
+        'user_id',
+        'committee_id',
+        'points_to',
+        'status',
+        'stamp',
+        'rand',
+        'temp',
+        'autosaved',
+        'last',
+        'guest_id'
     ];
 
     public function proofs()
     {
-        return $this->hasMany('App\Models\Proof');
+        return $this->hasMany(Proof::class);
     }
 
     public function user()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo(User::class);
     }
 
     public function committee()
     {
-        return $this->belongsTo('App\Models\Committee');
+        return $this->belongsTo(Committee::class);
     }
 
     public function reason_rejection()
     {
-        return $this->hasOne('App\Models\ReasonRejection');
+        return $this->hasOne(ReasonRejection::class);
+    }
+
+    public function guest_id()
+    {
+        return $this->belongsTo(User::class, 'user_id','guest_id');
     }
 
     /**

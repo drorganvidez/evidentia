@@ -22,7 +22,15 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'surname', 'name', 'username', 'password', 'email', 'block', 'biography', 'clean_name', 'clean_surname'
+        'surname',
+        'name',
+        'username',
+        'password',
+        'email',
+        'block',
+        'biography',
+        'clean_name',
+        'clean_surname'
     ];
 
     /**
@@ -45,12 +53,17 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return $this->belongsToMany('App\Models\Role');
+        return $this->belongsToMany(Role::class);
     }
 
     public function evidences()
     {
-        return $this->hasMany('App\Models\Evidence');
+        return $this->hasMany(Evidence::class);
+    }
+
+    public function guest_evidences()
+    {
+        return $this->hasMany(Evidence::class, 'user_id', 'guest_id');
     }
 
     public function hasRole($rol_param)
@@ -80,42 +93,42 @@ class User extends Authenticatable
 
     public function coordinator()
     {
-        return $this->hasOne('App\Models\Coordinator');
+        return $this->hasOne(Coordinator::class);
     }
 
     public function secretary()
     {
-        return $this->hasOne('App\Models\Secretary');
+        return $this->hasOne(Secretary::class);
     }
 
     public function meetings()
     {
-        return $this->belongsToMany('App\Models\Meeting');
+        return $this->belongsToMany(Meeting::class);
     }
 
     public function bonus()
     {
-        return $this->belongsToMany('App\Models\Bonus');
+        return $this->belongsToMany(Bonus::class);
     }
 
     public function avatar()
     {
-        return $this->hasOne('App\Models\Avatar');
+        return $this->hasOne(Avatar::class);
     }
 
     public function attendees()
     {
-        return $this->hasMany('App\Models\Attendee');
+        return $this->hasMany(Attendee::class);
     }
 
     public function signature_sheets()
     {
-        return $this->belongsToMany('App\Models\SignatureSheet')->withTimestamps()->orderByDesc('created_at');
+        return $this->belongsToMany(SignatureSheet::class)->withTimestamps()->orderByDesc('created_at');
     }
 
     public function api_tokens()
     {
-        return $this->hasMany('App\Models\ApiToken');
+        return $this->hasMany(ApiToken::class);
     }
 
     public function evidences_draft_count(): int

@@ -27,7 +27,13 @@ $is_invalid = "";
             @endphp
         @endisset
         <label class="{{$label_class}}">
+
             {{$label}}
+
+            @isset($info)
+                <i style="cursor: pointer" class="fe fe-info" data-bs-toggle="modal" data-bs-target="#modal_item_{{$name}}"></i>
+            @endisset
+
         </label>
 
         @isset($description)
@@ -77,14 +83,19 @@ $is_invalid = "";
             @endphp
         @endisset
 
-        @if(old("$name"))
-            @php
-                $value = old("$name")
-            @endphp
-        @endif
+        @php
+
+        if(old("$name")){
+           $val = old("$name");
+        } else {
+            $val = $value;
+        }
+
+        @endphp
+
 
         <!-- Input -->
-        <input type="{{$type}}" name="{{$name}}" value="{{$value}}" class="form-control{{$is_invalid}}" {{$disabled}} {{$autofocus}} {{$required}}>
+        <input type="{{$type}}" name="{{$name}}" value="{{$val}}" class="form-control{{$is_invalid}}" {{$disabled}} {{$autofocus}} {{$required}}>
 
         @error("$name")
         <div class="invalid-feedback">
@@ -94,5 +105,31 @@ $is_invalid = "";
     </span>
 
     </div>
+
+    @isset($info)
+    <div class="modal fade" id="modal_item_{{$name}}" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-card card">
+                    <div class="card-header">
+
+                        <!-- Title -->
+                        <h4 class="card-header-title" id="exampleModalCenterTitle">
+                            {{$label}}: para tu interés
+                        </h4>
+
+                        <!-- Close -->
+                        <i style="cursor: pointer" class="fe fe-x-circle" data-bs-dismiss="modal" aria-label="Close"></i>
+                    </div>
+                    <div class="card-body">
+
+                            {{$info}}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endisset
 
 </div>

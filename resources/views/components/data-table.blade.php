@@ -506,6 +506,19 @@
                         @if(!$disabled_dropdown_menu)
                             <td class="text-end">
 
+                                @isset($edit_item_route)
+                                    <a class="btn btn-outline-primary btn-sm" href="{{route("$edit_item_route",['instance' => \Instantiation::instance(), 'id' => $item['id']])}}">
+                                        <i class="fe fe-edit"></i>
+                                    </a>
+                                @endisset
+
+                                @isset($delete_item_route)
+                                    <a class="btn btn-outline-danger btn-sm"  data-bs-toggle="modal" data-bs-target="#modal_item_{{$item['id']}}" href="#">
+                                        <i class="fe fe-trash"></i>
+                                    </a>
+                                @endisset
+
+                                {{--
                                 <!-- Dropdown -->
                                 <div class="dropdown">
                                     <a class="dropdown-ellipses dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -528,7 +541,7 @@
 
                                     </div>
                                 </div>
-
+                                --}}
 
 
                             </td>

@@ -8,24 +8,24 @@
 
     <ul class="navbar-nav">
 
-    <x-item-menu>
-        <x-slot:route>
-            evidences
-        </x-slot>
-        <x-slot:icon>
-        box
-        </x-slot>
-        <x-slot:name>
-        Evidencias
-        </x-slot>
-        <x-slot:subitems>
-        Nueva evidencia, evidences.create;
-        En borrador, evidences.draft;
-        Pendientes, evidences.pending;
-        Aceptadas, evidences.accepted;
-        Rechazadas, evidences.rejected
-        </x-slot>
-    </x-item-menu>
+        <x-item-menu>
+            <x-slot:route>
+                evidences
+            </x-slot:route>
+            <x-slot:icon>
+            box
+            </x-slot:icon>
+            <x-slot:name>
+            Evidencias
+            </x-slot:name>
+            <x-slot:subitems>
+            Nueva evidencia, evidences.create;
+            En borrador, evidences.draft;
+            Pendientes, evidences.pending;
+            Aceptadas, evidences.accepted;
+            Rechazadas, evidences.rejected
+            </x-slot:subitems>
+        </x-item-menu>
 
     </ul>
 

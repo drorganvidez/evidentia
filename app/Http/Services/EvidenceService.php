@@ -5,15 +5,16 @@ namespace App\Http\Services;
 use App\Http\Resources\EvidenceResource;
 use App\Models\Committee;
 use App\Models\Evidence;
-use App\Models\User;
+use App\Models\File;
+use App\Models\Proof;
 use App\Rules\CheckHoursAndMinutes;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use ReflectionException;
 
 class EvidenceService extends Service
 {
@@ -39,9 +40,9 @@ class EvidenceService extends Service
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public function get_evidences_by_committee_and_status($committee_query, $status) : object
+    public function get_evidences_by_committee_and_status($committee_query, $status) : JsonResource
     {
         $committee = Committee::where(['name' => $committee_query])->first();
 
@@ -53,12 +54,40 @@ class EvidenceService extends Service
                     'status' => 'DRAFT',
                     'temp' => false,
                     'last' => true
-                ])->get()->sortByDesc('updated_at');
+                ])->get();
             }else{
+
                 $evidences = Evidence::where([
                     'user_id' => Auth::id(),
                     'status' => $status
-                ])->get()->sortByDesc('updated_at');
+                ])->get();
+
+                if($status == 'PENDING'){
+                    $guest_evidences = Evidence::where([
+                        'guest_id' => Auth::id(),
+                        'status' => 'PENDING'
+                    ])->get();
+                    $evidences = $evidences->concat($guest_evidences);
+                }
+
+                if($status == 'ACCEPTED'){
+                    $guest_evidences = Evidence::where([
+                        'guest_id' => Auth::id(),
+                        'status' => 'ACCEPTED'
+                    ])->get();
+                    $evidences = $evidences->concat($guest_evidences);
+                }
+
+                if($status == 'REJECTED'){
+                    $guest_evidences = Evidence::where([
+                        'guest_id' => Auth::id(),
+                        'status' => 'REJECTED'
+                    ])->get();
+                    $evidences = $evidences->concat($guest_evidences);
+                }
+
+                $evidences = $evidences->sortByDesc('updated_at');
+
             }
 
         } else {
@@ -76,7 +105,37 @@ class EvidenceService extends Service
                     'user_id' => Auth::id(),
                     'committee_id' => $committee->id,
                     'status' => $status
-                ])->get()->sortByDesc('updated_at');
+                ])->get();
+
+                if($status == 'PENDING'){
+                    $guest_evidences = Evidence::where([
+                        'guest_id' => Auth::id(),
+                        'status' => 'PENDING',
+                        'committee_id' => $committee->id,
+                    ])->get();
+                    $evidences = $evidences->concat($guest_evidences);
+                }
+
+                if($status == 'ACCEPTED'){
+                    $guest_evidences = Evidence::where([
+                        'guest_id' => Auth::id(),
+                        'status' => 'ACCEPTED',
+                        'committee_id' => $committee->id,
+                    ])->get();
+                    $evidences = $evidences->concat($guest_evidences);
+                }
+
+                if($status == 'REJECTED'){
+                    $guest_evidences = Evidence::where([
+                        'guest_id' => Auth::id(),
+                        'status' => 'REJECTED',
+                        'committee_id' => $committee->id,
+                    ])->get();
+                    $evidences = $evidences->concat($guest_evidences);
+                }
+
+                $evidences = $evidences->sortByDesc('updated_at');
+
             }
 
         }
@@ -101,6 +160,33 @@ class EvidenceService extends Service
         }
     }
 
+    public function upload_file($file, $instance, Authenticatable $user, Evidence $evidence)
+    {
+        $name = $file->getClientOriginalName();
+        $type = $file->getClientOriginalExtension();
+        $size = $file->getSize();
+
+        $path = $instance.'/proofs/'.$user->username.'/evidence_'.$evidence->id.'/';
+        $full_path = $instance.'/proofs/'.$user->username.'/evidence_'.$evidence->id.'/'.$name;
+
+        Storage::putFileAs($path, $file, $name);
+
+        $file_entity = File::create([
+            'name' => $name,
+            'type' => $type,
+            'route' => $full_path,
+            'size' => $size,
+        ]);
+
+        $file_entity = \Stamp::compute_file($file_entity);
+        $file_entity->save();
+
+        Proof::create([
+            'evidence_id' => $evidence->id,
+            'file_id' => $file_entity->id
+        ]);
+    }
+
     public function delete_files($evidence)
     {
         foreach($evidence->proofs as $proof)
@@ -111,14 +197,25 @@ class EvidenceService extends Service
 
     public function get_evidences_by_user_and_status(Authenticatable $user, string $status){
 
-        return Evidence::where([
+        $evidences = Evidence::where([
             'user_id' => $user->id,
             'status' => $status
-        ])->get()->sortByDesc('updated_at');
+        ])->get();
+
+        if($status == 'PENDING' || $status == 'ACCEPTED' || $status == 'REJECTED'){
+            $guest_evidences = Evidence::where([
+                'guest_id' => $user->id,
+                'status' => $status,
+                'last' => true
+            ])->get();
+            $evidences = $evidences->concat($guest_evidences);
+        }
+
+        return $evidences->sortByDesc('updated_at');
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function get_json_evidences_by_user_and_status(Authenticatable $user, string $status) : JsonResource{
         return $this->transform_to_resource_collection($this->get_evidences_by_user_and_status($user, $status));
@@ -132,7 +229,7 @@ class EvidenceService extends Service
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function get_json_evidences_by_user(Authenticatable $user): JsonResource
     {
@@ -140,7 +237,7 @@ class EvidenceService extends Service
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function evidences_in_draft_by_user(Authenticatable $user): JsonResource
     {
@@ -165,12 +262,21 @@ class EvidenceService extends Service
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function evidences_pending_by_user(Authenticatable $user): JsonResource
     {
         $evidences = $this->get_evidences_by_user_and_status(Auth::user(), 'PENDING');
-        return $this->transform_to_resource_collection($evidences);
+
+        $guest_evidences = Evidence::where([
+            'guest_id' => Auth::id(),
+            'status' => 'PENDING'
+        ])->get();
+
+        $merge = $evidences->concat($guest_evidences);
+        $merge = $merge->get()->sortByDesc('updated_at');
+
+        return $this->transform_to_resource_collection($merge);
     }
 
     public function count_evidences_pending_by_user(Authenticatable $user): int
@@ -179,7 +285,7 @@ class EvidenceService extends Service
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function evidences_accepted_by_user(Authenticatable $user): JsonResource
     {
@@ -193,7 +299,7 @@ class EvidenceService extends Service
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function evidences_rejected_by_user(Authenticatable $user): JsonResource
     {

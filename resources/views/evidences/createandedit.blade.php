@@ -42,7 +42,14 @@
                 $points_to = null;
             @endphp
 
-            <livewire:save-evidence :evidence_temp="$evidence_temp" :evidence_temp_id="$evidence_temp_id" :route_draft="$route_draft" :route_publish="$route_publish" :committees="$committees"></livewire:save-evidence>
+            <livewire:save-evidence
+                    :evidence_temp="$evidence_temp"
+                    :evidence_temp_id="$evidence_temp_id"
+                    :route_draft="$route_draft"
+                    :route_publish="$route_publish"
+                    :committees="$committees"
+                    :students="$students"
+            ></livewire:save-evidence>
 
             <div class="col-lg-6">
 
