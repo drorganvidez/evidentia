@@ -46,9 +46,9 @@ class Evidence extends Model
         return $this->hasOne(ReasonRejection::class);
     }
 
-    public function guest_id()
+    public function guest()
     {
-        return $this->belongsTo(User::class, 'user_id','guest_id');
+        return $this->belongsTo(User::class, 'guest_id',);
     }
 
     /**

@@ -63,7 +63,7 @@ class User extends Authenticatable
 
     public function guest_evidences()
     {
-        return $this->hasMany(Evidence::class, 'user_id', 'guest_id');
+        return $this->hasMany(Evidence::class, 'guest_id', 'user_id');
     }
 
     public function hasRole($rol_param)

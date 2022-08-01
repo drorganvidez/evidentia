@@ -845,6 +845,7 @@
 </script>
 
 @livewireScripts
+<script> window.livewire_app_url = '{{route('home', \Instantiation::instance())}}'; </script>
 
 </body>
 </html>

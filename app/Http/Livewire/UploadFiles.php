@@ -24,7 +24,6 @@ class UploadFiles extends Component
 
     public $evidence_id;
     public $evidence;
-    public $instance_route;
     public $proofs;
 
     public $info;
@@ -42,22 +41,26 @@ class UploadFiles extends Component
 
     private $evidence_service;
 
-    public function fix_database(){
-
+    /*
+    public function fix_database()
+    {
         \Instantiation::set_default_connection();
-        $instance_found = Instance::where('route', Cookie::get('instance'))->first();
+        $instance_found = Instance::where('route', $_COOKIE['instance'])->first();
         \Instantiation::set($instance_found);
 
+        setcookie("uff", $instance_found->route, time()+3600, '/');
     }
+    */
 
+    /*
     public function boot()
     {
-        $this->fix_database();
+        //$this->fix_database();
     }
+    */
 
     public function mount($evidence_id)
     {
-        $this->instance_route = Cookie::get('instance');
         $this->evidence_id = $evidence_id;
         $this->evidence = Evidence::find($evidence_id);
         $this->user_id = $this->evidence->user->id;
@@ -74,39 +77,10 @@ class UploadFiles extends Component
         ]);
         */
 
-        //$this->fix_database();
-
         foreach ($this->files as $file) {
 
-
             $evidence_service = new EvidenceService();
-            $evidence_service->upload_file($file, $this->instance_route, $this->user, $this->evidence);
-
-            /*
-            $name = $file->getClientOriginalName();
-            $type = $file->getClientOriginalExtension();
-            $size = $file->getSize();
-
-            $path = $this->instance_route.'/proofs/'.$this->user->username.'/evidence_'.$this->evidence_id.'/';
-            $full_path = $this->instance_route.'/proofs/'.$this->user->username.'/evidence_'.$this->evidence_id.'/'.$name;
-
-            Storage::putFileAs($path, $file, $name);
-
-            $file_entity = File::create([
-                'name' => $name,
-                'type' => $type,
-                'route' => $full_path,
-                'size' => $size,
-            ]);
-
-            $file_entity = \Stamp::compute_file($file_entity);
-            $file_entity->save();
-
-            $proof = Proof::create([
-                'evidence_id' => $this->evidence_id,
-                'file_id' => $file_entity->id
-            ]);
-            */
+            $evidence_service->upload_file($file, \Instantiation::instance(), $this->user, $this->evidence);
 
         }
 
@@ -145,7 +119,7 @@ class UploadFiles extends Component
         $this->proofs = Evidence::find($this->evidence_id)->proofs->sortByDesc('created_at');
 
         return view('livewire.upload-files', [
-            'proofs' => $this->proofs
+            'proofs' => collect()
         ]);
 
 

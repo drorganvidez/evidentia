@@ -4,7 +4,7 @@
 
 @section('submenu')
 
-    <x-submenus.evidences-menu/>
+    <x-submenus.evidences-menu></x-submenus.evidences-menu>
 
 @endsection
 
@@ -21,6 +21,9 @@
                 </x-slot:data>
 
                 {{-- Columns --}}
+
+
+
                 <x-slot:columns>
                     Título | title;
                     Horas | hours;

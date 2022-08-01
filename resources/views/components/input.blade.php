@@ -5,14 +5,24 @@ $is_invalid = "";
 @endphp
 
 @error("$name")
-@php
+    @php
 
-    $is_invalid = " is-invalid";
+        $is_invalid = " is-invalid";
 
-@endphp
+    @endphp
 @enderror
 
-<div class="{{$col}}">
+@php
+
+    if(isset($order)){
+        $or = $order;
+    } else {
+        $or = "";
+    }
+
+@endphp
+
+<div class="{{$col}} {{$or}}">
 
     <div class="form-group">
 
@@ -93,9 +103,8 @@ $is_invalid = "";
 
         @endphp
 
-
         <!-- Input -->
-        <input type="{{$type}}" name="{{$name}}" value="{{$val}}" class="form-control{{$is_invalid}}" {{$disabled}} {{$autofocus}} {{$required}}>
+        <input type="{{$type}}" name="{{$name}}" value="{{$val}}" class="form-control{{$is_invalid}}" {{$disabled}} {{$autofocus}} {{$required}} >
 
         @error("$name")
         <div class="invalid-feedback">

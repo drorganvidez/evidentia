@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\EvidenceController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+//use \Livewire\Controllers\HttpConnectionHandler;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,14 +44,20 @@ Route::group(['prefix' => 'admin'], function(){
 });
 
 // App routes
-Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], function(){
+Route::group(['prefix' => '{instance}'], function(){
+
+    // Livewire routes
+    Route::post('livewire/message/{name}', [
+        'uses' => '\Livewire\Controllers\HttpConnectionHandler@__invoke'
+    ]);
 
     // App login routes
     Route::get('/login', 'LoginInstanceController@login')->name('instance.login');
     Route::post('/login_p', 'LoginInstanceController@login_p')->name('instance.login_p');
     Route::post('/logout', 'LoginInstanceController@logout')->name('instance.logout');
 
-    Route::group(['middleware' => ['checksession']], function(){
+    Route::group(['middleware' => ['checksession', 'checkblock']], function(){
+
         // Main routes
         Route::get('/', 'HomeController@index')->name('home');
 

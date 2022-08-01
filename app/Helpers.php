@@ -44,7 +44,7 @@ class Instantiation
         ]]);
         config(['database.default' => 'instance']);
 
-        Cookie::queue('instance', $instance->route, 60*24*30*3);
+        setcookie("instance", $instance->route, time()+(3600*24*30*3), '/');
 
     }
 

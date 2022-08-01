@@ -6,7 +6,17 @@
 
 @endphp
 
-<div class="{{$col}}">
+@php
+
+    if(isset($order)){
+        $or = $order;
+    } else {
+        $or = "";
+    }
+
+@endphp
+
+<div class="{{$col}} {{$or}}">
 
     <div class="form-group">
 
@@ -40,7 +50,7 @@
         <select class="form-select mb-3" name="{{$name}}" data-choices>
 
             @isset($default)
-                <option selected>{{$default}}</option>
+                <option selected value="">{{$default}}</option>
             @endisset
 
             @foreach ($data_array as $item)

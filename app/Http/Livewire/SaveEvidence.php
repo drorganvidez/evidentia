@@ -23,20 +23,13 @@ class SaveEvidence extends Component
         'saveDescription' => 'saveDescription'
         ];
 
-    public function mount($evidence_temp, $evidence_temp_id, $committees, $students,  $route_draft, $route_publish){
+    public function mount($evidence_temp, $evidence_temp_id, $committees, $students, $route_draft, $route_publish){
         $this->evidence_temp_id = $evidence_temp_id;
         $this->evidence_temp = $evidence_temp;
         $this->committees = $committees;
         $this->students = $students;
         $this->route_draft = $route_draft;
         $this->route_publish = $route_publish;
-    }
-
-    public function boot()
-    {
-        \Instantiation::set_default_connection();
-        $instance_found = Instance::where('route', Cookie::get('instance'))->first();
-        \Instantiation::set($instance_found);
     }
 
     public function saveTitle($title)

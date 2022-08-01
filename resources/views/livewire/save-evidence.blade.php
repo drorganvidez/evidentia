@@ -8,12 +8,15 @@
             <input type="hidden" name="_id" value="{{$evidence_temp_id}}">
             <input type="hidden" name="points_to" value="{{$evidence_temp->points_to}}">
 
-            <div class="row">
+            <div class="row order-md-1 order-sm-1">
 
                 <x-input>
                     <x-slot:col>
-                        col-6 col-md-6
+                        col-lg-6 col-md-6 col-sm-12
                     </x-slot:col>
+                    <x-slot:order>
+                        order-md-1 order-sm-1
+                    </x-slot:order>
                     <x-slot:label>
                         Título
                     </x-slot:label>
@@ -31,6 +34,9 @@
                     <x-slot:col>
                         col-6 col-md-3
                     </x-slot:col>
+                    <x-slot:order>
+                        order-md-2 order-sm-2
+                    </x-slot:order>
                     <x-slot:label>
                         Horas
                     </x-slot:label>
@@ -46,6 +52,9 @@
                     <x-slot:col>
                         col-6 col-md-3
                     </x-slot:col>
+                    <x-slot:order>
+                        order-md-3 order-sm-3
+                    </x-slot:order>
                     <x-slot:label>
                         Minutos
                     </x-slot:label>
@@ -59,15 +68,18 @@
 
             </div>
 
-            <div class="row">
+            <div class="row order-md-2 order-sm-2">
 
                 <x-select>
                     <x-slot:data>
                         {{$committees}}
                     </x-slot:data>
                     <x-slot:col>
-                        col-6 col-md-6
+                        col-lg-6 col-md-6 col-sm-12
                     </x-slot:col>
+                    <x-slot:order>
+                        order-md-4 order-sm-4
+                    </x-slot:order>
                     <x-slot:label>
                         Comité asociado
                     </x-slot:label>
@@ -96,7 +108,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row order-md-3 order-sm-3">
 
                 <x-select>
                     <x-slot:data>
@@ -105,6 +117,9 @@
                     <x-slot:col>
                         col-12 col-md-12
                     </x-slot:col>
+                    <x-slot:order>
+                        order-md-5 order-sm-5
+                    </x-slot:order>
                     <x-slot:label>
                         Estudiante asociado
                     </x-slot:label>
@@ -115,7 +130,7 @@
                         guest_id
                     </x-slot:name>
                     <x-slot:value>
-                        {{$evidence_temp->guest_id ?? ''}}
+                        {{$evidence_temp->guest->id ?? ''}}
                     </x-slot:value>
                     <x-slot:default>
                         Sin estudiante asociado
@@ -139,12 +154,15 @@
 
             </div>
 
-            <div class="row">
+            <div class="row order-md-4 order-sm-4">
 
                 <x-textarea>
                     <x-slot:col>
-                        col-12 col-md-12
+                        col-lg-12 col-md-12 col-sm-12
                     </x-slot:col>
+                    <x-slot:order>
+                        order-md-6 order-sm-6
+                    </x-slot:order>
                     <x-slot:label>
                         Descripción
                     </x-slot:label>
@@ -161,9 +179,9 @@
 
             </div>
 
-            <div class="row">
+            <div class="row order-md-6 order-sm-6">
 
-                <div class="form-group col-md-12 ">
+                <div class="form-group col-md-12 order-md-8 order-sm-8">
 
                     <div id="loading" style="display: none">
                         <div class="spinner-grow spinner-grow-sm" role="status">
@@ -178,7 +196,7 @@
 
                 </div>
 
-                <div class="form-group col-12">
+                <div class="form-group col-12 order-9 order-md-9 order-sm-9">
                     <button type="submit" formaction="{{$route_draft}}" class="btn btn-secondary bt-block mb-2">
                         <i class="fas fa-pencil-ruler"></i> &nbsp;Guardar como borrador</button>
                     <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#modal_confirm">

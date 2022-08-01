@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\CheckSession;
 use App\Http\Middleware\MeetingMinutesMine;
 use App\Http\Middleware\MeetingRequestMine;
+use App\Http\Middleware\SelectDatabase;
 use App\Http\Middleware\SelectDatabaseApi;
 use App\Http\Middleware\SignatureSheetMine;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -25,7 +26,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        \App\Http\Middleware\SelectDatabase::class,
+        SelectDatabase::class
     ];
 
     /**
@@ -38,7 +39,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
-            // \Illuminate\Session\Middleware\AuthenticateSession::class,
+            \Illuminate\Session\Middleware\AuthenticateSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
@@ -49,8 +50,18 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             //\App\Http\Middleware\SelectDatabaseApi::class,
-
         ],
+
+        'livewire' => [
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\Session\Middleware\AuthenticateSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \App\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\SelectDatabase::class,
+        ]
     ];
 
     /**
@@ -87,6 +98,7 @@ class Kernel extends HttpKernel
         'meetingrequestmine' => MeetingRequestMine::class,
         'signaturesheetmine' => SignatureSheetMine::class,
         'meetingminutesmine' => MeetingMinutesMine::class,
+        'selectdatabase' => SelectDatabase::class,
         'selectdatabaseapi' => SelectDatabaseApi::class,
         'checksession' => CheckSession::class
     ];

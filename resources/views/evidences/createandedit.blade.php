@@ -33,7 +33,6 @@
 
     @endif
 
-
         <div class="row">
 
             @php
@@ -51,7 +50,7 @@
                     :students="$students"
             ></livewire:save-evidence>
 
-            <div class="col-lg-6">
+            <div class="col-lg-6 order-md-7 order-sm-7">
 
                 <div class="form-group">
 
