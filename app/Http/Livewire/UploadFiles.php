@@ -41,24 +41,6 @@ class UploadFiles extends Component
 
     private $evidence_service;
 
-    /*
-    public function fix_database()
-    {
-        \Instantiation::set_default_connection();
-        $instance_found = Instance::where('route', $_COOKIE['instance'])->first();
-        \Instantiation::set($instance_found);
-
-        setcookie("uff", $instance_found->route, time()+3600, '/');
-    }
-    */
-
-    /*
-    public function boot()
-    {
-        //$this->fix_database();
-    }
-    */
-
     public function mount($evidence_id)
     {
         $this->evidence_id = $evidence_id;

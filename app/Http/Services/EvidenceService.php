@@ -206,6 +206,7 @@ class EvidenceService extends Service
             $guest_evidences = Evidence::where([
                 'guest_id' => $user->id,
                 'status' => $status,
+                'temp' => false,
                 'last' => true
             ])->get();
             $evidences = $evidences->concat($guest_evidences);
@@ -224,7 +225,9 @@ class EvidenceService extends Service
     public function get_evidences_by_user(Authenticatable $user){
 
         return Evidence::where([
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'temp' => false,
+            'last' => true
         ])->get()->sortByDesc('updated_at');
     }
 
@@ -267,16 +270,7 @@ class EvidenceService extends Service
     public function evidences_pending_by_user(Authenticatable $user): JsonResource
     {
         $evidences = $this->get_evidences_by_user_and_status(Auth::user(), 'PENDING');
-
-        $guest_evidences = Evidence::where([
-            'guest_id' => Auth::id(),
-            'status' => 'PENDING'
-        ])->get();
-
-        $merge = $evidences->concat($guest_evidences);
-        $merge = $merge->get()->sortByDesc('updated_at');
-
-        return $this->transform_to_resource_collection($merge);
+        return $this->transform_to_resource_collection($evidences);
     }
 
     public function count_evidences_pending_by_user(Authenticatable $user): int
