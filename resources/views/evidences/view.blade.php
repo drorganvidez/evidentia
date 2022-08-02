@@ -322,13 +322,13 @@
                                         <div class="col w-25 ms-n2">
 
                                             <!-- Title -->
-                                            <h4 class="mb-1 name">
+                                            <h5 class="mb-1 name">
                                                 <a href="{{route('download.file', ['instance' => \Instantiation::instance(), 'file_id' => $proof->file->id])}}">
 
                                                     {{$proof->file->name}}
 
                                                 </a>
-                                            </h4>
+                                            </h5>
 
                                             <!-- Size -->
                                             <p class="card-text small text-muted mb-1">

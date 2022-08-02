@@ -145,6 +145,10 @@ Route::group(['prefix' => '{instance}'], function(){
                 Route::get('export/{id}', 'export')->name('evidences.export');
                 Route::post('export/mass', 'export_mass')->name('evidences.export.mass');
 
+                // Reassign evidene
+                Route::get('reassign/{id}', 'reassign')->name('evidences.reassign');
+                Route::post('reassign', 'reassign_p')->name('evidences.reassign_p');
+
             });
 
         });

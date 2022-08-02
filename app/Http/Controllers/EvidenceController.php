@@ -359,4 +359,33 @@ class EvidenceController extends Controller
 
     }
 
+    /****************************************************************************
+     * REASSIGN EVIDENCE
+     ****************************************************************************
+     */
+
+    public function reassign($instance, $id)
+    {
+        $evidence = Evidence::findOrFail($id);
+        $committees = Committee::where('id', '!=', $evidence->committee->id)->get();
+
+        return view('evidences.reassign', [
+            'instance' => $instance,
+            'evidence' => $evidence,
+            'committees' => $committees
+        ]);
+
+    }
+
+    public function reassign_p(Request $request)
+    {
+        $evidence = Evidence::findOrFail($request->input('_id'));
+        $committee = Committee::findOrFail($request->input('committee_id'));
+
+        $evidence->committee_id = $committee->id;
+        $evidence->save();
+
+        return redirect()->route('evidences.pending', \Instantiation::instance())->with('success', 'La evidencia se ha reasignado de comité con éxito');
+    }
+
 }

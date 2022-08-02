@@ -30,15 +30,20 @@
                 $label_class = "form-class mb-3"
             @endphp
         @endisset
-        <label class="{{$label_class}}">
 
-            {{$label}}
+        @isset($label)
 
-            @isset($info)
-                <i style="cursor: pointer" class="fe fe-info" data-bs-toggle="modal" data-bs-target="#modal_item_{{$name}}"></i>
-            @endisset
+            <label class="{{$label_class}}">
 
-        </label>
+                {{$label}}
+
+                @isset($info)
+                    <i style="cursor: pointer" class="fe fe-info" data-bs-toggle="modal" data-bs-target="#modal_item_{{$name}}"></i>
+                @endisset
+
+            </label>
+
+        @endisset
 
         @isset($description)
             <!-- Description -->

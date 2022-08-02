@@ -542,7 +542,7 @@
 
                                     @foreach($action_names as $action)
                                         <a class="btn btn-outline-primary btn-sm" href="{{route($action_routes[$loop->index],['instance' => \Instantiation::instance(), 'id' => $item['id']])}}">
-                                            <i class="{{$action_icons[$loop->index]}}"></i>
+                                            <i class="{{$action_icons[$loop->index]}}"></i> {{$action_names[$loop->index]}}
                                         </a>
                                     @endforeach
 

@@ -35,7 +35,8 @@
 
                 {{-- Actions --}}
                 <x-slot:actions>
-                    Exportar, evidences.export, fe fe-download-cloud
+                    Exportar, evidences.export, fe fe-download-cloud;
+                    Reasignar, evidences.reassign, fe fe-repeat
                 </x-slot:actions>
 
                 {{-- Mass Actions --}}

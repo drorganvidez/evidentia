@@ -89,13 +89,13 @@
                                     <div class="col w-25 ms-n2">
 
                                         <!-- Title -->
-                                        <h4 class="mb-1 name">
+                                        <h5 class="mb-1 name">
                                             <a href="#" wire:click="download_file({{ $proof->file->id }})">
 
                                                 {{$proof->file->name}}
 
                                             </a>
-                                        </h4>
+                                        </h5>
 
                                         <!-- Size -->
                                         <p class="card-text small text-muted mb-1">
