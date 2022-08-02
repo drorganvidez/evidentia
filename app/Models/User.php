@@ -155,6 +155,12 @@ class User extends Authenticatable
         return $service->count_evidences_rejected_by_user($this);
     }
 
+    public function total_evidences_hours(): float
+    {
+        $service = new EvidenceService();
+        return $service->evidences_hours_by_user($this);
+    }
+
     /*
 
     public function evidence_rand(){

@@ -17,7 +17,8 @@
         "livewire/livewire": "^2.10",
         "maatwebsite/excel": "^3.1",
         "nyholm/psr7": "^1.4",
-        "symfony/psr-http-message-bridge": "^2.1"
+        "symfony/psr-http-message-bridge": "^2.1",
+        "ext-zip": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

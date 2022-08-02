@@ -63,19 +63,23 @@ Route::group(['prefix' => '{instance}'], function(){
 
         // Profile routes
         Route::group(['prefix' => 'profile'], function(){
+
             Route::controller(ProfileController::class)->group(function () {
                 Route::get('data', 'data')->name('profile.data');
                 Route::post('data_p', 'data_p')->name('profile.data_p');
                 Route::get('avatar', 'avatar')->name('profile.avatar');
                 Route::get('password', 'password')->name('profile.password');
             });
+
         });
 
         // Settings
         Route::group(['prefix' => 'settings'], function() {
+
             Route::controller(SettingController::class)->group(function () {
                 Route::get('notifications', 'notifications')->name('settings.notifications');
             });
+
         });
 
         // Developer
@@ -98,12 +102,12 @@ Route::group(['prefix' => '{instance}'], function(){
 
                 });
 
-
             });
         });
 
         // Evidences
         Route::group(['prefix' => 'evidences'], function() {
+
             Route::controller(EvidenceController::class)->group(function () {
 
                 // Create evidence
@@ -134,14 +138,24 @@ Route::group(['prefix' => '{instance}'], function(){
                 // Delete autosaved
                 Route::post('autosaved', 'delete_autosaved')->name('evidences.delete.autosaved')->middleware('evidencemine');
 
+                // View evidence
+                Route::get('view/{id}', 'view')->name('evidences.view');
+
+                // Export evidences
+                Route::get('export/{id}', 'export')->name('evidences.export');
+                Route::post('export/mass', 'export_mass')->name('evidences.export.mass');
+
             });
+
         });
 
         // Settings
         Route::group(['prefix' => 'download'], function() {
+
             Route::controller(DownloadController::class)->group(function () {
                 Route::get('file/{file_id}', 'download_file')->name('download.file');
             });
+
         });
     });
 

@@ -51,6 +51,55 @@ class Evidence extends Model
         return $this->belongsTo(User::class, 'guest_id',);
     }
 
+    public function spanish_status()
+    {
+
+        if(strcmp($this->status, 'DRAFT') === 0){
+            return 'En borrador';
+        }
+
+        if(strcmp($this->status, 'PENDING') === 0){
+            return 'Pendiente de revisar';
+        }
+
+        if(strcmp($this->status, 'ACCEPTED') === 0){
+            return 'Aceptada';
+        }
+
+        if(strcmp($this->status, 'REJECTED') === 0){
+            return 'Rechazada';
+        }
+
+        return "";
+
+    }
+
+    public function color_status()
+    {
+        if(strcmp($this->status, 'DRAFT') === 0){
+            return 'secondary';
+        }
+
+        if(strcmp($this->status, 'PENDING') === 0){
+            return 'warning';
+        }
+
+        if(strcmp($this->status, 'ACCEPTED') === 0){
+            return 'danger';
+        }
+
+        if(strcmp($this->status, 'REJECTED') === 0){
+            return 'success';
+        }
+
+        return "primary";
+    }
+
+    public function full_time()
+    {
+        return \Time::complex_shape_hours($this->hours) . ' horas y ' . \Time::complex_shape_minutes($this->hours) . ' minutos';
+    }
+
     /**
      * @return mixed
      * Evidence Flow

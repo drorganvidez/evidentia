@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Services\EvidenceService;
 use App\Http\Services\UserService;
+use App\Models\ApiToken;
 use App\Models\Committee;
 use App\Models\Evidence;
 use App\Models\File;
 use App\Models\Proof;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -316,4 +318,45 @@ class EvidenceController extends Controller
 
         return view('evidences.rejected', ['evidences' => $stringify, 'committees' => Committee::all()]);
     }
+
+    /****************************************************************************
+     * LIST EVIDENCES
+     ****************************************************************************
+     */
+
+    public function view($instance, $id)
+    {
+        $evidence = Evidence::findOrFail($id);
+        return view('evidences.view', [
+            'evidence' => $evidence
+        ]);
+    }
+
+    /****************************************************************************
+     * EXPORT EVIDENCES
+     ****************************************************************************
+     */
+
+    public function export($instance, $id)
+    {
+        $evidence = Evidence::findOrFail($id);
+
+        $this->evidence_service->zip_evidence($evidence);
+
+        return $this->evidence_service->download_zip($evidence);
+    }
+
+    public function export_mass(Request $request)
+    {
+
+        $items_selected = $request->input("items_selected");
+
+        $evidences = $this->evidence_service->get_collection_by_ids($items_selected);
+
+        $zip_name = $this->evidence_service->zip_evidences($evidences);
+
+        return $this->evidence_service->download_zip_by_name($zip_name);
+
+    }
+
 }

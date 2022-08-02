@@ -10,11 +10,15 @@ use App\Models\Proof;
 use App\Rules\CheckHoursAndMinutes;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use ReflectionException;
+use ZipArchive;
 
 class EvidenceService extends Service
 {
@@ -318,6 +322,107 @@ class EvidenceService extends Service
     {
         $evidences = $this->get_evidences_by_user_and_status($user, 'ACCEPTED');
         return $this->collection_hours($evidences);
+    }
+
+    public function zip_evidence(Evidence $evidence)
+    {
+
+        $username = Auth::user()->username;
+        $instance = \Instantiation::instance();
+
+        $rootPath = realpath(storage_path('app').'/'.$instance.'/proofs/'.$username.'/evidence_'.$evidence->id);
+        $zipcreated = storage_path('app').'/'.$instance.'/proofs/'.$username.'/evidence_'.$evidence->id.'.zip';
+
+        $zip = new ZipArchive();
+        $zip->open($zipcreated, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+
+        // Add root folder
+        $zip->addEmptyDir('evidence_'.$evidence->id);
+
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($rootPath),
+            RecursiveIteratorIterator::LEAVES_ONLY
+        );
+
+        foreach ($files as $name => $file)
+        {
+            // Skip directories (they would be added automatically)
+            if (!$file->isDir())
+            {
+                // Get real and relative path for current file
+                $filePath = $file->getRealPath();
+                $relativePath = substr($filePath, strlen($rootPath) + 1);
+
+                // Add current file to archive
+                $zip->addFile($filePath, 'evidence_'.$evidence->id.'/'.$relativePath);
+            }
+        }
+
+        $zip->close();
+
+    }
+
+    public function zip_evidences($evidences)
+    {
+        $username = Auth::user()->username;
+        $instance = \Instantiation::instance();
+
+        $now = Carbon::now();
+        $zip_name = $instance.'/proofs/'.$username.'/ ' .$username . '_evidences_' . $now . '.zip';
+        $zipcreated = storage_path('app').'/'. $zip_name;
+
+        $zip = new ZipArchive();
+        $zip->open($zipcreated, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+
+        foreach($evidences as $evidence)
+        {
+
+            $rootPath = realpath(storage_path('app').'/'.$instance.'/proofs/'.$username.'/evidence_'.$evidence->id);
+
+            // Add root folder
+            $zip->addEmptyDir('evidence_'.$evidence->id);
+
+            $files = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($rootPath),
+                RecursiveIteratorIterator::LEAVES_ONLY
+            );
+
+            foreach ($files as $name => $file)
+            {
+                // Skip directories (they would be added automatically)
+                if (!$file->isDir())
+                {
+                    // Get real and relative path for current file
+                    $filePath = $file->getRealPath();
+                    $relativePath = substr($filePath, strlen($rootPath) + 1);
+
+                    // Add current file to archive
+                    $zip->addFile($filePath, 'evidence_'.$evidence->id.'/'.$relativePath);
+                }
+            }
+        }
+
+        $zip->close();
+
+        return $zip_name;
+    }
+
+    public function download_zip(Evidence $evidence)
+    {
+        $username = Auth::user()->username;
+        $instance = \Instantiation::instance();
+
+        $response = Storage::download($instance.'/proofs/'.$username.'/evidence_'.$evidence->id.'.zip');
+        ob_end_clean();
+        return $response;
+    }
+
+    public function download_zip_by_name(string $zip_name)
+    {
+
+        $response = Storage::download($zip_name);
+        ob_end_clean();
+        return $response;
     }
 
 }

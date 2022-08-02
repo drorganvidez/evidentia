@@ -34,7 +34,6 @@
     @endisset
 
     @isset($filters)
-
         @php
 
             $filter_fields = [];
@@ -49,6 +48,42 @@
                 $i = $i + 1;
             }
         @endphp
+    @endisset
+
+    @isset($actions)
+
+        @php
+            $action_names = [];
+            $action_routes = [];
+            $action_icons = [];
+            $i = 0;
+            foreach (explode(';', $actions) as $item){
+                $parts = explode(',', $item);
+                $action_names[$i] = trim($parts[0]);
+                $action_routes[$i] = trim($parts[1]);
+                $action_icons[$i] = trim($parts[2]);
+                $i = $i + 1;
+            }
+        @endphp
+
+    @endisset
+
+    @isset($mass_actions)
+
+        @php
+            $mass_action_names = [];
+            $mass_action_routes = [];
+            $mass_action_icons = [];
+            $i = 0;
+            foreach (explode(';', $mass_actions) as $item){
+                $parts = explode(',', $item);
+                $mass_action_names[$i] = trim($parts[0]);
+                $mass_action_routes[$i] = trim($parts[1]);
+                $mass_action_icons[$i] = trim($parts[2]);
+                $i = $i + 1;
+            }
+        @endphp
+
     @endisset
 
     @isset($mass_delete_route)
@@ -68,7 +103,6 @@
                     </div>
                     <div class="card-body">
 
-
                         @isset($mass_delete_message)
                             <p> {{$mass_delete_message}} </p>
                         @else
@@ -83,19 +117,17 @@
                         <form method="post" style="display:inline" action="{{route("$mass_delete_route",\Instantiation::instance())}}">
                             @csrf
 
-                            <input type="hidden" id="items_selected" name="items_selected" value="">
+                            <input type="hidden" class="items_selected" name="items_selected" value="">
 
                             <button type="submit" class="btn btn-danger">
                                 <i class="fe fe-trash-2"></i> Eliminar seleccionados
                             </button>
-
 
                         </form>
 
                         <button class="btn btn-light" data-bs-dismiss="modal" aria-label="Close">
                             Cancelar
                         </button>
-
 
                     </div>
                 </div>
@@ -506,6 +538,16 @@
                         @if(!$disabled_dropdown_menu)
                             <td class="text-end">
 
+                                @isset($actions)
+
+                                    @foreach($action_names as $action)
+                                        <a class="btn btn-outline-primary btn-sm" href="{{route($action_routes[$loop->index],['instance' => \Instantiation::instance(), 'id' => $item['id']])}}">
+                                            <i class="{{$action_icons[$loop->index]}}"></i>
+                                        </a>
+                                    @endforeach
+
+                                @endisset
+
                                 @isset($edit_item_route)
                                     <a class="btn btn-outline-primary btn-sm" href="{{route("$edit_item_route",['instance' => \Instantiation::instance(), 'id' => $item['id']])}}">
                                         <i class="fe fe-edit"></i>
@@ -601,6 +643,8 @@
                     </div>
                     <div class="col-auto me-n3">
 
+
+
                         @isset($mass_delete_route)
                             <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modal_mass_delete" >
                                 <i class="fe fe-trash-2"></i> Borrado masivo
@@ -641,8 +685,6 @@
 
                 <!-- Alert -->
                 <div class="list-alert alert alert-dark alert-dismissible border fade" role="alert">
-
-
                     <!-- Content -->
                     <div class="row align-items-center">
                         <div class="col">
@@ -657,6 +699,24 @@
 
                         </div>
                         <div class="col-auto me-n3">
+
+                            @isset($mass_actions)
+
+                                @foreach($mass_actions as $mass_action)
+
+                                    <form method="post" style="display:inline" action="{{route($mass_action_routes[$loop->index],\Instantiation::instance())}}">
+                                        @csrf
+
+                                        <input type="hidden" class="items_selected" name="items_selected" value="">
+
+                                        <button type="submit" class="btn btn-sm btn-primary">
+                                            <i class="{{$mass_action_icons[$loop->index]}}"></i> {{$mass_action_names[$loop->index]}}
+                                        </button>
+
+                                    </form>
+                                @endforeach
+
+                            @endisset
 
                             @isset($mass_delete_route)
                                 <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modal_mass_delete" >
@@ -729,7 +789,7 @@
 
             function update_input_items_selected()
             {
-                $('#items_selected').val(items_selected);
+                $('.items_selected').val(items_selected);
             }
 
             $('#pagination').change(function(){

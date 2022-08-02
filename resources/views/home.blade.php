@@ -30,15 +30,21 @@
                 </div>
 
                 <!-- Image -->
-                <img src="assets/img/covers/profile-cover-2.jpg" alt="..." class="card-img-top">
+                <img src="{{asset('img/covers/profile-cover-2.jpg')}}" alt="..." class="card-img-top">
 
                 <!-- Body -->
                 <div class="card-body">
 
+                    <a href="#" class="avatar avatar-xl card-avatar card-avatar-top" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="avatar-title rounded-circle">BB</span>
+                    </a>
+
+                    {{--
                     <!-- Image -->
                     <a href="profile-posts.html" class="avatar avatar-xl card-avatar card-avatar-top">
                         <img src="assets/img/avatars/profiles/avatar-2.jpg" class="avatar-img rounded-circle border border-4 border-card" alt="...">
                     </a>
+                    --}}
 
                     <!-- Heading -->
                     <h2 class="card-title text-center">
@@ -70,7 +76,7 @@
                             </h6>
 
                             <!-- Value -->
-                            <h2 class="mb-0">10.2k</h2>
+                            <h2 class="mb-0">{{\Illuminate\Support\Facades\Auth::user()->total_evidences_hours()}} horas</h2>
 
                         </div>
                         <div class="col-lg-3 col-sm-6 col-md-6 py-4 text-center border-start">

@@ -72,11 +72,6 @@
         </x-slot:mass_delete_message>
 
 
-        <x-slot:actions>
-
-        </x-slot:actions>
-
-
         {{--
         <x-slot:disable_selection>
         </x-slot:disable_selection>

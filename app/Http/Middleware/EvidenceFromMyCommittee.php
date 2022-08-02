@@ -6,7 +6,7 @@ use App\Models\Evidence;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
-class EvidenceFromMyComittee
+class EvidenceFromMyCommittee
 {
     /**
      * Handle an incoming request.
@@ -17,18 +17,17 @@ class EvidenceFromMyComittee
      */
     public function handle($request, Closure $next)
     {
-        $instance = \Instantiation::instance();
 
         $id = $request->route('id');
-        if($id == null) // si se recibe por POST
+        if($id == null)
         {
             $id = $request->_id;
         }
         $evidence = Evidence::find($id);
 
-        if($evidence->comittee->id != Auth::user()->coordinator->comittee->id)
+        if($evidence->comittee->id != Auth::user()->coordinator->committee->id)
         {
-            return redirect()->route('home',$instance);
+            return abort('404');
         }
 
         return $next($request);

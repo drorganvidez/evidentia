@@ -19,7 +19,7 @@ class CreateCoordinatorsTable extends Migration
         Schema::create('coordinators', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('comittee_id');
+            $table->foreignId('committee_id');
             $table->foreignId('user_id');
         });
     }

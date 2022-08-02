@@ -510,7 +510,7 @@
         </button>
 
         <!-- Brand -->
-        <a class="oldnavbar-brand" href="{{route('root')}}">
+        <a class="text-center" href="{{route('root')}}">
             <x-logo-css/>
         </a>
 
@@ -782,6 +782,12 @@
                                 </h1>
 
                             </div>
+                            <div class="col-auto">
+
+                                @yield('options')
+
+                            </div>
+
                         </div>
                         @yield('submenu')
                     </div>

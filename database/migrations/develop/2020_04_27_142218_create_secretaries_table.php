@@ -18,7 +18,7 @@ class CreateSecretariesTable extends Migration
         Schema::create('secretaries', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('comittee_id');
+            $table->foreignId('committee_id');
             $table->foreignId('user_id');
         });
     }
