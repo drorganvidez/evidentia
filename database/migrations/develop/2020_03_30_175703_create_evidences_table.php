@@ -25,7 +25,7 @@ class CreateEvidencesTable extends Migration
             $table->text('description')->nullable();
             $table->float('hours')->nullable();
             $table->integer('points_to')->nullable($value = true);
-            $table->enum('status', ['DRAFT', 'PENDING', 'ACCEPTED', 'REJECTED', 'BIN', 'CLOSED'])->nullable();;
+            $table->enum('status', ['DRAFT', 'PENDING', 'ACCEPTED', 'REJECTED', 'BIN', 'CLOSED'])->nullable();
             $table->string('stamp')->nullable($value = true);
             $table->boolean('last')->default(true);
             $table->boolean('rand')->default(false);

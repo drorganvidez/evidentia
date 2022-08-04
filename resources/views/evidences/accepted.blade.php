@@ -25,6 +25,7 @@
                     Título | title | {"type" : "href", "route" : "evidences.view"};
                     Horas | hours;
                     Comité | committee | {"type" : "badge"};
+                    Puntuación | score | {"type" : "badge", "bg" : "success"};
                     Última modificación | updated_at | {"type" : "ago"}
                 </x-slot:columns>
 

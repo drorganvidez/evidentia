@@ -372,23 +372,23 @@ class DevelopSeeder extends Seeder
          */
 
         DB::table('coordinators')->insert([
-        'user_id' => 5,
-        'comittee_id' => 5
-    ]);
+            'user_id' => 5,
+            'committee_id' => 5
+        ]);
 
         DB::table('coordinators')->insert([
             'user_id' => 6,
-            'comittee_id' => 7
+            'committee_id' => 7
         ]);
 
         DB::table('secretaries')->insert([
             'user_id' => 3,
-            'comittee_id' => 5
+            'committee_id' => 5
         ]);
 
         DB::table('secretaries')->insert([
             'user_id' => 4,
-            'comittee_id' => 7
+            'committee_id' => 7
         ]);
 
         /*

@@ -1,4 +1,4 @@
-<div class="card card-body">
+<div class="card card-body pb-2">
 
     <div class="row">
 
@@ -76,6 +76,32 @@
 
             {!! $evidence->description !!}
         </div>
+
+        @if($evidence->review)
+
+            <div class="col-12 col-md-12">
+
+                <h6 class="text-muted text-uppercase">
+                    Revisión
+                </h6>
+
+                <div class="badge bg-{{$evidence->color_status()}} mb-2">
+                    Puntuación: {{ $evidence->review->score }}
+                </div>
+
+                <div class="card bg-{{$evidence->color_status()}}" style="margin-bottom: 17px">
+
+                    <div class="card-body pb-2" style="color: white">
+
+                        <!-- Text -->
+                        {!! $evidence->review->comment !!}
+
+                    </div>
+                </div>
+
+            </div>
+
+        @endif
 
     </div>
 

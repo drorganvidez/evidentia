@@ -20,10 +20,13 @@ class EvidenceResource extends JsonResource
             'hours' => $this->hours,
             'description' => $this->description,
             'status' => $this->status,
+            'spanish_status' => $this->spanish_status(),
+            'owner' => $this->user->full_name(),
             'committee' => $this->committee->name,
             'files_count' => count($this->files()),
             'files' => FileResource::collection($this->files()),
             'stamp' => $this->stamp,
+            'score' => $this->review?->score,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

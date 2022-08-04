@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -143,6 +144,39 @@ class EvidenceService extends Service
             }
 
         }
+
+        return $this->transform_to_resource_collection($evidences);
+
+    }
+
+    public function get_all_evidences_by_committee(Committee $committee)
+    {
+        $evidences = collect();
+
+        $evidences_pending = Evidence::where([
+            'committee_id' => $committee->id,
+            'last' => true,
+            'temp' => false,
+            'status' => 'PENDING'
+            ])->get();
+
+        $evidences_accepted = Evidence::where([
+            'committee_id' => $committee->id,
+            'last' => true,
+            'temp' => false,
+            'status' => 'ACCEPTED'
+        ])->get();
+
+        $evidences_rejected = Evidence::where([
+            'committee_id' => $committee->id,
+            'last' => true,
+            'temp' => false,
+            'status' => 'REJECTED'
+        ])->get();
+
+        $evidences = $evidences->concat($evidences_pending)->concat($evidences_accepted)->concat($evidences_rejected);
+
+        $evidences = $evidences->sortByDesc('updated_at');
 
         return $this->transform_to_resource_collection($evidences);
 

@@ -51,6 +51,11 @@ class Evidence extends Model
         return $this->belongsTo(User::class, 'guest_id',);
     }
 
+    public function review()
+    {
+        return $this->hasOne(Review::class);
+    }
+
     public function spanish_status()
     {
 
@@ -85,11 +90,11 @@ class Evidence extends Model
         }
 
         if(strcmp($this->status, 'ACCEPTED') === 0){
-            return 'danger';
+            return 'success';
         }
 
         if(strcmp($this->status, 'REJECTED') === 0){
-            return 'success';
+            return 'danger';
         }
 
         return "primary";

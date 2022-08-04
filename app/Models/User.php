@@ -91,6 +91,11 @@ class User extends Authenticatable
         return false;
     }
 
+    public function full_name()
+    {
+        return $this->surname . ', ' . $this->name;
+    }
+
     public function coordinator()
     {
         return $this->hasOne(Coordinator::class);

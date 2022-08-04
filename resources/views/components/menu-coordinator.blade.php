@@ -10,20 +10,17 @@
 
         <x-item-menu>
             <x-slot:route>
-                task
+                coordinator_evidences_moderate
             </x-slot:route>
             <x-slot:icon>
-                check-square
+                check-circle
             </x-slot:icon>
             <x-slot:name>
-                Moderar evidencias
+                Evaluación
             </x-slot:name>
             <x-slot:subitems>
-                Nueva evidencia, evidences.create;
-                En borrador, evidences.draft;
-                Pendientes, evidences.pending;
-                Aceptadas, evidences.accepted;
-                Rechazadas, evidences.rejected
+                Evidencias, coordinator.evidences.list;
+                Modo moderación, coordinator.evidences.moderate
             </x-slot:subitems>
         </x-item-menu>
 
@@ -38,11 +35,8 @@
                 Tareas
             </x-slot:name>
             <x-slot:subitems>
-                Nueva evidencia, evidences.create;
-                En borrador, evidences.draft;
-                Pendientes, evidences.pending;
-                Aceptadas, evidences.accepted;
-                Rechazadas, evidences.rejected
+                Tablero, coordinator.tasks.kanban;
+                Informes, coordinator.tasks.reports
             </x-slot:subitems>
         </x-item-menu>
 

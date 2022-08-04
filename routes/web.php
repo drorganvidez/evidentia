@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\EvidenceController;
+use App\Http\Controllers\EvidenceCoordinatorController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
@@ -145,11 +146,33 @@ Route::group(['prefix' => '{instance}'], function(){
                 Route::get('export/{id}', 'export')->name('evidences.export');
                 Route::post('export/mass', 'export_mass')->name('evidences.export.mass');
 
-                // Reassign evidene
+                // Reassign evidence
                 Route::get('reassign/{id}', 'reassign')->name('evidences.reassign');
                 Route::post('reassign', 'reassign_p')->name('evidences.reassign_p');
 
             });
+
+        });
+
+        Route::group(['prefix' => 'coordinator'], function() {
+
+            Route::group(['prefix' => 'evidences'], function() {
+                Route::controller(EvidenceCoordinatorController::class)->group(function () {
+                    Route::get('', 'evidences_list')->name('coordinator.evidences.list');
+                    Route::get('moderate', 'evidences_moderate')->name('coordinator.evidences.moderate');
+                    Route::get('moderate/{id}', 'evidences_moderate_evidence')->name('coordinator.evidences.moderate.evidence');
+                    Route::post('moderate', 'evidences_moderate_evidence_p')->name('coordinator.evidences.moderate.evidence_p');
+                });
+            });
+
+            Route::group(['prefix' => 'tasks'], function() {
+                Route::controller(EvidenceCoordinatorController::class)->group(function () {
+                    Route::get('kanban', 'kanban')->name('coordinator.tasks.kanban');
+                    Route::get('reports', 'reports')->name('coordinator.tasks.reports');
+                });
+            });
+
+
 
         });
 

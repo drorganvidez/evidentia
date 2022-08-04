@@ -194,7 +194,7 @@ abstract class Service
         return $this->transform_to_resource_collection($entities);
     }
 
-    public function entity($entity_json) : object
+    public function entity($entity_json)
     {
         try {
             $id = json_decode(json_encode($entity_json), false)->id;

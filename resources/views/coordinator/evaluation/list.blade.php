@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Evidencias')
+@section('title', 'Evaluación')
 
 @section('submenu')
 
-    <x-submenus.evidences-menu/>
+    <x-submenus.evaluation-menu/>
 
 @endsection
 
@@ -24,18 +24,19 @@
                 <x-slot:columns>
                     Título | title | {"type" : "href", "route" : "evidences.view"};
                     Horas | hours;
-                    Comité | committee | {"type" : "badge"};
-                    Puntuación | score | {"type" : "badge", "bg" : "danger"};
+                    Estudiante | owner;
+                    Estado | spanish_status | {"type" : "badge"};
                     Última modificación | updated_at | {"type" : "ago"}
                 </x-slot:columns>
 
                 {{-- Filters --}}
                 <x-slot:filters>
-                    Comité, committee, @foreach($committees as $committee) {{$committee->name}} @if(!$loop->last): @endif @endforeach
+                    Estado, status, Pendiente:Aceptada:Rechazada
                 </x-slot:filters>
 
                 {{-- Actions --}}
                 <x-slot:actions>
+                    Moderar, coordinator.evidences.moderate.evidence, fe fe-check;
                     Exportar, evidences.export, fe fe-download-cloud
                 </x-slot:actions>
 
