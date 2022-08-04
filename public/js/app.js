@@ -13,6 +13,10 @@
  */
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
+var feather = __webpack_require__(/*! feather-icons */ "./node_modules/feather-icons/dist/feather.js");
+
+feather.replace();
+
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":

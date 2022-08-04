@@ -567,6 +567,7 @@
 
             <x-menucommon/>
             <x-menustudent/>
+            <x-menucoordinator/>
 
 
 

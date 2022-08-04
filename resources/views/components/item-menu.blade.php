@@ -48,7 +48,7 @@ if($badge){
 
     <li class="nav-item">
         <a class="nav-link {{$parent_collapsed}}" href="#{{$route}}" data-bs-toggle="collapse" role="button" aria-expanded="{{$aria_expanded}}" aria-controls="{{$route}}">
-            <i class="fe fe-{{$icon}}"></i> {{$name}}
+            <i style="width: 18px; margin-right: 11px" data-feather="{{$icon}}"></i> {{$name}}
         </a>
         <div class="collapse {{$show}}" id="{{$route}}" style="">
             <ul class="nav nav-sm flex-column">
@@ -90,7 +90,7 @@ if($badge){
 
     <li class="nav-item">
         <a class="nav-link{{$active}}" href="{{route("$route",\Instantiation::instance())}}">
-            <i class="fe fe-{{$icon}}"></i> {{$name}}
+            <i style="width: 18px; margin-right: 11px" data-feather="{{$icon}}"></i> {{$name}}
 
             @if($isThereBadge)
                 <span class="badge bg-primary ms-auto">{{$badge}}</span>
