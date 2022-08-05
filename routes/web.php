@@ -160,6 +160,7 @@ Route::group(['prefix' => '{instance}'], function(){
                 Route::controller(EvidenceCoordinatorController::class)->group(function () {
                     Route::get('', 'evidences_list')->name('coordinator.evidences.list');
                     Route::get('moderate', 'evidences_moderate')->name('coordinator.evidences.moderate');
+                    Route::post('moderate_p', 'evidences_moderate_p')->name('coordinator.evidences.moderate_p');
                     Route::get('moderate/{id}', 'evidences_moderate_evidence')->name('coordinator.evidences.moderate.evidence');
                     Route::post('moderate', 'evidences_moderate_evidence_p')->name('coordinator.evidences.moderate.evidence_p');
                 });

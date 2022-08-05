@@ -17,23 +17,37 @@
             <div class="card card-inactive">
                 <div class="card-body text-center">
 
-                    <!-- Image -->
-                    <img src="assets/img/illustrations/scale.svg" alt="..." class="img-fluid" style="max-width: 182px;">
-
                     <!-- Title -->
                     <h1>
                         Modo moderación
                     </h1>
 
-                    <!-- Subtitle -->
-                    <p class="text-muted">
-                        Con esta funcionalidad, todas las evidencias pendientes se pondrán en cola para ser evaluadas por orden estricto de llegada
-                    </p>
+                    @if($no_evidences)
 
-                    <!-- Button -->
-                    <a href="#!" class="btn btn-primary">
-                        Create Report
-                    </a>
+                        <p class="text-muted">
+                            No hemos encontrado evidencias pendientes de moderar
+                        </p>
+
+                    @else
+
+                        <p class="text-muted">
+                            Con esta funcionalidad, todas las evidencias pendientes se pondrán en cola para ser evaluadas por orden estricto de llegada
+                        </p>
+
+                        <form action="{{route('coordinator.evidences.moderate_p', \Instantiation::instance())}}" method="post">
+
+                            @csrf
+
+                            <button type="submit" href="#!" class="btn btn-primary">
+                                Moderar evidencias
+                            </button>
+
+                        </form>
+
+                    @endif
+
+
+
 
                 </div>
             </div>

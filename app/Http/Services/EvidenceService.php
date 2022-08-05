@@ -182,6 +182,53 @@ class EvidenceService extends Service
 
     }
 
+    public function get_all_evidences_by_committee_and_status(Committee $committee, string $status)
+    {
+
+        $evidences = collect();
+
+        if(strcmp(strtoupper($status), 'PENDIENTE') === 0 || strcmp(strtoupper($status), 'PENDING') === 0){
+            $evidences = Evidence::where([
+                'committee_id' => $committee->id,
+                'last' => true,
+                'temp' => false,
+                'status' => 'PENDING'
+            ])->get();
+        }
+
+        if(strcmp(strtoupper($status), 'ACEPTADA') === 0 || strcmp(strtoupper($status), 'ACCEPTED') === 0){
+            $evidences = Evidence::where([
+                'committee_id' => $committee->id,
+                'last' => true,
+                'temp' => false,
+                'status' => 'ACCEPTED'
+            ])->get();
+        }
+
+        if(strcmp(strtoupper($status), 'RECHAZADA') === 0 || strcmp(strtoupper($status), 'REJECTED') === 0){
+            $evidences = Evidence::where([
+                'committee_id' => $committee->id,
+                'last' => true,
+                'temp' => false,
+                'status' => 'REJECTED'
+            ])->get();
+        }
+
+        return $this->transform_to_resource_collection($evidences);
+    }
+
+    public function get_all_pending_evidences_by_committee(Committee $committee)
+    {
+        $evidences_pending = Evidence::where([
+            'committee_id' => $committee->id,
+            'last' => true,
+            'temp' => false,
+            'status' => 'PENDING'
+        ])->get();
+
+        return $this->transform_to_resource_collection($evidences_pending);
+    }
+
     public function recursive_delete_evidence($evidence)
     {
 

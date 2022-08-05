@@ -55,6 +55,10 @@
                 <input type="hidden" name="_id_evidence" value="{{$evidence->id}}">
                 <input type="hidden" name="_id_review" value="{{$review?->id}}">
 
+                @if(Session::has('moderation'))
+                    <input type="hidden" name="moderation" value="true">
+                @endif
+
                 <div class="row order-md-1 order-sm-1">
 
                     <div class="form-group">
@@ -196,9 +200,19 @@
 
                 <div class="form-group">
 
-                    <button type="submit" class="btn btn-primary bt-block mb-2">
-                        <i class="fe fe-save"></i> &nbsp;Guardar
-                    </button>
+                    @if(Session::has('moderation'))
+
+                        <button type="submit" class="btn btn-primary bt-block mb-2">
+                            <i class="fe fe-save"></i> &nbsp;Guardar y continuar  moderando
+                        </button>
+
+                    @else
+
+                        <button type="submit" class="btn btn-primary bt-block mb-2">
+                            <i class="fe fe-save"></i> &nbsp;Guardar
+                        </button>
+
+                    @endif
 
                 </div>
 

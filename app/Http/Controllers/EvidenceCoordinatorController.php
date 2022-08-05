@@ -9,6 +9,8 @@ use App\Models\Evidence;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class EvidenceCoordinatorController extends Controller
 {
@@ -29,8 +31,19 @@ class EvidenceCoordinatorController extends Controller
     public function evidences_list()
     {
         $committee = Auth::user()->coordinator->committee;
+        $status = request()->query('status');
 
-        $evidences = $this->evidence_service->get_all_evidences_by_committee($committee);
+        $evidences = collect();
+
+        if(!empty($status)){
+            $evidences = $this->evidence_service->get_all_evidences_by_committee_and_status($committee, $status);
+        }else{
+            $evidences = $this->evidence_service->get_all_evidences_by_committee($committee);
+        }
+
+        //$this->evidence_service->get_all_evidences_by_committee()
+
+
         $evidences_stringify = $this->evidence_service->stringify_collection($evidences);
 
         return view('coordinator.evaluation.list', [
@@ -40,7 +53,36 @@ class EvidenceCoordinatorController extends Controller
 
     public function evidences_moderate()
     {
-        return view('coordinator.evaluation.moderation_mode');
+
+        $next_evidence = $this->next();
+
+        $no_evidences = false;
+
+        if($next_evidence == null){
+            $no_evidences = true;
+        }
+
+        return view('coordinator.evaluation.moderation_mode', [
+            'no_evidences' => $no_evidences
+        ]);
+    }
+
+    public function evidences_moderate_p(Request $request)
+    {
+        $next_evidence = $this->next();
+        $request->session()->flash('moderation');
+
+        return redirect()->route('coordinator.evidences.moderate.evidence', [
+            'instance' => \Instantiation::instance(),
+            'id' => $next_evidence->id
+        ]);
+    }
+
+    private function next()
+    {
+        $committee = Auth::user()->coordinator->committee;
+        $evidences_pending = $this->evidence_service->get_all_pending_evidences_by_committee($committee);
+        return $evidences_pending->first();
     }
 
     public function evidences_moderate_evidence($instance, $id)
@@ -56,6 +98,11 @@ class EvidenceCoordinatorController extends Controller
 
     public function evidences_moderate_evidence_p(Request $request)
     {
+
+        if($request->input('moderation') === 'true'){
+            $request->session()->flash('moderation');
+        }
+
         $this->review_service->validate();
 
         $evidence = Evidence::find($request->input('_id_evidence'));
@@ -76,7 +123,23 @@ class EvidenceCoordinatorController extends Controller
             $this->review_service->update_review($review->id, $data, $evidence, $status);
         }
 
-        return redirect()->route('coordinator.evidences.list', \Instantiation::instance())->with('success', 'La evidencia se ha moderado con éxito');
+        if($request->input('moderation') === 'true'){
+
+            $next_evidence = $this->next();
+
+            if($next_evidence == null){
+                return redirect()->route('coordinator.evidences.list', \Instantiation::instance())->with('success', 'Todas las evidencias pendientes moderadas con éxito');
+            }else{
+                return redirect()->route('coordinator.evidences.moderate.evidence', [
+                    'instance' => \Instantiation::instance(),
+                    'id' => $next_evidence->id
+                ]);
+            }
+
+        }else{
+            return redirect()->route('coordinator.evidences.list', \Instantiation::instance())->with('success', 'La evidencia se ha moderado con éxito');
+        }
+
 
     }
 }
