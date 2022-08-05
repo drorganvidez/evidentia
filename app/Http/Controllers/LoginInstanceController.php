@@ -39,12 +39,18 @@ class LoginInstanceController extends Controller
         }
 
         return back()->withInput()->with('error', 'Las credenciales no son válidas.');
+
     }
 
     public function logout(Request $request)
     {
 
         Auth::logout();
+
+        if (isset($_COOKIE['instance'])) {
+            unset($_COOKIE['instance']);
+
+        }
 
         return redirect()->route('home',['instance' => \Instantiation::instance()]);
     }

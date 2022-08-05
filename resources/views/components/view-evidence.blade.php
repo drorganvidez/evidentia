@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-8 ">
             <p class="text-muted mb-0 pb-0">
-                #{{$evidence->id}}
+                #{{$evidence->id}} - {{$evidence->user->full_name()}}
             </p>
 
             <!-- Title -->

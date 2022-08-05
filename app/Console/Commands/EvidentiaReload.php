@@ -58,6 +58,11 @@ class EvidentiaReload extends Command
 
         exec("php artisan evidentia:instance");
 
+        exec("rm -r /var/www/storage/app/21 > /dev/null");
+        exec("rm -r /var/www/storage/app/livewire-tmp > /dev/null");
+
+        exec("php artisan key:generate");
+
         $this->info('Evidentia reloaded successfully.');
     }
 }

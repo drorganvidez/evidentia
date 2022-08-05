@@ -38,6 +38,11 @@ class EvidenceCoordinatorController extends Controller
         ]);
     }
 
+    public function evidences_moderate()
+    {
+        return view('coordinator.evaluation.moderation_mode');
+    }
+
     public function evidences_moderate_evidence($instance, $id)
     {
         $evidence = Evidence::findOrFail($id);

@@ -361,7 +361,7 @@ class EvidenceService extends Service
     public function zip_evidence(Evidence $evidence)
     {
 
-        $username = Auth::user()->username;
+        $username = $evidence->user->username;
         $instance = \Instantiation::instance();
 
         $rootPath = realpath(storage_path('app').'/'.$instance.'/proofs/'.$username.'/evidence_'.$evidence->id);
