@@ -64,7 +64,8 @@ class EvidenceService extends Service
 
                 $evidences = Evidence::where([
                     'user_id' => Auth::id(),
-                    'status' => $status
+                    'status' => $status,
+                    'last' => true
                 ])->get();
 
                 if($status == 'PENDING'){
@@ -86,7 +87,8 @@ class EvidenceService extends Service
                 if($status == 'REJECTED'){
                     $guest_evidences = Evidence::where([
                         'guest_id' => Auth::id(),
-                        'status' => 'REJECTED'
+                        'status' => 'REJECTED',
+                        'last' => true
                     ])->get();
                     $evidences = $evidences->concat($guest_evidences);
                 }
@@ -135,6 +137,7 @@ class EvidenceService extends Service
                         'guest_id' => Auth::id(),
                         'status' => 'REJECTED',
                         'committee_id' => $committee->id,
+                        'last' => true
                     ])->get();
                     $evidences = $evidences->concat($guest_evidences);
                 }
@@ -284,7 +287,8 @@ class EvidenceService extends Service
 
         $evidences = Evidence::where([
             'user_id' => $user->id,
-            'status' => $status
+            'status' => $status,
+            'last' => true
         ])->get();
 
         if($status == 'PENDING' || $status == 'ACCEPTED' || $status == 'REJECTED'){

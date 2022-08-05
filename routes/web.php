@@ -125,6 +125,9 @@ Route::group(['prefix' => '{instance}'], function(){
                     Route::post('publish', 'edit_publish')->name('evidences.edit.publish');
                 });
 
+                // Reedit evidence
+                Route::post('reedit', 'reedit')->name('evidences.reedit');
+
                 // Delete evidence
                 Route::group(['prefix' => 'delete', 'middleware' => 'evidencemine'], function() {
                     Route::post('', 'delete')->name('evidences.delete_p');

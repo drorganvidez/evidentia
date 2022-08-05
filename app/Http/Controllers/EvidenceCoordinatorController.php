@@ -41,8 +41,6 @@ class EvidenceCoordinatorController extends Controller
             $evidences = $this->evidence_service->get_all_evidences_by_committee($committee);
         }
 
-        //$this->evidence_service->get_all_evidences_by_committee()
-
 
         $evidences_stringify = $this->evidence_service->stringify_collection($evidences);
 

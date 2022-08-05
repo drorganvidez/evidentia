@@ -233,6 +233,35 @@ class EvidenceController extends Controller
 
     }
 
+    public function reedit(Request $request)
+    {
+        $evidence = Evidence::findOrFail($request->input('_id'));
+        $evidence->last = false;
+        $evidence->save();
+
+        $data = [
+            'user_id' => Auth::id(),
+            'guest_id' => $evidence->guest_id,
+            'title' => $evidence->title,
+            'hours' => $evidence->hours,
+            'committee_id' => $evidence->committee->id,
+            'description' => $evidence->description,
+            'status' => 'DRAFT',
+            'temp' => false,
+            'autosaved' => false,
+            'points_to' => $evidence->id,
+            'last' => true
+        ];
+
+        $new_evidence_json = $this->evidence_service->create($data, $validate = false);
+        $new_evidence = $this->evidence_service->entity($new_evidence_json);
+
+        $this->copy_files($evidence, $new_evidence);
+
+        return redirect()->route('evidences.draft', \Instantiation::instance())->with('success', 'La evidencia ha sido cambiada a borrador con éxito');
+
+    }
+
     /****************************************************************************
      * DELETE AN EVIDENCE
      ****************************************************************************/

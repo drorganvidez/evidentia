@@ -82,7 +82,7 @@
             <div class="col-12 col-md-12">
 
                 <h6 class="text-muted text-uppercase">
-                    Revisión
+                    Revisión ({{ \Carbon\Carbon::parse($evidence->review->updated_at)->format('d/m/Y H:i')}})
                 </h6>
 
                 <div class="badge bg-{{$evidence->color_status()}} mb-2">

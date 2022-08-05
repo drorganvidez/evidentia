@@ -39,6 +39,11 @@
                     Exportar, evidences.export, fe fe-download-cloud
                 </x-slot:actions>
 
+                {{-- Confirm Actions --}}
+                <x-slot:confirm_actions>
+                    Reeditar | evidences.reedit | fe fe-edit-3 | Puedes reeditar una evidencia rechazada. Esto hará que vuelva al estado de borrador. Tendrás que mandarla de nuevo a revisión.
+                </x-slot:confirm_actions>
+
                 {{-- Mass Actions --}}
                 <x-slot:mass_actions>
                     Exportar evidencias, evidences.export.mass, fe fe-download-cloud

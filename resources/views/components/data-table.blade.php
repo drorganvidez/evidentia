@@ -68,6 +68,26 @@
 
     @endisset
 
+    @isset($confirm_actions)
+
+        @php
+            $confirm_action_names = [];
+            $confirm_action_routes = [];
+            $confirm_action_icons = [];
+            $confirm_action_message = [];
+            $i = 0;
+            foreach (explode(';', $confirm_actions) as $item){
+                $parts = explode('|', $item);
+                $confirm_action_names[$i] = trim($parts[0]);
+                $confirm_action_routes[$i] = trim($parts[1]);
+                $confirm_action_icons[$i] = trim($parts[2]);
+                $confirm_action_message[$i] = trim($parts[3]);
+                $i = $i + 1;
+            }
+        @endphp
+
+    @endisset
+
     @isset($mass_actions)
 
         @php
@@ -368,6 +388,67 @@
 
                 @foreach ($data_array as $item)
 
+                    @isset($confirm_actions)
+
+                    @foreach($confirm_action_names as $action)
+
+                        <div class="modal fade" id="modal_confirm_{{$confirm_action_names[$loop->index]}}_{{$item['id']}}" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-left modal-dialog-centered"  role="document">
+                                <div class="modal-content">
+                                    <div class="modal-card card">
+                                        <div class="card-header">
+
+                                            <!-- Title -->
+                                            <h4 class="card-header-title" id="exampleModalCenterTitle">
+                                                ¿Estás segur@?
+                                            </h4>
+
+                                            <!-- Close -->
+                                            <i style="cursor: pointer" class="fe fe-x-circle" data-bs-dismiss="modal" aria-label="Close"></i>
+                                        </div>
+                                        <div class="card-body">
+
+                                            <p>
+                                            {{$confirm_action_message[$loop->index]}}
+                                            </p>
+                                            <p>
+                                                <b>¿Deseas continuar?.</b>
+                                            </p>
+
+                                            @php
+
+                                                $route = $confirm_action_routes[$loop->index];
+
+                                            @endphp
+
+                                            <form method="post" action="{{route("$route",[
+                                                                'instance' => \Instantiation::instance()])}}">
+                                                @csrf
+
+                                                <input type="hidden" name="_id" value="{{$item["id"]}}">
+
+                                                <button type="submit" class="btn btn-warning">
+                                                    <i class="{{$confirm_action_icons[$loop->index]}}"></i> {{$confirm_action_names[$loop->index]}}
+                                                </button>
+
+
+                                            </form>
+
+                                            <button class="btn btn-light" data-bs-dismiss="modal" aria-label="Close">
+                                                Cancelar
+                                            </button>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    @endforeach
+
+                    @endisset
+
                     @isset($delete_item_route)
 
                         <div class="modal fade" id="modal_item_{{$item['id']}}" tabindex="-1" role="dialog" aria-hidden="true">
@@ -545,6 +626,17 @@
                                             <i class="{{$action_icons[$loop->index]}}"></i> {{$action_names[$loop->index]}}
                                         </a>
                                     @endforeach
+
+                                @endisset
+
+                                @isset($confirm_actions)
+
+                                @foreach($confirm_action_names as $action)
+                                    <a class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal_confirm_{{$confirm_action_names[$loop->index]}}_{{$item['id']}}">
+                                        <i class="{{$confirm_action_icons[$loop->index]}}"></i> {{$confirm_action_names[$loop->index]}}
+                                    </a>
+
+                                @endforeach
 
                                 @endisset
 
