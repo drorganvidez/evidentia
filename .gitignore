@@ -16,3 +16,4 @@ resources/.DS_Store
 .editorconfig
 *.lock
 package-lock.json
+*.lock
