@@ -17,3 +17,4 @@ resources/.DS_Store
 *.lock
 package-lock.json
 *.lock
+composer.lock
