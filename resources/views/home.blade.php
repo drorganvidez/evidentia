@@ -129,7 +129,7 @@
                                     <h5 class="widget-user-desc text-left" style="margin-bottom: 0px">
                                         <i class="fas fa-calendar-day"></i>
                                         &nbsp;&nbsp;
-                                        Eventos programados
+                                        Eventos programados CAMBIO
                                     </h5>
 
                                 </div>
