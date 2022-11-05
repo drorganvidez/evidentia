@@ -31,4 +31,15 @@ class TransactionController extends Controller
         return view('transaction.list',
             ['instance' => $instance, 'transactions' => $transactions]);
     }
+
+
+    // CREAR TRANSACCION
+    public function create()
+    {
+        $instance = \Instantiation::instance();
+        $comittees = Comittee::all();
+
+        return view('transaction.createandedit', ['instance' => $instance,
+                                            'comittees' => $comittees]);
+    }
 }

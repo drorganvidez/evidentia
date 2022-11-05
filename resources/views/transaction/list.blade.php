@@ -74,18 +74,14 @@
 
                 <div class="card-body">
 
-                    <div class="callout callout-info">
-                        <h4>
-
-                            Añadir Transacción
-
-                        </h4>
+                    <div >
+                        <h4>Añadir transacciones</h4>
                         
-                            <a href="{{route('evidence.list.export',['instance' => $instance, 'ext' => 'csv'])}}"
-                            class="btn btn-info btn-block" role="button">
-                            Añadir nueva
-                            </a>
-                        
+                        <p>
+                            <button class="btn btn-info btn-block" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                Añadir nueva
+                            </button>
+                        </p>
                     </div>
                 </div>
             </div>
