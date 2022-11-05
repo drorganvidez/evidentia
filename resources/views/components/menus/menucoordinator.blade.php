@@ -7,6 +7,9 @@
             <x-li route="coordinator.evidence.list.all"
                   secondaries="coordinator.evidence.view,coordinator.evidence.list.all,coordinator.evidence.list.pending,coordinator.evidence.list.accepted,coordinator.evidence.list.rejected"
                   icon='fas fa-clipboard-check' name="Gestionar evidencias"/>
+            
+            <x-li route="transaction.list"
+                  icon='fas fa-clipboard-check' name="Gestionar finanzas"/>
 
         </ul>
     </nav>
