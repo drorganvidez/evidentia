@@ -1,0 +1,16 @@
+# -------------------------------------------------
+# TITULO (EN MAYUSCULAS)
+# Debe estar escrito en ingles, debe ser breve y conciso.
+
+
+
+# DESCRIPCION
+# Debe estar escrito en ingles y debe empezar por:
+# - FIX: si es un commit para arreglar algun fallo.
+# - END: si es un commit con el codigo terminado.
+# - WIP: (work in progress) si es un commit con codigo por acabar.
+
+# EJEMPLO DE COMMIT
+# INCIDENCE LIST DONE
+# - WIP: The list of incidents is done.
+
