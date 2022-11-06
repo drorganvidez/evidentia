@@ -176,6 +176,14 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         });
 
     });
+    /**
+     *  Incidences
+     */
+    Route::get('/incidence/list', 'IncidenceController@list')->name('incidence.list');
+    Route::get('/incidence/create', 'IncidenceController@create')->name('incidence.createAndEditIncidence');
+    Route::middleware(['checkuploadincidence'])->group(function () {
+        Route::post('/incidence/publish', 'IncidenceController@publish')->name('incidence.publish');
+    });
 
     /**
      *  MEETINGS, LISTS AND BONUS
