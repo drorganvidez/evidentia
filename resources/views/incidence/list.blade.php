@@ -53,7 +53,11 @@
                         @foreach($incidences as $incidence)
                             <tr>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$incidence->id}}</td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><p>{{$incidence->title}}</p></td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                    <a href="{{route('coordinator.incidence.view',
+                                                ['instance' => $instance, 'id' => $incidence->id])}}">
+                                        {{$incidence->title}}
+                                    </a></td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
                                 <x-incidencecomittee :incidence="$incidence"/>
                                 </td>

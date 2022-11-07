@@ -160,6 +160,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
     // EVIDENCES MANAGEMENT BY A COORDINATOR
     Route::prefix('coordinator')->group(function () {
+
         Route::get('/evidence/list/all', 'EvidenceCoordinatorController@all')->name('coordinator.evidence.list.all');
         Route::get('/evidence/list/pending', 'EvidenceCoordinatorController@pending')->name('coordinator.evidence.list.pending');
         Route::get('/evidence/list/accepted', 'EvidenceCoordinatorController@accepted')->name('coordinator.evidence.list.accepted');
@@ -207,7 +208,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
 
             Route::middleware(['checkvalidateincidences'])->group(function () {
-                Route::get('/incidence/close', 'IncidenceCoordinatorController@close')->name('coordinator.incidence.close');
+                Route::post('/incidence/close', 'IncidenceCoordinatorController@close')->name('coordinator.incidence.close');
                 Route::get('/incidence/review/{id}', 'IncidenceCoordinatorController@review')->name('coordinator.incidence.review');
             });
         });

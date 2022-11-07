@@ -1,11 +1,11 @@
-@if ($incidence->status != 'IN REVIEW' and !\Carbon\Carbon::now()->gt(\Config::validate_incidences_timestamp()))
+@if ($incidence->status != 'IN REVIEW' and $incidence->status != 'CLOSED' and !\Carbon\Carbon::now()->gt(\Config::validate_incidences_timestamp()))
 <a class="btn btn-success btn-sm" href="{{route('coordinator.incidence.review',['instance' => \Instantiation::instance(), 'id' => $incidence->id])}}">
     <i class="far fa-thumbs-up"></i>
     <span class="d-none d-sm-none d-md-none d-lg-inline"></span>
 </a>
 @endif
 
-@if ($incidence->status != 'CLOSED' and !\Carbon\Carbon::now()->gt(\Config::validate_incidences_timestamp()))
+@if ($incidence->status != 'CLOSED' and $incidence->status == 'IN REVIEW' and !\Carbon\Carbon::now()->gt(\Config::validate_incidences_timestamp()))
 <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-rejected-{{$incidence->id}}">
     <i class="far fa-thumbs-down"></i>
     <span class="d-none d-sm-none d-md-none d-lg-inline"></span>
@@ -18,7 +18,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="overflow: visible">
                 <div class="modal-header">
-                    <h4 class="modal-title text-wrap">Rechazar incidencia</h4>
+                    <h4 class="modal-title text-wrap">Cerrar incidencia</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -29,14 +29,14 @@
                     <input type="hidden" name="_id" value="{{$incidence->id}}"/>
                     <div class="modal-body text-wrap">
                         <x-textareasimple type="text" class="" col="12" attr="reasonrejection"
-                                    label="Motivo de rechazo"
-                                    description="Escribe un motivo de por qué se rechaza esta incidencia (entre 10 y 1000 caracteres)."
+                                    label="Motivo de cierre"
+                                    description="Escribe un motivo de por qué se cierre esta incidencia (entre 10 y 1000 caracteres)."
                         />
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                         <button type="submit" class="btn btn-danger">
-                            <i class="far fa-thumbs-down"></i> &nbsp;Rechazar incidencia
+                            <i class="far fa-thumbs-down"></i> &nbsp;Cerrar incidencia
                         </button>
                     </div>
                 </form>

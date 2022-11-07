@@ -9,7 +9,7 @@ class Incidence extends Model {
     protected $table = "incidence";
 
     protected $fillable = [
-      'id','title','datetime','description', 'status', 'stamp','user_id', 'comittee_id', 
+      'id','title','datetime','description', 'status','close_reason', 'stamp','user_id', 'comittee_id',
     ];
     public function proofs()
     {

@@ -89,7 +89,8 @@ class IncidenceController extends Controller
             'description' => $request->input('description'),
             'status' => $status,
             'user_id' => $user->id,
-            'comittee_id' => $request->input('comittee')
+            'comittee_id' => $request->input('comittee'),
+            'close_reason' => ''
         ]);
 
         // cómputo del sello

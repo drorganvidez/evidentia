@@ -23,6 +23,7 @@ class CreateIncidenceTable extends Migration
             $table->foreignId('comittee_id');
             $table->string('title');
             $table->text('description');
+            $table->text('close_reason');
             $table->enum('status', ['PENDING', 'IN REVIEW', 'CLOSED']);
             $table->string('stamp')->nullable($value = true);
             $table->timestamps();

@@ -80,9 +80,10 @@ class IncidenceCoordinatorController extends Controller
 
         $incidence = Incidence::find($request->_id);
         $incidence->status = 'CLOSED';
+        $incidence->close_reason = $request->input('reasonrejection');
         $incidence->save();
 
-        return redirect()->route('coordinator.incidence.list', $instance)->with('success', 'Incidencia cerrada con éxito.');
+        return redirect()->route('coordinator.incidence.list.all', $instance)->with('success', 'Incidencia cerrada con éxito.');
     }
 
   
