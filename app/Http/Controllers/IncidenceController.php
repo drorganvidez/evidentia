@@ -144,4 +144,45 @@ class IncidenceController extends Controller
         Storage::deleteDirectory($tmp);
 
     }
+
+             /****************************************************************************
+     * REMOVE AN INCIDENT
+     ****************************************************************************/
+
+    public function remove(Request $request)
+    {
+        $id = $request->_id;
+        $incidence = Incidence::find($id);
+        $instance = \Instantiation::instance();
+
+        // eliminamos recursivamente la evidencia y todas las versiones anteriores, incluyendo archivos
+        $this->delete_incidence($incidence);
+
+        return redirect()->route('incidence.list',$instance)->with('success', 'Evidencia borrada con éxito.');
+    }
+
+    private function delete_incidence($incidence)
+    {
+        $instance = \Instantiation::instance();
+        $user = Auth::user();
+
+        $incidence_previous = Incidence::find($incidence->points_to);
+
+        $this->delete_files($incidence);
+        Storage::deleteDirectory($instance.'/proofs/'.$user->username.'/incidence_'.$incidence->id.'');
+        $incidence->delete();
+
+        if($incidence_previous != null)
+        {
+            $this->delete_incidence($incidence_previous);
+        }
+    }
+
+    private function delete_files($incidence)
+    {
+        foreach($incidence->proofs as $proof)
+        {
+            $proof->file->delete();
+        }
+    }
 }
