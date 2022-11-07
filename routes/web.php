@@ -133,6 +133,10 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
     Route::post('/xls/upload/process','UploadController@process')->name('xls.upload.process');
     Route::get('/xls/upload/remove/{file_name}','UploadController@remove')->name('xls.upload.remove');
+    /**
+     *  TASKS
+     */
+    Route::get('/task/list', 'TaskController@list')->name('task.list');
 
     /**
      *  EVIDENCES

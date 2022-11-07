@@ -38,17 +38,11 @@ class TaskController extends Controller
 
     public function list() # And create
     {
-        $tasks = Task::where(['user_id' => Auth::id()])->get();
-        $instance = \Instantiation::instance();
+
         $comittees = Comittee::all();
 
-        $tasks = $tasks->reverse();
-
         return view('task.list',
-            ['instance' => $instance,
-             'route_draft' => route('task.draft',$instance),
-             'tasks' => $tasks,
-             'comittees' => $comittees]);
+             ['comittees' => $comittees]);
     }
 
     public function draft(Request $request)
