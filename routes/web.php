@@ -177,13 +177,22 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
     });
     /**
-     *  Incidences
+     *  INCIDENCES
      */
     Route::get('/incidence/list', 'IncidenceController@list')->name('incidence.list');
     Route::get('/incidence/create', 'IncidenceController@create')->name('incidence.createAndEditIncidence');
     Route::middleware(['checkuploadincidence'])->group(function () {
         Route::post('/incidence/publish', 'IncidenceController@publish')->name('incidence.publish');
     });
+
+    Route::middleware(['checknotnull:Incidence','incidencemine'])->group(function () {
+        Route::get('/incidence/view/{id}', 'IncidenceController@view')->name('incidence.view');
+
+        Route::middleware(['checkuploadincidence'])->group(function () {
+            Route::post('/incidence/remove', 'IncidenceController@remove')->name('incidence.remove');
+        });
+    });
+
 
     /**
      *  MEETINGS, LISTS AND BONUS

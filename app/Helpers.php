@@ -198,14 +198,14 @@ class Config
         return self::config_entity()->validate_evidences_timestamp;
     }
 
-    public static function upload_incidence_timestamp()
+    public static function upload_incidences_timestamp()
     {
-        return self::config_entity()->upload_incidence_timestamp;
+        return self::config_entity()->upload_incidences_timestamp;
     }
 
-    public static function validate_incidence_timestamp()
+    public static function validate_incidences_timestamp()
     {
-        return self::config_entity()->validate_incidence_timestamp;
+        return self::config_entity()->validate_incidences_timestamp;
     }
 
     public static function meetings_timestamp()

@@ -22,9 +22,27 @@ class IncidenceController extends Controller
         $this->middleware('checkroles:PRESIDENT|COORDINATOR|REGISTER_COORDINATOR|SECRETARY|STUDENT');
     }
 
+    
+    public function view($instance,$id)
+    {
+        $instance = \Instantiation::instance();
+        $incidence = Incidence::find($id);
+
+        return view('incidence.view',
+            ['instance' => $instance, 'incidence' => $incidence]);
+    }
+
+
     public function list()
     {
-        return view('home');
+        $instance = \Instantiation::instance();
+        $comittees = Comittee::all();
+        $incidence = Incidence::all();
+        return view('incidence.list', 
+        [
+            'incidences' => $incidence,
+            'instance' => $instance,
+            'comittees'=> $comittees]);
     }
     public function create()
     {

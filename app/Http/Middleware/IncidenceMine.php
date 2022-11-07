@@ -2,10 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use Carbon\Carbon;
+use App\Models\Incidence;
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
-class CheckValidateIncidence
+class IncidenceMine
 {
     /**
      * Handle an incoming request.
@@ -17,10 +18,16 @@ class CheckValidateIncidence
     public function handle($request, Closure $next)
     {
         $instance = \Instantiation::instance();
-        $now = Carbon::now();
-        $datetime = \Config::validate_incidences_timestamp();
 
-        if($now->gt($datetime)){
+        $id = $request->route('id');
+        if($id == null) // si se recibe por POST
+        {
+            $id = $request->_id;
+        }
+        $incidence = Incidence::find($id);
+
+        if($incidence->user->id != Auth::id())
+        {
             return redirect()->route('home',$instance);
         }
 

@@ -74,6 +74,7 @@ class Kernel extends HttpKernel
         'checkblock' => \App\Http\Middleware\CheckBlock::class,
         'checkuploadevidences' => \App\Http\Middleware\CheckUploadEvidences::class,
         'checkuploadincidence' => \App\Http\Middleware\CheckUploadIncidence::class,
+        'incidencemine' => \App\Http\Middleware\IncidenceMine::class,
         'checkvalidateevidences' => \App\Http\Middleware\CheckValidateEvidences::class,
         'checkregistermeetings' => \App\Http\Middleware\CheckRegisterMeeting::class,
         'checkregisterbonus' => \App\Http\Middleware\CheckRegisterBonus::class,

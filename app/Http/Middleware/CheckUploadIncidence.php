@@ -18,7 +18,7 @@ class CheckUploadIncidence
     {
         $instance = \Instantiation::instance();
         $now = Carbon::now();
-        $datetime = \Config::upload_incidence_timestamp();
+        $datetime = \Config::upload_incidences_timestamp();
 
         if($now->gt($datetime)){
             return redirect()->route('home',$instance);
