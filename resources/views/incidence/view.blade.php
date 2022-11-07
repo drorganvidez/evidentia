@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
-@section('title', 'Ver evidencia: '.$incidence->title)
+@section('title', 'Ver incidencia: '.$incidence->title)
 
 @section('title-icon', 'fab fa-battle-net')
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>
     @if(\Illuminate\Support\Facades\Auth::user()->hasRole('COORDINATOR') and $incidence->comittee->id == \Illuminate\Support\Facades\Auth::user()->coordinator->comittee->id)
-        <li class="breadcrumb-item"><a href="{{route('coordinator.incidence.list.all',$instance)}}">Gestionar evidencias de {{\Illuminate\Support\Facades\Auth::user()->coordinator->comittee->name}}</a></li>
+        <li class="breadcrumb-item"><a href="{{route('coordinator.incidence.list.all',$instance)}}">Gestionar incidencias de {{\Illuminate\Support\Facades\Auth::user()->coordinator->comittee->name}}</a></li>
     @else
-        <li class="breadcrumb-item"><a href="{{route('incidence.list',$instance)}}">Mis evidencias</a></li>
+        <li class="breadcrumb-item"><a href="{{route('incidence.list',$instance)}}">Mis incidencias</a></li>
     @endif
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
@@ -40,7 +40,7 @@
                         @else
 
                             @if(!\Carbon\Carbon::now()->gt(\Config::upload_incidences_timestamp()))
-                                <x-buttonconfirm :id="$incidence->id" route="incidence.remove" title="¿Seguro?" description="Esto borrará la evidencia actual, las
+                                <x-buttonconfirm :id="$incidence->id" route="incidence.remove" title="¿Seguro?" description="Esto borrará la incidencia actual, las
                                                 ediciones anteriores <b>y todos los archivos adjuntos.</b>" type="REMOVE"/>
                             @endif
 
@@ -77,14 +77,12 @@
 
                     <div class="row">
                     @foreach($incidence->proofs as $proof)
-
                         <div class="col-auto mt-3">
                             <a style="margin-bottom: 10px" class="btn btn-default btn-sm" href="{{route('incidence.proof.download',['instance' => $instance, 'id' => $proof->id])}}">
                                 <i class="fas fa-download"></i>
                                 {{$proof->file->name}} ({{$proof->file->sizeForHuman()}})
                             </a>
                         </div>
-
                     @endforeach
 
                     </div>

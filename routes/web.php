@@ -185,18 +185,36 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::middleware(['checkuploadincidence'])->group(function () {
         Route::post('/incidence/publish', 'IncidenceController@publish')->name('incidence.publish');
     });
-    Route::get('/incidence/view/{id}', 'IncidenceController@view')->name('incidence.view');
-    Route::middleware(['checknotnull:Incidence','incidencemine'])->group(function () {
-   
-
-        Route::middleware(['checkuploadincidence'])->group(function () {
-            Route::post('/incidence/remove', 'IncidenceController@remove')->name('incidence.remove');
-        });
+    Route::middleware(['checkuploadincidence'])->group(function () {
+        Route::post('/incidence/remove', 'IncidenceController@remove')->name('incidence.remove');
     });
     Route::middleware(['checknotnull:IncidenceProof','checkincidenceproofdownload'])->group(function () {
         Route::get('/incidence/proof/download/{id}', 'IncidenceProofController@download')->name('incidence.proof.download');
     });
 
+   
+    Route::get('/incidence/view/{id}', 'IncidenceController@view')->name('incidence.view');
+
+    Route::prefix('coordinator')->group(function () {
+        Route::get('/incidence/list/all', 'IncidenceCoordinatorController@all')->name('coordinator.incidence.list.all');
+        Route::get('/incidence/list/pending', 'IncidenceCoordinatorController@pending')->name('coordinator.incidence.list.pending');
+        Route::get('/incidence/list/inreview', 'IncidenceCoordinatorController@inreview')->name('coordinator.incidence.list.inreview');
+        Route::get('/incidence/list/closed', 'IncidenceCoordinatorController@closed')->name('coordinator.incidence.list.closed');
+
+
+        Route::middleware(['checknotnull:Incidence', 'incidencefrommycommittee'])->group(function () {
+            Route::get('/incidence/view/{id}', 'IncidenceController@view')->name('coordinator.incidence.view');
+
+
+            Route::middleware(['checkvalidateincidences'])->group(function () {
+                Route::get('/incidence/close', 'IncidenceCoordinatorController@close')->name('coordinator.incidence.close');
+                Route::get('/incidence/review/{id}', 'IncidenceCoordinatorController@review')->name('coordinator.incidence.review');
+            });
+        });
+    });
+        
+
+       
     /**
      *  MEETINGS, LISTS AND BONUS
      */

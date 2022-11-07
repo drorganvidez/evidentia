@@ -7,7 +7,9 @@
             <x-li route="coordinator.evidence.list.all"
                   secondaries="coordinator.evidence.view,coordinator.evidence.list.all,coordinator.evidence.list.pending,coordinator.evidence.list.accepted,coordinator.evidence.list.rejected"
                   icon='fas fa-clipboard-check' name="Gestionar evidencias"/>
-
+                  <x-li route="coordinator.incidence.list.all"
+                  secondaries="coordinator.incidence.view,coordinator.incidence.list.all,coordinator.incidence.list.pending,coordinator.incidence.list.accepted,coordinator.incidence.list.rejected"
+                  icon='fas fa-clipboard-check' name="Gestionar incidencias"/>
         </ul>
     </nav>
 @endif

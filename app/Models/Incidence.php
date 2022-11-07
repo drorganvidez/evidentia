@@ -20,8 +20,11 @@ class Incidence extends Model {
         return $this->belongsTo('App\Models\User');
     }
 
+
     public function comittee()
     {
         return $this->belongsTo('App\Models\Comittee');
     }
+
+
 }

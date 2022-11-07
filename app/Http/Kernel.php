@@ -85,5 +85,7 @@ class Kernel extends HttpKernel
         'incidencemine' => \App\Http\Middleware\IncidenceMine::class,
         'checkuploadincidence' => \App\Http\Middleware\CheckUploadIncidence::class,
         'checkincidenceproofdownload' => \App\Http\Middleware\CheckIncidenceProofDownload::class,
+        'incidencefrommycommittee' => \App\Http\Middleware\IncidenceFromMyComittee::class,
+        'checkvalidateincidences' => \App\Http\Middleware\CheckValidateIncidence::class,
     ];
 }
