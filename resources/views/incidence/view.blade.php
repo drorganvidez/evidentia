@@ -11,7 +11,6 @@
     @else
         <li class="breadcrumb-item"><a href="{{route('incidence.list',$instance)}}">Mis evidencias</a></li>
     @endif
-
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
 
@@ -35,14 +34,17 @@
                         <br><br>
 
 
-                     
+                        @if(\Illuminate\Support\Facades\Auth::user()->hasRole('COORDINATOR') and $incidence->comittee->id == \Illuminate\Support\Facades\Auth::user()->coordinator->comittee->id)
+
+
+                        @else
 
                             @if(!\Carbon\Carbon::now()->gt(\Config::upload_incidences_timestamp()))
                                 <x-buttonconfirm :id="$incidence->id" route="incidence.remove" title="¿Seguro?" description="Esto borrará la evidencia actual, las
                                                 ediciones anteriores <b>y todos los archivos adjuntos.</b>" type="REMOVE"/>
                             @endif
 
-                        
+                        @endif
 
 
                     </div>
@@ -69,13 +71,22 @@
 
                     <x-incidencestatus :incidence="$incidence"/>
 
-                    <hr>
+                    <hr
 
                     <h4>Pruebas adjuntas</h4>
 
                     <div class="row">
+                    @foreach($incidence->proofs as $proof)
 
-                       
+                        <div class="col-auto mt-3">
+                            <a style="margin-bottom: 10px" class="btn btn-default btn-sm" href="{{route('incidence.proof.download',['instance' => $instance, 'id' => $proof->id])}}">
+                                <i class="fas fa-download"></i>
+                                {{$proof->file->name}} ({{$proof->file->sizeForHuman()}})
+                            </a>
+                        </div>
+
+                    @endforeach
+
                     </div>
 
                 </div>

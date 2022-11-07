@@ -14,8 +14,6 @@
     <form method="POST" enctype="multipart/form-data">
         @csrf
 
-        <input type="hidden" name="removed_files" id="removed_files"/>
-
         <div class="row">
 
             <div class="col-lg-8">

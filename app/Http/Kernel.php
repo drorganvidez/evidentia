@@ -73,8 +73,6 @@ class Kernel extends HttpKernel
         'evidencefrommycommittee' => \App\Http\Middleware\EvidenceFromMyComittee::class,
         'checkblock' => \App\Http\Middleware\CheckBlock::class,
         'checkuploadevidences' => \App\Http\Middleware\CheckUploadEvidences::class,
-        'checkuploadincidence' => \App\Http\Middleware\CheckUploadIncidence::class,
-        'incidencemine' => \App\Http\Middleware\IncidenceMine::class,
         'checkvalidateevidences' => \App\Http\Middleware\CheckValidateEvidences::class,
         'checkregistermeetings' => \App\Http\Middleware\CheckRegisterMeeting::class,
         'checkregisterbonus' => \App\Http\Middleware\CheckRegisterBonus::class,
@@ -83,6 +81,9 @@ class Kernel extends HttpKernel
         'checkisadministrator' => \App\Http\Middleware\CheckIsAdministrator::class,
         'meetingrequestmine' => MeetingRequestMine::class,
         'signaturesheetmine' => SignatureSheetMine::class,
-        'meetingminutesmine' => MeetingMinutesMine::class
+        'meetingminutesmine' => MeetingMinutesMine::class,
+        'incidencemine' => \App\Http\Middleware\IncidenceMine::class,
+        'checkuploadincidence' => \App\Http\Middleware\CheckUploadIncidence::class,
+        'checkincidenceproofdownload' => \App\Http\Middleware\CheckIncidenceProofDownload::class,
     ];
 }

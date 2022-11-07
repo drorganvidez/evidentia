@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comittee;
 use App\Models\File;
 use App\Models\Incidence;
-use App\Models\Proof;
+use App\Models\IncidenceProof;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
 use Illuminate\Http\Request;
@@ -22,7 +22,6 @@ class IncidenceController extends Controller
         $this->middleware('checkroles:PRESIDENT|COORDINATOR|REGISTER_COORDINATOR|SECRETARY|STUDENT');
     }
 
-    
     public function view($instance,$id)
     {
         $instance = \Instantiation::instance();
@@ -31,7 +30,6 @@ class IncidenceController extends Controller
         return view('incidence.view',
             ['instance' => $instance, 'incidence' => $incidence]);
     }
-
 
     public function list()
     {
@@ -95,6 +93,7 @@ class IncidenceController extends Controller
         ]);
 
         // cómputo del sello
+        $incidence = \Stamp::compute_incidence($incidence);
         $incidence->save();
 
         return $incidence;
@@ -112,7 +111,7 @@ class IncidenceController extends Controller
             $type = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
             $size = Storage::size($filename);
             $old_directory = $filename;
-            $new_directory = $instance.'/proofs/'.$user->username.'/incidence_'.$incidence->id.'/'.$name.'.'.$type;
+            $new_directory = $instance.'/incidence_proofs/'.$user->username.'/incidence_'.$incidence->id.'/'.$name.'.'.$type;
 
             try{
                 // movemos
@@ -131,8 +130,8 @@ class IncidenceController extends Controller
                 $file_entity->save();
 
                 // almacenamos en la BBDD la información de la prueba de la evidencia
-                $proof = Proof::create([
-                    'incicence_id' => $incidence->id,
+                $proof = IncidenceProof::create([
+                    'incidence_id' => $incidence->id,
                     'file_id' => $file_entity->id
                 ]);
             } catch (\Exception $e) {
@@ -143,63 +142,6 @@ class IncidenceController extends Controller
 
         // ya no necesitamos la carpeta temporal, la eliminamos
         Storage::deleteDirectory($tmp);
-
-    }
-
-    private function copy_files_into_temporary_folder($incidence)
-    {
-
-        $user = Auth::user();
-        $instance = \Instantiation::instance();
-        $token = session()->token();
-
-        $proofs_folder = $instance.'/proofs/'.$user->username.'/incidence_'.$incidence->id;
-        $tmp = $instance.'/tmp/'.$user->username.'/'.$token;
-
-        foreach (Storage::files($proofs_folder) as $filename) {
-
-            $filename_basename = pathinfo($filename, PATHINFO_BASENAME);
-
-            $old_directory = $proofs_folder.'/'.$filename_basename;
-            $new_directory = $tmp.'/'.$filename_basename;
-
-            try {
-                // copiamos
-                Storage::copy($old_directory, $new_directory);
-            } catch (\Exception $e) {
-
-            }
-
-        }
-
-    }
-    private function save($request,$status)
-    {
-        $instance = \Instantiation::instance();
-
-        // evidencia desde la que hemos decidido partir
-        $incidence_previous = Incidence::find($request->_id);
-
-        // creamos la nueva evidencia a partir de la seleccionada para editar
-        $incidence_new = $this->new_incidence($request,$status);
-
-        // evidencia cabecera en el flujo de ediciones (la última)
-        $incidence_header = $incidence_previous->find_header_incidence();
-        $incidence_header->last = false;
-        $incidence_header->save();
-
-        // apuntamos al final del flujo de ediciones
-        $incidence_new->points_to = $incidence_header->id;
-        $incidence_new->save();
-
-        // copiamos ahora los archivos de la carpeta temporal a la nueva evidencia
-        $this->save_files($request,$incidence_new);
-
-        if($status == "DRAFT") {
-            return redirect()->route('incidence.list', $instance)->with('success', 'Evidencia editada con éxito.');
-        }else{
-            return redirect()->route('incidence.list', $instance)->with('success', 'Evidencia publicada con éxito.');
-        }
 
     }
 }

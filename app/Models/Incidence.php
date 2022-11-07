@@ -11,7 +11,10 @@ class Incidence extends Model {
     protected $fillable = [
       'id','title','datetime','description', 'status', 'stamp','user_id', 'comittee_id', 
     ];
-
+    public function proofs()
+    {
+        return $this->hasMany('App\Models\IncidenceProof');
+    }
     public function user()
     {
         return $this->belongsTo('App\Models\User');
