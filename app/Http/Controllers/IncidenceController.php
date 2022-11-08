@@ -68,7 +68,7 @@ class IncidenceController extends Controller
 
         $this->save_files($request,$incidence);
 
-        return redirect()->route('incidence.list',$instance)->with('success', 'Evidencia creada con éxito.');
+        return redirect()->route('incidence.list',$instance)->with('success', 'Incidencia creada con éxito.');
 
     }
 
@@ -80,10 +80,10 @@ class IncidenceController extends Controller
             'description' => ['required',new MinCharacters(10),new MaxCharacters(20000)],
         ]);
 
-        // datos necesarios para crear evidencias
+        // datos necesarios para crear incidencias
         $user = Auth::user();
 
-        // creación de una nueva evidencia
+        // creación de una nueva incidencia
         $incidence = Incidence::create([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
@@ -130,7 +130,7 @@ class IncidenceController extends Controller
                 $file_entity = \Stamp::compute_file($file_entity);
                 $file_entity->save();
 
-                // almacenamos en la BBDD la información de la prueba de la evidencia
+                // almacenamos en la BBDD la información de la prueba de la incidencia
                 $proof = IncidenceProof::create([
                     'incidence_id' => $incidence->id,
                     'file_id' => $file_entity->id
@@ -156,10 +156,10 @@ class IncidenceController extends Controller
         $incidence = Incidence::find($id);
         $instance = \Instantiation::instance();
 
-        // eliminamos recursivamente la evidencia y todas las versiones anteriores, incluyendo archivos
+        // eliminamos recursivamente la incidencia y todas las versiones anteriores, incluyendo archivos
         $this->delete_incidence($incidence);
 
-        return redirect()->route('incidence.list',$instance)->with('success', 'Evidencia borrada con éxito.');
+        return redirect()->route('incidence.list',$instance)->with('success', 'Incidencia borrada con éxito.');
     }
 
     private function delete_incidence($incidence)
