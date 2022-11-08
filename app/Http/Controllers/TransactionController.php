@@ -36,11 +36,6 @@ class TransactionController extends Controller
 
 
 
-
-
-
-
-
     // CREAR TRANSACCION
     public function create()
     {
@@ -49,5 +44,17 @@ class TransactionController extends Controller
 
         return view('transaction.createandedit', ['instance' => $instance,
                                             'comittees' => $comittees]);
+    }
+
+
+    // LISTAR TODAS LAS TRANSACCIONES POR EL COORDIANDOR
+    public function all()
+    {
+        $transactions = Transaction->get_all_transactions();
+        $intance = \Instantiation::instance();
+        $transactions = $transactions->reverse();
+
+        return view('transaction.coordinator.list',
+            ['instance' => $instance, 'transactions' => $transactions]);
     }
 }
