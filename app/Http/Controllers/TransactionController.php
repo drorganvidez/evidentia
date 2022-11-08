@@ -35,6 +35,10 @@ class TransactionController extends Controller
     }
 
 
+
+
+
+
     // CREAR TRANSACCION
 
     // Esta muestra la vista para crear una transacción
@@ -73,11 +77,11 @@ class TransactionController extends Controller
     private function new_transaction($request,$status)
     {
 
-   //     $request->validate([
-   //         'reason' => 'required|min:10|max:40',
-     //       'type' => 'required',
-       //     'amount' => 'required'
-       // ]); 
+        $request->validate([
+            'reason' => 'required|min:10|max:40',
+            'type' => 'required',
+            'amount' => 'required'
+       ]); 
 
         // datos necesarios para crear evidencias
         $user = Auth::user();
@@ -97,5 +101,16 @@ class TransactionController extends Controller
         $transaction->save();
 
         return $transaction;
+
+    // LISTAR TODAS LAS TRANSACCIONES POR EL COORDIANDOR
+    public function all()
+    {
+        $transactions = Transaction->get_all_transactions();
+        $intance = \Instantiation::instance();
+        $transactions = $transactions->reverse();
+
+        return view('transaction.coordinator.list',
+            ['instance' => $instance, 'transactions' => $transactions]);
+
     }
 }
