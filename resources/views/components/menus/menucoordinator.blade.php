@@ -9,7 +9,7 @@
                   icon='fas fa-clipboard-check' name="Gestionar evidencias"/>
             
             <x-li route="transaction.list"
-                  icon='fas fa-clipboard-check' name="Gestionar finanzas"/>
+                  icon='fas fa-clipboard-check' name="Tus transacciones"/>
 
         </ul>
     </nav>

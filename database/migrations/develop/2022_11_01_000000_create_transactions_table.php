@@ -20,7 +20,10 @@ class CreateTransactionsTable extends Migration
 
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id');
+            $table->foreignId('comittee_id');
             $table->string('reason');
+            $table->enum('status', ['PENDING', 'ACCEPTED', 'REJECTED']);
             $table->enum('type', ['Beneficio', 'Gasto']);
             $table->float('amount');
             $table->date('date');   

@@ -109,7 +109,7 @@
                            
 
                             <div class="form-group col-md-4">
-                                <button type="button"  class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-default"><i class="fas fa-external-link-square-alt"></i> &nbsp;Crear transacción</button>
+                                <button type="button" formaction="{{$route_publish}}" class="btn btn-primary btn-block"><i class="fas fa-external-link-square-alt"></i> &nbsp;Crear transacción</button>
                             </div>
 
                         </div>

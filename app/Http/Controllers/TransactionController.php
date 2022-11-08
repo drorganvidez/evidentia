@@ -20,17 +20,25 @@ use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
 class TransactionController extends Controller
-{
+{   
+    // List: lista todas las transacciones de un coordinador
     public function list()
     {
-        $transactions = Transaction::all();
+        $transactions = Transaction::where(['user_id' => Auth::id()])->get();
         $instance = \Instantiation::instance();
 
-
+        $transactions = $transactions->reverse();
 
         return view('transaction.list',
             ['instance' => $instance, 'transactions' => $transactions]);
     }
+
+
+
+
+
+
+
 
 
     // CREAR TRANSACCION

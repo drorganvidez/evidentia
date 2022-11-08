@@ -45,6 +45,7 @@
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Tipo</th>
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Cantidad</th>
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Fecha</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Comité</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -56,6 +57,10 @@
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->type}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->amount}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->date}}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                    <x-evidencecomittee :transaction="$transaction"/>
+                                </td>
+                              
                                
 
                             </tr>
