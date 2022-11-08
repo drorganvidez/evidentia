@@ -56,37 +56,13 @@
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->reason}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->type}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->amount}}</td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->date}}</td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                    <x-evidencecomittee :transaction="$transaction"/>
-                                </td>
-                              
-                               
-
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->created_at}}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><x-transactioncomittee :transaction="$transaction"/></td>
                             </tr>
                         @endforeach
 
                         </tbody>
                     </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4">
-
-            <div class="card shadow-sm">
-
-                <div class="card-body">
-
-                    <div >
-                        <h4>Añadir transacciones</h4>
-                        
-                        <p>
-                            <button class="btn btn-info btn-block" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                                Añadir nueva
-                            </button>
-                        </p>
                     </div>
                 </div>
             </div>

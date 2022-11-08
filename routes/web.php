@@ -139,6 +139,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
      */
     Route::get('/transaction/list', 'TransactionController@list')->name('transaction.list');
     Route::get('/transaction/create', 'TransactionController@create')->name('transaction.create');
+    Route::post('/transaction/publish', 'TransactionController@publish')->name('transaction.publish');
 
 
     /**

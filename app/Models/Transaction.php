@@ -12,6 +12,11 @@ class Transaction extends Model
         'id', 'reason', 'type', 'amount', 'comittee_id', 'user_id'
     ];
 
+    public function comittee()
+    {
+        return $this->belongsTo('App\Models\Comittee');
+    }
+
     /*
     * Obtener todas las transacciones
     */

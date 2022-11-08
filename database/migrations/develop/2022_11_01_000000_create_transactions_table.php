@@ -26,7 +26,8 @@ class CreateTransactionsTable extends Migration
             $table->enum('status', ['PENDING', 'ACCEPTED', 'REJECTED']);
             $table->enum('type', ['Beneficio', 'Gasto']);
             $table->float('amount');
-            $table->date('date');   
+            $table->string('stamp')->nullable($value = true);
+            $table->timestamps();
         });
 
     }

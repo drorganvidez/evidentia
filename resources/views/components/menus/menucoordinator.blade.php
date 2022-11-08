@@ -11,6 +11,9 @@
             <x-li route="transaction.list"
                   icon='fas fa-clipboard-check' name="Tus transacciones"/>
 
+            <x-li route="transaction.create"
+                  icon='fas fa-clipboard-check' name="Crear transacción"/>
+
         </ul>
     </nav>
 @endif

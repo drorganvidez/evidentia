@@ -71,7 +71,7 @@
 
         <div class="row">
 
-            <div class="col-lg-8">
+            <div class="col-lg-12">
 
                 <div class="card shadow-sm">
 
@@ -79,7 +79,7 @@
 
                         <div class="form-row">
 
-                            <x-input col="7" attr="reason" :value="$transaccion->reason ?? ''" label="Motivo" description="Escribe un título que describa con precisión tu transacción (Al menos 10 caracteres)"/>
+                            <x-input col="6" attr="reason" :value="$transaccion->reason ?? ''" label="Motivo" description="Escribe un título que describa con precisión tu transacción (Al menos 10 caracteres)"/>
 
                             <div class="form-group col-md-2">
                                 <label for="amount">Cantidad</label>
@@ -92,11 +92,11 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-2">
                                 <label for="type">Tipo</label>
-                                <select id="comittee" class="selectpicker form-control @error('comittee') is-invalid @enderror" name="comittee" value="{{ old('comittee') }}" required autofocus>
-                                    <option labe='Beneficio' value="Beneficio">Beneficio</option>
-                                    <option  value="Gasto">Gasto</option>
+                                <select id="type" class="selectpicker form-control @error('comittee') is-invalid @enderror" name="type" value="Beneficio" required autofocus>
+                                    <option label='Beneficio' value="Beneficio">Beneficio</option>
+                                    <option  label='Gasto' value="Gasto">Gasto</option>
                                 </select>
 
                                 @error('type')
@@ -106,10 +106,52 @@
                                 @enderror
                             </div>
 
+                            
+                            <div class="form-group col-md-2">
+                                <label for="comittee">Comité asociado</label>
+                                <select id="comittee" class="selectpicker form-control @error('comittee') is-invalid @enderror" name="comittee" value="{{ old('comittee') }}" required autofocus>
+                                    @foreach($comittees as $comittee)
+                                        @isset($evidence)
+                                            <option {{$comittee->id == old('comittee') || $transaction->comittee->id == $comittee->id ? 'selected' : ''}} value="{{$comittee->id}}">
+                                        @else
+                                            <option {{$comittee->id == old('comittee') ? 'selected' : ''}} value="{{$comittee->id}}">
+                                                @endisset
+                                                {!! $comittee->name !!}
+                                            </option>
+                                            @endforeach
+                                </select>
+
+                                <small class="form-text text-muted">Elige un comité al que quieres asociar tu evidencia.</small>
+
+                                @error('comite')
+                                <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
                            
 
-                            <div class="form-group col-md-4">
-                                <button type="button" formaction="{{$route_publish}}" class="btn btn-primary btn-block"><i class="fas fa-external-link-square-alt"></i> &nbsp;Crear transacción</button>
+                            <div class="form-group col-md-12">
+                                <button type="button"  class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-default"><i class="fas fa-external-link-square-alt"></i> &nbsp;Publicar transacción</button>
+                            </div>
+
+                            <div class="modal fade" id="modal-default">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Publicar una transacción</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Cuando se publica una transacción, esta se envía al coordinador de finanzas
+                                                para su posterior revisión.
+                                            <p>¿Deseas continuar?</p>
+                                        </div>
+                                        <div class="modal-footer justify-content-between">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                            <button type="submit" formaction="{{$route_publish}}" class="btn btn-primary" data-toggle="modal" data-target="#modal-default"><i class="fas fa-external-link-square-alt"></i> &nbsp;Sí, publicar transacción</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
