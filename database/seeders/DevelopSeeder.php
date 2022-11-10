@@ -500,6 +500,19 @@ class DevelopSeeder extends Seeder
         ]);
 
         /*
+         *  TAREAS
+         */
+        
+        DB::table('tasks')->insert([
+            'id' => 1, 
+            'title' => 'Tarea 1', 
+            'description' => 'Descripción de tarea', 
+            'hours' => 3, 
+            'user_id' => 1, 
+            'comittee_id' => 1 
+        ]);
+        
+        /*
          *  CONFIGURACIÓN
          */
 

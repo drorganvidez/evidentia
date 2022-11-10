@@ -23,9 +23,5 @@ class Task extends Model
         return $this->belongsTo('App\Models\Comittee');
     }
 
-    /**
-     * @return mixed
-     * Evidence Flow
-     */
 
 }
