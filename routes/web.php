@@ -142,8 +142,11 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
     Route::post('/transaction/publish', 'TransactionController@publish')->name('transaction.publish');
 
-    Route::get('/transaction/list/all', 'TrasnasctionController@all')->name('transaction.list.all');
+    Route::get('/transaction/list/all', 'TransactionController@all')->name('transaction.list.all');
 
+    Route::get('/transaction/list/rejected', 'TransactionController@rejected')->name('transaction.rejected');
+    Route::get('/transaction/list/acepted', 'TransactionController@accepted')->name('transaction.acepted');
+    Route::get('/transaction/export/{type}/{ext}', 'TransactionController@transaction_export')->name('transaction.export');
 
 
     /**

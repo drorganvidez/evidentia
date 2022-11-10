@@ -101,16 +101,71 @@ class TransactionController extends Controller
         $transaction->save();
 
         return $transaction;
+    }
+
 
     // LISTAR TODAS LAS TRANSACCIONES POR EL COORDIANDOR
     public function all()
     {
-        $transactions = Transaction->get_all_transactions();
-        $intance = \Instantiation::instance();
+        $transactions = Transaction::all();
+        $instance = \Instantiation::instance();
         $transactions = $transactions->reverse();
+        $comittees = Comittee::all();
 
         return view('transaction.coordinator.list',
             ['instance' => $instance, 'transactions' => $transactions]);
 
     }
+
+
+
+    // RECHAZAR TRANSACCION
+
+    public function rejected($instance, $id)
+    {
+        $instance = \Instantiation::instance();
+
+        $transaction = Transaction::find($id);
+        $transaction->status = 'REJECTED';
+        $transaction->save();
+
+        return redirect()->route('transaction.list.all')->with('success', 'Transacción rechazada con éxito.');
+    }
+
+
+
+
+    // ACEPTAR TRANSACCION
+
+    public function accepted($id)
+    {
+        $instance = \Instantiation::instance();
+
+        
+        $transaction = Transaction::find($id);
+        $transaction->status = 'ACCEPTED';
+        $transaction->save();
+
+        return redirect()->route('transaction.list.all')->with('success', 'Transacción aceptada con éxito.');
+    }
+
+
+
+
+    // EXPORTAR TRANSACCIONES ( CSV, PDF, XLSX)
+
+
+    public function transaction_export($instance, $type, $ext)
+    {
+        try {
+            ob_end_clean();
+            if (!in_array($ext, ['csv', 'pdf', 'xlsx'])) {
+                return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
+            }
+            return Excel::download(new TransactionExport($type), 'transacciones-' . \Illuminate\Support\Carbon::now() . '.' . $ext);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
+        }
+    }
+
 }
