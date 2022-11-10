@@ -40,9 +40,14 @@ class TaskController extends Controller
     {
 
         $comittees = Comittee::all();
+        $tasks = Task::where(['user_id' => Auth::id()])->get();
+        $instance = \Instantiation::instance();
 
-        return view('task.list',
-             ['comittees' => $comittees]);
+        return view('task.list',[
+            'comittees' => $comittees,
+            'tasks' => $tasks,
+            'instance' => $instance
+        ]);
     }
 
     public function draft(Request $request)

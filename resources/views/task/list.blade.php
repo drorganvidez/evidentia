@@ -81,12 +81,21 @@
                         <th>Título</th>
                         <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Horas</th>
                         <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Comité</th>
-                        <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Creada</th>
-                        <th>Estado</th>
                     </tr>
                     </thead>
                     <tbody>
                         <!-- AÑADIR FUNCION LISTAR TAREAS -->
+                        @foreach($tasks as $task)
+                            <tr>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$task->id}}</td>
+                                <td><a href="{{route('task.view',['instance' => $instance, 'id' => $task->id])}}">{{$task->title}}</a></td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$task->hours}}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                    <x-taskcomittee :task="$task"/>
+                                </td>
+
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
                 </div>

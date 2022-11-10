@@ -137,7 +137,9 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
      *  TASKS
      */
     Route::get('/task/list', 'TaskController@list')->name('task.list');
-
+    Route::middleware(['checknotnull:Task'])->group(function () {
+        Route::get('/evidence/task/{id}', 'TaskController@view')->name('task.view');
+    });
     /**
      *  EVIDENCES
      */
