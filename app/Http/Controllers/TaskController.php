@@ -88,6 +88,7 @@ class TaskController extends Controller
         $task = Task::create([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
+            'hours' => $request->input('hours'),
             'start_date' => $request->input('start_date'),
             'end_date' => $request->input('end_date'),
             'user_id' => $user->id,
@@ -107,7 +108,6 @@ class TaskController extends Controller
 
     public function edit($instance,$id)
     {
-
         $user = Auth::user();
         $instance = \Instantiation::instance();
         $token = session()->token();
@@ -115,33 +115,36 @@ class TaskController extends Controller
         $task = Task::find($id);
         $comittees = Comittee::all();
 
-        return view('task.view', ['task' => $task, 'instance' => $instance,
-            'route_draft' => route('task.draft.edit',$instance),
+        $tmp = $instance.'/tmp/'.$user->username.'/'.$token.'/';
+
+        Storage::deleteDirectory($tmp);
+
+        // generamos un nuevo token
+        session()->regenerate();
+
+
+        return view('task.edit', ['task' => $task, 'instance' => $instance,
             'comittees' => $comittees,
-            'edit' => true,
-            'title' => $request->input('title'),
-            'description' => $request->input('description'),
-            'start_date' => $request->input('start_date'),
-            'end_date' => $request->input('end_date'),
-            'user_id' => $user->id,
-            ]);
+            'route_save' => route('task.save',$instance)]);
     }
 
-    public function draft_edit(Request $request)
-    {
-        return $this->save($request,"DRAFT");
-    }
 
-    private function save($request,$status)
+    private function save($request)
     {
         $instance = \Instantiation::instance();
+            
+        // tarea desde la que hemos decidido partir
+        $task_previous = Evidence::find($request->_id);
 
-        if($status == "DRAFT") {
-            return redirect()->route('task.list', $instance)->with('success', 'Evidencia editada con éxito.');
-        }else{
-            return redirect()->route('task.list', $instance)->with('success', 'Evidencia publicada con éxito.');
-        }
+        // creamos la nueva tarea a partir de la seleccionada para editar
+        $task_new = $this->new_task($request,$status);
 
+        $evidence_new->save();
+
+        // copiamos ahora los archivos de la carpeta temporal a la nueva evidencia
+        $this->save_files($request,$evidence_new);
+
+        return redirect()->route('task.list', $instance)->with('success', 'Evidencia publicada con éxito.');
     }
 
     /****************************************************************************

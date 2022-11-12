@@ -30,13 +30,11 @@
                     <h5><b>Descripción:</b></h5>  {!! $task->description !!}
                     <br></br>
 
-<!--
                         <a class="btn btn-info btn-sm"
-                            href="{{route('evidence.edit',['instance' => $instance, 'id' => $task->id])}}">
+                            href="{{route('task.edit',['instance' => $instance, 'id' => $task->id])}}">
                             <i class="fas fa-pencil-alt">
                             </i>
                         </a>
--->
                         <x-buttonconfirm :id="$task->id" route="task.remove" title="¿Seguro?" description="Esto borrará la tarea actual de forma <b>permanente.</b>" type="REMOVE"/>
 
                 </div>
