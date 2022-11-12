@@ -76,8 +76,8 @@ class TaskController extends Controller
 
         $request->validate([
             'title' => 'required|min:5|max:255',
-            'startDate' => 'required|date_format:"Y-m-dH:i"',
-            'endDate' => 'required|date_format:"Y-m-dH:i"',
+            'start_date' => 'required|date_format:"Y-m-dH:i"',
+            'end_date' => 'required|date_format:"Y-m-dH:i"',
             'description' => ['required',new MinCharacters(10),new MaxCharacters(20000)],
         ]);
 
@@ -88,8 +88,8 @@ class TaskController extends Controller
         $task = Task::create([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
-            'startDate' => $request->input('startDate'),
-            'endDate' => $request->input('endDate'),
+            'start_date' => $request->input('start_date'),
+            'end_date' => $request->input('end_date'),
             'user_id' => $user->id,
             'comittee_id' => $request->input('comittee')
         ]);
@@ -121,8 +121,8 @@ class TaskController extends Controller
             'edit' => true,
             'title' => $request->input('title'),
             'description' => $request->input('description'),
-            'startDate' => $request->input('startDate'),
-            'endDate' => $request->input('endDate'),
+            'start_date' => $request->input('start_date'),
+            'end_date' => $request->input('end_date'),
             'user_id' => $user->id,
             ]);
     }
@@ -145,7 +145,7 @@ class TaskController extends Controller
     }
 
     /****************************************************************************
-     * REMOVE AN EVIDENCE
+     * REMOVE A TASK
      ****************************************************************************/
 
     public function remove(Request $request)
@@ -154,7 +154,7 @@ class TaskController extends Controller
         $task = Task::find($id);
         $instance = \Instantiation::instance();
 
-        $evidence->delete();
+        $task->delete();
 
         return redirect()->route('task.list',$instance)->with('success', 'Tarea borrada con éxito.');
     }

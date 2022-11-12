@@ -87,7 +87,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <!-- AÑADIR FUNCION LISTAR TAREAS -->
                         @foreach($tasks as $task)
                             <tr>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$task->id}}</td>
@@ -95,7 +94,7 @@
                                 <td></td>
                                 <td style="display:block;text-overflow: ellipsis;width: 30vw;overflow: hidden; white-space: nowrap;" class="">{{$task->description}}</td>
                                 <td style="text-align:center;" class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$task->hours}}</td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">12:00 - 15:00</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{substr($task->start_date,11,5)}} - {{substr($task->end_date,11,5)}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
                                     <x-taskcomittee :task="$task"/>
                                 </td>
