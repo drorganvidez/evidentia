@@ -25,9 +25,10 @@
 
                     <h5><b>Comité:</b><x-taskcomittee :task="$task"/></h5>
                     <h5><b>Horas:</b> {{$task->hours}} horas</h5>
-                    <h5><b>Fecha Inicio:</b> 12:00</h5>
-                    <h5><b>Fecha Inicio:</b> 15:00</h5>
+                    <h5><b>Fecha Inicio:</b> {{$task->start_date}}</h5>
+                    <h5><b>Fecha Inicio:</b> {{$task->end_date}}</h5>
                     <h5><b>Descripción:</b></h5>  {!! $task->description !!}
+                    <br></br>
 
 <!--
                         <a class="btn btn-info btn-sm"
@@ -35,25 +36,9 @@
                             <i class="fas fa-pencil-alt">
                             </i>
                         </a>
-
-                        <x-buttonconfirm :id="$task->id" route="evidence.remove" title="¿Seguro?" description="Esto borrará la tarea actual de forma <b>permanente.</b>" type="REMOVE"/>
 -->
-                </div>
+                        <x-buttonconfirm :id="$task->id" route="task.remove" title="¿Seguro?" description="Esto borrará la tarea actual de forma <b>permanente.</b>" type="REMOVE"/>
 
-            </div>
-
-        </div>
-
-        <div class="col-lg-4">
-
-            <div class="card shadow-sm">
-
-                <div class="card-body">
-
-                    <h4>Estado</h4>
-                    <!--
-                    Añadir
-                    -->
                 </div>
 
             </div>
