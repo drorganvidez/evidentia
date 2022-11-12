@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TransactionExport;
 
 class TransactionController extends Controller
 {   
@@ -110,7 +111,6 @@ class TransactionController extends Controller
         $transactions = Transaction::all();
         $instance = \Instantiation::instance();
         $transactions = $transactions->reverse();
-        $comittees = Comittee::all();
 
         return view('transaction.coordinator.list',
             ['instance' => $instance, 'transactions' => $transactions]);
@@ -121,7 +121,7 @@ class TransactionController extends Controller
 
     // RECHAZAR TRANSACCION
 
-    public function rejected($instance, $id)
+    public function rejected($id)
     {
         $instance = \Instantiation::instance();
 
@@ -141,12 +141,11 @@ class TransactionController extends Controller
     {
         $instance = \Instantiation::instance();
 
-        
         $transaction = Transaction::find($id);
         $transaction->status = 'ACCEPTED';
         $transaction->save();
 
-        return redirect()->route('transaction.list.all')->with('success', 'Transacción aceptada con éxito.');
+        return redirect()->route('transaction.list.all', $instance)->with('success', 'Transacción aceptada con éxito.');
     }
 
 
@@ -155,14 +154,14 @@ class TransactionController extends Controller
     // EXPORTAR TRANSACCIONES ( CSV, PDF, XLSX)
 
 
-    public function transaction_export($instance, $type, $ext)
+    public function transaction_export($instance, $ext)
     {
         try {
             ob_end_clean();
             if (!in_array($ext, ['csv', 'pdf', 'xlsx'])) {
                 return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
             }
-            return Excel::download(new TransactionExport($type), 'transacciones-' . \Illuminate\Support\Carbon::now() . '.' . $ext);
+            return Excel::download(new TransactionExport(), 'transacciones-' . \Illuminate\Support\Carbon::now() . '.' . $ext);
         } catch (\Exception $e) {
             return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
         }

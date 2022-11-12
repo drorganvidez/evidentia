@@ -2,9 +2,12 @@
 
 namespace App\Exports;
 
+use App\Models\Comittee;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use App\Models\Transaction;
+use App\Models\User;
 
 class TransactionExport implements FromCollection, WithHeadings
 {
@@ -17,16 +20,19 @@ class TransactionExport implements FromCollection, WithHeadings
         $res = collect();
         foreach ($transactions as $transaction) {
 
-            if (Auth::User()->hasRole('REGISTER_COORDINATOR')) {
-
+            if (Auth::User()->hasRole('COORDINATOR')) {
+                $userId = $transaction->user_id;
+                $comiteeId = $transaction->comittee_id;
+                $user = User::find($userId);
+                $comitee = Comittee::find($comiteeId);
                 $array = [
-                    'Nombre' => strtoupper(trim($event->name)),
-                    'Fecha_inicio' => strtoupper(trim($event->start_datetime)),
-                    'Fecha_fin' => strtoupper(trim($event->end_datetime)),
-                    'Capacidad' => strtoupper(trim($event->capacity)),
-                    'Horas' => strtoupper(trim($event->hours)),
-                    'Estado' => strtoupper(trim($event->status)),
-                    'Url' => trim($event->url)
+                    'Concepto' => strtoupper(trim($transaction->reason)),
+                    'Estado' => strtoupper(trim($transaction->status)),
+                    'Tipo' => strtoupper(trim($transaction->type)),
+                    'Cantidad' => strtoupper(trim($transaction->amount)),
+                    'Usuario' => strtoupper(trim($user->username)),
+                    'Comite' => strtoupper(trim($comitee->name)),
+                    'Fecha' =>  strtoupper(trim($transaction->date))             
                 ];
 
                 $object = (object)$array;
@@ -39,13 +45,13 @@ class TransactionExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-            'Nombre',
-            'Fecha inicio',
-            'Fecha fin',
-            'Capacidad',
-            'Horas',
+            'Concepto',
             'Estado',
-            'Url'
+            'Tipo',
+            'Cantidad',
+            'Usuario',
+            'Comite',
+            'Fecha'
         ];
     }
 

@@ -17,17 +17,17 @@
             <div class="row mb-3">
                 <p style="padding: 5px 50px 0px 15px">Exportar tabla:</p>
                 <div class="col-lg-1 mt-12">
-                    <a href=""
+                    <a href="{{route('transaction.export',['instance' => $instance, 'ext' => 'xlsx'])}}"
                        class="btn btn-info btn-block" role="button">
                         XLSX</a>
                 </div>
                 <div class="col-lg-1 mt-12">
-                    <a href=""
+                    <a href="{{route('transaction.export',['instance' => $instance, 'ext' => 'csv'])}}"
                        class="btn btn-info btn-block" role="button">
                         CSV</a>
                 </div>
                 <div class="col-lg-1 mt-12">
-                    <a href=""
+                    <a href="{{route('transaction.export',['instance' => $instance, 'ext' => 'pdf'])}}"
                        class="btn btn-info btn-block" role="button">
                         PDF</a>
                 </div>
@@ -70,14 +70,16 @@
                                 </td>
                                 -->
                                 @if($transaction->status == 'PENDING')
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                    <a href="{{route('transaction.acepted', $transaction->id)}}"
-                                        class="btn btn-success btn-block" role="button">Aceptar
+                                <td class="align-middle">
+                                    <a class="btn btn-success btn-sm" href="{{route('transaction.accepted', $transaction->id)}}">
+                                        <i class="far fa-thumbs-up"></i>
+                                        <span class="d-none d-sm-none d-md-none d-lg-inline"></span>
                                     </a>
                                 </td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                    <a href="{{route('transaction.rejected', $transaction->id)}}"
-                                        class="btn btn-danger btn-block" role="button">Denegar
+                                    <a class="btn btn-danger btn-sm" href="{{route('transaction.rejected',['instance' => \Instantiation::instance(), 'id' => $transaction->id])}}">
+                                        <i class="far fa-thumbs-down"></i>
+                                        <span class="d-none d-sm-none d-md-none d-lg-inline"></span>
                                     </a>
                                 </td>
                                 @endif
