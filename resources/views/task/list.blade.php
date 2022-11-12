@@ -12,11 +12,7 @@
 
 @section('content')
 
-    <div class="form-group col-md-4">
-        <button type="button" style = "width:auto;" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-default">
-            <i class="fas fa-clock"></i>
-         &nbsp;Empezar tarea</button>
-    </div>
+    
     <!-- BOTON PARAR FUTURA VERSION
     <div class="form-group col-md-4">
         <button type="button" style = "width:auto; background-color:#dc3545; border-color:#dc3545;" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-default">
@@ -34,10 +30,10 @@
 
             <div class="form-row">
 
-                <x-input col="4" attr="title" :value="$task->title ?? ''" label="Título"/>
-                <x-input col="5" attr="title" :value="$task->title ?? ''" label="Descripción"/>
+                <x-input col="3" attr="title" :value="$task->title ?? ''" label="Título"/>
+                <x-input col="4" type="text" attr="description" :value="$task->title ?? ''" label="Descripción"/>
 
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-2">
                     <label for="comittee">Comité asociado</label>
                     <select id="comittee" class="selectpicker form-control @error('comittee') is-invalid @enderror" name="comittee" value="{{ old('comittee') }}" required autofocus>
                         @foreach($comittees as $comittee)
@@ -57,7 +53,19 @@
                         </span>
                     @enderror
                 </div>
-
+                <div class="form-group col-md-1">
+                    <label for="duration">Duración</label>
+                    <div id="duration">
+                        00:00:00
+                    </div>
+                </div> 
+                
+                <div class="form-group col-md-2">
+                    <label style="visibility:hidden">Start Button</label>
+                    <button type="button" style = "width:auto;" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-default">
+                        <i class="fas fa-clock"></i>
+                    &nbsp;Empezar tarea</button>
+                </div>
                 
             </div>
 

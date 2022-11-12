@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class DevelopSeeder extends Seeder
 {
@@ -510,8 +511,8 @@ class DevelopSeeder extends Seeder
             'hours' => 3, 
             'user_id' => 1, 
             'comittee_id' => 1,
-            'start_date' => date("Y-m-d H:i:s"),
-            'end_date' => date("Y-m-d H:i:s")
+            'start_date' => Carbon::parse('2022-01-01 10:00:00'),
+            'end_date' => Carbon::parse('2022-01-01 13:00:00')
         ]);
         
         /*
