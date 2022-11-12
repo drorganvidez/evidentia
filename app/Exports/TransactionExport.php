@@ -14,13 +14,22 @@ class TransactionExport implements FromCollection, WithHeadings
     /**
      * @return \Illuminate\Support\Collection
      */
+    public $type = null;
+
+    public function __construct($type){
+        $this->type = $type;
+    }
     public function collection()
     {
-        $transactions = Transaction::all();
         $res = collect();
+        if (Auth::User()->hasRole('COORDINATOR') and $this->type == 'all') {
+        $transactions = Transaction::all();
+        }
+        if(Auth::User()->hasRole('COORDINATOR') and $this->type == 'mine'){
+            $transactions = Transaction::where(['user_id' => Auth::id()])->get();
+        }
         foreach ($transactions as $transaction) {
 
-            if (Auth::User()->hasRole('COORDINATOR')) {
                 $userId = $transaction->user_id;
                 $comiteeId = $transaction->comittee_id;
                 $user = User::find($userId);
@@ -38,7 +47,6 @@ class TransactionExport implements FromCollection, WithHeadings
                 $object = (object)$array;
                 $res->push($object);
             }
-        }
         return $res;
     }
 

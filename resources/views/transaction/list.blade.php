@@ -17,17 +17,17 @@
             <div class="row mb-3">
                 <p style="padding: 5px 50px 0px 15px">Exportar tabla:</p>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('evidence.list.export',['instance' => $instance, 'ext' => 'xlsx'])}}"
+                    <a href="{{route('transaction.export',['instance' => $instance, 'type' => 'mine', 'ext' => 'xlsx'])}}"
                        class="btn btn-info btn-block" role="button">
                         XLSX</a>
                 </div>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('evidence.list.export',['instance' => $instance, 'ext' => 'csv'])}}"
+                    <a href="{{route('transaction.export',['instance' => $instance, 'type' => 'mine', 'ext' => 'csv'])}}"
                        class="btn btn-info btn-block" role="button">
                         CSV</a>
                 </div>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('evidence.list.export',['instance' => $instance, 'ext' => 'pdf'])}}"
+                    <a href="{{route('transaction.export',['instance' => $instance, 'type' => 'mine','ext' => 'pdf'])}}"
                        class="btn btn-info btn-block" role="button">
                         PDF</a>
                 </div>

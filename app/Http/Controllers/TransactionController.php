@@ -145,7 +145,7 @@ class TransactionController extends Controller
         $transaction->status = 'ACCEPTED';
         $transaction->save();
 
-        return redirect()->route('transaction.list.all', $instance)->with('success', 'Transacción aceptada con éxito.');
+        return back()->with('success', 'Transacción aceptada con éxito.');
     }
 
 
@@ -154,14 +154,17 @@ class TransactionController extends Controller
     // EXPORTAR TRANSACCIONES ( CSV, PDF, XLSX)
 
 
-    public function transaction_export($instance, $ext)
+    public function transaction_export($instance,$type, $ext)
     {
         try {
             ob_end_clean();
             if (!in_array($ext, ['csv', 'pdf', 'xlsx'])) {
                 return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
             }
-            return Excel::download(new TransactionExport(), 'transacciones-' . \Illuminate\Support\Carbon::now() . '.' . $ext);
+            if(!in_array($type, ['all', 'mine'])) {
+                return back()->with('error', 'Mal formato de type');
+            }
+            return Excel::download(new TransactionExport($type), 'transacciones-' . \Illuminate\Support\Carbon::now() . '.' . $ext);
         } catch (\Exception $e) {
             return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
         }
