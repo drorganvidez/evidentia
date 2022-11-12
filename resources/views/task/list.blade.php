@@ -12,16 +12,9 @@
 
 @section('content')
 
-    
-    <!-- BOTON PARAR FUTURA VERSION
-    <div class="form-group col-md-4">
-        <button type="button" style = "width:auto; background-color:#dc3545; border-color:#dc3545;" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-default">
-            <i class="fas fa-clock"></i>
-         &nbsp;Parar tarea</button>
-    </div>
-    -->
+    <div class="basic stopwatch"></div>
     <div class="row">
-    
+    <form method="POST" style="display:in-line;" action="/create"> 
     <div class="col-lg-12">
 
     <div class="card shadow-sm">
@@ -29,13 +22,16 @@
         <div class="card-body">
 
             <div class="form-row">
-
-                <x-input col="3" attr="title" :value="$task->title ?? ''" label="Título"/>
-                <x-input col="4" type="text" attr="description" :value="$task->title ?? ''" label="Descripción"/>
+            
+            
+                <x-input col="3" name="title" attr="title" :value="$task->title ?? ''" label="Título"/>
+                <x-input col="4" name="description" type="text" attr="description" :value="$task->title ?? ''" label="Descripción"/>
+                <input id="start_date" style="display:none;" name="start_date" type="datetime-local"/>
+                <input id="end_date" style="display:none;" name="end_date" type="datetime-local"/>
 
                 <div class="form-group col-md-2">
                     <label for="comittee">Comité asociado</label>
-                    <select id="comittee" class="selectpicker form-control @error('comittee') is-invalid @enderror" name="comittee" value="{{ old('comittee') }}" required autofocus>
+                    <select name="comitee" id="comittee" class="selectpicker form-control @error('comittee') is-invalid @enderror" name="comittee" value="{{ old('comittee') }}" required autofocus>
                         @foreach($comittees as $comittee)
                             @isset($task)
                                 <option {{$comittee->id == old('comittee') || $task->comittee->id == $comittee->id ? 'selected' : ''}} value="{{$comittee->id}}">
@@ -60,18 +56,24 @@
                     </div>
                 </div> 
                 
-                <div class="form-group col-md-2">
+                <div id="div_start_button" class="form-group col-md-2">
                     <label style="visibility:hidden">Start Button</label>
-                    <button type="button" style = "width:auto;" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-default">
+                    <button type="button" style = "width:auto;" id="start_chronometrer"class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-default">
                         <i class="fas fa-clock"></i>
                     &nbsp;Empezar tarea</button>
                 </div>
-                
+                <div style ="display:none;" id="div_stop_button" class="form-group col-md-2">
+                    <label style="visibility:hidden">Stop Button</label>
+                    <button type="submit" style = "background-color:#dc3545; border-color:#dc3545;width:auto;" id="stop_chronometrer"class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-default">
+                        <i class="fas fa-clock"></i>
+                    &nbsp;Parar tarea</button>
+                </div>
             </div>
 
 
         </div>
     </div>
+    </form>
 
     <div class="col-lg-12">
 
@@ -114,6 +116,56 @@
             </div>
         </div>
     </div>
+
+    <script>
+        let start_chronometrer = document.getElementById("start_chronometrer");
+        let stop_chronometrer = document.getElementById("stop_chronometrer"); 
+        let div_stop_button = document.getElementById("div_stop_button");
+        let div_start_button = document.getElementById("div_start_button");
+        let input_start_date = document.getElementById("start_date");
+        let input_end_date = document.getElementById("end_date");
+
+
+        start_chronometrer.onclick = start; 
+        stop_chronometrer.onclick = stop; 
+
+        let hours = `00`,
+        minutes = `00`,
+        seconds = `00`,
+        chronometerDisplay = document.getElementById("duration"),
+        chronometerCall
+
+        function chronometer() {
+
+            seconds ++
+            if (seconds < 10) seconds = `0` + seconds
+            if (seconds > 59) {
+            seconds = `00`
+            minutes ++
+            if (minutes < 10) minutes = `0` + minutes
+            }
+            if (minutes > 59) {
+            minutes = `00`
+            hours ++
+            if (hours < 10) hours = `0` + hours
+            }
+            chronometerDisplay.textContent = `${hours}:${minutes}:${seconds}`
+        }
+
+        function start(evento) {
+            div_start_button.style.display = "none";
+            div_stop_button.style.display = "block";
+            chronometerCall = setInterval(chronometer, 1000);
+            event.target.setAttribute(`disabled`,``);
+            input_start_date.set("value", DateTime.now())
+        }
+        function stop(evento) {
+            clearInterval(chronometerCall);
+            input_end_date.set("value", DateTime.now())
+
+        }
+
+    </script>
 
     @section('scripts')
 

@@ -36,7 +36,21 @@ class TaskController extends Controller
             ['instance' => $instance, 'task' => $task]);
     }
 
-    public function list() # And create
+    public function list()
+    {
+
+        $comittees = Comittee::all();
+        $tasks = Task::where(['user_id' => Auth::id()])->get();
+        $instance = \Instantiation::instance();
+
+        return view('task.list',[
+            'comittees' => $comittees,
+            'tasks' => $tasks,
+            'instance' => $instance
+        ]);
+    }
+
+    public function create()
     {
 
         $comittees = Comittee::all();
@@ -95,8 +109,6 @@ class TaskController extends Controller
             'comittee_id' => $request->input('comittee')
         ]);
 
-        // cómputo del sello
-        # $evidence = \Stamp::compute_evidence($evidence);
         $task->save();
 
         return $task;
