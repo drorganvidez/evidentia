@@ -67,8 +67,8 @@
                                         </div>
                                         <div class="modal-body">
                                             <p>Cuando se publica una incidencia, esta se envía al coordinador de tu comité
-                                                para su posterior revisión. Mientras esté en proceso de revisión,
-                                                <b>no podrá ser editada.</b></p>
+                                                para su posterior revisión.Despues que esté en proceso de revisión,
+                                                <b>no podrá ser borrada.</b></p>
                                             <p>¿Deseas continuar?</p>
                                         </div>
                                         <div class="modal-footer justify-content-between">
