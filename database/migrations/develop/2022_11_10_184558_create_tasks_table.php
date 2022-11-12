@@ -21,7 +21,10 @@ class CreateTasksTable extends Migration
             $table->string('title');
             $table->text('description');
             $table->float('hours');
+            $table->timestamp('start_date', 0);
+            $table->timestamp('end_date', 0);
             $table->timestamps();
+
         });
     }
 
