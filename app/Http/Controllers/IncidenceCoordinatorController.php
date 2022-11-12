@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Incidence;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\CoordinatorIncidencesExport;
 
 class IncidenceCoordinatorController extends Controller
 {
@@ -50,7 +52,7 @@ class IncidenceCoordinatorController extends Controller
         $incidences = $comittee->incidences_in_review()->paginate(10);
 
         return view('incidence.coordinator.list',
-            ['instance' => $instance, 'incidences' => $incidences, 'type' => 'accepted']);
+            ['instance' => $instance, 'incidences' => $incidences, 'type' => 'inreview']);
     }
     public function closed()
     {
@@ -61,7 +63,7 @@ class IncidenceCoordinatorController extends Controller
         $incidences = $comittee->incidences_closed()->paginate(10);
 
         return view('incidence.coordinator.list',
-            ['instance' => $instance, 'incidences' => $incidences, 'type' => 'accepted']);
+            ['instance' => $instance, 'incidences' => $incidences, 'type' => 'closed']);
     }
 
 
@@ -86,5 +88,17 @@ class IncidenceCoordinatorController extends Controller
         return redirect()->route('coordinator.incidence.list.all', $instance)->with('success', 'Incidencia cerrada con éxito.');
     }
 
-  
+    public function incidences_export($instance, $type, $ext)
+    {
+        try {
+            ob_end_clean();
+            if (!in_array($ext, ['csv', 'pdf', 'xlsx'])) {
+                return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
+            }
+            return Excel::download(new CoordinatorIncidencesExport($type), 'incidence-' . \Illuminate\Support\Carbon::now() . '.' . $ext);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
+        }
+    }
+
 }

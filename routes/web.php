@@ -200,11 +200,16 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
    
     Route::get('/incidence/view/{id}', 'IncidenceController@view')->name('incidence.view');
 
+    /**
+     *  COORDINATOR INCIDENCES
+     */
+
     Route::prefix('coordinator')->group(function () {
         Route::get('/incidence/list/all', 'IncidenceCoordinatorController@all')->name('coordinator.incidence.list.all');
         Route::get('/incidence/list/pending', 'IncidenceCoordinatorController@pending')->name('coordinator.incidence.list.pending');
         Route::get('/incidence/list/inreview', 'IncidenceCoordinatorController@inreview')->name('coordinator.incidence.list.inreview');
         Route::get('/incidence/list/closed', 'IncidenceCoordinatorController@closed')->name('coordinator.incidence.list.closed');
+        Route::get('/incidence/export/{type}/{ext}','IncidenceCoordinatorController@incidences_export')->name('coordinator.incidence.export');
 
 
         Route::middleware(['checknotnull:Incidence', 'incidencefrommycommittee'])->group(function () {
