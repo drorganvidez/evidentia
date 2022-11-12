@@ -509,7 +509,9 @@ class DevelopSeeder extends Seeder
             'description' => 'Descripción de tarea', 
             'hours' => 3, 
             'user_id' => 1, 
-            'comittee_id' => 1 
+            'comittee_id' => 1,
+            'start_date' => date("Y-m-d H:i:s"),
+            'end_date' => date("Y-m-d H:i:s")
         ]);
         
         /*
