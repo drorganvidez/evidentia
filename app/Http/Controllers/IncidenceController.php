@@ -164,16 +164,9 @@ class IncidenceController extends Controller
         $instance = \Instantiation::instance();
         $user = Auth::user();
 
-        $incidence_previous = Incidence::find($incidence->points_to);
-
         $this->delete_files($incidence);
-        Storage::deleteDirectory($instance.'/proofs/'.$user->username.'/incidence_'.$incidence->id.'');
+        Storage::deleteDirectory($instance.'/incidence_proofs/'.$user->username.'/incidence_'.$incidence->id.'');
         $incidence->delete();
-
-        if($incidence_previous != null)
-        {
-            $this->delete_incidence($incidence_previous);
-        }
     }
 
     private function delete_files($incidence)
