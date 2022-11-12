@@ -23,40 +23,21 @@
 
                 <div class="card-body">
 
-                    <h5>
-                        <x-taskcomittee :task="$task"/>
-                        <span class="badge badge-secondary">
-                            <i class="far fa-clock"></i> {{$task->hours}} horas
-                        </span>
-                    </h5>
+                    <h5><b>Comité:</b><x-taskcomittee :task="$task"/></h5>
+                    <h5><b>Horas:</b> {{$task->hours}} horas</h5>
+                    <h5><b>Fecha Inicio:</b> 12:00</h5>
+                    <h5><b>Fecha Inicio:</b> 15:00</h5>
+                    <h5><b>Descripción:</b></h5>  {!! $task->description !!}
 
-                    <h4>{{$task->title}}</h4>
-
-                    <div class="post text-justify">
-
-                        {!! $task->description !!}
-
-                        <br><br>
-
-                        <!--
+<!--
                         <a class="btn btn-info btn-sm"
                             href="{{route('evidence.edit',['instance' => $instance, 'id' => $task->id])}}">
                             <i class="fas fa-pencil-alt">
                             </i>
                         </a>
 
-
-                        <x-buttonconfirm :id="$task->id" route="evidence.remove" title="¿Seguro?" description="Esto borrará la evidencia actual, las
-                                        ediciones anteriores <b>y todos los archivos adjuntos.</b>" type="REMOVE"/>
-
+                        <x-buttonconfirm :id="$task->id" route="evidence.remove" title="¿Seguro?" description="Esto borrará la tarea actual de forma <b>permanente.</b>" type="REMOVE"/>
 -->
-                        
-
-
-                    </div>
-
-
-
                 </div>
 
             </div>
