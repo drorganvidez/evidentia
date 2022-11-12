@@ -181,12 +181,15 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     /**
      *  INCIDENCES
      */
+
     Route::get('/incidence/list', 'IncidenceController@list')->name('incidence.list');
+    
     Route::get('/incidence/create', 'IncidenceController@create')->name('incidence.createAndEditIncidence');
+
     Route::middleware(['checkuploadincidence'])->group(function () {
         Route::post('/incidence/publish', 'IncidenceController@publish')->name('incidence.publish');
     });
-    Route::middleware(['checkuploadincidence'])->group(function () {
+    Route::middleware(['checkuploadincidence' , 'checkincidenceisnotinreview'])->group(function () {
         Route::post('/incidence/remove', 'IncidenceController@remove')->name('incidence.remove');
     });
     Route::middleware(['checknotnull:IncidenceProof','checkincidenceproofdownload'])->group(function () {
@@ -205,7 +208,6 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
         Route::middleware(['checknotnull:Incidence', 'incidencefrommycommittee'])->group(function () {
             Route::get('/incidence/view/{id}', 'IncidenceController@view')->name('coordinator.incidence.view');
-
 
             Route::middleware(['checkvalidateincidences'])->group(function () {
                 Route::post('/incidence/close', 'IncidenceCoordinatorController@close')->name('coordinator.incidence.close');
