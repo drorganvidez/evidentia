@@ -34,9 +34,9 @@ class IncidenceController extends Controller
 
     public function list()
     {
+        $incidence = Incidence::where(['user_id' => Auth::id()])->get()->reverse();
         $instance = \Instantiation::instance();
         $comittees = Comittee::all();
-        $incidence = Incidence::all();
         return view('incidence.list', 
         [
             'incidences' => $incidence,
