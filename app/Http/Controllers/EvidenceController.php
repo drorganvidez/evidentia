@@ -56,7 +56,7 @@ class EvidenceController extends Controller
         $instance = \Instantiation::instance();
         $comittees = Comittee::all();
 
-        return view('evidence.list', ['route_draft' => route('evidence.draft',$instance),
+        return view('evidence.createandedit', ['route_draft' => route('evidence.draft',$instance),
                                             'route_publish' => route('evidence.publish',$instance),
                                             'instance' => $instance,
                                             'comittees' => $comittees]);
