@@ -8,7 +8,7 @@
 
 @endif
 
-@if($incidence->status == "IN REVIEW")
+@if($incidence->status == "INREVIEW")
     <div class="progress progress-sm">
         <div class="progress-bar bg-gradient-info" data-toggle="tooltip" data-placement="right" title="En revisión" role="progressbar" aria-volumenow="70" aria-volumemin="0" aria-volumemax="100" style="width: 70%">
         </div>

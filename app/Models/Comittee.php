@@ -34,7 +34,7 @@ class Comittee extends Model
     }
 
     public function incidences_in_review() {
-        return $this->incidences()->where('status','=', 'IN REVIEW')->orderByDesc('updated_at');
+        return $this->incidences()->where('status','=', 'INREVIEW')->orderByDesc('updated_at');
     }
 
     public function incidences_closed() {

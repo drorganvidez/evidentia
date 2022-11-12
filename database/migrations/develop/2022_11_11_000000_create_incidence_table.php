@@ -24,7 +24,7 @@ class CreateIncidenceTable extends Migration
             $table->string('title');
             $table->text('description');
             $table->text('close_reason');
-            $table->enum('status', ['PENDING', 'IN REVIEW', 'CLOSED']);
+            $table->enum('status', ['PENDING', 'INREVIEW', 'CLOSED']);
             $table->string('stamp')->nullable($value = true);
             $table->timestamps();
         });

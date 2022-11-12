@@ -71,7 +71,7 @@ class IncidenceCoordinatorController extends Controller
         $instance = \Instantiation::instance();
 
         $incidence = Incidence::find($id);
-        $incidence->status = 'IN REVIEW';
+        $incidence->status = 'INREVIEW';
         $incidence->save();
 
         return redirect()->route('coordinator.incidence.list.all', $instance)->with('success', 'Incidencia en revisión.');

@@ -24,7 +24,7 @@ class CheckIncidenceIsNotInReview
         {
             return redirect()->route('incidence.list',$instance);
         }
-        if($incidence->status == "IN REVIEW")
+        if($incidence->status == "INREVIEW")
         {
             return redirect()->route('incidence.list',$instance);
         }
