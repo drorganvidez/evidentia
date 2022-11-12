@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\MyIncidencesExport;
 use App\Models\Comittee;
 use App\Models\File;
 use App\Models\Incidence;
@@ -146,10 +147,6 @@ class IncidenceController extends Controller
 
     }
 
-             /****************************************************************************
-     * REMOVE AN INCIDENT
-     ****************************************************************************/
-
     public function remove(Request $request)
     {
         $id = $request->_id;
@@ -184,6 +181,19 @@ class IncidenceController extends Controller
         foreach($incidence->proofs as $proof)
         {
             $proof->file->delete();
+        }
+    }
+
+    public function export($instance, $ext)
+    {
+        try {
+            ob_end_clean();
+            if(!in_array($ext, ['csv', 'pdf', 'xlsx'])){
+                return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
+            }
+            return Excel::download(new MyIncidencesExport(), 'misincidencias-' . \Illuminate\Support\Carbon::now() . '.' . $ext);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
         }
     }
 }

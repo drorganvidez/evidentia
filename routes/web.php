@@ -5,6 +5,7 @@ use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\MeetingSecretaryController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\EvidenceController;
+use App\Http\Controllers\IncidenceController;
 use App\Http\Controllers\SignController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -181,6 +182,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     /**
      *  INCIDENCES
      */
+    Route::get('/incidence/list/export/{ext}',[IncidenceController::class , 'export'])->name('incidence.list.export');
     Route::get('/incidence/list', 'IncidenceController@list')->name('incidence.list');
     Route::get('/incidence/create', 'IncidenceController@create')->name('incidence.createAndEditIncidence');
     Route::middleware(['checkuploadincidence'])->group(function () {
