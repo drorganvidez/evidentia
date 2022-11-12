@@ -48,7 +48,7 @@ class IncidenceController extends Controller
         $instance = \Instantiation::instance();
         $comittees = Comittee::all();
 
-        return view('incidence.createAndEditIncidence', 
+        return view('incidence.create', 
         [
             'route_publish' => route('incidence.publish',$instance),
             'instance' => $instance,
