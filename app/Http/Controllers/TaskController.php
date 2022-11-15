@@ -129,17 +129,17 @@ class TaskController extends Controller
         // datos necesarios para crear tareas
         $user = Auth::user();
       
-        $start_date = date_create($task->start_date);
-        $end_date = date_create($task->end_date);
-        
+        $start_date = date_create($request->input('start_date'));
+        $end_date = date_create($request->input('end_date'));
+
         // Calculates the difference between DateTime objects
-        $interval = date_diff($end_date, $end_date);
+        $interval = date_diff($start_date, $end_date);
 
         $days = intval($interval->format('%d'));
         $hours = floatval($interval->format('%H'));
         $minutes = intval($interval->format('%i'));
 
-        $duration = $days*24 + $hours + floor(($minutes*100)/60)/100;
+        $hours = $days*24 + $hours + floor(($minutes*100)/60)/100;
 
         // modificación de los datos
         $task->title = $request->input('title');
