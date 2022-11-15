@@ -139,10 +139,11 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/task/create', 'TaskController@create')->name('task.create');
     Route::get('/task/list', 'TaskController@list')->name('task.list');
     Route::post('/task/remove', 'TaskController@remove')->name('task.remove');
+    Route::post('/task/edit/save', 'TaskController@save')->name('task.save');
     Route::middleware(['checknotnull:Task'])->group(function () {
         Route::get('/task/view/{id}', 'TaskController@view')->name('task.view');
         Route::get('/task/edit/{id}', 'TaskController@edit')->name('task.edit');
-        Route::post('/task/edit/save', 'TaskController@save')->name('task.save');
+        
     });
     /**
      *  EVIDENCES

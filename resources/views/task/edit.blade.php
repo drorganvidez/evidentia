@@ -36,8 +36,8 @@
                             <x-input col="4" attr="title" :value="$task->title ?? ''" label="Título" description="Escribe un título que describa con precisión tu tarea (mínimo 5 caracteres)"/>
                             <input style="display:none" name="hours" value="3"/>
                             <div class="form-group col-md-3">
-                                <label for="start-date">Fecha de inicio</label>
-                                <input id="" type="datetime-local" class="form-control" name="start-date" value="{{$task->start_date}}" autocomplete="start-time" autofocus="">
+                                <label for="start_date">Fecha de inicio</label>
+                                <input id="start_date" type="datetime-local" class="form-control" name="start_date" value="{{$task->start_date}}" />
                                 
                                 <small class="form-text text-muted">Fecha y hora</small>
                                 @error("hours")
@@ -48,8 +48,8 @@
                             </div>
 
                             <div class="form-group col-md-3">
-                                <label for="end-date">Fecha fin</label>
-                                <input id="" type="datetime-local" class="form-control" name="end-date" value="{{$task->end_date}}" autocomplete="start-time" autofocus="">
+                                <label for="end_date">Fecha fin</label>
+                                <input id="end_date" type="datetime-local" class="form-control" name="end_date" value="{{$task->end_date}}" autocomplete="end_time" autofocus=""/>
                                 <small class="form-text text-muted">Fecha y hora</small>
                                 @error("minutes")
                                 <span class="invalid-feedback d-block" role="alert">

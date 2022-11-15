@@ -64,37 +64,22 @@ class TaskController extends Controller
         ]);
     }
 
-    public function draft(Request $request)
-    {
-        return $this->new($request,"DRAFT");
-    }
 
-    public function publish(Request $request)
-    {
-        return $this->new($request);
-    }
-
-    private function new($request,$status)
+    private function new($request)
     {
 
         $instance = \Instantiation::instance();
 
-        $task = $this->new_task($request,$status);
+        $task = $this->new_task($request);
 
         return redirect()->route('task.list',$task)->with('success', 'Tarea creada con éxito.');
 
     }
 
-    private function new_task($request,$status)
+    private function new_task($request)
     {
 
-        $request->validate([
-            'title' => 'required|min:5|max:255',
-            'start_date' => 'required|date_format:"Y-m-dH:i"',
-            'end_date' => 'required|date_format:"Y-m-dH:i"',
-            'description' => ['required',new MinCharacters(10),new MaxCharacters(20000)],
-        ]);
-
+        echo $request->input('start_date');
         // datos necesarios para crear tareas
         $user = Auth::user();
 
@@ -141,22 +126,16 @@ class TaskController extends Controller
     }
 
 
-    private function save($request)
+    public function save(Request $request)
     {
         $instance = \Instantiation::instance();
-            
-        // tarea desde la que hemos decidido partir
-        $task_previous = Evidence::find($request->_id);
 
         // creamos la nueva tarea a partir de la seleccionada para editar
-        $task_new = $this->new_task($request,$status);
+        $task_new = $this->new_task($request);
 
-        $evidence_new->save();
+        $task_new->save();
 
-        // copiamos ahora los archivos de la carpeta temporal a la nueva evidencia
-        $this->save_files($request,$evidence_new);
-
-        return redirect()->route('task.list', $instance)->with('success', 'Evidencia publicada con éxito.');
+        return redirect()->route('task.list', $instance)->with('success', 'Tarea guardada con éxito.');
     }
 
     /****************************************************************************
