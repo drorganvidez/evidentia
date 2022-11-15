@@ -11,74 +11,23 @@
 @endsection
 
 @section('content')
+    
     <div class="basic stopwatch"></div>
     <div class="row">
+
     <form method="POST" enctype="multipart/form-data" novalidate style="display:in-line;"> 
     @csrf
     <div class="col-lg-12">
-
-    <div class="card shadow-sm">
-
-        <div class="card-body">
-
-            <div class="form-row">
-            
-            
-                <x-input col="3" name="title" attr="title" :value="$task->title ?? ''" label="Título"/>
-                <x-input col="4" name="description" type="text" attr="description" :value="$task->title ?? ''" label="Descripción"/>
-        
-                <input id="start_date" style="display:none;" type="datetime-local" name="start_date" />
-                <input id="end_date" type="datetime-local" style="display:none;" name="end_date" />
-                <div class="form-group col-md-2">
-                    <label for="comittee">Comité asociado</label>
-                    <select id="comittee" class="selectpicker form-control @error('comittee') is-invalid @enderror" name="comittee" value="{{ old('comittee') }}" required autofocus>
-                        @foreach($comittees as $comittee)
-                            @isset($task)
-                                <option {{$comittee->id == old('comittee') || $task->comittee->id == $comittee->id ? 'selected' : ''}} value="{{$comittee->id}}">
-                            @else
-                                <option {{$comittee->id == old('comittee') ? 'selected' : ''}} value="{{$comittee->id}}">
-                                    @endisset
-                                    {!! $comittee->name !!}
-                                </option>
-                                @endforeach
-                    </select>
-
-                    @error('comite')
-                    <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                <div class="row mb-3">
-                <p style="padding: 5px 50px 0px 15px">Exportar tabla:</p>
-                <div class="col-lg-1 mt-12">
-                    <a href="{{route('task.list.export',['instance' => $instance, 'ext' => 'xlsx'])}}"
-                       class="btn btn-info btn-block" role="button">
-                        XLSX</a>
-                </div>
-                <div class="col-lg-1 mt-12">
-                    <a href="{{route('task.list.export',['instance' => $instance, 'ext' => 'csv'])}}"
-                       class="btn btn-info btn-block" role="button">
-                        CSV</a>
-                </div>
-                <div class="col-lg-1 mt-12">
-                    <a href="{{route('task.list.export',['instance' => $instance, 'ext' => 'pdf'])}}"
-                       class="btn btn-info btn-block" role="button">
-                        PDF</a>
-                </div>
-            </div>
 
         <div class="card shadow-sm">
 
             <div class="card-body">
 
                 <div class="form-row">
-                
-                
-                    <x-input col="3" name="title" attr="title" :value="$task->title ?? ''" label="Título"/>
-                    <x-input col="4" name="description" type="text" attr="description" :value="$task->title ?? ''" label="Descripción"/>
-                    <input id="start_date" style="display:none;" name="start_date" type="datetime-local"/>
-                    <input id="end_date" style="display:none;" name="end_date" type="datetime-local"/>
-                    <input style="display:none" name="hours" value="3"/>
+                    <x-input col="3" id="title" name="title" attr="title" :value="$task->title ?? ''" label="Título"/>
+                    <x-input col="4" id="description" name="description" type="text" attr="description" :value="$task->title ?? ''" label="Descripción"/>
+                    <input id="start_date" style="display:none;" type="datetime-local" name="start_date" />
+                    <input id="end_date" type="datetime-local" style="display:none;" name="end_date" />
 
                     <div class="form-group col-md-2">
                         <label for="comittee">Comité asociado</label>
@@ -103,8 +52,8 @@
 
                     <div class="form-group col-md-1">
                         <label for="duration">Duración</label>
-                        <div id="duration">
-                            00:00:00
+                        <div >
+                            <p id="duration" style="font-size:21px">00:00:00</p>
                         </div>
                     </div> 
                     
@@ -169,6 +118,25 @@
         </div>
     </div>
 
+    <div class="row mb-3">
+                <div class="col-lg-9 mt-12"></div>
+                <div class="col-lg-1 mt-12">
+                    <a href="{{route('task.list.export',['instance' => $instance, 'ext' => 'xlsx'])}}"
+                       class="btn btn-info btn-block" role="button">
+                        XLSX</a>
+                </div>
+                <div class="col-lg-1 mt-12">
+                    <a href="{{route('task.list.export',['instance' => $instance, 'ext' => 'csv'])}}"
+                       class="btn btn-info btn-block" role="button">
+                        CSV</a>
+                </div>
+                <div class="col-lg-1 mt-12">
+                    <a href="{{route('task.list.export',['instance' => $instance, 'ext' => 'pdf'])}}"
+                       class="btn btn-info btn-block" role="button">
+                        PDF</a>
+                </div>
+            </div>
+
     <script>
         
         let start_chronometrer = document.getElementById("start_chronometrer");
@@ -177,18 +145,65 @@
         let div_start_button = document.getElementById("div_start_button");
         let input_start_date = document.getElementById("start_date");
         let input_end_date = document.getElementById("end_date");
-        let input_hours = document.getElementById("hours");
+        let input_title = document.getElementById("title");
+        let input_description = document.getElementById("description");
+        let input_comittee = document.getElementById("comittee");
+        let duration = document.getElementById("duration")
 
         start_chronometrer.onclick = start; 
         stop_chronometrer.onclick = stop; 
 
-        let hours = `00`,
-        minutes = `00`,
-        seconds = `00`,
+        if (sessionStorage.getItem("statusButton") == "block"){
+            var actualDuration = sessionStorage.getItem("duration");
+            h = actualDuration.slice(0,2)
+            min = actualDuration.slice(3,5)
+            sec = actualDuration.slice(6,8)
+        }
+        else{
+            h = "00"
+            min = "00"
+            sec = "00"
+        }
+        let hours = h,
+        minutes = min,
+        seconds = sec,
         chronometerDisplay = document.getElementById("duration"),
         chronometerCall
+        
+        window.onload = function(evento) {
+            if (sessionStorage.getItem("statusButton") == "block"){    
+                
+                var title = sessionStorage.getItem("title");
+                input_title.value = title
+
+                var description = sessionStorage.getItem("description");
+                input_description.value = description
+
+                var start_date = sessionStorage.getItem("start_date");
+                input_start_date.value = start_date
+                
+                var comittee = sessionStorage.getItem("comittee");
+                input_comittee.value = comittee
+                
+                div_start_button.removeAttribute(`disabled`);
+                sessionStorage.clear()
+                start(evento);
+            }
+        }
+
+        window.onbeforeunload = function() {
+            clearInterval(chronometerCall);
+            sessionStorage.setItem("title", input_title.value);
+            sessionStorage.setItem("description", input_description.value);
+            sessionStorage.setItem("start_date", input_start_date.value);
+            sessionStorage.setItem("comittee", input_comittee.value);
+            sessionStorage.setItem("statusButton", div_stop_button.style.display);
+            sessionStorage.setItem("duration", duration.textContent);
+        }
+
 
         function chronometer() {
+            
             seconds ++
             if (seconds < 10) seconds = `0` + seconds
             if (seconds > 59) {
@@ -202,20 +217,27 @@
             if (hours < 10) hours = `0` + hours
             }
             chronometerDisplay.textContent = `${hours}:${minutes}:${seconds}`
+        
         }
 
         function start(evento) {
             div_start_button.style.display = "none";
             div_stop_button.style.display = "block";
             chronometerCall = setInterval(chronometer, 1000);
-            event.target.setAttribute(`disabled`,``);
+            evento.target.setAttribute(`disabled`,``);
             let fecha_actual = new Date().toISOString().slice(0, 19).replace('T', ' ');
             input_start_date.setAttribute('value', fecha_actual);
         }
+        
         function stop(evento) {
             clearInterval(chronometerCall);
             let fecha_actual = new Date().toISOString().slice(0, 19).replace('T', ' ');
             input_end_date.setAttribute('value', fecha_actual);
+            
+            // ESTO DA PROBLEMAS bloquear pag
+            div_start_button.style.display = "block";
+            div_stop_button.style.display = "none";  
+            
         }
 
     </script>
