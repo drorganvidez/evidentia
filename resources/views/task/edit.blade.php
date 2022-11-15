@@ -34,7 +34,7 @@
                         <div class="form-row">
 
                             <x-input col="4" attr="title" :value="$task->title ?? ''" label="Título" description="Escribe un título que describa con precisión tu tarea (mínimo 5 caracteres)"/>
-                            <input style="display:none" name="hours" value="3"/>
+                            <input style="display:none" name="id" value="{{$task->id}}"/>
                             <div class="form-group col-md-3">
                                 <label for="start_date">Fecha de inicio</label>
                                 <input id="start_date" type="datetime-local" class="form-control" name="start_date" value="{{$task->start_date}}" />

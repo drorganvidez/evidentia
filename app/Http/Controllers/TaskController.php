@@ -79,7 +79,6 @@ class TaskController extends Controller
     private function new_task($request)
     {
 
-        echo $request->input('start_date');
         // datos necesarios para crear tareas
         $user = Auth::user();
 
@@ -112,9 +111,7 @@ class TaskController extends Controller
         $task = Task::find($id);
         $comittees = Comittee::all();
 
-        $tmp = $instance.'/tmp/'.$user->username.'/'.$token.'/';
-
-        Storage::deleteDirectory($tmp);
+        
 
         // generamos un nuevo token
         session()->regenerate();
@@ -129,11 +126,33 @@ class TaskController extends Controller
     public function save(Request $request)
     {
         $instance = \Instantiation::instance();
+        $task = Task::find($request->input('id'));
 
-        // creamos la nueva tarea a partir de la seleccionada para editar
-        $task_new = $this->new_task($request);
+        // datos necesarios para crear tareas
+        $user = Auth::user();
+      
+        $start_date = date_create($task->start_date);
+        $end_date = date_create($task->end_date);
+        
+        // Calculates the difference between DateTime objects
+        $interval = date_diff($end_date, $end_date);
 
-        $task_new->save();
+        $days = intval($interval->format('%d'));
+        $hours = floatval($interval->format('%H'));
+        $minutes = intval($interval->format('%i'));
+
+        $duration = $days*24 + $hours + floor(($minutes*100)/60)/100;
+
+        // modificación de los datos
+        $task->title = $request->input('title');
+        $task->description = $request->input('description');
+        $task->hours = $hours;
+        $task->start_date = $start_date;
+        $task->end_date = $end_date;
+        $task->user_id = $user->id;
+        $task->comittee_id = $request->input('comittee');
+        
+        $task->save();
 
         return redirect()->route('task.list', $instance)->with('success', 'Tarea guardada con éxito.');
     }
