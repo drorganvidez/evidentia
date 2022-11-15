@@ -5,6 +5,7 @@ use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\MeetingSecretaryController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\EvidenceController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\SignController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -145,6 +146,9 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         Route::get('/task/edit/{id}', 'TaskController@edit')->name('task.edit');
         
     });
+
+    Route::get('/task/list/export/{ext}',[TaskController::class , 'export'])->name('task.list.export');
+
     /**
      *  EVIDENCES
      */

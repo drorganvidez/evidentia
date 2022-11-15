@@ -48,32 +48,83 @@
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
+                <div class="row mb-3">
+                <p style="padding: 5px 50px 0px 15px">Exportar tabla:</p>
+                <div class="col-lg-1 mt-12">
+                    <a href="{{route('task.list.export',['instance' => $instance, 'ext' => 'xlsx'])}}"
+                       class="btn btn-info btn-block" role="button">
+                        XLSX</a>
                 </div>
-
-                <div class="form-group col-md-1">
-                    <label for="duration">Duración</label>
-                    <div id="duration">
-                        00:00:00
-                    </div>
-                </div> 
-                
-                <div id="div_start_button" class="form-group col-md-2">
-                    <label style="visibility:hidden">Start Button</label>
-                    <button type="button" style = "width:auto;" id="start_chronometrer"class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-default">
-                        <i class="fas fa-clock"></i>
-                    &nbsp;Empezar tarea</button>
+                <div class="col-lg-1 mt-12">
+                    <a href="{{route('task.list.export',['instance' => $instance, 'ext' => 'csv'])}}"
+                       class="btn btn-info btn-block" role="button">
+                        CSV</a>
                 </div>
-                <div style ="display:none;" id="div_stop_button" class="form-group col-md-2">
-                    <label style="visibility:hidden">Stop Button</label>
-                    <button type="submit" formaction="{{$route_new}}" style = "background-color:#dc3545; border-color:#dc3545;width:auto;" id="stop_chronometrer" class="btn btn-primary btn-block">
-                        <i class="fas fa-clock"></i>
-                    &nbsp;Parar tarea</button>
+                <div class="col-lg-1 mt-12">
+                    <a href="{{route('task.list.export',['instance' => $instance, 'ext' => 'pdf'])}}"
+                       class="btn btn-info btn-block" role="button">
+                        PDF</a>
                 </div>
             </div>
 
+        <div class="card shadow-sm">
 
+            <div class="card-body">
+
+                <div class="form-row">
+                
+                
+                    <x-input col="3" name="title" attr="title" :value="$task->title ?? ''" label="Título"/>
+                    <x-input col="4" name="description" type="text" attr="description" :value="$task->title ?? ''" label="Descripción"/>
+                    <input id="start_date" style="display:none;" name="start_date" type="datetime-local"/>
+                    <input id="end_date" style="display:none;" name="end_date" type="datetime-local"/>
+                    <input style="display:none" name="hours" value="3"/>
+
+                    <div class="form-group col-md-2">
+                        <label for="comittee">Comité asociado</label>
+                        <select id="comittee" class="selectpicker form-control @error('comittee') is-invalid @enderror" name="comittee" value="{{ old('comittee') }}" required autofocus>
+                            @foreach($comittees as $comittee)
+                                @isset($task)
+                                    <option {{$comittee->id == old('comittee') || $task->comittee->id == $comittee->id ? 'selected' : ''}} value="{{$comittee->id}}">
+                                @else
+                                    <option {{$comittee->id == old('comittee') ? 'selected' : ''}} value="{{$comittee->id}}">
+                                        @endisset
+                                        {!! $comittee->name !!}
+                                    </option>
+                                    @endforeach
+                        </select>
+
+                        @error('comite')
+                        <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group col-md-1">
+                        <label for="duration">Duración</label>
+                        <div id="duration">
+                            00:00:00
+                        </div>
+                    </div> 
+                    
+                    <div id="div_start_button" class="form-group col-md-2">
+                        <label style="visibility:hidden">Start Button</label>
+                        <button type="button" style = "width:auto;" id="start_chronometrer"class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-default">
+                            <i class="fas fa-clock"></i>
+                        &nbsp;Empezar tarea</button>
+                    </div>
+                    <div style ="display:none;" id="div_stop_button" class="form-group col-md-2">
+                        <label style="visibility:hidden">Stop Button</label>
+                        <button type="submit" formaction="{{$route_new}}" style = "background-color:#dc3545; border-color:#dc3545;width:auto;" id="stop_chronometrer" class="btn btn-primary btn-block">
+                            <i class="fas fa-clock"></i>
+                        &nbsp;Parar tarea</button>
+                    </div>
+                </div>
+
+
+            </div>
         </div>
-    </div>
     </form>
 
     <div class="col-lg-12">
