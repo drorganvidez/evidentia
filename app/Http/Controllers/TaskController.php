@@ -46,33 +46,31 @@ class TaskController extends Controller
         return view('task.list',[
             'comittees' => $comittees,
             'tasks' => $tasks,
-            'instance' => $instance
+            'instance' => $instance,
+            'route_new' => route('task.create',$instance)
         ]);
     }
 
-    public function create()
+    /*public function create()
     {
 
         $comittees = Comittee::all();
         $tasks = Task::where(['user_id' => Auth::id()])->get();
         $instance = \Instantiation::instance();
-
+        
         return view('task.list',[
             'comittees' => $comittees,
             'tasks' => $tasks,
-            'instance' => $instance
+            'instance' => $instance,
         ]);
-    }
+    }*/
 
-
-    private function new($request)
+    public function create(Request $request)
     {
-
         $instance = \Instantiation::instance();
-
-        $task = $this->new_task($request);
-
-        return redirect()->route('task.list',$task)->with('success', 'Tarea creada con éxito.');
+        $task_new = $this->new_task($request);
+        $task_new->save();
+        return redirect()->route('task.list', $instance)->with('success', 'Tarea guardada con éxito.');
 
     }
 

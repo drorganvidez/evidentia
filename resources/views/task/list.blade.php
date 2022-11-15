@@ -11,10 +11,10 @@
 @endsection
 
 @section('content')
-
     <div class="basic stopwatch"></div>
     <div class="row">
-    <form method="POST" style="display:in-line;" action="/create"> 
+    <form method="POST" enctype="multipart/form-data" style="display:in-line;"> 
+    @csrf
     <div class="col-lg-12">
 
     <div class="card shadow-sm">
@@ -28,10 +28,11 @@
                 <x-input col="4" name="description" type="text" attr="description" :value="$task->title ?? ''" label="Descripción"/>
                 <input id="start_date" style="display:none;" name="start_date" type="datetime-local"/>
                 <input id="end_date" style="display:none;" name="end_date" type="datetime-local"/>
+                <input style="display:none" name="hours" value="3"/>
 
                 <div class="form-group col-md-2">
                     <label for="comittee">Comité asociado</label>
-                    <select name="comitee" id="comittee" class="selectpicker form-control @error('comittee') is-invalid @enderror" name="comittee" value="{{ old('comittee') }}" required autofocus>
+                    <select id="comittee" class="selectpicker form-control @error('comittee') is-invalid @enderror" name="comittee" value="{{ old('comittee') }}" required autofocus>
                         @foreach($comittees as $comittee)
                             @isset($task)
                                 <option {{$comittee->id == old('comittee') || $task->comittee->id == $comittee->id ? 'selected' : ''}} value="{{$comittee->id}}">
@@ -49,6 +50,7 @@
                         </span>
                     @enderror
                 </div>
+
                 <div class="form-group col-md-1">
                     <label for="duration">Duración</label>
                     <div id="duration">
@@ -64,7 +66,7 @@
                 </div>
                 <div style ="display:none;" id="div_stop_button" class="form-group col-md-2">
                     <label style="visibility:hidden">Stop Button</label>
-                    <button type="submit" style = "background-color:#dc3545; border-color:#dc3545;width:auto;" id="stop_chronometrer"class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-default">
+                    <button type="submit" formaction="{{$route_new}}" style = "background-color:#dc3545; border-color:#dc3545;width:auto;" id="stop_chronometrer" class="btn btn-primary btn-block">
                         <i class="fas fa-clock"></i>
                     &nbsp;Parar tarea</button>
                 </div>
@@ -118,6 +120,7 @@
     </div>
 
     <script>
+        
         let start_chronometrer = document.getElementById("start_chronometrer");
         let stop_chronometrer = document.getElementById("stop_chronometrer"); 
         let div_stop_button = document.getElementById("div_stop_button");
@@ -157,12 +160,13 @@
             div_stop_button.style.display = "block";
             chronometerCall = setInterval(chronometer, 1000);
             event.target.setAttribute(`disabled`,``);
-            input_start_date.set("value", DateTime.now())
+            let fecha_actual = new Date().toISOString().slice(0, 19).replace('T', ' ');
+            input_start_date.setAttribute('value', fecha_actual);
         }
         function stop(evento) {
             clearInterval(chronometerCall);
-            input_end_date.set("value", DateTime.now())
-
+            let fecha_actual = new Date().toISOString().slice(0, 19).replace('T', ' ');
+            input_end_date.setAttribute('value', fecha_actual);
         }
 
     </script>
