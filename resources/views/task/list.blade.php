@@ -13,7 +13,7 @@
 @section('content')
     <div class="basic stopwatch"></div>
     <div class="row">
-    <form method="POST" enctype="multipart/form-data" style="display:in-line;"> 
+    <form method="POST" enctype="multipart/form-data" novalidate style="display:in-line;"> 
     @csrf
     <div class="col-lg-12">
 
@@ -26,10 +26,9 @@
             
                 <x-input col="3" name="title" attr="title" :value="$task->title ?? ''" label="Título"/>
                 <x-input col="4" name="description" type="text" attr="description" :value="$task->title ?? ''" label="Descripción"/>
-                <input id="start_date" style="display:none;" name="start_date" type="datetime-local"/>
-                <input id="end_date" style="display:none;" name="end_date" type="datetime-local"/>
-                <input style="display:none" name="hours" value="3"/>
-
+        
+                <input id="start_date" style="display:none;" type="datetime-local" name="start_date" />
+                <input id="end_date" type="datetime-local" style="display:none;" name="end_date" />
                 <div class="form-group col-md-2">
                     <label for="comittee">Comité asociado</label>
                     <select id="comittee" class="selectpicker form-control @error('comittee') is-invalid @enderror" name="comittee" value="{{ old('comittee') }}" required autofocus>
@@ -127,7 +126,7 @@
         let div_start_button = document.getElementById("div_start_button");
         let input_start_date = document.getElementById("start_date");
         let input_end_date = document.getElementById("end_date");
-
+        let input_hours = document.getElementById("hours");
 
         start_chronometrer.onclick = start; 
         stop_chronometrer.onclick = stop; 
@@ -139,7 +138,6 @@
         chronometerCall
 
         function chronometer() {
-
             seconds ++
             if (seconds < 10) seconds = `0` + seconds
             if (seconds > 59) {

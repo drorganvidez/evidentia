@@ -51,20 +51,6 @@ class TaskController extends Controller
         ]);
     }
 
-    /*public function create()
-    {
-
-        $comittees = Comittee::all();
-        $tasks = Task::where(['user_id' => Auth::id()])->get();
-        $instance = \Instantiation::instance();
-        
-        return view('task.list',[
-            'comittees' => $comittees,
-            'tasks' => $tasks,
-            'instance' => $instance,
-        ]);
-    }*/
-
     public function create(Request $request)
     {
         $instance = \Instantiation::instance();
@@ -80,11 +66,23 @@ class TaskController extends Controller
         // datos necesarios para crear tareas
         $user = Auth::user();
 
+        $start_date = date_create($request->input('start_date'));
+        $end_date = date_create($request->input('end_date'));
+
+        // Calculates the difference between DateTime objects
+        $interval = date_diff($start_date, $end_date);
+    
+        $days = intval($interval->format('%d'));
+        $hours = floatval($interval->format('%H'));
+        $minutes = intval($interval->format('%i'));
+
+        $hours = $days*24 + $hours + floor(($minutes*100)/60)/100;
+            
         // creación de una nueva tarea
         $task = Task::create([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
-            'hours' => $request->input('hours'),
+            'hours' => $horas,
             'start_date' => $request->input('start_date'),
             'end_date' => $request->input('end_date'),
             'user_id' => $user->id,
@@ -109,11 +107,8 @@ class TaskController extends Controller
         $task = Task::find($id);
         $comittees = Comittee::all();
 
-        
-
         // generamos un nuevo token
         session()->regenerate();
-
 
         return view('task.edit', ['task' => $task, 'instance' => $instance,
             'comittees' => $comittees,
