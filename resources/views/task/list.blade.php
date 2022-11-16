@@ -11,8 +11,6 @@
 @endsection
 
 @section('content')
-    
-    <div class="basic stopwatch"></div>
     <div class="row">
 
     <form method="POST" enctype="multipart/form-data" novalidate style="display:in-line;"> 
@@ -53,7 +51,7 @@
                     <div class="form-group col-md-1">
                         <label for="duration">Duración</label>
                         <div >
-                            <p id="duration" style="font-size:21px">00:00:00</p>
+                            <p id="duration" style="font-size:21px"></p>
                         </div>
                     </div> 
                     
@@ -137,6 +135,8 @@
                 </div>
             </div>
 
+    @section('scripts')
+
     <script>
         
         let start_chronometrer = document.getElementById("start_chronometrer");
@@ -149,12 +149,14 @@
         let input_description = document.getElementById("description");
         let input_comittee = document.getElementById("comittee");
         let duration = document.getElementById("duration")
+        let start_button = document.getElementById("start_chronometrer");
 
         start_chronometrer.onclick = start; 
         stop_chronometrer.onclick = stop; 
 
         if (sessionStorage.getItem("statusButton") == "block"){
             var actualDuration = sessionStorage.getItem("duration");
+            duration.textContent = actualDuration
             h = actualDuration.slice(0,2)
             min = actualDuration.slice(3,5)
             sec = actualDuration.slice(6,8)
@@ -163,13 +165,14 @@
             h = "00"
             min = "00"
             sec = "00"
+            duration.textContent = h + ":" + min + ":" + sec
         }
         let hours = h,
         minutes = min,
         seconds = sec,
         chronometerDisplay = document.getElementById("duration"),
         chronometerCall
-        
+
         window.onload = function(evento) {
             if (sessionStorage.getItem("statusButton") == "block"){    
                 
@@ -226,25 +229,23 @@
             chronometerCall = setInterval(chronometer, 1000);
             evento.target.setAttribute(`disabled`,``);
             let fecha_actual = new Date().toISOString().slice(0, 19).replace('T', ' ');
-            input_start_date.setAttribute('value', fecha_actual);
+
+            input_start_date.setAttribute('value', fecha_actual.slice(0,16));
         }
         
         function stop(evento) {
             clearInterval(chronometerCall);
             let fecha_actual = new Date().toISOString().slice(0, 19).replace('T', ' ');
-            input_end_date.setAttribute('value', fecha_actual);
+            input_end_date.setAttribute('value', fecha_actual.slice(0,16));
             
-            // ESTO DA PROBLEMAS bloquear pag
+            start_button.disabled = true;
+            start_button.textContent = "¡Cargando!";
             div_start_button.style.display = "block";
-            div_stop_button.style.display = "none";  
+            div_stop_button.style.display = "none";
             
         }
 
     </script>
-
-    @section('scripts')
-
-        
 
     @endsection
 

@@ -66,6 +66,11 @@ class TaskController extends Controller
         // datos necesarios para crear tareas
         $user = Auth::user();
 
+        $request->validate([
+            'title' => 'required',
+            'description' => ['required',new MaxCharacters(2000)],
+        ]);
+
         $start_date = date_create($request->input('start_date'));
         $end_date = date_create($request->input('end_date'));
 
