@@ -5,7 +5,9 @@ namespace Tests\Feature;
 use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
+use App\Models\Task;
 
 class TaskTest extends TestCase
 {
@@ -40,6 +42,15 @@ class TaskTest extends TestCase
 
 
         $response = $this->get('/21/task/list');
+        $response->assertStatus(302);
+    }
+
+    public function testEditTask()
+    {
+        
+        $this->loginWithAlumno1();
+
+        $response = $this->get('/21/task/edit/2');
         $response->assertStatus(302);
     }
 
