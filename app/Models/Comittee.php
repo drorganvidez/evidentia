@@ -20,6 +20,11 @@ class Comittee extends Model
         return $this->hasMany('App\Models\Evidence');
     }
 
+    public function kanban()
+    {
+        return $this->hasMany('App\Models\Kanban');
+    }
+
     public function evidences_not_draft() {
         return $this->evidences()->where('status','!=', 'DRAFT')->orderByDesc('updated_at');
     }

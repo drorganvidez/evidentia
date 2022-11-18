@@ -299,6 +299,10 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
      * KANBAN
      */
     Route::get('/kanban/list/', 'KanbanController@list')->name('kanban.list');
+    
+    // Route::middleware(['checknotnull:Kanban','kanbanfrommycommittee'])->group(function () {
+        Route::get('/kanban/view/{id}', 'KanbanController@view')->name('kanban.view');
+    // });
 
     /**
      *  ATTENDEES

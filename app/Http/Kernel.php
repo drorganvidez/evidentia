@@ -71,6 +71,7 @@ class Kernel extends HttpKernel
         'evidencecanbeedited' => \App\Http\Middleware\EvidenceCanBeEdited::class,
         'evidencemine' => \App\Http\Middleware\EvidenceMine::class,
         'evidencefrommycommittee' => \App\Http\Middleware\EvidenceFromMyComittee::class,
+        // 'kanbanfrommycommittee' => \App\Http\Middleware\KanbanFromMyComittee::class,
         'checkblock' => \App\Http\Middleware\CheckBlock::class,
         'checkuploadevidences' => \App\Http\Middleware\CheckUploadEvidences::class,
         'checkvalidateevidences' => \App\Http\Middleware\CheckValidateEvidences::class,

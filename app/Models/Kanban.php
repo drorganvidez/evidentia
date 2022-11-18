@@ -12,5 +12,15 @@ class Kanban extends Model
         'id', 'title', 'user_id', 'comittee_id'
     ];
 
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
+
+    public function comittee()
+    {
+        return $this->belongsTo('App\Models\Comittee');
+    }
+
 }
 
