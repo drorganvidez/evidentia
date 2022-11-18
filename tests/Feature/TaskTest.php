@@ -54,5 +54,45 @@ class TaskTest extends TestCase
         $response->assertStatus(302);
     }
 
+    public function createTaskPositive()
+    {
+        
+        $this->loginWithAlumno1();
+
+        $response = $this->get('/21/task/');
+        $request = [
+            'title' => 'Evidencia 2',
+            'description' => 'Creación de un test exitoso',
+            'hours' => '1.0',
+            'end_date' => '2022-11-18 08:26',
+            'user_id' => '2022-11-18 09:26',
+            'comittee_id' => '2'
+        ];
+
+        $response = $this->post('create',$request);
+
+        $response->assertStatus(200);
+    }
+
+    public function createTaskNegative()
+    {
+        
+        $this->loginWithAlumno1();
+
+        $response = $this->get('/21/task/');
+        $request = [
+            'title' => 'Evidencia 2',
+            'description' => '',
+            'hours' => '1.0',
+            'end_date' => '2022-11-18 08:26',
+            'user_id' => '2022-11-18 09:26',
+            'comittee_id' => '2'
+        ];
+
+        $response = $this->post('create',$request);
+
+        $response->assertStatus(400);
+    }
+
 
 }

@@ -69,6 +69,7 @@ class TaskController extends Controller
         $request->validate([
             'title' => 'required',
             'description' => ['required',new MaxCharacters(2000)],
+            $now->diff($dob)->y > 18
         ]);
 
         $start_date = date_create($request->input('start_date'));
@@ -93,7 +94,7 @@ class TaskController extends Controller
             'user_id' => $user->id,
             'comittee_id' => $request->input('comittee')
         ]);
-
+        
         $task->save();
 
         return $task;

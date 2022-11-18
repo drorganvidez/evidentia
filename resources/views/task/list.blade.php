@@ -229,7 +229,6 @@
             chronometerCall = setInterval(chronometer, 1000);
             evento.target.setAttribute(`disabled`,``);
             let fecha_actual = new Date().toISOString().slice(0, 19).replace('T', ' ');
-
             input_start_date.setAttribute('value', fecha_actual.slice(0,16));
         }
         
