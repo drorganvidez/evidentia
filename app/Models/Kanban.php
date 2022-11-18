@@ -9,7 +9,7 @@ class Kanban extends Model
     protected $table="kanban";
 
     protected $fillable = [
-        'id', 'title', 'user_id', 'comitte_id'
+        'id', 'title', 'user_id', 'comittee_id'
     ];
 
 }

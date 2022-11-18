@@ -296,6 +296,11 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     });
 
     /**
+     * KANBAN
+     */
+    Route::get('/kanban/list/', 'KanbanController@list')->name('kanban.list');
+
+    /**
      *  ATTENDEES
      */
     Route::get('/attendee/list/', 'AttendeeController@list')->name('attendee.list');

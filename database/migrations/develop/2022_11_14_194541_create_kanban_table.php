@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateKanbanTable extends Migration
 {
+    protected $connection = 'base21';
     /**
      * Run the migrations.
      *
@@ -15,6 +16,10 @@ class CreateKanbanTable extends Migration
     {
         Schema::create('kanban', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->foreignId('user_id');
+            $table->foreignId('comittee_id');
+            $table->boolean('last')->default(true);
             $table->timestamps();
         });
     }
