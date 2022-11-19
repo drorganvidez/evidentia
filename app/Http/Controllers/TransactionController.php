@@ -34,6 +34,18 @@ class TransactionController extends Controller
             'transactions' => $transactions]);
     }
 
+    // LISTAR TODAS LAS TRANSACCIONES POR EL COORDIANDOR
+    public function all()
+    {
+        $transactions = Transaction->get_all_transactions();
+        $intance = \Instantiation::instance();
+        $transactions = $transactions->reverse();
+
+        return view('transaction.coordinator.list',
+            ['instance' => $instance, 'transactions' => $transactions]);
+
+    }
+
 
 
 
@@ -101,16 +113,7 @@ class TransactionController extends Controller
         $transaction->save();
 
         return $transaction;
-
-    // LISTAR TODAS LAS TRANSACCIONES POR EL COORDIANDOR
-    public function all()
-    {
-        $transactions = Transaction->get_all_transactions();
-        $intance = \Instantiation::instance();
-        $transactions = $transactions->reverse();
-
-        return view('transaction.coordinator.list',
-            ['instance' => $instance, 'transactions' => $transactions]);
-
     }
+
+    
 }
