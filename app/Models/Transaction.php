@@ -20,7 +20,7 @@ class Transaction extends Model
     /*
     * Obtener todas las transacciones
     */
-    public function get_all_transactions(): \Illuminate\Support\Collection
+    public static function get_all_transactions(): \Illuminate\Support\Collection
     {
         $collection = collect();
 

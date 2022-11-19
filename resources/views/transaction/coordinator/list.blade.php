@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Todas las Transacciones')
+@section('title', 'Gestionar Transacciones')
 
 @section('title-icon', 'fas fa-id-badge')
 
@@ -17,17 +17,17 @@
             <div class="row mb-3">
                 <p style="padding: 5px 50px 0px 15px">Exportar tabla:</p>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('evidence.list.export',['instance' => $instance, 'ext' => 'xlsx'])}}"
+                    <a href="{{route('transaction.export',['instance' => $instance, 'type' => 'all', 'ext' => 'xlsx'])}}"
                        class="btn btn-info btn-block" role="button">
                         XLSX</a>
                 </div>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('evidence.list.export',['instance' => $instance, 'ext' => 'csv'])}}"
+                    <a href="{{route('transaction.export',['instance' => $instance,'type' => 'all', 'ext' => 'csv'])}}"
                        class="btn btn-info btn-block" role="button">
                         CSV</a>
                 </div>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('evidence.list.export',['instance' => $instance, 'ext' => 'pdf'])}}"
+                    <a href="{{route('transaction.export',['instance' => $instance, 'type' => 'all','ext' => 'pdf'])}}"
                        class="btn btn-info btn-block" role="button">
                         PDF</a>
                 </div>
@@ -46,6 +46,7 @@
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Cantidad</th>
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Fecha</th>
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Comité</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Estado</th>
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Acción</th>
                         </tr>
                         </thead>
@@ -59,59 +60,37 @@
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->amount}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->date}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                    <x-evidencecomittee :transaction="$transaction"/>
+                                    <x-transactioncomittee :transaction="$transaction"/>
                                 </td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                    <a href="{{route('',}}"
-                                        class="btn btn-info btn-block" role="button">Aceptar
+                                    <!--     LA LINEA DE ABAJO NO ES  -->
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->status}}</td>
+                                <!--
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                    <x-transactionstatus :transaction="$transaction"/>
+                                </td>
+                                -->
+                                @if($transaction->status == 'PENDING')
+                                <td class="align-middle">
+                                    <a class="btn btn-success btn-sm" href="{{route('transaction.accepted', $transaction->id)}}">
+                                        <i class="far fa-thumbs-up"></i>
+                                        <span class="d-none d-sm-none d-md-none d-lg-inline"></span>
                                     </a>
                                 </td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                    <a href="{{route('',}}"
-                                        class="btn btn-info btn-block" role="button">Denegar
+                                    <a class="btn btn-danger btn-sm" href="{{route('transaction.rejected',['instance' => \Instantiation::instance(), 'id' => $transaction->id])}}">
+                                        <i class="far fa-thumbs-down"></i>
+                                        <span class="d-none d-sm-none d-md-none d-lg-inline"></span>
                                     </a>
                                 </td>
-
+                                @endif
                             </tr>
                         @endforeach
-
                         </tbody>
                     </table>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="col-lg-4">
-
-            <div class="card shadow-sm">
-
-                <div class="card-body">
-
-                    <div >
-                        <h4>Añadir transacciones</h4>
-                        
-                        <p>
-                            <button class="btn btn-info btn-block" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                                Añadir nueva
-                            </button>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
-
-    @section('scripts')
-
-        <script>
-
-            $(document).ready(function(){
-                countdown("{{\Carbon\Carbon::create(\Carbon\Carbon::now())->diffInSeconds(Config::upload_evidences_timestamp(),false)}}");
-            });
-
-        </script>
-
-    @endsection
 
 @endsection
