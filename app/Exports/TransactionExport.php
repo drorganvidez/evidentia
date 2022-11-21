@@ -22,7 +22,7 @@ class TransactionExport implements FromCollection, WithHeadings
     public function collection()
     {
         $res = collect();
-        if (Auth::User()->hasRole('COORDINATOR') and $this->type == 'all') {
+        if (Auth::User()->hasRole('PRESIDENT') and $this->type == 'all') {
         $transactions = Transaction::all();
         }
         if(Auth::User()->hasRole('COORDINATOR') and $this->type == 'mine'){
