@@ -63,7 +63,7 @@ class ManagementController extends Controller
             ['instance' => $instance, 'evidences' => $evidences]);
     }
 
-    public function accept($id)
+    public function accept($instance, $id)
     {
         $instance = \Instantiation::instance();
 
@@ -71,9 +71,19 @@ class ManagementController extends Controller
         $transaction->status = 'ACCEPTED';
         $transaction->save();
 
-        return redirect()->route('president.transaction.list', $instance)->with('success', 'Transacción aceptada con éxito.');
-    }
 
+        return redirect()->route('president.transaction.list', $instance)->with('success', "'Transacción aceptada con éxito.");
+    }
+    public function reject($instance, $id)
+    {
+        $instance = \Instantiation::instance();
+
+        $transaction = Transaction::find($id);
+        $transaction->status = 'REJECTED';
+        $transaction->save();
+
+        return redirect()->route('president.transaction.list', $instance)->with('success', 'Transacción rechazada con éxito .');
+    }
     public function transaction_list()
     {
         $instance = \Instantiation::instance();

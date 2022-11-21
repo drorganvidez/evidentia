@@ -9,7 +9,7 @@ class Transaction extends Model
     protected $table="transactions";
 
     protected $fillable = [
-        'id', 'reason', 'type', 'amount', 'comittee_id', 'user_id'
+        'id', 'reason', 'type', 'status', 'amount', 'comittee_id', 'user_id'
     ];
 
     public function comittee()

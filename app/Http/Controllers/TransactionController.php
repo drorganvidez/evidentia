@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TransactionExport;
+use App\Http\Services;
 
 class TransactionController extends Controller
 {   
@@ -123,11 +124,8 @@ class TransactionController extends Controller
     {
         $instance = \Instantiation::instance();
 
-        $transaction = Transaction::find($id);
-        $transaction->status = 'REJECTED';
-        $transaction->save();
 
-        return redirect()->route('transaction.list.all', $instance)->with('success', 'Transacción rechazada con éxito.');
+        return redirect()->route('transaction.list.all', $instance)->with('success', $id);
     }
 
 
@@ -135,15 +133,11 @@ class TransactionController extends Controller
 
     // ACEPTAR TRANSACCION
 
-    public function accepted($instance, $id)
+    public function accept($instance, $id)
     {
         $instance = \Instantiation::instance();
 
-        $transaction = Transaction::where('id', '=', $id);
-        $transaction->status = 'ACCEPTED';
-        $transaction->save();
-
-        return redirect()->route('transaction.list.all', $instance)->with('success', 'Transacción aceptada con éxito.');
+        return view('home');
     }
 
 
