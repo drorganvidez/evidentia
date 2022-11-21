@@ -61,8 +61,8 @@
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><x-transactioncomittee :transaction="$transaction"/></td>
                                 @if($transaction->status == 'PENDING')
                                     <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                        <a href="{{route('president.transaction.accept',['id' => $transaction->id])}}" class="btn btn-info btn-block" role="button"> Aceptar</a>
-                                        <a href="{{route('management.export',['instance' => $instance, 'ext' => 'xlsx'])}}" class="btn btn-info btn-block" role="button"> Denegar</a>
+                                        <a href="{{route('president.transaction.accept',['instance' => $instance , 'id' => $transaction->id])}}" class="btn btn-info btn-block" role="button"> Aceptar</a>
+                                        <a href="{{route('president.transaction.reject',['instance' => $instance , 'id' => $transaction->id])}}" class="btn btn-info btn-block" role="button"> Denegar</a>
                                     </td>
                                 @endif
                             </tr>

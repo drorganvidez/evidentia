@@ -368,6 +368,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/president/evidence/list','ManagementController@evidence_list')->name('president.evidence.list');
     Route::get('/president/transaction/list','ManagementController@transaction_list')->name('president.transaction.list');
     Route::get('/president/transaction/accept','ManagementController@accept')->name('president.transaction.accept');
+    Route::get('/president/transaction/reject','ManagementController@reject')->name('president.transaction.reject');
     Route::get('/president/meeting/list','ManagementController@meeting_list')->name('president.meeting.list');
 
     Route::get('/president/comittee/list','ManagementController@comittee_list')->name('president.comittee.list');

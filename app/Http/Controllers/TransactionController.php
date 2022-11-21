@@ -119,7 +119,7 @@ class TransactionController extends Controller
 
     // RECHAZAR TRANSACCION
 
-    public function rejected($id)
+    public function rejected($instance, $id)
     {
         $instance = \Instantiation::instance();
 
@@ -127,7 +127,7 @@ class TransactionController extends Controller
         $transaction->status = 'REJECTED';
         $transaction->save();
 
-        return redirect()->route('transaction.list.all')->with('success', 'Transacción rechazada con éxito.');
+        return redirect()->route('transaction.list.all', $instance)->with('success', 'Transacción rechazada con éxito.');
     }
 
 
@@ -135,15 +135,15 @@ class TransactionController extends Controller
 
     // ACEPTAR TRANSACCION
 
-    public function accepted($id)
+    public function accepted($instance, $id)
     {
         $instance = \Instantiation::instance();
 
-        $transaction = Transaction::find($id);
+        $transaction = Transaction::where('id', '=', $id);
         $transaction->status = 'ACCEPTED';
         $transaction->save();
 
-        return back()->with('success', 'Transacción aceptada con éxito.');
+        return redirect()->route('transaction.list.all', $instance)->with('success', 'Transacción aceptada con éxito.');
     }
 
 
