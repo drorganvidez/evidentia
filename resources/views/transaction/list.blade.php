@@ -45,6 +45,7 @@
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Tipo</th>
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Cantidad</th>
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Fecha</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Estado</th>
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Comité</th>
                         </tr>
                         </thead>
@@ -57,6 +58,7 @@
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->type}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->amount}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->created_at}}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->status}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><x-transactioncomittee :transaction="$transaction"/></td>
                             </tr>
                         @endforeach

@@ -14,14 +14,6 @@
 
             <x-li route="transaction.create"
                   icon='fas fa-clipboard-check' name="Crear transacción"/>
-
-
-        
-            @if(\Illuminate\Support\Facades\Auth::user()->coordinator->comittee->name == "Finanzas")                  
-            <x-li route="corrdinator.transaction.list.all"
-                icon='fas fa-clipboard-check' name="illo"/>
-            @endif  
-
         </ul>
     </nav>
 @endif
