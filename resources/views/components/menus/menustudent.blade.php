@@ -10,6 +10,7 @@
             <x-li route="evidence.list" secondaries="evidence.view,evidence.edit" icon='fas fa-id-badge' name="Mis evidencias"/>
             <x-li route="meeting.list" icon='fas fa-cocktail' name="Mis reuniones"/>
             <x-li route="attendee.list" icon='fas fa-hiking' name="Mis asistencias"/>
+            <x-li route="kanban.table" icon='fas fa-archive' name="Tablero Kanban"/>
             <!-- <x-li route="home" icon='fas fa-folder' name="Gestor de archivos"/> -->
 
         </ul>

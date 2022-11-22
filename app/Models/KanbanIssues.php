@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class KanbanIssues extends Model
 {
 
-    protected $table="kanbanissues";
+    protected $table="kanban_issues";
 
     protected $fillable = [
-        'id', 'task', 'description', 'hours', 'user_id', 'comittee_id', 'type'
+        'task', 'description', 'hours', 'user_id', 'comittee_id', 'type'
     ];
 
 
@@ -23,6 +23,7 @@ class KanbanIssues extends Model
     {
         return $this->belongsTo('App\Models\Comittee');
     }
+
 
     public static function issues_to_do() {
         return KanbanIssues::where('type','=', 'TODO')->get();

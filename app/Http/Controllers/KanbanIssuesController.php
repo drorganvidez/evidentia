@@ -19,10 +19,10 @@ class KanbanIssuesController extends Controller
     public function table()
     {
         $instance = \Instantiation::instance();
-        //$issues = KanbanIssues::where(['user_id' => Auth::id()])->get();
+        $issues = KanbanIssues::where(['user_id' => Auth::id()])->get();
 
         return view('kanban.table',
-            ['instance' => $instance]); //, 'issues' => $issues
+            ['instance' => $instance, 'issues' => $issues]); //
     }
       
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AttendeeController;
+use App\Http\Controllers\KanbanIssuesController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\MeetingSecretaryController;
 use App\Http\Controllers\MeetingController;
@@ -135,8 +136,16 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/xls/upload/remove/{file_name}','UploadController@remove')->name('xls.upload.remove');
 
     /**
+     *  KANBAN
+     */
+
+    Route::get('/kanban/table', 'KanbanIssuesController@table')->name('kanban.table');
+
+
+    /**
      *  EVIDENCES
      */
+
     Route::get('/evidence/list', 'EvidenceController@list')->name('evidence.list');
     Route::middleware(['checkuploadevidences'])->group(function () {
         Route::get('/evidence/create', 'EvidenceController@create')->name('evidence.create');
