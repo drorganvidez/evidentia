@@ -299,9 +299,15 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
      * KANBAN
      */
     Route::get('/kanban/list/', 'KanbanController@list')->name('kanban.list');
+    Route::get('/kanban/view/{id}', 'KanbanController@view')->name('kanban.view');
+
+    /**
+     * ISSUE
+     */
     
     // Route::middleware(['checknotnull:Kanban','kanbanfrommycommittee'])->group(function () {
-        Route::get('/kanban/view/{id}', 'KanbanController@view')->name('kanban.view');
+        //Route::get('/kanban/issue/view/{id}', 'KanbanController@view')->name('issue.view');
+        // Route::get('/issue/create', 'IssueController@create')->name('issue.create');
     // });
 
     /**

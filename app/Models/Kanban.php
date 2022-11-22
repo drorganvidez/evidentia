@@ -22,5 +22,9 @@ class Kanban extends Model
         return $this->belongsTo('App\Models\Comittee');
     }
 
+    public function issue(){
+        return $this->belongsTo('App\Models\Issue');
+    }
+
 }
 

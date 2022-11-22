@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateIssuesTable extends Migration
+class CreateIssueTable extends Migration
 {
     protected $connection = 'base21';
     /**
@@ -14,8 +14,14 @@ class CreateIssuesTable extends Migration
      */
     public function up()
     {
-        Schema::create('issues', function (Blueprint $table) {
+        Schema::create('issue', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('kanban_id');
+            $table->foreignId('user_id');
+            $table->string('title');
+            $table->text('description');
+            $table->enum('status', ['TO DO', 'IN PROGRESS', 'COMPLETED']);
+            $table->boolean('last')->default(true);
             $table->timestamps();
         });
     }
@@ -27,6 +33,6 @@ class CreateIssuesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('issues');
+        Schema::dropIfExists('issue');
     }
 }

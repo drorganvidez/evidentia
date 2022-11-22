@@ -2,20 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\MyEvidencesExport;
 use App\Models\Comittee;
 use App\Models\Kanban;
-use App\Models\File;
-use App\Models\Proof;
-use App\Rules\CheckHoursAndMinutes;
-use App\Rules\MaxCharacters;
-use App\Rules\MinCharacters;
+use App\Models\Issue;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
 class KanbanController extends Controller
@@ -33,8 +26,10 @@ class KanbanController extends Controller
         $instance = \Instantiation::instance();
         $kanban = Kanban::find($id);
 
+        $issues = Issue::where(['kanban_id' => $id])->get();
+
         return view('kanban.view',
-            ['instance' => $instance, 'kanban' => $kanban]);
+            ['instance' => $instance, 'kanban' => $kanban, 'issues' =>$issues]);
     }
 
     public function list()

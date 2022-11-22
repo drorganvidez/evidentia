@@ -4,14 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 class Issue extends Model
 {
 
-    protected $table="issues";
+    protected $table="issue";
 
     protected $fillable = [
-        'id', 'title', 'description', 'estimated_hours', 'user_id', 'status'
+        'id', 'title', 'description', 'estimated_hours', 'user_id', 'status','kanban_id'
     ];
+
+    public function kanban(){
+        return $this->belongsTo('App\Models\Kanban');
+    }
 
     public static function issues_to_do() {
         return Issue::where('status','=', 'TO DO')->orderByDesc('updated_at')->get();
