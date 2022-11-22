@@ -124,8 +124,11 @@ class TransactionController extends Controller
     {
         $instance = \Instantiation::instance();
 
+        $transaction = Transaction::find($id);
+        $transaction->status = 'REJECTED';
+        $transaction->save();
 
-        return redirect()->route('transaction.list.all', $instance)->with('success', $id);
+        return redirect()->route('transaction.list.all', $instance)->with('success', 'Transacción rechazada con éxito .');
     }
 
 
@@ -133,11 +136,15 @@ class TransactionController extends Controller
 
     // ACEPTAR TRANSACCION
 
-    public function accept($instance, $id)
+    public function accepted($instance, $id)
     {
         $instance = \Instantiation::instance();
 
-        return view('home');
+        $transaction = Transaction::where();
+        $transaction->status = 'ACCEPTED';
+        $transaction->save();
+
+        return redirect()->route('transaction.list.all', $instance)->with('success', 'Transacción aceptada con éxito.');
     }
 
 

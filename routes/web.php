@@ -188,7 +188,6 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
                 Route::post('/evidence/reject/', 'EvidenceCoordinatorController@reject')->name('coordinator.evidence.reject');
             });
         });
-
     });
 
     /**

@@ -41,7 +41,7 @@ class TransactionExport implements FromCollection, WithHeadings
                     'Cantidad' => strtoupper(trim($transaction->amount)),
                     'Usuario' => strtoupper(trim($user->username)),
                     'Comite' => strtoupper(trim($comitee->name)),
-                    'Fecha' =>  strtoupper(trim($transaction->date))             
+                    'Fecha' =>  strtoupper(trim($transaction->created_at))             
                 ];
 
                 $object = (object)$array;
