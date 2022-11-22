@@ -50,7 +50,20 @@ class TaskTest extends TestCase
         
         $this->loginWithAlumno1();
 
-        $response = $this->get('/21/task/edit/2');
+        //$response = $this->get('/21/task/edit/1');
+
+        $request = [
+            'id'    => 1,
+            'title' => 'Task 1',
+            'description' => 'Modificación de un test exitoso',
+            'hours' => '1.0',
+            'end_date' => '2022-11-18 08:26',
+            'user_id' => '2022-11-18 09:26',
+            'comittee_id' => '2'
+        ];
+
+        $response = $this->post('task/edit/save',$request);
+
         $response->assertStatus(302);
     }
 

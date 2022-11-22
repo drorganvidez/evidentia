@@ -124,6 +124,7 @@ class TaskController extends Controller
 
     public function save(Request $request)
     {
+
         $instance = \Instantiation::instance();
         $task = Task::find($request->input('id'));
 

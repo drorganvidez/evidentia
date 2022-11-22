@@ -23,7 +23,7 @@
 
                 <div class="form-row">
                     <x-input col="3" id="title" name="title" attr="title" :value="$task->title ?? ''" label="Título"/>
-                    <x-input col="4" id="description" name="description" type="text" attr="description" :value="$task->title ?? ''" label="Descripción"/>
+                    <x-input col="4" id="description" name="description" type="text" attr="description" :value="$task->description ?? ''" label="Descripción"/>
                     <input id="start_date" style="display:none;" type="datetime-local" name="start_date" />
                     <input id="end_date" type="datetime-local" style="display:none;" name="end_date" />
 
