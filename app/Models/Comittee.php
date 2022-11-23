@@ -20,6 +20,11 @@ class Comittee extends Model
         return $this->hasMany('App\Models\Evidence');
     }
 
+    public function transactions()
+    {
+        return $this->hasMany('App\Models\Transaction');
+    }
+
     public function evidences_not_draft() {
         return $this->evidences()->where('status','!=', 'DRAFT')->orderByDesc('updated_at');
     }

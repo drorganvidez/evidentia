@@ -135,6 +135,20 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/xls/upload/remove/{file_name}','UploadController@remove')->name('xls.upload.remove');
 
     /**
+     * TRANSACTION
+     */
+    Route::get('/transaction/list', 'TransactionController@list')->name('transaction.list');
+    Route::get('/transaction/create', 'TransactionController@create')->name('transaction.create');
+
+    Route::post('/transaction/publish', 'TransactionController@publish')->name('transaction.publish');
+
+
+    Route::get('/transaction/list/rejected', 'TransactionController@rejected')->name('transaction.rejected');
+    Route::get('/transaction/list/acepted', 'TransactionController@accepted')->name('transaction.accepted');
+    
+
+
+    /**
      *  EVIDENCES
      */
     Route::get('/evidence/list', 'EvidenceController@list')->name('evidence.list');
@@ -174,7 +188,6 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
                 Route::post('/evidence/reject/', 'EvidenceCoordinatorController@reject')->name('coordinator.evidence.reject');
             });
         });
-
     });
 
     /**
@@ -352,6 +365,10 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
     Route::get('/president/user/list','ManagementController@user_list')->name('president.user.list');
     Route::get('/president/evidence/list','ManagementController@evidence_list')->name('president.evidence.list');
+    Route::get('/president/transaction/list','ManagementController@transaction_list')->name('president.transaction.list');
+    Route::get('/president/transaction/accept/{id}','ManagementController@accept')->name('president.transaction.accept');
+    Route::get('/president/transaction/reject/{id}','ManagementController@reject')->name('president.transaction.reject');
+    Route::get('/transaction/export/{type}/{ext}', 'TransactionController@transaction_export')->name('transaction.export');
     Route::get('/president/meeting/list','ManagementController@meeting_list')->name('president.meeting.list');
 
     Route::get('/president/comittee/list','ManagementController@comittee_list')->name('president.comittee.list');
