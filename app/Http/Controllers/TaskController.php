@@ -7,6 +7,8 @@ use App\Models\Comittee;
 use App\Models\Task;
 use App\Models\File;
 use App\Models\Proof;
+use App\Rules\CheckStartDate;
+use App\Rules\CheckEndDate;
 use App\Rules\CheckHoursAndMinutes;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
@@ -65,15 +67,15 @@ class TaskController extends Controller
 
         // datos necesarios para crear tareas
         $user = Auth::user();
+        $start_date = date_create($request->input('start_date'));
+        $end_date = date_create($request->input('end_date'));
 
         $request->validate([
             'title' => 'required',
             'description' => ['required',new MaxCharacters(2000)],
-            $now->diff($dob)->y > 18
+            'start_date' => ['required', new CheckStartDate($end_date,$start_date)],
+            'end_date' => ['required', new CheckEndDate($end_date,$start_date)]
         ]);
-
-        $start_date = date_create($request->input('start_date'));
-        $end_date = date_create($request->input('end_date'));
 
         // Calculates the difference between DateTime objects
         $interval = date_diff($start_date, $end_date);
@@ -142,6 +144,13 @@ class TaskController extends Controller
         $minutes = intval($interval->format('%i'));
 
         $hours = $days*24 + $hours + floor(($minutes*100)/60)/100;
+        
+        $request->validate([
+            'title' => 'required',
+            'description' => ['required',new MaxCharacters(2000)],
+            'start_date' => ['required', new CheckStartDate($end_date,$start_date)],
+            'end_date' => ['required', new CheckEndDate($end_date,$start_date)]
+        ]);
 
         // modificación de los datos
         $task->title = $request->input('title');
