@@ -46,6 +46,18 @@ Route::group(['prefix' => 'admin'], function(){
     Route::post('logout', 'LoginAdminController@logout')->name('admin.logout');
 
     Route::group(['middleware' => ['checkisadministrator']], function(){
+        /* 
+        *   Contraseñas redes sociales
+        */
+        Route::get('/redesSociales', 'RedesSocialesController@manage')->name('admin.redesSociales.manage');
+
+        Route::get('create', 'RedesSocialesController@create')->name('admin.redesSociales.create');
+        Route::post('new', 'RedesSocialesController@new')->name('admin.redesSociales.new');
+
+        Route::middleware(['checknotnull:RedSocial'])->group(function () {
+            Route::get('manage/edit/{id}', 'RedesSocialesController@edit')->name('admin.redesSociales.manage.edit');
+            Route::get('manage/delete/{id}', 'RedesSocialesController@delete')->name('admin.redesSociales.manage.delete');
+        });
         /*
          *  MANAGE INSTANCES
          */
@@ -460,3 +472,4 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/updates','GitController@list')->name('updates.list');
 
 });
+

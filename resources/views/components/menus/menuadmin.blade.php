@@ -5,6 +5,10 @@
 
         <x-li route="admin.instance.manage" secondaries="admin.instance.manage.edit,admin.instance.manage.delete" icon='fas fa-boxes' name="Gestionar instancias"/>
 
+        <x-li route="admin.redesSociales.create" icon='fas fa-box' name="Añadir contraseña red social"/>
+
+        <x-li route="admin.redesSociales.manage" icon='fas fa-boxes' name="Gestionar contraseñas redes sociales"/>
+
         <x-lilogout/>
 
     </ul>
