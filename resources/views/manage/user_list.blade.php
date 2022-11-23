@@ -78,6 +78,7 @@
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">UVUS</th>
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Roles</th>
                             <th></th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell" style="width: 15rem;">Almacenamiento ocupado</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -109,6 +110,11 @@
                                                     <i class="nav-icon nav-icon fas fa-users-cog"></i>
                                                 </a>
                                             @endif
+                                        </td>
+                                        <td>
+                                            {{-- Espacio dedicado para el sumatorio de espacio ocupado --}}
+                                            {{-- El link redirige al file manager::por hacer--}}
+                                            <a href="#">{{$dict_storage[$user->id]}}</a>
                                         </td>
                                     </tr>
 

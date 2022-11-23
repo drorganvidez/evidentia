@@ -8,10 +8,12 @@ use App\Http\Services\UserService;
 use App\Models\Comittee;
 use App\Models\Coordinator;
 use App\Models\Evidence;
+use App\Models\File;
 use App\Models\Meeting;
 use App\Models\Role;
 use App\Models\Secretary;
 use App\Models\User;
+use App\View\Components\Id;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -47,8 +49,37 @@ class ManagementController extends Controller
             $filtered_users = $users;
         }
 
+        // calculo el almacenamiento ocupado por cada alumno
+        $dict_storage_used_user = [];
+        foreach ($filtered_users as $user) {
+            $weight = 0;
+            $evidences = Evidence::where(['user_id' => $user->id])->get();
+            foreach ($evidences as $evidence) {
+                foreach ($evidence->proofs as $proof)   {
+                    $file = File::find($proof->file_id);
+                    $weight += $file->size;
+                }
+            }
+
+            $GB = 1000000000;
+            $MB = 1000000;
+            $KB = 1000;
+            //Cambiar para que aquí directamente meta en el array y escriba el valor ya convertido a humano
+            //Luego lo único que quedaría sería leerlo en la vista y ya probar
+            if($weight > $GB)           {
+                $weight = round($weight/$GB,2)." GB";
+            } else if ($weight > $MB)   {
+                $weight = round($weight/$MB,2)." MB";
+            } else if($weight > $KB)    {
+                $weight = round($weight/$KB,2)." KB";
+            } else {
+                $weight = "0.00 KB";
+            }
+            $dict_storage_used_user[$user->id] = $weight;
+        }
+
         return view('manage.user_list',
-            ['instance' => $instance, 'users' => $filtered_users]);
+            ['instance' => $instance, 'users' => $filtered_users, 'dict_storage' => $dict_storage_used_user]);
     }
 
     public function evidence_list()
