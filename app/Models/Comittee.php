@@ -23,6 +23,7 @@ class Comittee extends Model
     }
 
 
+
     public function incidences()
     {
         return $this->hasMany('App\Models\Incidence');
@@ -42,6 +43,13 @@ class Comittee extends Model
     }
 
 
+
+
+
+    public function transactions()
+    {
+        return $this->hasMany('App\Models\Transaction');
+    }
 
 
     public function evidences_not_draft() {

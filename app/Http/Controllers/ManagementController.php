@@ -9,6 +9,7 @@ use App\Models\Comittee;
 use App\Models\Coordinator;
 use App\Models\Evidence;
 use App\Models\Meeting;
+use App\Models\Transaction;
 use App\Models\Role;
 use App\Models\Secretary;
 use App\Models\User;
@@ -51,6 +52,8 @@ class ManagementController extends Controller
             ['instance' => $instance, 'users' => $filtered_users]);
     }
 
+
+
     public function evidence_list()
     {
         $instance = \Instantiation::instance();
@@ -58,6 +61,36 @@ class ManagementController extends Controller
 
         return view('manage.evidence_list',
             ['instance' => $instance, 'evidences' => $evidences]);
+    }
+
+    public function accept($instance, $id)
+    {
+        $instance = \Instantiation::instance();
+
+        $transaction = Transaction::find($id);
+        $transaction->status = 'ACCEPTED';
+        $transaction->save();
+
+
+        return redirect()->route('president.transaction.list', $instance)->with('success', "'Transacción aceptada con éxito.");
+    }
+    public function reject($instance, $id)
+    {
+        $instance = \Instantiation::instance();
+
+        $transaction = Transaction::find($id);
+        $transaction->status = 'REJECTED';
+        $transaction->save();
+
+        return redirect()->route('president.transaction.list', $instance)->with('success', 'Transacción rechazada con éxito .');
+    }
+    public function transaction_list()
+    {
+        $instance = \Instantiation::instance();
+        $transactions = Transaction::all();
+
+        return view('manage.transaction_list',
+            ['instance' => $instance, 'transactions' => $transactions]);
     }
 
     public function meeting_list()

@@ -1,0 +1,16 @@
+1) Numero y correo poner como unicos.
+2) En la entidad abstracta rol, quitar el atributo nombre, no tiene sentido.
+3) La propiedad voz debe de ser enumerado.
+4) Enumerado instrumentos: añadir clarinete bajo, requinto
+5) Un usuario solo puede tener una foto.
+6) En la entidad petición: intrumento es optativo, voz también
+7) Se debe poder deditar un repertorio
+8) Falta la historia de usuario de editar instrumetnos para musicos
+9) En la entidad petición hay propiedades que deben ser optativas, como instrumento y voz
+
+
+
+MOCKUP:
+-FALTA VER LOS EVENTOS Y VER LAS FALTAS DE LOS EVENTOS ASÍ COMO COMUNICARLAS.
+-AÑADIR MÚSICOS CONTRATADOS A UNA ACTUACIÓN
+-Propiedad bocadillos y comentarios privados en eventos.
