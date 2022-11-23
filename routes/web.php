@@ -142,6 +142,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/kanban/table', 'KanbanIssuesController@table')->name('kanban.table');
     Route::post('/kanban/publish', 'KanbanIssuesController@publish')->name('kanban.publish');
     Route::get('/kanban/create', 'KanbanIssuesController@create')->name('kanban.create');
+    Route::post('/kanban/inprogress', 'KanbanIssuesController@issue_todo_inprogress')->name('kanban.issue_todo_inprogress');
 
 
     /**

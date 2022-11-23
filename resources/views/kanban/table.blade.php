@@ -31,26 +31,31 @@
 
 
                 <div class="card-footer" style="padding-top: 10px">
-                    <div class="row">
-
-                        <div class="col-lg-12">
-                            <span class="description-text" style="font-size: 20px; text-align: left;"></span>
-                            <p style="margin-bottom: 0px; text-align: justify" class="biography">
-
-
-
-                                    <div class="callout callout-danger mt-3">
-                                        <h5>Ups...</h5>
-
-                                        <p>Parece que no has rellenado este apartado. ¡No lo olvides! Indica con detalle tu nivel
-                                            de implicación en las jornadas desde <a href="{{route('profile.view',\Instantiation::instance())}}">Mi perfil</a></p>
-                                    </div>
+                    @foreach($issuesToDo as $issue)
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <span class="description-text" style="font-size: 20px; text-align: left;"></span>
+                                <p style="margin-bottom: 0px; text-align: justify" class="biography">
 
 
 
-                            </p>
+                                        <div class="callout callout-danger mt-3">
+                                            <h5>{{$issue->task}}</h5>
+
+                                            <p>{{$issue->description}}</p>
+                                            <p>Asignado a: {{$issue->user->name}} {{$issue->user->surname}}</p>
+                                            <p>Horas estimadas: {{$issue->hours}}h</p>
+                                            <a class="btn btn-info btn-sm"
+                                                href="{{route('kanban.issue_todo_inprogress',['instance' => $instance, 'id' => $issue->id, 'issuesToDo' => $issuesToDo, 'issuesInProgress' => $issuesInProgress, 'issuesClosed' => $issuesClosed])}}">
+                                                    <i class="fas fa-pencil-alt">
+                                                    </i>
+                                            </a>
+                                        </div>
+
+                                </p>
+                            </div>
                         </div>
-                    </div>
+                    @endforeach
 
                 </div>
             </div>
@@ -71,20 +76,23 @@
 
 
                 <div class="card-footer" style="padding-top: 10px">
-                    <div class="row">
 
-                        <div class="col-lg-12">
-                            <span class="description-text" style="font-size: 20px; text-align: left;"></span>
-                            <p style="margin-bottom: 0px; text-align: justify" class="biography">
-                                <div class="callout callout-warning mt-3">
-                                    <h5>Ups...</h5>
+                    @foreach($issuesInProgress as $issue)
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <span class="description-text" style="font-size: 20px; text-align: left;"></span>
+                                <p style="margin-bottom: 0px; text-align: justify" class="biography">
+                                    <div class="callout callout-warning mt-3">
+                                        <h5>{{$issue->task}}</h5>
 
-                                    <p>Parece que no has rellenado este apartado. ¡No lo olvides! Indica con detalle tu nivel
-                                        de implicación en las jornadas desde <a href="{{route('profile.view',\Instantiation::instance())}}">Mi perfil</a></p>
-                                </div>
-                            </p>
+                                        <p>{{$issue->description}}</p>
+                                        <p>Asignado a: {{$issue->user->name}} {{$issue->user->surname}}</p>
+                                        <p>Horas estimadas: {{$issue->hours}}h</p>
+                                    </div>
+                                </p>
+                            </div>
                         </div>
-                    </div>
+                    @endforeach
                 </div>
 
 
@@ -105,33 +113,29 @@
                 </div>
 
                 <div class="card-footer" style="padding-top: 10px">
-                    <div class="row">
+                    @foreach($issuesClosed as $issue)
+                        <div class="row">
 
-                        <div class="col-lg-12">
-                            <span class="description-text" style="font-size: 20px; text-align: left;"></span>
-                            <p style="margin-bottom: 0px; text-align: justify" class="biography">
-
-
-
-                                    <div class="callout callout-success mt-3">
-                                        <h5>Ups...</h5>
-
-                                        <p>Parece que no has rellenado este apartado. ¡No lo olvides! Indica con detalle tu nivel
-                                            de implicación en las jornadas desdeParece que no has rellenado este apartado. ¡No lo olvides! Indica con detalle tu nivel
-                                            de implicación en las jornadas desdeParece que no has rellenado este apartado. ¡No lo olvides! Indica con detalle tu nivel
-                                            de implicación en las jornadas desdeParece que no has rellenado este apartado. ¡No lo olvides! Indica con detalle tu nivel
-                                            de implicación en las jornadas desdeParece que no has rellenado este apartado. ¡No lo olvides! Indica con detalle tu nivel
-                                            de implicación en las jornadas desdeParece que no has rellenado este apartado. ¡No lo olvides! Indica con detalle tu nivel
-                                            de implicación en las jornadas desdeParece que no has rellenado este apartado. ¡No lo olvides! Indica con detalle tu nivel
-                                            de implicación en las jornadas desde <a href="{{route('profile.view',\Instantiation::instance())}}">Mi perfil</a></p>
-                                    </div>
+                            <div class="col-lg-12">
+                                <span class="description-text" style="font-size: 20px; text-align: left;"></span>
+                                <p style="margin-bottom: 0px; text-align: justify" class="biography">
 
 
 
-                            </p>
+                                        <div class="callout callout-success mt-3">
+                                            <h5>{{$issue->task}}</h5>
+
+                                            <p>{{$issue->description}}</p>
+                                            <p>Asignado a: {{$issue->user->name}} {{$issue->user->surname}}</p>
+                                            <p>Horas estimadas: {{$issue->hours}}h</p>
+                                        </div>
+
+
+
+                                </p>
+                            </div>
                         </div>
-                    </div>
-
+                    @endforeach
                 </div>
             </div>
         
