@@ -24,9 +24,21 @@ class KanbanIssuesController extends Controller
     {
         $instance = \Instantiation::instance();
         $issues = KanbanIssues::where(['user_id' => Auth::id()])->get();
+        $coordinator = Auth::user()->coordinator;
+        if($coordinator){
+            $issuesToDo = KanbanIssues::where(['comittee_id' => $coordinator->comittee->id, 'type' => "TODO"])->get();
+            $issuesInProgress = KanbanIssues::where(['comittee_id' => $coordinator->comittee->id, 'type' => "INPROGRESS"])->get();
+            $issuesClosed = KanbanIssues::where(['comittee_id' => $coordinator->comittee->id,'type' => "CLOSED"])->get();
+        }
+        else{
+            $issuesToDo = KanbanIssues::where(['user_id' => Auth::id(),'type' => "TODO"])->get();
+            $issuesInProgress = KanbanIssues::where(['user_id' => Auth::id(),'type' => "INPROGRESS"])->get();
+            $issuesClosed = KanbanIssues::where(['user_id'=> Auth::id(),'type' => "CLOSED"])->get();
+        }
+        
 
         return view('kanban.table',
-            ['instance' => $instance, 'issues' => $issues]); //
+            ['instance' => $instance, 'issuesToDo' => $issuesToDo, 'issuesInProgress'=>$issuesInProgress, 'issuesClosed' => $issuesClosed]); //
     }
       
     /****************************************************************************
@@ -84,6 +96,30 @@ class KanbanIssuesController extends Controller
         $issue->save();
 
         return $issue;
+    }
+
+    /****************************************************************************
+     * ISSUE TO IN PROGRESS
+    ****************************************************************************/
+
+    public function issue_todo_inprogress($instance,$id,$issuesToDo,$issuesInProgress,$issuesClosed)
+    {
+
+        $user = Auth::user();
+        $instance = \Instantiation::instance();
+        $token = session()->token();
+
+        $issue = KanbanIssues::find($id);
+        $issue->type = 'INPROGRESS';
+        $issue->save();
+
+        /*
+        $tmp = $instance.'/tmp/'.$user->username.'/'.$token.'/';
+
+        Storage::deleteDirectory($tmp);
+        */
+
+        return view('kanban.table', ['instance' => $instance, 'issuesToDo' => $issuesToDo, 'issuesInProgress'=>$issuesInProgress, 'issuesClosed' => $issuesClosed]);
     }
 
 
