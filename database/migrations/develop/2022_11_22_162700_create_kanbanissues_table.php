@@ -23,8 +23,8 @@ class CreateKanbanIssuesTable extends Migration
             $table->foreignId('user_id');
             $table->foreignId('comittee_id');
             $table->enum('type',['TODO','INPROGRESS','CLOSED']);
-
-        });
+            $table->timestamps();
+        }); 
     }
 
     /**

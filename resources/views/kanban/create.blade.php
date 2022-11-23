@@ -84,7 +84,7 @@
                                             <h4 class="modal-title">Publicar una evidencia</h4>
                                         </div>
                                         <div class="modal-body">
-                                            <p>Cuando se publica una tarea, esta se asigna al usuario yo que se hermano
+                                            <p>Cuando se publica una tarea, esta se asigna a un usuario y ya 
                                                 <b>no podrá ser editada.</b></p>
                                             <p>¿Deseas continuar?</p>
                                         </div>
