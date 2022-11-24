@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css%22%3E">
+<link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
 @extends('layouts.app')
 
 @section('title', 'Tablero Kanban')
@@ -18,7 +20,7 @@
                 <div class="widget-user-header text-white" style="background: url({{ asset('dist/img/abstract.jpg') }}); height: auto">
 
                     <h5 class="widget-user-desc text-left" style="margin-bottom: 0px"><i class="fas fa-briefcase"></i>&nbsp;&nbsp;
-                        To do
+                        Asignadas
                     </h5>
 
                     <h5 class="widget-user-desc text-left">
@@ -45,11 +47,11 @@
                                             <p>{{$issue->description}}</p>
                                             <p>Asignado a: {{$issue->user->name}} {{$issue->user->surname}}</p>
                                             <p>Horas estimadas: {{$issue->hours}}h</p>
-                                            <a class="btn btn-info btn-sm"
-                                                href="{{route('kanban.issue_todo_inprogress',['instance' => $instance, 'id' => $issue->id, 'issuesToDo' => $issuesToDo, 'issuesInProgress' => $issuesInProgress, 'issuesClosed' => $issuesClosed])}}">
-                                                    <i class="fas fa-pencil-alt">
-                                                    </i>
-                                            </a>
+                                            @if($issue->user_id == Auth::user()->id)
+                                                <a href="{{route('kanban.issueinprogress',['instance' => $instance, 'id' => $issue->id])}}">
+                                                    Comenzar tarea.
+                                                </a>
+                                            @endif
                                         </div>
 
                                 </p>
@@ -64,7 +66,7 @@
                 <div class="widget-user-header text-white" style="background: url({{ asset('dist/img/abstract.jpg') }}); height: auto">
 
                     <h5 class="widget-user-desc text-left" style="margin-bottom: 0px"><i class="fas fa-briefcase"></i>&nbsp;&nbsp;
-                        In Progress
+                        En curso
                     </h5>
 
                     <h5 class="widget-user-desc text-left">
@@ -88,6 +90,11 @@
                                         <p>{{$issue->description}}</p>
                                         <p>Asignado a: {{$issue->user->name}} {{$issue->user->surname}}</p>
                                         <p>Horas estimadas: {{$issue->hours}}h</p>
+                                        @if($issue->user_id == Auth::user()->id)
+                                            <a href="{{route('kanban.issueclosed',['instance' => $instance, 'id' => $issue->id])}}">
+                                                Terminar tarea.    
+                                            </a>
+                                        @endif
                                     </div>
                                 </p>
                             </div>
@@ -102,7 +109,7 @@
                 <div class="widget-user-header text-white" style="background: url({{ asset('dist/img/abstract.jpg') }}); height: auto">
 
                     <h5 class="widget-user-desc text-left" style="margin-bottom: 0px"><i class="fas fa-briefcase"></i>&nbsp;&nbsp;
-                        Closed
+                        Cerradas
                     </h5>
 
                     <h5 class="widget-user-desc text-left">

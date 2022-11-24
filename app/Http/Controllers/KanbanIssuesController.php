@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\MyAttendeesExport;
 use App\Models\KanbanIssues;
 use App\Models\User;
+use App\Models\Evidence;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -17,7 +18,7 @@ class KanbanIssuesController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('checkroles:COORDINATOR');
+        $this->middleware('checkroles:PRESIDENT|COORDINATOR|REGISTER_COORDINATOR|SECRETARY|STUDENT');
     }
 
     public function table()
@@ -102,9 +103,8 @@ class KanbanIssuesController extends Controller
      * ISSUE TO IN PROGRESS
     ****************************************************************************/
 
-    public function issue_todo_inprogress($instance,$id,$issuesToDo,$issuesInProgress,$issuesClosed)
+    public function issueinprogress($instance, $id)
     {
-
         $user = Auth::user();
         $instance = \Instantiation::instance();
         $token = session()->token();
@@ -112,14 +112,35 @@ class KanbanIssuesController extends Controller
         $issue = KanbanIssues::find($id);
         $issue->type = 'INPROGRESS';
         $issue->save();
+        
+        return redirect()->route('kanban.table', $instance);
+    }
 
-        /*
-        $tmp = $instance.'/tmp/'.$user->username.'/'.$token.'/';
+    public function issueclosed($instance, $id)
+    {
+        $user = Auth::user();
+        $instance = \Instantiation::instance();
+        $token = session()->token();
 
-        Storage::deleteDirectory($tmp);
-        */
+        $issue = KanbanIssues::find($id);
+        $issue->type = 'CLOSED';
+        $issue->save();
 
-        return view('kanban.table', ['instance' => $instance, 'issuesToDo' => $issuesToDo, 'issuesInProgress'=>$issuesInProgress, 'issuesClosed' => $issuesClosed]);
+        // creación de una nueva evidencia
+        $evidence = Evidence::create([
+            'title' => $issue->task,
+            'description' => $issue->description,
+            'hours' => $issue->hours,
+            'status' => "PENDING",
+            'user_id' => $issue->user_id,
+            'comittee_id' => $issue->comittee_id
+        ]);
+
+        // cómputo del sello
+        $evidence = \Stamp::compute_evidence($evidence);
+        $evidence->save();
+        
+        return redirect()->route('kanban.table', $instance);
     }
 
 
