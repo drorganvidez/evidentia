@@ -22,6 +22,7 @@ class CreatePointTable extends Migration
             $table->string('title');
             $table->integer('duration')->nullable();
             $table->text('description')->nullable();
+            $table->text('sugerencia')->nullable();
             $table->timestamps();
         });
     }

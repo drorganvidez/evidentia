@@ -21,6 +21,7 @@ class CreateAgreementTable extends Migration
                 ->on('points')->onDelete('cascade');
             $table->string('identificator')->nullable();
             $table->text('description');
+            $table->text('sugerencia');
             $table->timestamps();
         });
     }
