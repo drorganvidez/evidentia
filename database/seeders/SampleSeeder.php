@@ -57,6 +57,12 @@ class SampleSeeder extends Seeder
             'slug' => 'Estudiante'
         ]);
 
+        DB::table('roles')->insert([
+            'id' => 7,
+            'rol' => 'COLLABORATOR',
+            'slug' => 'Colaborador'
+        ]);
+
         /*
          *  USUARIOS
          */

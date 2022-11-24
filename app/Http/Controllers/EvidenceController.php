@@ -24,7 +24,7 @@ class EvidenceController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('checkroles:PRESIDENT|COORDINATOR|REGISTER_COORDINATOR|SECRETARY|STUDENT');
+        $this->middleware('checkroles:PRESIDENT|COORDINATOR|REGISTER_COORDINATOR|SECRETARY|STUDENT|COLLABORATOR');
     }
 
     public function view($instance,$id)
