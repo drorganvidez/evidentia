@@ -24,11 +24,11 @@
 
                 <div class="card-body">
                     <div class="row">
-                    @foreach($redesSociales as $redSocial)
+                    @foreach($redsocial as $r)
                         <div class="col-lg-4">
                             <div class="info-box-content">
-                                <span class="info-box-text text-center text-muted">{{$redSocial->name}}</span>
-                                <span class="info-box-text text-center text-muted">{{$redSocial->password}}</span>
+                                <span class="info-box-text text-center text-muted">{{$r->name}}</span>
+                                <span class="info-box-text text-center text-muted">{{$r->password}}</span>
                             </div>
                         </div>
                     @endforeach

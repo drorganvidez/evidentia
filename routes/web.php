@@ -58,6 +58,9 @@ Route::group(['prefix' => 'admin'], function(){
             Route::get('manage/edit/{id}', 'RedesSocialesController@edit')->name('admin.redesSociales.manage.edit');
             Route::get('manage/delete/{id}', 'RedesSocialesController@delete')->name('admin.redesSociales.manage.delete');
         });
+
+        Route::post('manage/save', 'RedesSocialesController@save')->name('admin.redesSociales.manage.save');
+        Route::post('manage/remove/', 'RedesSocialesController@remove')->name('admin.redesSociales.manage.remove');
         /*
          *  MANAGE INSTANCES
          */

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @isset($edit)
-    @section('title', 'Editar Red Social: '.$redSocial->name)
+    @section('title', 'Editar Red Social: '.$redsocial->name)
 @else
     @section('title', 'Crear Red Social')
 @endisset
@@ -27,17 +27,17 @@
                     <form method="POST" action="{{$route}}">
                         @csrf
 
-                        <x-id :id="$redSocial->id ?? ''" :edit="$edit ?? ''"/>
+                        <x-id :id="$redsocial->id ?? ''" :edit="$edit ?? ''"/>
 
                         <div class="form-row">
 
-                            <x-input col="6" attr="name" :value="$redSocial->name ?? ''" label="Nombre" description="Ejemplo: Twitter/Facebook"/>
+                            <x-input col="6" attr="name" :value="$redsocial->name ?? ''" label="Nombre" description="Ejemplo: Twitter/Facebook"/>
 
                         </div>
 
                         <div class="form-row">
 
-                            <x-input col="4" attr="password" :value="$redSocial->password ?? ''" label="Contraseña" description="Contraseña"/>
+                            <x-input col="4" attr="password" :value="$redsocial->password ?? ''" label="Contraseña" description="Contraseña"/>
 
                         </div>
 

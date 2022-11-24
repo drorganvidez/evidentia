@@ -24,9 +24,9 @@
 
                         <dl class="row">
                             <dt class="col-sm-4">Nombre</dt>
-                            <dd class="col-sm-8">{{$redSocial->name}}</dd>
+                            <dd class="col-sm-8">{{$redsocial->name}}</dd>
                             <dt class="col-sm-4">Contraseña</dt>
-                            <dd class="col-sm-8">{{$redSocial->password}}</dd>
+                            <dd class="col-sm-8">{{$redsocial->password}}</dd>
                         </dl>
                     </div>
 
@@ -35,7 +35,7 @@
 
                         <div class="form-row">
 
-                            <input type="hidden" name="id" value="{{$redSocial->id}}"/>
+                            <input type="hidden" name="id" value="{{$redsocial->id}}"/>
 
                         </div>
 
