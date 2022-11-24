@@ -422,6 +422,7 @@
                             let point_description = $this.find('.point_description').val();
                             item ["description"] = point_description;
 
+                            //no se como cambiar esto
                             // acuerdos del punto
                             agreements = []
                             $this.find('.point_agreement').each(function(){

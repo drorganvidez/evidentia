@@ -12,7 +12,8 @@ class Point extends Model
         'meeting_minutes_id',
         'title',
         'duration',
-        'description'
+        'description',
+        'sugerencia'
     ];
 
     public function meeting_minutes()

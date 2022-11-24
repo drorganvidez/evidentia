@@ -246,6 +246,12 @@
                     </p>
                 @endif
 
+                @if($point->sugerencia)
+                    <p style="text-align: justify">
+                        {{$point->sugerencia}}
+                    </p>
+                @endif
+
                 @if($point->agreements->count() > 0)
 
                     <table>
