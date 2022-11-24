@@ -228,6 +228,11 @@ button {
   border-radius: 0;
 }
 
+#boton {
+  color: #fff;
+  text-decoration: none;
+}
+
 button:focus:not(:focus-visible) {
   outline: 0;
 }
