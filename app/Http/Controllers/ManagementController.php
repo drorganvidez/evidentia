@@ -6,6 +6,7 @@ use App\Exports\ManagementEvidencesExport;
 use App\Exports\ManagementStudentExport;
 use App\Http\Services\UserService;
 use App\Models\Comittee;
+use App\Models\Collaborator;
 use App\Models\Coordinator;
 use App\Models\Evidence;
 use App\Models\Meeting;
@@ -246,6 +247,11 @@ class ManagementController extends Controller
         // ¿tiene rol de secretario?
         if ($user->hasRole('SECRETARY')) {
             DB::table('secretaries')->insert(['comittee_id' => $comittee_id, 'user_id' => $user->id]);
+        }
+
+        // ¿tiene rol de colaborador?
+        if ($user->hasRole('COLLABORATOR')) {
+            DB::table('collaborators')->insert(['comittee_id' => $comittee_id, 'user_id' => $user->id]);
         }
 
         $user->save();

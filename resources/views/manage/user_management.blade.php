@@ -100,7 +100,7 @@
                                         >{{$comittee->name}}</option>
                                     @endforeach
                                 </select>
-                                <small class="form-text text-muted">Los roles "COORDINADOR" o "SECRETARIO"
+                                <small class="form-text text-muted">Los roles "COORDINADOR", "SECRETARIO" o "COLABORADOR"
                                     exigen tener un comité asociado.</small>
                             </div>
 
@@ -174,10 +174,14 @@
                 if(values[i] == "5"){
                     $("#comittee").show();
                 }
+
+                // si es colaborador
+                if(values[i] == "7"){
+                    $("#comittee").show();
+                }
             }
 
             $("#roles").change(function(){
-
                 var values = $(this).val();
                 var cont = 0;
                 for (var i = 0; i < values.length; i++) {
@@ -190,6 +194,12 @@
 
                     // si es administrador
                     if(values[i] == "5"){
+                        $("#comittee").show();
+                        cont++;
+                    }
+
+                    // si es colaborador
+                    if(values[i] == "7"){
                         $("#comittee").show();
                         cont++;
                     }
