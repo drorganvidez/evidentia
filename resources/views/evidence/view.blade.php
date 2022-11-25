@@ -91,17 +91,22 @@
 
                     <h4>Pruebas adjuntas</h4>
 
-                    <div class="row">
+                    <div class="row">                   
 
-                        @foreach($evidence->proofs as $proof)
-
+                        @foreach($dict_storaged_files as $fileType)
                             <div class="col-auto mt-3">
-                                <a style="margin-bottom: 10px" class="btn btn-default btn-sm" href="{{route('proof.download',['instance' => $instance, 'id' => $proof->id])}}">
-                                    <i class="fas fa-download"></i>
-                                    {{$proof->file->name}} ({{$proof->file->sizeForHuman()}})
-                                </a>
+                                <h5>{{$fileType}}</h5>
                             </div>
-
+                            @foreach($evidence->proofs as $proof)
+                                @if($proof->file->type == $fileType)
+                                    <div class="col-auto mt-3">
+                                        <a style="margin-bottom: 10px" class="btn btn-default btn-sm" href="{{route('proof.download',['instance' => $instance, 'id' => $proof->id])}}">
+                                            <i class="fas fa-download"></i>
+                                            {{$proof->file->name}} ({{$proof->file->sizeForHuman()}})
+                                        </a>
+                                    </div>
+                                @endif
+                            @endforeach
                         @endforeach
 
                     </div>

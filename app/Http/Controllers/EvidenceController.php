@@ -29,11 +29,20 @@ class EvidenceController extends Controller
 
     public function view($instance,$id)
     {
+        
         $instance = \Instantiation::instance();
         $evidence = Evidence::find($id);
 
+        /*lista de archivos segun el tipo*/
+
+        $evidence_storaged_files_type = collect();
+        foreach($evidence-> proofs as $proof){
+            $fileType = $proof->file->type;
+            $evidence_storaged_files_type->push($fileType);
+        }
+
         return view('evidence.view',
-            ['instance' => $instance, 'evidence' => $evidence]);
+            ['instance' => $instance, 'evidence' => $evidence, 'dict_storaged_files' => $evidence_storaged_files_type]);
     }
 
     public function list()
