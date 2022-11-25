@@ -61,6 +61,21 @@ Route::group(['prefix' => 'admin'], function(){
 
         Route::post('manage/save', 'RedesSocialesController@save')->name('admin.redesSociales.manage.save');
         Route::post('manage/remove/', 'RedesSocialesController@remove')->name('admin.redesSociales.manage.remove');
+        /* 
+        *   Empresas colaborativas
+        */
+        Route::get('/empresasColaborativas', 'EmpresasColaborativasController@manage')->name('admin.empresasColaborativas.manage');
+
+        Route::get('create', 'EmpresasColaborativas@create')->name('admin.empresasColaborativas.create');
+        Route::post('new', 'EmpresasColaborativas@new')->name('admin.empresasColaborativas.new');
+
+        Route::middleware(['checknotnull:EmpresaColaborativa'])->group(function () {
+            Route::get('manage/edit/{id}', 'EmpresasColaborativas@edit')->name('admin.empresasColaborativas.manage.edit');
+            Route::get('manage/delete/{id}', 'EmpresasColaborativas@delete')->name('admin.empresasColaborativas.manage.delete');
+        });
+
+        Route::post('manage/save', 'EmpresasColaborativas@save')->name('admin.empresasColaborativas.manage.save');
+        Route::post('manage/remove/', 'EmpresasColaborativas@remove')->name('admin.empresasColaborativas.manage.remove');
         /*
          *  MANAGE INSTANCES
          */
