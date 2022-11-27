@@ -32,7 +32,7 @@
                     <div class="card-body">
 
                         <div class="form-row">
-                            <x-input col="4" attr="title" :value="$task->title ?? ''" label="Título" description="Escribe un título que describa con precisión tu tarea (mínimo 5 caracteres)"/>
+                            <x-input col="4" attr="title" :value="$task->title ?? ''" label="Título" description="Escribe un título que describa con precisión tu tarea"/>
                             <input style="display:none" name="id" value="{{$task->id}}"/>
                             <div class="form-group col-md-3">
                                 <label for="start_date">Fecha de inicio</label>
