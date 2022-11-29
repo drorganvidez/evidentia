@@ -11,7 +11,7 @@
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/">Home</a></li>
     @isset($edit)
-        <li class="breadcrumb-item"><a href="{{route('admin.empresacolaborativas.manage')}}">Gestionar Empresas Colaborativas</a></li>
+        <li class="breadcrumb-item"><a href="{{route('admin.empresasColaborativas.manage')}}">Gestionar Empresas Colaborativas</a></li>
     @endisset
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection

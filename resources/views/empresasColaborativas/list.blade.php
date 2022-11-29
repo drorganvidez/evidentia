@@ -24,12 +24,12 @@
 
                 <div class="card-body">
                     <div class="row">
-                    @foreach($empresacolaborativa as $e)
+                    @foreach($empresacolaborativa as $r)
                         <div class="col-lg-4">
                             <div class="info-box-content">
-                                <span class="info-box-text text-center text-muted">{{$e->name}}</span>
-                                <span class="info-box-text text-center text-muted">{{$e->telephone}}</span>
-                                <span class="info-box-text text-center text-muted">{{$e->email}}</span>
+                                <span class="info-box-text text-center text-muted">{{$r->name}}</span>
+                                <span class="info-box-text text-center text-muted">{{$r->telephone}}</span>
+                                <span class="info-box-text text-center text-muted">{{$r->email}}</span>
                             </div>
                         </div>
                     @endforeach

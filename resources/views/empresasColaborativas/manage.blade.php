@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Gestionar empresas')
+@section('title', 'Gestionar empresas colaborativas')
 @section('title-icon', 'fas fa-boxes')
 
 @section('breadcrumb')
@@ -28,18 +28,18 @@
                         </thead>
                         <tbody>
 
-                        @foreach($empresacolaborativa as $e)
+                        @foreach($empresacolaborativa as $r)
                             <tr>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$e->name}}</td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$e->telephone}}</td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$e->email}}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$r->name}}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$r->telephone}}</td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$r->email}}</td>
 
                                 <td>
-                                    <a class="btn btn-info btn-sm" href="{{route('admin.empresasColaborativas.manage.edit',$e->id)}}" role="button">
+                                    <a class="btn btn-info btn-sm" href="{{route('admin.empresasColaborativas.manage.edit',$r->id)}}" role="button">
                                         <i class="fas fa-edit"></i> <span class="d-none d-sm-none d-md-none d-lg-inline">Editar</span>
                                     </a>
 
-                                    <a class="btn btn-danger btn-sm" href="{{route('admin.empresasColaborativas.manage.delete',$e->id)}}" role="button">
+                                    <a class="btn btn-danger btn-sm" href="{{route('admin.empresasColaborativas.manage.delete',$r->id)}}" role="button">
                                         <i class="fas fa-trash"></i> <span class="d-none d-sm-none d-md-none d-lg-inline">Eliminar</span>
                                     </a>
 
