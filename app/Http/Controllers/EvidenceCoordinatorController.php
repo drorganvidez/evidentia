@@ -8,6 +8,9 @@ use App\Models\ReasonRejection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\User;
+use App\Models\Comittee;
+
 
 class EvidenceCoordinatorController extends Controller
 {
@@ -109,5 +112,23 @@ class EvidenceCoordinatorController extends Controller
         } catch (\Exception $e) {
             return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
         }
+    }
+
+    public function user_list_comittee()
+    {
+        $instance = \Instantiation::instance();
+        $users = User::all();
+            
+        $filtered_users = collect();
+        $users->each(function ($item, $key) use ($filtered_users) {
+            $coordinator_comittee = Auth::user()->associate_comittee();
+            $item_comittee = $item->associate_comittee();
+            if ($item_comittee == $coordinator_comittee) {
+                $filtered_users->push($item);
+            }
+        });
+    
+        return view('manage.user_list_detailed',
+            ['instance' => $instance, 'users' => $filtered_users]);
     }
 }

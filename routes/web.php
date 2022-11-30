@@ -165,6 +165,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         Route::get('/evidence/list/accepted', 'EvidenceCoordinatorController@accepted')->name('coordinator.evidence.list.accepted');
         Route::get('/evidence/list/rejected', 'EvidenceCoordinatorController@rejected')->name('coordinator.evidence.list.rejected');
         Route::get('/evidence/export/{type}/{ext}','EvidenceCoordinatorController@evidences_export')->name('coordinator.evidence.export');
+        
 
         Route::middleware(['checknotnull:Evidence','evidencefrommycommittee'])->group(function () {
             Route::get('/evidence/view/{id}', 'EvidenceController@view')->name('coordinator.evidence.view');
@@ -176,6 +177,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         });
 
     });
+    Route::get('/coordinator/user/list','EvidenceCoordinatorController@user_list_comittee')->name('coordinator.user.list');
 
     /**
      *  MEETINGS, LISTS AND BONUS
