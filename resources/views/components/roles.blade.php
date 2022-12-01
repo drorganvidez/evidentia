@@ -7,9 +7,13 @@
             de {{$user->coordinator->comittee->name}}
         @endif
 
-        @if($rol->rol == 'SECRETARY')
-            de {{$user->secretary->comittee->name}}
-        @endif
+    @if($rol->rol == 'SECRETARY')
+        de {{$user->secretary->comittee->name}}
+    @endif
+
+    @if($rol->rol == 'COLLABORATOR')
+        de {{$user->collaborator->comittee->name}}
+    @endif
 
     </span>
 @endforeach

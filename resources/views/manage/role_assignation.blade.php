@@ -1,16 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Gestionar: ' . $user->surname . ', ' . $user->name)
+@section('title', 'Asignar roles')
 
 @section('title-icon', 'nav-icon fas fa-cogs')
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>
-    @if(Auth::user()->hasRole('PRESIDENT'))
-        <li class="breadcrumb-item"><a href="{{route('president.user.list',$instance)}}">Gestionar alumnos</a></li>
-    @else
-        <li class="breadcrumb-item"><a href="{{route('lecture.user.list',$instance)}}">Gestionar alumnos</a></li>
-    @endif
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
 
@@ -18,8 +13,6 @@
 
     <form method="POST" action="{{$route}}">
         @csrf
-
-        <input type="hidden" name="user_id" value="{{$user->id}}">
 
         <div class="row">
 
@@ -30,51 +23,14 @@
 
                         <div class="card-body">
 
-
-
-                            <h3>Datos personales</h3>
-
-                            <div class="form-row">
-
-                                <x-input col="6" attr="username" :value="$user->username" label="Uvus"/>
-
-                            </div>
-
-                            <div class="form-row">
-
-                                <x-input col="6" attr="name" :value="$user->name" label="Nombre"/>
-
-                                <x-input col="6" attr="surname" :value="$user->surname" label="Apellidos"/>
-
-                            </div>
-
-                            <div class="form-row">
-
-                                <x-input col="4" attr="email" :value="$user->email" label="Email"/>
-
-                            </div>
-
-                            <hr>
-
-                            <h3>Configuración</h3>
-
-                            <div class="icheck-primary d-inline">
-                                <input type="checkbox" name="pass" id="pass" @if($user->block == false) checked @endif>
-                                <label for="pass">
-                                    Permitir acceso a la aplicación
-                                </label>
-                            </div>
-
-                            <br><br>
-
-                            <label>Roles</label>
+                            <h3>Roles a aplicar</h3>
 
                             <div class="form-group">
-                                <select class="select2bs4" id="roles" name="roles[]" multiple="multiple @error('roles') is-invalid @enderror" data-placeholder="Elige el rol o los roles del usuario"
+                                <select class="select2bs4" id="roles" name="roles[]" multiple="multiple @error('roles') is-invalid @enderror" data-placeholder="Elige el rol o los roles a aplicar"
                                         style="width: 100%;">
                                     @foreach($roles as $rol)
                                         <option
-                                            @if($user->hasRole($rol->rol))
+                                            @if($rol->id == "6")
                                             selected
                                             @endif
                                             value="{{$rol->id}}"
@@ -93,9 +49,6 @@
                                 <select name="comittee" class="form-control select2bs4" style="width: 100%;">
                                     @foreach($comittees as $comittee)
                                         <option
-                                            @if($comittee->name == $user->associate_comittee())
-                                            selected
-                                            @endif
                                             value="{{$comittee->id}}"
                                         >{{$comittee->name}}</option>
                                     @endforeach
@@ -104,54 +57,35 @@
                                     exigen tener un comité asociado.</small>
                             </div>
 
+                            <h3>Usuarios</h3>
+                            
+                            <label style="color:red;">Aviso: Los usuarios seleccionados perderán sus roles antes de conseguir sus roles nuevos.</label>
 
-
-                            <hr>
-
-                            <h3>Cambio de contraseña</h3>
-
-                            <div class="form-row">
-                                <x-input col="6" attr="password" :required="false" type="password" label="Nueva contraseña"/>
+                            <div class="form-group">
+                                <select class="select2bs4" id="users" name="users[]" multiple="multiple @error('users') is-invalid @enderror" data-placeholder="Elige los usuarios a los que aplicar los roles"
+                                        style="width: 100%;">
+                                    @foreach($users as $user)
+                                        <option
+                                            value="{{$user->id}}"
+                                        >{{$user->name}} {{$user->surname}}</option>
+                                    @endforeach
+                                </select>
+                                @error('users')
+                                <span class="invalid-feedback d-block" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                @enderror
                             </div>
-
-                            <div class="form-row">
-                                <x-input col="6" attr="password_confirmation" :required="false" type="password" label="Repite la nueva contraseña"/>
-                            </div>
-
 
                             <div class="form-row">
                                 <div class="col-lg-3 mt-1">
-                                    <button type="submit"  class="btn btn-primary btn-block">Actualizar usuario</button>
+                                    <button type="submit"  class="btn btn-primary btn-block">Actualizar usuarios</button>
                                 </div>
                             </div>
 
-
-
-                        </div>
-
                     </div>
 
                 </div>
-
-                <div class="col-lg-4">
-
-                    <div class="row">
-
-
-
-
-                        <div class="col-lg-12">
-                            <x-profile :user="$user"/>
-                        </div>
-
-
-                    </div>
-
-
-
-                </div>
-
-
 
 
         </div>

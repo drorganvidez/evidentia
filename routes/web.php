@@ -201,6 +201,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         Route::get('/evidence/list/accepted', 'EvidenceCoordinatorController@accepted')->name('coordinator.evidence.list.accepted');
         Route::get('/evidence/list/rejected', 'EvidenceCoordinatorController@rejected')->name('coordinator.evidence.list.rejected');
         Route::get('/evidence/export/{type}/{ext}','EvidenceCoordinatorController@evidences_export')->name('coordinator.evidence.export');
+        
 
         Route::middleware(['checknotnull:Evidence','evidencefrommycommittee'])->group(function () {
             Route::get('/evidence/view/{id}', 'EvidenceController@view')->name('coordinator.evidence.view');
@@ -212,6 +213,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         });
 
     });
+    Route::get('/coordinator/user/list','EvidenceCoordinatorController@user_list_comittee')->name('coordinator.user.list');
 
     /**
      *  MEETINGS, LISTS AND BONUS
@@ -401,6 +403,9 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/president/user/management/{id}','ManagementController@user_management')->name('president.user.management');
     Route::post('/president/user/management/save','ManagementController@user_management_save')->name('president.user.management.save');
 
+    Route::get('/president/role/assignation','ManagementController@role_assignation')->name('president.role.assignation');
+    Route::post('/president/role/assignation/save','ManagementController@role_assignation_save')->name('president.role.assignation.save');
+
 
     Route::get('/president/export','ImportExportController@export')->name('president.export');
     Route::get('/management/export/{ext}','ManagementController@evidences_export')->name('management.export');
@@ -436,6 +441,9 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
     Route::get('/lecture/user/management/{id}','ManagementController@user_management')->name('lecture.user.management');
     Route::post('/lecture/user/management/save','ManagementController@user_management_save')->name('lecture.user.management.save');
+
+    Route::get('/lecture/role/assignation','ManagementController@role_assignation')->name('lecture.role.assignation');
+    Route::post('/lecture/role/assignation/save','ManagementController@role_assignation_save')->name('lecture.role.assignation.save');
 
     Route::get('/lecture/instances','QuickInstances@list')->name('lecture.instances.list');
     Route::post('/lecture/instances/save','QuickInstances@save')->name('lecture.instances.save');
