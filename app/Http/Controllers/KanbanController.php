@@ -43,4 +43,66 @@ class KanbanController extends Controller
             ['instance' => $instance, 'kanban' => $kanban]);
     }
 
+       /****************************************************************************
+     * CREATE A KANBAN
+     ****************************************************************************/
+
+    public function create()
+    {
+        $instance = \Instantiation::instance();
+        $comittees = Comittee::all();
+
+        return view('kanban.createandedit', ['route_draft' => route('kanban.draft',$instance),
+                                            'route_publish' => route('kanban.publish',$instance),
+                                            'instance' => $instance,
+                                            'comittees' => $comittees]);
+    }
+
+    public function draft(Request $request)
+    {
+        return $this->new($request,"DRAFT");
+    }
+
+    public function publish(Request $request)
+    {
+        return $this->new($request,"PENDING");
+    }
+
+    private function new($request,$status)
+    {
+
+        $instance = \Instantiation::instance();
+
+        $kanban = $this->new_kanban($request,$status);
+
+        $this->save_files($request,$kanban);
+
+        return redirect()->route('kanban.list',$instance)->with('success', 'Tablero creado con éxito.');
+
+    }
+
+    private function new_kanban($request,$status)
+    {
+
+        $request->validate([
+            'title' => 'required|min:5|max:255'
+        ]);
+
+        // datos necesarios para crear tableros
+        $user = Auth::user();
+
+        // creación de un nuevo
+        $kanban = Kanban::create([
+            'title' => $request->input('title'),
+            'user_id' => $user->id,
+            'comittee_id' => $request->input('comittee')
+        ]);
+
+        // cómputo del sello
+        //$kanban = \Stamp::compute_evidence($evidence);
+        $kanban->save();
+
+        return $kanban;
+    }
+
 }
