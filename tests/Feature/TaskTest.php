@@ -27,30 +27,30 @@ class TaskTest extends TestCase
 
     }
 
-    private function loginWithAlumno1(){
+    public function testLoginWithAlumno1(){
         $request = [
             'username' => 'alumno1',
             'password' => 'alumno1'
         ];
         $response = $this->post('login',$request);
+        $response->assertSessionDoesntHaveErrors();
+
     }
 
     public function testListTask()
     {
         
-        $this->loginWithAlumno1();
+        $this->testLoginWithAlumno1();
 
 
-        $response = $this->get('/21/task/list');
+        $response = $this->get('/21/task/list/');
         $response->assertStatus(302);
     }
 
     public function testEditTask()
     {
         
-        $this->loginWithAlumno1();
-
-        //$response = $this->get('/21/task/edit/1');
+        $this->testLoginWithAlumno1();
 
         $request = [
             'id'    => 1,
@@ -61,16 +61,30 @@ class TaskTest extends TestCase
             'user_id' => '2022-11-18 09:26',
             'comittee_id' => '2'
         ];
-
-        $response = $this->post('task/edit/save',$request);
+        
+        $response = $this->post('/21/task/edit/save',$request);
 
         $response->assertStatus(302);
     }
 
-    public function createTaskPositive()
+    public function testDetailTaskView(){
+        $this->testLoginWithAlumno1();
+
+        $response = $this->get('/21/task/view/1');
+        $response->assertStatus(302);
+    }
+
+    public function testExportTaskListPDF(){
+        $this->testLoginWithAlumno1();
+
+        $response = $this->get('/21/task/list/export/{ext}');
+        $response->assertStatus(302);
+    }
+
+    public function testCreateTaskPositive()
     {
         
-        $this->loginWithAlumno1();
+        $this->testLoginWithAlumno1();
 
         $response = $this->get('/21/task/');
         $request = [
@@ -87,10 +101,10 @@ class TaskTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function createTaskNegative()
+    public function testCreateTaskNegative()
     {
         
-        $this->loginWithAlumno1();
+        $this->testLoginWithAlumno1();
 
         $response = $this->get('/21/task/');
         $request = [
