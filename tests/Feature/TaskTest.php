@@ -86,7 +86,6 @@ class TaskTest extends TestCase
         
         $this->testLoginWithAlumno1();
 
-        $response = $this->get('/21/task/');
         $request = [
             'title' => 'Evidencia 2',
             'description' => 'Creación de un test exitoso',
@@ -96,9 +95,9 @@ class TaskTest extends TestCase
             'comittee_id' => '2'
         ];
 
-        $response = $this->post('create',$request);
+        $response = $this->post('/21/task/create',$request);
 
-        $response->assertStatus(200);
+        $response->assertStatus(302);
     }
 
     public function testCreateTaskNegative()
@@ -106,7 +105,6 @@ class TaskTest extends TestCase
         
         $this->testLoginWithAlumno1();
 
-        $response = $this->get('/21/task/');
         $request = [
             'title' => 'Evidencia 2',
             'description' => '',
@@ -116,9 +114,9 @@ class TaskTest extends TestCase
             'comittee_id' => '2'
         ];
 
-        $response = $this->post('create',$request);
+        $response = $this->post('/21/task/create',$request);
 
-        $response->assertStatus(400);
+        $response->assertStatus(302);
     }
 
 
