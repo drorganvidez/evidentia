@@ -88,9 +88,24 @@ class ManagementController extends Controller
     {
         $instance = \Instantiation::instance();
         $transactions = Transaction::all();
+        $total = 0;
+        $noAceptado = 0;
+        $aceptado = 0;
+        $pendiente = 0;
+
+        for ($i = 0; $i < count($transactions); $i++) {
+            $total = $total + $transactions[$i]->amount;
+            if ($transactions[$i]->status == 'ACCEPTED') {
+                $aceptado = $aceptado + $transactions[$i]->amount;
+            } elseif ($transactions[$i]->status == 'REJECTED') {
+                $noAceptado = $noAceptado + $transactions[$i]->amount;
+            } else {
+                $pendiente = $pendiente + $transactions[$i]->amount;
+            }
+        }
 
         return view('manage.transaction_list',
-            ['instance' => $instance, 'transactions' => $transactions]);
+            ['instance' => $instance, 'transactions' => $transactions, 'total' => $total, 'noAceptado' => $noAceptado, 'aceptado' => $aceptado, 'pendiente' => $pendiente]);
     }
 
     public function meeting_list()
