@@ -302,8 +302,14 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/kanban/view/{id}', 'KanbanController@view')->name('kanban.view');
     Route::get('/kanban/create', 'KanbanController@create')->name('kanban.create');
     Route::post('/kanban/new', 'KanbanController@new')->name('kanban.new');
-    // Route::get('/kanban/publish', 'KanbanController@publish')->name('kanban.publish');
 
+     /**
+     *  ISSUES
+     */
+    Route::get('/kanban/view/{id}/issue/create/', 'KanbanController@create_issue')->name('kanban.view.issue.create');
+    Route::post('/kanban/view/{id}/issue/new/', 'KanbanController@new_issue')->name('kanban.view.issue.new');
+
+   
     /**
      *  ATTENDEES
      */

@@ -43,7 +43,7 @@ class KanbanController extends Controller
             ['instance' => $instance, 'kanban' => $kanban]);
     }
 
-       /****************************************************************************
+    /****************************************************************************
      * CREATE A KANBAN
      ****************************************************************************/
 
@@ -56,11 +56,6 @@ class KanbanController extends Controller
                                       'instance' => $instance,
                                       'comittees' => $comittees]);
     }
-
-    // public function publish(Request $request)
-    // {
-    //     return $this->new($request);
-    // }
 
     public function new(Request $request)
     {
@@ -86,6 +81,53 @@ class KanbanController extends Controller
         $kanban->save();
 
         return redirect()->route('kanban.list',$instance)->with('success', 'Tablero creado con éxito.');
+
+    }
+
+    /****************************************************************************
+     * CREATE AN ISSUE
+     ****************************************************************************/
+
+    public function create_issue($instance, $id)
+    {
+        $instance = \Instantiation::instance();
+        $kanban = Kanban::find($id);
+
+        return view('kanban.view.issue.create', ['route' => route('kanban.view.issue.new', $instance),
+                                    'instance' => $instance,
+                                    'kanban' => $kanban]);
+    }
+
+
+    public function new_issue(Request $request,$id)
+    {
+
+        $instance = \Instantiation::instance();
+
+        $request->validate([
+            'title' => 'required|min:5|max:255',
+            'description' => ['required',new MinCharacters(10),new MaxCharacters(20000)],
+            'estimated_hours' => ['required_without:minutes','nullable','numeric','sometimes','max:99',new CheckHoursAndMinutes($request->input('minutes'))]
+        ]);
+
+        // datos necesarios para crear issue
+        $user = Auth::user();
+
+        // creación de un nuevo
+        $issue = Issue::create([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'user_id' => $user->id,
+            'estimated_hours'=> $request->input('estimated_hours'),
+            'status'=>$request->input('status'),
+            'kanban_id'=>$id
+        ]);
+
+        // cómputo del sello
+        //$kanban = \Stamp::compute_evidence($evidence);
+        $issue->save();
+
+        return redirect()->route('kanban.view',$instance)->with('success', 'Tarea creada con éxito.');
 
     }
 

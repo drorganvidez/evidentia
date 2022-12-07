@@ -302,6 +302,17 @@
         }
     </style>
 
+    <div class="row">
+
+    <div class="col-lg-12">
+        <div class="row mb-3">
+            <div class="col-lg-3 mt-1">
+                <a href="{{route('kanban.view.issue.create',['instance' => $instance, 'id' => $kanban->id])}}" class="btn btn-primary btn-block" role="button"><i class="fas fa-plus"></i> &nbsp;Crear nueva tarea</a>
+            </div>
+        </div>
+    </div>
+
+</div>
     <div class="container-fluid">
         <div id="sortableKanbanBoards" class="row">
             <div class="panel panel-primary kanban-col">
