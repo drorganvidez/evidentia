@@ -62,19 +62,10 @@ class KanbanController extends Controller
     //     return $this->new($request);
     // }
 
-    private function new($request)
+    public function new(Request $request)
     {
 
         $instance = \Instantiation::instance();
-
-        $this->new_kanban($request);
-
-        return redirect()->route('kanban.list',$instance)->with('success', 'Tablero creado con éxito.');
-
-    }
-
-    private function new_kanban($request)
-    {
 
         $request->validate([
             'title' => 'required|min:5|max:255'
@@ -94,9 +85,8 @@ class KanbanController extends Controller
         //$kanban = \Stamp::compute_evidence($evidence);
         $kanban->save();
 
-        return $kanban;
-    }
+        return redirect()->route('kanban.list',$instance)->with('success', 'Tablero creado con éxito.');
 
-    
+    }
 
 }
