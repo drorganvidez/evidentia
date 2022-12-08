@@ -11,7 +11,7 @@ class Issue extends Model
     protected $table="issue";
 
     protected $fillable = [
-        'id', 'title', 'description', 'estimated_hours', 'user_id', 'status','kanban_id'
+        'id', 'title', 'description', 'estimated_hours', 'status','kanban_id'
     ];
 
     public function kanban(){
@@ -26,6 +26,10 @@ class Issue extends Model
     }
     public static function issues_completed() {
         return Evidence::where('status','=', 'COMPLETED')->orderByDesc('updated_at')->get();
+    }
+
+    public function user(){
+        return $this->belongsToMany('App\Models\User');
     }
 
 }

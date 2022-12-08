@@ -88,18 +88,20 @@ class KanbanController extends Controller
      * CREATE AN ISSUE
      ****************************************************************************/
 
-    public function create_issue($instance, $id)
+    public function create_issue($id)
     {
         $instance = \Instantiation::instance();
         $kanban = Kanban::find($id);
+        $users = User::orderBy('surname')->get();
 
-        return view('kanban.view.issue.create', ['route' => route('kanban.view.issue.new', $instance),
-                                    'instance' => $instance,
-                                    'kanban' => $kanban]);
+        return view('kanban.create_issue', ['route' => route('kanban.view.issue.new', ['instance' => $instance, 'id' =>$id]),
+                                                 'users' => $users,
+                                                 'instance' => $instance,
+                                                 'kanban' => $kanban]);
     }
 
 
-    public function new_issue(Request $request,$id)
+    public function new_issue(Request $request, $id)
     {
 
         $instance = \Instantiation::instance();
@@ -107,21 +109,34 @@ class KanbanController extends Controller
         $request->validate([
             'title' => 'required|min:5|max:255',
             'description' => ['required',new MinCharacters(10),new MaxCharacters(20000)],
-            'estimated_hours' => ['required_without:minutes','nullable','numeric','sometimes','max:99',new CheckHoursAndMinutes($request->input('minutes'))]
+            'users' => 'required|array|min:1',
+            'estimated_hours' => ['numeric','sometimes','min:0','max:99']
         ]);
 
         // datos necesarios para crear issue
-        $user = Auth::user();
+        //$user = Auth::user();
 
         // creación de un nuevo
         $issue = Issue::create([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
-            'user_id' => $user->id,
             'estimated_hours'=> $request->input('estimated_hours'),
-            'status'=>$request->input('status'),
+            'status'=>'TO DO',
             'kanban_id'=>$id
         ]);
+
+        // $issue->status = 'TODO';
+
+        // Asociamos los usuarios a la issue
+        $users_ids = $request->input('users',[]);
+
+        foreach($users_ids as $user_id)
+        {
+
+            $user = User::find($user_id);
+            $issue->users()->attach($user);
+
+        }
 
         // cómputo del sello
         //$kanban = \Stamp::compute_evidence($evidence);
