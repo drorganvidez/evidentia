@@ -14,6 +14,7 @@ use App\Models\Role;
 use App\Models\Meeting;
 use App\Models\MeetingMinutes;
 use App\Models\Comittee;
+use App\Models\Secretary;
 
 class LectureDashboardController extends Controller {
 
@@ -64,7 +65,7 @@ class LectureDashboardController extends Controller {
             }
         }
 
-        /*Numero de archivos subidos a las evidencias 5 lineas FUNCIONA*/
+        /*Numero de archivos subidos a las evidencias 5 lineas TERMINADO*/
         
         $total_files = 0;
         $total_evidences_not_draft = Evidence::evidences_not_draft();
@@ -74,11 +75,11 @@ class LectureDashboardController extends Controller {
            }
         }
         
-        /*Media de archivo por evidencia 1 linea FUNCIONA*/
+        /*Media de archivo por evidencia 1 linea TERMINADO*/
 
         $mean_evidence_proof = $total_files / $total_evidences_not_draft_count;
 
-        /*Evidencias en un rango X archivos (0,1,2,3 o mas) 14 lineas FUNCIONA*/
+        /*Evidencias en un rango X archivos (0,1,2,3 o mas) 14 lineas TERMINADO*/
 
         for($i = 0; $i<4;$i++){ 
             $dict_evidences_proof_ranges[$i] = 0;
@@ -89,7 +90,7 @@ class LectureDashboardController extends Controller {
             foreach($evidence->proofs as $proof){
                 $number_proofs = $number_proofs + 1;
             }
-            if($number_proofs < 1){
+            if($number_proofs < 1 and $number_proofs >= 0){
                 $dict_evidences_proof_ranges[0] = $dict_evidences_proof_ranges[0] + 1;
             } else if ($number_proofs >= 1 and $number_proofs < 2){
                 $dict_evidences_proof_ranges[1] = $dict_evidences_proof_ranges[1] + 1;
@@ -100,7 +101,7 @@ class LectureDashboardController extends Controller {
             }
         }
 
-        /*Peso total de los archivos subidos 6 lineas FUNCIONA*/
+        /*Peso total de los archivos subidos 6 lineas FALTA PONER TAMAÑO EN LEGIBLE EN GB*/
 
         $total_weight = 0;
         $total_evidences_not_draft = Evidence::evidences_not_draft();
@@ -111,12 +112,12 @@ class LectureDashboardController extends Controller {
             }
         }
 
-        /*Peso medio de archivos por evidencia 1 Linea FUNCIONA*/
+        /*Peso medio de archivos por evidencia 1 Linea TERMINADO*/
         $mean_evidences_proof_weight = $total_weight / $total_evidences_not_draft_count;
 
         /*ESTOS DOS METODOS DE AQUI ABAJO HAY QUE ARREGLARLOS POR QUE SI NO SE TIENEN MEETIGNS NO SE PUEDE COMPROBA*/
 
-        /*Reuniones totales 1 Linea*/
+        /*Reuniones totales 1 Linea TERMINADO*/
         $total_meetings_counts = Meeting::all()->count();        
 
         /*Tiempo total de reunion 10 Lineas*/
@@ -144,7 +145,7 @@ class LectureDashboardController extends Controller {
 
         */
 
-        /*Evidencias subidas por comite 21 Lineas FUNCIONA pero hay que revisar por que tiene pinta que son las evidencias*/
+        /*Personas por comite 21 Lineas FUNCIONA pero hay que revisar por que tiene pinta que son las evidencias*/
 
         $comites = Comittee::all();
         for($i=0;$i<8;$i++){
@@ -216,26 +217,66 @@ class LectureDashboardController extends Controller {
 
         /*Numero de reuniones efectivas segun cambridge*/
 
-        /*Media de Reuniones por secretario 2 Lineas*/
-
-        /* Esta comentado por que no hay meetings, cuand ose creen entonces se quita
+        /* Esta comentado por que no hay meetings, cuando se creen entonces se quita
         $mean_time_meetings_hour = $total_time_meetings_hours / $total_meetings_counts;
         $mean_time_meetings_minutes = $total_time_meetings_minutes / $total_meetings_counts;
         */
 
         /*Reuniones por cada comite*/
 
+       /* $all_comites = Comittee::all();
+
+        for($i=0; $i<8;$i++){ 
+            $meetings_comite[$i] = 0;
+        }
+
+        foreach($all_comites as $comite){
+            $meetings_comite = $comite->meetings();
+        }*/
+
         /*Media tiempo de reuniones por cada comite*/
 
-        /*Reuniones en los tiempos de 0 a 1 hora, de 1 a 2 horas, de 2 a 3 horas y de 3 a mas horas ordenadas*/
+        /*Numero de Secretarios por comite 20 Lineas TERMINADO*/
 
-        /*Eventos totales*/
+        for($i=0; $i<8;$i++){ 
+            $secretarios_por_comite[$i] = 0;
+        }
+        
+        $comites = Comittee::all();
+
+        foreach($comites as $comiteElegido){
+            $comiteSecretarios = $comiteElegido->name;
+
+            if(str_contains($comiteSecretarios,'Presidencia')){
+                $secretarios_por_comite[0] = $secretarios_por_comite[0] + $comiteElegido-> secretaries()->count();
+            } elseif (str_contains($comiteSecretarios,'Secretar')){
+                $secretarios_por_comite[1] = $secretarios_por_comite[1] + $comiteElegido-> secretaries()->count();
+            } elseif (str_contains($comiteSecretarios,'Programa')){
+                $secretarios_por_comite[2] = $secretarios_por_comite[2] + $comiteElegido-> secretaries()->count();
+            } elseif (str_contains($comiteSecretarios,'Igualdad')){
+                $secretarios_por_comite[3] = $secretarios_por_comite[3] + $comiteElegido-> secretaries()->count();
+            } elseif (str_contains($comiteSecretarios,'Sostenibilidad')){
+                $secretarios_por_comite[4] = $secretarios_por_comite[4] + $comiteElegido-> secretaries()->count();
+            } elseif (str_contains($comiteSecretarios,'Finanzas')){
+                $secretarios_por_comite[5] = $secretarios_por_comite[5] + $comiteElegido-> secretaries()->count();
+            } elseif (str_contains($comiteSecretarios,'Log')){
+                $secretarios_por_comite[6] = $secretarios_por_comite[6] + $comiteElegido-> secretaries()->count();
+            } elseif (str_contains($comiteSecretarios,'Comunicaci')){
+                $secretarios_por_comite[7] = $secretarios_por_comite[7] + $comiteElegido-> secretaries()->count();
+            }
+
+        }
+
+
+        /*Media de Reuniones por secretario ¿REALMENTE UTIL?*/
+
+        /*Reuniones en los tiempos de 0 a 1 hora, de 1 a 2 horas, de 2 a 3 horas y de 3 a mas horas ordenadas segun el comite*/
 
 
         return view('dashboard.view',['instance'=> $instance, 'total_evidences_not_draft'=>$total_evidences_not_draft_count, 
         'total_users' => $total_users_filtered, 'evidences_per_user' => $evidences_per_user, 'total_files' => $total_files,
         'mean_evidence_proof' => $mean_evidence_proof, 'total_weight' => $total_weight, 'mean_evidences_proof_weight' => $mean_evidences_proof_weight,
-        'comites' => $user_comite
+        'comites' => $user_comite, "secretarios_comite" => $secretarios_por_comite
         ]);
     }
 

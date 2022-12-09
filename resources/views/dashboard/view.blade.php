@@ -27,7 +27,14 @@
 
 <h5> Media de cuota de espacio ocupada por archivos en cada evidencia {{$mean_evidences_proof_weight}}</h5>
 
-
+<h5> Secretarios comite 0 {{$secretarios_comite[0]}}</h5>
+<h5> Secretarios comite 1 {{$secretarios_comite[1]}}</h5>
+<h5> Secretarios comite 2 {{$secretarios_comite[2]}}</h5>
+<h5> Secretarios comite 3 {{$secretarios_comite[3]}}</h5>
+<h5> Secretarios comite 4 {{$secretarios_comite[4]}}</h5>
+<h5> Secretarios comite 5 {{$secretarios_comite[5]}}</h5>
+<h5> Secretarios comite 6 {{$secretarios_comite[6]}}</h5>
+<h5> Secretarios comite 7 {{$secretarios_comite[7]}}</h5>
 
 @endsection
 
