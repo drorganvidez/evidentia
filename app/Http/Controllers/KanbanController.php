@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Rules\MaxCharacters;
+use App\Rules\MinCharacters;
 
 class KanbanController extends Controller
 {
@@ -114,18 +116,16 @@ class KanbanController extends Controller
         ]);
 
         // datos necesarios para crear issue
-        //$user = Auth::user();
+        $user = Auth::user();
 
         // creación de un nuevo
         $issue = Issue::create([
+            'user_id'=>$user->$id,
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'estimated_hours'=> $request->input('estimated_hours'),
-            'status'=>'TO DO',
             'kanban_id'=>$id
         ]);
-
-        // $issue->status = 'TODO';
 
         // Asociamos los usuarios a la issue
         $users_ids = $request->input('users',[]);
@@ -138,8 +138,6 @@ class KanbanController extends Controller
 
         }
 
-        // cómputo del sello
-        //$kanban = \Stamp::compute_evidence($evidence);
         $issue->save();
 
         return redirect()->route('kanban.view',$instance)->with('success', 'Tarea creada con éxito.');

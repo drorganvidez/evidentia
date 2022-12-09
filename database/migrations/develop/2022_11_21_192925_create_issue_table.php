@@ -20,6 +20,7 @@ class CreateIssueTable extends Migration
             $table->foreignId('user_id');
             $table->string('title');
             $table->text('description');
+            $table->integer('estimated_hours');
             $table->enum('status', ['TO DO', 'IN PROGRESS', 'COMPLETED']);
             $table->boolean('last')->default(true);
             $table->timestamps();
