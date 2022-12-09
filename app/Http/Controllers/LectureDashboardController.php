@@ -23,130 +23,63 @@ class LectureDashboardController extends Controller {
 
         $instance = \Instantiation::instance();
 
-        /*
+        /*====================================================================================
 
             DATOS GENERALES DE LAS JORNADAS
 
-        */
+        ====================================================================================*/
 
-        /*Usuarios totales 5 linea FUNCIONA*/
-        $total_users = User::all();
-        $total_users_filtered = 0;
-        foreach($total_users as $users){
-            if(!($users->hasRole('LECTURE'))){
-                $total_users_filtered = $total_users_filtered +1;
-            }
-        }
 
-        /*Evidencia totales 1 linea FUNCIONA*/
+        /*Usuarios totales DENTRO DE LA VISTA Y ARREGLADO*/
+        
+        $total_users = $this->getTotalUsers();
+
+        /*Evidencia totales DENTRO DE LA VISTA Y ARREGLADO*/
         $total_evidences_not_draft_count = Evidence::evidences_not_draft()->count();
         
-        /*Evidencias medias por persona 1 linea FUNCIONA*/
-        $evidences_per_user = $total_evidences_not_draft_count / $total_users_filtered;
+        /*Evidencias medias por persona DENTRO DE LA VISTA Y ARREGLADO*/
+        $evidences_per_user = $total_evidences_not_draft_count / $total_users;
 
-        /*Evidencias en un rango X de horas (entre 0 y 1,1 y 2, 3 y 5) 13 lineas FUNCIONA*/
+        /*Evidencias en un rango X de horas (entre 0 y 1,1 y 2, 3 y 5) DENTRO DE LA VISTA Y ARREGLADO*/
+        $dict_evidences_hours = $this->getEvidencesInRange();
 
-        $evidences_not_draft = Evidence::evidences_not_draft();
+        /* Numero de archivos subidos a las evidencias DENTRO DE LA VISTA */
+        $total_files = $this->getTotalFiles();
         
-        for($i=0; $i<4;$i++){ 
-            $dict_evidences_hours[$i] = 0;
-        }
-
-        foreach ($evidences_not_draft as $evidence) {
-            $hours = $evidence->hours;
-            if($hours < 1){
-                $dict_evidences_hours[0] = $dict_evidences_hours[0] + 1;
-            } else if ($hours >= 1 and $hours < 2){
-                $dict_evidences_hours[1] = $dict_evidences_hours[1] + 1;
-            } else if ($hours >= 2 and $hours < 3){
-                $dict_evidences_hours[2] = $dict_evidences_hours[2] + 1;
-            } else if ($hours >= 1 and $hours < 2){
-                $dict_evidences_hours[3] = $dict_evidences_hours[3] + 1;
-            }
-        }
-
-        /*Numero de archivos subidos a las evidencias 5 lineas TERMINADO*/
-        
-        $total_files = 0;
-        $total_evidences_not_draft = Evidence::evidences_not_draft();
-        foreach ($total_evidences_not_draft as $evidence) {
-           foreach($evidence->proofs as $proof){
-                $total_files = $total_files + 1;
-           }
-        }
-        
-        /*Media de archivo por evidencia 1 linea TERMINADO*/
-
+        /*Media de archivo por evidencia 1 linea DENTRO DE LA VISTA*/
         $mean_evidence_proof = $total_files / $total_evidences_not_draft_count;
 
-        /*Evidencias en un rango X archivos (0,1,2,3 o mas) 14 lineas TERMINADO*/
+        /*Evidencias en un rango X archivos (0,1,2,3 o mas) 14 lineas DENTRO DE LA VISTA Y ARREGLADO*/
+        $dict_evidences_proof_ranges = $this->getProofRanges();
 
-        for($i = 0; $i<4;$i++){ 
-            $dict_evidences_proof_ranges[$i] = 0;
-        }
+        /*Peso total de los archivos subidos DENTRO DE LA VISTA Y ARREGLADO*/
+        $total_weight = $this->totalWeight();
+        $total_weight_reformed = $this->getSize($total_weight);
 
-        foreach ($total_evidences_not_draft as $evidence) {
-            $number_proofs = 0;
-            foreach($evidence->proofs as $proof){
-                $number_proofs = $number_proofs + 1;
-            }
-            if($number_proofs < 1 and $number_proofs >= 0){
-                $dict_evidences_proof_ranges[0] = $dict_evidences_proof_ranges[0] + 1;
-            } else if ($number_proofs >= 1 and $number_proofs < 2){
-                $dict_evidences_proof_ranges[1] = $dict_evidences_proof_ranges[1] + 1;
-            } else if ($number_proofs >= 2 and $number_proofs < 3){
-                $dict_evidences_proof_ranges[2] = $dict_evidences_proof_ranges[2] + 1;
-            } else if ($number_proofs >= 3){
-                $dict_evidences_proof_ranges[3] = $dict_evidences_proof_ranges[3] + 1;
-            }
-        }
+        /*Peso medio de archivos por evidencia DENTRO DE LA VISTA Y ARREGLADO */
+        $mean_evidences_proof_weight = $this->getSize($total_weight / $total_evidences_not_draft_count);
 
-        /*Peso total de los archivos subidos 6 lineas FALTA PONER TAMAÑO EN LEGIBLE EN GB*/
+        /*Reuniones totales DENTRO LA VISTA Y ARREGLADO */
+        $total_meetings = Meeting::all()->count();       
 
-        $total_weight = 0;
-        $total_evidences_not_draft = Evidence::evidences_not_draft();
-        foreach($total_evidences_not_draft as $evidence){
-            foreach($evidence->proofs as $proof){
-                $size = $proof->file->size;
-                $total_weight = $total_weight + $size;
-            }
-        }
+        /*Tiempo total de reunion DENTRO LA VISTA Y ARREGLADO*/
+        $total_time_meetings = $this->getTotalTimeMeetings();
 
-        /*Peso medio de archivos por evidencia 1 Linea TERMINADO*/
-        $mean_evidences_proof_weight = $total_weight / $total_evidences_not_draft_count;
+        /*Tiempo medio de cada reunion DENTRO LA VISTA Y ARREGLADO*/
+        $meen_time_meetings = $total_time_meetings/$total_meetings;
 
-        /*ESTOS DOS METODOS DE AQUI ABAJO HAY QUE ARREGLARLOS POR QUE SI NO SE TIENEN MEETIGNS NO SE PUEDE COMPROBA*/
-
-        /*Reuniones totales 1 Linea TERMINADO*/
-        $total_meetings_counts = Meeting::all()->count();        
-
-        /*Tiempo total de reunion 10 Lineas*/
-/*
-        $total_time_meetings_hours = 5; /*ESTE VALOR PONERLO A 0, ES UNA PRUEBA*/
-/*        $total_time_meetings_minutes = 65; /*ESTE VALOR PONERLO A 0, ES UNA PRUEBA*/
-/*        $total_meetings = Meeting::all();
-        foreach($total_meetings as $meeting){
-            $total_time_meetings_hours = $total_time_meetings + $meeting->hours;
-            /* TENGO QUE ARREGLARLO ME DA ERROR NO SE POR QUE AHI
-            $minutes = MeetingMinutes::find($meeting->id)
-            $total_time_meetings_minutes = $total_time_meetings_minutes + $minutes;
-            if($total_time_meetings_minutes > 60){
-                $total_time_meetings_hours = $total_time_meetings_hours + 1;
-                $total_time_meetings_minutes = $total_time_meetings_minutes - 60;
-            }
-
-            */
-        /*}*/
-
-
-        /* 
+        /* ====================================================================================
 
             DATOS PARA CADA COMITE
 
-        */
+        ====================================================================================*/
+
+        /*Nombres de cada comite DENTRO DE LA VISTA Y ARREGLADO*/
+
+        $comite_name = $this->getComiteNames();    
 
         /*Personas por comite 21 Lineas FUNCIONA pero hay que revisar por que tiene pinta que son las evidencias*/
-
+        /*    
         $comites = Comittee::all();
         for($i=0;$i<8;$i++){
             $user_comite[$i]=0;
@@ -174,9 +107,182 @@ class LectureDashboardController extends Controller {
             
             
         }
-        
-        /*Numero evidencias por comite 21 Lineas FUNCIONA*/
+        */
 
+        /*Numero evidencias por comite 21 Lineas DENTRO DE LA VISTA Y ARREGLADO*/
+
+        $evidence_per_comite = $this->getEvidencesComite();
+
+        /*Numero medio de evidencias por personas dentro del comite da division por 0 debido a que el $user_comite no pilla a las personas de ese comite*/
+
+
+        /*Peso de archivos por comite DENTRO DE LA VISTA Y ARREGLADO*/
+
+        $comite_weight = $this->getComiteProofWeight();
+
+        /*Reuniones por cada comite DENTRO DE LA VISTA Y ARREGLADO*/
+
+        $comite_meetings = $this->getComiteMeetings();
+
+        /*Tiempo total de reuniones en cada comite*/
+
+        /*$meetings_comite_time = $this->getTotalTimeComiteMeetings();*/
+
+        /*Tiempo medio de cada reunion en el comite*/
+
+        /*Numero de Secretarios por comite 20 Lineas DENTRO DE LA VISTA Y ARREGLADO*/
+
+        $secretarios_por_comite = $this->getSecretariosComite();
+
+        /*Reuniones en los tiempos de 0 a 1 hora, de 1 a 2 horas, de 2 a 3 horas y de 3 a mas horas ordenadas segun el comite*/
+
+
+        return view('dashboard.view',['instance'=> $instance, 'total_evidences_not_draft'=>$total_evidences_not_draft_count, 
+        'total_users' => $total_users, 'evidences_per_user' => $evidences_per_user, 'total_files' => $total_files, 'dict_evidences_hours' => $dict_evidences_hours,
+        'mean_evidence_proof' => $mean_evidence_proof, 'total_weight' => $total_weight_reformed, 'mean_evidences_proof_weight' => $mean_evidences_proof_weight,
+        'secretarios_comite' => $secretarios_por_comite, 'comite_name' => $comite_name, 'evidences_per_comite' => $evidence_per_comite,
+        'evidences_proof_range' => $dict_evidences_proof_ranges, 'comite_weight' => $comite_weight, 'total_meetings' => $total_meetings, 
+        'total_time_meetings' => $total_time_meetings, 'meen_time_meetings' => $meen_time_meetings, 'meetings_comite' => $comite_meetings
+        ]);
+    }
+
+    /*====================================================================================
+
+        FUNCIONES AUXILIARES USADAS PARA CALCULAR ESTADISTICAS
+
+    ====================================================================================*/    
+
+
+    public function getSize($sizeToConvert){
+        $KB = 1024;
+        $MB = pow(1024,2);
+        $GB = pow(1024,3);
+        if($sizeToConvert>=$GB){
+            $sizeReformed = round($sizeToConvert/$GB,2)." GB";
+        }else if($sizeToConvert>=$MB){
+            $sizeReformed = round($sizeToConvert/$MB,2)." MB";
+        }
+        else if($sizeToConvert>=$KB){
+            $sizeReformed = round($sizeToConvert/$KB,2)." KB";
+        } else {
+            $sizeReformed = $sizeToConvert." KB";
+        }
+
+        return $sizeReformed;
+    }
+
+    public function getTotalUsers(){
+        $total_users = User::all();
+        $total_users_filtered = 0;
+        foreach($total_users as $users){
+            if(!($users->hasRole('LECTURE'))){
+                $total_users_filtered = $total_users_filtered +1;
+            }
+        }
+
+        return $total_users_filtered;
+    }
+
+    /*Funcion para las evidencias en un rango especifico*/
+
+    public function getEvidencesInRange(){
+        $evidences_not_draft = Evidence::evidences_not_draft();
+        
+        for($i=0; $i<4;$i++){ 
+            $dict_evidences_hours[$i] = 0;
+        }
+
+        foreach ($evidences_not_draft as $evidence) {
+            $hours = $evidence->hours;
+            if($hours < 1){
+                $dict_evidences_hours[0] = $dict_evidences_hours[0] + 1;
+            } else if ($hours >= 1 and $hours < 2){
+                $dict_evidences_hours[1] = $dict_evidences_hours[1] + 1;
+            } else if ($hours >= 2 and $hours < 3){
+                $dict_evidences_hours[2] = $dict_evidences_hours[2] + 1;
+            } else if ($hours >= 1 and $hours < 2){
+                $dict_evidences_hours[3] = $dict_evidences_hours[3] + 1;
+            }
+        }
+
+        return $dict_evidences_hours;
+        
+    }
+
+    public function getTotalFiles(){
+        $total_files = 0;
+        $total_evidences_not_draft = Evidence::evidences_not_draft();
+        foreach ($total_evidences_not_draft as $evidence) {
+           foreach($evidence->proofs as $proof){
+                $total_files = $total_files + 1;
+           }
+        }
+
+        return $total_files;
+    }
+
+    public function getProofRanges(){
+        for($i = 0; $i<4;$i++){ 
+            $dict_evidences_proof_ranges[$i] = 0;
+        }
+        $total_evidences_not_draft = Evidence::evidences_not_draft();
+        foreach ($total_evidences_not_draft as $evidence) {
+            $number_proofs = 0;
+            foreach($evidence->proofs as $proof){
+                $number_proofs = $number_proofs + 1;
+            }
+            if($number_proofs < 1 and $number_proofs >= 0){
+                $dict_evidences_proof_ranges[0] = $dict_evidences_proof_ranges[0] + 1;
+            } else if ($number_proofs >= 1 and $number_proofs < 2){
+                $dict_evidences_proof_ranges[1] = $dict_evidences_proof_ranges[1] + 1;
+            } else if ($number_proofs >= 2 and $number_proofs < 3){
+                $dict_evidences_proof_ranges[2] = $dict_evidences_proof_ranges[2] + 1;
+            } else if ($number_proofs >= 3){
+                $dict_evidences_proof_ranges[3] = $dict_evidences_proof_ranges[3] + 1;
+            }
+        }
+
+        return  $dict_evidences_proof_ranges;
+    }
+
+
+    public function totalWeight(){
+        $total_weight = 0;
+        $total_evidences_not_draft = Evidence::evidences_not_draft();
+        foreach($total_evidences_not_draft as $evidence){
+            foreach($evidence->proofs as $proof){
+                $size = $proof->file->size;
+                $total_weight = $total_weight + $size;
+            }
+        }
+
+        return $total_weight;
+    }
+
+    public function getTotalTimeMeetings(){
+        $total_time_meetings = 0; /*ESTE VALOR PONERLO A 0, ES UNA PRUEBA*/
+        $all_meetings = Meeting::all();
+        foreach($all_meetings as $meeting){
+            $total_time_meetings = $total_time_meetings + $meeting->hours;
+        }
+        return $total_time_meetings;
+    }
+
+
+    public function getComiteNames(){
+        $comite_name[0] = "Presidencia";
+        $comite_name[1] = "Secretaria";
+        $comite_name[2] = "Programa";
+        $comite_name[3] = "Igualdad";
+        $comite_name[4] = "Sostenibilidad";
+        $comite_name[5] = "Finanzas";
+        $comite_name[6] = "Loguistica";
+        $comite_name[7] = "Comunicación";
+
+        return $comite_name;
+    }
+   
+    public function getEvidencesComite(){
         for($i=0; $i<8;$i++){ 
             $evidence_per_comite[$i] = 0;
         }
@@ -203,40 +309,44 @@ class LectureDashboardController extends Controller {
             }
         }
 
-        /*Numero medio de evidencias por personas dentro del comite 2 lineas da division por 0*/
+        return $evidence_per_comite;
+    }
 
-        /*for($i = 0; $i<8;$i++){ 
-            if($user_comite>0 or $user_comite!=null){
-                $mean_evidence_proof_comite[$i] = $evidence_per_comite[$i]/$user_comite[$i];
-            } else {
-                $mean_evidence_proof_comite[$i] = 0;
+    public function getComiteProofWeight(){
+        for($i=0;$i<8;$i++){
+            $comite_weight[$i]=0;
+        }
+        $total_evidences_not_draft = Evidence::evidences_not_draft();
+        foreach($total_evidences_not_draft as $evidence){
+            $name_comite_proof = Comittee::find($evidence->comittee_id)->name;
+            foreach($evidence->proofs as $proof){
+                if(str_contains($name_comite_proof,'Presidencia')){
+                    $comite_weight[0] = $comite_weight[0] + $proof->file->size;
+                } elseif (str_contains($name_comite_proof,'Secretar')){
+                    $comite_weight[1] = $comite_weight[1] + $proof->file->size;
+                } elseif (str_contains($name_comite_proof,'Programa')){
+                    $comite_weight[2] = $comite_weight[2] + $proof->file->size;
+                } elseif (str_contains($name_comite_proof,'Igualdad')){
+                    $comite_weight[3] = $comite_weight[3] + $proof->file->size;
+                } elseif (str_contains($name_comite_proof,'Sostenibilidad')){
+                    $comite_weight[4] = $comite_weight[4] + $proof->file->size;
+                } elseif (str_contains($name_comite_proof,'Finanzas')){
+                    $comite_weight[5] = $comite_weight[5] + $proof->file->size;
+                } elseif (str_contains($name_comite_proof,'Log')){
+                    $comite_weight[6] = $comite_weight[6] + $proof->file->size;
+                } elseif (str_contains($name_comite_proof,'Comunicaci')){
+                    $comite_weight[7] = $comite_weight[7] + $proof->file->size;
+                }
             }
-        }*/
-        
-        /*Peso total archivos por comite*/
-
-        /*Numero de reuniones efectivas segun cambridge*/
-
-        /* Esta comentado por que no hay meetings, cuando se creen entonces se quita
-        $mean_time_meetings_hour = $total_time_meetings_hours / $total_meetings_counts;
-        $mean_time_meetings_minutes = $total_time_meetings_minutes / $total_meetings_counts;
-        */
-
-        /*Reuniones por cada comite*/
-
-       /* $all_comites = Comittee::all();
-
-        for($i=0; $i<8;$i++){ 
-            $meetings_comite[$i] = 0;
         }
 
-        foreach($all_comites as $comite){
-            $meetings_comite = $comite->meetings();
-        }*/
+        for($i=0;$i<8;$i++){
+            $comite_weight[$i] = $this->getSize($comite_weight[$i]);
+        }
+        return $comite_weight;
+    }
 
-        /*Media tiempo de reuniones por cada comite*/
-
-        /*Numero de Secretarios por comite 20 Lineas TERMINADO*/
+    public function getSecretariosComite(){
 
         for($i=0; $i<8;$i++){ 
             $secretarios_por_comite[$i] = 0;
@@ -266,24 +376,37 @@ class LectureDashboardController extends Controller {
             }
 
         }
-
-
-        /*Media de Reuniones por secretario ¿REALMENTE UTIL?*/
-
-        /*Reuniones en los tiempos de 0 a 1 hora, de 1 a 2 horas, de 2 a 3 horas y de 3 a mas horas ordenadas segun el comite*/
-
-
-        return view('dashboard.view',['instance'=> $instance, 'total_evidences_not_draft'=>$total_evidences_not_draft_count, 
-        'total_users' => $total_users_filtered, 'evidences_per_user' => $evidences_per_user, 'total_files' => $total_files,
-        'mean_evidence_proof' => $mean_evidence_proof, 'total_weight' => $total_weight, 'mean_evidences_proof_weight' => $mean_evidences_proof_weight,
-        'comites' => $user_comite, "secretarios_comite" => $secretarios_por_comite
-        ]);
+        return $secretarios_por_comite;
     }
 
+    public function getComiteMeetings(){
 
+        for($i=0; $i<8;$i++){ 
+            $meetings_comite[$i] = 0;
+        }
+        $comites = Comittee::all();
 
-
-
-
+        foreach($comites as $comite){
+            $comiteName = $comite->name;
+            if(str_contains($comiteName,'Presidencia')){  
+                $meetings_comite[0] = $meetings_comite[0] + $comite->meetings()->count();              
+            } elseif (str_contains($comiteName,'Secretar')){  
+                $meetings_comite[1] = $meetings_comite[1] + $comite->meetings()->count();               
+            } elseif (str_contains($comiteName,'Programa')){                
+                $meetings_comite[2] = $meetings_comite[2] + $comite->meetings()->count(); 
+            } elseif (str_contains($comiteName,'Igualdad')){                
+                $meetings_comite[3] = $meetings_comite[3] + $comite->meetings()->count(); 
+            } elseif (str_contains($comiteName,'Sostenibilidad')){                
+                $meetings_comite[4] = $meetings_comite[4] + $comite->meetings()->count(); 
+            } elseif (str_contains($comiteName,'Finanzas')){
+                $meetings_comite[5] = $meetings_comite[5] + $comite->meetings()->count(); 
+            } elseif (str_contains($comiteName,'Log')){
+                $meetings_comite[6] = $meetings_comite[6] + $comite->meetings()->count(); 
+            } elseif (str_contains($comiteName,'Comunicaci')){
+                $meetings_comite[7] = $meetings_comite[7] + $comite->meetings()->count(); 
+            }
+        }
+        return $meetings_comite;
+    }
 
 }
