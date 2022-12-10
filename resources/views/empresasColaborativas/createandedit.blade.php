@@ -43,7 +43,7 @@
 
                         <div class="form-row">
 
-                            <x-input col="4" attr="email" :value="$empresacolaborativa->email ?? ''" label="Email" description="Email"/>
+                            <x-input col="4" attr="email" required type="email" :value="$empresacolaborativa->email ?? ''" label="Email" description="Email"/>
 
                         </div>
 
