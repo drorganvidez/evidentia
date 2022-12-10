@@ -17,7 +17,6 @@ class CreateIssueTable extends Migration
         Schema::create('issue', function (Blueprint $table) {
             $table->id();
             $table->foreignId('kanban_id');
-            $table->foreignId('user_id');
             $table->string('title');
             $table->text('description');
             $table->integer('estimated_hours');

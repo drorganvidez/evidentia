@@ -28,7 +28,7 @@ class Issue extends Model
         return Evidence::where('status','=', 'COMPLETED')->orderByDesc('updated_at')->get();
     }
 
-    public function user(){
+    public function users(){
         return $this->belongsToMany('App\Models\User');
     }
 
