@@ -112,20 +112,20 @@ class KanbanController extends Controller
      * CREATE AN ISSUE
      ****************************************************************************/
 
-    public function create_issue($id)
+    public function create_issue($instance, $id)
     {
         $instance = \Instantiation::instance();
         $kanban = Kanban::find($id);
         $users = User::orderBy('surname')->get();
 
-        return view('kanban.create_issue', ['route' => route('kanban.view.issue.new', ['instance' => $instance, 'id' =>$id]),
+        return view('kanban.create_issue', ['route' => route('kanban.view.issue.new', ['instance' => $instance, 'id' => $kanban->id]),
                                                  'users' => $users,
                                                  'instance' => $instance,
                                                  'kanban' => $kanban]);
     }
 
 
-    public function new_issue(Request $request, $id)
+    public function new_issue(Request $request, $instance, $id)
     {
 
         $instance = \Instantiation::instance();
@@ -160,10 +160,9 @@ class KanbanController extends Controller
             $issue->users()->attach($user);
 
         }
-
         $kanban = Kanban::find($id);
 
-        return redirect()->route('kanban.view',['instance' => $instance, 'id' => $kanban->id])->with('success', 'Tarea creada con éxito.');
+        return redirect()->route('kanban.view', ['instance' => $instance, 'id' => $kanban->id])->with('success', 'Tarea creada con éxito.');
 
     }
 
