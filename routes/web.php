@@ -376,6 +376,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/lecture/user/list','ManagementController@user_list')->name('lecture.user.list');
     Route::get('/lecture/evidence/list','ManagementController@evidence_list')->name('lecture.evidence.list');
     Route::get('/lecture/meeting/list','ManagementController@meeting_list')->name('lecture.meeting.list');
+    Route::get('/lecture/user/filemanager/{id}', 'ManagementController@user_filemanager')->name('lecture.user.filemanager');
 
     Route::middleware(['checkroles:LECTURE'])->group(function () {
         Route::get('/lecture/config', 'ConfigController@config')->name('lecture.config');

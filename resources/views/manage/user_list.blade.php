@@ -34,7 +34,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-9">
+            <div class="col-lg-12">
 
             <div class="card shadow-lg">
 
@@ -113,8 +113,10 @@
                                         </td>
                                         <td>
                                             {{-- Espacio dedicado para el sumatorio de espacio ocupado --}}
-                                            {{-- El link redirige al file manager::por hacer--}}
-                                            <a href="#">{{$dict_storage[$user->id]}}</a>
+                                            {{-- El link redirige al file manager del usuario en concreto--}}
+                                            <a href="{{route('lecture.user.filemanager', ['instance' => $instance, 'id' => $user->id])}}">
+                                                {{$dict_storage[$user->id]}}
+                                            </a>
                                         </td>
                                     </tr>
 
