@@ -119,5 +119,42 @@ class TaskTest extends TestCase
         $response->assertStatus(302);
     }
 
+    public function testCreateTaskWithoutLogin()
+    {
+        
+        $request = [
+            'title' => 'Evidencia 2',
+            'description' => '',
+            'hours' => '1.0',
+            'end_date' => '2022-11-18 08:26',
+            'user_id' => '2022-11-18 09:26',
+            'comittee_id' => '2'
+        ];
+
+        $response = $this->post('/21/task/create',$request);
+
+        $response->assertStatus(302);
+    }
+
+    public function testEditTaskNegative()
+    {
+        
+        $this->testLoginWithAlumno1();
+
+        $request = [
+            'id'    => 1,
+            'title' => 'Task 1',
+            'description' => '',
+            'hours' => '1.0',
+            'end_date' => '2022-11-18 08:26',
+            'user_id' => '2022-11-18 09:26',
+            'comittee_id' => '2'
+        ];
+        
+        $response = $this->post('/21/task/edit/save',$request);
+
+        $response->assertStatus(302);
+    }
+
 
 }
