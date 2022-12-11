@@ -67,7 +67,15 @@
                                 @endif
                             </tr>
                         @endforeach
-
+                        <tr>
+                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><b>Total:</b></td>
+                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><b>{{$total}}€</b></td>
+                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><b>Total Aceptado:</b></td>
+                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><b>{{$aceptado}}€</b></td>
+                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><b>Total No Aceptado:</b></td>
+                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><b>{{$noAceptado}}€</b></td>
+                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><b>Total Pendiente:</b></td>
+                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><b>{{$pendiente}}€</b></td>
                         </tbody>
                     </table>
 
