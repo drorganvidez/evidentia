@@ -5,6 +5,7 @@ use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\MeetingSecretaryController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\EvidenceController;
+use App\Http\Controllers\IncidenceController;
 use App\Http\Controllers\SignController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -174,6 +175,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
     // EVIDENCES MANAGEMENT BY A COORDINATOR
     Route::prefix('coordinator')->group(function () {
+
         Route::get('/evidence/list/all', 'EvidenceCoordinatorController@all')->name('coordinator.evidence.list.all');
         Route::get('/evidence/list/pending', 'EvidenceCoordinatorController@pending')->name('coordinator.evidence.list.pending');
         Route::get('/evidence/list/accepted', 'EvidenceCoordinatorController@accepted')->name('coordinator.evidence.list.accepted');
@@ -190,6 +192,51 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         });
     });
 
+    /**
+     *  INCIDENCES
+     */
+    Route::get('/incidence/list/export/{ext}',[IncidenceController::class , 'export'])->name('incidence.list.export');
+    Route::get('/incidence/list', 'IncidenceController@list')->name('incidence.list');
+    
+    Route::get('/incidence/create', 'IncidenceController@create')->name('incidence.createAndEditIncidence');
+
+    Route::middleware(['checkuploadincidence'])->group(function () {
+        Route::post('/incidence/publish', 'IncidenceController@publish')->name('incidence.publish');
+    });
+    Route::middleware(['checkuploadincidence' , 'checkincidenceisnotinreview'])->group(function () {
+        Route::post('/incidence/remove', 'IncidenceController@remove')->name('incidence.remove');
+    });
+    Route::middleware(['checknotnull:IncidenceProof','checkincidenceproofdownload'])->group(function () {
+        Route::get('/incidence/proof/download/{id}', 'IncidenceProofController@download')->name('incidence.proof.download');
+    });
+
+   
+    Route::get('/incidence/view/{id}', 'IncidenceController@view')->name('incidence.view');
+
+    /**
+     *  COORDINATOR INCIDENCES
+     */
+
+    Route::prefix('coordinator')->group(function () {
+        Route::get('/incidence/list/all', 'IncidenceCoordinatorController@all')->name('coordinator.incidence.list.all');
+        Route::get('/incidence/list/pending', 'IncidenceCoordinatorController@pending')->name('coordinator.incidence.list.pending');
+        Route::get('/incidence/list/inreview', 'IncidenceCoordinatorController@inreview')->name('coordinator.incidence.list.inreview');
+        Route::get('/incidence/list/closed', 'IncidenceCoordinatorController@closed')->name('coordinator.incidence.list.closed');
+        Route::get('/incidence/export/{type}/{ext}','IncidenceCoordinatorController@incidences_export')->name('coordinator.incidence.export');
+
+
+        Route::middleware(['checknotnull:Incidence', 'incidencefrommycommittee'])->group(function () {
+            Route::get('/incidence/view/{id}', 'IncidenceController@view')->name('coordinator.incidence.view');
+
+            Route::middleware(['checkvalidateincidences'])->group(function () {
+                Route::post('/incidence/close', 'IncidenceCoordinatorController@close')->name('coordinator.incidence.close');
+                Route::get('/incidence/review/{id}', 'IncidenceCoordinatorController@review')->name('coordinator.incidence.review');
+            });
+        });
+    });
+        
+
+       
     /**
      *  MEETINGS, LISTS AND BONUS
      */

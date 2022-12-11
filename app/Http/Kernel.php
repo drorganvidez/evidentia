@@ -81,6 +81,12 @@ class Kernel extends HttpKernel
         'checkisadministrator' => \App\Http\Middleware\CheckIsAdministrator::class,
         'meetingrequestmine' => MeetingRequestMine::class,
         'signaturesheetmine' => SignatureSheetMine::class,
-        'meetingminutesmine' => MeetingMinutesMine::class
+        'meetingminutesmine' => MeetingMinutesMine::class,
+        'incidencemine' => \App\Http\Middleware\IncidenceMine::class,
+        'checkuploadincidence' => \App\Http\Middleware\CheckUploadIncidence::class,
+        'checkincidenceproofdownload' => \App\Http\Middleware\CheckIncidenceProofDownload::class,
+        'incidencefrommycommittee' => \App\Http\Middleware\IncidenceFromMyComittee::class,
+        'checkvalidateincidences' => \App\Http\Middleware\CheckValidateIncidence::class,
+        'checkincidenceisnotinreview' => \App\Http\Middleware\CheckIncidenceIsNotInReview::class
     ];
 }

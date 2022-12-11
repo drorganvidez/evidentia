@@ -130,6 +130,7 @@ class Stamp
         return $evidence;
     }
 
+
     public static function get_stamp_evidence($evidence)
     {
         $salt =  \Config::secret();
@@ -139,6 +140,30 @@ class Stamp
             $evidence->hours.
             $evidence->created_at.
             $evidence->upload_at.
+            $salt);
+    }
+
+    public static function compute_incidence($incidence)
+    {
+        $salt =  \Config::secret();
+        $incidence->stamp = hash('sha256',
+            $incidence->title.
+            $incidence->description.
+            $incidence->hours.
+            $incidence->created_at.
+            $incidence->upload_at.
+            $salt);
+        return $incidence;
+    }
+    public static function get_stamp_incidence($incidence)
+    {
+        $salt =  \Config::secret();
+        return hash('sha256',
+            $incidence->title.
+            $incidence->description.
+            $incidence->hours.
+            $incidence->created_at.
+            $incidence->upload_at.
             $salt);
     }
 }
@@ -196,6 +221,16 @@ class Config
     public static function validate_evidences_timestamp()
     {
         return self::config_entity()->validate_evidences_timestamp;
+    }
+
+    public static function upload_incidences_timestamp()
+    {
+        return self::config_entity()->upload_incidences_timestamp;
+    }
+
+    public static function validate_incidences_timestamp()
+    {
+        return self::config_entity()->validate_incidences_timestamp;
     }
 
     public static function meetings_timestamp()

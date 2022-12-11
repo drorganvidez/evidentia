@@ -15,15 +15,42 @@ class Comittee extends Model
         return $this->hasMany('App\Models\Subcomittee');
     }
 
+    
+
     public function evidences()
     {
         return $this->hasMany('App\Models\Evidence');
     }
 
+
+
+    public function incidences()
+    {
+        return $this->hasMany('App\Models\Incidence');
+    }
+
+
+    public function incidences_pending() {
+        return $this->incidences()->where('status','=', 'PENDING')->orderByDesc('updated_at');
+    }
+
+    public function incidences_in_review() {
+        return $this->incidences()->where('status','=', 'INREVIEW')->orderByDesc('updated_at');
+    }
+
+    public function incidences_closed() {
+        return $this->incidences()->where('status','=', 'CLOSED')->orderByDesc('updated_at');
+    }
+
+
+
+
+
     public function transactions()
     {
         return $this->hasMany('App\Models\Transaction');
     }
+
 
     public function evidences_not_draft() {
         return $this->evidences()->where('status','!=', 'DRAFT')->orderByDesc('updated_at');
@@ -44,6 +71,8 @@ class Comittee extends Model
     public function evidences_rejected() {
         return $this->evidences()->where('status','=', 'REJECTED')->orderByDesc('updated_at');
     }
+
+
 
     public function coordinators()
     {
