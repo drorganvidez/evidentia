@@ -40,9 +40,11 @@
                                     <x-kanbantablecomittee :kanbantable="$kanbantable"/>
                                 </td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"> {{ \Carbon\Carbon::parse($kanbantable->created_at)->diffForHumans() }} </td>
-
+                                
                                 <td class="align-middle">
                                     <x-kanbantableoptionsstudent :kanbantable="$kanbantable"/>
+                                    <x-buttonconfirm :id="$kanbantable->id" route="kanban.remove_kanban" title="¿Seguro?" description="Esto borrará el tablero kanban actual
+                                        y todas las tareas asociadas." type="REMOVE"/>
                                 </td>
 
                             </tr>

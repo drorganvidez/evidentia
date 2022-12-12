@@ -89,22 +89,24 @@ class KanbanController extends Controller
      /****************************************************************************
      * REMOVE A KANBAN
      ****************************************************************************/
-    public function remove_kanban(Request $request)
+    public function remove_kanban(Request $request, $instance)
     {
-        $Kanban = Kanban::find($request->_id);
+        $kanban = Kanban::find($request->_id);
         $instance = \Instantiation::instance();
+        
+        $issues = Issue::all();
 
-        $issues = $request->input('users',[]);
-
-        // eliminamos issues del kanban
-        foreach($Kanban->issues as $issue)
+        foreach($issues as $issue)
         {
-            $issue -> delete();
+            if($issue->kanban_id == $kanban->id){
+                $issue -> delete();
+            }
         }
 
-        $Kanban->delete();
+        $kanban->delete();
 
-        return redirect()->route('kanban.view',$instance)->with('success', 'Tablero eliminado con éxito.');
+        return redirect()->route('kanban.list', ['instance' => $instance,
+                                                 'id' => $kanban -> id])->with('success', 'Tablero eliminado con éxito.');
     }
 
 
@@ -169,19 +171,19 @@ class KanbanController extends Controller
      /****************************************************************************
      * REMOVE AN ISSUE
      ****************************************************************************/
+    /*
+    public function remove_issue(Request $request)
+    {
+        $id = $request->_id;
+        $issue = Issue::find($id);
+        $idkanban = $issue->kanban_id;
+        $instance = \Instantiation::instance();
 
-    // public function remove_issue(Request $request)
-    // {
-    //     $id = $request->_id;
-    //     $issue = Issue::find($id);
-    //     $idkanban = $issue->kanban_id;
-    //     $instance = \Instantiation::instance();
-
-    //     $issue->delete();
+        $issue->delete();
 
 
         
-    //     return redirect()->route('kanban.view',$instance,$idkanban)->with('success', 'Tarea eliminada con éxito.');
-    // }
-
+        return redirect()->route('kanban.view',$instance,$idkanban)->with('success', 'Tarea eliminada con éxito.');
+    }
+*/
 }

@@ -302,6 +302,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/kanban/view/{id}', 'KanbanController@view')->name('kanban.view');
     Route::get('/kanban/create', 'KanbanController@create')->name('kanban.create');
     Route::post('/kanban/new', 'KanbanController@new')->name('kanban.new');
+    Route::post('/kanban/remove', 'KanbanController@remove_kanban')->name('kanban.remove_kanban');
 
      /**
      *  ISSUES
