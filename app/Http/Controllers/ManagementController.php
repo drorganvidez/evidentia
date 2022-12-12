@@ -52,34 +52,57 @@ class ManagementController extends Controller
         // calculo el almacenamiento ocupado por cada alumno
         $dict_storage_used_user = [];
         foreach ($filtered_users as $user) {
-            $weight = 0;
-            $evidences = Evidence::where(['user_id' => $user->id])->get();
-            foreach ($evidences as $evidence) {
-                foreach ($evidence->proofs as $proof)   {
-                    $file = File::find($proof->file_id);
-                    $weight += $file->size;
-                }
-            }
-
-            $GB = 1000000000;
-            $MB = 1000000;
-            $KB = 1000;
-            //Cambiar para que aquí directamente meta en el array y escriba el valor ya convertido a humano
-            //Luego lo único que quedaría sería leerlo en la vista y ya probar
-            if($weight > $GB)           {
-                $weight = round($weight/$GB,2)." GB";
-            } else if ($weight > $MB)   {
-                $weight = round($weight/$MB,2)." MB";
-            } else if($weight > $KB)    {
-                $weight = round($weight/$KB,2)." KB";
-            } else {
-                $weight = "0.00 KB";
-            }
-            $dict_storage_used_user[$user->id] = $weight;
+            $dict_storage_used_user = $this->user_storage_used($user, $dict_storage_used_user);
         }
 
         return view('manage.user_list',
             ['instance' => $instance, 'users' => $filtered_users, 'dict_storage' => $dict_storage_used_user]);
+    }
+
+    private function user_storage_used($user, $dict_storage_used_user)
+    {
+        $weight = 0;
+        $evidences = Evidence::where(['user_id' => $user->id])->get();
+        foreach ($evidences as $evidence) {
+            foreach ($evidence->proofs as $proof)   {
+                $file = File::find($proof->file_id);
+                $weight += $file->size;
+            }
+        }
+        $dict_storage_used_user[$user->id] = $this->size_to_human($weight);
+        return $dict_storage_used_user;
+    }
+
+    private function size_to_human($weight)
+    {
+        $GB = 1000000000;
+        $MB = 1000000;
+        $KB = 1000;
+        //Cambiar para que aquí directamente meta en el array y escriba el valor ya convertido a humano
+        //Luego lo único que quedaría sería leerlo en la vista y ya probar
+        if($weight > $GB)           {
+            $weight = round($weight/$GB,2)." GB";
+        } else if ($weight > $MB)   {
+            $weight = round($weight/$MB,2)." MB";
+        } else if($weight > $KB)    {
+            $weight = round($weight/$KB,2)." KB";
+        } else {
+            $weight = "0.00 KB";
+        }
+        return $weight;
+    }
+
+    public function user_filemanager($instance, $id)
+    {
+        $instance = \Instantiation::instance();
+        $user = User::findOrFail($id);
+        $evidences = Evidence::where(['user_id' => $user->id])->get();
+
+        $storage_used_dict = [];
+
+        $storage_used = $this->user_storage_used($user, $storage_used_dict)[$user->id];
+
+        return view('manage.user_filemanager', ['instance' => $instance, 'user' => $user, 'evidences' => $evidences, 'storage_used' => $storage_used, 'storage_used_dict' => $storage_used_dict]);
     }
 
     public function evidence_list()

@@ -26,6 +26,7 @@
                     <tr>
                         <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">ID Evidencia</th>
                         <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Título</th>
+                        <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">ID archivo</th>
                         <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Nombre de archivo</th>
                         <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Tipo</th>
                         <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Tamaño</th>
@@ -34,21 +35,23 @@
                     </tr>
                 </thead>
                 @foreach($evidences as $evidence)
-                    <tr>
-                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-
-                        </td>
-                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-
-                        </td>
-                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"></td>
-                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"></td>
-                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"></td>
-                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"></td>
-                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"></td>
-                    </tr>
-                
-                
+                    @foreach ($evidence->proofs as $proof)
+                        <tr>
+                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                {{$evidence->id}}
+                            </td>
+                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                {{$evidence->title}}
+                            </td>
+                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                {{$evidence->proof}}
+                            </td>
+                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"></td>
+                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"></td>
+                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"></td>
+                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"></td>
+                        </tr>
+                    @endforeach
                 @endforeach
 
 
