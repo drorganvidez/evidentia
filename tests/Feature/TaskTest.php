@@ -51,14 +51,15 @@ class TaskTest extends TestCase
     {
         
         $this->testLoginWithAlumno1();
-
+        $user = Auth::user();
         $request = [
             'id'    => 1,
             'title' => 'Task 1',
             'description' => 'Modificación de un test exitoso',
             'hours' => '1.0',
-            'end_date' => '2022-11-18 08:26',
-            'user_id' => '2022-11-18 09:26',
+            'end_date' => '2022-11-18 09:26',
+            'start_date' => '2022-11-18 08:26',
+            'user_id' => $user,
             'comittee_id' => '2'
         ];
         
@@ -76,7 +77,7 @@ class TaskTest extends TestCase
 
     public function testExportTaskListPDF(){
         $this->testLoginWithAlumno1();
-
+        $user = Auth::user();
         $response = $this->get('/21/task/list/export/{ext}');
         $response->assertStatus(302);
     }
@@ -85,18 +86,20 @@ class TaskTest extends TestCase
     {
         
         $this->testLoginWithAlumno1();
-
+        $user = Auth::user();
         $request = [
             'title' => 'Evidencia 2',
-            'description' => 'Creación de un test exitoso',
+            'description' => 'Creación de un test con exito',
             'hours' => '1.0',
-            'end_date' => '2022-11-18 08:26',
-            'user_id' => '2022-11-18 09:26',
+            'end_date' => '2022-11-18 09:26',
+            'start_date' => '2022-11-18 08:26',
+            'user_id' => $user,
             'comittee_id' => '2'
         ];
 
+       
         $response = $this->post('/21/task/create',$request);
-
+        
         $response->assertStatus(302);
     }
 
@@ -104,13 +107,14 @@ class TaskTest extends TestCase
     {
         
         $this->testLoginWithAlumno1();
-
+        $user = Auth::user();
         $request = [
             'title' => 'Evidencia 2',
             'description' => '',
             'hours' => '1.0',
-            'end_date' => '2022-11-18 08:26',
-            'user_id' => '2022-11-18 09:26',
+            'end_date' => '2022-11-18 09:26',
+            'start_date' => '2022-11-18 08:26',
+            'user_id' => $user,
             'comittee_id' => '2'
         ];
 
@@ -121,13 +125,14 @@ class TaskTest extends TestCase
 
     public function testCreateTaskWithoutLogin()
     {
-        
+        $user = Auth::user();
         $request = [
             'title' => 'Evidencia 2',
-            'description' => '',
+            'description' => 'Creación de un test sin exito',
             'hours' => '1.0',
-            'end_date' => '2022-11-18 08:26',
-            'user_id' => '2022-11-18 09:26',
+            'end_date' => '2022-11-18 09:26',
+            'start_date' => '2022-11-18 08:26',
+            'user_id' => $user,
             'comittee_id' => '2'
         ];
 
@@ -140,14 +145,55 @@ class TaskTest extends TestCase
     {
         
         $this->testLoginWithAlumno1();
-
+        
+        $user = Auth::user();
         $request = [
             'id'    => 1,
             'title' => 'Task 1',
-            'description' => '',
+            'description' => 'Modificación de un test sin exito',
             'hours' => '1.0',
-            'end_date' => '2022-11-18 08:26',
-            'user_id' => '2022-11-18 09:26',
+            'end_date' => '2022-11-18 09:26',
+            'start_date' => '2022-11-18 08:26',
+            'user_id' => $user,
+            'comittee_id' => '2'
+        ];
+        
+        $response = $this->post('/21/task/edit/save',$request);
+
+        $response->assertStatus(302);
+    }
+
+    public function testEditTaskWithoutLogin()
+    {
+        $user = Auth::user();
+        $request = [
+            'id'    => 1,
+            'title' => 'Task 1',
+            'description' => 'Modificación de un test sin exito',
+            'hours' => '1.0',
+            'end_date' => '2022-11-18 09:26',
+            'start_date' => '2022-11-18 08:26',
+            'user_id' => $user,
+            'comittee_id' => '2'
+        ];
+        
+        $response = $this->post('/21/task/edit/save',$request);
+
+        $response->assertStatus(302);
+    }
+
+    public function testEditTaskDates()
+    {
+        $this->testLoginWithAlumno1();
+        $user = Auth::user();
+        $request = [
+            'id'    => 1,
+            'title' => 'Task 1',
+            'description' => 'Modificación de un test sin exito',
+            'hours' => '1.0',
+            'end_date' => '2022-11-18 09:26',
+            'start_date' => '2022-11-18 08:26',
+            'user_id' => $user,
             'comittee_id' => '2'
         ];
         
