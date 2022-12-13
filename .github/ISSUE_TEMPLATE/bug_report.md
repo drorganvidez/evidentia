@@ -1,3 +1,12 @@
+---
+name: Reportar un bug
+about: Crea un incidencia para ayudar a mejorar evidencia
+title: ''
+labels: ''
+assignees: ''
+
+---
+
 **¿Qué pasos producen el problema?**
 
 1. 
