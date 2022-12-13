@@ -34,61 +34,68 @@
 
             <div class="card shadow-lg">
 
-                <div class="card-body">
-                    <table id="dataset" class="table table-hover table-responsive">
-                        <thead>
-                        <tr>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">ID</th>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Motivo</th>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Tipo</th>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Cantidad</th>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Fecha</th>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Estado</th>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Comité</th>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody>
+<div class="card-body">
+    <div class="table-responsive">
+        <table id="dataset" class="table table-hover table-responsive">
+        <thead>
+        <tr>
+            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">ID</th>
+            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Motivo</th>
+            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Tipo</th>
+            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Cantidad</th>
+            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Fecha</th>
+            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Estado</th>
+            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Comité</th>
+            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
 
-                        @foreach($transactions as $transaction)
-                            <tr>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->id}}</td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->reason}}</td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->type}}</td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->amount}}</td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->created_at}}</td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                        @if($transaction->status == "PENDING")
+        @foreach($transactions as $transaction)
+            <tr>
+                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->id}}</td>
+                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->reason}}</td>
+                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->type}}</td>
+                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->amount}}</td>
+                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$transaction->created_at}}</td>
+                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><x-transactioncomittee :transaction="$transaction"/></td>
+                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                        @if($transaction->status == "PENDING")
 
-                                            <div class="progress progress-sm">
-                                                <div class="progress-bar bg-gradient-gray-dark" data-toggle="tooltip" data-placement="right" title="Pendiente de revisión" role="progressbar" aria-volumenow="66" aria-volumemin="0" aria-volumemax="100" style="width: 66%">
-                                                </div>
-                                            </div>
+                            <div class="progress progress-sm">
+                                <div class="progress-bar bg-gradient-gray-dark" data-toggle="tooltip" data-placement="right" title="Pendiente de revisión" role="progressbar" aria-volumenow="66" aria-volumemin="0" aria-volumemax="100" style="width: 66%">
+                                </div>
+                            </div>
 
-                                        @endif
+                        @endif
 
-                                        @if($transaction->status == "ACCEPTED")
-                                            <div class="progress progress-sm">
-                                                <div class="progress-bar bg-gradient-success" data-toggle="tooltip" data-placement="right" title="Aceptada" role="progressbar" aria-volumenow="100" aria-volumemin="0" aria-volumemax="100" style="width: 100%">
-                                                </div>
-                                            </div>
-                                        @endif
+                        @if($transaction->status == "ACCEPTED")
+                            <div class="progress progress-sm">
+                                <div class="progress-bar bg-gradient-success" data-toggle="tooltip" data-placement="right" title="Aceptada" role="progressbar" aria-volumenow="100" aria-volumemin="0" aria-volumemax="100" style="width: 100%">
+                                </div>
+                            </div>
+                        @endif
 
-                                        @if($transaction->status == "REJECTED")
-                                            <div class="progress progress-sm">
-                                                <div class="progress-bar bg-gradient-danger" role="progressbar" data-toggle="tooltip" data-placement="right" title="Rechazada" aria-volumenow="100" aria-volumemin="0" aria-volumemax="100" style="width: 100%">
-                                                </div>
-                                            </div>
-                                        @endif
-                                </td>   
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><x-transactioncomittee :transaction="$transaction"/></td>
-                                @if($transaction->status == 'PENDING')
-                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                        <a href="{{route('president.transaction.accept',['instance' => \Instantiation::instance() , 'id' => $transaction->id])}}" class="btn btn-info btn-block" role="button"> Aceptar</a>
-                                        <a href="{{route('president.transaction.reject',['instance' => \Instantiation::instance() , 'id' => $transaction->id])}}" class="btn btn-info btn-block" role="button"> Denegar</a>
-                                    </td>
-                                @endif
-                            </tr>
+                        @if($transaction->status == "REJECTED")
+                            <div class="progress progress-sm">
+                                <div class="progress-bar bg-gradient-danger" role="progressbar" data-toggle="tooltip" data-placement="right" title="Rechazada" aria-volumenow="100" aria-volumemin="0" aria-volumemax="100" style="width: 100%">
+                                </div>
+                            </div>
+                        @endif
+                </td>   
+                        @if($transaction->status == 'PENDING')
+                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                <a href="{{route('president.transaction.accept',['instance' => \Instantiation::instance() , 'id' => $transaction->id])}}" class="btn btn-info btn-block" role="button"> Aceptar</a>
+                                <a href="{{route('president.transaction.reject',['instance' => \Instantiation::instance() , 'id' => $transaction->id])}}" class="btn btn-info btn-block" role="button"> Denegar</a>
+                            </td>
+                        @endif
+                        @if($transaction->status != 'PENDING')
+                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                <a href="{{route('president.transaction.accept',['instance' => \Instantiation::instance() , 'id' => $transaction->id])}}" class="btn btn-info btn-block disabled" role="button"> Aceptar</a>
+                                <a href="{{route('president.transaction.reject',['instance' => \Instantiation::instance() , 'id' => $transaction->id])}}" class="btn btn-info btn-block disabled" role="button"> Denegar</a>
+                            </td>
+                        @endif
+            </tr>
                         @endforeach
                         <tr>
                             <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><b>Total:</b></td>
@@ -99,12 +106,13 @@
                             <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><b>{{$noAceptado}}€</b></td>
                             <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><b>Total Pendiente:</b></td>
                             <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><b>{{$pendiente}}€</b></td>
-                        </tbody>
-                    </table>
+                        </tr>
 
-                </div>
-
-            </div>
+        </tbody>
+    </table>
+    </div>
+</div>
+</div>
 
         </div>
     </div>
