@@ -6,7 +6,7 @@
     @section('title', 'Crear Red Social')
 @endisset
 
-@section('title-icon', 'fas fa-box')
+@section('title-icon', 'fa fa-comment')
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/">Home</a></li>
