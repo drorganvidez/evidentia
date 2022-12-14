@@ -74,7 +74,7 @@ class TaskTest extends TestCase
         $this->testLoginWithAlumno1();
 
         $response = $this->get('/21/task/view/1');
-        
+
         $response->assertSessionDoesntHaveErrors();
         $response->assertStatus(302);
     }
@@ -83,6 +83,7 @@ class TaskTest extends TestCase
         $this->testLoginWithAlumno1();
         $user = Auth::user();
         $response = $this->get('/21/task/list/export/{ext}');
+        $response->assertSessionDoesntHaveErrors();
         $response->assertStatus(302);
     }
 
