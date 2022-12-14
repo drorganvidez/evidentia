@@ -342,6 +342,10 @@
                                                                                 <label>Descripción</label>
                                                                                 <textarea class="form-control point_description" rows="3" placeholder="Añade una descripción concisa del desarrollo de este punto">{{$point['description']}}</textarea>
                                                                             </div>
+                                                                            <div class="form-group">
+                                                                                <label>Sugerencias</label>
+                                                                                <textarea class="form-control point_sugerencia" rows="3" placeholder="Añade todas las sugerencias propuestas en caso de no llegar a un acuerdo">{{$point['sugerencia']}}</textarea>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
 
@@ -432,6 +436,10 @@
                                                                                 <div class="form-group">
                                                                                     <label>Descripción</label>
                                                                                     <textarea class="form-control point_description" rows="3" placeholder="Añade una descripción concisa del desarrollo de este punto"></textarea>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label>Sugerencias</label>
+                                                                                    <textarea class="form-control point_sugerencia" rows="3" placeholder="Añade las sugerencias propuestas en caso de no llegar a un acuerdo"></textarea>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -591,7 +599,11 @@
                     // descripción del punto
                     let point_description = $this.find('.point_description').val();
                     item ["description"] = point_description;
-
+                    
+                    // sugerencias del punto
+                    let point_sugerencia = $this.find('.point_sugerencia').val();
+                    item ["sugerencia"] = point_sugerencia;
+                    
                     // acuerdos del punto
                     agreements = []
                     $this.find('.point_agreement').each(function(){
@@ -706,6 +718,12 @@
                                 <div class="form-group">
                                     <label>Descripción</label>
                                     <textarea class="form-control point_description" rows="3" placeholder="Añade una descripción concisa del desarrollo de este punto"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Sugerencia</label>
+                                    <textarea class="form-control point_sugerencia" rows="3" placeholder="Sugerencias propuestas en caso de no llegar a un acuerdo"></textarea>
                                 </div>
                             </div>
                         </div>

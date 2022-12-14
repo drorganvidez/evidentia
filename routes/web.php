@@ -46,6 +46,23 @@ Route::group(['prefix' => 'admin'], function(){
     Route::post('logout', 'LoginAdminController@logout')->name('admin.logout');
 
     Route::group(['middleware' => ['checkisadministrator']], function(){
+        /* 
+        *   Contraseñas redes sociales
+        */
+        Route::prefix('redesSociales')->group(function() {
+            Route::get('/redesSociales', 'RedesSocialesController@manage')->name('admin.redesSociales.manage');
+
+            Route::get('create', 'RedesSocialesController@create')->name('admin.redesSociales.create');
+            Route::post('new', 'RedesSocialesController@new')->name('admin.redesSociales.new');
+
+            Route::middleware(['checknotnull:RedSocial'])->group(function () {
+                Route::get('manage/edit/{id}', 'RedesSocialesController@edit')->name('admin.redesSociales.manage.edit');
+                Route::get('manage/delete/{id}', 'RedesSocialesController@delete')->name('admin.redesSociales.manage.delete');
+            });
+
+            Route::post('manage/save', 'RedesSocialesController@save')->name('admin.redesSociales.manage.save');
+            Route::post('manage/remove/', 'RedesSocialesController@remove')->name('admin.redesSociales.manage.remove');
+        });
         /*
          *  MANAGE INSTANCES
          */
@@ -64,6 +81,25 @@ Route::group(['prefix' => 'admin'], function(){
             Route::post('manage/save', 'InstanceController@save')->name('admin.instance.manage.save');
 
             Route::post('manage/remove/', 'InstanceController@remove')->name('admin.instance.manage.remove');
+        });
+         /* 
+        *   Empresas Colaborativas
+        */
+        Route::prefix('empresasColaborativas')->group(function() {
+
+            Route::get('manage', 'EmpresasColaborativasController@manage')->name('admin.empresasColaborativas.manage');
+
+            Route::get('create', 'EmpresasColaborativasController@create')->name('admin.empresasColaborativas.create');
+            Route::post('new', 'EmpresasColaborativasController@new')->name('admin.empresasColaborativas.new');
+
+            Route::middleware(['checknotnull:EmpresaColaborativa'])->group(function () {
+                Route::get('manage/edit/{id}', 'EmpresasColaborativasController@edit')->name('admin.empresasColaborativas.manage.edit');
+                Route::get('manage/delete/{id}', 'EmpresasColaborativasController@delete')->name('admin.empresasColaborativas.manage.delete');
+            });
+
+            Route::post('manage/save', 'EmpresasColaborativasController@save')->name('admin.empresasColaborativas.manage.save');
+            Route::post('manage/remove/', 'EmpresasColaborativasController@remove')->name('admin.empresasColaborativas.manage.remove');
+            
         });
     });
 
@@ -165,6 +201,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         Route::get('/evidence/list/accepted', 'EvidenceCoordinatorController@accepted')->name('coordinator.evidence.list.accepted');
         Route::get('/evidence/list/rejected', 'EvidenceCoordinatorController@rejected')->name('coordinator.evidence.list.rejected');
         Route::get('/evidence/export/{type}/{ext}','EvidenceCoordinatorController@evidences_export')->name('coordinator.evidence.export');
+        
 
         Route::middleware(['checknotnull:Evidence','evidencefrommycommittee'])->group(function () {
             Route::get('/evidence/view/{id}', 'EvidenceController@view')->name('coordinator.evidence.view');
@@ -176,6 +213,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         });
 
     });
+    Route::get('/coordinator/user/list','EvidenceCoordinatorController@user_list_comittee')->name('coordinator.user.list');
 
     /**
      *  MEETINGS, LISTS AND BONUS
@@ -365,6 +403,9 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/president/user/management/{id}','ManagementController@user_management')->name('president.user.management');
     Route::post('/president/user/management/save','ManagementController@user_management_save')->name('president.user.management.save');
 
+    Route::get('/president/role/assignation','ManagementController@role_assignation')->name('president.role.assignation');
+    Route::post('/president/role/assignation/save','ManagementController@role_assignation_save')->name('president.role.assignation.save');
+
 
     Route::get('/president/export','ImportExportController@export')->name('president.export');
     Route::get('/management/export/{ext}','ManagementController@evidences_export')->name('management.export');
@@ -400,6 +441,9 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
     Route::get('/lecture/user/management/{id}','ManagementController@user_management')->name('lecture.user.management');
     Route::post('/lecture/user/management/save','ManagementController@user_management_save')->name('lecture.user.management.save');
+
+    Route::get('/lecture/role/assignation','ManagementController@role_assignation')->name('lecture.role.assignation');
+    Route::post('/lecture/role/assignation/save','ManagementController@role_assignation_save')->name('lecture.role.assignation.save');
 
     Route::get('/lecture/instances','QuickInstances@list')->name('lecture.instances.list');
     Route::post('/lecture/instances/save','QuickInstances@save')->name('lecture.instances.save');
@@ -460,3 +504,4 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/updates','GitController@list')->name('updates.list');
 
 });
+

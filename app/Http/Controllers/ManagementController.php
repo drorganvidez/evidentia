@@ -6,6 +6,7 @@ use App\Exports\ManagementEvidencesExport;
 use App\Exports\ManagementStudentExport;
 use App\Http\Services\UserService;
 use App\Models\Comittee;
+use App\Models\Collaborator;
 use App\Models\Coordinator;
 use App\Models\Evidence;
 use App\Models\Meeting;
@@ -176,6 +177,99 @@ class ManagementController extends Controller
 
     }
 
+    public function role_assignation($instance)
+    {
+        $instance = \Instantiation::instance();
+        $users = User::all();
+
+        $route = null;
+        if (Auth::user()->hasRole('PRESIDENT')) {
+            $route = route('president.role.assignation.save', $instance);
+        } else {
+            $route = route('lecture.role.assignation.save', $instance);
+        }
+
+        // el presidente no puede editar los usuarios de tipo profesor
+        $filtered_users = collect();
+        if (Auth::user()->hasRole('PRESIDENT')) {
+            $users->each(function ($item, $key) use ($filtered_users) {
+                if (!$item->hasRole('LECTURE')) {
+                    $filtered_users->push($item);
+                }
+            });
+        } else {
+            $filtered_users = $users;
+        }
+
+
+        // el presidente no puede crear usuarios de tipo profesor
+        $roles = null;
+        if (Auth::user()->hasRole('PRESIDENT')) {
+            $roles = Role::where('rol', '!=', 'LECTURE')->get();
+        } else {
+            $roles = Role::all();
+        }
+
+        $comittees = Comittee::all();
+
+        return view('manage.role_assignation',
+            ['instance' => $instance, 'route' => $route, 'users' => $filtered_users, 'roles' => $roles, 'comittees' => $comittees]);
+            
+    }
+
+    public function role_assignation_save(Request $request)
+    {
+
+        $instance = \Instantiation::instance();
+
+        // obtenemos los roles
+        $roles_id = $request->input('roles', []);
+        $comittee_id = $request->input('comittee');
+        if (Comittee::find($comittee_id) == null) {
+            return redirect()->route('lecture.user.management', ['instance' => $instance, 'id' => $user->id])->with('error', 'Comité no válido.');
+        }
+        
+        // actualizamos los usuarios
+        $users_id = $request->input('users', []);
+        foreach ($users_id as $user_id) {
+            $user = User::find($user_id);
+
+            // elimino toda asociación previa
+            DB::table('coordinators')->where(['user_id' => $user->id])->delete();
+            DB::table('secretaries')->where(['user_id' => $user->id])->delete();
+            DB::table('collaborators')->where(['user_id' => $user->id])->delete();
+    
+            // elimino roles anteriores
+            $user->roles()->detach();
+
+            // asigno los nuevos roles
+            foreach ($roles_id as $rol_id) {
+                $rol = Role::find($rol_id);
+                $user->roles()->attach($rol);
+                $user->save();
+            }
+
+            // ¿tiene rol de coordinador?
+            if ($user->hasRole('COORDINATOR')) {
+                DB::table('coordinators')->insert(['comittee_id' => $comittee_id, 'user_id' => $user->id]);
+            }
+
+            // ¿tiene rol de secretario?
+            if ($user->hasRole('SECRETARY')) {
+                DB::table('secretaries')->insert(['comittee_id' => $comittee_id, 'user_id' => $user->id]);
+            }
+
+            // ¿tiene rol de colaborador?
+            if ($user->hasRole('COLLABORATOR')) {
+                DB::table('collaborators')->insert(['comittee_id' => $comittee_id, 'user_id' => $user->id]);
+            }
+
+            $user->save();
+        }
+
+        return redirect()->route('president.role.assignation', ['instance' => $instance])->with('success', 'Usuarios actualizados con éxito');
+    }
+
     public function user_management($instance, $id)
     {
         $instance = \Instantiation::instance();
@@ -227,6 +321,7 @@ class ManagementController extends Controller
         // elimino toda asociación previa
         DB::table('coordinators')->where(['user_id' => $user->id])->delete();
         DB::table('secretaries')->where(['user_id' => $user->id])->delete();
+        DB::table('collaborators')->where(['user_id' => $user->id])->delete();
 
         // elimino roles anteriores
         $user->roles()->detach();
@@ -246,6 +341,11 @@ class ManagementController extends Controller
         // ¿tiene rol de secretario?
         if ($user->hasRole('SECRETARY')) {
             DB::table('secretaries')->insert(['comittee_id' => $comittee_id, 'user_id' => $user->id]);
+        }
+
+        // ¿tiene rol de colaborador?
+        if ($user->hasRole('COLLABORATOR')) {
+            DB::table('collaborators')->insert(['comittee_id' => $comittee_id, 'user_id' => $user->id]);
         }
 
         $user->save();

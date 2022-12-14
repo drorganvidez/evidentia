@@ -86,6 +86,11 @@ class User extends Authenticatable
         return $this->hasOne('App\Models\Secretary');
     }
 
+    public function collaborator()
+    {
+        return $this->hasOne('App\Models\Collaborator');
+    }
+
     public function meetings()
     {
         return $this->belongsToMany('App\Models\Meeting');
@@ -333,6 +338,8 @@ class User extends Authenticatable
             return $this->coordinator->comittee->name;
         }elseif ($this->hasRole('SECRETARY')){
             return $this->secretary->comittee->name;
+        }elseif ($this->hasRole('COLLABORATOR')){
+            return $this->collaborator->comittee->name;
         }else{
             return "None";
         }
@@ -363,6 +370,8 @@ class User extends Authenticatable
             $comittee = $this->coordinator->comittee->name;
         }elseif ($this->hasRole('SECRETARY')){
             $comittee = $this->secretary->comittee->name;
+        }elseif ($this->hasRole('COLLABORATOR')){
+            $comittee = $this->collaborator->comittee->name;
         }
 
         $comittees_names->push($comittee);

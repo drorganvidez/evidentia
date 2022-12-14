@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Gestionar alumnos')
+@section('title', 'Miembros del comité')
 
 @section('title-icon', 'nav-icon fas fa-users-cog')
 
@@ -77,6 +77,11 @@
                             <th>Nombre</th>
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">UVUS</th>
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Roles</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Horas en evidencias</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Horas en reuniones</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Horas en eventos</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Horas en bonos</th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Horas totales</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -99,17 +104,11 @@
                                         <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
                                             <x-roles :user="$user"/>
                                         </td>
-                                        <td>
-                                            @if(Auth::user()->hasRole('PRESIDENT'))
-                                                <a class="btn btn-primary btn-sm" href="{{route('president.user.management',['instance' => $instance, 'id' => $user->id])}}">
-                                                    <i class="nav-icon nav-icon fas fa-users-cog"></i>
-                                                </a>
-                                            @else
-                                                <a class="btn btn-primary btn-sm" href="{{route('lecture.user.management',['instance' => $instance, 'id' => $user->id])}}">
-                                                    <i class="nav-icon nav-icon fas fa-users-cog"></i>
-                                                </a>
-                                            @endif
-                                        </td>
+                                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$user->evidences_accepted_hours()}}</td>
+                                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$user->meetings_hours()}}</td>
+                                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$user->events_hours()}}</td>
+                                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$user->bonus_hours()}}</td>
+                                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$user->total_computed_hours()}}</td>
                                     </tr>
 
                             @endif
@@ -123,97 +122,7 @@
                 
             </div>
 
-        </div>
-
-        <div class="col-lg-4">
-
-            <div class="card shadow-sm">
-
-                <div class="card-body">
-
-                    <h4>Añadir nuevo usuario</h4>
-
-                    <form method="POST" enctype="multipart/form-data" action="{{route('management.user.new',\Instantiation::instance())}}">
-                        @csrf
-
-                        <div class="form-row">
-                            <x-input col="6" attr="name" label="Nombre"/>
-                            <x-input col="6" attr="surname" label="Apellidos"/>
-                        </div>
-
-                        <div class="form-row">
-                            <x-input col="6" attr="email" label="Email"/>
-                        </div>
-
-                        <div class="form-row">
-                            <x-input col="6" attr="username"  label="UVUS" description="El UVUS será el nombre de usuario"/>
-                            <x-input col="6" attr="password" disabled="true" :edit="true" label="Password" description="La contraseña por defecto es aleatoria y debe ser restablecida"/>
-                        </div>
-                        <div class="form-row">
-
-                            <div class="col-lg-12">
-                                <button type="submit" class="btn btn-primary btn-block" data-dismiss="modal">
-                                    <i class="fas fa-user-plus"></i>
-                                    Añadir usuario</button>
-                            </div>
-
-                        </div>
-
-
-
-                    </form>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="borrar_todo">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content" style="overflow: visible">
-
-                <div class="modal-header">
-                    <h4 class="modal-title text-wrap">Borrar todos los usuarios</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-
-                <form action="{{route('management.user.delete.all',\Instantiation::instance())}}" method="POST">
-                    @csrf
-                    <div class="modal-body text-wrap">
-                        <h2>Aviso</h2>
-                        <p>
-                            Esta acción está pensada al principio del uso de este software, cuando se
-                            acaban de importar todos los usuarios mediante un archivo XLS y/o se están haciendo pruebas. Esta función es <b>muy destructiva.</b>
-                        </p>
-
-                        <p>Se borrarán:</p>
-
-                        <ul>
-                            <li>Todos los usuarios excepto el tuyo</li>
-                            <li>Todas las evidencias asociadas</li>
-                            <li>Todos los mensajes y notificaciones asociadas</li>
-                            <li>Todas las asistencias</li>
-                            <li>Todas las reuniones registradas por los secretarios</li>
-                        </ul>
-
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fas fa-trash"></i> &nbsp;Lo comprendo, eliminar todos los usuarios
-                        </button>
-                    </div>
-                </form>
-
-
-
-
-            </div>
-        </div>
+        
     </div>
 
 @endsection

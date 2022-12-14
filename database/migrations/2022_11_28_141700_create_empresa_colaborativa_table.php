@@ -4,11 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRolesTable extends Migration
+class CreateEmpresaColaborativaTable extends Migration
 {
-
-    protected $connection = 'base21';
-
     /**
      * Run the migrations.
      *
@@ -16,10 +13,11 @@ class CreateRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
-            $table->id();
-            $table->enum('rol', ['LECTURE', 'PRESIDENT', 'REGISTER_COORDINATOR', 'COORDINATOR', 'SECRETARY', 'STUDENT', 'COLLABORATOR']);
-            $table->string('slug')->nullable();
+        Schema::create('empresaColaborativa', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->string('telephone');
+            $table->string('email');
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ class CreateRolesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('empresaColaborativa');
     }
 }

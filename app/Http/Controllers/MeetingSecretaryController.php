@@ -548,7 +548,8 @@ class MeetingSecretaryController extends Controller
                 'meeting_minutes_id' => $meeting_minutes->id,
                 'title' => $point['title'],
                 'duration' => $point['duration'] == '' ? 0 : $point['duration'],
-                'description' => $point['description']
+                'description' => $point['description'],
+                'sugerencia' => $point['sugerencia']
             ]);
 
             foreach ($point['agreements'] as $agreement) {
@@ -609,6 +610,7 @@ class MeetingSecretaryController extends Controller
                 'title' => $point->title,
                 'description' => $point->description,
                 'duration' => $point->duration,
+                'sugerencia' => $point->sugerencia,
                 'agreements' => $agreements_array
             );
 
@@ -712,7 +714,8 @@ class MeetingSecretaryController extends Controller
                 'meeting_minutes_id' => $meeting_minutes->id,
                 'title' => $point['title'],
                 'duration' => $point['duration'] == '' ? 0 : $point['duration'],
-                'description' => $point['description']
+                'description' => $point['description'],
+                'sugerencia' =>$point['sugerencia'],
             ]);
 
             foreach ($point['agreements'] as $agreement) {

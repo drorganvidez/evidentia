@@ -7,6 +7,7 @@
             <x-li route="lecture.config" icon='fas fa-cogs' name="Configurar curso"/>
 
             <x-li route="lecture.user.list" secondaries="lecture.user.management,lecture.user.management" icon='nav-icon fas fa-users-cog' name="Gestionar alumnos"/>
+            <x-li route="lecture.role.assignation" icon='nav-icon fas fa-users-cog' name="Asignar roles"/>
             <x-li route="lecture.evidence.list" icon='fas fa-clipboard-check' name="Gestionar evidencias"/>
             <x-li route="lecture.meeting.list" icon='far fa-handshake' name="Gestionar reuniones"/>
             <x-li route="lecture.comittee.list" icon='fas fa-sitemap' name="Gestionar comités"/>
