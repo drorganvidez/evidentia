@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class DevelopSeeder extends Seeder
 {
@@ -499,6 +500,21 @@ class DevelopSeeder extends Seeder
             'icon' => '<i class="fab fa-sketch"></i>'
         ]);
 
+        /*
+         *  TAREAS
+         */
+        
+        DB::table('tasks')->insert([
+            'id' => 1, 
+            'title' => 'Tarea 1', 
+            'description' => 'Descripción de tarea', 
+            'hours' => 3, 
+            'user_id' => 1, 
+            'comittee_id' => 1,
+            'start_date' => Carbon::parse('2022-01-01 10:00:00'),
+            'end_date' => Carbon::parse('2022-01-01 13:00:00')
+        ]);
+        
         /*
          *  CONFIGURACIÓN
          */

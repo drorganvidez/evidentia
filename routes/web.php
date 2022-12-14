@@ -5,6 +5,7 @@ use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\MeetingSecretaryController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\EvidenceController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\SignController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -133,6 +134,20 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
 
     Route::post('/xls/upload/process','UploadController@process')->name('xls.upload.process');
     Route::get('/xls/upload/remove/{file_name}','UploadController@remove')->name('xls.upload.remove');
+    /**
+     *  TASKS
+     */
+    Route::get('/task/list', 'TaskController@list')->name('task.list');
+    Route::post('/task/remove', 'TaskController@remove')->name('task.remove');
+    Route::post('/task/create', 'TaskController@create')->name('task.create');
+    Route::post('/task/edit/save', 'TaskController@save')->name('task.save');
+    Route::middleware(['checknotnull:Task'])->group(function () {
+        Route::get('/task/view/{id}', 'TaskController@view')->name('task.view');
+        Route::get('/task/edit/{id}', 'TaskController@edit')->name('task.edit');
+        
+    });
+
+    Route::get('/task/list/export/{ext}',[TaskController::class , 'export'])->name('task.list.export');
 
     /**
      *  EVIDENCES
