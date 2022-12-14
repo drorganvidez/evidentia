@@ -45,6 +45,7 @@ class TaskTest extends TestCase
 
         $response = $this->get('/21/task/list/');
         $response->assertStatus(302);
+        $response->assertSessionDoesntHaveErrors();
     }
 
     public function testEditTask()
@@ -65,6 +66,7 @@ class TaskTest extends TestCase
         
         $response = $this->post('/21/task/edit/save',$request);
 
+        $response->assertSessionDoesntHaveErrors();
         $response->assertStatus(302);
     }
 
@@ -72,6 +74,8 @@ class TaskTest extends TestCase
         $this->testLoginWithAlumno1();
 
         $response = $this->get('/21/task/view/1');
+        
+        $response->assertSessionDoesntHaveErrors();
         $response->assertStatus(302);
     }
 
