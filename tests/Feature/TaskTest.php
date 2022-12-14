@@ -82,7 +82,21 @@ class TaskTest extends TestCase
     public function testExportTaskListPDF(){
         $this->testLoginWithAlumno1();
         $user = Auth::user();
-        $response = $this->get('/21/task/list/export/{ext}');
+        $response = $this->get('/21/task/list/export/pdf');
+        $response->assertSessionDoesntHaveErrors();
+        $response->assertStatus(302);
+    }
+    public function testExportTaskListCSV(){
+        $this->testLoginWithAlumno1();
+        $user = Auth::user();
+        $response = $this->get('/21/task/list/export/csv');
+        $response->assertSessionDoesntHaveErrors();
+        $response->assertStatus(302);
+    }
+    public function testExportTaskListXSLX(){
+        $this->testLoginWithAlumno1();
+        $user = Auth::user();
+        $response = $this->get('/21/task/list/export/xslx');
         $response->assertSessionDoesntHaveErrors();
         $response->assertStatus(302);
     }
