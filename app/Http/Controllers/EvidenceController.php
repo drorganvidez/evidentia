@@ -37,12 +37,16 @@ class EvidenceController extends Controller
 
         $evidence_storaged_files_type = collect();
         foreach($evidence-> proofs as $proof){
-            $fileType = $proof->file->type;
-            $evidence_storaged_files_type->push($fileType);
+            $evidence_storaged_files_type->push($proof->file->type);
+        }
+        $evidence_vp_type = collect();
+        foreach($evidence->verified_proofs as $vp)
+        {
+            $evidence_vp_type->push($vp->type);
         }
 
         return view('evidence.view',
-            ['instance' => $instance, 'evidence' => $evidence, 'dict_storaged_files' => $evidence_storaged_files_type]);
+            ['instance' => $instance, 'evidence' => $evidence, 'dict_storaged_files' => $evidence_storaged_files_type, 'dict_vp_filetypes' => $evidence_vp_type]);
     }
 
     public function list()
@@ -311,6 +315,10 @@ class EvidenceController extends Controller
         foreach($evidence->proofs as $proof)
         {
             $proof->file->delete();
+        }
+        foreach($evidence->verified_proofs as $proof)
+        {
+            $proof->delete();
         }
     }
 

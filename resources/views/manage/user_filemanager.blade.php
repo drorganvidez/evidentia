@@ -34,27 +34,87 @@
                         <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Eliminar</th>
                     </tr>
                 </thead>
-                @foreach($evidences as $evidence)
-                    @foreach ($evidence->proofs as $proof)
-                        <tr>
-                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                {{$evidence->id}}
-                            </td>
-                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                {{$evidence->title}}
-                            </td>
-                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                {{$evidence->proof}}
-                            </td>
-                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"></td>
-                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"></td>
-                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"></td>
-                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"></td>
-                        </tr>
+                <tbody>
+                    @foreach($evidences as $evidence)
+                        @foreach ($evidence->proofs as $proof)
+                            <tr>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                    {{$evidence->id}}
+                                </td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                    {{$evidence->title}}
+                                </td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                    {{$proof->file_id}}
+                                </td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                    {{$proof->file->name}}
+                                </td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                    {{$proof->file->type}}
+                                </td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                    {{$proof->file->sizeForHuman()}}
+                                </td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                    <a style="margin-bottom: 10px" class="btn btn-default btn-sm" href="{{route('proof.download',['instance' => $instance, 'id' => $proof->id])}}">
+                                        <i class="fas fa-download"></i>
+                                        Descargar
+                                    </a>
+                                </td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                    <a style="margin-bottom: 10px" class="btn btn-default btn-sm" href="{{route('lecture.proof.verify', ['instance' => $instance,'user_id'=> $user->id, 'evidence_id' => $evidence->id, 'proof_id' => $proof->id])}}">
+                                        <i class="fas fa-check"></i>
+                                        Verificar
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
                     @endforeach
-                @endforeach
-
-
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <h3>Evidencias verificadas</h3>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 mt-5">
+            <table class="table" id="dataset_verified">
+                <thead>
+                    <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">ID Evidencia</th>
+                    <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Título</th>
+                    <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">ID archivo</th>
+                    <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Nombre de archivo</th>
+                    <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Tipo</th>
+                    <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Tamaño</th>
+                </thead>
+                <tbody>
+                    @foreach ($evidences as $evidence)
+                        @foreach ($evidence->verified_proofs as $proof)
+                            <tr>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                    {{$evidence->id}}
+                                </td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                    {{$evidence->title}}
+                                </td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                    {{$proof->file_id}}
+                                </td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                    {{$proof->name}}
+                                </td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                    {{$proof->type}}
+                                </td>
+                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                    {{$proof->size}}
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endforeach
+                </tbody>
             </table>
         </div>
     </div>

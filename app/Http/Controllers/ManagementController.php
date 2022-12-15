@@ -13,11 +13,14 @@ use App\Models\Meeting;
 use App\Models\Role;
 use App\Models\Secretary;
 use App\Models\User;
+use App\Models\Proof;
+use App\Models\VerifiedProof;
 use App\View\Components\Id;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ManagementController extends Controller
@@ -59,6 +62,7 @@ class ManagementController extends Controller
             ['instance' => $instance, 'users' => $filtered_users, 'dict_storage' => $dict_storage_used_user]);
     }
 
+    #Calcula el espacio en disco ocupado por usuario
     private function user_storage_used($user, $dict_storage_used_user)
     {
         $weight = 0;
@@ -73,6 +77,7 @@ class ManagementController extends Controller
         return $dict_storage_used_user;
     }
 
+    #Necesario para pasar el sumatorio del peso.
     private function size_to_human($weight)
     {
         $GB = 1000000000;
@@ -92,6 +97,7 @@ class ManagementController extends Controller
         return $weight;
     }
 
+    # Funciones para el filemanager#114
     public function user_filemanager($instance, $id)
     {
         $instance = \Instantiation::instance();
@@ -103,6 +109,30 @@ class ManagementController extends Controller
         $storage_used = $this->user_storage_used($user, $storage_used_dict)[$user->id];
 
         return view('manage.user_filemanager', ['instance' => $instance, 'user' => $user, 'evidences' => $evidences, 'storage_used' => $storage_used, 'storage_used_dict' => $storage_used_dict]);
+    }
+
+    public function verify_proof($instance, $user_id, $evidence_id, $proof_id)
+    {
+        $instance = \Instantiation::instance();
+        $lecturer = Auth::user();
+        #$user = User::findOrFail($user_id);
+        $proof = Proof::findOrFail($proof_id);
+
+        $verified_proof = VerifiedProof::create([
+            'evidence_id' => $evidence_id,
+            'file_id' => $proof->file->id,
+            'name' => $proof->file->name,
+            'type' => $proof->file->type,
+            'size' => $this->size_to_human($proof->file->size),
+            'lecturer_id' => $lecturer->id
+        ]);
+
+        $verified_proof->save();
+
+        Storage::delete($proof->file->route);
+        $proof->delete();
+
+        return redirect()->route('lecture.user.filemanager', ['instance' => $instance, 'id' => $user_id]);
     }
 
     public function evidence_list()

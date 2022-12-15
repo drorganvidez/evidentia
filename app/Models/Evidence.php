@@ -33,6 +33,11 @@ class Evidence extends Model
         return $this->hasOne('App\Models\ReasonRejection');
     }
 
+    public function verified_proofs()
+    {
+        return $this->hasMany('App\Models\VerifiedProof');
+    }
+
     /**
      * @return mixed
      * Evidence Flow
