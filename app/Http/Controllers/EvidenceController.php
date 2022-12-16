@@ -18,8 +18,8 @@ use ReflectionException;
 class EvidenceController extends Controller
 {
 
-    public $evidence_service;
-    public $user_service;
+    public EvidenceService $evidence_service;
+    public UserService $user_service;
 
     public function __construct()
     {
