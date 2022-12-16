@@ -1,0 +1,27 @@
+on:
+  push:
+    branches:
+      - master
+
+name: Automatic release
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-20.04
+
+    steps:
+      # ...
+      - name: Build & test
+        run: |
+          echo "done!"
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            LICENSE.txt
+            *.jar
