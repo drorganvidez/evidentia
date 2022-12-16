@@ -74,8 +74,8 @@ class EvidentiaInstance extends Command
             $this->line('Seeding ... [OK]');
 
             $this->line('Deleting temporary files');
-            exec("rm -r /var/www/storage/app/21 > /dev/null");
-            exec("rm -r /var/www/storage/app/livewire-tmp > /dev/null");
+            exec("rm -r /var/www/storage/app/21 2>/dev/null");
+            exec("rm -r /var/www/storage/app/livewire-tmp 2>/dev/null");
             $this->line('Deleting temporary files ... [OK]');
 
             $this->info('Instance created successfully.');

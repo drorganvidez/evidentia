@@ -46,6 +46,10 @@ class EvidentiaStart extends Command
         exec('cp .env.dev .env');
         $this->line('Setting environment ... [OK]');
 
+        $this->line('Clearing cache');
+        Artisan::call('optimize:clear');
+        $this->line('Clearing cache ... [OK]');
+
         // Borramos la instancia por defecto
         $this->line('Dropping default instance');
         DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `base21`;");
