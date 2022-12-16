@@ -17,19 +17,19 @@ use App\Models\Configuration;
 class Instantiation
 {
 
-    public static function set_default_connection()
+    public static function set_default_connection(): void
     {
         Artisan::call('config:clear');
         config(['database.default' => 'mysql']);
     }
 
-    public static function set_default_instance()
+    public static function set_default_instance(): void
     {
         Artisan::call('config:clear');
         config(['database.default' => 'instance']);
     }
 
-    public static function set($instance)
+    public static function set($instance): void
     {
         config(['database.connections.instance' => [
             'driver' => 'mysql',
@@ -74,7 +74,7 @@ class Instantiation
         return $entity;
     }
 
-    public static function migrate()
+    public static function migrate(): void
     {
         Artisan::call('migrate',
             [
