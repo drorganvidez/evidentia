@@ -1,6 +1,6 @@
 on: [push]
 
-name: Tests
+name: Tests push
 
 jobs:
 
