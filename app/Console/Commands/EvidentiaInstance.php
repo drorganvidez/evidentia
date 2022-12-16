@@ -73,6 +73,11 @@ class EvidentiaInstance extends Command
             exec('php artisan db:seed --class=DevelopSeeder');
             $this->line('Seeding ... [OK]');
 
+            $this->line('Deleting temporary files');
+            exec("rm -r /var/www/storage/app/21 > /dev/null");
+            exec("rm -r /var/www/storage/app/livewire-tmp > /dev/null");
+            $this->line('Deleting temporary files ... [OK]');
+
             $this->info('Instance created successfully.');
         }catch (\Exception $e){
             $this->error($e.' There seems to be a problem creating the instance. Check that it has not been previously instantiated.');
