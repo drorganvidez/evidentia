@@ -84,7 +84,7 @@
                                 <h3>¿Qué es?</h3>
 
                                 <p>
-                                    <b>evidentia.cloud</b> es un sistema de gestión automática de evidencias de trabajos de alumnos
+                                    <b>Evidentia</b> es un sistema de gestión automática de evidencias de trabajos de alumnos
                                     y alumnas. Fue originalmente pensado para las Jornadas InnoSoft Days organizadas en el ámbito de la asignatura
                                     Evolución y Gestión de la Configuración.
                                 </p>
