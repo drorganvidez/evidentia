@@ -15,7 +15,7 @@ class EvidentiaStart extends Command
      *
      * @var string
      */
-    protected $signature = 'evidentia:start {type}';
+    protected $signature = 'evidentia:start';
 
     /**
      * The console command description.
@@ -42,113 +42,9 @@ class EvidentiaStart extends Command
     public function handle()
     {
 
-        $type = $this->argument('type');
-
-        if($type != "docker" && $type != "vagrant"){
-            throw new \InvalidArgumentException("Missing type
-            \nHere you are valid examples:
-            \nphp artisan evidentia:start docker\nphp artisan evidentia:start vagrant");
-        }
-
-        $this->line('Optimizing');
-        Artisan::call("optimize:clear");
-        $this->line('Optimizing ... [OK]');
-
-        $this->line('Setting environment file');
-        exec("cat /dev/null > .env");
-        exec('echo "APP_NAME=Evidentia" >> .env');
-        exec('echo "APP_ENV=local" >> .env');
-        exec('echo "APP_KEY=" >> .env');
-        exec('echo "APP_DEBUG=true" >> .env');
-        exec('echo "APP_URL=http://localhost" >> .env');
-        exec('echo "" >> .env');
-        exec('echo "LOG_CHANNEL=stack" >> .env');
-        exec('echo "" >> .env');
-        exec('echo "DB_CONNECTION=mysql" >> .env');
-
-        if($type == "docker"){
-            exec('echo "DB_HOST=mysql" >> .env');
-            exec('echo "DB_PORT=3306" >> .env');
-        }
-
-        if($type == "vagrant"){
-            exec('echo "DB_HOST=localhost" >> .env');
-            exec('echo "DB_PORT=33060" >> .env');
-        }
-
-
-        exec('echo "DB_DATABASE=evidentia" >> .env');
-        exec('echo "DB_USERNAME=evidentia" >> .env');
-        exec('echo "DB_PASSWORD=secret" >> .env');
-        exec('echo "DB_CHARSET=utf8" >> .env');
-        exec('echo "DB_COLLATION=utf8_unicode_ci" >> .env');
-        exec('echo "" >> .env');
-        exec('echo "BROADCAST_DRIVER=log" >> .env');
-        exec('echo "CACHE_DRIVER=file" >> .env');
-        exec('echo "QUEUE_CONNECTION=sync" >> .env');
-        exec('echo "SESSION_DRIVER=file" >> .env');
-        exec('echo "SESSION_LIFETIME=120" >> .env');
-        exec('echo "" >> .env');
-
-        if($type == "docker"){
-            exec('echo "REDIS_HOST=redis" >> .env');
-        }
-
-        if($type == "vagrant"){
-            exec('echo "REDIS_HOST=127.0.0.1" >> .env');
-        }
-
-        exec('echo "REDIS_PASSWORD=null" >> .env');
-        exec('echo "REDIS_PORT=6379" >> .env');
-        exec('echo "" >> .env');
-        exec('echo "MAIL_MAILER=smtp" >> .env');
-        exec('echo "MAIL_HOST=smtp.mailtrap.io" >> .env');
-        exec('echo "MAIL_PORT=2525" >> .env');
-        exec('echo "MAIL_USERNAME=null" >> .env');
-        exec('echo "MAIL_PASSWORD=null" >> .env');
-        exec('echo "MAIL_ENCRYPTION=null" >> .env');
-        exec('echo "MAIL_FROM_ADDRESS=null" >> .env');
-        exec('echo "MAIL_FROM_NAME=\"${APP_NAME}\"" >> .env');
-        exec('echo "" >> .env');
-        exec('echo "AWS_ACCESS_KEY_ID=" >> .env');
-        exec('echo "AWS_SECRET_ACCESS_KEY=" >> .env');
-        exec('echo "AWS_DEFAULT_REGION=us-east-1" >> .env');
-        exec('echo "AWS_BUCKET=" >> .env');
-        exec('echo "" >> .env');
-        exec('echo "PUSHER_APP_ID=" >> .env');
-        exec('echo "PUSHER_APP_KEY=" >> .env');
-        exec('echo "PUSHER_APP_SECRET=" >> .env');
-        exec('echo "PUSHER_APP_CLUSTER=mt1" >> .env');
-        exec('echo "" >> .env');
-        exec('echo "MIX_PUSHER_APP_KEY=\"${PUSHER_APP_KEY}\"" >> .env');
-        exec('echo "MIX_PUSHER_APP_CLUSTER=\"${PUSHER_APP_CLUSTER}\"" >> .env');
-        exec('echo "" >> .env');
-        exec('echo "QUEUE_HOST=beanstalkd" >> .env');
-        exec('echo "" >> .env');
-        exec('echo "LECTURE_NEW_INSTANCE_NAME=Profesor" >> .env');
-        exec('echo "LECTURE_NEW_INSTANCE_SURNAME=Profesor" >> .env');
-        exec('echo "LECTURE_NEW_INSTANCE_EMAIL=profesor1@profesor1.com" >> .env');
-        exec('echo "LECTURE_NEW_INSTANCE_USERNAME=profesor1" >> .env');
-        exec('echo "LECTURE_NEW_INSTANCE_PASSWORD=profesor1" >> .env');
-        exec('echo "" >> .env');
-        exec('echo "ADMIN_NAME=David" >> .env');
-        exec('echo "ADMIN_SURNAME=Romero" >> .env');
-        exec('echo "ADMIN_EMAIL=admin@admin.com" >> .env');
-        exec('echo "ADMIN_USERNAME=admin@admin.com" >> .env');
-        exec('echo "ADMIN_PASSWORD=admin" >> .env');
-        exec('echo "" >> .env');
-        exec('echo "EVIDENTIA_VERSION=" >> .env');
-        $this->line('Setting environment file ... [OK]');
-
-        $this->line('Generating key');
-        exec("php artisan key:generate");
-        exec("php artisan config:cache");
-        exec("php artisan config:clear");
-        exec("php artisan cache:clear");
-        $this->line('Generating key ... [OK]');
-        exec("php artisan config:cache");
-        exec("php artisan config:clear");
-        exec("php artisan cache:clear");
+        $this->line('Setting environment');
+        exec('cp .env.dev .env');
+        $this->line('Setting environment ... [OK]');
 
         // Borramos la instancia por defecto
         $this->line('Dropping default instance');
@@ -166,7 +62,6 @@ class EvidentiaStart extends Command
         }catch(\Exception $e){
             $this->comment('No instances found');
         }
-
 
         // Borramos la base de datos principal
         $this->line('Dropping main database');
@@ -191,8 +86,8 @@ class EvidentiaStart extends Command
 
         $this->info("Evidentia has started successfully. Enjoy!");
 
-        exec("php artisan config:cache");
-        exec("php artisan config:clear");
-        exec("php artisan cache:clear");
+        return 0;
+
     }
+
 }

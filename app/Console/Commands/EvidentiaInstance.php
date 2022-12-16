@@ -79,5 +79,7 @@ class EvidentiaInstance extends Command
             $this->comment("Tip: use 'php artisan evidentia:reload' if you want to reload instance settings and database.");
         }
 
+        return 0;
+
     }
 }
