@@ -1,0 +1,50 @@
+on:
+  pull_request:
+    branches:
+      - master
+      - develop
+
+name: Tests pull request
+
+jobs:
+
+  phpunit:
+    name: Test Suite with PHPUnit
+    runs-on: ubuntu-20.04
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: secret
+          MYSQL_DATABASE: evidentia
+          MYSQL_USER: evidentia
+          MYSQL_PASSWORD: secret
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Verify MySQL connection from host
+        run: |
+          mysql --host 127.0.0.1 --port 3306 -uroot -psecret -e "GRANT ALL ON *.*  TO 'evidentia'@'%' identified by 'secret'; FLUSH PRIVILEGES;"
+          mysql --host 127.0.0.1 --port 3306 -uroot -psecret -e "CREATE DATABASE base21;"
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Install composer dependencies
+        run: |
+          rm composer.lock
+          composer install --no-scripts
+          composer update
+
+      - name: Prepare Laravel Application
+        run: |
+          cp .env.ci .env
+          php artisan key:generate
+          php artisan migrate
+          php artisan db:seed
+          php artisan db:seed --class=InstancesTableSeeder
+      - name: Run Testsuite
+        run: vendor/bin/phpunit tests/
