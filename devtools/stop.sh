@@ -1,4 +1,4 @@
 #!/bin/bash
 cd ..
 cd laradock
-docker-compose down
+docker compose down

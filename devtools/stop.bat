@@ -1,4 +1,4 @@
 @echo off
 cd ..
 cd laradock
-docker-compose down
+docker compose down

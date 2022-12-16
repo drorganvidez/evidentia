@@ -4,7 +4,7 @@ git submodule update --init --recursive
 COPY .env.laradock laradock\.env
 COPY createdb.sql laradock\mysql\docker-entrypoint-initdb.d\createdb.sql
 cd laradock
-docker-compose up -d nginx mysql phpmyadmin redis workspace
+docker compose up -d nginx mysql phpmyadmin redis workspace
 docker exec laradock-php-fpm-1 chown -R www-data:www-data /var/www/storage
 docker exec laradock-workspace-1 rm -f composer.lock
 docker exec laradock-workspace-1 composer install
