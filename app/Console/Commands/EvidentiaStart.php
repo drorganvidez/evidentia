@@ -52,7 +52,7 @@ class EvidentiaStart extends Command
 
         // Borramos la instancia por defecto
         $this->line('Dropping default instance');
-        DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `base21`;");
+        DB::statement("DROP DATABASE IF EXISTS `base21`;");
         $this->line('Dropping default instance ... [OK]');
 
         // Borramos las demás instancias
