@@ -15,5 +15,7 @@ resources/.DS_Store
 .idea/
 .editorconfig
 package-lock.json
-start.sh
-stop.sh
+*.lock
+composer.lock
+laradock
+

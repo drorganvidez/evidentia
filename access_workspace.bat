@@ -1,2 +1,2 @@
 cd laradock
-docker exec -it laradock_workspace_1 bash
+docker exec -it laradock-workspace-1 bash
