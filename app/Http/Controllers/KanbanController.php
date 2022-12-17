@@ -167,23 +167,6 @@ class KanbanController extends Controller
         return redirect()->route('kanban.view', ['instance' => $instance, 'id' => $kanban->id])->with('success', 'Tarea creada con éxito.');
 
     }
+    
 
-     /****************************************************************************
-     * REMOVE AN ISSUE
-     ****************************************************************************/
-    /*
-    public function remove_issue(Request $request)
-    {
-        $id = $request->_id;
-        $issue = Issue::find($id);
-        $idkanban = $issue->kanban_id;
-        $instance = \Instantiation::instance();
-
-        $issue->delete();
-
-
-        
-        return redirect()->route('kanban.view',$instance,$idkanban)->with('success', 'Tarea eliminada con éxito.');
-    }
-*/
 }

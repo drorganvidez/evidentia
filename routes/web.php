@@ -5,6 +5,7 @@ use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\MeetingSecretaryController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\EvidenceController;
+use App\Http\Controllers\KanbanController;
 use App\Http\Controllers\SignController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -303,6 +304,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
     Route::get('/kanban/create', 'KanbanController@create')->name('kanban.create');
     Route::post('/kanban/new', 'KanbanController@new')->name('kanban.new');
     Route::post('/kanban/remove', 'KanbanController@remove_kanban')->name('kanban.remove_kanban');
+    Route::get('/kanban/list/export/{ext}',[KanbanController::class , 'export'])->name('kanban.list.export');
 
      /**
      *  ISSUES
