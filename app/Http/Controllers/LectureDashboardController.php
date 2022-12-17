@@ -78,43 +78,9 @@ class LectureDashboardController extends Controller {
 
         $comite_name = $this->getComiteNames();    
 
-        /*Personas por comite 21 Lineas FUNCIONA pero hay que revisar por que tiene pinta que son las evidencias*/
-        /*    
-        $comites = Comittee::all();
-        for($i=0;$i<8;$i++){
-            $user_comite[$i]=0;
-        }
-        
-        foreach($total_users as $user){
-            $comites_user = $user->committee_belonging();
-                if(str_contains($comites_user,'Presidencia')){
-                    $user_comite[0] = $user_comite[0] + 1;
-                } elseif (str_contains($comites_user,'Secretar')){
-                    $user_comite[1] = $user_comite[1] + 1;
-                } elseif (str_contains($comites_user,'Programa')){
-                    $user_comite[2] = $user_comite[2] + 1;
-                } elseif (str_contains($comites_user,'Igualdad')){
-                    $user_comite[3] = $user_comite[3] + 1;
-                } elseif (str_contains($comites_user,'Sostenibilidad')){
-                    $user_comite[4] = $user_comite[4] + 1;
-                } elseif (str_contains($comites_user,'Finanzas')){
-                    $user_comite[5] = $user_comite[5] + 1;
-                } elseif (str_contains($comites_user,'Log')){
-                    $user_comite[6] = $user_comite[6] + 1;
-                } elseif (str_contains($comites_user,'Comunicaci')){
-                    $user_comite[7] = $user_comite[7] + 1;
-                }
-            
-            
-        }
-        */
-
         /*Numero evidencias por comite 21 Lineas DENTRO DE LA VISTA Y ARREGLADO*/
 
         $evidence_per_comite = $this->getEvidencesComite();
-
-        /*Numero medio de evidencias por personas dentro del comite da division por 0 debido a que el $user_comite no pilla a las personas de ese comite*/
-
 
         /*Peso de archivos por comite DENTRO DE LA VISTA Y ARREGLADO*/
 
@@ -123,12 +89,6 @@ class LectureDashboardController extends Controller {
         /*Reuniones por cada comite DENTRO DE LA VISTA Y ARREGLADO*/
 
         $comite_meetings = $this->getComiteMeetings();
-
-        /*Tiempo total de reuniones en cada comite*/
-
-        /*$meetings_comite_time = $this->getTotalTimeComiteMeetings();*/
-
-        /*Tiempo medio de cada reunion en el comite*/
 
         /*Numero de Secretarios por comite 20 Lineas DENTRO DE LA VISTA Y ARREGLADO*/
 
