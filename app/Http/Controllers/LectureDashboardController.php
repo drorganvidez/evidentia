@@ -245,12 +245,12 @@ class LectureDashboardController extends Controller {
 
     public function getComiteNames(){
         $comite_name[0] = "Presidencia";
-        $comite_name[1] = "Secretaria";
+        $comite_name[1] = "Secretaría";
         $comite_name[2] = "Programa";
         $comite_name[3] = "Igualdad";
         $comite_name[4] = "Sostenibilidad";
         $comite_name[5] = "Finanzas";
-        $comite_name[6] = "Loguistica";
+        $comite_name[6] = "Logistica";
         $comite_name[7] = "Comunicación";
 
         return $comite_name;
