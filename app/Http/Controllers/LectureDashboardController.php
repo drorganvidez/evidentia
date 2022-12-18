@@ -30,44 +30,60 @@ class LectureDashboardController extends Controller {
         ====================================================================================*/
 
 
-        /*Usuarios totales DENTRO DE LA VISTA Y ARREGLADO*/
+        /*Usuarios totales DENTRO DE LA VISTA Y ARREGLADO ===========*/
         
         $total_users = $this->getTotalUsers();
 
-        /*Evidencia totales DENTRO DE LA VISTA Y ARREGLADO*/
+        /*Evidencia totales DENTRO DE LA VISTA Y ARREGLADO ========*/
+
         $total_evidences_not_draft_count = Evidence::evidences_not_draft()->count();
         
-        /*Evidencias medias por persona DENTRO DE LA VISTA Y ARREGLADO*/
-        $evidences_per_user = $total_evidences_not_draft_count / $total_users;
+        /*Evidencias medias por persona DENTRO DE LA VISTA Y ARREGLADO ========*/
+        if( !($total_evidences_not_draft_count <= 0)){
+            $evidences_per_user = $total_evidences_not_draft_count / $total_users;
+        } else {
+            $evidences_per_user = 0;
+        }
+        
 
-        /*Evidencias en un rango X de horas (entre 0 y 1,1 y 2, 3 y 5) DENTRO DE LA VISTA Y ARREGLADO*/
+        /*Evidencias en un rango X de horas (entre 0 y 1,1 y 2, 3 y 5) DENTRO DE LA VISTA Y ARREGLADO ==========*/
         $dict_evidences_hours = $this->getEvidencesInRange();
 
-        /* Numero de archivos subidos a las evidencias DENTRO DE LA VISTA */
+        /* Numero de archivos subidos a las evidencias DENTRO DE LA VISTA ===========*/
         $total_files = $this->getTotalFiles();
         
-        /*Media de archivo por evidencia 1 linea DENTRO DE LA VISTA*/
-        $mean_evidence_proof = $total_files / $total_evidences_not_draft_count;
+        /*Media de archivo por evidencia 1 linea DENTRO DE LA VISTA =========*/
+        if( !($total_evidences_not_draft_count <= 0)){
+            $mean_evidence_proof = $total_files / $total_evidences_not_draft_count;
+        } else {
+            $mean_evidence_proof = 0;
+        }
 
-        /*Evidencias en un rango X archivos (0,1,2,3 o mas) 14 lineas DENTRO DE LA VISTA Y ARREGLADO*/
+        /*Evidencias en un rango X archivos (0,1,2,3 o mas) 14 lineas DENTRO DE LA VISTA Y ARREGLADO ==============*/
         $dict_evidences_proof_ranges = $this->getProofRanges();
 
-        /*Peso total de los archivos subidos DENTRO DE LA VISTA Y ARREGLADO*/
+        /*Peso total de los archivos subidos DENTRO DE LA VISTA Y ARREGLADO ==========*/
         $total_weight = $this->totalWeight();
         $total_weight_reformed = $this->getSize($total_weight);
 
-        /*Peso medio de archivos por evidencia DENTRO DE LA VISTA Y ARREGLADO */
-        $mean_evidences_proof_weight = $this->getSize($total_weight / $total_evidences_not_draft_count);
-
-        /*Reuniones totales DENTRO LA VISTA Y ARREGLADO */
+        /*Peso medio de archivos por evidencia DENTRO DE LA VISTA Y ARREGLADO =========*/
+        if( !($total_evidences_not_draft_count <= 0)){
+            $mean_evidences_proof_weight = $this->getSize($total_weight / $total_evidences_not_draft_count);
+        } else{
+            $mean_evidences_proof_weight = 0;
+        }
+        /*Reuniones totales DENTRO LA VISTA Y ARREGLADO ========= */
         $total_meetings = Meeting::all()->count();       
 
-        /*Tiempo total de reunion DENTRO LA VISTA Y ARREGLADO*/
+        /*Tiempo total de reunion DENTRO LA VISTA Y ARREGLADO ========*/
         $total_time_meetings = $this->getTotalTimeMeetings();
 
         /*Tiempo medio de cada reunion DENTRO LA VISTA Y ARREGLADO*/
-        $meen_time_meetings = $total_time_meetings/$total_meetings;
-
+        if( !($total_meetings <= 0)){
+            $meen_time_meetings = $total_time_meetings/$total_meetings;
+        }else{
+            $meen_time_meetings = 0;
+        }
         /* ====================================================================================
 
             DATOS PARA CADA COMITE
@@ -93,8 +109,6 @@ class LectureDashboardController extends Controller {
         /*Numero de Secretarios por comite 20 Lineas DENTRO DE LA VISTA Y ARREGLADO*/
 
         $secretarios_por_comite = $this->getSecretariosComite();
-
-        /*Reuniones en los tiempos de 0 a 1 hora, de 1 a 2 horas, de 2 a 3 horas y de 3 a mas horas ordenadas segun el comite*/
 
 
         return view('dashboard.view',['instance'=> $instance, 'total_evidences_not_draft'=>$total_evidences_not_draft_count, 
