@@ -262,26 +262,24 @@ class LectureDashboardController extends Controller {
         }
 
         $total_evidences_not_draft = Evidence::all();
-        if(!($total_evidences_not_draft->count()<=0)){
-            foreach($total_evidences_not_draft as $evidence){
-                $name_comite = Comittee::find($evidence->comittee_id)->name;
-                if(str_contains($name_comite,'Presidencia')){
-                    $evidence_per_comite[0] = $evidence_per_comite[0] + 1;
-                } elseif (str_contains($name_comite,'Secretar')){
-                    $evidence_per_comite[1] = $evidence_per_comite[1] + 1;
-                } elseif (str_contains($name_comite,'Programa')){
-                    $evidence_per_comite[2] = $evidence_per_comite[2] + 1;
-                } elseif (str_contains($name_comite,'Igualdad')){
-                    $evidence_per_comite[3] = $evidence_per_comite[3] + 1;
-                } elseif (str_contains($name_comite,'Sostenibilidad')){
-                    $evidence_per_comite[4] = $evidence_per_comite[4] + 1;
-                } elseif (str_contains($name_comite,'Finanzas')){
-                    $evidence_per_comite[5] = $evidence_per_comite[5] + 1;
-                } elseif (str_contains($name_comite,'Log')){
-                    $evidence_per_comite[6] = $evidence_per_comite[6] + 1;
-                } elseif (str_contains($name_comite,'Comunicaci')){
-                    $evidence_per_comite[7] = $evidence_per_comite[7] + 1;
-                }
+        foreach($total_evidences_not_draft as $evidence){
+            $name_comite = Comittee::find($evidence->comittee_id)->name;
+            if(str_contains($name_comite,'Presidencia')){
+                $evidence_per_comite[0] = $evidence_per_comite[0] + 1;
+            } elseif (str_contains($name_comite,'Secretar')){
+                $evidence_per_comite[1] = $evidence_per_comite[1] + 1;
+            } elseif (str_contains($name_comite,'Programa')){
+                $evidence_per_comite[2] = $evidence_per_comite[2] + 1;
+            } elseif (str_contains($name_comite,'Igualdad')){
+                $evidence_per_comite[3] = $evidence_per_comite[3] + 1;
+            } elseif (str_contains($name_comite,'Sostenibilidad')){
+                $evidence_per_comite[4] = $evidence_per_comite[4] + 1;
+            } elseif (str_contains($name_comite,'Finanzas')){
+                $evidence_per_comite[5] = $evidence_per_comite[5] + 1;
+            } elseif (str_contains($name_comite,'Log')){
+                $evidence_per_comite[6] = $evidence_per_comite[6] + 1;
+            } elseif (str_contains($name_comite,'Comunicaci')){
+                $evidence_per_comite[7] = $evidence_per_comite[7] + 1;
             }
         }
 
@@ -289,44 +287,36 @@ class LectureDashboardController extends Controller {
     }
 
     public function getComiteProofWeight(){
-
         for($i=0;$i<8;$i++){
             $comite_weight[$i]=0;
         }
         $total_evidences_not_draft = Evidence::evidences_not_draft();
-
-        if(!($total_evidences_not_draft->count()<=0)){
-
-            foreach($total_evidences_not_draft as $evidence){
-                $name_comite_proof = Comittee::find($evidence->comittee_id)->name;
-                
-                foreach($evidence->proofs as $proof){
-                    if(str_contains($name_comite_proof,'Presidencia')){
-                        $comite_weight[0] = $comite_weight[0] + $proof->file->size;
-                    } elseif (str_contains($name_comite_proof,'Secretar')){
-                        $comite_weight[1] = $comite_weight[1] + $proof->file->size;
-                    } elseif (str_contains($name_comite_proof,'Programa')){
-                        $comite_weight[2] = $comite_weight[2] + $proof->file->size;
-                    } elseif (str_contains($name_comite_proof,'Igualdad')){
-                        $comite_weight[3] = $comite_weight[3] + $proof->file->size;
-                    } elseif (str_contains($name_comite_proof,'Sostenibilidad')){
-                        $comite_weight[4] = $comite_weight[4] + $proof->file->size;
-                    } elseif (str_contains($name_comite_proof,'Finanzas')){
-                        $comite_weight[5] = $comite_weight[5] + $proof->file->size;
-                    } elseif (str_contains($name_comite_proof,'Log')){
-                        $comite_weight[6] = $comite_weight[6] + $proof->file->size;
-                    } elseif (str_contains($name_comite_proof,'Comunicaci')){
-                        $comite_weight[7] = $comite_weight[7] + $proof->file->size;
-                    }
+        foreach($total_evidences_not_draft as $evidence){
+            $name_comite_proof = Comittee::find($evidence->comittee_id)->name;
+            foreach($evidence->proofs as $proof){
+                if(str_contains($name_comite_proof,'Presidencia')){
+                    $comite_weight[0] = $comite_weight[0] + $proof->file->size;
+                } elseif (str_contains($name_comite_proof,'Secretar')){
+                    $comite_weight[1] = $comite_weight[1] + $proof->file->size;
+                } elseif (str_contains($name_comite_proof,'Programa')){
+                    $comite_weight[2] = $comite_weight[2] + $proof->file->size;
+                } elseif (str_contains($name_comite_proof,'Igualdad')){
+                    $comite_weight[3] = $comite_weight[3] + $proof->file->size;
+                } elseif (str_contains($name_comite_proof,'Sostenibilidad')){
+                    $comite_weight[4] = $comite_weight[4] + $proof->file->size;
+                } elseif (str_contains($name_comite_proof,'Finanzas')){
+                    $comite_weight[5] = $comite_weight[5] + $proof->file->size;
+                } elseif (str_contains($name_comite_proof,'Log')){
+                    $comite_weight[6] = $comite_weight[6] + $proof->file->size;
+                } elseif (str_contains($name_comite_proof,'Comunicaci')){
+                    $comite_weight[7] = $comite_weight[7] + $proof->file->size;
                 }
             }
         }
-        
 
         for($i=0;$i<8;$i++){
             $comite_weight[$i] = $this->getSize($comite_weight[$i]);
         }
-
         return $comite_weight;
     }
 
@@ -369,29 +359,27 @@ class LectureDashboardController extends Controller {
             $meetings_comite[$i] = 0;
         }
         $comites = Comittee::all();
-        if(!($comites->count<=0)){
-            foreach($comites as $comite){
-                $comiteName = $comite->name;
-                if(str_contains($comiteName,'Presidencia')){  
-                    $meetings_comite[0] = $meetings_comite[0] + $comite->meetings()->count();              
-                } elseif (str_contains($comiteName,'Secretar')){  
-                    $meetings_comite[1] = $meetings_comite[1] + $comite->meetings()->count();               
-                } elseif (str_contains($comiteName,'Programa')){                
-                    $meetings_comite[2] = $meetings_comite[2] + $comite->meetings()->count(); 
-                } elseif (str_contains($comiteName,'Igualdad')){                
-                    $meetings_comite[3] = $meetings_comite[3] + $comite->meetings()->count(); 
-                } elseif (str_contains($comiteName,'Sostenibilidad')){                
-                    $meetings_comite[4] = $meetings_comite[4] + $comite->meetings()->count(); 
-                } elseif (str_contains($comiteName,'Finanzas')){
-                    $meetings_comite[5] = $meetings_comite[5] + $comite->meetings()->count(); 
-                } elseif (str_contains($comiteName,'Log')){
-                    $meetings_comite[6] = $meetings_comite[6] + $comite->meetings()->count(); 
-                } elseif (str_contains($comiteName,'Comunicaci')){
-                    $meetings_comite[7] = $meetings_comite[7] + $comite->meetings()->count(); 
-                }
+
+        foreach($comites as $comite){
+            $comiteName = $comite->name;
+            if(str_contains($comiteName,'Presidencia')){  
+                $meetings_comite[0] = $meetings_comite[0] + $comite->meetings()->count();              
+            } elseif (str_contains($comiteName,'Secretar')){  
+                $meetings_comite[1] = $meetings_comite[1] + $comite->meetings()->count();               
+            } elseif (str_contains($comiteName,'Programa')){                
+                $meetings_comite[2] = $meetings_comite[2] + $comite->meetings()->count(); 
+            } elseif (str_contains($comiteName,'Igualdad')){                
+                $meetings_comite[3] = $meetings_comite[3] + $comite->meetings()->count(); 
+            } elseif (str_contains($comiteName,'Sostenibilidad')){                
+                $meetings_comite[4] = $meetings_comite[4] + $comite->meetings()->count(); 
+            } elseif (str_contains($comiteName,'Finanzas')){
+                $meetings_comite[5] = $meetings_comite[5] + $comite->meetings()->count(); 
+            } elseif (str_contains($comiteName,'Log')){
+                $meetings_comite[6] = $meetings_comite[6] + $comite->meetings()->count(); 
+            } elseif (str_contains($comiteName,'Comunicaci')){
+                $meetings_comite[7] = $meetings_comite[7] + $comite->meetings()->count(); 
             }
         }
-        
         return $meetings_comite;
     }
 
