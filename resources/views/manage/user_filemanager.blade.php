@@ -21,7 +21,7 @@
     <div class="row">
         <div class="col-lg-12">
             <table id="dataset" class="table">
-
+                <caption>Evidencias con archivos no verificados</caption>
                 <thead>
                     <tr>
                         <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">ID Evidencia</th>
@@ -81,6 +81,7 @@
     <div class="row">
         <div class="col-lg-12 mt-5">
             <table class="table" id="dataset_verified">
+                <caption>Evidencias con archivos verificados</caption>
                 <thead>
                     <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">ID Evidencia</th>
                     <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Título</th>

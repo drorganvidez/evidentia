@@ -100,7 +100,6 @@ class ManagementController extends Controller
     # Funciones para el filemanager#114
     public function user_filemanager($instance, $id)
     {
-        $instance = \Instantiation::instance();
         $user = User::findOrFail($id);
         $evidences = Evidence::where(['user_id' => $user->id])->get();
 
@@ -113,9 +112,7 @@ class ManagementController extends Controller
 
     public function verify_proof($instance, $user_id, $evidence_id, $proof_id)
     {
-        $instance = \Instantiation::instance();
         $lecturer = Auth::user();
-        #$user = User::findOrFail($user_id);
         $proof = Proof::findOrFail($proof_id);
 
         $verified_proof = VerifiedProof::create([
