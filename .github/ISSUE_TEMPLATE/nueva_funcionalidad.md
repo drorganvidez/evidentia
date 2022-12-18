@@ -6,18 +6,18 @@ tags: ''
 
 ---
 
-**¿Está funcionalidad está asociada a un problema? Por favor, descríbelo.**
+**¿Está funcionalidad está asociada a un problema?**
 
-Una descripción concisa y clara del problema. E.g: Siempre me frustra que... [...]
+* 
 
-**Describe la solución que te gustaría**
+**¿Qué solución planteo?**
 
-Una descripción concisa y clara de lo que te gustaría que ocurriese.
+* 
 
-**Describe alternativas que hayas considerado**
+**¿Existe otras soluciones posibles?**
 
-Una descripción concisa y clara de soluciones alternativas o funcionalidades que hayas considerado.
+*
 
-**Contenido adicional**
+**Detalles adicionales:**
 
-Añade cualquier otro contenido o capturas sobre la funcionalidad requerida.
+* 
