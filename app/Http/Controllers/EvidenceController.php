@@ -29,7 +29,6 @@ class EvidenceController extends Controller
 
     public function view($instance,$id)
     {
-        
         $instance = \Instantiation::instance();
         $evidence = Evidence::find($id);
 
@@ -44,6 +43,8 @@ class EvidenceController extends Controller
         {
             $evidence_vp_type->push($vp->type);
         }
+        $evidence_storaged_files_type = $evidence_storaged_files_type->unique();
+        $evidence_vp_type = $evidence_vp_type->unique();
 
         return view('evidence.view',
             ['instance' => $instance, 'evidence' => $evidence, 'dict_storaged_files' => $evidence_storaged_files_type, 'dict_vp_filetypes' => $evidence_vp_type]);
