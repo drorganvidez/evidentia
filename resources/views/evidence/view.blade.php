@@ -91,19 +91,41 @@
 
                     <h4>Pruebas adjuntas</h4>
 
-                    <div class="row">
+                    <div class="col">
 
-                        @foreach($evidence->proofs as $proof)
-
-                            <div class="col-auto mt-3">
-                                <a style="margin-bottom: 10px" class="btn btn-default btn-sm" href="{{route('proof.download',['instance' => $instance, 'id' => $proof->id])}}">
-                                    <i class="fas fa-download"></i>
-                                    {{$proof->file->name}} ({{$proof->file->sizeForHuman()}})
-                                </a>
+                        @foreach($dict_storaged_files as $fileType)
+                            <div class="row mt-3">
+                                <h5 class='mx-3'>{{Str::upper($fileType)}}</h5>
                             </div>
-
+                            @foreach($evidence->proofs as $proof)
+                                @if($proof->file->type == $fileType)
+                                    <div class="row mt-1 mx-2">
+                                        <a style="margin-bottom: 10px" class="btn btn-default btn-sm" href="{{route('proof.download',['instance' => $instance, 'id' => $proof->id])}}">
+                                            <i class="fas fa-download"></i>
+                                            {{$proof->file->name}} ({{$proof->file->sizeForHuman()}})
+                                        </a>
+                                    </div>
+                                @endif
+                            @endforeach
                         @endforeach
 
+                    </div>
+
+                    <h4>Pruebas verificadas</h4>
+                    <div class="col">
+                        @foreach($dict_vp_filetypes as $fileType)
+                            <div class="row mt-3">
+                                <h5 class='mx-3'>{{Str::upper($fileType)}}</h5>
+                            </div>
+                            @foreach ($evidence->verified_proofs as $proof)
+                                <div class="row mt-1 mx-2">
+                                    <p style="margin-bottom: 10px" class="btn btn-default btn-sm disabled">
+                                        <i class="fas fa-file"></i>
+                                        {{$proof->name}} ({{$proof->size}})
+                                    </p>
+                                </div>
+                            @endforeach
+                        @endforeach
                     </div>
 
                 </div>

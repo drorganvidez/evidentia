@@ -32,8 +32,22 @@ class EvidenceController extends Controller
         $instance = \Instantiation::instance();
         $evidence = Evidence::find($id);
 
+        /*lista de archivos segun el tipo*/
+
+        $evidence_storaged_files_type = collect();
+        foreach($evidence-> proofs as $proof){
+            $evidence_storaged_files_type->push($proof->file->type);
+        }
+        $evidence_vp_type = collect();
+        foreach($evidence->verified_proofs as $vp)
+        {
+            $evidence_vp_type->push($vp->type);
+        }
+        $evidence_storaged_files_type = $evidence_storaged_files_type->unique();
+        $evidence_vp_type = $evidence_vp_type->unique();
+
         return view('evidence.view',
-            ['instance' => $instance, 'evidence' => $evidence]);
+            ['instance' => $instance, 'evidence' => $evidence, 'dict_storaged_files' => $evidence_storaged_files_type, 'dict_vp_filetypes' => $evidence_vp_type]);
     }
 
     public function list()
@@ -302,6 +316,10 @@ class EvidenceController extends Controller
         foreach($evidence->proofs as $proof)
         {
             $proof->file->delete();
+        }
+        foreach($evidence->verified_proofs as $proof)
+        {
+            $proof->delete();
         }
     }
 

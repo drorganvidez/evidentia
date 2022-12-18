@@ -8,14 +8,19 @@ use App\Http\Services\UserService;
 use App\Models\Comittee;
 use App\Models\Coordinator;
 use App\Models\Evidence;
+use App\Models\File;
 use App\Models\Meeting;
 use App\Models\Role;
 use App\Models\Secretary;
 use App\Models\User;
+use App\Models\Proof;
+use App\Models\VerifiedProof;
+use App\View\Components\Id;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ManagementController extends Controller
@@ -47,8 +52,84 @@ class ManagementController extends Controller
             $filtered_users = $users;
         }
 
+        // calculo el almacenamiento ocupado por cada alumno
+        $dict_storage_used_user = [];
+        foreach ($filtered_users as $user) {
+            $dict_storage_used_user = $this->user_storage_used($user, $dict_storage_used_user);
+        }
+
         return view('manage.user_list',
-            ['instance' => $instance, 'users' => $filtered_users]);
+            ['instance' => $instance, 'users' => $filtered_users, 'dict_storage' => $dict_storage_used_user]);
+    }
+
+    #Calcula el espacio en disco ocupado por usuario
+    private function user_storage_used($user, $dict_storage_used_user)
+    {
+        $weight = 0;
+        $evidences = Evidence::where(['user_id' => $user->id])->get();
+        foreach ($evidences as $evidence) {
+            foreach ($evidence->proofs as $proof)   {
+                $file = File::find($proof->file_id);
+                $weight += $file->size;
+            }
+        }
+        $dict_storage_used_user[$user->id] = $this->size_to_human($weight);
+        return $dict_storage_used_user;
+    }
+
+    #Necesario para pasar el sumatorio del peso.
+    private function size_to_human($weight)
+    {
+        $GB = 1000000000;
+        $MB = 1000000;
+        $KB = 1000;
+        //Cambiar para que aquí directamente meta en el array y escriba el valor ya convertido a humano
+        //Luego lo único que quedaría sería leerlo en la vista y ya probar
+        if($weight > $GB)           {
+            $weight = round($weight/$GB,2)." GB";
+        } else if ($weight > $MB)   {
+            $weight = round($weight/$MB,2)." MB";
+        } else if($weight > $KB)    {
+            $weight = round($weight/$KB,2)." KB";
+        } else {
+            $weight = "0.00 KB";
+        }
+        return $weight;
+    }
+
+    # Funciones para el filemanager#114
+    public function user_filemanager($instance, $id)
+    {
+        $user = User::findOrFail($id);
+        $evidences = Evidence::where(['user_id' => $user->id])->get();
+
+        $storage_used_dict = [];
+
+        $storage_used = $this->user_storage_used($user, $storage_used_dict)[$user->id];
+
+        return view('manage.user_filemanager', ['instance' => $instance, 'user' => $user, 'evidences' => $evidences, 'storage_used' => $storage_used, 'storage_used_dict' => $storage_used_dict]);
+    }
+
+    public function verify_proof($instance, $user_id, $evidence_id, $proof_id)
+    {
+        $lecturer = Auth::user();
+        $proof = Proof::findOrFail($proof_id);
+
+        $verified_proof = VerifiedProof::create([
+            'evidence_id' => $evidence_id,
+            'file_id' => $proof->file->id,
+            'name' => $proof->file->name,
+            'type' => $proof->file->type,
+            'size' => $this->size_to_human($proof->file->size),
+            'lecturer_id' => $lecturer->id
+        ]);
+
+        $verified_proof->save();
+
+        Storage::delete($proof->file->route);
+        $proof->delete();
+
+        return redirect()->route('lecture.user.filemanager', ['instance' => $instance, 'id' => $user_id]);
     }
 
     public function evidence_list()

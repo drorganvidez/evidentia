@@ -33,8 +33,8 @@
                         PDF</a>
                 </div>
             </div>
-
-            <div class="col-lg-9">
+        </div>
+            <div class="col-lg-12">
 
             <div class="card shadow-lg">
 
@@ -78,6 +78,7 @@
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">UVUS</th>
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Roles</th>
                             <th></th>
+                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell" style="width: 15rem;">Almacenamiento ocupado</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -110,6 +111,13 @@
                                                 </a>
                                             @endif
                                         </td>
+                                        <td>
+                                            {{-- Espacio dedicado para el sumatorio de espacio ocupado --}}
+                                            {{-- El link redirige al file manager del usuario en concreto--}}
+                                            <a href="{{route('lecture.user.filemanager', ['instance' => $instance, 'id' => $user->id])}}">
+                                                {{$dict_storage[$user->id]}}
+                                            </a>
+                                        </td>
                                     </tr>
 
                             @endif
@@ -124,7 +132,8 @@
             </div>
 
         </div>
-
+    </div>
+    <div class="row">
         <div class="col-lg-4">
 
             <div class="card shadow-sm">
