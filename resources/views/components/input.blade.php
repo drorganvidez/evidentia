@@ -41,7 +41,7 @@ $is_invalid = "";
             {{$label}}
 
             @isset($info)
-                <i style="cursor: pointer" class="fe fe-info" data-bs-toggle="modal" data-bs-target="#modal_item_{{$name}}"></i>
+                <i style="width: 15px; margin-bottom: 2px; cursor: pointer" data-feather="info" data-bs-toggle="modal" data-bs-target="#modal_item_{{$name}}">></i>
             @endisset
 
         </label>
@@ -128,7 +128,7 @@ $is_invalid = "";
                         </h4>
 
                         <!-- Close -->
-                        <i style="cursor: pointer" class="fe fe-x-circle" data-bs-dismiss="modal" aria-label="Close"></i>
+                        <i style="cursor: pointer" data-feather="x-circle" data-bs-dismiss="modal" aria-label="Close"></i>
                     </div>
                     <div class="card-body">
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
@@ -8,20 +8,9 @@
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon"/>
 
-    <!-- Base CSS -->
-    <link rel="stylesheet" href="{{asset('css/app.css')}}" />
-
-    <!-- Map CSS -->
-    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css" />
-
-    <!-- Libs CSS -->
-    <link rel="stylesheet" href="{{ asset('css/libs.bundle.css') }}" />
-
     <!-- Theme CSS -->
-    <x-dark-mode-css/>
 
-    <!-- Own CSS -->
-    <link rel="stylesheet" href="{{ asset('css/own.css') }}" />
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
     <!-- Title -->
     <title>@yield('title') @yield('parent') | Evidentia Cloud</title>
@@ -804,27 +793,6 @@
 </div>
 
 <!-- JAVASCRIPT -->
-<script src="{{asset('js/manifest.js')}}"></script>
-<script src="{{asset('js/vendor.js')}}"></script>
-<script src="{{asset('js/app.js')}}"></script>
-
-<!-- Map JS -->
-<script src='https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
-
-<!-- Vendor JS -->
-<script src="{{ asset('js/vendor.bundle.js') }}" ></script>
-
-<!-- Theme JS -->
-<script src="{{ asset('js/theme.bundle.js') }}" ></script>
-
-<!-- Show password -->
-<script src="{{asset('js/show-password.js')}}" ></script>
-
-<!-- Dark mode -->
-<script src="{{asset('js/dark-mode.js')}}" ></script>
-
-<!-- Alerts -->
-<script src="{{asset('js/alerts.js')}}"></script>
 
 @stack('scripts')
 

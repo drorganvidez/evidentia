@@ -20,7 +20,10 @@
 
                         @if($show_button)
 
-                            <button class="btn btn-primary btn-sm btn-block" type="submit"><i class="fe fe-upload"></i> Subir</button>
+                            <button class="btn btn-primary btn-sm btn-block" type="submit">
+                                <i data-feather="box" class="feather feather-box"></i>
+
+                                Subir</button>
 
                         @endif
                     </div>

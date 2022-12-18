@@ -1,0 +1,68 @@
+//
+// flatpickr.scss
+// Flatpickr plugin overrides
+//
+
+.flatpickr-calendar {
+  background-color: $input-bg;
+  border: $input-border-width solid $input-border-color;
+  color: $input-color;
+  box-shadow: none;
+
+  * {
+    color: inherit !important;
+    fill: currentColor !important;
+  }
+
+  &.arrowTop:before {
+    border-bottom-color: $input-border-color;
+  }
+
+  &.arrowTop:after {
+    border-bottom-color: $input-bg;
+  }
+
+  .flatpickr-months {
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+  }
+
+  .flatpickr-prev-month,
+  .flatpickr-next-month {
+    top: 0.625rem;
+  }
+
+  .flatpickr-current-month {
+    font-size: 115%;
+  }
+
+  .flatpickr-day {
+    border-radius: var(--#{$prefix}border-radius);
+
+    &:hover {
+      background-color: var(--#{$prefix}light);
+      border-color: $input-border-color;
+    }
+  }
+
+  .flatpickr-day.prevMonthDay {
+    color: $text-muted !important;
+  }
+
+  .flatpickr-day.today {
+    border-color: var(--#{$prefix}border-color);
+  }
+
+  .flatpickr-day.selected {
+    background-color: var(--#{$prefix}primary);
+    border-color: var(--#{$prefix}primary);
+    color: var(--#{$prefix}white) !important;
+  }
+
+  .flatpickr-day.inRange {
+    background-color: var(--#{$prefix}light);
+    border: none;
+    border-radius: 0;
+    box-shadow: -5px 0 0 var(--#{$prefix}light), 5px 0 0 var(--#{$prefix}light);
+  }
+}

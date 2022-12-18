@@ -4,8 +4,9 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
+import './bootstrap';
 
-const feather = require('feather-icons')
+import $ from "jquery";
+window.$ = $;
 
-feather.replace();
+import '../sass/app.scss';
