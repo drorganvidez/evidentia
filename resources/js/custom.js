@@ -41,4 +41,3 @@ function dark_mode_toggle()
     $("#logo_css").attr('src', logo_src);
 
 }
-

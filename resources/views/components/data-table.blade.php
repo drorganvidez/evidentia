@@ -830,7 +830,8 @@
     </div>
 
     @push('scripts')
-        <script type="module">
+
+        <script>
 
             let items_selected = [];
 
@@ -851,8 +852,6 @@
                 update_input_items_selected();
 
             }
-
-
 
             let items_id = [@foreach ($data_array as $item){{$item['id']}}@if(!$loop->last), @endif @endforeach]
 
@@ -883,6 +882,12 @@
             {
                 $('.items_selected').val(items_selected);
             }
+
+        </script>
+
+        <script type="module">
+
+
 
             $('#pagination').change(function(){
                 let url = "{{request()->fullUrl()}}";
