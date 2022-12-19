@@ -10,7 +10,7 @@
 
     <!-- Theme CSS -->
 
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Title -->
     <title>@yield('title') @yield('parent') | Evidentia Cloud</title>
@@ -794,11 +794,13 @@
 
 <!-- JAVASCRIPT -->
 
+<script src="{{asset('build/js/custom/custom.js')}}" ></script>
+
 @stack('scripts')
 
 @yield('scripts')
 
-<script>
+<script type="module">
 
     @if (session('error'))
 

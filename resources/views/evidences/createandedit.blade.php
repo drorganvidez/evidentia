@@ -108,7 +108,7 @@
 
             @push('scripts')
 
-                <script>
+                <script type="module">
 
                     function close_modal(){
                         $('#modal_evidence_temp').hide();

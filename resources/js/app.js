@@ -6,7 +6,12 @@
 
 import './bootstrap';
 
-import $ from "jquery";
-window.$ = $;
+import '../assets/css/libs.bundle.css';
+import '../assets/css/theme.bundle.css';
 
-import '../sass/app.scss';
+import '../assets/js/vendor.bundle';
+import '../assets/js/theme.bundle';
+
+
+import $ from 'jquery'
+window.jQuery = window.$ = $

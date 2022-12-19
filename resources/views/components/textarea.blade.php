@@ -115,13 +115,13 @@
 
     @if(!empty($value))
 
-        <script>
+        <script type="module">
             $('#hidden_input').val("{!! $value !!}");
         </script>
 
     @endif
 
-    <script>
+    <script type="module">
 
         $('.ql-editor').bind('DOMSubtreeModified', function(){
             let data = $('.ql-editor').html();

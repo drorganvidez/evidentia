@@ -253,7 +253,7 @@
 
         @push('scripts')
 
-            <script>
+            <script type="module">
                 $(document).ready(function(){
 
                     // we start to do automatic saving when we detect any change in the form

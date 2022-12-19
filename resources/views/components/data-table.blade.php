@@ -830,7 +830,7 @@
     </div>
 
     @push('scripts')
-        <script>
+        <script type="module">
 
             let items_selected = [];
 
@@ -894,7 +894,7 @@
                     url = url + "?pagination=";
                 @endif
 
-                    sel = $(this).val();
+                    let sel = $(this).val();
 
                 var url_on_change = new URL(url);
                 url_on_change.searchParams.set("pagination", sel);
@@ -907,9 +907,6 @@
         </script>
     @endpush
 
-    <script>
-
-    </script>
 @endif
 
 @if(count($data_array) === 0 and count(request()->query()) === 0 )
