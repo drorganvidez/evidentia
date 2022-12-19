@@ -4,6 +4,10 @@ function throw_alert(type, delay = 5000)
     $("#toast_"+type).delay(delay).fadeOut('slow');
 }
 
+function close_modal_autosaved(){
+    $('#modal_evidence_temp').hide();
+}
+
 function dark_mode_toggle(){
 
     let href = $("#css_mode").attr('href');
@@ -34,30 +38,5 @@ function dark_mode_toggle(){
     }
     $("#logo_css").attr('src', logo_src);
 
-    /*
-    setTimeout(function(){
-        var icon_css_mode = $("#icon_css_mode");
-
-        if(icon_css_mode.attr("class") === "fe fe-sun"){
-            icon_css_mode.attr("class", "fe fe-moon");
-        }else{
-            icon_css_mode.attr("class", "fe fe-sun");
-        }
-
-    },2000);
-
-    //$("#css_mode").attr('href','theme.bundle.css');
-
-    /*
-
-    if (dark_mode == 1){
-        $('link[href="theme-dark.bundle.css"]').attr('href','theme.bundle.css');
-    }else{
-        $('link[href="theme.bundle.css"]').attr('href','theme-dark.bundle.css');
-    }
-
-
-     */
-
-
 }
+

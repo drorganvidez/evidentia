@@ -6,12 +6,12 @@
 
 import './bootstrap';
 
-import '../assets/css/libs.bundle.css';
-import '../assets/css/theme.bundle.css';
+import './theme'
 
-import '../assets/js/vendor.bundle';
-import '../assets/js/theme.bundle';
-
+// custom JS files
+//import './alert'
+//import './dark_mode'
+//import './show_passwords'
 
 import $ from 'jquery'
 window.jQuery = window.$ = $

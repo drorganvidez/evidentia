@@ -21,7 +21,7 @@
                         @if($show_button)
 
                             <button class="btn btn-primary btn-sm btn-block" type="submit">
-                                <i data-feather="box" class="feather feather-box"></i>
+                                <i class="fe fe-upload"></i>
 
                                 Subir</button>
 

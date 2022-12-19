@@ -83,7 +83,7 @@
                                 <p>Hemos encontrado una versión reciente guardada el {{ \Carbon\Carbon::parse($evidence_temp->updated_at)->format('d/m/Y')}} a las {{\Carbon\Carbon::parse($evidence_temp->updated_at)->format('H:i:s')}} </p>
                                 <p>¿Deseas continuar escribiendo desde este guardado?</p>
 
-                                <button class="btn btn-success mt-2" onclick="close_modal()">
+                                <button class="btn btn-success mt-2" onclick="close_modal_autosaved()">
                                     Sí, continuar
                                 </button>
 
@@ -110,9 +110,7 @@
 
                 <script type="module">
 
-                    function close_modal(){
-                        $('#modal_evidence_temp').hide();
-                    }
+
 
                     $(document).ready(function() {
 

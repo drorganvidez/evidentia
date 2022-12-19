@@ -8,14 +8,8 @@
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon"/>
 
-    <!-- Base CSS -->
-    <link rel="stylesheet" href="{{asset('css/app.css')}}" />
-
-    <!-- Libs CSS -->
-    <link rel="stylesheet" href="{{ asset('css/libs.bundle.css') }}" />
-
-    <!-- Theme CSS -->
-    <x-dark-mode-css/>
+    <!-- Laravel Vite -->
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
     <!-- Title -->
     <title>@yield('title') | Evidentia Cloud</title>
@@ -175,31 +169,34 @@
             </div>
             <!-- /.modal -->
 
-
-
-
         </div>
     </div> <!-- / .row -->
 </div> <!-- / .container -->
 
 <!-- JAVASCRIPT -->
-<script src="{{asset('js/manifest.js')}}"></script>
-<script src="{{asset('js/vendor.js')}}"></script>
-<script src="{{asset('js/app.js')}}"></script>
-
-<!-- Vendor JS -->
-<script src="{{ asset('js/vendor.bundle.js') }}"></script>
-
-<!-- Theme JS -->
-<script src="{{ asset('js/theme.bundle.js') }}"></script>
-
-<!-- Show password -->
-<script src="{{asset('js/show-password.js')}}"></script>
-
-<!-- Alerts -->
-<script src="{{asset('js/alerts.js')}}"></script>
 
 @yield('scripts')
+
+<script type="module">
+
+    $(".toggle-password").on('click', function() {
+
+        var eye = $("#eye");
+        if(eye.attr("class") === "fe fe-eye"){
+            eye.attr("class", "fe fe-eye-off");
+        }else{
+            eye.attr("class", "fe fe-eye");
+        }
+
+        var input = $("#password");
+        if (input.attr("type") === "password") {
+            input.attr("type", "text");
+        } else {
+            input.attr("type", "password");
+        }
+    });
+
+</script>
 
 <script>
 
