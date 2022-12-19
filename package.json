@@ -1,12 +1,13 @@
 {
     "private": true,
     "scripts": {
-        "dev": "vite",
+        "dev": "vite --host",
         "build": "vite build"
     },
     "dependencies": {
         "@popperjs/core": "^2.11.6",
         "@shopify/draggable": "^1.0.0-beta.8",
+        "@vitejs/plugin-basic-ssl": "^1.0.1",
         "autosize": "^5.0.2",
         "axios": "^1.2.1",
         "bootstrap": "^5.2.3",

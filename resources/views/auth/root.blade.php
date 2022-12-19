@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon"/>
 
     <!-- Laravel Vite -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <x-dark-mode-css></x-dark-mode-css>
 
     <!-- Title -->
     <title>@yield('title') | Evidentia Cloud</title>

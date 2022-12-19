@@ -1,5 +1,5 @@
 @if(Cookie::get('dark_mode'))
-    <link id="css_mode" rel="stylesheet" href="{{asset('css/theme-dark.bundle.css')}}" />
+    @vite(['resources/sass/app_dark_mode.scss', 'resources/js/app.js'])
 @else
-    <link id="css_mode" rel="stylesheet" href="{{asset('css/theme.bundle.css')}}" />
+    @vite(['resources/sass/app_light_mode.scss', 'resources/js/app.js'])
 @endif

@@ -4,11 +4,13 @@ function throw_alert(type, delay = 5000)
     $("#toast_"+type).delay(delay).fadeOut('slow');
 }
 
-function close_modal_autosaved(){
+function close_modal_autosaved()
+{
     $('#modal_evidence_temp').hide();
 }
 
-function dark_mode_toggle(){
+function dark_mode_toggle()
+{
 
     let href = $("#css_mode").attr('href');
     var icon_css_mode = $("#icon_css_mode");

@@ -3,13 +3,13 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Software libre para la gestión de evidencias de trabajo en jornadas docentesd" />
+    <meta name="description" content="Software libre para la gestión de evidencias de trabajo en jornadas docentes" />
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon"/>
 
     <!-- Laravel Vite -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <x-dark-mode-css></x-dark-mode-css>
 
     <!-- Title -->
     <title>@yield('title') @yield('parent') | Evidentia Cloud</title>
