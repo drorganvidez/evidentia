@@ -1,59 +1,59 @@
 {
-  "resources/fonts/cerebrisans/cerebrisans-medium.eot": {
-    "file": "assets/cerebrisans-medium-01926de3.eot",
-    "src": "resources/fonts/cerebrisans/cerebrisans-medium.eot"
-  },
   "resources/fonts/cerebrisans/cerebrisans-regular.eot": {
     "file": "assets/cerebrisans-regular-2b590207.eot",
     "src": "resources/fonts/cerebrisans/cerebrisans-regular.eot"
   },
-  "resources/fonts/feather/Feather.ttf": {
-    "file": "assets/Feather-06b871e4.ttf",
-    "src": "resources/fonts/feather/Feather.ttf"
+  "resources/fonts/cerebrisans/cerebrisans-medium.eot": {
+    "file": "assets/cerebrisans-medium-01926de3.eot",
+    "src": "resources/fonts/cerebrisans/cerebrisans-medium.eot"
+  },
+  "resources/img/masks/avatar-status.svg": {
+    "file": "assets/avatar-status-c2f8f473.svg",
+    "src": "resources/img/masks/avatar-status.svg"
   },
   "resources/fonts/cerebrisans/cerebrisans-semibold.eot": {
     "file": "assets/cerebrisans-semibold-3023135a.eot",
     "src": "resources/fonts/cerebrisans/cerebrisans-semibold.eot"
   },
-  "resources/img/masks/avatar-group-hover.svg": {
-    "file": "assets/avatar-group-hover-1ed17cb7.svg",
-    "src": "resources/img/masks/avatar-group-hover.svg"
-  },
-  "resources/img/masks/avatar-status.svg": {
-    "file": "assets/avatar-status-a27e1ee1.svg",
-    "src": "resources/img/masks/avatar-status.svg"
+  "resources/fonts/feather/Feather.ttf": {
+    "file": "assets/Feather-06b871e4.ttf",
+    "src": "resources/fonts/feather/Feather.ttf"
   },
   "resources/img/masks/avatar-group.svg": {
-    "file": "assets/avatar-group-b8322250.svg",
+    "file": "assets/avatar-group-2419b806.svg",
     "src": "resources/img/masks/avatar-group.svg"
+  },
+  "resources/img/masks/avatar-group-hover-last.svg": {
+    "file": "assets/avatar-group-hover-last-cc54d034.svg",
+    "src": "resources/img/masks/avatar-group-hover-last.svg"
+  },
+  "resources/img/masks/avatar-group-hover.svg": {
+    "file": "assets/avatar-group-hover-7dccee21.svg",
+    "src": "resources/img/masks/avatar-group-hover.svg"
+  },
+  "resources/img/masks/icon-status.svg": {
+    "file": "assets/icon-status-25fd8ade.svg",
+    "src": "resources/img/masks/icon-status.svg"
   },
   "resources/img/covers/sidebar-cover.jpg": {
     "file": "assets/sidebar-cover-1e515106.jpg",
     "src": "resources/img/covers/sidebar-cover.jpg"
   },
-  "resources/img/masks/avatar-group-hover-last.svg": {
-    "file": "assets/avatar-group-hover-last-5cb4a6e7.svg",
-    "src": "resources/img/masks/avatar-group-hover-last.svg"
-  },
   "resources/img/covers/header-cover.jpg": {
     "file": "assets/header-cover-411a3640.jpg",
     "src": "resources/img/covers/header-cover.jpg"
-  },
-  "resources/img/masks/icon-status.svg": {
-    "file": "assets/icon-status-ed386d44.svg",
-    "src": "resources/img/masks/icon-status.svg"
   },
   "resources/fonts/cerebrisans/cerebrisans-regular.woff": {
     "file": "assets/cerebrisans-regular-1dfe61a1.woff",
     "src": "resources/fonts/cerebrisans/cerebrisans-regular.woff"
   },
-  "resources/fonts/cerebrisans/cerebrisans-medium.woff": {
-    "file": "assets/cerebrisans-medium-01ae6777.woff",
-    "src": "resources/fonts/cerebrisans/cerebrisans-medium.woff"
-  },
   "resources/fonts/cerebrisans/cerebrisans-semibold.woff": {
     "file": "assets/cerebrisans-semibold-2baa0396.woff",
     "src": "resources/fonts/cerebrisans/cerebrisans-semibold.woff"
+  },
+  "resources/fonts/cerebrisans/cerebrisans-medium.woff": {
+    "file": "assets/cerebrisans-medium-01ae6777.woff",
+    "src": "resources/fonts/cerebrisans/cerebrisans-medium.woff"
   },
   "resources/fonts/feather/Feather.woff": {
     "file": "assets/Feather-7341145f.woff",
@@ -63,26 +63,26 @@
     "file": "assets/cerebrisans-regular-e4ecad79.ttf",
     "src": "resources/fonts/cerebrisans/cerebrisans-regular.ttf"
   },
-  "resources/fonts/cerebrisans/cerebrisans-medium.ttf": {
-    "file": "assets/cerebrisans-medium-a4c7c18f.ttf",
-    "src": "resources/fonts/cerebrisans/cerebrisans-medium.ttf"
-  },
   "resources/fonts/cerebrisans/cerebrisans-semibold.ttf": {
     "file": "assets/cerebrisans-semibold-5bd86834.ttf",
     "src": "resources/fonts/cerebrisans/cerebrisans-semibold.ttf"
   },
+  "resources/fonts/cerebrisans/cerebrisans-medium.ttf": {
+    "file": "assets/cerebrisans-medium-a4c7c18f.ttf",
+    "src": "resources/fonts/cerebrisans/cerebrisans-medium.ttf"
+  },
   "resources/fonts/feather/Feather.svg": {
-    "file": "assets/Feather-9765d5d6.svg",
+    "file": "assets/Feather-536182d8.svg",
     "src": "resources/fonts/feather/Feather.svg"
   },
-  "resources/sass/app_light_mode.scss": {
-    "file": "assets/app_light_mode-2a45d031.css",
-    "src": "resources/sass/app_light_mode.scss",
+  "resources/sass/app_dark_mode.scss": {
+    "file": "assets/app_dark_mode-4b50cc2d.css",
+    "src": "resources/sass/app_dark_mode.scss",
     "isEntry": true
   },
-  "resources/sass/app_dark_mode.scss": {
-    "file": "assets/app_dark_mode-24941dc3.css",
-    "src": "resources/sass/app_dark_mode.scss",
+  "resources/sass/app_light_mode.scss": {
+    "file": "assets/app_light_mode-b96f43a9.css",
+    "src": "resources/sass/app_light_mode.scss",
     "isEntry": true
   },
   "resources/js/app.js": {
