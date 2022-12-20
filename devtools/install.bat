@@ -18,17 +18,17 @@ call .env.dev.bat
 rem set dev environment variables
 
 rem Llama a la función y proporciona los parámetros necesarios
-call :refactorizar {{MYSQL_DATABASE}} %DB_DATABASE% laradock\.env
-call :refactorizar {{MYSQL_PORT}} %DB_PORT% laradock\.env
-call :refactorizar {{MYSQL_PASSWORD}} %DB_PASSWORD% laradock\.env
-call :refactorizar {{MYSQL_ROOT_PASSWORD}} %DB_PASSWORD% laradock\.env
+call :setinfile {{MYSQL_DATABASE}} %DB_DATABASE% laradock\.env
+call :setinfile {{MYSQL_PORT}} %DB_PORT% laradock\.env
+call :setinfile {{MYSQL_PASSWORD}} %DB_PASSWORD% laradock\.env
+call :setinfile {{MYSQL_ROOT_PASSWORD}} %DB_PASSWORD% laradock\.env
 
 rem changes SQL entry point database
 copy entrypoint.sql start.sql >nul
 
-call :refactorizar database_user %DB_USERNAME% start.sql
-call :refactorizar database_name %DB_DATABASE% start.sql
-call :refactorizar database_password %DB_PASSWORD% start.sql
+call :setinfile database_user %DB_USERNAME% start.sql
+call :setinfile database_name %DB_DATABASE% start.sql
+call :setinfile database_password %DB_PASSWORD% start.sql
 
 copy start.sql laradock\mysql\docker-entrypoint-initdb.d\createdb.sql >nul
 del start.sql
@@ -67,7 +67,7 @@ echo The installation has been completed successfully. Enjoy!
 pause
 
 rem Define la función y sus parámetros
-:refactorizar
+:setinfile
 setlocal enabledelayedexpansion
 set "search=%~1"
 set "replace=%~2"
