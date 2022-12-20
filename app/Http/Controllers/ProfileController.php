@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -50,5 +51,33 @@ class ProfileController extends Controller
     public function password()
     {
         return view('profile.password');
+    }
+
+    public function password_p(Request $request)
+    {
+        $instance = \Instantiation::instance();
+
+        $user = Auth::user();
+
+        $request->validate([
+            'current_password' => 'required|string',
+            'password' => [
+                'required',
+                'min:8',
+                'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%.@]).*$/',
+                'confirmed'
+            ]
+        ]);
+
+        if (!Hash::check($request->get('current_password'), $user->password))
+        {
+            return back()->with('error', "La contraseña actual que has introducido no es correcta");
+        }
+
+        $user->password = Hash::make($request->input('password'));
+
+        $user->save();
+
+        return redirect()->route('profile.password',$instance)->with('success', 'Contraseña cambiada con éxito.');
     }
 }

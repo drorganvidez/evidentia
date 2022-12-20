@@ -792,7 +792,6 @@
 </div>
 
 <!-- Custom JavaScript -->
-
 <script src="{{asset('build/js/custom.js')}}" ></script>
 
 @stack('scripts')

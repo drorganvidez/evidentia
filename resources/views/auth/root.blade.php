@@ -173,7 +173,8 @@
     </div> <!-- / .row -->
 </div> <!-- / .container -->
 
-<!-- JAVASCRIPT -->
+<!-- Custom JavaScript -->
+<script src="{{asset('build/js/custom.js')}}" ></script>
 
 @yield('scripts')
 
@@ -198,7 +199,7 @@
 
 </script>
 
-<script>
+<script type="module">
 
     @if (session('error'))
 

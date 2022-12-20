@@ -70,6 +70,7 @@ Route::group(['prefix' => '{instance}'], function(){
                 Route::post('data_p', 'data_p')->name('profile.data_p');
                 Route::get('avatar', 'avatar')->name('profile.avatar');
                 Route::get('password', 'password')->name('profile.password');
+                Route::post('password_p', 'password_p')->name('profile.password_p');
             });
 
         });
