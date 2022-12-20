@@ -12,10 +12,10 @@ copy .env.dev .env >nul
 rem set Laradock environment
 copy .env.laradock laradock\.env >nul
 
-rem load environment variables
+rem load environment variables (only for Windows platforms)
 call .env.dev.bat
 
-rem set dev environment variables
+echo Setting development environment variables for Laravel and Laradock, please wait...
 
 rem Llama a la función y proporciona los parámetros necesarios
 call :setinfile {{MYSQL_DATABASE}} %DB_DATABASE% laradock\.env
@@ -63,6 +63,9 @@ echo http://localhost
 
 echo.
 echo The installation has been completed successfully. Enjoy!
+
+cd ..
+cd devtools
 
 pause
 
