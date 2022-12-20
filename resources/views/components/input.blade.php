@@ -73,6 +73,16 @@ $is_invalid = "";
             @endphp
         @endisset
 
+        @isset($noold)
+            @php
+                $noold = true;
+            @endphp
+        @else
+            @php
+                $noold = false;
+            @endphp
+        @endisset
+
         @isset($type)
             @php
 
@@ -95,11 +105,17 @@ $is_invalid = "";
 
         @php
 
-        if(old("$name")){
-           $val = old("$name");
-        } else {
-            $val = $value;
-        }
+            if(!$noold){
+
+                if(old("$name")){
+                    $val = old("$name");
+                }else{
+                    $val = $value;
+                }
+
+            }else {
+                $val = $value;
+            }
 
         @endphp
 

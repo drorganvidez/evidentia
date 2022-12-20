@@ -32,11 +32,12 @@
                     Introduce la contraseña actual de Evidentia
                 </x-slot:description>
                 <x-slot:col>
-                    col-12 col-md-4
+                    col-12 col-md-6 col-sm-12
                 </x-slot:col>
                 <x-slot:required></x-slot:required>
                 <x-slot:autofocus>
                 </x-slot:autofocus>
+                <x-slot:noold></x-slot:noold>
             </x-input>
         </div>
 
@@ -55,7 +56,7 @@
                     Nueva contraseña
                 </x-slot:label>
                 <x-slot:col>
-                    col-12 col-md-4
+                    col-12 col-md-6
                 </x-slot:col>
                 <x-slot:description>
                     Al menos 8 caracteres, incluyendo mayúsculas, minúsculas, número y algún
@@ -77,10 +78,10 @@
 
                 </x-slot:value>
                 <x-slot:label>
-                    Repite la nueva gcontraseña
+                    Repite la nueva contraseña
                 </x-slot:label>
                 <x-slot:col>
-                    col-12 col-md-4
+                    col-12 col-md-6
                 </x-slot:col>
                 <x-slot:required></x-slot:required>
             </x-input>
