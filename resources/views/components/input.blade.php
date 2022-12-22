@@ -103,6 +103,16 @@ $is_invalid = "";
             @endphp
         @endisset
 
+        @isset($placeholder)
+            @php
+                $place = $placeholder
+            @endphp
+        @else
+            @php
+                $place = ""
+            @endphp
+        @endisset
+
         @php
 
             if(!$noold){
@@ -110,17 +120,28 @@ $is_invalid = "";
                 if(old("$name")){
                     $val = old("$name");
                 }else{
-                    $val = $value;
+                    if (isset($value)){
+                        $val = $value;
+                    }else{
+                        $val = "";
+                    }
                 }
 
             }else {
-                $val = $value;
+
+                if (isset($value)){
+                    $val = $value;
+                }else{
+                    $val = "";
+                }
+
+
             }
 
         @endphp
 
         <!-- Input -->
-        <input type="{{$type}}" name="{{$name}}" value="{{$val}}" class="form-control{{$is_invalid}}" {{$disabled}} {{$autofocus}} {{$required}} >
+        <input type="{{$type}}" name="{{$name}}" value="{{$val}}" placeholder="{{$place}}" class="form-control{{$is_invalid}}" {{$disabled}} {{$autofocus}} {{$required}} >
 
         @error("$name")
         <div class="invalid-feedback">

@@ -8,18 +8,28 @@
     <form action="{{route('instance.login_p',\Instantiation::instance())}}" method="post">
     @csrf
 
-    <!-- Email address -->
-        <div class="form-group">
+        <div class="row">
+            <x-input>
+                <x-slot:name>
+                    username
+                </x-slot:name>
+                <x-slot:placeholder>
+                    Introduce tu usuario
+                </x-slot:placeholder>
+                <x-slot:label>
+                    UVUS
+                </x-slot:label>
+                <x-slot:col>
+                    col-12
+                </x-slot:col>
+                <x-slot:required></x-slot:required>
 
-            <!-- Label -->
-            <label class="form-label">
-                UVUS
-            </label>
+                @if(!old('username'))
+                    <x-slot:autofocus>
+                    </x-slot:autofocus>
+                @endif
 
-            <!-- Input -->
-            <input name="username" class="form-control"
-                   placeholder="Introduce tu usuario" autofocus>
-
+            </x-input>
         </div>
 
         <!-- Password -->
@@ -36,7 +46,7 @@
                 <div class="col-auto">
 
                     <!-- Help text -->
-                    <a href="{{route('password.reset',\Instantiation::instance())}}" class="form-text small text-muted">
+                    <a href="{{route('password.reset',\Instantiation::instance())}}" tabindex="-1" class="form-text small text-muted">
                         ¿Has olvidado la contraseña?
                     </a>
 
@@ -47,7 +57,7 @@
             <div class="input-group input-group-merge">
 
                 <!-- Input -->
-                <input class="form-control" id="password" name="password" type="password" placeholder="Introduce tu contraseña">
+                <input class="form-control" id="password" name="password" type="password" placeholder="Introduce tu contraseña" required autofocus>
 
                 <!-- Icon -->
                 <x-show-password/>
