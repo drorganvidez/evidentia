@@ -23,7 +23,7 @@ toggles.forEach((toggle) => {
     shouldSort: false,
     callbackOnCreateTemplates: function (template) {
       return {
-        choice: (classNames, data) => {
+        choice: ({ classNames }, data) => {
           const classes = `${classNames.item} ${classNames.itemChoice} ${
             data.disabled ? classNames.itemDisabled : classNames.itemSelectable
           }`;

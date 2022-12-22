@@ -11,21 +11,25 @@
     "file": "assets/cerebrisans-semibold-3023135a.eot",
     "src": "resources/fonts/cerebrisans/cerebrisans-semibold.eot"
   },
+  "resources/fonts/feather/Feather.ttf": {
+    "file": "assets/Feather-06b871e4.ttf",
+    "src": "resources/fonts/feather/Feather.ttf"
+  },
   "resources/img/masks/avatar-status.svg": {
     "file": "assets/avatar-status-c2f8f473.svg",
     "src": "resources/img/masks/avatar-status.svg"
+  },
+  "resources/img/masks/avatar-group-hover.svg": {
+    "file": "assets/avatar-group-hover-7dccee21.svg",
+    "src": "resources/img/masks/avatar-group-hover.svg"
   },
   "resources/img/covers/sidebar-cover.jpg": {
     "file": "assets/sidebar-cover-1e515106.jpg",
     "src": "resources/img/covers/sidebar-cover.jpg"
   },
-  "resources/fonts/feather/Feather.ttf": {
-    "file": "assets/Feather-06b871e4.ttf",
-    "src": "resources/fonts/feather/Feather.ttf"
-  },
-  "resources/img/masks/avatar-group-hover.svg": {
-    "file": "assets/avatar-group-hover-7dccee21.svg",
-    "src": "resources/img/masks/avatar-group-hover.svg"
+  "resources/img/masks/avatar-group.svg": {
+    "file": "assets/avatar-group-2419b806.svg",
+    "src": "resources/img/masks/avatar-group.svg"
   },
   "resources/img/masks/icon-status.svg": {
     "file": "assets/icon-status-25fd8ade.svg",
@@ -34,10 +38,6 @@
   "resources/img/masks/avatar-group-hover-last.svg": {
     "file": "assets/avatar-group-hover-last-cc54d034.svg",
     "src": "resources/img/masks/avatar-group-hover-last.svg"
-  },
-  "resources/img/masks/avatar-group.svg": {
-    "file": "assets/avatar-group-2419b806.svg",
-    "src": "resources/img/masks/avatar-group.svg"
   },
   "resources/img/covers/header-cover.jpg": {
     "file": "assets/header-cover-411a3640.jpg",
@@ -51,13 +51,13 @@
     "file": "assets/cerebrisans-medium-01ae6777.woff",
     "src": "resources/fonts/cerebrisans/cerebrisans-medium.woff"
   },
-  "resources/fonts/cerebrisans/cerebrisans-semibold.woff": {
-    "file": "assets/cerebrisans-semibold-2baa0396.woff",
-    "src": "resources/fonts/cerebrisans/cerebrisans-semibold.woff"
-  },
   "resources/fonts/feather/Feather.woff": {
     "file": "assets/Feather-7341145f.woff",
     "src": "resources/fonts/feather/Feather.woff"
+  },
+  "resources/fonts/cerebrisans/cerebrisans-semibold.woff": {
+    "file": "assets/cerebrisans-semibold-2baa0396.woff",
+    "src": "resources/fonts/cerebrisans/cerebrisans-semibold.woff"
   },
   "resources/fonts/cerebrisans/cerebrisans-regular.ttf": {
     "file": "assets/cerebrisans-regular-e4ecad79.ttf",
@@ -75,18 +75,18 @@
     "file": "assets/Feather-536182d8.svg",
     "src": "resources/fonts/feather/Feather.svg"
   },
-  "resources/sass/app_dark_mode.scss": {
-    "file": "assets/app_dark_mode-4b50cc2d.css",
-    "src": "resources/sass/app_dark_mode.scss",
-    "isEntry": true
-  },
   "resources/sass/app_light_mode.scss": {
     "file": "assets/app_light_mode-b96f43a9.css",
     "src": "resources/sass/app_light_mode.scss",
     "isEntry": true
   },
+  "resources/sass/app_dark_mode.scss": {
+    "file": "assets/app_dark_mode-4b50cc2d.css",
+    "src": "resources/sass/app_dark_mode.scss",
+    "isEntry": true
+  },
   "resources/js/app.js": {
-    "file": "assets/app-ece10d3f.js",
+    "file": "assets/app-26124a2f.js",
     "src": "resources/js/app.js",
     "isEntry": true
   }
