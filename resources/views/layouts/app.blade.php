@@ -553,11 +553,9 @@
 
             <!-- Navigation -->
 
-            <x-menucommon/>
-            <x-menustudent/>
-            <x-menucoordinator/>
-
-
+            <x-menu-common></x-menu-common>
+            <x-menu-student></x-menu-student>
+            <x-menu-coordinator></x-menu-coordinator>
 
             <div class="mt-auto"></div>
 
