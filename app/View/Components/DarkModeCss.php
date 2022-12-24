@@ -4,7 +4,7 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class DarkModeCSS extends Component
+class DarkModeCss extends Component
 {
     /**
      * Create a new component instance.

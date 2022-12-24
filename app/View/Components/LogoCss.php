@@ -4,7 +4,7 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class LogoCSS extends Component
+class LogoCss extends Component
 {
     /**
      * Create a new component instance.
