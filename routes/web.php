@@ -5,6 +5,7 @@ use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\EvidenceController;
 use App\Http\Controllers\EvidenceCoordinatorController;
+use App\Http\Controllers\InstancesController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
@@ -26,21 +27,34 @@ Auth::routes();
 
 Route::get('/', 'RootController@root')->name('root');
 
-// Admin routes
+// Admin login routes
 Route::group(['prefix' => 'admin'], function(){
 
-    // Admin login routes
+
+});
+
+// Admin main routes
+Route::group(['prefix' => 'admin'], function(){
+
     Route::controller(AdminController::class)->group(function () {
         Route::get('login', 'login')->name('admin.login');
         Route::post('login_p', 'login_p')->name('admin.login_p');
     });
 
-
-    // Admin main routes
     Route::group(['middleware' => ['checkisadministrator']], function(){
-        Route::get('/', 'AdminController@home')->name('admin.home');
-    });
+        Route::get('/dashboard', 'AdminController@dashboard')->name('admin.dashboard');
 
+        Route::group(['prefix' => 'instances'], function() {
+
+            Route::controller(InstancesController::class)->group(function () {
+                Route::get('/', 'list')->name('admin.instances.list');
+                Route::get('/create', 'create')->name('admin.instances.create');
+                Route::get('/edit/{id}', 'edit')->name('admin.instances.edit');
+            });
+
+        });
+
+    });
 
 });
 
@@ -48,7 +62,7 @@ Route::group(['prefix' => 'admin'], function(){
 Route::group(['prefix' => '{instance}'], function(){
 
     // Livewire routes
-    Route::post('livewire/message/{name}', [
+    Route::post('dashboard/livewire/message/{name}', [
         'uses' => '\Livewire\Controllers\HttpConnectionHandler@__invoke'
     ]);
 
@@ -60,7 +74,7 @@ Route::group(['prefix' => '{instance}'], function(){
     Route::group(['middleware' => ['checksession', 'checkblock']], function(){
 
         // Main routes
-        Route::get('/', 'HomeController@index')->name('home');
+        Route::get('/dashboard', 'DashboardController@dashboard')->name('instance.dashboard');
 
         // Profile routes
         Route::group(['prefix' => 'profile'], function(){
@@ -85,7 +99,7 @@ Route::group(['prefix' => '{instance}'], function(){
         });
 
         // Developer
-        Route::group(['prefix' => 'developer'], function() {
+        Route::group(['middleware' => ['checkisnotadministrator'], 'prefix' => 'developer'], function() {
             Route::controller(DeveloperController::class)->group(function () {
 
                 Route::group(['prefix' => 'api'], function(){

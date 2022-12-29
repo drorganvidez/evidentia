@@ -8,18 +8,31 @@
     <form action="{{route('admin.login_p')}}" method="post">
     @csrf
 
-    <!-- Email address -->
-        <div class="form-group">
+        <div class="row">
+            <x-input>
+                <x-slot:name>
+                    email
+                </x-slot:name>
+                <x-slot:placeholder>
+                    Introduce tu correo
+                </x-slot:placeholder>
+                <x-slot:label>
+                    Correo
+                </x-slot:label>
+                <x-slot:type>
+                    email
+                </x-slot:type>
+                <x-slot:col>
+                    col-12
+                </x-slot:col>
+                <x-slot:required></x-slot:required>
 
-            <!-- Label -->
-            <label class="form-label">
-                Correo
-            </label>
+                @if(!old('username'))
+                    <x-slot:autofocus>
+                    </x-slot:autofocus>
+                @endif
 
-            <!-- Input -->
-            <input name="email" class="form-control"
-                   placeholder="Introduce tu correo" autofocus>
-
+            </x-input>
         </div>
 
         <!-- Password -->
@@ -35,10 +48,10 @@
                 </div>
                 <div class="col-auto">
 
-                    <!-- Help text -->
-                    <a href="{{route('password.reset',\Instantiation::instance())}}" class="form-text small text-muted">
-                        ¿Has olvidado la contraseña?
-                    </a>
+                <!-- Help text -->
+                <a href="{{route('password.reset',\Instantiation::instance())}}" tabindex="-1" class="form-text small text-muted">
+                    ¿Has olvidado la contraseña?
+                </a>
 
                 </div>
             </div> <!-- / .row -->

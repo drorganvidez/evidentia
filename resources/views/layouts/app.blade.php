@@ -557,6 +557,8 @@
             <x-menu-student></x-menu-student>
             <x-menu-coordinator></x-menu-coordinator>
 
+            <x-menu-admin></x-menu-admin>
+
             <div class="mt-auto"></div>
 
 
@@ -818,7 +820,7 @@
 </script>
 
 @livewireScripts
-<script> window.livewire_app_url = '{{route('home', \Instantiation::instance())}}'; </script>
+<script> window.livewire_app_url = '{{route('instance.dashboard', \Instantiation::instance())}}'; </script>
 
 </body>
 </html>

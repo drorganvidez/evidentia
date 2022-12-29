@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\v1\EvidenceController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,10 +20,12 @@ Route::middleware('selectdatabaseapi')->group( function () {
 
         Route::group(['prefix' => '{instance}'], function () {
 
+            /*
             Route::controller(RegisterController::class)->group(function(){
                 Route::post('register', 'register');
                 Route::post('login', 'login');
             });
+            */
 
         });
 

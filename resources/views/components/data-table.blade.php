@@ -641,8 +641,13 @@
                                 @endisset
 
                                 @isset($edit_item_route)
-                                    <a class="btn btn-outline-primary btn-sm" href="{{route("$edit_item_route",['instance' => \Instantiation::instance(), 'id' => $item['id']])}}">
-                                        <i class="fe fe-edit"></i>
+
+                                    @if(Request::is('admin') || Request::is('admin/*'))
+                                        <a class="btn btn-outline-primary btn-sm" href="{{route("$edit_item_route",['admin' => \Instantiation::instance(), 'id' => $item['id']])}}">
+                                    @else
+                                        <a class="btn btn-outline-primary btn-sm" href="{{route("$edit_item_route",['instance' => \Instantiation::instance(), 'id' => $item['id']])}}">
+                                    @endif
+                                    <i class="fe fe-edit"></i>
                                     </a>
                                 @endisset
 
@@ -651,32 +656,6 @@
                                         <i class="fe fe-trash"></i>
                                     </a>
                                 @endisset
-
-                                {{--
-                                <!-- Dropdown -->
-                                <div class="dropdown">
-                                    <a class="dropdown-ellipses dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                       aria-haspopup="true" aria-expanded="false">
-                                        <i class="fe fe-more-vertical"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-end">
-
-                                        @isset($edit_item_route)
-                                            <a href="{{route("$edit_item_route",['instance' => \Instantiation::instance(), 'id' => $item['id']])}}" class="dropdown-item">
-                                                Editar
-                                            </a>
-                                        @endisset
-
-                                        @isset($delete_item_route)
-                                            <a class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#modal_item_{{$item['id']}}" href="#">
-                                                Eliminar
-                                            </a>
-                                        @endisset
-
-                                    </div>
-                                </div>
-                                --}}
-
 
                             </td>
                         @endif

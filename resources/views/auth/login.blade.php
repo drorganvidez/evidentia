@@ -45,10 +45,10 @@
                 </div>
                 <div class="col-auto">
 
-                    <!-- Help text -->
-                    <a href="{{route('password.reset',\Instantiation::instance())}}" tabindex="-1" class="form-text small text-muted">
-                        ¿Has olvidado la contraseña?
-                    </a>
+                <!-- Help text -->
+                <a href="{{route('password.reset',\Instantiation::instance())}}" tabindex="-1" class="form-text small text-muted">
+                    ¿Has olvidado la contraseña?
+                </a>
 
                 </div>
             </div> <!-- / .row -->

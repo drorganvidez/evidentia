@@ -15,7 +15,7 @@ class LoginInstanceController extends Controller
     {
 
         if(Auth::check()){
-            return redirect()->route('home',['instance' => \Instantiation::instance()]);
+            return redirect()->route('instance.dashboard',['instance' => \Instantiation::instance()]);
         }
 
         \Instantiation::set_default_connection();
@@ -35,7 +35,7 @@ class LoginInstanceController extends Controller
         $credentials = $request->only('username', 'password');
 
         if (Auth::attempt($credentials)) {
-            return redirect()->route('home',['instance' => \Instantiation::instance()]);
+            return redirect()->route('instance.dashboard',['instance' => \Instantiation::instance()]);
         }
 
         return back()->withInput()->with('error', 'Las credenciales no son válidas.');
@@ -52,6 +52,6 @@ class LoginInstanceController extends Controller
 
         }
 
-        return redirect()->route('home',['instance' => \Instantiation::instance()]);
+        return redirect()->route('root');
     }
 }

@@ -47,10 +47,11 @@ if($badge){
     @endphp
 
     <li class="nav-item">
+
         <a class="nav-link {{$parent_collapsed}}" href="#{{$route}}" data-bs-toggle="collapse" role="button" aria-expanded="{{$aria_expanded}}" aria-controls="{{$route}}">
             <i class="fe fe-{{$icon}}"></i> {{$name}}
-
         </a>
+
         <div class="collapse {{$show}}" id="{{$route}}" style="">
             <ul class="nav nav-sm flex-column">
 

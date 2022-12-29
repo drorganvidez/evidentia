@@ -8,7 +8,7 @@
 @section('title-icon', 'fas fa-door-open')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item">Home</li>
+    <li class="breadcrumb-item">Dashboard</li>
 @endsection
 
 @section('content')

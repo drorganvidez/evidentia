@@ -2,7 +2,7 @@
 
     <x-item-menu>
         <x-slot:route>
-            home
+            instance.dashboard
         </x-slot:route>
         <x-slot:icon>
             home
@@ -44,6 +44,7 @@
         </x-slot:subitems>
     </x-item-menu>
 
+    @if( !(Request::is('admin') || Request::is('admin/*')))
     <x-item-menu>
         <x-slot:route>
             developer
@@ -60,5 +61,6 @@
             Mis API tokens, developer.apitokens
         </x-slot:subitems>
     </x-item-menu>
+    @endif
 
 </ul>

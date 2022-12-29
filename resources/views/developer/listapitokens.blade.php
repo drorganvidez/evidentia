@@ -4,7 +4,7 @@
 
 @section('submenu')
 
-    <x-submenus.developer-menu/>
+    <x-submenus.developer-menu></x-submenus.developer-menu>
 
 @endsection
 
@@ -28,7 +28,6 @@
         </div>
 
     @endif
-
 
     <x-data-table>
 
@@ -96,6 +95,5 @@
         </x-slot:create_item_message>
 
     </x-data-table>
-
 
 @endsection

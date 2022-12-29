@@ -93,6 +93,7 @@ class Kernel extends HttpKernel
         'checkregistereventsandattendings' => \App\Http\Middleware\CheckRegisterEventsAndAttendings::class,
         'checkproofdownload' => \App\Http\Middleware\CheckProofDownload::class,
         'checkisadministrator' => \App\Http\Middleware\CheckIsAdministrator::class,
+        'checkisnotadministrator' => \App\Http\Middleware\CheckIsNotAdministrator::class,
         'meetingrequestmine' => MeetingRequestMine::class,
         'signaturesheetmine' => SignatureSheetMine::class,
         'meetingminutesmine' => MeetingMinutesMine::class,
