@@ -108,7 +108,6 @@ abstract class Service
      *  Update
      * @throws ReflectionException
      */
-
     public function update($id, $new_data, $validate = true): object
     {
 

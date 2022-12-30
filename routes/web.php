@@ -49,6 +49,7 @@ Route::group(['prefix' => 'admin'], function(){
             Route::controller(InstancesController::class)->group(function () {
                 Route::get('/', 'list')->name('admin.instances.list');
                 Route::get('/create', 'create')->name('admin.instances.create');
+                Route::post('/create_p', 'create_p')->name('admin.instances.create_p');
                 Route::get('/edit/{id}', 'edit')->name('admin.instances.edit');
             });
 

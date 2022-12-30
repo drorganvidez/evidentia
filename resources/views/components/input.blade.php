@@ -141,7 +141,7 @@ $is_invalid = "";
         @endphp
 
         <!-- Input -->
-        <input type="{{$type}}" name="{{$name}}" value="{{$val}}" placeholder="{{$place}}" class="form-control{{$is_invalid}}" {{$disabled}} {{$autofocus}} {{$required}} >
+        <input type="{{$type}}" id="{{$name}}" name="{{$name}}" value="{{$val}}" placeholder="{{$place}}" class="form-control{{$is_invalid}}" {{$disabled}} {{$autofocus}} {{$required}} >
 
         @error("$name")
         <div class="invalid-feedback">

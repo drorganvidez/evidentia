@@ -18,9 +18,8 @@ class CheckSession
     public function handle(Request $request, Closure $next)
     {
 
-        // sesión caducada
         if(Auth::user() == null){
-            return redirect()->route('instance.login',['instance' => \Instantiation::instance()]);
+            return redirect()->route('root');
         }
 
         return $next($request);

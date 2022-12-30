@@ -21,7 +21,7 @@ class CheckRegisterEventsAndAttendings
         $datetime = \Config::attendee_timestamp();
 
         if($now->gt($datetime)){
-            return redirect()->route('home',$instance);
+            return abort('404');
         }
 
         return $next($request);

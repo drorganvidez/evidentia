@@ -28,7 +28,7 @@ class CheckRoles
         }
 
         $instance = \Instantiation::instance();
-        return redirect()->route('home',$instance);
+        return redirect()->route('root');
 
     }
 }

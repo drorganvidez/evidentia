@@ -1,0 +1,81 @@
+<?php
+
+namespace App\Http\Services;
+
+use App\Http\Resources\InstanceResource;
+use App\Models\Instance;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
+
+class InstanceService extends Service
+{
+    public function __construct()
+    {
+
+        parent::__construct(Instance::class, InstanceResource::class);
+
+        $this->rules = [
+            'name' => 'required|unique:instances',
+            'route' => 'required|alpha_num|unique:instances',
+            'host' => 'required',
+            'port' => 'required',
+            'database' => 'required|alpha_num|unique:instances',
+            'username' => 'required',
+            'password' => 'required',
+        ];
+
+    }
+
+    public function test_connection($name, $route, $host, $port, $username, $password): bool
+    {
+
+        $successfully = false;
+
+        $instance = new Instance();
+        $instance->name = $name;
+        $instance->route = $route;
+        $instance->host = $host;
+        $instance->port = $port;
+        $instance->username = $username;
+        $instance->password = $password;
+
+        \Instantiation::set($instance);
+
+        try {
+            DB::connection()->getPdo();
+            $successfully = true;
+        } catch (\Exception $e) {
+            \Instantiation::set_default_connection();
+        }
+
+        \Instantiation::set_default_connection();
+
+        return $successfully;
+    }
+
+    public function instance_database($instance)
+    {
+        DB::connection()->getPdo()->exec("CREATE DATABASE IF NOT EXISTS `$instance->database`");
+        DB::connection()->getPdo()->exec("ALTER SCHEMA `$instance->database` DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_unicode_ci");
+
+        \Instantiation::set($instance);
+
+        try {
+            DB::connection()->getPdo();
+            \Instantiation::migrate();
+            Artisan::call('db:seed',
+                [
+                    '--class' => 'SampleSeeder',
+                    '--database' => 'instance'
+                ]);
+        } catch (\Exception $e) {
+
+            \Instantiation::set_default_connection();
+            DB::statement("DROP DATABASE `$instance->database`");
+            $instance->delete();
+
+        }
+
+        \Instantiation::set_default_connection();
+    }
+}

@@ -25,7 +25,7 @@ class CheckNotNull
         $entity = $model::where('id', $id)->first();
 
         if($entity == null){
-            return redirect("/");
+            return abort('404');
         }
 
         return $next($request);

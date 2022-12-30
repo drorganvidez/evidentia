@@ -83,106 +83,106 @@ class SampleSeeder extends Seeder
          *  COMITÉS & SUBCOMITÉS
          */
 
-        DB::table('comittees')->insert([
+        DB::table('committees')->insert([
             'id' => 1,
             'name' => 'Presidencia',
             'icon' => '<i class="fas fa-user-tie"></i>'
         ]);
 
-        DB::table('comittees')->insert([
+        DB::table('committees')->insert([
             'id' => 2,
             'name' => 'Secretaría',
             'icon' => '<i class="fas fa-file-signature"></i>'
         ]);
 
-        DB::table('comittees')->insert([
+        DB::table('committees')->insert([
             'id' => 3,
             'name' => 'Programa',
             'icon' => '<i class="fas fa-list-ol"></i>'
         ]);
 
-        DB::table('comittees')->insert([
+        DB::table('committees')->insert([
             'id' => 4,
             'name' => 'Igualdad',
             'icon' => '<i class="fas fa-people-carry"></i>'
         ]);
 
-        DB::table('comittees')->insert([
+        DB::table('committees')->insert([
             'id' => 5,
             'name' => 'Sostenibilidad',
             'icon' => '<i class="fas fa-piggy-bank"></i>'
         ]);
 
-        DB::table('comittees')->insert([
+        DB::table('committees')->insert([
             'id' => 6,
             'name' => 'Finanzas',
             'icon' => '<i class="fas fa-euro-sign"></i>'
         ]);
 
-        DB::table('comittees')->insert([
+        DB::table('committees')->insert([
             'id' => 7,
             'name' => 'Logística',
             'icon' => '<i class="fas fa-warehouse"></i>'
         ]);
 
-        DB::table('comittees')->insert([
+        DB::table('committees')->insert([
             'id' => 8,
             'name' => 'Comunicación',
             'icon' => '<i class="fab fa-twitter"></i>'
         ]);
 
-        DB::table('subcomittees')->insert([
+        DB::table('subcommittees')->insert([
             'id' => 1,
-            'comittee_id' => 7,
+            'committee_id' => 7,
             'name' => 'Sede',
             'icon' => '<i class="fas fa-map-pin"></i>'
         ]);
 
-        DB::table('subcomittees')->insert([
+        DB::table('subcommittees')->insert([
             'id' => 2,
-            'comittee_id' => 7,
+            'committee_id' => 7,
             'name' => 'Registro',
             'icon' => '<i class="fas fa-user-check"></i>'
         ]);
 
-        DB::table('subcomittees')->insert([
+        DB::table('subcommittees')->insert([
             'id' => 3,
-            'comittee_id' => 7,
+            'committee_id' => 7,
             'name' => 'Medios Audiovisuales',
             'icon' => '<i class="fas fa-film"></i>'
         ]);
 
-        DB::table('subcomittees')->insert([
+        DB::table('subcommittees')->insert([
             'id' => 4,
-            'comittee_id' => 7,
+            'committee_id' => 7,
             'name' => 'Eventos Sociales',
             'icon' => '<i class="fas fa-users"></i>'
         ]);
 
-        DB::table('subcomittees')->insert([
+        DB::table('subcommittees')->insert([
             'id' => 5,
-            'comittee_id' => 8,
+            'committee_id' => 8,
             'name' => 'Web',
             'icon' => '<i class="fas fa-laptop"></i>'
         ]);
 
-        DB::table('subcomittees')->insert([
+        DB::table('subcommittees')->insert([
             'id' => 6,
-            'comittee_id' => 8,
+            'committee_id' => 8,
             'name' => 'Publicidad',
             'icon' => '<i class="fas fa-ad"></i>'
         ]);
 
-        DB::table('subcomittees')->insert([
+        DB::table('subcommittees')->insert([
             'id' => 7,
-            'comittee_id' => 8,
+            'committee_id' => 8,
             'name' => 'Redes Sociales',
             'icon' => '<i class="fas fa-hashtag"></i>'
         ]);
 
-        DB::table('subcomittees')->insert([
+        DB::table('subcommittees')->insert([
             'id' => 8,
-            'comittee_id' => 8,
+            'committee_id' => 8,
             'name' => 'Diseño',
             'icon' => '<i class="fab fa-sketch"></i>'
         ]);

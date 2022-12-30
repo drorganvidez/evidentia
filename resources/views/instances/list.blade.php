@@ -10,6 +10,27 @@
 
 @section('content')
 
+    @if(Session::has('instance'))
+
+        <div class="row">
+
+            <div class="col-lg-6 col-md-12 col-sm-12">
+                <div class="alert alert-info" role="alert">
+                    Las credenciales de acceso como profesor para la instancia '{{ Session::get('instance')->name }}' son:
+                    <br><br>
+                    <ul>
+                        <li>Usuario: {{env('LECTURE_NEW_INSTANCE_USERNAME')}}</li>
+                        <li>Contraseña: {{env('LECTURE_NEW_INSTANCE_PASSWORD')}}</li>
+                    </ul>
+                    Aviso: las credenciales solo se mostrarán esta vez por seguridad. Guárdalas en lugar seguro.
+                    Recuerda que puedes cambiarlas en cualquier momento.
+                </div>
+            </div>
+
+        </div>
+
+    @endif
+
     <x-data-table>
 
         {{-- Data --}}
@@ -23,6 +44,7 @@
             Ruta | route;
             Servidor MySQL | host;
             Puerto MySQL | port;
+            Base de datos | database;
             Usuario MySQL | username;
             Password MYSQL | password;
             Fecha de creación | created_at | {"type" : "datetime"}

@@ -21,7 +21,7 @@ class CheckValidateEvidences
         $datetime = \Config::validate_evidences_timestamp();
 
         if($now->gt($datetime)){
-            return redirect()->route('home',$instance);
+            return abort('404');
         }
 
         return $next($request);

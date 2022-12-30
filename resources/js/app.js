@@ -5,13 +5,10 @@
  */
 
 import './bootstrap';
-
 import './theme'
 
-// custom JS files
-//import './alert'
-//import './dark_mode'
-//import './show_passwords'
-
 import $ from 'jquery'
+import axios from 'axios';
+
+window.axios = axios;
 window.jQuery = window.$ = $

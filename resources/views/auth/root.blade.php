@@ -45,7 +45,7 @@
             <div class="text-center">
 
                 <small class="text-muted text-center">
-                    ¿Nuev@ en Evidentia? <a href="sign-up.html">Date de alta</a>.
+                    ¿Nuev@ en Evidentia? <a href="sign-up.html">Date de alta</a>
                     <br>
                     <a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU/GPL 3.0</a> •
                     <a href="https://github.com/drorganvidez/evidentia">Repositorio en GitHub</a> •
