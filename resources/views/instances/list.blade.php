@@ -42,11 +42,6 @@
         <x-slot:columns>
             Nombre del curso | name;
             Ruta | route;
-            Servidor MySQL | host;
-            Puerto MySQL | port;
-            Base de datos | database;
-            Usuario MySQL | username;
-            Password MYSQL | password;
             Fecha de creación | created_at | {"type" : "datetime"}
         </x-slot:columns>
 
@@ -55,7 +50,7 @@
         </x-slot:edit_item_route>
 
         <x-slot:delete_item_route>
-            developer.deleteapitoken_p
+            admin.instances.delete_p
         </x-slot:delete_item_route>
 
         <x-slot:delete_item_message>

@@ -78,4 +78,15 @@ class InstanceService extends Service
 
         \Instantiation::set_default_connection();
     }
+
+    public function delete_database($instance)
+    {
+        DB::statement("DROP DATABASE `$instance->database`");
+    }
+
+    public function delete_instance_files($instance)
+    {
+        exec("rm -r /var/www/storage/app/21 2>/dev/null");
+        exec("rm -r /var/www/storage/app/livewire-tmp 2>/dev/null");
+    }
 }

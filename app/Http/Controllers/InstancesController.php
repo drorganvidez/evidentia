@@ -57,4 +57,17 @@ class InstancesController extends Controller
 
     }
 
+    public function delete(Request $request)
+    {
+        $id = $request->input("_id");
+        $instance = $this->instance_service->find($id);
+
+        $this->instance_service->delete_database($instance);
+        $this->instance_service->delete_instance_files($instance);
+
+        $this->instance_service->delete($id);
+
+        return redirect()->route('admin.instances.list')->with('success', 'Instancia borrada con éxito');
+    }
+
 }
