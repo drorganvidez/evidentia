@@ -16,7 +16,7 @@ class InstanceService extends Service
         parent::__construct(Instance::class, InstanceResource::class);
 
         $this->rules = [
-            'name' => ['required', Rule::unique('instances')->ignore($this->request->_id)],
+            'name' => ['required', 'min:5', 'max:20', Rule::unique('instances')->ignore($this->request->_id)],
             'route' => ['required', 'alpha_num', Rule::unique('instances')->ignore($this->request->_id)],
             'host' => 'required',
             'port' => 'required|numeric',

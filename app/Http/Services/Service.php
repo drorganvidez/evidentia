@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Models\Evidence;
+use ArrayObject;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -60,7 +61,8 @@ abstract class Service
 
     public function validate_except($except): void
     {
-        $rules_without_except = array_map(function($x) { return $x; }, $this->rules);
+        $rules_without_except_array_object = new ArrayObject($this->rules);
+        $rules_without_except = $rules_without_except_array_object->getArrayCopy();
         for ($i = 0; $i < count($except); $i++) {
             unset($rules_without_except[$except[$i]]);
         }

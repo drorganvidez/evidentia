@@ -72,9 +72,11 @@ class InstancesController extends Controller
         $this->instance_service->validate_except(['route']);
 
         $id = $request->input('_id');
+        $instance = Instance::findOrFail($id);
 
         $data = [
             'name' => $request->name,
+            'route' => $instance->route,
             'host' => $request->host,
             'port' => $request->port,
             'database' => $request->database,
