@@ -11,6 +11,7 @@ copy .env.dev .env >nul
 
 rem set Laradock environment
 copy .env.laradock laradock\.env >nul
+copy docker-compose.stub laradock\docker-compose.yml >nul
 
 rem load environment variables (only for Windows platforms)
 call .env.dev.bat

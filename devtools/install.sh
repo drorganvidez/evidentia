@@ -8,6 +8,7 @@ source .env
 
 # changes environment
 cp .env.laradock laradock/.env
+cp docker-compose.stub laradock/docker-compose.yml
 sed -i '' 's/{{MYSQL_DATABASE}}/'"$DB_DATABASE"'/g' laradock/.env 2>/dev/null 
 sed -i 's/{{MYSQL_DATABASE}}/'"$DB_DATABASE"'/g' laradock/.env 2>/dev/null 
 sed -i '' 's/{{MYSQL_PASSWORD}}/'"$DB_PASSWORD"'/g' laradock/.env 2>/dev/null 
