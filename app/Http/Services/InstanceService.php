@@ -6,6 +6,7 @@ use App\Http\Resources\InstanceResource;
 use App\Models\Instance;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class InstanceService extends Service
 {
@@ -15,11 +16,11 @@ class InstanceService extends Service
         parent::__construct(Instance::class, InstanceResource::class);
 
         $this->rules = [
-            'name' => 'required|unique:instances',
-            'route' => 'required|alpha_num|unique:instances',
+            'name' => ['required', Rule::unique('instances')->ignore($this->request->_id)],
+            'route' => ['required', 'alpha_num', Rule::unique('instances')->ignore($this->request->_id)],
             'host' => 'required',
-            'port' => 'required',
-            'database' => 'required|alpha_num|unique:instances',
+            'port' => 'required|numeric',
+            'database' => ['required', 'alpha_num', Rule::unique('instances')->ignore($this->request->_id)],
             'username' => 'required',
             'password' => 'required',
         ];

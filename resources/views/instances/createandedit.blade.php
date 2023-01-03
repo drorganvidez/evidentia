@@ -22,7 +22,7 @@
         <div class="row">
 
             <div class="col-lg-12">
-                <a href="{{route('instances.list', \Instantiation::instance())}}" class="btn btn-outline-primary mb-4">
+                <a href="{{route('admin.instances.list', \Instantiation::instance())}}" class="btn btn-outline-primary mb-4">
                     <i class="fe fe-skip-back"></i> Volver a mis instancias
                 </a>
             </div>
@@ -31,7 +31,7 @@
 
     @endisset
 
-    <form method="post" action="{{route("$action",\Instantiation::instance())}}">
+    <form method="post" action="{{route("$action")}}">
 
         @csrf
 
@@ -81,9 +81,16 @@
                     col-12 col-md-6
                 </x-slot:col>
                 <x-slot:description>
-                    Usa una ruta como entrypoint
+                    @isset($item)
+                        No puedes editar la ruta de una instancia ya creada
+                    @else
+                        Usa una ruta como entrypoint
+                    @endisset
                 </x-slot:description>
                 <x-slot:required></x-slot:required>
+                @isset($item)
+                    <x-slot:disabled></x-slot:disabled>
+                @endisset
             </x-input>
         </div>
 
@@ -142,7 +149,7 @@
                     database
                 </x-slot:name>
                 <x-slot:value>
-                    {{$item->port ?? '' }}
+                    {{$item->database ?? '' }}
                 </x-slot:value>
                 <x-slot:placeholder>
                     base22

@@ -28,6 +28,26 @@ abstract class Service
         $this->rules = [];
     }
 
+    public function model()
+    {
+        return $this->model;
+    }
+
+    public function resource()
+    {
+        return $this->resource;
+    }
+
+    public function request(): Request
+    {
+        return $this->request;
+    }
+
+    public function rules(): array
+    {
+        return $this->rules;
+    }
+
     public function validate($rules = null): void
     {
 
@@ -36,7 +56,15 @@ abstract class Service
         } else {
             $this->request->validate($this->rules);
         }
+    }
 
+    public function validate_except($except): void
+    {
+        $rules_without_except = array_map(function($x) { return $x; }, $this->rules);
+        for ($i = 0; $i < count($except); $i++) {
+            unset($rules_without_except[$except[$i]]);
+        }
+        $this->request->validate($rules_without_except);
     }
 
     private function validation($data): bool
@@ -55,11 +83,6 @@ abstract class Service
         return response()->json([
             'errors' => $messages
         ]);
-    }
-
-    public function rules(): array
-    {
-        return $this->rules;
     }
 
     /**

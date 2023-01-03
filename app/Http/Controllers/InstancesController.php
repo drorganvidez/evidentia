@@ -57,6 +57,36 @@ class InstancesController extends Controller
 
     }
 
+    public function edit($id)
+    {
+        $instance = Instance::findOrFail($id);
+
+        return view('instances.createandedit', [
+            'action' => 'admin.instances.edit_p',
+            'item' => $instance
+        ]);
+    }
+
+    public function edit_p(Request $request)
+    {
+        $this->instance_service->validate_except(['route']);
+
+        $id = $request->input('_id');
+
+        $data = [
+            'name' => $request->name,
+            'host' => $request->host,
+            'port' => $request->port,
+            'database' => $request->database,
+            'username' => $request->username,
+            'password' => $request->password
+        ];
+
+        $this->instance_service->update($id, $data);
+
+        return redirect()->route('admin.instances.list')->with('success', 'Instancia editada con éxito');
+    }
+
     public function delete(Request $request)
     {
         $id = $request->input("_id");
