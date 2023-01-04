@@ -23,7 +23,7 @@ class AdminController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            return redirect()->route('admin.dashboard', ['admin' => 'admin']);
+            return redirect()->route('admin.dashboard');
         }
 
         return back()->withInput()->with('error', 'Las credenciales no son válidas.');

@@ -2,111 +2,88 @@
 
 namespace Tests\Feature;
 
-use App\Http\Middleware\VerifyCsrfToken;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\InstancesController;
+use App\Http\Services\InstanceService;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Http\Request;
 use Tests\TestCase;
 
 class InstanceTest extends TestCase
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
+    use WithoutMiddleware;
 
-    //use RefreshDatabase;
-
-    public function testSettingUp() :void {
-
-        DB::connection()->getPdo()->exec("DROP DATABASE IF EXISTS `evidentia`;");
-        DB::connection()->getPdo()->exec("CREATE DATABASE IF NOT EXISTS `evidentia`");
-        DB::connection()->getPdo()->exec("ALTER SCHEMA `evidentia`  DEFAULT CHARACTER SET utf8mb4  DEFAULT COLLATE utf8mb4_unicode_ci");
-        exec("php artisan migrate");
-        exec("php artisan db:seed");
-        exec('php artisan db:seed --class=InstancesTableSeeder');
-
-        $this->assertTrue(true);
-
+    public function setUp() : void
+    {
+        // write code that executes before starting the tests
+        parent::setUp();
+        //$this->setAppToZero();
+        $this->setDefaultInstanceConnection();
     }
 
-    public function testHome()
+    public function tearDown() : void
     {
-        $response = $this->get('/');
-        $response->assertStatus(302);
+        // write code that runs at the end of each test
+        parent::tearDown();
     }
 
-    public function testDefautInstanceWithoutLogged()
+    public function test_admin_login_true()
     {
-        $response = $this->get('/20');
-        $response->assertStatus(302);
-    }
-
-    /*public function testAdminLoginFalse()
-    {
-        $request = [
-            'email' => 'incorrect',
-            'password' => 'incorrect'
-        ];
-
-        $response = $this->post('login',$request);
-
-        $response->assertSessionHasErrors();
-    }*/
-
-    public function testAdminLoginTrue()
-    {
-        $request = [
+        // Arrange
+        $request = new Request([
             'email' => 'admin@admin.com',
             'password' => 'admin'
-        ];
+        ]);
+        $adminController = new AdminController();
 
-        $response = $this->post('login',$request);
+        // Act
+        $response = $adminController->login_p($request);
 
-        $response->assertSessionDoesntHaveErrors();
+        // Assert
+        $this->assertTrue($response->isRedirection());
+        $this->assertEquals(route('admin.dashboard'), $response->headers->get('Location'));
+
     }
 
-    public function testListInstances()
+    public function test_admin_login_false()
     {
-        $this->testAdminLoginTrue();
+        // Arrange
+        $request = new Request([
+            'email' => 'admin@admin.com',
+            'password' => 'invalid'
+        ]);
+        $adminController = new AdminController();
 
-        $response = $this->get('/admin/instance/manage');
-        $response->assertStatus(302);
+        // Act
+        $response = $adminController->login_p($request);
+
+        // Assert
+        $this->assertTrue($response->isRedirection());
+        $this->assertEquals(url()->previous(), $response->headers->get('Location'));
+        $this->assertEquals('Las credenciales no son válidas.', session('error'));
     }
 
-    public function testCreateInstance()
+    public function test_list_instances()
     {
-        $this->withoutMiddleware([VerifyCsrfToken::class]);
-        $this->testAdminLoginTrue();
+        // Arrange
+        $instancesController = new InstancesController();
 
-        $request = [
-            'name' => 'Nuevo curso',
-            'route' => '21',
-            'host' => env("DB_HOST"),
-            'port' => env('DB_PORT'),
-            'database' => 'evidentia',
-            'username' => 'evidentia',
-            'password' => 'secret',
-        ];
+        // Act
+        $response = $instancesController->list();
 
-        $response = $this->post('admin/instance/new',$request);
-
-        //$response->assertOk();
-
-        $response->assertStatus(302);
+        // Assert
+        $this->assertEquals('instances.list', $response->getName());
+        $this->assertCount(1, $response->getData()['instances']);
     }
 
-    /*public function testRemoveInstance()
+    public function test_create_view()
     {
-        $this->withoutExceptionHandling();
-        $this->testAdminLoginTrue();
+        $instancesController = new InstancesController();
+        $view = $instancesController->create();
 
-        $request = [
-            'name' => 'Nuevo curso',
-            'id' => 2
-        ];
+        $this->assertEquals('instances.createandedit', $view->getName());
+        $this->assertEquals(['action' => 'admin.instances.create_p'], $view->getData());
+    }
 
-        $response = $this->post('admin/instance/manage/remove',$request);
-        $response->assertStatus(302);
-    }*/
+
 }

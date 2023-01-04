@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Services\InstanceService;
 use App\Models\Instance;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class InstancesController extends Controller
@@ -16,7 +19,7 @@ class InstancesController extends Controller
         $this->instance_service = new InstanceService();
     }
 
-    public function list()
+    public function list(): Factory|View|Application
     {
 
         $instances = Instance::all();

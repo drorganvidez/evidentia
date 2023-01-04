@@ -209,7 +209,7 @@ abstract class Service
      */
     public function all(): object
     {
-        $entities =  $this->model::all();
+        $entities =  $this->model::orderBy('created_at')->get();
 
         if(empty($entities)){
             return response()->json();
