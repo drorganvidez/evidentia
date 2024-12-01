@@ -152,107 +152,91 @@ class EventbriteController extends Controller
         }
     }
 
-    public function attendee_load()
+    public function attendee_load($instance, $event_id)
     {
-
-        $instance = \Instantiation::instance();
-
         $token = \Config::eventbrite_token();
-        $events = Event::all();
-
-        // PRUEBA DE CONEXIÓN CON TOKEN
+        $event = Event::where('id_eventbrite', $event_id)->first();
+        
+        // Validar el token
         if (!EventbriteController::validate_token($token)) {
             return back()->with('error', 'Ups, parece que hay un problema con el token. Comprueba que es válido...');
         }
 
-        // antes de continuar, lo más fácil y rápido es borrar las asistencias previas
-        DB::table('attendee')->delete();
+        // Borrar asistencias previas relacionadas con el evento
+        DB::table('attendee')->where('event_id', $event_id)->delete();
 
         try {
             $client = new Client(['base_uri' => 'https://www.eventbriteapi.com/v3/']);
+            $page = 1;
 
-            foreach ($events as $event) {
-
-                // obtenemos la paginación
-                $attendees = $client->request('GET', 'events/' . $event->id_eventbrite . '/attendees', [
-                    'query' => ['token' => $token]
+            do {
+                // Obtener los asistentes de la página actual
+                $response = $client->request('GET', 'events/' . $event->id_eventbrite . '/attendees', [
+                    'query' => ['token' => $token, 'page' => $page]
                 ]);
 
-                $attendees = json_decode($attendees->getBody());
-                $page_count = $attendees->pagination->page_count;
+                $data = json_decode($response->getBody());
+                $attendees = $data->attendees;
+                $has_more_items = $data->pagination->has_more_items;
 
-                $page_contador = 1;
+                foreach ($attendees as $attendee) {
+                    $first_name = strtoupper(trim(preg_replace('~[^0-9a-z]+~i', '', preg_replace(
+                        '~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i',
+                        '$1',
+                        htmlentities($attendee->profile->first_name, ENT_QUOTES, 'UTF-8')
+                    )), ' '));
 
-                while ($page_contador <= $page_count) {
+                    $last_name = strtoupper(trim(preg_replace('~[^0-9a-z]+~i', '', preg_replace(
+                        '~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i',
+                        '$1',
+                        htmlentities($attendee->profile->last_name, ENT_QUOTES, 'UTF-8')
+                    )), ' '));
 
-                    // obtenemos las asistencias a cada evento
-                    $attendees_page = $client->request('GET', 'events/' . $event->id_eventbrite . '/attendees', [
-                        'query' => ['token' => $token, 'page' => $page_contador]
-                    ]);
+                    $email = $attendee->profile->email;
+                    $status = $attendee->status;
 
-                    $attendees_page = json_decode($attendees_page->getBody());
-                    $attendees_page = (array)$attendees_page->attendees;
+                    $user = DB::table('users')->where('clean_name', 'like', '%' . $first_name . '%')->where('clean_surname', 'like', '%' . $last_name . '%')->first();
 
-                    foreach ($attendees_page as $attendee) {
-
-                        // limpiamos el nombre de caracteres problemáticos
-                        $first_name = $attendee->profile->first_name;
-                        $first_name = strtoupper(trim(preg_replace('~[^0-9a-z]+~i', '', preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($first_name, ENT_QUOTES, 'UTF-8'))), ' '));
-
-                        // limpiamos los apellidos de caracteres problemáticos
-                        $last_name = $attendee->profile->last_name;
-                        $last_name = strtoupper(trim(preg_replace('~[^0-9a-z]+~i', '', preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($last_name, ENT_QUOTES, 'UTF-8'))), ' '));
-
-                        $status = $attendee->status;
-                        $email = $attendee->profile->email;
-
-                        $user = DB::table('users')->where('clean_name', 'like', '%' . $first_name . '%')->where('clean_surname', 'like', '%' . $last_name . '%')->first();
-
-                        // si no hemos encontrado al usuario por nombres y apellidos, lo intentamos por el email
-                        if ($user == null) {
-                            $user = DB::table('users')->where('email', 'like', '%' . $email . '%')->first();
-                        }
-
-                        // usuario encontrado
-                        if ($user != null) {
-
-                            $exits = Attendee::where("event_id", $event->id)->where("user_id", $user->id)->first();
-                          
-                            if($exits == null){
-                                try{
-
-                                  $new_attendee = Attendee::create([
-                                      'event_id' => $event->id,
-                                      'user_id' => $user->id,
-                                      'status' => $status
-                                  ]);
-                                  $new_attendee->save();
-
-                                }catch (\Exception $e){
-                                    echo $e;
-                                }
-
-                            }
-                          
-                        }
+                    // si no hemos encontrado al usuario por nombres y apellidos, lo intentamos por el email
+                    if ($user == null) {
+                        $user = DB::table('users')->where('email', 'like', '%' . $email . '%')->first();
                     }
 
-                    $page_contador = $page_contador + 1;
+                    // usuario encontrado
+                    if ($user != null) {
+                        $exits = Attendee::where("event_id", $event_id)->where("user_id", $user->id)->first();
+                        if($exits == null){
+                            try{
+                                $new_attendee = Attendee::create([
+                                    'event_id' => $event->id,
+                                    'user_id' => $user->id,
+                                    'status' => $status
+                                ]);
+                                $new_attendee->save();
 
+                            }catch (\Exception $e){
+                                return back()->with('error', $e->getMessage());
+                            }
+                        }
+                    }
                 }
 
-            }
+                $page++;
+
+            } while ($has_more_items);
 
             $config = Configuration::find(1);
             $config->attendees_uploaded_timestamp = Carbon::now();
             $config->save();
 
-            return redirect()->route('registercoordinator.attendee.list', $instance)->with('success', 'Asistencias actualizadas con éxito.');
+            return redirect()->route('registercoordinator.attendee.list', $instance)
+                ->with('success', 'Asistencias actualizadas con éxito.');
 
         } catch (\Exception $e) {
-            return back()->with('error', $e);
+            return back()->with('error', $e->getMessage());
         }
     }
+
 
     public function event_list()
     {

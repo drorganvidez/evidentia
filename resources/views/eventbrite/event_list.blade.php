@@ -56,6 +56,7 @@
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Capacidad</th>
                             <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Horas</th>
                             <th>Estado</th>
+                            <th>Cargar Asistencia</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -70,6 +71,9 @@
                                 <td>
                                     <x-eventstatus :event="$event"/>
                                 </td>
+                                <td><a href="{{route('registercoordinator.attendee.load',['instance' => $instance, 'id' => $event->id_eventbrite])}}"
+                                    class="btn btn-primary btn-block" role="button">
+                                    <i class="fas fa-cloud-download-alt"></i></a></td>
                             </tr>
                         @endforeach
                         </tbody>

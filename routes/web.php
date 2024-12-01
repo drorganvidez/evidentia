@@ -331,7 +331,7 @@ Route::group(['prefix' => '{instance}', 'middleware' => ['checkblock']], functio
         Route::post('/registercoordinator/token/save', 'EventbriteController@token_save')->name('registercoordinator.token.save');
 
         Route::get('/registercoordinator/event/load', 'EventbriteController@event_load')->name('registercoordinator.event.load');
-        Route::get('/registercoordinator/attendee/load', 'EventbriteController@attendee_load')->name('registercoordinator.attendee.load');
+        Route::get('/registercoordinator/attendee/load/{id}', 'EventbriteController@attendee_load')->name('registercoordinator.attendee.load');
     });
 
     Route::get('/registercoordinator/event/list','EventbriteController@event_list')->name('registercoordinator.event.list');
