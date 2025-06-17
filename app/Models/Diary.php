@@ -3,23 +3,30 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\MeetingRequest;
+use App\Models\DiaryPoint;
 
 class Diary extends Model
 {
-
-    protected $table = "diaries";
+    protected $table = 'diaries';
 
     protected $fillable = [
-        "meeting_request_id"
+        'meeting_request_id',
     ];
 
-    public function MeetingRequest()
+    /**
+     * Get the meeting request associated with this diary.
+     */
+    public function meetingRequest()
     {
-        return $this->belongsTo('App\Models\MeetingRequest');
+        return $this->belongsTo(MeetingRequest::class);
     }
 
-    public function diary_points()
+    /**
+     * Get the diary points of this diary.
+     */
+    public function diaryPoints()
     {
-        return $this->hasMany('App\Models\DiaryPoints');
+        return $this->hasMany(DiaryPoint::class);
     }
 }

@@ -7,19 +7,10 @@
         </li>
 
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="{{ route('updates.list',['instance' => \Instantiation::instance()]) }}" class="nav-link">
+            <a href="{{ route('updates.list') }}" class="nav-link">
                 <i class="fab fa-github"></i> Versión del software: {{env('EVIDENTIA_VERSION','')}}</a>
         </li>
 
-        <!--
-        <li class="nav-item d-none d-sm-inline-block">
-            <a href="{{route('updates.list',\Instantiation::instance())}}" class="nav-link">Actualizaciones</a>
-        </li>
-
-        <li class="nav-item d-none d-sm-inline-block">
-            <a href="{{route('suggestionsmailbox',\Instantiation::instance())}}" class="nav-link">Buzón</a>
-        </li>
-        -->
 
     </ul>
 
@@ -28,12 +19,12 @@
 
         <!-- Logout -->
         <li class="nav-item">
-            <a href="{{ route('instance.logout',['instance' => \Instantiation::instance()]) }}"  class="nav-link"
+            <a href="{{ route('logout') }}"  class="nav-link"
                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="nav-icon fas fa-sign-out-alt"></i> Salir
             </a>
         </li>
-        <form id="logout-form" action="{{ route('instance.logout',['instance' => \Instantiation::instance()]) }}" method="POST" style="display: none;">
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
             @csrf
         </form>
 

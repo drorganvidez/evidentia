@@ -51,7 +51,7 @@
 
                                             <div id="accordion">
 
-                                                @foreach(\App\Models\Comittee::all() as $committee)
+                                                @foreach(\App\Models\Committee::all() as $committee)
                                                     <div class="card card-light">
                                                         <div class="card-header">
                                                             <h4 class="card-title w-100">
@@ -209,7 +209,7 @@
                                     <div class="row">
                                         <div class="col-lg-12 mt-3">
                                             <div id="accordion">
-                                                @forelse(\App\Models\MeetingRequest::next_meeting_requests() as $meeting)
+                                                @forelse(\App\Models\MeetingRequest::nextMeetingRequests() as $meeting)
                                                     <div class="card card-light">
                                                         <div class="card-header">
                                                             <h4 class="card-title w-100">
@@ -279,11 +279,11 @@
                                         <h5>Subida de evidencias</h5>
 
                                         <p>
-                                            {{\Carbon\Carbon::parse(Config::upload_evidences_timestamp())->format('d/m/Y')}}
+                                            {{\Carbon\Carbon::parse(\App\Models\Configuration::first()->upload_evidences_timestamp)->format('d/m/Y')}}
 
                                             a las
 
-                                            {{\Carbon\Carbon::parse(Config::upload_evidences_timestamp())->format('H:i')}}
+                                            {{\Carbon\Carbon::parse(\App\Models\Configuration::first()->upload_evidences_timestamp)->format('H:i')}}
                                         </p>
                                     </div>
 
@@ -291,11 +291,11 @@
                                         <h5>Validación de evidencias</h5>
 
                                         <p>
-                                            {{\Carbon\Carbon::parse(Config::validate_evidences_timestamp())->format('d/m/Y')}}
+                                            {{\Carbon\Carbon::parse(\App\Models\Configuration::first()->validate_evidences_timestamp)->format('d/m/Y')}}
 
                                             a las
 
-                                            {{\Carbon\Carbon::parse(Config::validate_evidences_timestamp())->format('H:i')}}
+                                            {{\Carbon\Carbon::parse(\App\Models\Configuration::first()->validate_evidences_timestamp)->format('H:i')}}
                                         </p>
                                     </div>
 
@@ -303,11 +303,11 @@
                                         <h5>Registro de reuniones</h5>
 
                                         <p>
-                                            {{\Carbon\Carbon::parse(Config::meetings_timestamp())->format('d/m/Y')}}
+                                            {{\Carbon\Carbon::parse(\App\Models\Configuration::first()->meetings_timestamp)->format('d/m/Y')}}
 
                                             a las
 
-                                            {{\Carbon\Carbon::parse(Config::meetings_timestamp())->format('H:i')}}
+                                            {{\Carbon\Carbon::parse(\App\Models\Configuration::first()->meetings_timestamp)->format('H:i')}}
                                         </p>
                                     </div>
 
@@ -315,11 +315,11 @@
                                         <h5>Registro de bonos</h5>
 
                                         <p>
-                                            {{\Carbon\Carbon::parse(Config::bonus_timestamp())->format('d/m/Y')}}
+                                            {{\Carbon\Carbon::parse(\App\Models\Configuration::first()->bonus_timestamp)->format('d/m/Y')}}
 
                                             a las
 
-                                            {{\Carbon\Carbon::parse(Config::bonus_timestamp())->format('H:i')}}
+                                            {{\Carbon\Carbon::parse(\App\Models\Configuration::first()->bonus_timestamp)->format('H:i')}}
                                         </p>
                                     </div>
 
@@ -327,11 +327,11 @@
                                         <h5>Importación de eventos y asistencias</h5>
 
                                         <p>
-                                            {{\Carbon\Carbon::parse(Config::attendee_timestamp())->format('d/m/Y')}}
+                                            {{\Carbon\Carbon::parse(\App\Models\Configuration::first()->attendee_timestamp)->format('d/m/Y')}}
 
                                             a las
 
-                                            {{\Carbon\Carbon::parse(Config::attendee_timestamp())->format('H:i')}}
+                                            {{\Carbon\Carbon::parse(\App\Models\Configuration::first()->attendee_timestamp)->format('H:i')}}
                                         </p>
                                     </div>
 

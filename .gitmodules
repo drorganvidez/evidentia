@@ -1,6 +1,0 @@
-[submodule "laradock"]
-	path = laradock
-	url = https://github.com/laradock/laradock
-[submodule "homestead"]
-	path = homestead
-	url = https://github.com/laravel/homestead

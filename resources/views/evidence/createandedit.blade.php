@@ -9,7 +9,7 @@
 @section('title-icon', 'fab fa-angellist')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
     @isset($edit)
         <li class="breadcrumb-item"><a href="{{route('evidence.list',$instance)}}">Mis evidencias</a></li>
     @endisset

@@ -1,3 +1,16 @@
+@props(['type' => '', 'type' => 'text'])
+@props(['col' => '', 'type' => 'text'])
+@props(['attr' => '', 'type' => 'text'])
+@props(['label' => '', 'type' => 'text'])
+@props(['placeholder' => '', 'type' => 'text'])
+@props(['value' => '', 'type' => 'text'])
+@props(['required' => '', 'type' => 'text'])
+@props(['edit' => '', 'type' => 'text'])
+@props(['disabled' => '', 'type' => 'text'])
+@props(['step' => '', 'type' => 'text'])
+@props(['description' => '', 'type' => 'text'])
+@props(['class' => '', 'type' => 'text'])
+
 <div class="form-group col-md-{{ $col }}">
     <label for="{{ $attr }}">{{ $label }}</label>
     <textarea id="summernote" type="{{ $type }}" class="textarea form-control {{ $class }}

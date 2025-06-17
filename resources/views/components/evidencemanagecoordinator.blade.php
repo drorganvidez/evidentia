@@ -24,7 +24,7 @@
                     </button>
                 </div>
 
-                <form action="{{route('coordinator.evidence.reject',['instance' => \Instantiation::instance()])}}" method="POST">
+                <form action="{{route('coordinator.evidence.reject')}}" method="POST">
                     @csrf
                     <input type="hidden" name="_id" value="{{$evidence->id}}"/>
                     <div class="modal-body text-wrap">

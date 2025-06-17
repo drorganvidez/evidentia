@@ -45,7 +45,7 @@ class GitController extends Controller
             $issues = json_decode($issues->getBody());
             $issues = (array)$issues;
 
-            return view('updates.list', ['instance' => \Instantiation::instance(), 'releases' => $releases, 'issues' => $issues]);
+            return view('updates.list', ['releases' => $releases, 'issues' => $issues]);
 
 
         }catch (\Exception $e){

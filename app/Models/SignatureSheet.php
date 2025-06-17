@@ -4,27 +4,44 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\MeetingRequest;
+use App\Models\Secretary;
 
 class SignatureSheet extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-      'title','random_identifier', 'meeting_request_id', 'secretary_id'
+        'title',
+        'random_identifier',
+        'meeting_request_id',
+        'secretary_id',
     ];
 
+    /**
+     * The users who signed this sheet.
+     */
     public function users()
     {
-        return $this->belongsToMany('App\Models\User')->withTimestamps()->orderByDesc('created_at');
+        return $this->belongsToMany(User::class)
+                    ->withTimestamps()
+                    ->orderByDesc('created_at');
     }
 
-    public function meeting_request()
+    /**
+     * The meeting request associated with this signature sheet.
+     */
+    public function meetingRequest()
     {
-        return $this->belongsTo('App\Models\MeetingRequest');
+        return $this->belongsTo(MeetingRequest::class);
     }
 
+    /**
+     * The secretary who created this signature sheet.
+     */
     public function secretary()
     {
-        return $this->belongsTo('App\Models\Secretary');
+        return $this->belongsTo(Secretary::class);
     }
 }

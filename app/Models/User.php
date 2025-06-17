@@ -3,188 +3,163 @@
 namespace App\Models;
 
 use Config;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
-
+use App\Models\Role;
+use App\Models\Evidence;
+use App\Models\Coordinator;
+use App\Models\Secretary;
+use App\Models\Meeting;
+use App\Models\Bonus;
+use App\Models\Avatar;
+use App\Models\Attendee;
+use App\Models\SignatureSheet;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'surname', 'name', 'username', 'password', 'email', 'block', 'biography', 'clean_name', 'clean_surname'
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password', 'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
 
     public function roles()
     {
-        return $this->belongsToMany('App\Models\Role');
+        return $this->belongsToMany(Role::class);
     }
 
     public function evidences()
     {
-        return $this->hasMany('App\Models\Evidence');
+        return $this->hasMany(Evidence::class);
     }
 
-    public function hasRole($rol_param)
+    public function hasRole($rol_param): bool
     {
-        try {
-            foreach ($this->roles as $rol) {
-                if ($rol->rol == $rol_param) {
-                    return true;
-                }
-            }
-        }catch(\Exception $e){
-
-        }
-        return false;
+        return $this->roles->contains(fn($role) => $role->rol === $rol_param);
     }
 
-    public function isAdmin()
+    public function isAdmin(): bool
     {
-        try {
-            return $this->administrator;
-        }catch(\Exception $e){
-
-        }
-
-        return false;
+        return (bool)($this->administrator ?? false);
     }
 
     public function coordinator()
     {
-        return $this->hasOne('App\Models\Coordinator');
+        return $this->hasOne(Coordinator::class);
     }
 
     public function secretary()
     {
-        return $this->hasOne('App\Models\Secretary');
+        return $this->hasOne(Secretary::class);
     }
 
     public function meetings()
     {
-        return $this->belongsToMany('App\Models\Meeting');
+        return $this->belongsToMany(Meeting::class);
     }
 
     public function bonus()
     {
-        return $this->belongsToMany('App\Models\Bonus');
+        return $this->belongsToMany(Bonus::class);
     }
 
     public function avatar()
     {
-        return $this->hasOne('App\Models\Avatar');
+        return $this->hasOne(Avatar::class);
     }
 
     public function attendees()
     {
-        return $this->hasMany('App\Models\Attendee');
+        return $this->hasMany(Attendee::class);
     }
 
-    public function signature_sheets()
+    public function signatureSheets()
     {
-        return $this->belongsToMany('App\Models\SignatureSheet')->withTimestamps()->orderByDesc('created_at');
+        return $this->belongsToMany(SignatureSheet::class)->withTimestamps()->orderByDesc('created_at');
     }
 
-    public function evidence_rand(){
-        return $this->evidences->where('rand','=', '1')->first();
+    public function evidence_rand()
+    {
+        return $this->evidences->where('rand', '1')->first();
     }
 
-    public function evidence_rand_route(){
-
-        $route = "";
-        try{
-            $route = route('profiles.view.evidence',['instance' => \Instantiation::instance(), 'id_user' => $this->id, 'id_evidence' => $this->evidence_rand()->id]);
-        }catch (\Exception $e){
-            $route = "";
-        }
-
-        return $route;
-    }
-
-    public function evidence_rand_hours(){
-        try{
-            return $this->evidence_rand()->hours;
-        }catch (\Exception $e){
-            return 0;
+    public function evidence_rand_route()
+    {
+        try {
+            return route('profiles.view.evidence', [
+                'instance' => \Instantiation::instance(),
+                'id_user' => $this->id,
+                'id_evidence' => $this->evidence_rand()->id,
+            ]);
+        } catch (\Exception $e) {
+            return "";
         }
     }
 
-    public function evidences_draft() {
-        return $this->evidences->where('status','=', 'DRAFT');
+    public function evidence_rand_hours()
+    {
+        return optional($this->evidence_rand())->hours ?? 0;
     }
 
-    public function evidences_not_draft() {
-        return $this->evidences->where('status','!=', 'DRAFT');
+    public function evidences_draft()
+    {
+        return $this->evidences->where('status', 'DRAFT');
     }
 
-    public function evidences_pending() {
-        return $this->evidences->where('status','=', 'PENDING');
+    public function evidences_not_draft()
+    {
+        return $this->evidences->where('status', '!=', 'DRAFT');
     }
 
-    public function evidences_accepted() {
-        return $this->evidences->where('status','=', 'ACCEPTED');
+    public function evidences_pending()
+    {
+        return $this->evidences->where('status', 'PENDING');
     }
 
-    public function evidences_rejected() {
-        return $this->evidences->where('status','=', 'REJECTED');
+    public function evidences_accepted()
+    {
+        return $this->evidences->where('status', 'ACCEPTED');
     }
 
-    // Asistencias pendientes
+    public function evidences_rejected()
+    {
+        return $this->evidences->where('status', 'REJECTED');
+    }
+
     public function attendees_pending()
     {
-        return $this->attendees->where('status','=', 'Attending');
+        return $this->attendees->where('status', 'Attending');
     }
 
-    // Asistencias confirmadas
     public function attendees_checkedin()
     {
-        return $this->attendees->where('status','=', 'Checked In');
+        return $this->attendees->where('status', 'Checked In');
     }
-
-    /*
-     *  MÉTODOS DERIVADOS DE INTERÉS
-     */
 
     private function collection_hours($collection)
     {
-        $hours =  $collection->map(function ($item, $key) {
-            return $item->hours;
-        });
-        return $hours->sum();
+        return $collection->pluck('hours')->sum();
     }
 
     private function collection_count($collection)
     {
         return $collection->count();
     }
-
-    // Todas las evidencias
 
     public function evidences_hours()
     {
@@ -196,8 +171,6 @@ class User extends Authenticatable
         return $this->collection_count($this->evidences);
     }
 
-    // Evidencias en borrador
-
     public function evidences_draft_hours()
     {
         return $this->collection_hours($this->evidences_draft());
@@ -207,8 +180,6 @@ class User extends Authenticatable
     {
         return $this->collection_count($this->evidences_draft());
     }
-
-    // Evidencias pendientes
 
     public function evidences_pending_hours()
     {
@@ -220,8 +191,6 @@ class User extends Authenticatable
         return $this->collection_count($this->evidences_pending());
     }
 
-    // Evidencias aceptadas
-
     public function evidences_accepted_hours()
     {
         return $this->collection_hours($this->evidences_accepted());
@@ -232,8 +201,6 @@ class User extends Authenticatable
         return $this->collection_count($this->evidences_accepted());
     }
 
-    // Evidencias rechazadas
-
     public function evidences_rejected_hours()
     {
         return $this->collection_hours($this->evidences_rejected());
@@ -243,8 +210,6 @@ class User extends Authenticatable
     {
         return $this->collection_count($this->evidences_rejected());
     }
-
-    // Reuniones
 
     public function meetings_hours()
     {
@@ -258,30 +223,23 @@ class User extends Authenticatable
 
     public function meetings_total_count()
     {
-        return Meeting::all()->count();
+        return Meeting::count();
     }
 
-    // Asistencias totales pendientes
     public function attendees_pending_count()
     {
         return $this->collection_count($this->attendees_pending());
     }
 
-    // Asistencias totales confirmadas
     public function attendees_checkedin_count()
     {
         return $this->collection_count($this->attendees_checkedin());
     }
 
-    // Horas de asistencia
     public function attendees_hours()
     {
-        if($this->attendees_checkedin_count() == 0) return "0";
-
-        $hours =  $this->attendees_checkedin()->map(function ($item, $key) {
-            return $item->event->hours;
-        });
-        return $hours->sum();
+        if ($this->attendees_checkedin_count() === 0) return 0;
+        return $this->attendees_checkedin()->sum(fn($a) => $a->event->hours);
     }
 
     public function events_hours()
@@ -291,12 +249,7 @@ class User extends Authenticatable
 
     public function max_events_hours()
     {
-
-        if($this->attendees_hours() >= Config::max_attendees_hours()){
-            return Config::max_attendees_hours();
-        }
-
-        return $this->attendees_hours();
+        return min($this->attendees_hours(), Config::max_attendees_hours());
     }
 
     public function events_count()
@@ -304,71 +257,47 @@ class User extends Authenticatable
         return $this->attendees_checkedin_count();
     }
 
-    // Bonos
     public function bonus_hours()
     {
         return $this->collection_hours($this->bonus);
     }
 
-    // Total de horas computadas
-    public function total_computed_hours(){
+    public function total_computed_hours()
+    {
         return $this->evidences_accepted_hours() + $this->meetings_hours() + $this->events_hours() + $this->bonus_hours();
     }
 
     public function avatar_route()
     {
-
-        if($this->avatar == null){
-            return URL::to('/').'/uploads/avatars/default.png';
-        }
-
-        return URL::to('/').'/uploads/avatars/'.$this->avatar->file->name.'.'.$this->avatar->file->type;
-
+        return $this->avatar
+            ? URL::to('/uploads/avatars/' . $this->avatar->file->name . '.' . $this->avatar->file->type)
+            : URL::to('/uploads/avatars/default.png');
     }
 
     public function associate_comittee()
     {
-        // ¿es coordinador o secretario?
-        if($this->hasRole('COORDINATOR')){
-            return $this->coordinator->comittee->name;
-        }elseif ($this->hasRole('SECRETARY')){
-            return $this->secretary->comittee->name;
-        }else{
-            return "None";
+        if ($this->hasRole('COORDINATOR')) {
+            return $this->coordinator->comittee->name ?? 'None';
+        } elseif ($this->hasRole('SECRETARY')) {
+            return $this->secretary->comittee->name ?? 'None';
         }
+        return 'None';
     }
 
     public function committee_belonging()
     {
+        $names = $this->evidences
+            ->filter(fn($e) => $e->status === 'ACCEPTED' && $e->comittee)
+            ->map(fn($e) => $e->comittee->name)
+            ->unique()
+            ->filter();
 
-        // se obtienen los comités de las evidencias validadas
-        $comittees_names =  $this->evidences->map(function ($item, $key) {
-            if($item->status == 'ACCEPTED') {
-                return $item->comittee->name;
-            }
-        });
-
-        // se eliminan comités repetidos
-        $comittees_names = $comittees_names->unique();
-
-        // eliminamos los comités nulos
-        $comittees_names =  $comittees_names ->filter(function ($value, $key) {
-            return $value != null;
-        });
-
-        $comittee = "";
-
-        // por defecto, si el alumno es coordinador o secretario, se añade el comité asociado
-        if($this->hasRole('COORDINATOR')){
-            $comittee = $this->coordinator->comittee->name;
-        }elseif ($this->hasRole('SECRETARY')){
-            $comittee = $this->secretary->comittee->name;
+        if ($this->hasRole('COORDINATOR')) {
+            $names->push($this->coordinator->comittee->name);
+        } elseif ($this->hasRole('SECRETARY')) {
+            $names->push($this->secretary->comittee->name);
         }
 
-        $comittees_names->push($comittee);
-
-        $comittees_names = $comittees_names->implode(" | ");
-
-        return $comittees_names;
+        return $names->implode(' | ');
     }
 }

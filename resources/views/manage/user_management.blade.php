@@ -5,7 +5,7 @@
 @section('title-icon', 'nav-icon fas fa-cogs')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
     @if(Auth::user()->hasRole('PRESIDENT'))
         <li class="breadcrumb-item"><a href="{{route('president.user.list',$instance)}}">Gestionar alumnos</a></li>
     @else

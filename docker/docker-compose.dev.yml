@@ -1,0 +1,50 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      args:
+        USER_ID: ${UID}
+        GROUP_ID: ${GID}
+    container_name: evidentia_app_container
+    user: "${UID}:${GID}"
+    volumes:
+      - ../:/var/www/html
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    depends_on:
+      - mysql
+      - redis
+      - mailhog
+    env_file:
+      - ../.env
+    entrypoint: ["sh", "/var/www/html/docker/entrypoint.dev.sh"]
+
+
+  mysql:
+    image: mysql:8
+    container_name: evidentia_mysql_container
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    ports:
+      - "${DB_FORWARD_PORT:-3306}:3306"
+    volumes:
+      - db_data_dev:/var/lib/mysql
+
+  redis:
+    image: redis:7
+    container_name: evidentia_redis_container
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: evidentia_mailhog_container
+    restart: unless-stopped
+    ports:
+      - "8025:8025"
+
+volumes:
+  db_data_dev:

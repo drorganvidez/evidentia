@@ -18,10 +18,9 @@ class SuggestionsMailboxController extends Controller
     public function suggestionsmailbox()
     {
 
-        $instance = \Instantiation::instance();
-        $route = route('suggestionsmailbox_p',$instance);
+        $route = route('suggestionsmailbox_p');
 
-        return view('suggestionsmailbox',['instance' => $instance, 'route' => $route]);
+        return view('suggestionsmailbox',['route' => $route]);
     }
 
     public function suggestionsmailbox_p(Request $request)
@@ -35,8 +34,8 @@ class SuggestionsMailboxController extends Controller
         $subject_form = $request->input('subject');
         $comment = $request->input('comment');
 
-        Mail::to('evidentia.cloud@gmail.com')->send(new SuggestionsMailbox($subject_form,$comment));
+        Mail::to('drorganvidez@us.es')->send(new SuggestionsMailbox($subject_form,$comment));
 
-        return redirect()->route('suggestionsmailbox',\Instantiation::instance())->with('success',"Mensaje enviado con éxito. ¡Muchas gracias!");
+        return redirect()->route('suggestionsmailbox')->with('success',"Mensaje enviado con éxito. ¡Muchas gracias!");
     }
 }

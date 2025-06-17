@@ -43,7 +43,7 @@
 <div class="login-box">
 
     <div class="login-logo">
-        <a href="{{route('instances.home')}}"><img width="200px" src="{{asset('dist/img/logo_light.svg')}}"></a>
+        <a href="/"><img width="200px" src="{{asset('dist/img/logo_light.svg')}}"></a>
     </div>
 
     @yield('content')
@@ -51,8 +51,7 @@
     <div class="lockscreen-footer text-center" style="font-size: 10px">
         <a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU/GPL 3.0</a> ·
         <a href="https://github.com/drorganvidez/evidentia">Repositorio en GitHub</a> ·
-        <a data-toggle="modal" data-target="#modal-default" href="#">Acerca de</a> ·
-        <a href="{{route('admin.login')}}">Administración</a>
+        <a data-toggle="modal" data-target="#modal-default" href="#">Acerca de</a>
         <br>
         Hecho con <i class="fas fa-heart"></i>
     </div>
@@ -69,7 +68,7 @@
                 <div class="modal-body">
                     <img width="100px" src="{{asset('dist/img/logo_light.svg')}}">
                     <p class="text-muted">
-                        <b>evidentia.cloud</b> es un sistema de gestión automática de evidencias de trabajos de alumnos
+                        <b>evidentia.us.es</b> es un sistema de gestión automática de evidencias de trabajos de alumnos
                         y alumnas. Fue originalmente pensado para las Jornadas InnoSoft Days organizadas en el ámbito de la asignatura
                         Evolución y Gestión de la Configuración.
                     </p>

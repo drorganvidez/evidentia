@@ -3,27 +3,45 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\Committee;
+use App\Models\MeetingMinutes;
 
 class Meeting extends Model
 {
-    protected $table = "meeting";
+
+    protected $table = 'meetings';
 
     protected $fillable = [
-      'id','title','datetime','place','type','modality','hours'
+        'title',
+        'datetime',
+        'place',
+        'type',
+        'modality',
+        'hours',
     ];
 
+    /**
+     * The users attending the meeting.
+     */
     public function users()
     {
-        return $this->belongsToMany('App\Models\User');
+        return $this->belongsToMany(User::class);
     }
 
-    public function comittee()
+    /**
+     * The committee that organizes the meeting.
+     */
+    public function committee()
     {
-        return $this->belongsTo('App\Models\Comittee');
+        return $this->belongsTo(Committee::class);
     }
 
-    public function meeting_minutes()
+    /**
+     * The minutes recorded for this meeting.
+     */
+    public function meetingMinutes()
     {
-        return $this->hasOne('App\Models\MeetingMinutes');
+        return $this->hasOne(MeetingMinutes::class);
     }
 }

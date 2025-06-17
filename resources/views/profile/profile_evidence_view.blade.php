@@ -4,7 +4,7 @@
 @section('title-icon', 'nav-icon fas fa-user')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
     <li class="breadcrumb-item"><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $user->id])}}">{{$user->surname}}, {{$user->name}}</a></li>
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection

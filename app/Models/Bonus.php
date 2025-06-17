@@ -3,21 +3,31 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\Committee;
 
 class Bonus extends Model
 {
+    protected $table = 'bonuses';
 
-    protected $table = "bonus";
+    protected $fillable = [
+        'reason',
+        'hours',
+    ];
 
-    protected $fillable = ["reason", "hours"];
-
+    /**
+     * The users that received the bonus.
+     */
     public function users()
     {
-        return $this->belongsToMany('App\Models\User');
+        return $this->belongsToMany(User::class);
     }
 
-    public function comittee()
+    /**
+     * The committee that granted the bonus.
+     */
+    public function committee()
     {
-        return $this->belongsTo('App\Models\Comittee');
+        return $this->belongsTo(Committee::class);
     }
 }

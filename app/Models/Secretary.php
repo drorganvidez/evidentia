@@ -3,38 +3,62 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Committee;
+use App\Models\User;
+use App\Models\DefaultList;
+use App\Models\MeetingRequest;
+use App\Models\SignatureSheet;
+use App\Models\MeetingMinutes;
 
 class Secretary extends Model
 {
-    protected $table = "secretaries";
+    protected $table = 'secretaries';
 
-    public function comittee()
+    /**
+     * The committee this secretary belongs to.
+     */
+    public function committee()
     {
-        return $this->belongsTo('App\Models\Comittee');
+        return $this->belongsTo(Committee::class);
     }
 
+    /**
+     * The user linked to this secretary.
+     */
     public function user()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo(User::class);
     }
 
-    public function default_lists()
+    /**
+     * Default lists created by this secretary.
+     */
+    public function defaultLists()
     {
-        return $this->hasMany('App\Models\DefaultList')->orderByDesc('created_at');
+        return $this->hasMany(DefaultList::class)->orderByDesc('created_at');
     }
 
-    public function meeting_requests()
+    /**
+     * Meeting requests initiated by this secretary.
+     */
+    public function meetingRequests()
     {
-        return $this->hasMany('App\Models\MeetingRequest')->orderByDesc('created_at');
+        return $this->hasMany(MeetingRequest::class)->orderByDesc('created_at');
     }
 
-    public function signature_sheets()
+    /**
+     * Signature sheets prepared by this secretary.
+     */
+    public function signatureSheets()
     {
-        return $this->hasMany('App\Models\SignatureSheet')->orderByDesc('created_at');
+        return $this->hasMany(SignatureSheet::class)->orderByDesc('created_at');
     }
 
-    public function meeting_minutes()
+    /**
+     * Meeting minutes recorded by this secretary.
+     */
+    public function meetingMinutes()
     {
-        return $this->hasMany('App\Models\MeetingMinutes')->orderByDesc('updated_at');
+        return $this->hasMany(MeetingMinutes::class)->orderByDesc('updated_at');
     }
 }

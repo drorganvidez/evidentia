@@ -2,7 +2,7 @@
     @if(Request::is('admin') || Request::is('admin/*'))
         <a href="{{ route($route) }}"
     @else
-        <a href="{{ route($route,['instance' => \Instantiation::instance()]) }}"
+        <a href="{{ route($route) }}"
     @endif
 
 

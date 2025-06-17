@@ -1,34 +1,22 @@
 <?php
-
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CheckRoles
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
-     */
-    public function handle($request, Closure $next, $roles)
+    public function handle(Request $request, Closure $next, ...$roles)
     {
+        $user = Auth::user();
+        if (!$user) return redirect()->route('login');
 
-        $roles = explode('|', $roles);
-
-        foreach(Auth::user()->roles as $rol)
-        {
-            if (in_array($rol->rol, $roles))
-            {
+        foreach ($user->roles as $rol) {
+            if (in_array($rol->rol, $roles)) {
                 return $next($request);
             }
         }
-
-        $instance = \Instantiation::instance();
-        return redirect()->route('home',$instance);
-
+        return redirect()->route('home');
     }
 }

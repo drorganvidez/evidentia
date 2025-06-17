@@ -3,20 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Committee;
+use App\Models\User;
 
 class Coordinator extends Model
 {
+    protected $table = 'coordinators';
 
-    protected $table = "coordinators";
-
-    public function comittee()
+    public function committee()
     {
-        return $this->belongsTo('App\Models\Comittee','comittee_id');
+        return $this->belongsTo(Committee::class, 'committee_id');
     }
 
     public function user()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo(User::class);
     }
-
 }

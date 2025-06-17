@@ -85,7 +85,7 @@
                             <h5>Ups...</h5>
 
                             <p>Parece que no has rellenado este apartado. ¡No lo olvides! Indica con detalle tu nivel
-                                de implicación en las jornadas desde <a href="{{route('profile.view',\Instantiation::instance())}}">Mi perfil</a></p>
+                                de implicación en las jornadas desde <a href="{{route('profile.view')}}">Mi perfil</a></p>
                         </div>
 
                     @endif

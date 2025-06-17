@@ -3,21 +3,32 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\Secretary;
 
 class DefaultList extends Model
 {
+    protected $table = 'default_lists';
 
-    protected $table = "defaultlist";
+    protected $fillable = [
+        'id',
+        'name',
+        'secretary_id',
+    ];
 
-    protected $fillable = ['id','name','secretary_id'];
-
+    /**
+     * The users that belong to this default list.
+     */
     public function users()
     {
-        return $this->belongsToMany('App\Models\User');
+        return $this->belongsToMany(User::class);
     }
 
+    /**
+     * The secretary associated with this default list.
+     */
     public function secretary()
     {
-        return $this->belongsTo('App\Models\Secretary');
+        return $this->belongsTo(Secretary::class);
     }
 }

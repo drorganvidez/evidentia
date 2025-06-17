@@ -1,0 +1,33 @@
+FROM php:8.2-fpm
+
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+
+RUN apt-get update && apt-get install -y \
+    zip unzip git curl libpng-dev libonig-dev libxml2-dev libzip-dev libjpeg-dev libfreetype6-dev \
+    nodejs npm \
+    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl gd \
+    && pecl install redis && docker-php-ext-enable redis
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+RUN groupadd -g ${GROUP_ID} laravelgroup && \
+    useradd -u ${USER_ID} -g laravelgroup -m laraveluser && \
+    mkdir -p /var/www/html && \
+    chown -R laraveluser:laravelgroup /var/www/html
+
+USER laraveluser
+
+WORKDIR /var/www/html
+
+# Copiar solo package.json y package-lock.json con permisos correctos
+COPY --chown=laraveluser:laravelgroup package*.json ./
+
+RUN npm install
+
+# Copiar el resto del código con permisos correctos
+COPY --chown=laraveluser:laravelgroup . .
+
+RUN npm run build
+
+CMD ["php-fpm"]

@@ -23,21 +23,19 @@ class ProfileController extends Controller
 
     public function view()
     {
-        $instance = \Instantiation::instance();
 
-        $route_upload_info = route('profile.upload.info',$instance);
-        $route_upload_biography = route('profile.upload.biography',$instance);
-        $route_upload_pass = route('profile.upload.pass',$instance);
+        $route_upload_info = route('profile.upload.info');
+        $route_upload_biography = route('profile.upload.biography');
+        $route_upload_pass = route('profile.upload.pass');
 
         return view('profile.view',
-            ['instance' => $instance, 'route_upload_info' => $route_upload_info,
+            ['route_upload_info' => $route_upload_info,
                 'route_upload_biography' => $route_upload_biography,
                 'route_upload_pass' => $route_upload_pass]);
     }
 
     public function upload_info(Request $request)
     {
-        $instance = \Instantiation::instance();
 
         $user = Auth::user();
 
@@ -104,7 +102,7 @@ class ProfileController extends Controller
         }
 
 
-        return redirect()->route('profile.view',$instance)->with('success', 'Datos personales editados con éxito.');
+        return redirect()->route('profile.view')->with('success', 'Datos personales editados con éxito.');
 
     }
 

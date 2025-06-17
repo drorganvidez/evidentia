@@ -3,25 +3,33 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\MeetingMinutes;
+use App\Models\Agreement;
 
 class Point extends Model
 {
-    protected $table = "points";
+    protected $table = 'points';
 
     protected $fillable = [
         'meeting_minutes_id',
         'title',
         'duration',
-        'description'
+        'description',
     ];
 
-    public function meeting_minutes()
+    /**
+     * Get the meeting minutes this point belongs to.
+     */
+    public function meetingMinutes()
     {
-        return $this->belongsTo('App\Models\MeetingMinutes');
+        return $this->belongsTo(MeetingMinutes::class);
     }
 
+    /**
+     * Get the agreements associated with this point.
+     */
     public function agreements()
     {
-        return $this->hasMany('App\Models\Agreement');
+        return $this->hasMany(Agreement::class);
     }
 }

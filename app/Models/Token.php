@@ -2,41 +2,34 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
+use App\Models\User;
 
 class Token extends Model
 {
-    protected $table = "tokens";
+    protected $table = 'tokens';
 
-    protected $fillable = ["token", "used", "valid_until_timestamp", "user_id"];
+    protected $fillable = [
+        'token',
+        'used',
+        'valid_until_timestamp',
+        'user_id',
+    ];
 
-    public function is_valid()
+    /**
+     * Determine if the token is valid (not used and not expired).
+     */
+    public function isValid(): bool
     {
-        /**
-         *  Un token es válido si:
-         *      1. No ha sido usado
-         *      2. Aún no ha expirado
-         */
-
-
-        // 1. No ha sido usado
-        if(!$this->used){
-
-            // 2. Aún no ha expirado
-            $now = Carbon::now();
-            $datetime = $this->valid_until_timestamp;
-
-            if($now->lt($datetime)){
-
-                return true;
-
-            }
-
-        }
-
-
-        return false;
+        return !$this->used && Carbon::now()->lt($this->valid_until_timestamp);
     }
 
+    /**
+     * The user that owns this token.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

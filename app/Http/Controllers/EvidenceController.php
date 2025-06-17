@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Middleware\CheckRoles;
 
 class EvidenceController extends Controller
 {
@@ -24,27 +25,25 @@ class EvidenceController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('checkroles:PRESIDENT|COORDINATOR|REGISTER_COORDINATOR|SECRETARY|STUDENT');
+        $this->middleware(CheckRoles::class . ':PRESIDENT,COORDINATOR,REGISTER_COORDINATOR,SECRETARY,STUDENT');
     }
 
-    public function view($instance,$id)
+    public function view($id)
     {
-        $instance = \Instantiation::instance();
         $evidence = Evidence::find($id);
 
         return view('evidence.view',
-            ['instance' => $instance, 'evidence' => $evidence]);
+            ['evidence' => $evidence]);
     }
 
     public function list()
     {
         $evidences = Evidence::where(['user_id' => Auth::id(),'last' => true])->get();
-        $instance = \Instantiation::instance();
 
         $evidences = $evidences->reverse();
 
         return view('evidence.list',
-            ['instance' => $instance, 'evidences' => $evidences]);
+            ['evidences' => $evidences]);
     }
 
     /****************************************************************************

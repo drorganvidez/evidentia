@@ -4,37 +4,66 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Diary;
+use App\Models\Committee;
+use App\Models\Secretary;
+use App\Models\SignatureSheet;
 
 class MeetingRequest extends Model
 {
-    protected $table = "meeting_requests";
+    protected $table = 'meeting_requests';
 
     protected $fillable = [
-      'meeting_id','datetime','place','type','modality', 'comittee_id', 'secretary_id', 'title'
+        'meeting_id',
+        'datetime',
+        'place',
+        'type',
+        'modality',
+        'committee_id',
+        'secretary_id',
+        'title',
     ];
 
+    /**
+     * Get the diary associated with this meeting request.
+     */
     public function diary()
     {
-        return $this->hasOne('App\Models\Diary');
+        return $this->hasOne(Diary::class);
     }
 
-    public function comittee()
+    /**
+     * Get the committee that owns this meeting request.
+     */
+    public function committee()
     {
-        return $this->belongsTo('App\Models\Comittee');
+        return $this->belongsTo(Committee::class);
     }
 
+    /**
+     * Get the secretary who made the request.
+     */
     public function secretary()
     {
-        return $this->belongsTo('App\Models\Secretary');
+        return $this->belongsTo(Secretary::class);
     }
 
-    public function signature_sheet()
+    /**
+     * Get the signature sheet for this meeting request.
+     */
+    public function signatureSheet()
     {
-        return $this->hasOne('App\Models\SignatureSheet');
+        return $this->hasOne(SignatureSheet::class);
     }
 
-    public static function next_meeting_requests() {
-        return MeetingRequest::where('datetime', '>=', Carbon::now())->orderBy('datetime', 'asc')->get()->take(7);
+    /**
+     * Get the next 7 upcoming meeting requests.
+     */
+    public static function nextMeetingRequests()
+    {
+        return static::where('datetime', '>=', Carbon::now())
+            ->orderBy('datetime', 'asc')
+            ->limit(7)
+            ->get();
     }
-
 }

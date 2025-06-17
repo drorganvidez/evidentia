@@ -9,7 +9,7 @@
 @section('title-icon', 'fas fa-stream')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
     <li class="breadcrumb-item"><a href="{{route('secretary.defaultlist.list',['instance' => $instance])}}">Gestionar listas</a></li>
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection

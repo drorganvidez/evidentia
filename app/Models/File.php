@@ -6,42 +6,39 @@ use Illuminate\Database\Eloquent\Model;
 
 class File extends Model
 {
-
-    protected $table = "files";
+    protected $table = 'files';
 
     protected $fillable = [
-        'name', 'type', 'route', 'size'
+        'name',
+        'type',
+        'route',
+        'size',
     ];
 
-    /*public function proof()
+    /**
+     * Get the size of the file in human-readable format.
+     */
+    public function sizeForHuman(): string
     {
-        return $this->hasOne('App\Models\Proof');
-    }*/
+        $bytes = $this->size;
 
-    public function sizeForHuman()
-    {
-        $conversion = $this->size;
-        $GB = 1000000000;
-        $MB = 1000000;
-        $KB = 1000;
+        $GB = 1_000_000_000;
+        $MB = 1_000_000;
+        $KB = 1_000;
 
-        if($conversion > $GB)
-        {
-            return round($conversion/$GB,2)." GB";
+        if ($bytes >= $GB) {
+            return round($bytes / $GB, 2) . ' GB';
         }
 
-        if($conversion > $MB)
-        {
-            return round($conversion/$MB,2)." MB";
+        if ($bytes >= $MB) {
+            return round($bytes / $MB, 2) . ' MB';
         }
 
-        if($conversion > $KB)
-        {
-            return round($conversion/$KB,2)." KB";
+        if ($bytes >= $KB) {
+            return round($bytes / $KB, 2) . ' KB';
         }
 
-        return $conversion." KB";
-
+        return $bytes . ' B';
     }
 
 }

@@ -11,12 +11,12 @@
 
     <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-            <a href="{{ route('instance.logout',['instance' => \Instantiation::instance()]) }}"  class="nav-link"
+            <a href="{{ route('instance.logout') }}"  class="nav-link"
                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="nav-icon fas fa-sign-out-alt"></i> Salir
             </a>
         </li>
-        <form id="logout-form" action="{{ route('instance.logout',['instance' => \Instantiation::instance()]) }}" method="POST" style="display: none;">
+        <form id="logout-form" action="{{ route('instance.logout') }}" method="POST" style="display: none;">
             @csrf
         </form>
     </ul>

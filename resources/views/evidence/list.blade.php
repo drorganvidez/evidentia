@@ -5,7 +5,7 @@
 @section('title-icon', 'fas fa-id-badge')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
 
@@ -17,17 +17,17 @@
             <div class="row mb-3">
                 <p style="padding: 5px 50px 0px 15px">Exportar tabla:</p>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('evidence.list.export',['instance' => $instance, 'ext' => 'xlsx'])}}"
+                    <a href="{{route('evidence.list.export',['ext' => 'xlsx'])}}"
                        class="btn btn-info btn-block" role="button">
                         XLSX</a>
                 </div>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('evidence.list.export',['instance' => $instance, 'ext' => 'csv'])}}"
+                    <a href="{{route('evidence.list.export',['ext' => 'csv'])}}"
                        class="btn btn-info btn-block" role="button">
                         CSV</a>
                 </div>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('evidence.list.export',['instance' => $instance, 'ext' => 'pdf'])}}"
+                    <a href="{{route('evidence.list.export',['ext' => 'pdf'])}}"
                        class="btn btn-info btn-block" role="button">
                         PDF</a>
                 </div>
@@ -54,7 +54,7 @@
                         @foreach($evidences as $evidence)
                             <tr>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$evidence->id}}</td>
-                                <td><a href="{{route('evidence.view',['instance' => $instance, 'id' => $evidence->id])}}">{{$evidence->title}}</a></td>
+                                <td><a href="{{route('evidence.view',['id' => $evidence->id])}}">{{$evidence->title}}</a></td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$evidence->hours}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
                                     <x-evidencecomittee :evidence="$evidence"/>
@@ -97,11 +97,11 @@
 
                             <i class="fas fa-stopwatch"></i>
 
-                            {{\Carbon\Carbon::parse(Config::upload_evidences_timestamp())->format('d/m/Y')}}
+                            {{\Carbon\Carbon::parse(\App\Models\Configuration::first()->upload_evidences_timestamp)->format('d/m/Y')}}
 
                             a las
 
-                            {{\Carbon\Carbon::parse(Config::upload_evidences_timestamp())->format('H:i')}}
+                            {{\Carbon\Carbon::parse(\App\Models\Configuration::first()->upload_evidences_timestamp)->format('H:i')}}
 
                         </h4>
 
@@ -174,7 +174,7 @@
         <script>
 
             $(document).ready(function(){
-                countdown("{{\Carbon\Carbon::create(\Carbon\Carbon::now())->diffInSeconds(Config::upload_evidences_timestamp(),false)}}");
+                countdown("{{\Carbon\Carbon::create(\Carbon\Carbon::now())->diffInSeconds(\App\Models\Configuration::first()->upload_evidences_timestamp,false)}}");
             });
 
         </script>

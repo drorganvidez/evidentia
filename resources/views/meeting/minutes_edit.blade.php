@@ -5,7 +5,7 @@
 @section('title-icon', 'fas fa-scroll')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/{{$instance}}">Home</a></li>
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
     <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage',\Instantiation::instance())}}">Gestionar reuniones</a></li>
     <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage.minutes.list',\Instantiation::instance())}}">Mis actas</a></li>
     <li class="breadcrumb-item active">@yield('title')</li>

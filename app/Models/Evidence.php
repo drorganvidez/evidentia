@@ -3,144 +3,151 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Proof;
+use App\Models\User;
+use App\Models\Committee;
+use App\Models\ReasonRejection;
 
 class Evidence extends Model
 {
-
-    protected $table="evidences";
+    protected $table = 'evidences';
 
     protected $fillable = [
-        'id', 'title', 'description', 'hours', 'user_id', 'comittee_id', 'points_to', 'status', 'stamp', 'rand'
+        'title',
+        'description',
+        'hours',
+        'user_id',
+        'committee_id',
+        'points_to',
+        'status',
+        'stamp',
+        'rand',
+        'last'
     ];
 
+    // Relaciones
     public function proofs()
     {
-        return $this->hasMany('App\Models\Proof');
+        return $this->hasMany(Proof::class);
     }
 
     public function user()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo(User::class);
     }
 
-    public function comittee()
+    public function committee()
     {
-        return $this->belongsTo('App\Models\Comittee');
+        return $this->belongsTo(Committee::class);
     }
 
-    public function reason_rejection()
+    public function reasonRejection()
     {
-        return $this->hasOne('App\Models\ReasonRejection');
+        return $this->hasOne(ReasonRejection::class);
     }
 
-    /**
-     * @return mixed
-     * Evidence Flow
-     */
-
-    // lista las evidencias ANTERIORES a esta
-    public function previous_evidences()
+    // Evidencias anteriores (recursivo)
+    public function previousEvidences()
     {
-        $evidence_previous = Evidence::find($this->points_to);
+        $previous = static::find($this->points_to);
 
-        // si es null, es que el flujo solo contiene una evidencia
-        if($evidence_previous == null){
-            $evidences = collect();
-            $evidences->push($this);
-            return $evidences;
-        }else{
-            return $this->previous_evidences_p($evidence_previous,collect());
+        if (!$previous) {
+            return collect([$this]);
         }
 
+        return $this->previousEvidencesRecursive($previous, collect());
     }
 
-    private function previous_evidences_p($evidence,$collection)
-    {
-
-        $collection->push($evidence);
-
-        if($evidence->points_to == null){
-            return $collection;
-        }else{
-            $evidence_previous = Evidence::find($evidence->points_to);
-            return $this->previous_evidences_p($evidence_previous,$collection);
-        }
-    }
-
-    // lista las evidendes POSTERIORES a esta
-    public function later_evidences()
-    {
-        $points_me = Evidence::where('points_to',$this->id)->first();
-
-        // si es null, es que el flujo solo contiene una evidencia
-        if($points_me == null){
-            $evidences = collect();
-            $evidences->push($this);
-            return $evidences;
-        }else{
-            return $this->later_evidences_p($points_me,collect());
-        }
-
-    }
-
-    private function later_evidences_p($evidence,$collection)
+    private function previousEvidencesRecursive($evidence, $collection)
     {
         $collection->push($evidence);
 
-        if($evidence->last)
+        if (is_null($evidence->points_to)) {
             return $collection;
-        else {
-            $points_me = Evidence::where('points_to',$evidence->id)->first();
-            return $this->later_evidences_p($points_me,$collection);
         }
+
+        $previous = static::find($evidence->points_to);
+        return $this->previousEvidencesRecursive($previous, $collection);
     }
 
-    // lista el flujo total de ediciones de evidencias, desde la primera edición a la última
-    public function flow_evidences(){
-        $previous_evidences = $this->previous_evidences();
-        $later_evidences = $this->later_evidences();
-        return $previous_evidences->concat($later_evidences)->push($this)->unique()->sortByDesc('created_at');
-    }
-
-    // obtiene la evidencia que va a la cabeza del flujo de ediciones
-    public function find_header_evidence()
+    // Evidencias posteriores (recursivo)
+    public function laterEvidences()
     {
-        return $this->find_header_evidence_p($this);
+        $next = static::where('points_to', $this->id)->first();
+
+        if (!$next) {
+            return collect([$this]);
+        }
+
+        return $this->laterEvidencesRecursive($next, collect());
     }
 
-    private function find_header_evidence_p($evidence)
+    private function laterEvidencesRecursive($evidence, $collection)
     {
-        if($evidence->last)
+        $collection->push($evidence);
+
+        if ($evidence->last ?? false) {
+            return $collection;
+        }
+
+        $next = static::where('points_to', $evidence->id)->first();
+        return $this->laterEvidencesRecursive($next, $collection);
+    }
+
+    // Flujo completo
+    public function flowEvidences()
+    {
+        return $this->previousEvidences()
+            ->concat([$this])
+            ->concat($this->laterEvidences())
+            ->unique()
+            ->sortByDesc('created_at');
+    }
+
+    // Encuentra la última del flujo
+    public function findHeaderEvidence()
+    {
+        return $this->findHeaderEvidenceRecursive($this);
+    }
+
+    private function findHeaderEvidenceRecursive($evidence)
+    {
+        if ($evidence->last ?? false) {
             return $evidence;
-        else {
-            $points_me = Evidence::where('points_to',$evidence->id)->first();
-            return $this->find_header_evidence_p($points_me);
         }
+
+        $next = static::where('points_to', $evidence->id)->first();
+        return $this->findHeaderEvidenceRecursive($next);
     }
 
-    public static function evidences_not_draft() {
-        return Evidence::where('status','!=', 'DRAFT')->orderByDesc('updated_at')->get();
-    }
-
-    public static function evidences_draft() {
-        return Evidence::where('status','=', 'DRAFT')->where('points_to','=',null)->orderByDesc('updated_at')->get();
-    }
-
-    public static function evidences_pending() {
-        return Evidence::where('status','=', 'PENDING')->orderByDesc('updated_at')->get();
-    }
-
-    public static function evidences_accepted() {
-        return Evidence::where('status','=', 'ACCEPTED')->orderByDesc('updated_at')->get();
-    }
-
-    public static function evidences_rejected() {
-        return Evidence::where('status','=', 'REJECTED')->orderByDesc('updated_at')->get();
-    }
-
-    public function integrity()
+    // Scopes estáticos
+    public static function evidencesNotDraft()
     {
-        return $this->stamp == \Stamp::get_stamp_evidence($this);
+        return static::where('status', '!=', 'DRAFT')->orderByDesc('updated_at')->get();
     }
 
+    public static function evidencesDraft()
+    {
+        return static::where('status', 'DRAFT')->whereNull('points_to')->orderByDesc('updated_at')->get();
+    }
+
+    public static function evidencesPending()
+    {
+        return static::where('status', 'PENDING')->orderByDesc('updated_at')->get();
+    }
+
+    public static function evidencesAccepted()
+    {
+        return static::where('status', 'ACCEPTED')->orderByDesc('updated_at')->get();
+    }
+
+    public static function evidencesRejected()
+    {
+        return static::where('status', 'REJECTED')->orderByDesc('updated_at')->get();
+    }
+
+    public function integrity(): bool
+    {
+        return $this->stamp === \Stamp::get_stamp_evidence($this);
+    }
 }
