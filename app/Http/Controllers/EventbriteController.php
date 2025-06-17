@@ -22,11 +22,11 @@ class EventbriteController extends Controller
 
     public function token()
     {
-        $instance = \Instantiation::instance();
+        
         $token = \Config::eventbrite_token();
         $route = route('registercoordinator.token.save', $instance);
 
-        return view('eventbrite.token', ['instance' => $instance, 'token' => $token, 'route' => $route]);
+        return view('eventbrite.token', ['token' => $token, 'route' => $route]);
     }
 
     private static function validate_token($token)
@@ -42,7 +42,7 @@ class EventbriteController extends Controller
 
     public function token_save(Request $request)
     {
-        $instance = \Instantiation::instance();
+        
 
         $request->validate([
             'token' => 'required|max:255',
@@ -67,7 +67,7 @@ class EventbriteController extends Controller
     public function event_load()
     {
 
-        $instance = \Instantiation::instance();
+        
 
         $token = \Config::eventbrite_token();
 
@@ -240,22 +240,22 @@ class EventbriteController extends Controller
 
     public function event_list()
     {
-        $instance = \Instantiation::instance();
+        
 
         $events = Event::all();
 
         return view('eventbrite.event_list',
-            ['instance' => $instance, 'events' => $events]);
+            ['events' => $events]);
     }
 
     public function attendee_list()
     {
-        $instance = \Instantiation::instance();
+        
 
         $attendees = Attendee::all();
 
         return view('eventbrite.attendee_list',
-            ['instance' => $instance, 'attendees' => $attendees]);
+            ['attendees' => $attendees]);
     }
 
     public function attendee_export()

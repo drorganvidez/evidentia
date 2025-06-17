@@ -16,17 +16,17 @@
             <div class="row mb-3">
                 <p style="padding: 5px 25px 0px 15px">Exportar tabla:</p>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('management.export',['instance' => $instance, 'ext' => 'xlsx'])}}"
+                    <a href="{{route('management.export',['ext' => 'xlsx'])}}"
                        class="btn btn-info btn-block" role="button">
                         XLSX</a>
                 </div>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('management.export',['instance' => $instance, 'ext' => 'csv'])}}"
+                    <a href="{{route('management.export',['ext' => 'csv'])}}"
                        class="btn btn-info btn-block" role="button">
                         CSV</a>
                 </div>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('management.export',['instance' => $instance, 'ext' => 'pdf'])}}"
+                    <a href="{{route('management.export',['ext' => 'pdf'])}}"
                        class="btn btn-info btn-block" role="button">
                         PDF</a>
                 </div>
@@ -54,13 +54,13 @@
                             <tr>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$evidence->id}}</td>
                                 <td>
-                                    <a href="{{route('profiles.view.evidence',['instance' => $instance, 'id_user' => $evidence->user->id, 'id_evidence' => $evidence->id])}}">{{$evidence->title}}</a>
+                                    <a href="{{route('profiles.view.evidence',['id_user' => $evidence->user->id, 'id_evidence' => $evidence->id])}}">{{$evidence->title}}</a>
                                 </td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><a
-                                        href="{{route('profiles.view',['instance' => $instance, 'id' => $evidence->user->id])}}">{{$evidence->user->surname}}</a>
+                                        href="{{route('profiles.view',['id' => $evidence->user->id])}}">{{$evidence->user->surname}}</a>
                                 </td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><a
-                                        href="{{route('profiles.view',['instance' => $instance, 'id' => $evidence->user->id])}}">{{$evidence->user->name}}</a>
+                                        href="{{route('profiles.view',['id' => $evidence->user->id])}}">{{$evidence->user->name}}</a>
                                 </td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$evidence->hours}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">

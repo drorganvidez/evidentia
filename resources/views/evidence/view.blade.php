@@ -49,7 +49,7 @@
 
                             @if($evidence->status == 'DRAFT' and !\Carbon\Carbon::now()->gt(\\App\Models\Configuration::first()->upload_evidences_timestamp))
                                 <a class="btn btn-info btn-sm"
-                                   href="{{route('evidence.edit',['instance' => $instance, 'id' => $evidence->id])}}">
+                                   href="{{route('evidence.edit',['id' => $evidence->id])}}">
                                     <i class="fas fa-pencil-alt">
                                     </i>
                                 </a>
@@ -96,7 +96,7 @@
                         @foreach($evidence->proofs as $proof)
 
                             <div class="col-auto mt-3">
-                                <a style="margin-bottom: 10px" class="btn btn-default btn-sm" href="{{route('proof.download',['instance' => $instance, 'id' => $proof->id])}}">
+                                <a style="margin-bottom: 10px" class="btn btn-default btn-sm" href="{{route('proof.download',['id' => $proof->id])}}">
                                     <i class="fas fa-download"></i>
                                     {{$proof->file->name}} ({{$proof->file->sizeForHuman()}})
                                 </a>

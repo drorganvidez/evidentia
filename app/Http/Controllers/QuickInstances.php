@@ -20,12 +20,12 @@ class QuickInstances extends Controller
 
     public function list()
     {
-        $instance = \Instantiation::instance();
+        
         \Instantiation::set_default_connection();
         $instances = Instance::orderBy('created_at', 'desc')->get();
         $route = route('lecture.instances.save',$instance);
 
-        return view('manage.instances', ['instances' => $instances, 'instance' => $instance, 'route' => $route ]);
+        return view('manage.instances', ['instances' => $instances, 'route' => $route ]);
     }
 
     public function save(Request $request)

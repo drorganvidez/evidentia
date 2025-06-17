@@ -91,7 +91,7 @@
                             <div class="form-group" id="comittee" style="display: none">
                                 <label>Selecciona el comité asociado</label>
                                 <select name="comittee" class="form-control select2bs4" style="width: 100%;">
-                                    @foreach($comittees as $comittee)
+                                    @foreach($committees as $comittee)
                                         <option
                                             @if($comittee->name == $user->associate_comittee())
                                             selected

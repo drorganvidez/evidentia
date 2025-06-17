@@ -44,8 +44,8 @@
                                 @foreach($evidences as $evidence)
                                     <tr>
                                         <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$evidence->id}}</td>
-                                        <td><a  href="{{route('profiles.view.evidence',['instance' => $instance, 'id_user' => $evidence->user->id, 'id_evidence' => $evidence->id])}}">{{$evidence->title}}</a></td>
-                                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $evidence->user->id])}}">{{$evidence->user->surname}}, {{$evidence->user->name}}</a></td>
+                                        <td><a  href="{{route('profiles.view.evidence',['id_user' => $evidence->user->id, 'id_evidence' => $evidence->id])}}">{{$evidence->title}}</a></td>
+                                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><a  href="{{route('profiles.view',['id' => $evidence->user->id])}}">{{$evidence->user->surname}}, {{$evidence->user->name}}</a></td>
                                         <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"> {{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }} </td>
                                         <td class="text-center">
                                             @if($evidence->integrity())

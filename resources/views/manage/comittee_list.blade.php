@@ -33,7 +33,7 @@
                     </thead>
                     <tbody>
 
-                    @foreach($comittees as $comittee)
+                    @foreach($committees as $comittee)
                         <tr>
                             <td class="align-middle text-center d-none d-sm-none d-md-table-cell d-lg-table-cell"><span id="icon_prev_{{$comittee->id}}" style="font-size: 20px">{!! $comittee->icon ?? '' !!}</span></td>
                             <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><input name="icon_{{$comittee->id}}" id="icon_{{$comittee->id}}" oninput="prev({{$comittee->id}})" type="text" class="form-control" placeholder="" value="{{$comittee->icon}}" autocomplete="icon" autofocus=""></td>
@@ -107,7 +107,7 @@
     </div>
 
     <div class="container">
-        @foreach($comittees as $comittee)
+        @foreach($committees as $comittee)
         <div class="modal fade" id="modal-{{$comittee->id}}">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content" style="overflow: visible">

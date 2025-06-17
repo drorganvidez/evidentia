@@ -40,7 +40,7 @@ class MeetingSecretaryController extends Controller
 
     public function manage()
     {
-        $instance = \Instantiation::instance();
+        
 
         return view('meeting.manage', ['instance' => $instance]);
     }
@@ -51,7 +51,7 @@ class MeetingSecretaryController extends Controller
     public function request_list()
     {
 
-        $instance = \Instantiation::instance();
+        
 
         $meeting_requests = Auth::user()->secretary->meeting_requests;
 
@@ -60,14 +60,14 @@ class MeetingSecretaryController extends Controller
 
     public function request_create()
     {
-        $instance = \Instantiation::instance();
+        
 
         return view('meeting.request_createandedit', ['instance' => $instance]);
     }
 
     public function request_new(Request $request_http)
     {
-        $instance = \Instantiation::instance();
+        
 
         $validator = Validator::make($request_http->all(), [
             'title' => 'required|min:5|max:255',
@@ -130,7 +130,7 @@ class MeetingSecretaryController extends Controller
 
     public function request_edit($instance, $id)
     {
-        $instance = \Instantiation::instance();
+        
 
         $meeting_request = MeetingRequest::findOrFail($id);
 
@@ -150,7 +150,7 @@ class MeetingSecretaryController extends Controller
 
     public function request_save(Request $request_http)
     {
-        $instance = \Instantiation::instance();
+        
 
         $validator = Validator::make($request_http->all(), [
             'title' => 'required|min:5|max:255',
@@ -235,7 +235,7 @@ class MeetingSecretaryController extends Controller
     {
         $meeting_request = MeetingRequest::where('id', $request->input('meeting_request_id'))->first();
 
-        $instance = \Instantiation::instance();
+        
 
         // borramos el pdf del acta antigua
         Storage::delete(\Instantiation::instance() . '/meeting_requests/meeting_request_' . $meeting_request->id . '.pdf');
@@ -258,7 +258,7 @@ class MeetingSecretaryController extends Controller
      */
     public function signaturesheet_list()
     {
-        $instance = \Instantiation::instance();
+        
 
         $signature_sheets = Auth::user()->secretary->signature_sheets;
 
@@ -267,7 +267,7 @@ class MeetingSecretaryController extends Controller
 
     public function signaturesheet_create()
     {
-        $instance = \Instantiation::instance();
+        
 
         $available_meeting_requests = Auth::user()->secretary->meeting_requests;
 
@@ -275,12 +275,12 @@ class MeetingSecretaryController extends Controller
             return $value->signature_sheet == null;
         });
 
-        return view('meeting.signaturesheet_create', ['instance' => $instance, 'available_meeting_requests' => $available_meeting_requests]);
+        return view('meeting.signaturesheet_create', ['available_meeting_requests' => $available_meeting_requests]);
     }
 
     public function signaturesheet_new(Request $request)
     {
-        $instance = \Instantiation::instance();
+        
 
         $request->validate([
             'title' => 'required|min:5|max:255'
@@ -321,7 +321,7 @@ class MeetingSecretaryController extends Controller
 
     public function signaturesheet_edit($instance, $id)
     {
-        $instance = \Instantiation::instance();
+        
 
         $signature_sheet = SignatureSheet::findOrFail($id);
 
@@ -341,7 +341,7 @@ class MeetingSecretaryController extends Controller
 
     public function signaturesheet_save(Request $request)
     {
-        $instance = \Instantiation::instance();
+        
 
         $signature_sheet = SignatureSheet::findOrFail($request->input('_id'));
 
@@ -372,7 +372,7 @@ class MeetingSecretaryController extends Controller
     {
         $signature_sheet = SignatureSheet::where('id', $request->input('signature_sheet_id'))->first();
 
-        $instance = \Instantiation::instance();
+        
 
         // eliminamos la entidad en sí
         $signature_sheet->delete();
@@ -385,7 +385,7 @@ class MeetingSecretaryController extends Controller
      */
     public function minutes_list()
     {
-        $instance = \Instantiation::instance();
+        
 
         $meeting_minutes = Auth::user()->secretary->meeting_minutes;
 
@@ -394,14 +394,14 @@ class MeetingSecretaryController extends Controller
 
     public function minutes_create()
     {
-        $instance = \Instantiation::instance();
+        
 
         return redirect()->route('secretary.meeting.manage.minutes.create.step1', ['instance' => $instance]);
     }
 
     public function minutes_create_step1()
     {
-        $instance = \Instantiation::instance();
+        
 
         $meeting_requests = Auth::user()->secretary->meeting_requests;
 
@@ -413,7 +413,7 @@ class MeetingSecretaryController extends Controller
 
     public function minutes_create_step1_p(Request $request)
     {
-        $instance = \Instantiation::instance();
+        
 
         $meeting_request = MeetingRequest::find($request->input('meeting_request'));
 
@@ -425,7 +425,7 @@ class MeetingSecretaryController extends Controller
 
     public function minutes_create_step2(Request $request)
     {
-        $instance = \Instantiation::instance();
+        
 
         $meeting_request = MeetingRequest::find($request->input('meeting_request'));
 
@@ -440,7 +440,7 @@ class MeetingSecretaryController extends Controller
 
     public function minutes_create_step2_p(Request $request)
     {
-        $instance = \Instantiation::instance();
+        
 
         $meeting_request_input = $request->input('meeting_request');
         $signature_sheet_input = $request->input('signature_sheet');
@@ -467,7 +467,7 @@ class MeetingSecretaryController extends Controller
 
     public function minutes_create_step3(Request $request)
     {
-        $instance = \Instantiation::instance();
+        
 
         $meeting_request = MeetingRequest::find($request->input('meeting_request'));
         $signature_sheet = SignatureSheet::find($request->input('signature_sheet'));
@@ -487,7 +487,7 @@ class MeetingSecretaryController extends Controller
     public function minutes_create_step3_p(Request $request)
     {
 
-        $instance = \Instantiation::instance();
+        
         $minutes = $request->input('minutes');
 
         $validator = Validator::make($request->all(), [
@@ -587,7 +587,7 @@ class MeetingSecretaryController extends Controller
 
     public function minutes_edit($instance, $id)
     {
-        $instance = \Instantiation::instance();
+        
 
         $meeting_minutes = MeetingMinutes::findOrFail($id);
 
@@ -633,7 +633,7 @@ class MeetingSecretaryController extends Controller
     public function minutes_save(Request $request)
     {
 
-        $instance = \Instantiation::instance();
+        
         $minutes = $request->input('minutes');
 
         $validator = Validator::make($request->all(), [
@@ -752,7 +752,7 @@ class MeetingSecretaryController extends Controller
     {
         $meeting_minutes = MeetingMinutes::where('id', $request->input('meeting_minutes_id'))->first();
 
-        $instance = \Instantiation::instance();
+        
 
         // borramos el pdf del acta antigua
         Storage::delete(\Instantiation::instance() . '/meeting_minutes/meeting_minutes_' . $meeting_minutes->id . '.pdf');
@@ -818,25 +818,25 @@ class MeetingSecretaryController extends Controller
     /*
     public function list()
     {
-        $instance = \Instantiation::instance();
+        
 
         $meetings = Auth::user()->secretary->comittee->meetings()->get();
 
         return view('meeting.list',
-            ['instance' => $instance, 'meetings' => $meetings]);
+            ['meetings' => $meetings]);
     }
     */
 
     /*
     public function create()
     {
-        $instance = \Instantiation::instance();
+        
 
         $users = User::orderBy('surname')->get();
         $defaultlists = Auth::user()->secretary->default_lists;
 
         return view('meeting.createandedit',
-            ['instance' => $instance, 'users' => $users, 'defaultlists' => $defaultlists, 'route' => route('secretary.meeting.new',$instance)]);
+            ['users' => $users, 'defaultlists' => $defaultlists, 'route' => route('secretary.meeting.new',$instance)]);
     }
     */
 
@@ -844,7 +844,7 @@ class MeetingSecretaryController extends Controller
     public function new(Request $request)
     {
 
-        $instance = \Instantiation::instance();
+        
         $minutes = $request->input('minutes');
 
         $validatedData = $request->validate([
@@ -894,7 +894,7 @@ class MeetingSecretaryController extends Controller
         $defaultlists = Auth::user()->secretary->default_lists;
 
         return view('meeting.createandedit',
-            ['instance' => $instance, 'meeting' => $meeting, 'edit' => true, 'users' => $users, 'defaultlists' => $defaultlists, 'route' => route('secretary.meeting.save',$instance)]);
+            ['meeting' => $meeting, 'edit' => true, 'users' => $users, 'defaultlists' => $defaultlists, 'route' => route('secretary.meeting.save',$instance)]);
     }
     */
 
@@ -907,7 +907,7 @@ class MeetingSecretaryController extends Controller
     public function save(Request $request)
     {
 
-        $instance = \Instantiation::instance();
+        
         $minutes = $request->input('minutes');
 
         $validatedData = $request->validate([
@@ -955,7 +955,7 @@ class MeetingSecretaryController extends Controller
     public function remove(Request $request)
     {
         $meeting = Meeting::find($request->_id);
-        $instance = \Instantiation::instance();
+        
 
         $meeting->delete();
 

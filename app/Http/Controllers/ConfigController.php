@@ -17,7 +17,7 @@ class ConfigController extends Controller
 
     public function config()
     {
-        $instance = \Instantiation::instance();
+        
         $route = null;
         if(Auth::user()->hasRole('LECTURE')){
             $route = route('lecture.config.save',$instance);
@@ -28,12 +28,12 @@ class ConfigController extends Controller
         $configuration = Configuration::find(1);
 
         return view('config.config',
-            ['instance' => $instance, 'route' => $route, 'configuration' => $configuration]);
+            ['route' => $route, 'configuration' => $configuration]);
     }
 
     public function config_save(Request $request)
     {
-        $instance = \Instantiation::instance();
+        
 
         $request->validate([
             'upload_evidences_date' => 'required|date_format:Y-m-d|after:today',

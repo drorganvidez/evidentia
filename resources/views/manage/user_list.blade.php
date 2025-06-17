@@ -18,17 +18,17 @@
             <div class="row mb-3">
                 <p style="padding: 5px 25px 0px 15px">Exportar tabla:</p>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('president.manage.student.export',['instance' => $instance, 'ext' => 'xlsx'])}}"
+                    <a href="{{route('president.manage.student.export',['ext' => 'xlsx'])}}"
                        class="btn btn-info btn-block" role="button">
                         XLSX</a>
                 </div>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('president.manage.student.export',['instance' => $instance, 'ext' => 'csv'])}}"
+                    <a href="{{route('president.manage.student.export',['ext' => 'csv'])}}"
                        class="btn btn-info btn-block" role="button">
                         CSV</a>
                 </div>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('president.manage.student.export',['instance' => $instance, 'ext' => 'pdf'])}}"
+                    <a href="{{route('president.manage.student.export',['ext' => 'pdf'])}}"
                        class="btn btn-info btn-block" role="button">
                         PDF</a>
                 </div>
@@ -93,19 +93,19 @@
                                 @endif
 
                                         <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$user->dni}}</td>
-                                        <td><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $user->id])}}">{{$user->surname}}</a></td>
-                                        <td><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $user->id])}}">{{$user->name}}</a></td>
+                                        <td><a  href="{{route('profiles.view',['id' => $user->id])}}">{{$user->surname}}</a></td>
+                                        <td><a  href="{{route('profiles.view',['id' => $user->id])}}">{{$user->name}}</a></td>
                                         <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$user->username}}</td>
                                         <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
                                             <x-roles :user="$user"/>
                                         </td>
                                         <td>
                                             @if(Auth::user()->hasRole('PRESIDENT'))
-                                                <a class="btn btn-primary btn-sm" href="{{route('president.user.management',['instance' => $instance, 'id' => $user->id])}}">
+                                                <a class="btn btn-primary btn-sm" href="{{route('president.user.management',['id' => $user->id])}}">
                                                     <i class="nav-icon nav-icon fas fa-users-cog"></i>
                                                 </a>
                                             @else
-                                                <a class="btn btn-primary btn-sm" href="{{route('lecture.user.management',['instance' => $instance, 'id' => $user->id])}}">
+                                                <a class="btn btn-primary btn-sm" href="{{route('lecture.user.management',['id' => $user->id])}}">
                                                     <i class="nav-icon nav-icon fas fa-users-cog"></i>
                                                 </a>
                                             @endif

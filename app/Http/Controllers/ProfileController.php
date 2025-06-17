@@ -120,7 +120,7 @@ class ProfileController extends Controller
 
     public function upload_biography(Request $request)
     {
-        $instance = \Instantiation::instance();
+        
 
         $user = Auth::user();
 
@@ -141,7 +141,7 @@ class ProfileController extends Controller
     public function upload_pass(Request $request)
     {
 
-        $instance = \Instantiation::instance();
+        
 
         $user = Auth::user();
 
@@ -159,16 +159,16 @@ class ProfileController extends Controller
 
     public function profiles_view($instance,$id)
     {
-        $instance = \Instantiation::instance();
+        
         $user = User::find($id);
 
         return view('profile.generalview',
-            ['instance' => $instance, 'user' => $user]);
+            ['user' => $user]);
     }
 
     public function evidences_view($instance,$id_user, $id_evidence)
     {
-        $instance = \Instantiation::instance();
+        
         $user = User::find($id_user);
         $evidence = Evidence::find($id_evidence);
 
@@ -179,6 +179,6 @@ class ProfileController extends Controller
         }
 
         return view('profile.profile_evidence_view',
-            ['instance' => $instance, 'user' => $user, 'evidence' => $evidence]);
+            ['user' => $user, 'evidence' => $evidence]);
     }
 }

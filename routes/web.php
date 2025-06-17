@@ -24,10 +24,12 @@ use App\Http\Controllers\RandomizeController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\SuggestionsMailboxController;
 use App\Http\Controllers\EvidenceController;
+use App\Http\Controllers\UploadController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\QuickInstances;
 
 use App\Http\Middleware\CheckRoles;
+use App\Http\Middleware\CheckUploadEvidences;
 
 // Rutas de autenticación
 Auth::routes();
@@ -194,7 +196,7 @@ Route::middleware('auth')->group(function () {
 
         Route::post('president/comittee/management/save', [ManagementController::class, 'comittee_save'])->name('president.comittee.management.save');
         Route::post('president/comittee/management/new', [ManagementController::class, 'comittee_new'])->name('president.comittee.management.new');
-        Route::middleware('checknotnull:Comittee')->post('president/comittee/management/remove', [ManagementController::class, 'comittee_remove'])->name('president.comittee.management.remove');
+        Route::middleware('checknotnull:Committee')->post('president/comittee/management/remove', [ManagementController::class, 'comittee_remove'])->name('president.comittee.management.remove');
 
         Route::get('president/user/management/{id}', [ManagementController::class, 'user_management'])->name('president.user.management');
         Route::post('president/user/management/save', [ManagementController::class, 'user_management_save'])->name('president.user.management.save');
@@ -217,7 +219,7 @@ Route::middleware('auth')->group(function () {
         Route::post('lecture/comittee/management/save', [ManagementController::class, 'comittee_save'])->name('lecture.comittee.management.save');
         Route::post('lecture/comittee/management/new', [ManagementController::class, 'comittee_new'])->name('lecture.comittee.management.new');
 
-        Route::middleware('checknotnull:Comittee')->post('lecture/comittee/management/remove', [ManagementController::class, 'comittee_remove'])->name('lecture.comittee.management.remove');
+        Route::middleware('checknotnull:Committee')->post('lecture/comittee/management/remove', [ManagementController::class, 'comittee_remove'])->name('lecture.comittee.management.remove');
 
         Route::get('lecture/integrity', [IntegrityController::class, 'integrity'])->name('lecture.integrity');
 
@@ -273,7 +275,7 @@ Route::middleware('auth')->group(function () {
     // EVIDENCES
     Route::get('evidence/list', [EvidenceController::class, 'list'])->name('evidence.list');
 
-    Route::middleware('checkuploadevidences')->group(function () {
+    Route::middleware([CheckUploadEvidences::class])->group(function () {
         Route::get('evidence/create', [EvidenceController::class, 'create'])->name('evidence.create');
         Route::post('evidence/draft', [EvidenceController::class, 'draft'])->name('evidence.draft');
         Route::post('evidence/publish', [EvidenceController::class, 'publish'])->name('evidence.publish');
@@ -292,6 +294,18 @@ Route::middleware('auth')->group(function () {
             Route::post('evidence/remove', [EvidenceController::class, 'remove'])->name('evidence.remove');
         });
     });
+
+    /**
+     * UPLOADS
+     */
+    Route::post('/evidence/upload/process', [UploadController::class, 'process'])->name('upload.process');
+    Route::delete('/evidence/upload/process', [UploadController::class, 'delete'])->name('upload.revert');
+
+    Route::get('/evidence/upload/load/{file_name}', [UploadController::class, 'load'])->name('upload.load');
+    Route::get('/evidence/upload/remove/{file_name}', [UploadController::class, 'remove'])->name('upload.remove');
+
+    Route::post('/xls/upload/process', [UploadController::class, 'process'])->name('xls.upload.process');
+    Route::get('/xls/upload/remove/{file_name}', [UploadController::class, 'remove'])->name('xls.upload.remove');
 
     // MESSAGES
     Route::get('mailbox', [MessageController::class, 'mailbox'])->name('message.mailbox');

@@ -22,13 +22,12 @@ class UploadController extends Controller
     {
 
         $user = Auth::user();
-        $instance = \Instantiation::instance();
         $token = $request->session()->token();
 
         $files = $request->file('files');
 
         $file = $files[0];
-        $path = Storage::putFileAs($instance.'/tmp/'.$user->username.'/'.$token.'/', $file, $file->getClientOriginalName());
+        $path = Storage::putFileAs('/tmp/'.$user->username.'/'.$token.'/', $file, $file->getClientOriginalName());
 
         return Response::make($this->filepond->getServerIdFromPath($path), 200, [
             'Content-Type' => 'text/plain',
@@ -69,7 +68,7 @@ class UploadController extends Controller
     public function remove($instance,$file_name)
     {
         $user = Auth::user();
-        $instance = \Instantiation::instance();
+        
         $token = session()->token();
         $tmp = $instance.'/tmp/'.$user->username.'/'.$token.'/';
         $path = $tmp.'/'.$file_name;

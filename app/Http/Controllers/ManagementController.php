@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\ManagementEvidencesExport;
 use App\Exports\ManagementStudentExport;
 use App\Http\Services\UserService;
-use App\Models\Comittee;
+use App\Models\Committee;
 use App\Models\Coordinator;
 use App\Models\Evidence;
 use App\Models\Meeting;
@@ -32,7 +32,7 @@ class ManagementController extends Controller
 
     public function user_list()
     {
-        $instance = \Instantiation::instance();
+        
         $users = User::all();
 
         // el presidente no puede editar los usuarios de tipo profesor
@@ -48,31 +48,31 @@ class ManagementController extends Controller
         }
 
         return view('manage.user_list',
-            ['instance' => $instance, 'users' => $filtered_users]);
+            ['users' => $filtered_users]);
     }
 
     public function evidence_list()
     {
-        $instance = \Instantiation::instance();
+        
         $evidences = Evidence::evidences_not_draft();
 
         return view('manage.evidence_list',
-            ['instance' => $instance, 'evidences' => $evidences]);
+            ['evidences' => $evidences]);
     }
 
     public function meeting_list()
     {
-        $instance = \Instantiation::instance();
+        
         $meetings = Meeting::all();
 
         return view('manage.meeting_list',
-            ['instance' => $instance, 'meetings' => $meetings]);
+            ['meetings' => $meetings]);
     }
 
     public function comittee_list()
     {
-        $instance = \Instantiation::instance();
-        $comittees = Comittee::all();
+        
+        $committees = Committee::all();
 
         $route = null;
         $route_new = null;
@@ -88,18 +88,18 @@ class ManagementController extends Controller
         }
 
         return view('manage.comittee_list',
-            ['instance' => $instance, 'comittees' => $comittees, 'route' => $route, 'route_new' => $route_new, 'route_remove' => $route_remove]);
+            ['committees' => $committees, 'route' => $route, 'route_new' => $route_new, 'route_remove' => $route_remove]);
     }
 
     public function comittee_new(Request $request)
     {
-        $instance = \Instantiation::instance();
+        
         $request->validate([
             'icon' => 'max:255',
             'name' => 'required|max:255|unique:comittees'
         ]);
 
-        Comittee::create([
+        Committee::create([
             'icon' => $request->input('icon'),
             'name' => $request->input('name')
         ]);
@@ -113,7 +113,7 @@ class ManagementController extends Controller
 
     public function comittee_save(Request $request)
     {
-        $instance = \Instantiation::instance();
+        
         $returned_route = null;
         if (Auth::user()->hasRole('PRESIDENT')) {
             $returned_route = "president.comittee.list";
@@ -123,7 +123,7 @@ class ManagementController extends Controller
 
         // por sl algún usuario avispao modifica los ID en el HTML
         try {
-            foreach (Comittee::all() as $comittee) {
+            foreach (Committee::all() as $comittee) {
 
 
             }
@@ -131,7 +131,7 @@ class ManagementController extends Controller
             return redirect()->route($returned_route, $instance)->with('error', 'Error en la integridad de los comités.' . $e->getMessage());
         }
 
-        foreach (Comittee::all() as $comittee) {
+        foreach (Committee::all() as $comittee) {
 
             /*
             $request->validate([
@@ -145,7 +145,7 @@ class ManagementController extends Controller
 
             if ($new_name != "") {
 
-                $saved_comittee = Comittee::find($comittee->id);
+                $saved_comittee = Committee::find($comittee->id);
                 $saved_comittee->icon = $new_icon;
                 $saved_comittee->name = $new_name;
 
@@ -158,7 +158,7 @@ class ManagementController extends Controller
 
     public function comittee_remove(Request $request)
     {
-        $instance = \Instantiation::instance();
+        
         $returned_route = null;
         if (Auth::user()->hasRole('PRESIDENT')) {
             $returned_route = "president.comittee.list";
@@ -166,7 +166,7 @@ class ManagementController extends Controller
             $returned_route = "lecture.comittee.list";
         }
 
-        $comittee = Comittee::find($request->input('_id'));
+        $comittee = Committee::find($request->input('_id'));
         if ($comittee->can_be_removed()) {
             $comittee->delete();
             return redirect()->route($returned_route, $instance)->with('success', 'Comité eliminado con éxito.');
@@ -178,7 +178,7 @@ class ManagementController extends Controller
 
     public function user_management($instance, $id)
     {
-        $instance = \Instantiation::instance();
+        
         $user = User::findOrFail($id);
 
         $route = null;
@@ -197,16 +197,16 @@ class ManagementController extends Controller
             $roles = Role::all();
         }
 
-        $comittees = Comittee::all();
+        $committees = Committee::all();
 
         return view('manage.user_management',
-            ['instance' => $instance, 'route' => $route, 'user' => $user, 'roles' => $roles, 'comittees' => $comittees]);
+            ['route' => $route, 'user' => $user, 'roles' => $roles, 'committees' => $committees]);
     }
 
     public function user_management_save(Request $request)
     {
 
-        $instance = \Instantiation::instance();
+        
         $user = User::find($request->input('user_id'));
 
         // guardar bloqueo
@@ -220,8 +220,8 @@ class ManagementController extends Controller
         // aqui se cambian los roles
         $roles_id = $request->input('roles', []);
         $comittee_id = $request->input('comittee');
-        if (Comittee::find($comittee_id) == null) {
-            return redirect()->route('lecture.user.management', ['instance' => $instance, 'id' => $user->id])->with('error', 'Comité no válido.');
+        if (Committee::find($comittee_id) == null) {
+            return redirect()->route('lecture.user.management', ['id' => $user->id])->with('error', 'Comité no válido.');
         }
 
         // elimino toda asociación previa
@@ -293,16 +293,16 @@ class ManagementController extends Controller
         }
 
         if ($user->hasRole('PRESIDENT')) {
-            return redirect()->route('president.user.list', ['instance' => $instance, 'id' => $user->id])->with('success', 'Usuario actualizado con éxito');
+            return redirect()->route('president.user.list', ['id' => $user->id])->with('success', 'Usuario actualizado con éxito');
         }
 
-        return redirect()->route('lecture.user.list', ['instance' => $instance, 'id' => $user->id])->with('success', 'Usuario actualizado con éxito');
+        return redirect()->route('lecture.user.list', ['id' => $user->id])->with('success', 'Usuario actualizado con éxito');
     }
 
     public function user_management_new(Request $request)
     {
 
-        $instance = \Instantiation::instance();
+        
 
         $request->validate([
             'name' => 'required|max:255',
@@ -324,7 +324,7 @@ class ManagementController extends Controller
         $student_role = Role::where('rol', 'STUDENT')->get();
         $user->roles()->attach($student_role);
 
-        return redirect()->route('lecture.user.list', ['instance' => $instance, 'id' => $user->id])->with('success', 'Usuario creado con éxito');
+        return redirect()->route('lecture.user.list', ['id' => $user->id])->with('success', 'Usuario creado con éxito');
 
     }
 

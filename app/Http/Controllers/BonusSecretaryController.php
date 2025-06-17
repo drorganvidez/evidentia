@@ -18,29 +18,29 @@ class BonusSecretaryController extends Controller
 
     public function list()
     {
-        $instance = \Instantiation::instance();
+        
 
         $bonus = Auth::user()->secretary->comittee->bonus()->get();
 
         return view('bonus.list',
-            ['instance' => $instance, 'bonus' => $bonus]);
+            ['bonus' => $bonus]);
     }
 
     public function create()
     {
-        $instance = \Instantiation::instance();
+        
 
         $users = User::orderBy('surname')->get();
         $defaultlists = Auth::user()->secretary->default_lists;
 
         return view('bonus.createandedit',
-            ['instance' => $instance, 'users' => $users, 'defaultlists' => $defaultlists, 'route' => route('secretary.bonus.new',$instance)]);
+            ['users' => $users, 'defaultlists' => $defaultlists, 'route' => route('secretary.bonus.new',$instance)]);
     }
 
     public function new(Request $request)
     {
 
-        $instance = \Instantiation::instance();
+        
 
         $request->validate([
             'reason' => 'required|min:5|max:255',
@@ -79,13 +79,13 @@ class BonusSecretaryController extends Controller
         $defaultlists = Auth::user()->secretary->default_lists;
 
         return view('bonus.createandedit',
-            ['instance' => $instance, 'bonus' => $bonus, 'edit' => true, 'users' => $users, 'defaultlists' => $defaultlists, 'route' => route('secretary.bonus.save',$instance)]);
+            ['bonus' => $bonus, 'edit' => true, 'users' => $users, 'defaultlists' => $defaultlists, 'route' => route('secretary.bonus.save',$instance)]);
     }
 
     public function save(Request $request)
     {
 
-        $instance = \Instantiation::instance();
+        
 
         $request->validate([
             'reason' => 'required|min:5|max:255',
@@ -121,7 +121,7 @@ class BonusSecretaryController extends Controller
     public function remove(Request $request)
     {
         $bonus = Bonus::find($request->_id);
-        $instance = \Instantiation::instance();
+        
 
         $bonus->delete();
 

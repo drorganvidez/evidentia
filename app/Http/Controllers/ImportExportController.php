@@ -23,17 +23,17 @@ class ImportExportController extends Controller
 
     public function import()
     {
-        $instance = \Instantiation::instance();
+        
         $route = route('lecture.import.save',$instance);
 
         return view('importexport.import',
-            ['instance' => $instance, 'route' => $route]);
+            ['route' => $route]);
     }
 
     public function import_save(Request $request)
     {
         $user = Auth::user();
-        $instance = \Instantiation::instance();
+        
         $token = $request->session()->token();
         $tmp = $instance.'/tmp/'.$user->username.'/'.$token.'/';
 
@@ -73,16 +73,16 @@ class ImportExportController extends Controller
 
     public function export()
     {
-        $instance = \Instantiation::instance();
+        
         $route = route('lecture.export.save',$instance);
 
         return view('importexport.export',
-            ['instance' => $instance, 'route' => $route]);
+            ['route' => $route]);
     }
 
     public function export_save(Request $request)
     {
-        $instance = \Instantiation::instance();
+        
         $evidences_select = $request->input('evidences');
         $meetings_select = $request->input('meetings');
         $events_select = $request->input('events');

@@ -18,28 +18,28 @@ class DefaultListSecretaryController extends Controller
 
     public function list()
     {
-        $instance = \Instantiation::instance();
+        
 
         $defaultlists = Auth::user()->secretary->default_lists()->get();
 
         return view('defaultlist.list',
-            ['instance' => $instance, 'defaultlists' => $defaultlists]);
+            ['defaultlists' => $defaultlists]);
     }
 
     public function create()
     {
-        $instance = \Instantiation::instance();
+        
 
         $users = User::orderBy('surname')->get();
 
         return view('defaultlist.createandedit',
-            ['instance' => $instance, 'users' => $users, 'route' => route('secretary.defaultlist.new',$instance)]);
+            ['users' => $users, 'route' => route('secretary.defaultlist.new',$instance)]);
     }
 
     public function new(Request $request)
     {
 
-        $instance = \Instantiation::instance();
+        
 
         $validatedData = $request->validate([
             'name' => 'required|max:255',
@@ -73,12 +73,12 @@ class DefaultListSecretaryController extends Controller
     public function edit($instance,$id)
     {
 
-        $instance = \Instantiation::instance();
+        
         $defaultlist = DefaultList::find($id);
         $users = User::orderBy('surname')->get();
 
         return view('defaultlist.createandedit',
-            ['instance' => $instance, 'defaultlist' => $defaultlist,
+            ['defaultlist' => $defaultlist,
                 'users' => $users, 'route' => route('secretary.defaultlist.save',$instance), 'edit' => true]);
 
     }
@@ -86,7 +86,7 @@ class DefaultListSecretaryController extends Controller
     public function save(Request $request)
     {
 
-        $instance = \Instantiation::instance();
+        
 
         $validatedData = $request->validate([
             'name' => 'required|max:255',
@@ -118,7 +118,7 @@ class DefaultListSecretaryController extends Controller
     public function remove(Request $request)
     {
         $defaultlist = DefaultList::find($request->_id);
-        $instance = \Instantiation::instance();
+        
 
         $defaultlist->delete();
 

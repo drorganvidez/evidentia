@@ -56,7 +56,7 @@
                                 @if(Request()->route('id') == $evidence_i->id)
                                         <a href="#" class="small-box-footer disabled">Actualmente editando</a>
                                 @else
-                                    <a href="{{route('evidence.edit',['instance' => $instance, 'id' => $evidence_i->id])}}" class="small-box-footer"><i class="fas fa-pencil-alt"></i> Continuar edición</a>
+                                    <a href="{{route('evidence.edit',['id' => $evidence_i->id])}}" class="small-box-footer"><i class="fas fa-pencil-alt"></i> Continuar edición</a>
                                 @endif
 
 
@@ -116,7 +116,7 @@
                             <div class="form-group col-md-3">
                                 <label for="comittee">Comité asociado</label>
                                 <select id="comittee" class="selectpicker form-control @error('comittee') is-invalid @enderror" name="comittee" value="{{ old('comittee') }}" required autofocus>
-                                    @foreach($comittees as $comittee)
+                                    @foreach($committees as $comittee)
                                         @isset($evidence)
                                             <option {{$comittee->id == old('comittee') || $evidence->comittee->id == $comittee->id ? 'selected' : ''}} value="{{$comittee->id}}">
                                         @else
@@ -225,7 +225,7 @@
                     acceptedFileTypes: ['image/*','application/zip','application/x-7z-compressed','application/x-tar','application/msword','application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', '.xlsx','application/pdf','application/x-rar-compressed','application/vnd.ms-powerpoint','application/vnd.oasis.opendocument.presentation','application/vnd.oasis.opendocument.spreadsheet','application/vnd.oasis.opendocument.text'],
                     labelFileTypeNotAllowed: 'Tipo de archivo no válido',
                     server: {
-                        url: '{{route('upload.process',Instantiation::instance())}}',
+                        url: '{{route('upload.process')}}',
                         process: {
                             method: 'POST',
                             headers: {
@@ -257,7 +257,7 @@
                         },
                         remove: function(source, load, errorCallback) {
                             var filename = source.split('/').pop()
-                            var url = location.origin + '/' + '{{\Instantiation::instance()}}' + '/evidence/upload/remove/' + filename;
+                            var url = location.origin + '/evidence/upload/remove/' + filename;
                             var request = new Request(url);
 
                             fetch(request).then(function(response) {
@@ -275,7 +275,7 @@
                         @foreach(Filepond::getFilesFromTemporaryFolder() as $file_name)
 
                             {
-                                source: '{{route('upload.load',['instance' => Instantiation::instance(), 'file_name' => $file_name])}}',
+                                source: '{{route('upload.load',['file_name' => $file_name])}}',
                                 options: {
                                     type: 'local'
                                 }

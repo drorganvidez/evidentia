@@ -21,17 +21,17 @@
             <div class="row mb-3">
                 <p style="padding: 5px 50px 0px 15px">Exportar tabla:</p>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('secretary.meeting.manage.signaturesheet.export',['instance' => $instance, 'ext' => 'xlsx'])}}"
+                    <a href="{{route('secretary.meeting.manage.signaturesheet.export',['ext' => 'xlsx'])}}"
                        class="btn btn-info btn-block" role="button">
                         XLSX</a>
                 </div>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('secretary.meeting.manage.signaturesheet.export',['instance' => $instance, 'ext' => 'csv'])}}"
+                    <a href="{{route('secretary.meeting.manage.signaturesheet.export',['ext' => 'csv'])}}"
                        class="btn btn-info btn-block" role="button">
                         CSV</a>
                 </div>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('secretary.meeting.manage.signaturesheet.export',['instance' => $instance, 'ext' => 'pdf'])}}"
+                    <a href="{{route('secretary.meeting.manage.signaturesheet.export',['ext' => 'pdf'])}}"
                        class="btn btn-info btn-block" role="button">
                         PDF</a>
                 </div>
@@ -55,7 +55,7 @@
                         @foreach($signature_sheets as $signature_sheet)
                             <tr scope="row">
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                    <a href="{{route('secretary.meeting.manage.signaturesheet.view',['instance' => $instance, 'signature_sheet' => $signature_sheet])}}">
+                                    <a href="{{route('secretary.meeting.manage.signaturesheet.view',['signature_sheet' => $signature_sheet])}}">
                                         {{$signature_sheet->title}}
                                     </a>
                                 </td>
@@ -78,11 +78,11 @@
                                     <button onclick="copyToClipboard('#signature_sheets_{{$signature_sheet->id}}')"
                                             type="button" class="btn btn-light btn-xs"><i class="far fa-copy"></i> Copiar</button>
 
-                                    <a class="btn btn-primary btn-xs" href="{{route('secretary.meeting.manage.signaturesheet.view',['instance' => $instance, 'signature_sheet' => $signature_sheet])}}">
+                                    <a class="btn btn-primary btn-xs" href="{{route('secretary.meeting.manage.signaturesheet.view',['signature_sheet' => $signature_sheet])}}">
                                         <i class="fas fa-signature"></i>
                                     </a>
 
-                                    <a class="btn btn-info btn-xs" href="{{route('secretary.meeting.manage.signaturesheet.edit',['instance' => $instance, 'id' => $signature_sheet->id])}}"><i class="fas fa-edit"></i></a>
+                                    <a class="btn btn-info btn-xs" href="{{route('secretary.meeting.manage.signaturesheet.edit',['id' => $signature_sheet->id])}}"><i class="fas fa-edit"></i></a>
 
                                     <a class="btn btn-danger btn-xs" href="#" data-toggle="modal" data-target="#modal-confirm-REMOVE-{{$signature_sheet->id}}">
                                         <i class="fas fa-trash"></i>

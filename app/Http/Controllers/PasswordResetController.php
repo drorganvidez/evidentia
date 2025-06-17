@@ -75,7 +75,7 @@ class PasswordResetController extends Controller
 
             if($token_entity->is_valid()){
                 return view('auth.passwords.update',
-                    ['instance' => $instance, 'token' => $token]);
+                    ['token' => $token]);
             }
 
             return redirect()->route('instance.login',$instance)->with('error', 'El token no es válido o ha caducado.');

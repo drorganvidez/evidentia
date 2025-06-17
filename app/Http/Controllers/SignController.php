@@ -18,15 +18,15 @@ class SignController extends Controller
             abort(404);
         }
 
-        $instance = \Instantiation::instance();
+        
 
-        return view('sign.sign',['instance' => $instance, 'signature_sheet' => $signature_sheet]);
+        return view('sign.sign',['signature_sheet' => $signature_sheet]);
 
     }
 
     public function sign_p(Request $request)
     {
-        $instance = \Instantiation::instance();
+        
 
         $signature_sheet = SignatureSheet::findOrFail($request->input('signature_sheet'));
         $credentials = $request->only('username', 'password');

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\MyEvidencesExport;
-use App\Models\Comittee;
+use App\Models\Committee;
 use App\Models\Evidence;
 use App\Models\File;
 use App\Models\Proof;
@@ -52,13 +52,12 @@ class EvidenceController extends Controller
 
     public function create()
     {
-        $instance = \Instantiation::instance();
-        $comittees = Comittee::all();
 
-        return view('evidence.createandedit', ['route_draft' => route('evidence.draft',$instance),
-                                            'route_publish' => route('evidence.publish',$instance),
-                                            'instance' => $instance,
-                                            'comittees' => $comittees]);
+        $committees = Committee::all();
+
+        return view('evidence.createandedit', ['route_draft' => route('evidence.draft'),
+                                            'route_publish' => route('evidence.publish'),
+                                            'committees' => $committees]);
     }
 
     public function draft(Request $request)
@@ -74,7 +73,7 @@ class EvidenceController extends Controller
     private function new($request,$status)
     {
 
-        $instance = \Instantiation::instance();
+        
 
         $evidence = $this->new_evidence($request,$status);
 
@@ -118,7 +117,7 @@ class EvidenceController extends Controller
     private function save_files($request, $evidence)
     {
         $user = Auth::user();
-        $instance = \Instantiation::instance();
+        
         $token = $request->session()->token();
         $tmp = $instance.'/tmp/'.$user->username.'/'.$token.'/';
 
@@ -166,7 +165,7 @@ class EvidenceController extends Controller
     {
 
         $user = Auth::user();
-        $instance = \Instantiation::instance();
+        
         $token = session()->token();
 
         $proofs_folder = $instance.'/proofs/'.$user->username.'/evidence_'.$evidence->id;
@@ -198,11 +197,11 @@ class EvidenceController extends Controller
     {
 
         $user = Auth::user();
-        $instance = \Instantiation::instance();
+        
         $token = session()->token();
 
         $evidence = Evidence::find($id);
-        $comittees = Comittee::all();
+        $committees = Committee::all();
 
         $tmp = $instance.'/tmp/'.$user->username.'/'.$token.'/';
 
@@ -215,7 +214,7 @@ class EvidenceController extends Controller
         $this->copy_files_into_temporary_folder($evidence);
 
         return view('evidence.createandedit', ['evidence' => $evidence, 'instance' => $instance,
-            'comittees' => $comittees,
+            'committees' => $committees,
             'edit' => true,
             'route_draft' => route('evidence.draft.edit',$instance),
             'route_publish' => route('evidence.publish.edit',$instance)]);
@@ -233,7 +232,7 @@ class EvidenceController extends Controller
 
     private function save($request,$status)
     {
-        $instance = \Instantiation::instance();
+        
 
         // evidencia desde la que hemos decidido partir
         $evidence_previous = Evidence::find($request->_id);
@@ -269,7 +268,7 @@ class EvidenceController extends Controller
     {
         $id = $request->_id;
         $evidence = Evidence::find($id);
-        $instance = \Instantiation::instance();
+        
 
         // eliminamos recursivamente la evidencia y todas las versiones anteriores, incluyendo archivos
         $this->delete_evidence($evidence);
@@ -279,7 +278,7 @@ class EvidenceController extends Controller
 
     private function delete_evidence($evidence)
     {
-        $instance = \Instantiation::instance();
+        
         $user = Auth::user();
 
         // por si la evidencia apunta a otra anterior
@@ -312,7 +311,7 @@ class EvidenceController extends Controller
     {
         $id = $request->_id;
         $evidence = Evidence::find($id);
-        $instance = \Instantiation::instance();
+        
 
         $evidence->status = "DRAFT";
 

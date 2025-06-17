@@ -51,7 +51,7 @@
                                     @if(!\Carbon\Carbon::now()->gt(\Config::bonus_timestamp()))
                                     <td>
                                         <a class="btn btn-primary btn-sm"
-                                           href="{{route('secretary.bonus.edit',['instance' => $instance, 'id' => $bono->id])}}"
+                                           href="{{route('secretary.bonus.edit',['id' => $bono->id])}}"
                                            role="button">
                                             <i class="far fa-edit"></i>
                                             <span class="d-none d-sm-none d-md-none d-lg-inline">Editar bono</span>

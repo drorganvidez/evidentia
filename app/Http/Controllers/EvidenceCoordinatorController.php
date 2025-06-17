@@ -24,55 +24,55 @@ class EvidenceCoordinatorController extends Controller
 
     public function all()
     {
-        $instance = \Instantiation::instance();
+        
 
         $coordinator = Auth::user()->coordinator;
         $comittee = $coordinator->comittee;
         $evidences = $comittee->evidences_not_draft()->paginate(10);;
 
         return view('evidence.coordinator.list',
-            ['instance' => $instance, 'evidences' => $evidences, 'type' => 'all']);
+            ['evidences' => $evidences, 'type' => 'all']);
     }
 
     public function pending()
     {
-        $instance = \Instantiation::instance();
+        
 
         $coordinator = Auth::user()->coordinator;
         $comittee = $coordinator->comittee;
         $evidences = $comittee->evidences_pending()->paginate(10);
 
         return view('evidence.coordinator.list',
-            ['instance' => $instance, 'evidences' => $evidences, 'type' => 'pending']);
+            ['evidences' => $evidences, 'type' => 'pending']);
     }
 
     public function accepted()
     {
-        $instance = \Instantiation::instance();
+        
 
         $coordinator = Auth::user()->coordinator;
         $comittee = $coordinator->comittee;
         $evidences = $comittee->evidences_accepted()->paginate(10);
 
         return view('evidence.coordinator.list',
-            ['instance' => $instance, 'evidences' => $evidences, 'type' => 'accepted']);
+            ['evidences' => $evidences, 'type' => 'accepted']);
     }
 
     public function rejected()
     {
-        $instance = \Instantiation::instance();
+        
 
         $coordinator = Auth::user()->coordinator;
         $comittee = $coordinator->comittee;
         $evidences = $comittee->evidences_rejected()->paginate(10);
 
         return view('evidence.coordinator.list',
-            ['instance' => $instance, 'evidences' => $evidences, 'type' => 'rejected']);
+            ['evidences' => $evidences, 'type' => 'rejected']);
     }
 
     public function accept($instance, $id)
     {
-        $instance = \Instantiation::instance();
+        
 
         $evidence = Evidence::find($id);
         $evidence->status = 'ACCEPTED';
@@ -83,7 +83,7 @@ class EvidenceCoordinatorController extends Controller
 
     public function reject(Request $request)
     {
-        $instance = \Instantiation::instance();
+        
 
         $evidence = Evidence::find($request->_id);
         $evidence->status = 'REJECTED';

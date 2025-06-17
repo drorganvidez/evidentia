@@ -6,25 +6,25 @@ use App\Exports\MyAttendeesExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Middleware\CheckRoles;
 
 class AttendeeController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('checkroles:STUDENT');
+        $this->middleware(CheckRoles::class . ':STUDENT');
     }
 
     public function list()
     {
-        $instance = \Instantiation::instance();
         $attendees = Auth::user()->attendees;
 
         $events_update = \Config::events_uploaded_timestamp();
         $attendees_update = \Config::attendees_uploaded_timestamp();
 
         return view('attendee.list',
-            ['instance' => $instance, 'attendees' => $attendees,
+            ['attendees' => $attendees,
                 'events_update' => $events_update, 'attendees_update' => $attendees_update]);
     }
 

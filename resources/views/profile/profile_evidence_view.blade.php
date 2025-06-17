@@ -5,7 +5,7 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item"><a  href="{{route('profiles.view',['instance' => $instance, 'id' => $user->id])}}">{{$user->surname}}, {{$user->name}}</a></li>
+    <li class="breadcrumb-item"><a  href="{{route('profiles.view',['id' => $user->id])}}">{{$user->surname}}, {{$user->name}}</a></li>
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
 
@@ -73,7 +73,7 @@
 
                             @foreach($evidence->proofs as $proof)
 
-                                <a style="margin-bottom: 10px" class="btn btn-primary btn-sm" href="{{route('proof.download',['instance' => $instance, 'id' => $proof->id])}}">
+                                <a style="margin-bottom: 10px" class="btn btn-primary btn-sm" href="{{route('proof.download',['id' => $proof->id])}}">
                                     <i class="fas fa-download"></i>
                                     {{$proof->file->name}} ({{$proof->file->sizeForHuman()}})
                                 </a>

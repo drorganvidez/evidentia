@@ -87,13 +87,13 @@
                                         <label for="participation">Nivel de participación</label>
                                         <select id="participation" class="selectpicker form-control @error('participation') is-invalid @enderror" name="participation" value="{{ old('participation') }}" required autofocus>
 
-                                            <option {{old('participation') == 1 || Auth::user()->participation == 'ORGANIZATION' ? 'selected' : 'NO'}} value="1">ORGANIZACIÓN</option>
-                                            <option {{old('participation') == 2 || Auth::user()->participation == 'INTERMEDIATE' ? 'selected' : 'NO'}} value="2">INTERMEDIO</option>
-                                            <option {{old('participation') == 3 || Auth::user()->participation == 'ASSISTANCE' ? 'selected' : 'NO'}} value="3">ASISTENCIA</option>
+                                            <option {{old('participation') == 1 || Auth::user()->participation == 'ORGANIZATION' ? 'selected' : 'NO'}} value="1">COLABORATIVO</option>
+                                            <option {{old('participation') == 2 || Auth::user()->participation == 'INTERMEDIATE' ? 'selected' : 'NO'}} value="2">TÉCNICO-ORGANIZATIVO</option>
+                                            <option {{old('participation') == 3 || Auth::user()->participation == 'ASSISTANCE' ? 'selected' : 'NO'}} value="3">TÉCNICO</option>
 
                                         </select>
 
-                                        <small class="form-text text-muted">Selecciona el nivel de participación en las jornadas InnoSoft Days de este año.</small>
+                                        <small class="form-text text-muted">Selecciona el nivel de implicación en las jornadas InnoSoft Days de este año.</small>
 
                                         @error('participation')
                                         <span class="invalid-feedback" role="alert">

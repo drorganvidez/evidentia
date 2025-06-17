@@ -17,11 +17,11 @@ class IntegrityController extends Controller
 
     public function integrity()
     {
-        $instance = \Instantiation::instance();
+        
         $evidences = Evidence::all();
         $proofs = Proof::all();
 
         return view('integrity.list',
-            ['instance' => $instance, 'evidences' => $evidences, 'proofs' => $proofs]);
+            ['evidences' => $evidences, 'proofs' => $proofs]);
     }
 }

@@ -39,7 +39,7 @@
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ \Carbon\Carbon::parse($defaultlist->created_at)->diffForHumans() }}</td>
                                 <td>
                                     <a class="btn btn-primary btn-sm"
-                                       href="{{route('secretary.defaultlist.edit',['instance' => $instance, 'id' => $defaultlist->id])}}"
+                                       href="{{route('secretary.defaultlist.edit',['id' => $defaultlist->id])}}"
                                        role="button">
                                         <i class="far fa-edit"></i>
                                         <span class="d-none d-sm-none d-md-none d-lg-inline">Editar lista</span>

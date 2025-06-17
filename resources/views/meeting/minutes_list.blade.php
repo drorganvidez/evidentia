@@ -21,17 +21,17 @@
             <div class="row mb-3">
                 <p style="padding: 5px 50px 0px 15px">Exportar tabla:</p>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('secretary.meeting.manage.minutes.export',['instance' => $instance, 'ext' => 'xlsx'])}}"
+                    <a href="{{route('secretary.meeting.manage.minutes.export',['ext' => 'xlsx'])}}"
                        class="btn btn-info btn-block" role="button">
                         XLSX</a>
                 </div>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('secretary.meeting.manage.minutes.export',['instance' => $instance, 'ext' => 'csv'])}}"
+                    <a href="{{route('secretary.meeting.manage.minutes.export',['ext' => 'csv'])}}"
                        class="btn btn-info btn-block" role="button">
                         CSV</a>
                 </div>
                 <div class="col-lg-1 mt-12">
-                    <a href="{{route('secretary.meeting.manage.minutes.export',['instance' => $instance, 'ext' => 'pdf'])}}"
+                    <a href="{{route('secretary.meeting.manage.minutes.export',['ext' => 'pdf'])}}"
                        class="btn btn-info btn-block" role="button">
                         PDF</a>
                 </div>
@@ -72,9 +72,9 @@
                                     {{ \Carbon\Carbon::parse($m->updated_at)->diffForHumans() }}
                                 </td>
                                 <td>
-                                    <a class="btn btn-primary btn-sm" href="{{route('secretary.meeting.manage.minutes.download',['instance' => $instance, 'id' => $m->id])}}"><i class="fas fa-file-pdf"></i></a>
+                                    <a class="btn btn-primary btn-sm" href="{{route('secretary.meeting.manage.minutes.download',['id' => $m->id])}}"><i class="fas fa-file-pdf"></i></a>
 
-                                    <a class="btn btn-info btn-sm" href="{{route('secretary.meeting.manage.minutes.edit',['instance' => $instance, 'id' => $m->id])}}"><i class="fas fa-edit"></i></a>
+                                    <a class="btn btn-info btn-sm" href="{{route('secretary.meeting.manage.minutes.edit',['id' => $m->id])}}"><i class="fas fa-edit"></i></a>
 
                                     <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-confirm-REMOVE-{{$m->id}}">
                                         <i class="fas fa-trash"></i>
