@@ -43,7 +43,7 @@
 <div class="login-box">
 
     <div class="mb-4">
-        <a href="{{route('instances.home')}}"><img width="200px" src="{{asset('dist/img/logo_light.svg')}}"></a>
+        <a href="{{route('home')}}"><img width="200px" src="{{asset('dist/img/logo_light.svg')}}"></a>
     </div>
 
     <p>
@@ -55,7 +55,7 @@
     </p>
 
     <p>
-        <a href="{{route('instances.home')}}">Volver a la página de inicio.</a>
+        <a href="{{route('home')}}">Volver a la página de inicio.</a>
     </p>
 
 </div>

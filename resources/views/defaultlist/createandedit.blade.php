@@ -10,7 +10,7 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item"><a href="{{route('secretary.defaultlist.list',['instance' => $instance])}}">Gestionar listas</a></li>
+    <li class="breadcrumb-item"><a href="{{route('secretary.defaultlist.list',[])}}">Gestionar listas</a></li>
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
 
@@ -19,7 +19,7 @@
     <div class="row">
         <div class="col-lg-12">
 
-            <div class="card shadow-lg">
+            <div class="card">
 
                 <div class="card-body">
                     <form method="POST" enctype="multipart/form-data" action="{{$route}}">

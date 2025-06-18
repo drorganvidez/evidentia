@@ -14,7 +14,7 @@
 
         <div class="col-lg-4">
 
-            <div class="card shadow-lg">
+            <div class="card">
 
                 <div class="card-body">
 
@@ -75,7 +75,7 @@
 
         <div class="col-lg-8">
 
-            <div class="card shadow-sm">
+            <div class="card">
 
                 <div class="card-body">
 
@@ -170,7 +170,7 @@
                     ],
                     labelFileTypeNotAllowed: 'Tipo de archivo no válido',
                     server: {
-                        url: '{{route('xls.upload.process',Instantiation::instance())}}',
+                        url: '{{route('xls.upload.process')}}',
                         process: {
                             method: 'POST',
                             headers: {
@@ -202,7 +202,7 @@
                         },
                         remove: function(source, load, errorCallback) {
                             var filename = source.split('/').pop()
-                            var url = location.origin + '/' + '{{\Instantiation::instance()}}' + '/xls/upload/remove/' + filename;
+                            var url = location.origin + '/xls/upload/remove/' + filename;
                             var request = new Request(url);
 
                             fetch(request).then(function(response) {
@@ -221,7 +221,7 @@
                         @foreach(Filepond::getFilesFromTemporaryFolder() as $file_name)
 
                         {
-                            source: '{{route('upload.load',['instance' => Instantiation::instance(), 'file_name' => $file_name])}}',
+                            source: '{{route('upload.load',['file_name' => $file_name])}}',
                             options: {
                                 type: 'local'
                             }

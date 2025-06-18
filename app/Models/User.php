@@ -102,7 +102,6 @@ class User extends Authenticatable
     {
         try {
             return route('profiles.view.evidence', [
-                'instance' => \Instantiation::instance(),
                 'id_user' => $this->id,
                 'id_evidence' => $this->evidence_rand()->id,
             ]);
@@ -121,7 +120,7 @@ class User extends Authenticatable
         return $this->evidences->where('status', 'DRAFT');
     }
 
-    public function evidences_not_draft()
+    public function evidencesNotDraft()
     {
         return $this->evidences->where('status', '!=', 'DRAFT');
     }
@@ -274,12 +273,12 @@ class User extends Authenticatable
             : URL::to('/uploads/avatars/default.png');
     }
 
-    public function associate_comittee()
+    public function associate_committee()
     {
         if ($this->hasRole('COORDINATOR')) {
-            return $this->coordinator->comittee->name ?? 'None';
+            return $this->coordinator->committee->name ?? 'None';
         } elseif ($this->hasRole('SECRETARY')) {
-            return $this->secretary->comittee->name ?? 'None';
+            return $this->secretary->committee->name ?? 'None';
         }
         return 'None';
     }
@@ -287,15 +286,15 @@ class User extends Authenticatable
     public function committee_belonging()
     {
         $names = $this->evidences
-            ->filter(fn($e) => $e->status === 'ACCEPTED' && $e->comittee)
-            ->map(fn($e) => $e->comittee->name)
+            ->filter(fn($e) => $e->status === 'ACCEPTED' && $e->committee)
+            ->map(fn($e) => $e->committee->name)
             ->unique()
             ->filter();
 
         if ($this->hasRole('COORDINATOR')) {
-            $names->push($this->coordinator->comittee->name);
+            $names->push($this->coordinator->committee->name);
         } elseif ($this->hasRole('SECRETARY')) {
-            $names->push($this->secretary->comittee->name);
+            $names->push($this->secretary->committee->name);
         }
 
         return $names->implode(' | ');

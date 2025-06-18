@@ -19,7 +19,7 @@ class CheckBlock
 
         
         if(Auth::check() && Auth::user()->block){
-            return redirect()->route('block',$instance);
+            return redirect()->route('block');
         }
 
         return $next($request);

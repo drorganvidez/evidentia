@@ -28,7 +28,7 @@ class EvidenceMine
 
         if($evidence->user->id != Auth::id())
         {
-            return redirect()->route('home',$instance);
+            return redirect()->route('home');
         }
 
         return $next($request);

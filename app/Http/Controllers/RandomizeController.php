@@ -17,7 +17,7 @@ class RandomizeController extends Controller
     public function randomize()
     {
         
-        $route = route('randomize.save',$instance);
+        $route = route('randomize.save');
 
         return view('randomize.randomize',['route' => $route]);
     }
@@ -52,7 +52,7 @@ class RandomizeController extends Controller
             }
         }
 
-        return redirect()->route('randomize.randomize', $instance)->with('success', 'Evidencias aleatorizadas con éxito.');
+        return redirect()->route('randomize.randomize')->with('success', 'Evidencias aleatorizadas con éxito.');
 
     }
 }

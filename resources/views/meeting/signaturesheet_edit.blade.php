@@ -6,8 +6,8 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage',\Instantiation::instance())}}">Gestionar reuniones</a></li>
-    <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage.signaturesheet.list',\Instantiation::instance())}}">Mis hojas de firmas</a></li>
+    <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage')}}">Gestionar reuniones</a></li>
+    <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage.signaturesheet.list')}}">Mis hojas de firmas</a></li>
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
 
@@ -19,7 +19,7 @@
 
         <div class="col-md-9">
 
-            <div class="card shadow-sm">
+            <div class="card">
 
                 <div class="card-body">
 
@@ -52,7 +52,7 @@
 
 
 
-                    <form method="POST" action="{{route('secretary.meeting.manage.signaturesheet.save',\Instantiation::instance())}}">
+                    <form method="POST" action="{{route('secretary.meeting.manage.signaturesheet.save')}}">
                         @csrf
 
                         <x-id :id="$signature_sheet->id ?? ''" :edit="$edit ?? ''"/>

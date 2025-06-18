@@ -17,7 +17,7 @@ class AvatarController extends Controller
         $this->middleware('auth');
     }
 
-    public function avatar($instance,$id)
+    public function avatar($id)
     {
         $user = User::find($id);
 
@@ -65,7 +65,9 @@ class AvatarController extends Controller
 
 
         // limpiar búfer de salida
-        ob_end_clean();
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
 
         return $img->response('jpg');
 

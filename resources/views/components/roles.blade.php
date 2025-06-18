@@ -4,11 +4,11 @@
         {{$rol->slug}}
 
         @if($rol->rol == 'COORDINATOR')
-            de {{$user->coordinator->comittee->name}}
+            de {{$user->coordinator->committee->name}}
         @endif
 
         @if($rol->rol == 'SECRETARY')
-            de {{$user->secretary->comittee->name}}
+            de {{$user->secretary->committee->name}}
         @endif
 
     </span>

@@ -13,26 +13,8 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <div class="col-lg-9">
-                <div class="row mb-3">
-                    <p style="padding: 5px 25px 0px 15px">Exportar tabla:</p>
-                    <div class="col-lg-1 mt-12">
-                        <a href="{{route('president.manage.meeting.export',['ext' => 'xlsx'])}}"
-                           class="btn btn-info btn-block" role="button">
-                            XLSX</a>
-                    </div>
-                    <div class="col-lg-1 mt-12">
-                        <a href="{{route('president.manage.meeting.export',['ext' => 'csv'])}}"
-                           class="btn btn-info btn-block" role="button">
-                            CSV</a>
-                    </div>
-                    <div class="col-lg-1 mt-12">
-                        <a href="{{route('president.manage.meeting.export',['ext' => 'pdf'])}}"
-                           class="btn btn-info btn-block" role="button">
-                            PDF</a>
-                    </div>
-                </div>
-            <div class="card shadow-lg">
+
+        <div class="card">
 
                 <div class="card-body">
                     <table id="dataset" class="table table-hover table-responsive">
@@ -55,12 +37,12 @@
                                 <td>{{$meeting->place}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$meeting->hours}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                    <x-meetingcomittee :meeting="$meeting"/>
+                                    <x-meetingcommittee :meeting="$meeting"/>
                                 </td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$meeting->users->count()}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ \Carbon\Carbon::parse($meeting->datetime)->diffForHumans() }}</td>
                                 <td>
-                                    <a class="btn btn-primary btn-sm" href="{{route('download.minutes',['instance' => \Instantiation::instance(), 'id' => $meeting->meeting_minutes->id])}}">
+                                    <a class="btn btn-primary btn-sm" href="{{route('download.minutes',['id' => $meeting->meeting_minutes->id])}}">
                                         <i class="nav-icon nav-icon far fa-file-pdf"></i>
                                     </a>
                                 </td>

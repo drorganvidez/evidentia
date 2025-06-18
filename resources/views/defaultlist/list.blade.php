@@ -16,11 +16,11 @@
 
             <div class="row mb-3">
                 <div class="col-lg-2 mt-1">
-                    <a href="{{route('secretary.defaultlist.create',['instance' => $instance])}}" class="btn btn-primary btn-block" role="button"><i class="fas fa-plus"></i> &nbsp;Crear nueva lista</a>
+                    <a href="{{route('secretary.defaultlist.create',[])}}" class="btn btn-primary btn-block" role="button"><i class="fas fa-plus"></i> &nbsp;Crear nueva lista</a>
                 </div>
             </div>
 
-            <div class="card shadow-lg">
+            <div class="card">
 
 
                 <div class="card-body">

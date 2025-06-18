@@ -79,7 +79,7 @@ class EvidenceController extends Controller
 
         $this->save_files($request,$evidence);
 
-        return redirect()->route('evidence.list',$instance)->with('success', 'Evidencia creada con éxito.');
+        return redirect()->route('evidence.list')->with('success', 'Evidencia creada con éxito.');
 
     }
 
@@ -104,7 +104,7 @@ class EvidenceController extends Controller
             'hours' => $request->input('hours') + floor(($minutes*100)/60)/100,
             'status' => $status,
             'user_id' => $user->id,
-            'comittee_id' => $request->input('comittee')
+            'committee_id' => $request->input('committee')
         ]);
 
         // cómputo del sello
@@ -119,7 +119,7 @@ class EvidenceController extends Controller
         $user = Auth::user();
         
         $token = $request->session()->token();
-        $tmp = $instance.'/tmp/'.$user->username.'/'.$token.'/';
+        $tmp = '/tmp/'.$user->username.'/'.$token.'/';
 
         foreach (Storage::files($tmp) as $filename) {
 
@@ -127,7 +127,7 @@ class EvidenceController extends Controller
             $type = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
             $size = Storage::size($filename);
             $old_directory = $filename;
-            $new_directory = $instance.'/proofs/'.$user->username.'/evidence_'.$evidence->id.'/'.$name.'.'.$type;
+            $new_directory = '/proofs/'.$user->username.'/evidence_'.$evidence->id.'/'.$name.'.'.$type;
 
             try{
                 // movemos
@@ -168,8 +168,8 @@ class EvidenceController extends Controller
         
         $token = session()->token();
 
-        $proofs_folder = $instance.'/proofs/'.$user->username.'/evidence_'.$evidence->id;
-        $tmp = $instance.'/tmp/'.$user->username.'/'.$token;
+        $proofs_folder = '/proofs/'.$user->username.'/evidence_'.$evidence->id;
+        $tmp = '/tmp/'.$user->username.'/'.$token;
 
         foreach (Storage::files($proofs_folder) as $filename) {
 
@@ -193,7 +193,7 @@ class EvidenceController extends Controller
      * EDIT AN EVIDENCE
      ****************************************************************************/
 
-    public function edit($instance,$id)
+    public function edit($id)
     {
 
         $user = Auth::user();
@@ -203,7 +203,7 @@ class EvidenceController extends Controller
         $evidence = Evidence::find($id);
         $committees = Committee::all();
 
-        $tmp = $instance.'/tmp/'.$user->username.'/'.$token.'/';
+        $tmp = '/tmp/'.$user->username.'/'.$token.'/';
 
         Storage::deleteDirectory($tmp);
 
@@ -213,11 +213,11 @@ class EvidenceController extends Controller
         // copiamos las pruebas a una carpeta temporal para poder trabajar con los mismos
         $this->copy_files_into_temporary_folder($evidence);
 
-        return view('evidence.createandedit', ['evidence' => $evidence, 'instance' => $instance,
+        return view('evidence.createandedit', ['evidence' => $evidence,
             'committees' => $committees,
             'edit' => true,
-            'route_draft' => route('evidence.draft.edit',$instance),
-            'route_publish' => route('evidence.publish.edit',$instance)]);
+            'route_draft' => route('evidence.draft.edit'),
+            'route_publish' => route('evidence.publish.edit')]);
     }
 
     public function draft_edit(Request $request)
@@ -253,9 +253,9 @@ class EvidenceController extends Controller
         $this->save_files($request,$evidence_new);
 
         if($status == "DRAFT") {
-            return redirect()->route('evidence.list', $instance)->with('success', 'Evidencia editada con éxito.');
+            return redirect()->route('evidence.list')->with('success', 'Evidencia editada con éxito.');
         }else{
-            return redirect()->route('evidence.list', $instance)->with('success', 'Evidencia publicada con éxito.');
+            return redirect()->route('evidence.list')->with('success', 'Evidencia publicada con éxito.');
         }
 
     }
@@ -273,7 +273,7 @@ class EvidenceController extends Controller
         // eliminamos recursivamente la evidencia y todas las versiones anteriores, incluyendo archivos
         $this->delete_evidence($evidence);
 
-        return redirect()->route('evidence.list',$instance)->with('success', 'Evidencia borrada con éxito.');
+        return redirect()->route('evidence.list')->with('success', 'Evidencia borrada con éxito.');
     }
 
     private function delete_evidence($evidence)
@@ -286,7 +286,7 @@ class EvidenceController extends Controller
 
         // eliminamos los archivos almacenados
         $this->delete_files($evidence);
-        Storage::deleteDirectory($instance.'/proofs/'.$user->username.'/evidence_'.$evidence->id.'');
+        Storage::deleteDirectory('/proofs/'.$user->username.'/evidence_'.$evidence->id.'');
         $evidence->delete();
 
         if($evidence_previous != null)
@@ -317,14 +317,16 @@ class EvidenceController extends Controller
 
         $evidence->save();
 
-        return redirect()->route('evidence.list',$instance)->with('success', 'Evidencia reasignada como borrador con éxito.');
+        return redirect()->route('evidence.list')->with('success', 'Evidencia reasignada como borrador con éxito.');
     }
 
 
-    public function export($instance, $ext)
+    public function export( $ext)
     {
         try {
-            ob_end_clean();
+            if (ob_get_level()) {
+                ob_end_clean();
+            }
             if(!in_array($ext, ['csv', 'pdf', 'xlsx'])){
                 return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
             }

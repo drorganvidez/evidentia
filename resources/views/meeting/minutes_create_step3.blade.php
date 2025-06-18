@@ -6,7 +6,7 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage',\Instantiation::instance())}}">Gestionar reuniones</a></li>
+    <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage')}}">Gestionar reuniones</a></li>
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
 
@@ -16,9 +16,9 @@
 
         <x-menumeeting/>
 
-        <div class="col-lg-9">
+        <div class="col-lg-8">
 
-            <div class="card shadow-sm">
+            <div class="card">
 
                 <div class="card-body">
 
@@ -66,7 +66,7 @@
 
                                 <div id="step_3" class="content active" role="tabpanel">
 
-                                    <form method="POST" action="{{route('secretary.meeting.manage.minutes.create.step3_p',\Instantiation::instance())}}" id="request_form">
+                                    <form method="POST" action="{{route('secretary.meeting.manage.minutes.create.step3_p')}}" id="request_form">
                                         @csrf
 
                                         <input type="hidden" name="meeting_request" value="{{$meeting_request->id ?? ''}}"/>
@@ -397,7 +397,7 @@
 
                                                 @if($meeting_request)
 
-                                                    @foreach($meeting_request->diary->diary_points as $key => $diary_point)
+                                                    @foreach($meeting_request->diary->diaryPoints as $key => $diary_point)
 
                                                         <div class="card card-info point_body" id="point_{{++$key}}">
 
@@ -524,7 +524,7 @@
                 var seleccionados = new Array();
 
                 $.ajax({
-                    url: '/{{$instance}}/secretary/meeting/defaultlist/' + sel.value,
+                    url: '/secretary/meeting/defaultlist/' + sel.value,
                     success: function (respuesta) {
 
                         for (var i = 0; i < respuesta.length; i++) {
@@ -534,7 +534,7 @@
 
                         // Volvemos a incluir todos los usuarios
                         $.ajax({
-                            url: '/{{$instance}}/gp/users/all/',
+                            url: '/gp/users/all/',
                             success: function (respuesta) {
 
                                 for (var i = 0; i < respuesta.length; i++) {

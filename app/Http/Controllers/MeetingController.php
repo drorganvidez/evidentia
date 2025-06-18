@@ -28,10 +28,12 @@ class MeetingController extends Controller
     }
 
 
-    public function meeting_export($instance, $ext)
+    public function meeting_export($ext)
     {
         try {
-            ob_end_clean();
+            if (ob_get_level()) {
+                ob_end_clean();
+            }
             if(!in_array($ext, ['csv', 'pdf', 'xlsx'])){
                 return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
             }
@@ -41,10 +43,12 @@ class MeetingController extends Controller
         }
     }
 
-    public function export($instance, $ext)
+    public function export($ext)
     {
         try {
-            ob_end_clean();
+            if (ob_get_level()) {
+                ob_end_clean();
+            }
             if(!in_array($ext, ['csv', 'pdf', 'xlsx'])){
                 return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
             }

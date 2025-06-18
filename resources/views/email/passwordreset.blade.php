@@ -50,7 +50,7 @@
 
                         <div class="callout">
 
-                            <img class="img-fluid" width="200px" alt="blablabla" src="https://www.evidentia.cloud/dist/img/logo_light.svg">
+                            <img class="img-fluid" width="200px" alt="blablabla" src="https://evidentia.us.es/dist/img/logo_light.svg">
 
                             <br>
 
@@ -59,7 +59,7 @@
                             <p>Has solicitado un restablecimiento de la contraseña de tu cuenta de Evidentia Cloud.
                             Si no eres tú la persona que lo ha solicitado, ignora este mensaje.</p>
 
-                            <p><a style="color: #2e6da4; text-decoration: none;" href="https://www.evidentia.cloud/{{$instance}}/password/update/{{$token->token}}">Haz click aquí para restablecer tu contraseña.</a></p>
+                            <p><a style="color: #2e6da4; text-decoration: none;" href="https://evidentia.us.es/password/update/{{$token->token}}">Haz click aquí para restablecer tu contraseña.</a></p>
 
                             <p>Nota: El link de restablecimiento caducará a las 24 horas.</p>
 

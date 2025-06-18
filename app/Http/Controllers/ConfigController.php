@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Configuration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Middleware\CheckRoles;
 
 class ConfigController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('checkroles:LECTURE|PRESIDENT');
+        $this->middleware(CheckRoles::class . ':LECTURE,PRESIDENT');
     }
 
 
@@ -20,9 +21,9 @@ class ConfigController extends Controller
         
         $route = null;
         if(Auth::user()->hasRole('LECTURE')){
-            $route = route('lecture.config.save',$instance);
+            $route = route('lecture.config.save');
         }else{
-            $route = route('president.config.save',$instance);
+            $route = route('president.config.save');
         }
 
         $configuration = Configuration::find(1);
@@ -54,9 +55,9 @@ class ConfigController extends Controller
         $configuration->save();
 
         if(Auth::user()->hasRole('LECTURE')) {
-            return redirect()->route('lecture.config', $instance)->with('success', 'Configuración guardada con éxito.');
+            return redirect()->route('lecture.config')->with('success', 'Configuración guardada con éxito.');
         }else{
-            return redirect()->route('president.config', $instance)->with('success', 'Configuración guardada con éxito.');
+            return redirect()->route('president.config')->with('success', 'Configuración guardada con éxito.');
         }
 
     }

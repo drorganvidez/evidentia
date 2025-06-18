@@ -7,9 +7,9 @@
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/">Home</a></li>
     @if(Auth::user()->hasRole('PRESIDENT'))
-        <li class="breadcrumb-item"><a href="{{route('president.user.list',$instance)}}">Gestionar alumnos</a></li>
+        <li class="breadcrumb-item"><a href="{{route('president.user.list')}}">Gestionar alumnos</a></li>
     @else
-        <li class="breadcrumb-item"><a href="{{route('lecture.user.list',$instance)}}">Gestionar alumnos</a></li>
+        <li class="breadcrumb-item"><a href="{{route('lecture.user.list')}}">Gestionar alumnos</a></li>
     @endif
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
@@ -26,7 +26,7 @@
 
                 <div class="col-lg-8">
 
-                    <div class="card shadow-lg">
+                    <div class="card">
 
                         <div class="card-body">
 
@@ -88,16 +88,16 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group" id="comittee" style="display: none">
+                            <div class="form-group" id="committee" style="display: none">
                                 <label>Selecciona el comité asociado</label>
-                                <select name="comittee" class="form-control select2bs4" style="width: 100%;">
-                                    @foreach($committees as $comittee)
+                                <select name="committee" class="form-control select2bs4" style="width: 100%;">
+                                    @foreach($committees as $committee)
                                         <option
-                                            @if($comittee->name == $user->associate_comittee())
+                                            @if($committee->name == $user->associate_committee())
                                             selected
                                             @endif
-                                            value="{{$comittee->id}}"
-                                        >{{$comittee->name}}</option>
+                                            value="{{$committee->id}}"
+                                        >{{$committee->name}}</option>
                                     @endforeach
                                 </select>
                                 <small class="form-text text-muted">Los roles "COORDINADOR" o "SECRETARIO"
@@ -167,12 +167,12 @@
 
                 // si es coordinador
                 if(values[i] == "4"){
-                    $("#comittee").show();
+                    $("#committee").show();
                 }
 
                 // si es administrador
                 if(values[i] == "5"){
-                    $("#comittee").show();
+                    $("#committee").show();
                 }
             }
 
@@ -184,19 +184,19 @@
 
                     // si es coordinador
                     if(values[i] == "4"){
-                        $("#comittee").show();
+                        $("#committee").show();
                         cont++;
                     }
 
                     // si es administrador
                     if(values[i] == "5"){
-                        $("#comittee").show();
+                        $("#committee").show();
                         cont++;
                     }
                 }
 
                 if(cont == 0){
-                    $("#comittee").hide();
+                    $("#committee").hide();
                 }
 
             });

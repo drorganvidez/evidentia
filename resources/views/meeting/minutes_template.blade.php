@@ -103,7 +103,7 @@
 
             <tr>
                 <td>Comité</td>
-                <td>{{$meeting_minutes->meeting->comittee->name}}</td>
+                <td>{{$meeting_minutes->meeting->committee->name}}</td>
             </tr>
 
             <tr>
@@ -150,10 +150,10 @@
                 <th>Asistencia</th>
             </tr>
 
-            @foreach($meeting_minutes->meeting->comittee->coordinators as $coordinator)
+            @foreach($meeting_minutes->meeting->committee->coordinators as $coordinator)
                 <tr>
                     @if ($loop->first)
-                        <td class="X" rowspan="{{$meeting_minutes->meeting->comittee->coordinators->count()}}">
+                        <td class="X" rowspan="{{$meeting_minutes->meeting->committee->coordinators->count()}}">
                             COORDINADORES
                         </td>
                     @endif>
@@ -172,10 +172,10 @@
                 </tr>
             @endforeach
 
-            @foreach($meeting_minutes->meeting->comittee->secretaries as $secretary)
+            @foreach($meeting_minutes->meeting->committee->secretaries as $secretary)
                 <tr>
                     @if ($loop->first)
-                        <td class="X" rowspan="{{$meeting_minutes->meeting->comittee->secretaries->count()}}">
+                        <td class="X" rowspan="{{$meeting_minutes->meeting->committee->secretaries->count()}}">
                             SECRETARIOS
                         </td>
                     @endif>
@@ -306,7 +306,7 @@
             </h3>
 
             <h4>
-                Secretario de {{$meeting_minutes->meeting->comittee->name}}
+                Secretario de {{$meeting_minutes->meeting->committee->name}}
             </h4>
         </div>
 

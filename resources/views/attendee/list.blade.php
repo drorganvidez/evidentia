@@ -12,28 +12,9 @@
 @section('content')
 
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-12">
 
-            <div class="row mb-3">
-                <p style="padding: 5px 50px 0px 15px">Exportar tabla:</p>
-                <div class="col-lg-1 mt-12">
-                    <a href="{{route('attendee.list.export',['ext' => 'xlsx'])}}"
-                       class="btn btn-info btn-block" role="button">
-                        XLSX</a>
-                </div>
-                <div class="col-lg-1 mt-12">
-                    <a href="{{route('attendee.list.export',['ext' => 'csv'])}}"
-                       class="btn btn-info btn-block" role="button">
-                        CSV</a>
-                </div>
-                <div class="col-lg-1 mt-12">
-                    <a href="{{route('attendee.list.export',['ext' => 'pdf'])}}"
-                       class="btn btn-info btn-block" role="button">
-                        PDF</a>
-                </div>
-            </div>
-
-            <div class="card shadow-lg">
+            <div class="card">
 
                 <div class="card-body">
                     <table id="dataset" class="table table-hover table-responsive">
@@ -65,50 +46,27 @@
 
         </div>
 
-        <div class="col-lg-4">
-            <div class="card shadow-sm">
+        <div class="col-lg-6">
+            <div class="card">
+    <div class="card-body">
 
-                <div class="card-body">
-
-                    <div class="callout callout-info">
-                        <h4>
-
-                            Fecha límite para el registro de eventos y asistencias
-
-                        </h4>
-
-                        <h4>
-
-                            <i class="fas fa-stopwatch"></i>
-
-                            {{\Carbon\Carbon::parse(Config::attendee_timestamp())->format('d/m/Y')}}
-
-                            a las
-
-                            {{\Carbon\Carbon::parse(Config::attendee_timestamp())->format('H:i')}}
-
-                        </h4>
-
-                        <div class="countdown_container" style="display: none">
-
-                            <p>
-
-                                Quedan
-
-                                <b>
-                                    <span id="countdown"></span>
-                                </b>
-
-                                para registrar eventos y asistencias desde Eventbrite.
-
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </div>
+        <div class="alert alert-info mb-0">
+            <h4 class="mb-2">
+                <i class="fas fa-stopwatch"></i> Fecha límite para el registro de eventos y asistencias
+            </h4>
+            <p class="mb-0">
+                {{ \Carbon\Carbon::parse(Config::attendee_timestamp())->format('d/m/Y \a \l\a\s H:i') }}
+            </p>
+            <div class="countdown_container mt-2" style="display: none">
+                <p>
+                    Quedan <b><span id="countdown"></span></b> para registrar eventos y asistencias desde Eventbrite.
+                </p>
             </div>
+        </div>
+
+    </div>
+</div>
+
 
         </div>
     </div>

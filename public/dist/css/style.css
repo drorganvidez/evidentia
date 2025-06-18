@@ -85,3 +85,7 @@ a:hover {
 .bg-info{
     background-color: #002033 !important;
 }
+
+.alert.alert-info{
+    background-color: #002033;
+}

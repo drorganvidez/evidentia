@@ -8,6 +8,7 @@ use App\Models\ReasonRejection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Middleware\CheckRoles;
 
 class EvidenceCoordinatorController extends Controller
 {
@@ -15,7 +16,7 @@ class EvidenceCoordinatorController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('checkroles:COORDINATOR|SECRETARY');
+        $this->middleware(CheckRoles::class . ':COORDINATOR,SECRETARY');
     }
 
     /****************************************************************************
@@ -27,8 +28,8 @@ class EvidenceCoordinatorController extends Controller
         
 
         $coordinator = Auth::user()->coordinator;
-        $comittee = $coordinator->comittee;
-        $evidences = $comittee->evidences_not_draft()->paginate(10);;
+        $committee = $coordinator->committee;
+        $evidences = $committee->evidencesNotDraft()->paginate(10);;
 
         return view('evidence.coordinator.list',
             ['evidences' => $evidences, 'type' => 'all']);
@@ -39,8 +40,8 @@ class EvidenceCoordinatorController extends Controller
         
 
         $coordinator = Auth::user()->coordinator;
-        $comittee = $coordinator->comittee;
-        $evidences = $comittee->evidences_pending()->paginate(10);
+        $committee = $coordinator->committee;
+        $evidences = $committee->evidences_pending()->paginate(10);
 
         return view('evidence.coordinator.list',
             ['evidences' => $evidences, 'type' => 'pending']);
@@ -51,8 +52,8 @@ class EvidenceCoordinatorController extends Controller
         
 
         $coordinator = Auth::user()->coordinator;
-        $comittee = $coordinator->comittee;
-        $evidences = $comittee->evidences_accepted()->paginate(10);
+        $committee = $coordinator->committee;
+        $evidences = $committee->evidences_accepted()->paginate(10);
 
         return view('evidence.coordinator.list',
             ['evidences' => $evidences, 'type' => 'accepted']);
@@ -63,14 +64,14 @@ class EvidenceCoordinatorController extends Controller
         
 
         $coordinator = Auth::user()->coordinator;
-        $comittee = $coordinator->comittee;
-        $evidences = $comittee->evidences_rejected()->paginate(10);
+        $committee = $coordinator->committee;
+        $evidences = $committee->evidences_rejected()->paginate(10);
 
         return view('evidence.coordinator.list',
             ['evidences' => $evidences, 'type' => 'rejected']);
     }
 
-    public function accept($instance, $id)
+    public function accept($id)
     {
         
 
@@ -78,7 +79,7 @@ class EvidenceCoordinatorController extends Controller
         $evidence->status = 'ACCEPTED';
         $evidence->save();
 
-        return redirect()->route('coordinator.evidence.list.accepted', $instance)->with('success', 'Evidencia aceptada con éxito.');
+        return redirect()->route('coordinator.evidence.list.accepted')->with('success', 'Evidencia aceptada con éxito.');
     }
 
     public function reject(Request $request)
@@ -95,13 +96,15 @@ class EvidenceCoordinatorController extends Controller
         ]);
         $reasonrejection->save();
 
-        return redirect()->route('coordinator.evidence.list.rejected', $instance)->with('success', 'Evidencia rechazada con éxito.');
+        return redirect()->route('coordinator.evidence.list.rejected')->with('success', 'Evidencia rechazada con éxito.');
     }
 
-    public function evidences_export($instance, $type, $ext)
+    public function evidences_export($type, $ext)
     {
         try {
-            ob_end_clean();
+            if (ob_get_level()) {
+                ob_end_clean();
+            }
             if (!in_array($ext, ['csv', 'pdf', 'xlsx'])) {
                 return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
             }

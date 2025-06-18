@@ -6,7 +6,7 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage',\Instantiation::instance())}}">Gestionar reuniones</a></li>
+    <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage')}}">Gestionar reuniones</a></li>
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
 
@@ -16,9 +16,9 @@
 
         <x-menumeeting/>
 
-        <div class="col-md-9">
+        <div class="col-md-8">
 
-            <div class="card shadow-sm">
+            <div class="card">
 
                 <div class="card-body">
 
@@ -58,7 +58,7 @@
 
                         <div id="step_1" class="content active" role="tabpanel">
 
-                            <form method="POST" action="{{route('secretary.meeting.manage.minutes.create.step1_p',\Instantiation::instance())}}">
+                            <form method="POST" action="{{route('secretary.meeting.manage.minutes.create.step1_p')}}">
                                 @csrf
 
                                 <div class="form-row">

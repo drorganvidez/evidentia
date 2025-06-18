@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 class ProofController extends Controller
 {
 
-    public function download($instance,$id){
+    public function download($id){
 
         $proof = Proof::find($id);
         $file = $proof->file;
@@ -18,7 +18,9 @@ class ProofController extends Controller
         $response = Storage::download($file->route);
 
         // limpiar búfer de salida
-        ob_end_clean();
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
 
         return $response;
     }

@@ -25,7 +25,7 @@ class CheckIsAdministrator
         }
 
         
-        return redirect()->route('home',$instance);
+        return redirect()->route('home');
 
     }
 }

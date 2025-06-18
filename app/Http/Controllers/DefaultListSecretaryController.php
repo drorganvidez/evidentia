@@ -6,6 +6,7 @@ use App\Models\DefaultList;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Middleware\CheckRoles;
 
 class DefaultListSecretaryController extends Controller
 {
@@ -13,14 +14,14 @@ class DefaultListSecretaryController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('checkroles:SECRETARY');
+        $this->middleware(CheckRoles::class . ':SECRETARY');
     }
 
     public function list()
     {
         
 
-        $defaultlists = Auth::user()->secretary->default_lists()->get();
+        $defaultlists = Auth::user()->secretary->defaultLists()->get();
 
         return view('defaultlist.list',
             ['defaultlists' => $defaultlists]);
@@ -33,7 +34,7 @@ class DefaultListSecretaryController extends Controller
         $users = User::orderBy('surname')->get();
 
         return view('defaultlist.createandedit',
-            ['users' => $users, 'route' => route('secretary.defaultlist.new',$instance)]);
+            ['users' => $users, 'route' => route('secretary.defaultlist.new')]);
     }
 
     public function new(Request $request)
@@ -66,11 +67,11 @@ class DefaultListSecretaryController extends Controller
 
         }
 
-        return redirect()->route('secretary.defaultlist.list',$instance)->with('success', 'Lista creada con éxito.');
+        return redirect()->route('secretary.defaultlist.list')->with('success', 'Lista creada con éxito.');
 
     }
 
-    public function edit($instance,$id)
+    public function edit($id)
     {
 
         
@@ -79,7 +80,7 @@ class DefaultListSecretaryController extends Controller
 
         return view('defaultlist.createandedit',
             ['defaultlist' => $defaultlist,
-                'users' => $users, 'route' => route('secretary.defaultlist.save',$instance), 'edit' => true]);
+                'users' => $users, 'route' => route('secretary.defaultlist.save'), 'edit' => true]);
 
     }
 
@@ -111,7 +112,7 @@ class DefaultListSecretaryController extends Controller
             $defaultlist->users()->attach($user);
         }
 
-        return redirect()->route('secretary.defaultlist.list',$instance)->with('success', 'Lista editada con éxito.');
+        return redirect()->route('secretary.defaultlist.list')->with('success', 'Lista editada con éxito.');
 
     }
 
@@ -122,6 +123,6 @@ class DefaultListSecretaryController extends Controller
 
         $defaultlist->delete();
 
-        return redirect()->route('secretary.defaultlist.list',$instance)->with('success', 'Lista eliminada con éxito.');
+        return redirect()->route('secretary.defaultlist.list')->with('success', 'Lista eliminada con éxito.');
     }
 }

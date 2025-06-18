@@ -15,7 +15,7 @@
 
         <div class="col-lg-8">
 
-            <div class="card shadow-lg">
+            <div class="card">
 
                 <div class="card-body">
 
@@ -33,13 +33,13 @@
                     </thead>
                     <tbody>
 
-                    @foreach($committees as $comittee)
+                    @foreach($committees as $committee)
                         <tr>
-                            <td class="align-middle text-center d-none d-sm-none d-md-table-cell d-lg-table-cell"><span id="icon_prev_{{$comittee->id}}" style="font-size: 20px">{!! $comittee->icon ?? '' !!}</span></td>
-                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><input name="icon_{{$comittee->id}}" id="icon_{{$comittee->id}}" oninput="prev({{$comittee->id}})" type="text" class="form-control" placeholder="" value="{{$comittee->icon}}" autocomplete="icon" autofocus=""></td>
-                            <td><input name="name_{{$comittee->id}}" type="text" class="form-control" placeholder="" value="{{$comittee->name}}" autocomplete="name" ></td>
+                            <td class="align-middle text-center d-none d-sm-none d-md-table-cell d-lg-table-cell"><span id="icon_prev_{{$committee->id}}" style="font-size: 20px">{!! $committee->icon ?? '' !!}</span></td>
+                            <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><input name="icon_{{$committee->id}}" id="icon_{{$committee->id}}" oninput="prev({{$committee->id}})" type="text" class="form-control" placeholder="" value="{{$committee->icon}}" autocomplete="icon" autofocus=""></td>
+                            <td><input name="name_{{$committee->id}}" type="text" class="form-control" placeholder="" value="{{$committee->name}}" autocomplete="name" ></td>
                             <td>
-                                <a class="form-control btn btn-danger " href="#" data-toggle="modal" data-target="#modal-{{$comittee->id}}">
+                                <a class="form-control btn btn-danger " href="#" data-toggle="modal" data-target="#modal-{{$committee->id}}">
                                     <i class="fas fa-trash"></i> <span class="d-none d-sm-none d-md-none d-lg-inline">Eliminar</span>
                                 </a>
                             </td>
@@ -65,7 +65,7 @@
         </div>
 
         <div class="col-lg-4">
-            <div class="card shadow-sm">
+            <div class="card">
 
                 <div class="card-body">
 
@@ -107,8 +107,8 @@
     </div>
 
     <div class="container">
-        @foreach($committees as $comittee)
-        <div class="modal fade" id="modal-{{$comittee->id}}">
+        @foreach($committees as $committee)
+        <div class="modal fade" id="modal-{{$committee->id}}">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content" style="overflow: visible">
 
@@ -119,11 +119,11 @@
                         </button>
                     </div>
 
-                    @if($comittee->can_be_removed())
+                    @if($committee->can_be_removed())
 
                         <form action="{{$route_remove}}" method="POST">
                             @csrf
-                            <input type="hidden" name="_id" value="{{$comittee->id}}"/>
+                            <input type="hidden" name="_id" value="{{$committee->id}}"/>
                             <div class="modal-body text-wrap">
                                 Esta acción no se puede deshacer. ¿Deseas continuar?
                             </div>
@@ -142,10 +142,10 @@
                                 <ol>
                                     <li>
                                         <b>No tiene ningún coordinador ni secretario</b><br>
-                                        (coordinadores: {{$comittee->coordinators->count()}}, secretarios: {{$comittee->secretaries->count()}})
+                                        (coordinadores: {{$committee->coordinators->count()}}, secretarios: {{$committee->secretaries->count()}})
                                     </li>
-                                    <li><b>No tiene evidencias asociadas, sea cual sea su estado</b> (evidencias: {{$comittee->evidences->count()}})</li>
-                                <li><b>No hay reuniones asociadas</b> (reuniones: {{$comittee->meetings->count()}})</li>
+                                    <li><b>No tiene evidencias asociadas, sea cual sea su estado</b> (evidencias: {{$committee->evidences->count()}})</li>
+                                <li><b>No hay reuniones asociadas</b> (reuniones: {{$committee->meetings->count()}})</li>
                                 </ol>
                         </div>
                         <div class="modal-footer justify-content-between">

@@ -6,7 +6,7 @@
 
         id="{{ $id }}"
 
-        class="selectpicker form-control @error('comittee') is-invalid @enderror"
+        class="selectpicker form-control @error('committee') is-invalid @enderror"
 
         name="{{ $attr }}"
 

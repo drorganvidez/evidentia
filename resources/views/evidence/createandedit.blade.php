@@ -11,7 +11,7 @@
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/">Home</a></li>
     @isset($edit)
-        <li class="breadcrumb-item"><a href="{{route('evidence.list',$instance)}}">Mis evidencias</a></li>
+        <li class="breadcrumb-item"><a href="{{route('evidence.list')}}">Mis evidencias</a></li>
     @endisset
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
@@ -83,7 +83,7 @@
 
             <div class="col-lg-8">
 
-                <div class="card shadow-sm">
+                <div class="card">
 
                     <div class="card-body">
 
@@ -114,15 +114,15 @@
                             </div>
 
                             <div class="form-group col-md-3">
-                                <label for="comittee">Comité asociado</label>
-                                <select id="comittee" class="selectpicker form-control @error('comittee') is-invalid @enderror" name="comittee" value="{{ old('comittee') }}" required autofocus>
-                                    @foreach($committees as $comittee)
+                                <label for="committee">Comité asociado</label>
+                                <select id="committee" class="selectpicker form-control @error('committee') is-invalid @enderror" name="committee" value="{{ old('committee') }}" required autofocus>
+                                    @foreach($committees as $committee)
                                         @isset($evidence)
-                                            <option {{$comittee->id == old('comittee') || $evidence->comittee->id == $comittee->id ? 'selected' : ''}} value="{{$comittee->id}}">
+                                            <option {{$committee->id == old('committee') || $evidence->committee->id == $committee->id ? 'selected' : ''}} value="{{$committee->id}}">
                                         @else
-                                            <option {{$comittee->id == old('comittee') ? 'selected' : ''}} value="{{$comittee->id}}">
+                                            <option {{$committee->id == old('committee') ? 'selected' : ''}} value="{{$committee->id}}">
                                                 @endisset
-                                                {!! $comittee->name !!}
+                                                {!! $committee->name !!}
                                             </option>
                                             @endforeach
                                 </select>
@@ -180,7 +180,7 @@
 
             <div class="col-lg-4">
 
-                <div class="card shadow-sm">
+                <div class="card">
 
                     <div class="card-body">
 

@@ -22,7 +22,7 @@
         </h2>
 
         <h3 style="color: #79AED3">
-            Comité de {{$meeting_request->comittee->name}}
+            Comité de {{$meeting_request->committee->name}}
         </h3>
 
         <h3>
@@ -52,7 +52,7 @@
                 híbrida
                 @break
             @endswitch
-            </b> del comité de <b>{{$meeting_request->comittee->name}}</b>, que se celebrará el día <b>{{ \Carbon\Carbon::parse($meeting_request->datetime)->format('d/m/Y') }}</b>
+            </b> del comité de <b>{{$meeting_request->committee->name}}</b>, que se celebrará el día <b>{{ \Carbon\Carbon::parse($meeting_request->datetime)->format('d/m/Y') }}</b>
             a las <b>{{ \Carbon\Carbon::parse($meeting_request->datetime)->format('H:i') }}</b> en <b>{{$meeting_request->place}}</b>, en la que
             se tratarán los asuntos que se expresan a continuación:
         </p>
@@ -62,7 +62,7 @@
     <h3 style="margin-top: 50px; color: #79AED3">Orden del día</h3>
 
     <ol>
-        @foreach($meeting_request->diary->diary_points as $point)
+        @foreach($meeting_request->diary->diaryPoints as $point)
             <li>
                 {{$point->point}}
             </li>
@@ -82,7 +82,7 @@
         </h4>
 
         <h3>
-            Secretario de {{$meeting_request->comittee->name}}
+            Secretaría {{$meeting_request->committee->name}}
         </h3>
     </div>
 

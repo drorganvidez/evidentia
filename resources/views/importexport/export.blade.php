@@ -13,7 +13,7 @@
     <div class="row">
 
         <div class="col-md-12">
-            <div class="card shadow-lg">
+            <div class="card">
                 <div class="card-body">
                     <div class="tab-content">
 

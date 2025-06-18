@@ -21,7 +21,7 @@
             @if(!\Carbon\Carbon::now()->gt(\Config::attendee_timestamp()))
             <div class="row mb-3">
                 <div class="col-lg-4 mt-1">
-                    <a href="{{route('registercoordinator.attendee.export',['instance' => $instance])}}"
+                    <a href="{{route('registercoordinator.attendee.export',[])}}"
                        class="btn btn-info btn-block" role="button">
                         <i class="fas fa-file-export"></i> &nbsp;Exportar asistencias</a>
                 </div>
@@ -29,7 +29,7 @@
             </div>
             @endif
 
-            <div class="card shadow-lg">
+            <div class="card">
 
                 <div class="card-body">
                     <table id="dataset" class="table table-hover table-responsive">

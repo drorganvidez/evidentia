@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Gestionar evidencias de '.Auth::user()->coordinator->comittee->name)
+@section('title', 'Gestionar evidencias de '.Auth::user()->coordinator->committee->name)
 
 @section('title-icon', 'fas fa-clipboard-check')
 
@@ -35,7 +35,7 @@
 
         <div class="col-lg-8 mt-3">
 
-            <div class="card shadow-lg">
+            <div class="card">
 
                 <div class="card-body">
                     <table id="dataset" class="table table-hover table-responsive">
@@ -89,7 +89,7 @@
 
         <div class="col-lg-4 mt-3">
 
-            <div class="card shadow-sm">
+            <div class="card">
 
                 <div class="card-body">
 

@@ -32,7 +32,7 @@
                 </div>
             </div>
 
-            <div class="card shadow-lg">
+            <div class="card">
 
                 <div class="card-body">
                     <table id="dataset" class="table table-hover table-responsive">
@@ -64,7 +64,7 @@
                                 </td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$evidence->hours}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                    <x-evidencecomittee :evidence="$evidence"/>
+                                    <x-evidencecommittee :evidence="$evidence"/>
                                 </td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"> {{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }} </td>
                                 <td>

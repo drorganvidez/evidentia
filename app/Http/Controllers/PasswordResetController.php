@@ -19,11 +19,11 @@ class PasswordResetController extends Controller
         $this->middleware('guest');
     }
 
-    public function reset($instance)
+    public function reset()
     {
 
         return view('auth.passwords.reset',
-            ['instance' => $instance]);
+            []);
 
     }
 
@@ -57,16 +57,16 @@ class PasswordResetController extends Controller
             $token->save();
 
             try{
-                Mail::to($user)->send(new PasswordReset(\Instantiation::instance(),$token,$user));
+                Mail::to($user)->send(new PasswordReset($token,$user));
             }catch(\Exception $e){
 
             }
         }
 
-        return redirect()->route('instance.login', \Instantiation::instance())->with('light', 'Si el email se encuentra en nuestros registros, recibirás un correo con instrucciones para restablecer tu contraseña.');
+        return redirect()->route('login')->with('light', 'Si el email se encuentra en nuestros registros, recibirás un correo con instrucciones para restablecer tu contraseña.');
     }
 
-    public function update($instance, $token)
+    public function update($token)
     {
 
         $token_entity = Token::where("token", $token)->first();
@@ -78,11 +78,11 @@ class PasswordResetController extends Controller
                     ['token' => $token]);
             }
 
-            return redirect()->route('instance.login',$instance)->with('error', 'El token no es válido o ha caducado.');
+            return redirect()->route('login')->with('error', 'El token no es válido o ha caducado.');
 
         }
 
-        return redirect()->route('instance.login', $instance);
+        return redirect()->route('login');
 
     }
 
@@ -105,9 +105,9 @@ class PasswordResetController extends Controller
             $token_entity->used = true;
             $token_entity->save();
 
-            return redirect()->route('instance.login',\Instantiation::instance())->with('success', 'Contraseña cambiada con éxito. Ahora puedes iniciar sesión.');
+            return redirect()->route('login')->with('success', 'Contraseña cambiada con éxito. Ahora puedes iniciar sesión.');
         }else{
-            return redirect()->route('instance.login',\Instantiation::instance())->with('error', 'El token no es válido o ha caducado.');
+            return redirect()->route('login')->with('error', 'El token no es válido o ha caducado.');
         }
 
 

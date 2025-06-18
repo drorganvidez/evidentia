@@ -1,5 +1,5 @@
 @if ($evidence->status != 'ACCEPTED' and !\Carbon\Carbon::now()->gt(\Config::validate_evidences_timestamp()))
-<a class="btn btn-success btn-sm" href="{{route('coordinator.evidence.accept',['instance' => \Instantiation::instance(), 'id' => $evidence->id])}}">
+<a class="btn btn-success btn-sm" href="{{route('coordinator.evidence.accept',['id' => $evidence->id])}}">
     <i class="far fa-thumbs-up"></i>
     <span class="d-none d-sm-none d-md-none d-lg-inline"></span>
 </a>

@@ -7,20 +7,21 @@ use App\Models\Meeting;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Middleware\CheckRoles;
 
 class BonusSecretaryController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('checkroles:SECRETARY');
+        $this->middleware(CheckRoles::class . ':SECRETARY');
     }
 
     public function list()
     {
         
 
-        $bonus = Auth::user()->secretary->comittee->bonus()->get();
+        $bonus = Auth::user()->secretary->committee->bonus()->get();
 
         return view('bonus.list',
             ['bonus' => $bonus]);
@@ -31,10 +32,10 @@ class BonusSecretaryController extends Controller
         
 
         $users = User::orderBy('surname')->get();
-        $defaultlists = Auth::user()->secretary->default_lists;
+        $defaultlists = Auth::user()->secretary->defaultLists;
 
         return view('bonus.createandedit',
-            ['users' => $users, 'defaultlists' => $defaultlists, 'route' => route('secretary.bonus.new',$instance)]);
+            ['users' => $users, 'defaultlists' => $defaultlists, 'route' => route('secretary.bonus.new')]);
     }
 
     public function new(Request $request)
@@ -53,7 +54,7 @@ class BonusSecretaryController extends Controller
             'hours' => $request->input('hours')
         ]);
 
-        $bonus->comittee()->associate(Auth::user()->secretary->comittee);
+        $bonus->committee()->associate(Auth::user()->secretary->committee);
 
         $bonus->save();
 
@@ -68,18 +69,18 @@ class BonusSecretaryController extends Controller
 
         }
 
-        return redirect()->route('secretary.bonus.list',$instance)->with('success', 'Bono de horas creado con éxito.');
+        return redirect()->route('secretary.bonus.list')->with('success', 'Bono de horas creado con éxito.');
 
     }
 
-    public function edit($instance,$id)
+    public function edit($id)
     {
         $bonus = Bonus::find($id);
         $users = User::orderBy('surname')->get();
-        $defaultlists = Auth::user()->secretary->default_lists;
+        $defaultlists = Auth::user()->secretary->defaultLists;
 
         return view('bonus.createandedit',
-            ['bonus' => $bonus, 'edit' => true, 'users' => $users, 'defaultlists' => $defaultlists, 'route' => route('secretary.bonus.save',$instance)]);
+            ['bonus' => $bonus, 'edit' => true, 'users' => $users, 'defaultlists' => $defaultlists, 'route' => route('secretary.bonus.save')]);
     }
 
     public function save(Request $request)
@@ -114,7 +115,7 @@ class BonusSecretaryController extends Controller
             $bonus->users()->attach($user);
         }
 
-        return redirect()->route('secretary.bonus.list',$instance)->with('success', 'Bono editado con éxito.');
+        return redirect()->route('secretary.bonus.list')->with('success', 'Bono editado con éxito.');
 
     }
 
@@ -125,7 +126,7 @@ class BonusSecretaryController extends Controller
 
         $bonus->delete();
 
-        return redirect()->route('secretary.bonus.list',$instance)->with('success', 'Bono eliminado con éxito.');
+        return redirect()->route('secretary.bonus.list')->with('success', 'Bono eliminado con éxito.');
     }
 
 

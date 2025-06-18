@@ -15,43 +15,40 @@
 
         <x-menumeeting/>
 
-        <div class="col-md-9">
+        <div class="col-md-8">
 
-            <div class="card shadow-sm">
+<div class="card">
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-tasks me-2"></i> Pasos para gestionar correctamente las reuniones
+        </h5>
+    </div>
+    <div class="card-body">
 
-                <div class="card-body">
+        <div class="mb-3">
+            <h6 class="fw-bold"><i class="fas fa-calendar-plus me-2 text-info"></i> 1. Crear convocatoria de reunión</h6>
+            <p class="text-muted mb-0">
+                Define los puntos del orden del día que se tratarán durante la reunión.
+            </p>
+        </div>
 
-                    <h4>Bienvenid@ al gestor de reuniones</h4>
+        <div class="mb-3">
+            <h6 class="fw-bold"><i class="fas fa-pen-square me-2 text-info"></i> 2. Crear hoja de firmas</h6>
+            <p class="text-muted mb-0">
+                Los asistentes firmarán su asistencia mediante una URL personalizada accediendo con su usuario y contraseña.
+            </p>
+        </div>
 
-                    <p>Este apartado ha sido rediseñado por completo para dar un mejor servicio a las reuniones de las
-                    Jornadas.</p>
+        <div>
+            <h6 class="fw-bold"><i class="fas fa-file-alt me-2 text-info"></i> 3. Crear acta de reunión</h6>
+            <p class="text-muted mb-0">
+                El acta se genera automáticamente con los puntos del día y las firmas recogidas.
+            </p>
+        </div>
 
-                    <p>
-                        Por favor, siéntete libre de expresar tu opinión a través del
-                        <a href="{{route('suggestionsmailbox',\Instantiation::instance())}}">buzón de sugerencias</a>.
-                        Es anónimo.
-                    </p>
+    </div>
+</div>
 
-                    <hr>
-
-                    <h5>
-                        Pasos para gestionar correctamente las reuniones:
-                    </h5>
-
-                    <dl>
-                        <dt>1. Crear convocatoria de reunión</dt>
-                        <dd>Una convocatoria de reunión te permite definir los puntos del orden del día que vais a tratar en la reunión.</dd>
-                        <dt>2. Crear hoja de firmas</dt>
-                        <dd>Los asistentes a la reunión pueden acceder a una URL generada por el sistema con el que firmarán su asistencia
-                        con su usuario y contraseña.</dd>
-                        <dt>3. Crear acta de reunión</dt>
-                        <dd>Puedes crear el acta de reunión usando la convocatoria y la hoja de firmas: tanto los puntos del día como las firmas se
-                        incorporan automáticamente al acta.</dd>
-                    </dl>
-
-                </div>
-
-            </div>
 
 
         </div>

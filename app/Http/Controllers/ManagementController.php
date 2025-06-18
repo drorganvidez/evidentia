@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Middleware\CheckRoles;
 
 class ManagementController extends Controller
 {
@@ -26,7 +27,7 @@ class ManagementController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('checkroles:LECTURE|PRESIDENT');
+        $this->middleware(CheckRoles::class . ':LECTURE,PRESIDENT');
         $this->user_service = new UserService();
     }
 
@@ -54,7 +55,7 @@ class ManagementController extends Controller
     public function evidence_list()
     {
         
-        $evidences = Evidence::evidences_not_draft();
+        $evidences = Evidence::evidencesNotDraft();
 
         return view('manage.evidence_list',
             ['evidences' => $evidences]);
@@ -69,7 +70,7 @@ class ManagementController extends Controller
             ['meetings' => $meetings]);
     }
 
-    public function comittee_list()
+    public function committee_list()
     {
         
         $committees = Committee::all();
@@ -78,25 +79,25 @@ class ManagementController extends Controller
         $route_new = null;
         $route_remove = null;
         if (Auth::user()->hasRole('PRESIDENT')) {
-            $route = route('president.comittee.management.save', $instance);
-            $route_new = route('president.comittee.management.new', $instance);
-            $route_remove = route('president.comittee.management.remove', $instance);
+            $route = route('president.committee.management.save');
+            $route_new = route('president.committee.management.new');
+            $route_remove = route('president.committee.management.remove');
         } else {
-            $route = route('lecture.comittee.management.save', $instance);
-            $route_new = route('lecture.comittee.management.new', $instance);
-            $route_remove = route('lecture.comittee.management.remove', $instance);
+            $route = route('lecture.committee.management.save');
+            $route_new = route('lecture.committee.management.new');
+            $route_remove = route('lecture.committee.management.remove');
         }
 
-        return view('manage.comittee_list',
+        return view('manage.committee_list',
             ['committees' => $committees, 'route' => $route, 'route_new' => $route_new, 'route_remove' => $route_remove]);
     }
 
-    public function comittee_new(Request $request)
+    public function committee_new(Request $request)
     {
         
         $request->validate([
             'icon' => 'max:255',
-            'name' => 'required|max:255|unique:comittees'
+            'name' => 'required|max:255|unique:committees'
         ]);
 
         Committee::create([
@@ -105,87 +106,87 @@ class ManagementController extends Controller
         ]);
 
         if (Auth::user()->hasRole('PRESIDENT')) {
-            return redirect()->route('president.comittee.list', $instance)->with('success', 'Comité creado con éxito.');
+            return redirect()->route('president.committee.list')->with('success', 'Comité creado con éxito.');
         } else {
-            return redirect()->route('lecture.comittee.list', $instance)->with('success', 'Comité creado con éxito.');
+            return redirect()->route('lecture.committee.list')->with('success', 'Comité creado con éxito.');
         }
     }
 
-    public function comittee_save(Request $request)
+    public function committee_save(Request $request)
     {
         
         $returned_route = null;
         if (Auth::user()->hasRole('PRESIDENT')) {
-            $returned_route = "president.comittee.list";
+            $returned_route = "president.committee.list";
         } else {
-            $returned_route = "lecture.comittee.list";
+            $returned_route = "lecture.committee.list";
         }
 
         // por sl algún usuario avispao modifica los ID en el HTML
         try {
-            foreach (Committee::all() as $comittee) {
+            foreach (Committee::all() as $committee) {
 
 
             }
         } catch (\Exception $e) {
-            return redirect()->route($returned_route, $instance)->with('error', 'Error en la integridad de los comités.' . $e->getMessage());
+            return redirect()->route($returned_route)->with('error', 'Error en la integridad de los comités.' . $e->getMessage());
         }
 
-        foreach (Committee::all() as $comittee) {
+        foreach (Committee::all() as $committee) {
 
             /*
             $request->validate([
-                'icon_' . $comittee->id => 'max:255',
-                'name_' . $comittee->id => 'required|max:255|unique:comittees'
+                'icon_' . $committee->id => 'max:255',
+                'name_' . $committee->id => 'required|max:255|unique:committees'
             ]);
             */
 
-            $new_icon = $request->input('icon_' . $comittee->id);
-            $new_name = $request->input('name_' . $comittee->id);
+            $new_icon = $request->input('icon_' . $committee->id);
+            $new_name = $request->input('name_' . $committee->id);
 
             if ($new_name != "") {
 
-                $saved_comittee = Committee::find($comittee->id);
-                $saved_comittee->icon = $new_icon;
-                $saved_comittee->name = $new_name;
+                $saved_committee = Committee::find($committee->id);
+                $saved_committee->icon = $new_icon;
+                $saved_committee->name = $new_name;
 
-                $saved_comittee->save();
+                $saved_committee->save();
             }
         }
 
-        return redirect()->route($returned_route, $instance)->with('success', 'Comités guardados con éxito.');
+        return redirect()->route($returned_route)->with('success', 'Comités guardados con éxito.');
     }
 
-    public function comittee_remove(Request $request)
+    public function committee_remove(Request $request)
     {
         
         $returned_route = null;
         if (Auth::user()->hasRole('PRESIDENT')) {
-            $returned_route = "president.comittee.list";
+            $returned_route = "president.committee.list";
         } else {
-            $returned_route = "lecture.comittee.list";
+            $returned_route = "lecture.committee.list";
         }
 
-        $comittee = Committee::find($request->input('_id'));
-        if ($comittee->can_be_removed()) {
-            $comittee->delete();
-            return redirect()->route($returned_route, $instance)->with('success', 'Comité eliminado con éxito.');
+        $committee = Committee::find($request->input('_id'));
+        if ($committee->can_be_removed()) {
+            $committee->delete();
+            return redirect()->route($returned_route)->with('success', 'Comité eliminado con éxito.');
         } else {
-            return redirect()->route($returned_route, $instance)->with('error', 'El comité no ha podido ser eliminado.');
+            return redirect()->route($returned_route)->with('error', 'El comité no ha podido ser eliminado.');
         }
 
     }
 
-    public function user_management($instance, $id)
+    public function user_management($id)
     {
         
         $user = User::findOrFail($id);
 
         $route = null;
         if (Auth::user()->hasRole('PRESIDENT')) {
-            $route = route('president.user.management.save', $instance);
+            $route = route('president.user.management.save');
         } else {
-            $route = route('lecture.user.management.save', $instance);
+            $route = route('lecture.user.management.save');
         }
 
 
@@ -219,8 +220,8 @@ class ManagementController extends Controller
 
         // aqui se cambian los roles
         $roles_id = $request->input('roles', []);
-        $comittee_id = $request->input('comittee');
-        if (Committee::find($comittee_id) == null) {
+        $committee_id = $request->input('committee');
+        if (Committee::find($committee_id) == null) {
             return redirect()->route('lecture.user.management', ['id' => $user->id])->with('error', 'Comité no válido.');
         }
 
@@ -240,12 +241,12 @@ class ManagementController extends Controller
 
         // ¿tiene rol de coordinador?
         if ($user->hasRole('COORDINATOR')) {
-            DB::table('coordinators')->insert(['comittee_id' => $comittee_id, 'user_id' => $user->id]);
+            DB::table('coordinators')->insert(['committee_id' => $committee_id, 'user_id' => $user->id]);
         }
 
         // ¿tiene rol de secretario?
         if ($user->hasRole('SECRETARY')) {
-            DB::table('secretaries')->insert(['comittee_id' => $comittee_id, 'user_id' => $user->id]);
+            DB::table('secretaries')->insert(['committee_id' => $committee_id, 'user_id' => $user->id]);
         }
 
         $user->save();
@@ -336,13 +337,15 @@ class ManagementController extends Controller
             $this->user_service->delete($user->id);
         }
 
-        return redirect()->route('lecture.user.list', ['instance' => \Instantiation::instance()])->with('success', 'Usuarios borrados con éxito');
+        return redirect()->route('lecture.user.list', [])->with('success', 'Usuarios borrados con éxito');
     }
 
-    public function evidences_export($instance, $ext)
+    public function evidences_export($ext)
     {
         try {
-            ob_end_clean();
+            if (ob_get_level()) {
+                ob_end_clean();
+            }
             if (!in_array($ext, ['csv', 'pdf', 'xlsx'])) {
                 return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
             }
@@ -353,10 +356,12 @@ class ManagementController extends Controller
     }
 
 
-    public function management_student_export($instance, $ext)
+    public function management_student_export($ext)
     {
         try {
-            ob_end_clean();
+            if (ob_get_level()) {
+                ob_end_clean();
+            }
             if(!in_array($ext, ['csv', 'pdf', 'xlsx'])){
                 return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
             }

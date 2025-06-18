@@ -22,7 +22,7 @@
 
         <div class="col-md-8">
 
-            <div class="card shadow-sm">
+            <div class="card">
 
                 <div class="card-body">
 
@@ -31,7 +31,7 @@
                         <div class="col-lg-8">
 
                             <h5>
-                                <x-evidencecomittee :evidence="$evidence"/>
+                                <x-evidencecommittee :evidence="$evidence"/>
 
                                 <span class="badge badge-secondary">
                                     <i class="far fa-clock"></i> {{$evidence->hours}} horas

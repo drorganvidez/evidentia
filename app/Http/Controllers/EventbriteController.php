@@ -11,20 +11,21 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Middleware\CheckRoles;
 
 class EventbriteController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('checkroles:REGISTER_COORDINATOR');
+        $this->middleware(CheckRoles::class . ':REGISTER_COORDINATOR');
     }
 
     public function token()
     {
         
         $token = \Config::eventbrite_token();
-        $route = route('registercoordinator.token.save', $instance);
+        $route = route('registercoordinator.token.save');
 
         return view('eventbrite.token', ['token' => $token, 'route' => $route]);
     }
@@ -55,7 +56,7 @@ class EventbriteController extends Controller
                 $configuration = Configuration::find(1);
                 $configuration->eventbrite_token = $token;
                 $configuration->save();
-                return redirect()->route('registercoordinator.token', $instance)->with('success', 'Token validado y guardado con éxito.');
+                return redirect()->route('registercoordinator.token')->with('success', 'Token validado y guardado con éxito.');
             }
         } catch (\Exception $e) {
             return back()->withInput()->with('error', 'Ups, parece que hay un problema con el token. Comprueba que es válido.');
@@ -145,14 +146,14 @@ class EventbriteController extends Controller
             $config->events_uploaded_timestamp = Carbon::now();
             $config->save();
 
-            return redirect()->route('registercoordinator.event.list', $instance)->with('success', 'Eventos cargados con éxito.');
+            return redirect()->route('registercoordinator.event.list')->with('success', 'Eventos cargados con éxito.');
 
         } catch (\Exception $e) {
             return back()->with('error', 'Ups, parece que hay un problema con el token. Comprueba que es válido.' . $e->getMessage());
         }
     }
 
-    public function attendee_load($instance, $event_id)
+    public function attendee_load($event_id)
     {
         $token = \Config::eventbrite_token();
         $event = Event::where('id_eventbrite', $event_id)->first();
@@ -229,7 +230,7 @@ class EventbriteController extends Controller
             $config->attendees_uploaded_timestamp = Carbon::now();
             $config->save();
 
-            return redirect()->route('registercoordinator.attendee.list', $instance)
+            return redirect()->route('registercoordinator.attendee.list')
                 ->with('success', 'Asistencias actualizadas con éxito.');
 
         } catch (\Exception $e) {
@@ -262,17 +263,21 @@ class EventbriteController extends Controller
     {
         try {
             // limpiar búfer de salida
-            ob_end_clean();
+            if (ob_get_level()) {
+                ob_end_clean();
+            }
             return Excel::download(new AttendeesExport(), 'asistencias' . \Illuminate\Support\Carbon::now() . '.xlsx');
         } catch (\Exception $e) {
             return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
         }
     }
 
-    public function events_export($instance, $ext)
+    public function events_export($ext)
     {
         try {
-            ob_end_clean();
+            if (ob_get_level()) {
+                ob_end_clean();
+            }
             if (!in_array($ext, ['csv', 'pdf', 'xlsx'])) {
                 return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
             }

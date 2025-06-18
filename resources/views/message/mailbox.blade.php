@@ -15,7 +15,7 @@
         <div class="col-md-2">
             <a href="compose.html" class="btn btn-primary btn-block mb-3">Redactar</a>
 
-            <div class="card shadow-lg">
+            <div class="card">
                 <div class="card-body p-0">
                     <ul class="nav nav-pills flex-column">
                         <li class="nav-item active">

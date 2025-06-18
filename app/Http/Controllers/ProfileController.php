@@ -66,7 +66,7 @@ class ProfileController extends Controller
 
                 // almacenamos en disco el avatar
                 $file = $request->file('avatar');
-                $path = Storage::putFileAs($instance . '/avatares/' . $user->username, $file, $this->file_name_parser($file));
+                $path = Storage::putFileAs('/avatares/' . $user->username, $file, $this->file_name_parser($file));
 
                 // almacenamos en la BBDD la información del archivo
                 $file_entity = File::create([
@@ -134,7 +134,7 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return redirect()->route('profile.view',$instance)->with('success', 'Biografía editada con éxito.');
+        return redirect()->route('profile.view')->with('success', 'Biografía editada con éxito.');
 
     }
 
@@ -153,11 +153,11 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return redirect()->route('profile.view',$instance)->with('success', 'Contraseña cambiada con éxito.');
+        return redirect()->route('profile.view')->with('success', 'Contraseña cambiada con éxito.');
 
     }
 
-    public function profiles_view($instance,$id)
+    public function profiles_view($id)
     {
         
         $user = User::find($id);
@@ -166,16 +166,16 @@ class ProfileController extends Controller
             ['user' => $user]);
     }
 
-    public function evidences_view($instance,$id_user, $id_evidence)
+    public function evidences_view($id_user, $id_evidence)
     {
         
         $user = User::find($id_user);
         $evidence = Evidence::find($id_evidence);
 
         if($evidence == null){
-            return redirect()->route('home',['instance' => \Instantiation::instance()]);
+            return redirect()->route('home',[]);
         }else if($evidence->status == "DRAFT"){
-            return redirect()->route('home',['instance' => \Instantiation::instance()]);
+            return redirect()->route('home',[]);
         }
 
         return view('profile.profile_evidence_view',

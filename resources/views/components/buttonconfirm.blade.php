@@ -55,7 +55,7 @@
         </div>
     </div>
 
-    <form id="buttonconfirm-form-{{$id}}" action="{{ route($route,\Instantiation::instance()) }}" method="POST" style="display: none;">
+    <form id="buttonconfirm-form-{{$id}}" action="{{ route($route)}}" method="POST" style="display: none;">
         @csrf
         <input type="hidden" name="_id" value="{{$id}}"/>
     </form>

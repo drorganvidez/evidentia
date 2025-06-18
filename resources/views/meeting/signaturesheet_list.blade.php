@@ -6,7 +6,7 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage',\Instantiation::instance())}}">Gestionar reuniones</a></li>
+    <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage')}}">Gestionar reuniones</a></li>
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
 
@@ -16,28 +16,9 @@
 
         <x-menumeeting/>
 
-        <div class="col-lg-9">
+        <div class="col-lg-8">
 
-            <div class="row mb-3">
-                <p style="padding: 5px 50px 0px 15px">Exportar tabla:</p>
-                <div class="col-lg-1 mt-12">
-                    <a href="{{route('secretary.meeting.manage.signaturesheet.export',['ext' => 'xlsx'])}}"
-                       class="btn btn-info btn-block" role="button">
-                        XLSX</a>
-                </div>
-                <div class="col-lg-1 mt-12">
-                    <a href="{{route('secretary.meeting.manage.signaturesheet.export',['ext' => 'csv'])}}"
-                       class="btn btn-info btn-block" role="button">
-                        CSV</a>
-                </div>
-                <div class="col-lg-1 mt-12">
-                    <a href="{{route('secretary.meeting.manage.signaturesheet.export',['ext' => 'pdf'])}}"
-                       class="btn btn-info btn-block" role="button">
-                        PDF</a>
-                </div>
-            </div>
-
-            <div class="card shadow-sm">
+            <div class="card">
 
                 <div class="card-body">
 
@@ -68,8 +49,8 @@
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
 
                                     <span id="signature_sheets_{{$signature_sheet->id}}">
-                                        <a href="{{URL::to('/')}}/{{$instance}}/sign/{{$signature_sheet->random_identifier}}" target="_blank">
-                                            {{URL::to('/')}}/{{$instance}}/sign/{{$signature_sheet->random_identifier}}
+                                        <a href="{{URL::to('/')}}/sign/{{$signature_sheet->random_identifier}}" target="_blank">
+                                            {{URL::to('/')}}/sign/{{$signature_sheet->random_identifier}}
                                         </a>
                                     </span>
 
@@ -120,7 +101,7 @@
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 
-                        <form id="buttonconfirm-form-{{$signature_sheet->id}}" action="{{route('secretary.meeting.manage.signaturesheet.remove',$instance)}}" method="post">
+                        <form id="buttonconfirm-form-{{$signature_sheet->id}}" action="{{route('secretary.meeting.manage.signaturesheet.remove')}}" method="post">
                             @csrf
 
                             <input type="hidden" name="signature_sheet_id" value="{{$signature_sheet->id}}"/>

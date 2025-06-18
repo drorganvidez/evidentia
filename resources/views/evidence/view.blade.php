@@ -6,10 +6,10 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/">Home</a></li>
-    @if(\Illuminate\Support\Facades\Auth::user()->hasRole('COORDINATOR') and $evidence->comittee->id == \Illuminate\Support\Facades\Auth::user()->coordinator->comittee->id)
-        <li class="breadcrumb-item"><a href="{{route('coordinator.evidence.list.all',$instance)}}">Gestionar evidencias de {{\Illuminate\Support\Facades\Auth::user()->coordinator->comittee->name}}</a></li>
+    @if(\Illuminate\Support\Facades\Auth::user()->hasRole('COORDINATOR') and $evidence->committee->id == \Illuminate\Support\Facades\Auth::user()->coordinator->committee->id)
+        <li class="breadcrumb-item"><a href="{{route('coordinator.evidence.list.all')}}">Gestionar evidencias de {{\Illuminate\Support\Facades\Auth::user()->coordinator->committee->name}}</a></li>
     @else
-        <li class="breadcrumb-item"><a href="{{route('evidence.list',$instance)}}">Mis evidencias</a></li>
+        <li class="breadcrumb-item"><a href="{{route('evidence.list')}}">Mis evidencias</a></li>
     @endif
 
     <li class="breadcrumb-item active">@yield('title')</li>
@@ -21,12 +21,12 @@
 
         <div class="col-lg-8">
 
-            <div class="card shadow-lg">
+            <div class="card">
 
                 <div class="card-body">
 
                     <h5>
-                        <x-evidencecomittee :evidence="$evidence"/>
+                        <x-evidencecommittee :evidence="$evidence"/>
                         <span class="badge badge-secondary">
                             <i class="far fa-clock"></i> {{$evidence->hours}} horas
                         </span>
@@ -41,13 +41,13 @@
                         <br><br>
 
 
-                        @if(\Illuminate\Support\Facades\Auth::user()->hasRole('COORDINATOR') and $evidence->comittee->id == \Illuminate\Support\Facades\Auth::user()->coordinator->comittee->id)
+                        @if(\Illuminate\Support\Facades\Auth::user()->hasRole('COORDINATOR') and $evidence->committee->id == \Illuminate\Support\Facades\Auth::user()->coordinator->committee->id)
 
-                            <x-evidencemanagecoordinator :instance="$instance" :evidence="$evidence" />
+                            <x-evidencemanagecoordinator :evidence="$evidence" />
 
                         @else
 
-                            @if($evidence->status == 'DRAFT' and !\Carbon\Carbon::now()->gt(\\App\Models\Configuration::first()->upload_evidences_timestamp))
+                            @if($evidence->status == 'DRAFT' and !\Carbon\Carbon::now()->gt(\\Config::upload_evidences_timestamp()))
                                 <a class="btn btn-info btn-sm"
                                    href="{{route('evidence.edit',['id' => $evidence->id])}}">
                                     <i class="fas fa-pencil-alt">
@@ -55,7 +55,7 @@
                                 </a>
                             @endif
 
-                            @if(!\Carbon\Carbon::now()->gt(\\App\Models\Configuration::first()->upload_evidences_timestamp))
+                            @if(!\Carbon\Carbon::now()->gt(\\Config::upload_evidences_timestamp()))
                                 <x-buttonconfirm :id="$evidence->id" route="evidence.remove" title="¿Seguro?" description="Esto borrará la evidencia actual, las
                                                 ediciones anteriores <b>y todos los archivos adjuntos.</b>" type="REMOVE"/>
                             @endif
@@ -75,7 +75,7 @@
 
         <div class="col-lg-4">
 
-            <div class="card shadow-sm">
+            <div class="card">
 
                 <div class="card-body">
 

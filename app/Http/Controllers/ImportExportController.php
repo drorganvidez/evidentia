@@ -12,19 +12,20 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Mockery\Exception;
+use App\Http\Middleware\CheckRoles;
 
 class ImportExportController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('checkroles:LECTURE|PRESIDENT');
+        $this->middleware(CheckRoles::class . ':LECTURE,PRESIDENT');
     }
 
     public function import()
     {
         
-        $route = route('lecture.import.save',$instance);
+        $route = route('lecture.import.save');
 
         return view('importexport.import',
             ['route' => $route]);
@@ -35,7 +36,7 @@ class ImportExportController extends Controller
         $user = Auth::user();
         
         $token = $request->session()->token();
-        $tmp = $instance.'/tmp/'.$user->username.'/'.$token.'/';
+        $tmp = '/tmp/'.$user->username.'/'.$token.'/';
 
         try {
             foreach (Storage::files($tmp) as $filename) {
@@ -51,10 +52,10 @@ class ImportExportController extends Controller
             }
 
         }catch(\Exception $e){
-            return redirect()->route('lecture.import',$instance)->with('error', 'Ocurrió un error: ' . $e->getMessage());
+            return redirect()->route('lecture.import')->with('error', 'Ocurrió un error: ' . $e->getMessage());
         }
 
-        return redirect()->route('lecture.user.list', $instance)->with('success', 'Alumnos importados con éxito');
+        return redirect()->route('lecture.user.list')->with('success', 'Alumnos importados con éxito');
 
     }
 
@@ -74,7 +75,7 @@ class ImportExportController extends Controller
     public function export()
     {
         
-        $route = route('lecture.export.save',$instance);
+        $route = route('lecture.export.save');
 
         return view('importexport.export',
             ['route' => $route]);
@@ -90,10 +91,12 @@ class ImportExportController extends Controller
 
         try{
             // limpiar búfer de salida
-            ob_end_clean();
+            if (ob_get_level()) {
+                ob_end_clean();
+            }
             return Excel::download(new EvidencesExport($evidences_select,$meetings_select,$events_select,$bonus), 'evidencias' . Carbon::now() . '.xlsx');
         }catch(\Exception $e){
-            return redirect()->route('lecture.export',$instance)->with('error', 'Ocurrió un error: ' . $e->getMessage());
+            return redirect()->route('lecture.export')->with('error', 'Ocurrió un error: ' . $e->getMessage());
         }
 
     }

@@ -26,7 +26,6 @@ use App\Http\Controllers\SuggestionsMailboxController;
 use App\Http\Controllers\EvidenceController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\MessageController;
-use App\Http\Controllers\QuickInstances;
 
 use App\Http\Middleware\CheckRoles;
 use App\Http\Middleware\CheckUploadEvidences;
@@ -192,11 +191,11 @@ Route::middleware('auth')->group(function () {
         Route::get('president/user/list', [ManagementController::class, 'user_list'])->name('president.user.list');
         Route::get('president/evidence/list', [ManagementController::class, 'evidence_list'])->name('president.evidence.list');
         Route::get('president/meeting/list', [ManagementController::class, 'meeting_list'])->name('president.meeting.list');
-        Route::get('president/comittee/list', [ManagementController::class, 'comittee_list'])->name('president.comittee.list');
+        Route::get('president/committee/list', [ManagementController::class, 'committee_list'])->name('president.committee.list');
 
-        Route::post('president/comittee/management/save', [ManagementController::class, 'comittee_save'])->name('president.comittee.management.save');
-        Route::post('president/comittee/management/new', [ManagementController::class, 'comittee_new'])->name('president.comittee.management.new');
-        Route::middleware('checknotnull:Committee')->post('president/comittee/management/remove', [ManagementController::class, 'comittee_remove'])->name('president.comittee.management.remove');
+        Route::post('president/committee/management/save', [ManagementController::class, 'committee_save'])->name('president.committee.management.save');
+        Route::post('president/committee/management/new', [ManagementController::class, 'committee_new'])->name('president.committee.management.new');
+        Route::middleware('checknotnull:Committee')->post('president/committee/management/remove', [ManagementController::class, 'committee_remove'])->name('president.committee.management.remove');
 
         Route::get('president/user/management/{id}', [ManagementController::class, 'user_management'])->name('president.user.management');
         Route::post('president/user/management/save', [ManagementController::class, 'user_management_save'])->name('president.user.management.save');
@@ -215,11 +214,11 @@ Route::middleware('auth')->group(function () {
         Route::get('lecture/config', [ConfigController::class, 'config'])->name('lecture.config');
         Route::post('lecture/config/save', [ConfigController::class, 'config_save'])->name('lecture.config.save');
 
-        Route::get('lecture/comittee/list', [ManagementController::class, 'comittee_list'])->name('lecture.comittee.list');
-        Route::post('lecture/comittee/management/save', [ManagementController::class, 'comittee_save'])->name('lecture.comittee.management.save');
-        Route::post('lecture/comittee/management/new', [ManagementController::class, 'comittee_new'])->name('lecture.comittee.management.new');
+        Route::get('lecture/committee/list', [ManagementController::class, 'committee_list'])->name('lecture.committee.list');
+        Route::post('lecture/committee/management/save', [ManagementController::class, 'committee_save'])->name('lecture.committee.management.save');
+        Route::post('lecture/committee/management/new', [ManagementController::class, 'committee_new'])->name('lecture.committee.management.new');
 
-        Route::middleware('checknotnull:Committee')->post('lecture/comittee/management/remove', [ManagementController::class, 'comittee_remove'])->name('lecture.comittee.management.remove');
+        Route::middleware('checknotnull:Committee')->post('lecture/committee/management/remove', [ManagementController::class, 'committee_remove'])->name('lecture.committee.management.remove');
 
         Route::get('lecture/integrity', [IntegrityController::class, 'integrity'])->name('lecture.integrity');
 
@@ -235,9 +234,6 @@ Route::middleware('auth')->group(function () {
         Route::get('lecture/user/list', [ManagementController::class, 'user_list'])->name('lecture.user.list');
         Route::get('lecture/evidence/list', [ManagementController::class, 'evidence_list'])->name('lecture.evidence.list');
         Route::get('lecture/meeting/list', [ManagementController::class, 'meeting_list'])->name('lecture.meeting.list');
-
-        Route::get('lecture/instances', [QuickInstances::class, 'list'])->name('lecture.instances.list');
-        Route::post('lecture/instances/save', [QuickInstances::class, 'save'])->name('lecture.instances.save');
 
         // User management delete all
         Route::post('management/user/delete/all', [ManagementController::class, 'user_management_delete_all'])->name('management.user.delete.all');

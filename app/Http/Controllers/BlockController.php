@@ -17,7 +17,7 @@ class BlockController extends Controller
         if(Auth::user()->block){
             return view('block');
         }else{
-            return redirect()->route('home',\Instantiation::instance());
+            return redirect()->route('home');
         }
 
     }

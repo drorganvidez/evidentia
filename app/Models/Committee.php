@@ -50,7 +50,7 @@ class Committee extends Model
     }
 
     // Filtros de evidencias
-    public function evidences_not_draft()
+    public function evidencesNotDraft()
     {
         return $this->evidences()->where('status', '!=', 'DRAFT')->orderByDesc('updated_at');
     }

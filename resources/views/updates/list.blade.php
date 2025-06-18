@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-lg-8">
 
-            <div class="card shadow-lg">
+            <div class="card">
 
                 <div class="card-body">
 
@@ -52,7 +52,7 @@
 
         <div class="col-lg-4">
 
-            <div class="card shadow-sm">
+            <div class="card">
 
                 <div class="card-body">
 

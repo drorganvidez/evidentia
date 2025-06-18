@@ -18,7 +18,7 @@ class CheckUploadEvidences
     {
 
         $now = Carbon::now();
-        $datetime = \App\Models\Configuration::first()->upload_evidences_timestamp;
+        $datetime = \Config::upload_evidences_timestamp();
 
         if($now->gt($datetime)){
             return redirect()->route('home');

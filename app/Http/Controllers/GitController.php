@@ -29,7 +29,7 @@ class GitController extends Controller
             ]);
 
             if($releases->getStatusCode() == 403){
-                return view('updates.list_error', ['instance' => \Instantiation::instance()]);
+                return view('updates.list_error', []);
             }
 
             $releases = json_decode($releases->getBody());
@@ -39,7 +39,7 @@ class GitController extends Controller
             $issues = $client->request('GET', 'repos/drorganvidez/evidentia/issues');
 
             if($issues->getStatusCode() == 403){
-                return view('updates.list_error', ['instance' => \Instantiation::instance()]);
+                return view('updates.list_error', []);
             }
 
             $issues = json_decode($issues->getBody());
@@ -49,7 +49,7 @@ class GitController extends Controller
 
 
         }catch (\Exception $e){
-            return view('updates.list_error', ['instance' => \Instantiation::instance()]);
+            return view('updates.list_error', []);
         }
 
     }

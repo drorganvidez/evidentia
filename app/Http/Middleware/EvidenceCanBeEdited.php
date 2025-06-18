@@ -24,7 +24,7 @@ class EvidenceCanBeEdited
 
         if($evidence->status != "DRAFT" and $evidence->status != "REJECTED")
         {
-            return redirect()->route('home',$instance);
+            return redirect()->route('home');
         }
 
         return $next($request);

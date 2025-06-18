@@ -20,7 +20,7 @@
 
         <div class="col-md-8">
 
-            <div class="card shadow-sm">
+            <div class="card">
 
 
 
@@ -41,13 +41,13 @@
                         </thead>
                         <tbody>
 
-                        @foreach($user->evidences_not_draft() as $evidence)
+                        @foreach($user->evidencesNotDraft() as $evidence)
                             <tr>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$evidence->id}}</td>
                                 <td><a  href="{{route('profiles.view.evidence',['id_user' => $user->id, 'id_evidence' => $evidence->id])}}">{{$evidence->title}}</a></td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$evidence->hours}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                    <x-evidencecomittee :evidence="$evidence"/>
+                                    <x-evidencecommittee :evidence="$evidence"/>
                                 </td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"> {{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }} </td>
                                 <td>

@@ -11,32 +11,11 @@
 
 @section('content')
 
-
     <div class="row">
-        <div class="col-lg-8">
 
-            <div class="row mb-3">
-                <p style="padding: 5px 25px 0px 15px">Exportar tabla:</p>
-                <div class="col-lg-1 mt-12">
-                    <a href="{{route('president.manage.student.export',['ext' => 'xlsx'])}}"
-                       class="btn btn-info btn-block" role="button">
-                        XLSX</a>
-                </div>
-                <div class="col-lg-1 mt-12">
-                    <a href="{{route('president.manage.student.export',['ext' => 'csv'])}}"
-                       class="btn btn-info btn-block" role="button">
-                        CSV</a>
-                </div>
-                <div class="col-lg-1 mt-12">
-                    <a href="{{route('president.manage.student.export',['ext' => 'pdf'])}}"
-                       class="btn btn-info btn-block" role="button">
-                        PDF</a>
-                </div>
-            </div>
+        <div class="col-lg-12">
 
-            <div class="col-lg-9">
-
-            <div class="card shadow-lg">
+            <div class="card">
 
                 <div class="card-body">
 
@@ -51,7 +30,7 @@
 
                                     @if(\Illuminate\Support\Facades\Auth::user()->hasRole('LECTURE'))
 
-                                        <a class="dropdown-item" href="{{route('lecture.import',\Instantiation::instance())}}">Importación masiva de usuarios</a>
+                                        <a class="dropdown-item" href="{{route('lecture.import')}}">Importación masiva de usuarios</a>
 
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#borrar_todo">
@@ -125,15 +104,15 @@
 
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-lg-6 col-sm-12 col-md-12">
 
-            <div class="card shadow-sm">
+                        <div class="card">
 
                 <div class="card-body">
 
                     <h4>Añadir nuevo usuario</h4>
 
-                    <form method="POST" enctype="multipart/form-data" action="{{route('management.user.new',\Instantiation::instance())}}">
+                    <form method="POST" enctype="multipart/form-data" action="{{route('management.user.new')}}">
                         @csrf
 
                         <div class="form-row">
@@ -166,7 +145,9 @@
                 </div>
 
             </div>
+
         </div>
+
     </div>
 
     <div class="modal fade" id="borrar_todo">
@@ -181,7 +162,7 @@
                 </div>
 
 
-                <form action="{{route('management.user.delete.all',\Instantiation::instance())}}" method="POST">
+                <form action="{{route('management.user.delete.all')}}" method="POST">
                     @csrf
                     <div class="modal-body text-wrap">
                         <h2>Aviso</h2>

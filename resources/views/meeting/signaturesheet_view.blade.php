@@ -6,8 +6,8 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage',\Instantiation::instance())}}">Gestionar reuniones</a></li>
-    <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage.signaturesheet.list',\Instantiation::instance())}}">Mis firmas</a></li>
+    <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage')}}">Gestionar reuniones</a></li>
+    <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage.signaturesheet.list')}}">Mis firmas</a></li>
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
 
@@ -19,7 +19,7 @@
 
         <div class="col-md-9">
 
-            <div class="card shadow-sm">
+            <div class="card">
 
                 <div class="card-body">
 
@@ -48,8 +48,8 @@
                                     <b>URL para firmar</b>
                                     <br>
                                     <span id="signature_sheets_{{$signature_sheet->id}}">
-                                    <a href="{{URL::to('/')}}/{{$instance}}/sign/{{$signature_sheet->random_identifier}}" target="_blank">
-                                        {{URL::to('/')}}/{{$instance}}/sign/{{$signature_sheet->random_identifier}}
+                                    <a href="{{URL::to('/')}}/sign/{{$signature_sheet->random_identifier}}" target="_blank">
+                                        {{URL::to('/')}}/sign/{{$signature_sheet->random_identifier}}
                                     </a>
                                 </span>
                                     <button onclick="copyToClipboard('#signature_sheets_{{$signature_sheet->id}}')"

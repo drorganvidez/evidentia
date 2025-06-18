@@ -6,8 +6,8 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage',\Instantiation::instance())}}">Gestionar reuniones</a></li>
-    <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage.minutes.list',\Instantiation::instance())}}">Mis actas</a></li>
+    <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage')}}">Gestionar reuniones</a></li>
+    <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage.minutes.list')}}">Mis actas</a></li>
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
 
@@ -17,13 +17,13 @@
 
         <x-menumeeting/>
 
-        <div class="col-lg-9">
+        <div class="col-lg-8">
 
-            <div class="card shadow-sm">
+            <div class="card">
 
                 <div class="card-body">
 
-                    <form method="POST" action="{{route('secretary.meeting.manage.minutes.save',\Instantiation::instance())}}" id="request_form">
+                    <form method="POST" action="{{route('secretary.meeting.manage.minutes.save')}}" id="request_form">
                     @csrf
 
                         <input type="hidden" name="meeting_id" value="{{$meeting_minutes->meeting->id}}"/>
@@ -354,7 +354,7 @@
                         var seleccionados = new Array();
 
                         $.ajax({
-                            url: '/{{$instance}}/secretary/meeting/defaultlist/' + sel.value,
+                            url: '/secretary/meeting/defaultlist/' + sel.value,
                             success: function (respuesta) {
 
                                 for (var i = 0; i < respuesta.length; i++) {
@@ -364,7 +364,7 @@
 
                                 // Volvemos a incluir todos los usuarios
                                 $.ajax({
-                                    url: '/{{$instance}}/gp/users/all/',
+                                    url: '/gp/users/all/',
                                     success: function (respuesta) {
 
                                         for (var i = 0; i < respuesta.length; i++) {

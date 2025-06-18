@@ -17,7 +17,7 @@
             @if(!\Carbon\Carbon::now()->gt(\Config::bonus_timestamp()))
                 <div class="row mb-3">
                     <div class="col-lg-3 mt-1">
-                        <a href="{{route('secretary.bonus.create',['instance' => $instance])}}" class="btn btn-primary btn-block" role="button"><i class="fas fa-plus"></i> &nbsp;Crear nuevo bono de horas</a>
+                        <a href="{{route('secretary.bonus.create',[])}}" class="btn btn-primary btn-block" role="button"><i class="fas fa-plus"></i> &nbsp;Crear nuevo bono de horas</a>
                     </div>
                 </div>
             @endif
@@ -30,7 +30,7 @@
 
 
 
-            <div class="card shadow-lg">
+            <div class="card">
 
                 <div class="card-body">
                     <table id="dataset" class="table table-hover table-responsive">
@@ -74,7 +74,7 @@
 
         <div class="col-lg-4">
 
-            <div class="card shadow-lg">
+            <div class="card">
 
                 <div class="card-body">
 

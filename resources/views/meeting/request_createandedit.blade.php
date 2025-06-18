@@ -10,10 +10,10 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage',\Instantiation::instance())}}">Gestionar reuniones</a></li>
+    <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage')}}">Gestionar reuniones</a></li>
 
     @isset($edit)
-        <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage.request.list',\Instantiation::instance())}}">Mis convocatorias</a></li>
+        <li class="breadcrumb-item"><a href="{{route('secretary.meeting.manage.request.list')}}">Mis convocatorias</a></li>
     @endisset
 
     <li class="breadcrumb-item active">@yield('title')</li>
@@ -25,9 +25,9 @@
 
         <x-menumeeting/>
 
-        <div class="col-md-9">
+        <div class="col-md-8">
 
-            <div class="card shadow-sm">
+            <div class="card">
 
                 <div class="card-body">
 
@@ -37,7 +37,7 @@
 
                     @endphp
 
-                    <form method="POST" action="{{route('secretary.meeting.manage.request.'.$verb,\Instantiation::instance())}}" id="request_form">
+                    <form method="POST" action="{{route('secretary.meeting.manage.request.'.$verb)}}" id="request_form">
                         @csrf
 
                         <input type="hidden" name="points_list" id="points_list"/>

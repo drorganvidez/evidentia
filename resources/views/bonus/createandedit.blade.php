@@ -11,7 +11,7 @@
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/">Home</a></li>
     @isset($edit)
-        <li class="breadcrumb-item"><a href="{{route('secretary.bonus.list',['instance' => $instance])}}">Gestionar bonos</a></li>
+        <li class="breadcrumb-item"><a href="{{route('secretary.bonus.list',[])}}">Gestionar bonos</a></li>
     @endisset
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
@@ -25,7 +25,7 @@
     <div class="row">
         <div class="col-lg-12">
 
-            <div class="card shadow-lg">
+            <div class="card">
 
                 <div class="card-body">
                     <form method="POST" action="{{$route}}">
@@ -118,7 +118,7 @@
                     var seleccionados = new Array();
 
                     $.ajax({
-                        url: '/{{$instance}}/secretary/meeting/defaultlist/' + sel.value,
+                        url: '/secretary/meeting/defaultlist/' + sel.value,
                         success: function (respuesta) {
 
                             for (var i = 0; i < respuesta.length; i++) {
@@ -128,7 +128,7 @@
 
                             // Volvemos a incluir todos los usuarios
                             $.ajax({
-                                url: '/{{$instance}}/gp/users/all/',
+                                url: '/gp/users/all/',
                                 success: function (respuesta) {
 
                                     for (var i = 0; i < respuesta.length; i++) {

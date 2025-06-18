@@ -43,7 +43,7 @@
 <div class="login-box">
 
     <div class="mb-4">
-        <a href="{{route('instances.home')}}"><img width="200px" src="{{asset('dist/img/logo_light.svg')}}"></a>
+        <a href="{{route('home')}}"><img width="200px" src="{{asset('dist/img/logo_light.svg')}}"></a>
     </div>
 
     @if($signature_sheet->meeting_request)
@@ -61,7 +61,7 @@
             </dd>
 
             <dt class="col-sm-4">Comité</dt>
-            <dd class="col-sm-8">{{$signature_sheet->meeting_request->comittee->name}}</dd>
+            <dd class="col-sm-8">{{$signature_sheet->meeting_request->committee->name}}</dd>
 
         </dl>
 
@@ -75,7 +75,7 @@
 
     @endif
 
-    <form action="{{route('sign_p',\Instantiation::instance())}}" method="post">
+    <form action="{{route('sign_p')}}" method="post">
         @csrf
 
         <input type="hidden" name="signature_sheet" value="{{$signature_sheet->id}}"/>
