@@ -20,20 +20,26 @@ class UploadController extends Controller
 
     public function process(Request $request)
     {
-
         $user = Auth::user();
         $token = $request->session()->token();
 
         $files = $request->file('files');
+        $file = is_array($files) ? $files[0] : $files;
 
-        $file = $files[0];
-        $path = Storage::putFileAs('/tmp/'.$user->username.'/'.$token.'/', $file, $file->getClientOriginalName());
+        if (!$file || !$file->isValid()) {
+            \Log::error('Archivo inválido o no recibido correctamente.');
+            return response('Archivo inválido', 400);
+        }
 
-        return Response::make($this->filepond->getServerIdFromPath($path), 200, [
-            'Content-Type' => 'text/plain',
-        ]);
+        $relativePath = 'tmp/' . $user->username . '/' . $token . '/';
+        $path = Storage::putFileAs($relativePath, $file, $file->getClientOriginalName());
 
+        \Log::info('Archivo subido correctamente a: ' . $path);
+
+        return response($this->filepond->getServerIdFromPath($path), 200)
+            ->header('Content-Type', 'text/plain');
     }
+
 
     public function delete(Request $request)
     {

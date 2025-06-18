@@ -33,26 +33,26 @@
 
             Por medio del presente escrito, queda usted convocado/a a la reunión<b>
             @switch($meeting_request->type)
-                @case('ORDINARY')
+                @case('1')
                 ordinaria
                 @break
-                @case('EXTRAORDINARY')
+                @case('2')
                 extraordinaria
                 @break
             @endswitch
             </b> con modalidad<b>
             @switch($meeting_request->modality)
-                @case('F2F')
+                @case('1')
                 presencial
                 @break
-                @case('TELEMATIC')
+                @case('2')
                 telemática
                 @break
-                @case('MIXED')
+                @case('3')
                 híbrida
                 @break
             @endswitch
-            </b> del comité de <b>{{$meeting_request->committee->name}}</b>, que se celebrará el día <b>{{ \Carbon\Carbon::parse($meeting_request->datetime)->format('d/m/Y') }}</b>
+            </b>del comité de <b>{{$meeting_request->committee->name}}</b>, que se celebrará el día <b>{{ \Carbon\Carbon::parse($meeting_request->datetime)->format('d/m/Y') }}</b>
             a las <b>{{ \Carbon\Carbon::parse($meeting_request->datetime)->format('H:i') }}</b> en <b>{{$meeting_request->place}}</b>, en la que
             se tratarán los asuntos que se expresan a continuación:
         </p>
@@ -73,17 +73,17 @@
     <div style="text-align: center">
 
 
-        <h3 style="margin-top: 50px">
+        <h4 style="margin-top: 50px">
             Le saluda cordialmente
-        </h3>
-
-        <h4>
-            {{$meeting_request->secretary->user->name}} {{$meeting_request->secretary->user->surname}}
         </h4>
 
         <h3>
-            Secretaría {{$meeting_request->committee->name}}
+            {{$meeting_request->secretary->user->name}} {{$meeting_request->secretary->user->surname}}
         </h3>
+
+        <h4>
+            Secretaría de {{$meeting_request->committee->name}}
+        </h4>
     </div>
 
 </div>

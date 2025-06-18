@@ -17,7 +17,7 @@
 
         <x-menumeeting/>
 
-        <div class="col-md-9">
+        <div class="col-md-8">
 
             <div class="card">
 
@@ -30,15 +30,15 @@
                             <h4>
                                 <i class="fas fa-child"></i> Convocatoria asociada
                             </h4>
-                            @if($signature_sheet->meeting_request)
+                            @if($signature_sheet->meetingRequest)
                                 <p>
-                                    {{$signature_sheet->meeting_request->title}}
+                                    {{$signature_sheet->meetingRequest->title}}
                                     <br>
-                                    {{ \Carbon\Carbon::parse($signature_sheet->meeting_request->datetime)->format('d/m/Y') }}
+                                    {{ \Carbon\Carbon::parse($signature_sheet->meetingRequest->datetime)->format('d/m/Y') }}
                                     <br>
-                                    {{ \Carbon\Carbon::parse($signature_sheet->meeting_request->datetime)->format('H:i') }}
+                                    {{ \Carbon\Carbon::parse($signature_sheet->meetingRequest->datetime)->format('H:i') }}
                                     <br>
-                                    {{$signature_sheet->meeting_request->place}}
+                                    {{$signature_sheet->meetingRequest->place}}
                                 </p>
                             @else
                                 No hay ninguna convocatoria asociada a esta hoja de firmas.

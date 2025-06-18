@@ -12,6 +12,8 @@ class SignatureSheet extends Model
 {
     use HasFactory;
 
+    protected $table = 'signature_sheets';
+
     protected $fillable = [
         'title',
         'random_identifier',

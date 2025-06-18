@@ -26,9 +26,23 @@ use App\Http\Controllers\SuggestionsMailboxController;
 use App\Http\Controllers\EvidenceController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\SignController;
+use App\Http\Controllers\GeneralPurposeController;
+use App\Http\Controllers\EvidenceCoordinatorController;
 
 use App\Http\Middleware\CheckRoles;
 use App\Http\Middleware\CheckUploadEvidences;
+use App\Http\Middleware\CheckRegisterBonus;
+use App\Http\Middleware\CheckNotNull;
+use App\Http\Middleware\CheckProofDownload;
+use App\Http\Middleware\CheckValidateEvidences;
+use App\Http\Middleware\CheckRegisterEventsAndAttendings;
+use App\Http\Middleware\MeetingRequestMine;
+use App\Http\Middleware\MeetingMinutesMine;
+use App\Http\Middleware\SignatureSheetMine;
+use App\Http\Middleware\EvidenceFromMyCommittee;
+use App\Http\Middleware\EvidenceMine;
+use App\Http\Middleware\EvidenceCanBeEdited;
 
 // Rutas de autenticación
 Auth::routes();
@@ -67,7 +81,7 @@ Route::middleware('auth')->group(function () {
             Route::get('defaultlist/list/create', 'create')->name('secretary.defaultlist.create');
             Route::post('defaultlist/list/new', 'new')->name('secretary.defaultlist.new');
 
-            Route::middleware('checknotnull:DefaultList')->group(function () {
+            Route::middleware(CheckNotNull::class, ':DefaultList')->group(function () {
                 Route::get('defaultlist/edit/{id}', 'edit')->name('secretary.defaultlist.edit');
                 Route::post('defaultlist/save', 'save')->name('secretary.defaultlist.save');
                 Route::post('defaultlist/remove', 'remove')->name('secretary.defaultlist.remove');
@@ -85,7 +99,7 @@ Route::middleware('auth')->group(function () {
                 Route::get('create', [MeetingSecretaryController::class, 'request_create'])->name('secretary.meeting.manage.request.create');
                 Route::post('new', [MeetingSecretaryController::class, 'request_new'])->name('secretary.meeting.manage.request.new');
                 Route::get('download/{id}', [MeetingSecretaryController::class, 'request_download'])->name('secretary.meeting.manage.request.download');
-                Route::middleware('meetingrequestmine')->group(function () {
+                Route::middleware(MeetingRequestMine::class)->group(function () {
                     Route::get('edit/{id}', [MeetingSecretaryController::class, 'request_edit'])->name('secretary.meeting.manage.request.edit');
                     Route::post('save', [MeetingSecretaryController::class, 'request_save'])->name('secretary.meeting.manage.request.save');
                     Route::post('remove', [MeetingSecretaryController::class, 'request_remove'])->name('secretary.meeting.manage.request.remove');
@@ -98,7 +112,7 @@ Route::middleware('auth')->group(function () {
                 Route::get('list', [MeetingSecretaryController::class, 'signaturesheet_list'])->name('secretary.meeting.manage.signaturesheet.list');
                 Route::get('create', [MeetingSecretaryController::class, 'signaturesheet_create'])->name('secretary.meeting.manage.signaturesheet.create');
                 Route::post('new', [MeetingSecretaryController::class, 'signaturesheet_new'])->name('secretary.meeting.manage.signaturesheet.new');
-                Route::middleware('signaturesheetmine')->group(function () {
+                Route::middleware(SignatureSheetMine::class)->group(function () {
                     Route::get('edit/{id}', [MeetingSecretaryController::class, 'signaturesheet_edit'])->name('secretary.meeting.manage.signaturesheet.edit');
                     Route::post('save', [MeetingSecretaryController::class, 'signaturesheet_save'])->name('secretary.meeting.manage.signaturesheet.save');
                     Route::post('remove', [MeetingSecretaryController::class, 'signaturesheet_remove'])->name('secretary.meeting.manage.signaturesheet.remove');
@@ -124,7 +138,7 @@ Route::middleware('auth')->group(function () {
                 Route::get('download/{id}', [MeetingSecretaryController::class, 'minutes_download'])->name('secretary.meeting.manage.minutes.download');
                 Route::get('export/{ext}', [MeetingSecretaryController::class, 'meeting_minutes_export'])->name('secretary.meeting.manage.minutes.export');
 
-                Route::middleware('meetingminutesmine')->group(function () {
+                Route::middleware(MeetingMinutesMine::class)->group(function () {
                     Route::get('edit/{id}', [MeetingSecretaryController::class, 'minutes_edit'])->name('secretary.meeting.manage.minutes.edit');
                     Route::post('save', [MeetingSecretaryController::class, 'minutes_save'])->name('secretary.meeting.manage.minutes.save');
                     Route::post('remove', [MeetingSecretaryController::class, 'minutes_remove'])->name('secretary.meeting.manage.minutes.remove');
@@ -138,12 +152,15 @@ Route::middleware('auth')->group(function () {
         // Bonus
         Route::get('bonus/list', [BonusSecretaryController::class, 'list'])->name('secretary.bonus.list');
 
-        Route::middleware('checkregisterbonus')->group(function () {
+        Route::middleware([CheckRegisterBonus::class])->group(function () {
             Route::get('bonus/create', [BonusSecretaryController::class, 'create'])->name('secretary.bonus.create');
             Route::post('bonus/new', [BonusSecretaryController::class, 'new'])->name('secretary.bonus.new');
         });
 
-        Route::middleware(['checknotnull:Bonus', 'checkregisterbonus'])->group(function () {
+        Route::middleware([
+            CheckNotNull::class . ':Bonus',
+            CheckRegisterBonus::class
+        ])->group(function () {
             Route::get('bonus/edit/{id}', [BonusSecretaryController::class, 'edit'])->name('secretary.bonus.edit');
             Route::post('bonus/save', [BonusSecretaryController::class, 'save'])->name('secretary.bonus.save');
             Route::post('bonus/remove', [BonusSecretaryController::class, 'remove'])->name('secretary.bonus.remove');
@@ -157,7 +174,10 @@ Route::middleware('auth')->group(function () {
     // PROOFS
     Route::post('proof/remove', [ProofController::class, 'remove'])->name('proof.remove');
 
-    Route::middleware(['checknotnull:Proof', 'checkproofdownload'])->group(function () {
+    Route::middleware([
+            CheckNotNull::class . ':Proof',
+            CheckProofDownload::class
+        ])->group(function () {
         Route::get('proof/download/{id}', [ProofController::class, 'download'])->name('proof.download');
     });
 
@@ -165,12 +185,12 @@ Route::middleware('auth')->group(function () {
     Route::post('file/remove', [FileController::class, 'remove'])->name('file.remove');
 
     // AVATAR
-    Route::middleware('checknotnull:User')->group(function () {
+    Route::middleware([CheckNotNull::class . ':User',])->group(function () {
         Route::get('avatar/{id}', [AvatarController::class, 'avatar'])->name('avatar');
     });
 
     // REGISTER COORDINATOR
-    Route::middleware('checkregistereventsandattendings')->group(function () {
+    Route::middleware(CheckRegisterEventsAndAttendings::class)->group(function () {
         Route::get('registercoordinator/token', [EventbriteController::class, 'token'])->name('registercoordinator.token');
         Route::post('registercoordinator/token/save', [EventbriteController::class, 'token_save'])->name('registercoordinator.token.save');
 
@@ -195,7 +215,7 @@ Route::middleware('auth')->group(function () {
 
         Route::post('president/committee/management/save', [ManagementController::class, 'committee_save'])->name('president.committee.management.save');
         Route::post('president/committee/management/new', [ManagementController::class, 'committee_new'])->name('president.committee.management.new');
-        Route::middleware('checknotnull:Committee')->post('president/committee/management/remove', [ManagementController::class, 'committee_remove'])->name('president.committee.management.remove');
+        Route::middleware(CheckNotNull::class, ':Committee')->post('president/committee/management/remove', [ManagementController::class, 'committee_remove'])->name('president.committee.management.remove');
 
         Route::get('president/user/management/{id}', [ManagementController::class, 'user_management'])->name('president.user.management');
         Route::post('president/user/management/save', [ManagementController::class, 'user_management_save'])->name('president.user.management.save');
@@ -218,7 +238,7 @@ Route::middleware('auth')->group(function () {
         Route::post('lecture/committee/management/save', [ManagementController::class, 'committee_save'])->name('lecture.committee.management.save');
         Route::post('lecture/committee/management/new', [ManagementController::class, 'committee_new'])->name('lecture.committee.management.new');
 
-        Route::middleware('checknotnull:Committee')->post('lecture/committee/management/remove', [ManagementController::class, 'committee_remove'])->name('lecture.committee.management.remove');
+        Route::middleware(CheckNotNull::class, ':Committee')->post('lecture/committee/management/remove', [ManagementController::class, 'committee_remove'])->name('lecture.committee.management.remove');
 
         Route::get('lecture/integrity', [IntegrityController::class, 'integrity'])->name('lecture.integrity');
 
@@ -244,9 +264,9 @@ Route::middleware('auth')->group(function () {
 
     // PROFILES - visible for LECTURE and PRESIDENT only
     Route::middleware([CheckRoles::class . ':PRESIDENT,LECTURE'])->group(function () {
-        Route::middleware('checknotnull:User')->group(function () {
-            Route::get('profiles/view/{id}', [ProfileController::class, 'profiles_view'])->name('profiles.view');
-        });
+Route::middleware(CheckNotNull::class . ':User')->group(function () {
+    Route::get('profiles/view/{id}', [ProfileController::class, 'profiles_view'])->name('profiles.view');
+});
         Route::get('profiles/view/{id_user}/evidence/{id_evidence}', [ProfileController::class, 'evidences_view'])->name('profiles.view.evidence');
     });
 
@@ -281,11 +301,14 @@ Route::middleware('auth')->group(function () {
 
     Route::get('evidence/list/export/{ext}', [EvidenceController::class, 'export'])->name('evidence.list.export');
 
-    Route::middleware(['checknotnull:Evidence', 'evidencemine'])->group(function () {
+    Route::middleware([
+            CheckNotNull::class . ':Evidence',
+            EvidenceMine::class
+        ])->group(function () {
         Route::get('evidence/view/{id}', [EvidenceController::class, 'view'])->name('evidence.view');
 
-        Route::middleware('checkuploadevidences')->group(function () {
-            Route::get('evidence/edit/{id}', [EvidenceController::class, 'edit'])->name('evidence.edit')->middleware('evidencecanbeedited');
+        Route::middleware(CheckUploadEvidences::class)->group(function () {
+            Route::get('evidence/edit/{id}', [EvidenceController::class, 'edit'])->name('evidence.edit')->middleware(EvidenceCanBeEdited::class);
             Route::post('evidence/reedit', [EvidenceController::class, 'reedit'])->name('evidence.reedit');
             Route::post('evidence/remove', [EvidenceController::class, 'remove'])->name('evidence.remove');
         });
@@ -305,4 +328,38 @@ Route::middleware('auth')->group(function () {
 
     // MESSAGES
     Route::get('mailbox', [MessageController::class, 'mailbox'])->name('message.mailbox');
+
+    // Sign
+    Route::prefix('sign')->group(function () {
+        Route::get('/{random_identifier}', [SignController::class, 'sign'])->name('sign');
+        Route::post('/sign_p', [SignController::class, 'sign_p'])->name('sign_p');
+        Route::get('/finish', [SignController::class, 'finish'])->name('sign.finish');
+    });
+
+    /**
+     *  GENERAL PURPOSE
+     */
+    Route::get('/gp/users/all', [GeneralPurposeController::class, 'users_all'])->name('gp.users.all');
+
+    // EVIDENCES MANAGEMENT BY A COORDINATOR
+    Route::prefix('coordinator')->group(function () {
+        Route::get('/evidence/list/all', [EvidenceCoordinatorController::class, 'all'])->name('coordinator.evidence.list.all');
+        Route::get('/evidence/list/pending', [EvidenceCoordinatorController::class, 'pending'])->name('coordinator.evidence.list.pending');
+        Route::get('/evidence/list/accepted', [EvidenceCoordinatorController::class, 'accepted'])->name('coordinator.evidence.list.accepted');
+        Route::get('/evidence/list/rejected', [EvidenceCoordinatorController::class, 'rejected'])->name('coordinator.evidence.list.rejected');
+        Route::get('/evidence/export/{type}/{ext}', [EvidenceCoordinatorController::class, 'evidences_export'])->name('coordinator.evidence.export');
+
+        Route::middleware([
+            CheckNotNull::class . ':Evidence',
+            EvidenceFromMyCommittee::class
+        ])->group(function () {
+            Route::get('/evidence/view/{id}', [EvidenceController::class, 'view'])->name('coordinator.evidence.view');
+
+            Route::middleware([CheckValidateEvidences::class])->group(function () {
+                Route::get('/evidence/accept/{id}', [EvidenceCoordinatorController::class, 'accept'])->name('coordinator.evidence.accept');
+                Route::post('/evidence/reject/', [EvidenceCoordinatorController::class, 'reject'])->name('coordinator.evidence.reject');
+            });
+        });
+    });
+
 });

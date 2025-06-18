@@ -29,7 +29,7 @@ class SignController extends Controller
         
 
         $signature_sheet = SignatureSheet::findOrFail($request->input('signature_sheet'));
-        $credentials = $request->only('username', 'password');
+        $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
 

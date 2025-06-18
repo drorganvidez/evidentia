@@ -24,19 +24,19 @@ class CoordinatorEvidencesExport implements FromCollection, WithHeadings
         if($this->type=="all") {
             $coordinator = Auth::user()->coordinator;
             $comittee = $coordinator->comittee;
-            $evidences = $comittee->evidences_not_draft()->get();
+            $evidences = $comittee->evidencesNotDraft()->get();
         } else if($this->type=="pending") {
             $coordinator = Auth::user()->coordinator;
             $comittee = $coordinator->comittee;
-            $evidences = $comittee->evidences_pending()->get();
+            $evidences = $comittee->evidencesPending()->get();
         } else if($this->type=="accepted") {
             $coordinator = Auth::user()->coordinator;
             $comittee = $coordinator->comittee;
-            $evidences = $comittee->evidences_accepted()->get();
+            $evidences = $comittee->evidencesAccepted()->get();
         } else if($this->type=="rejected") {
             $coordinator = Auth::user()->coordinator;
             $comittee = $coordinator->comittee;
-            $evidences = $comittee->evidences_rejected()->get();
+            $evidences = $comittee->evidencesRejected()->get();
         }
         $res = collect();
         foreach ($evidences as $evidence) {

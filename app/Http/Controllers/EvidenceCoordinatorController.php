@@ -41,7 +41,7 @@ class EvidenceCoordinatorController extends Controller
 
         $coordinator = Auth::user()->coordinator;
         $committee = $coordinator->committee;
-        $evidences = $committee->evidences_pending()->paginate(10);
+        $evidences = $committee->evidencesPending()->paginate(10);
 
         return view('evidence.coordinator.list',
             ['evidences' => $evidences, 'type' => 'pending']);
@@ -53,7 +53,7 @@ class EvidenceCoordinatorController extends Controller
 
         $coordinator = Auth::user()->coordinator;
         $committee = $coordinator->committee;
-        $evidences = $committee->evidences_accepted()->paginate(10);
+        $evidences = $committee->evidencesAccepted()->paginate(10);
 
         return view('evidence.coordinator.list',
             ['evidences' => $evidences, 'type' => 'accepted']);
@@ -65,7 +65,7 @@ class EvidenceCoordinatorController extends Controller
 
         $coordinator = Auth::user()->coordinator;
         $committee = $coordinator->committee;
-        $evidences = $committee->evidences_rejected()->paginate(10);
+        $evidences = $committee->evidencesRejected()->paginate(10);
 
         return view('evidence.coordinator.list',
             ['evidences' => $evidences, 'type' => 'rejected']);

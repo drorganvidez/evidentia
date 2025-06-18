@@ -19,7 +19,7 @@
 
     <div class="row">
 
-        <div class="col-lg-8">
+        <div class="col-lg-6">
 
             <div class="card">
 
@@ -47,7 +47,7 @@
 
                         @else
 
-                            @if($evidence->status == 'DRAFT' and !\Carbon\Carbon::now()->gt(\\Config::upload_evidences_timestamp()))
+                            @if($evidence->status == 'DRAFT' and !\Carbon\Carbon::now()->gt(\Config::upload_evidences_timestamp()))
                                 <a class="btn btn-info btn-sm"
                                    href="{{route('evidence.edit',['id' => $evidence->id])}}">
                                     <i class="fas fa-pencil-alt">
@@ -55,7 +55,7 @@
                                 </a>
                             @endif
 
-                            @if(!\Carbon\Carbon::now()->gt(\\Config::upload_evidences_timestamp()))
+                            @if(!\Carbon\Carbon::now()->gt(\Config::upload_evidences_timestamp()))
                                 <x-buttonconfirm :id="$evidence->id" route="evidence.remove" title="¿Seguro?" description="Esto borrará la evidencia actual, las
                                                 ediciones anteriores <b>y todos los archivos adjuntos.</b>" type="REMOVE"/>
                             @endif
@@ -73,42 +73,57 @@
 
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-lg-6">
 
-            <div class="card">
+        <div class="card">
+            <div class="card-body">
 
-                <div class="card-body">
-
-                    <h4>Estado</h4>
-
-                    <p class="text-muted">Última edición
-                        <b>{{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }}</b>
+                <div class="alert alert-info">
+                    <h4 class="mb-2">
+                        <i class="fas fa-info-circle"></i> {{ $evidence->status_label}}
+                    </h4>
+                    <p class="text-muted mb-2">
+                        Última edición: <b>{{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }}</b>
                     </p>
-
                     <x-evidencestatus :evidence="$evidence"/>
+                </div>
 
-                    <hr>
+                <div class="mt-4">
 
-                    <h4>Pruebas adjuntas</h4>
-
-                    <div class="row">
-
-                        @foreach($evidence->proofs as $proof)
-
-                            <div class="col-auto mt-3">
-                                <a style="margin-bottom: 10px" class="btn btn-default btn-sm" href="{{route('proof.download',['id' => $proof->id])}}">
-                                    <i class="fas fa-download"></i>
-                                    {{$proof->file->name}} ({{$proof->file->sizeForHuman()}})
-                                </a>
-                            </div>
-
-                        @endforeach
-
-                    </div>
-
+                    @if($evidence->proofs->isEmpty())
+                        <p class="text-muted">No hay pruebas adjuntas.</p>
+                    @else
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Archivo</th>
+                                        <th>Tamaño</th>
+                                        <th class="text-center">Descargar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($evidence->proofs as $proof)
+                                        <tr>
+                                            <td>{{ $proof->file->name }}</td>
+                                            <td>{{ $proof->file->sizeForHuman() }}</td>
+                                            <td class="text-center">
+                                                <a href="{{ route('proof.download', ['id' => $proof->id]) }}"
+                                                class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-download"></i> Descargar
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
                 </div>
 
             </div>
+        </div>
+
 
         </div>
 

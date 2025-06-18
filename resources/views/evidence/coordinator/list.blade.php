@@ -12,28 +12,10 @@
 @section('content')
 
     <x-evidencelistcoordinator/>
-    <br>
-    <div class="row mb-3">
-        <p style="padding: 5px 25px 0px 15px">Exportar tabla:</p>
-        <div class="col-lg-1 mt-12">
-            <a href="{{route('coordinator.evidence.export',['type' => $type, 'ext' => 'xlsx'])}}"
-               class="btn btn-info btn-block" role="button">
-                XLSX</a>
-        </div>
-        <div class="col-lg-1 mt-12">
-            <a href="{{route('coordinator.evidence.export',['type' => $type, 'ext' => 'csv'])}}"
-               class="btn btn-info btn-block" role="button">
-                CSV</a>
-        </div>
-        <div class="col-lg-1 mt-12">
-            <a href="{{route('coordinator.evidence.export',['type' => $type, 'ext' => 'pdf'])}}"
-               class="btn btn-info btn-block" role="button">
-                PDF</a>
-        </div>
-    </div>
+
     <div class="row">
 
-        <div class="col-lg-8 mt-3">
+        <div class="col-lg-12 mt-3">
 
             <div class="card">
 
@@ -87,51 +69,37 @@
 
         </div>
 
-        <div class="col-lg-4 mt-3">
+        <div class="col-lg-6">
 
             <div class="card">
-
                 <div class="card-body">
 
-                    <div class="callout callout-info">
-                        <h4>
-
-                            Fecha límite para la validación de evidencias
-
+                    <div class="alert alert-info">
+                        <h4 class="mb-2">
+                            <i class="fas fa-stopwatch"></i> Fecha límite para la validación de evidencias
                         </h4>
-
-                        <h4>
-
-                            <i class="fas fa-stopwatch"></i>
-
-                            {{\Carbon\Carbon::parse(Config::validate_evidences_timestamp())->format('d/m/Y')}}
-
-                            a las
-
-                            {{\Carbon\Carbon::parse(Config::validate_evidences_timestamp())->format('H:i')}}
-
-                        </h4>
-
-                        <div class="countdown_container" style="display: none">
-
+                        <p class="mb-0">
+                            {{ \Carbon\Carbon::parse(\Config::validate_evidences_timestamp())->format('d/m/Y \a \l\a\s H:i') }}
+                        </p>
+                        <div class="countdown_container mt-2" style="display: none">
                             <p>
-
-                                Quedan
-
-                                <b>
-                                    <span id="countdown"></span>
-                                </b>
-
-                                para validar las evidencias de tu comité.
-
+                                Te quedan <b><span id="countdown"></span></b> para validar las evidencias de tu comité.
                             </p>
-
                         </div>
+                    </div>
 
+                    <div class="mt-3">
+                        <h5>Importancia de validar a tiempo</h5>
+                        <p class="text-justify">
+                            La validación o rechazo de evidencias es clave para cerrar el proceso correctamente. Como coordinador, revisa con antelación para evitar prisas de última hora y posibles errores.
+                            <br><br>
+                            **No lo dejes para el final**: cuanto antes valides, más margen tendrán tus compañeros/as para subsanar cualquier problema.
+                        </p>
                     </div>
 
                 </div>
             </div>
+
 
         </div>
     </div>

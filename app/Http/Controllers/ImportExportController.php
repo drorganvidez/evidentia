@@ -36,7 +36,7 @@ class ImportExportController extends Controller
         $user = Auth::user();
         
         $token = $request->session()->token();
-        $tmp = '/tmp/'.$user->username.'/'.$token.'/';
+        $tmp = 'tmp/'.$user->username.'/'.$token.'/';
 
         try {
             foreach (Storage::files($tmp) as $filename) {

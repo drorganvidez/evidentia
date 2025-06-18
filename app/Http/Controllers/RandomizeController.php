@@ -27,8 +27,8 @@ class RandomizeController extends Controller
         
 
         // eliminamos la aleatorización previa (si la hubiera)
-        $previous_evidences = Evidence::where('rand','=', '1')->get();
-        $previous_evidences->each(function ($item, $key) {
+        $previousEvidences = Evidence::where('rand','=', '1')->get();
+        $previousEvidences->each(function ($item, $key) {
             $item->rand = false;
             $item->save();
         });

@@ -16,7 +16,7 @@ class Stamp
     public static function compute_file($file)
     {
         $salt =  \Config::secret();
-        $hash_file = hash_file('sha256', storage_path('/app/'.$file->route));
+        $hash_file = hash_file('sha256', Storage::disk('local')->path($file->route));
         $file->stamp = hash('sha256',
             $file->name.
             $file->size.

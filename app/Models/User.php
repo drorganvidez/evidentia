@@ -23,7 +23,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'surname', 'name', 'username', 'password', 'email', 'block', 'biography', 'clean_name', 'clean_surname'
+        'surname', 'name', 'username', 'password', 'email', 'block', 'biography', 'clean_name', 'clean_surname', 'participation'
     ];
 
     protected $hidden = [
@@ -115,7 +115,7 @@ class User extends Authenticatable
         return optional($this->evidence_rand())->hours ?? 0;
     }
 
-    public function evidences_draft()
+    public function evidencesDraft()
     {
         return $this->evidences->where('status', 'DRAFT');
     }
@@ -125,17 +125,17 @@ class User extends Authenticatable
         return $this->evidences->where('status', '!=', 'DRAFT');
     }
 
-    public function evidences_pending()
+    public function evidencesPending()
     {
         return $this->evidences->where('status', 'PENDING');
     }
 
-    public function evidences_accepted()
+    public function evidencesAccepted()
     {
         return $this->evidences->where('status', 'ACCEPTED');
     }
 
-    public function evidences_rejected()
+    public function evidencesRejected()
     {
         return $this->evidences->where('status', 'REJECTED');
     }
@@ -172,42 +172,42 @@ class User extends Authenticatable
 
     public function evidences_draft_hours()
     {
-        return $this->collection_hours($this->evidences_draft());
+        return $this->collection_hours($this->evidencesDraft());
     }
 
     public function evidences_draft_count()
     {
-        return $this->collection_count($this->evidences_draft());
+        return $this->collection_count($this->evidencesDraft());
     }
 
     public function evidences_pending_hours()
     {
-        return $this->collection_hours($this->evidences_pending());
+        return $this->collection_hours($this->evidencesPending());
     }
 
     public function evidences_pending_count()
     {
-        return $this->collection_count($this->evidences_pending());
+        return $this->collection_count($this->evidencesPending());
     }
 
     public function evidences_accepted_hours()
     {
-        return $this->collection_hours($this->evidences_accepted());
+        return $this->collection_hours($this->evidencesAccepted());
     }
 
     public function evidences_accepted_count()
     {
-        return $this->collection_count($this->evidences_accepted());
+        return $this->collection_count($this->evidencesAccepted());
     }
 
     public function evidences_rejected_hours()
     {
-        return $this->collection_hours($this->evidences_rejected());
+        return $this->collection_hours($this->evidencesRejected());
     }
 
     public function evidences_rejected_count()
     {
-        return $this->collection_count($this->evidences_rejected());
+        return $this->collection_count($this->evidencesRejected());
     }
 
     public function meetings_hours()
@@ -299,4 +299,15 @@ class User extends Authenticatable
 
         return $names->implode(' | ');
     }
+
+    public function getParticipationLabelAttribute(): ?string
+    {
+        return match ($this->participation) {
+            1 => 'Colaborativo',
+            2 => 'Técnico-organizativo',
+            3 => 'Técnico',
+            default => null,
+        };
+    }
+
 }

@@ -34,7 +34,7 @@
 
                 <div class="row">
 
-                    @foreach($evidence->flow_evidences() as $evidence_i)
+                    @foreach($evidence->flowEvidences() as $evidence_i)
 
                         <div class="col-lg-3 mb-0 pb-0">
 

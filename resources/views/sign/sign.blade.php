@@ -46,22 +46,22 @@
         <a href="{{route('home')}}"><img width="200px" src="{{asset('dist/img/logo_light.svg')}}"></a>
     </div>
 
-    @if($signature_sheet->meeting_request)
+    @if($signature_sheet->meetingRequest)
 
         <dl class="row" style="margin-top: 30px; margin-bottom: 30px">
 
             <dt class="col-sm-4">Convocatoria</dt>
-            <dd class="col-sm-8">{{$signature_sheet->meeting_request->title}}</dd>
+            <dd class="col-sm-8">{{$signature_sheet->meetingRequest->title}}</dd>
             <dd class="col-sm-8 offset-sm-4">
-                {{ \Carbon\Carbon::parse($signature_sheet->meeting_request->datetime)->format('d/m/Y') }}
-                {{ \Carbon\Carbon::parse($signature_sheet->meeting_request->datetime)->format('H:i') }}
+                {{ \Carbon\Carbon::parse($signature_sheet->meetingRequest->datetime)->format('d/m/Y') }}
+                {{ \Carbon\Carbon::parse($signature_sheet->meetingRequest->datetime)->format('H:i') }}
             </dd>
             <dd class="col-sm-8 offset-sm-4">
-                {{$signature_sheet->meeting_request->place}}
+                {{$signature_sheet->meetingRequest->place}}
             </dd>
 
             <dt class="col-sm-4">Comité</dt>
-            <dd class="col-sm-8">{{$signature_sheet->meeting_request->committee->name}}</dd>
+            <dd class="col-sm-8">{{$signature_sheet->meetingRequest->committee->name}}</dd>
 
         </dl>
 
@@ -84,7 +84,7 @@
 
             <div class="col-lg-6">
                 <div class="input-group mb-3">
-                    <input name="username" required="" type="text" class="form-control" placeholder="UVUS" autocomplete="username" autofocus="">
+                    <input name="email" required="" type="text" class="form-control" placeholder="Email" autocomplete="email" autofocus="">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-user"></span>

@@ -82,6 +82,7 @@ class DevelopmentSeeder extends Seeder
             ['id' => 6, 'name' => 'Finanzas', 'icon' => '<i class="fas fa-euro-sign"></i>'],
             ['id' => 7, 'name' => 'Logística', 'icon' => '<i class="fas fa-warehouse"></i>'],
             ['id' => 8, 'name' => 'Comunicación', 'icon' => '<i class="fab fa-twitter"></i>'],
+            ['id' => 8, 'name' => 'I+D+I', 'icon' => '<i class="fas fa-terminal"></i>'],
         ], ['id']);
 
         // CONFIGURACIÓN (solo si no existe)

@@ -115,6 +115,8 @@ class MeetingSecretaryController extends Controller
         $content = $pdf->download()->getOriginalContent();
         Storage::put('/meeting_requests/meeting_request_' . $meeting_request->id . '.pdf', $content);
 
+        // return dd($request_http->all());
+
         // creamos una hoja de firmas (si el usuario lo ha querido así)
         if ($request_http->input('create_signature_sheet') == 'on') {
             SignatureSheet::create([
@@ -454,8 +456,8 @@ class MeetingSecretaryController extends Controller
 
             // si la hoja de firmas tiene una convocatoria asociada, se descarta cualquier otra elegida
             // por el secretario
-            if ($signature_sheet->meeting_request != null) {
-                $meeting_request = $signature_sheet->meeting_request;
+            if ($signature_sheet->meetingRequest != null) {
+                $meeting_request = $signature_sheet->meetingRequest;
             }
 
         }
@@ -682,8 +684,8 @@ class MeetingSecretaryController extends Controller
         }
 
         // borramos los puntos y acuerdos previos
-        if ($meeting->meeting_minutes->points) {
-            foreach ($meeting->meeting_minutes->points as $point) {
+        if ($meeting->meetingMinutes->points) {
+            foreach ($meeting->meetingMinutes->points as $point) {
                 foreach ($point->agreements as $agreement) {
                     $agreement->delete();
                 }
@@ -692,10 +694,10 @@ class MeetingSecretaryController extends Controller
         }
 
         // borramos el pdf del acta antigua
-        Storage::delete( '/meeting_minutes/meeting_minutes_' . $meeting->meeting_minutes->id . '.pdf');
+        Storage::delete( '/meeting_minutes/meeting_minutes_' . $meeting->meetingMinutes->id . '.pdf');
 
         // borramos el acta antigua
-        $meeting->meeting_minutes->delete();
+        $meeting->meetingMinutes->delete();
 
         // Añadimos el secretario a la reunión
         $meeting->users()->attach(Auth::user()->secretary->user);

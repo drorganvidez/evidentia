@@ -52,6 +52,14 @@
     <div class="card-footer pt-3">
         <div class="row">
             <div class="col-lg-12">
+
+            @if($user->participation_label)
+                <span class="badge bg-info text-dark">
+                    {{ $user->participation_label }}
+                </span>
+            @endif
+
+
                 <p style="text-align: justify; margin-bottom: 0;" class="biography">
                     @if(!$user->biography)
                         <div class="callout callout-danger mt-3">

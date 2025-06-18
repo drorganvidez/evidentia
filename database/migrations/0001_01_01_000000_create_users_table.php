@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('biography')->nullable();
             $table->string('clean_name')->nullable();
             $table->string('clean_surname')->nullable();
+            $table->unsignedTinyInteger('participation')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

@@ -13,6 +13,7 @@ class File extends Model
         'type',
         'route',
         'size',
+        'stamp'
     ];
 
     /**

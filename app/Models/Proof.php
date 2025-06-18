@@ -9,7 +9,7 @@ use App\Models\File;
 class Proof extends Model
 {
 
-        protected $table = 'proofs';
+    protected $table = 'proofs';
 
     protected $fillable = [
         'evidence_id',

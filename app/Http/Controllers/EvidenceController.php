@@ -119,7 +119,7 @@ class EvidenceController extends Controller
         $user = Auth::user();
         
         $token = $request->session()->token();
-        $tmp = '/tmp/'.$user->username.'/'.$token.'/';
+        $tmp = 'tmp/'.$user->username.'/'.$token.'/';
 
         foreach (Storage::files($tmp) as $filename) {
 
@@ -127,7 +127,7 @@ class EvidenceController extends Controller
             $type = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
             $size = Storage::size($filename);
             $old_directory = $filename;
-            $new_directory = '/proofs/'.$user->username.'/evidence_'.$evidence->id.'/'.$name.'.'.$type;
+            $new_directory = 'proofs/'.$user->username.'/evidence_'.$evidence->id.'/'.$name.'.'.$type;
 
             try{
                 // movemos
@@ -151,7 +151,7 @@ class EvidenceController extends Controller
                     'file_id' => $file_entity->id
                 ]);
             } catch (\Exception $e) {
-
+                dd('Error al guardar Proof:', $e->getMessage());
             }
 
         }
@@ -168,8 +168,8 @@ class EvidenceController extends Controller
         
         $token = session()->token();
 
-        $proofs_folder = '/proofs/'.$user->username.'/evidence_'.$evidence->id;
-        $tmp = '/tmp/'.$user->username.'/'.$token;
+        $proofs_folder = 'proofs/'.$user->username.'/evidence_'.$evidence->id;
+        $tmp = 'tmp/'.$user->username.'/'.$token;
 
         foreach (Storage::files($proofs_folder) as $filename) {
 
@@ -203,7 +203,7 @@ class EvidenceController extends Controller
         $evidence = Evidence::find($id);
         $committees = Committee::all();
 
-        $tmp = '/tmp/'.$user->username.'/'.$token.'/';
+        $tmp = 'tmp/'.$user->username.'/'.$token.'/';
 
         Storage::deleteDirectory($tmp);
 
@@ -241,7 +241,7 @@ class EvidenceController extends Controller
         $evidence_new = $this->new_evidence($request,$status);
 
         // evidencia cabecera en el flujo de ediciones (la última)
-        $evidence_header = $evidence_previous->find_header_evidence();
+        $evidence_header = $evidence_previous->findHeaderEvidence();
         $evidence_header->last = false;
         $evidence_header->save();
 
@@ -286,7 +286,7 @@ class EvidenceController extends Controller
 
         // eliminamos los archivos almacenados
         $this->delete_files($evidence);
-        Storage::deleteDirectory('/proofs/'.$user->username.'/evidence_'.$evidence->id.'');
+        Storage::deleteDirectory('proofs/'.$user->username.'/evidence_'.$evidence->id.'');
         $evidence->delete();
 
         if($evidence_previous != null)

@@ -120,6 +120,18 @@ class Evidence extends Model
         return $this->findHeaderEvidenceRecursive($next);
     }
 
+    public function getStatusLabelAttribute(): string
+    {
+        return match ($this->status) {
+            'DRAFT'    => 'En borrador',
+            'PENDING'  => 'Pendiente de revisión',
+            'ACCEPTED' => 'Aceptada',
+            'REJECTED' => 'Rechazada',
+            'BIN'      => 'Eliminada',
+            default    => 'Desconocido',
+        };
+    }
+
     // Scopes estáticos
     public static function evidencesNotDraft()
     {

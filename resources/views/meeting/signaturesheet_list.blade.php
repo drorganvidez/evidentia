@@ -41,7 +41,7 @@
                                     </a>
                                 </td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                    {{$signature_sheet->meeting_request->title ?? ''}}
+                                    {{$signature_sheet->meetingRequest->title ?? ''}}
                                 </td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
                                     {{ \Carbon\Carbon::parse($signature_sheet->updated_at)->diffForHumans() }}

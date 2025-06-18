@@ -26,9 +26,7 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-8">
-
-
+        <div class="col-lg-12">
 
             <div class="card">
 
@@ -72,52 +70,37 @@
 
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-lg-6 ">
 
             <div class="card">
-
                 <div class="card-body">
 
-                    <div class="callout callout-info">
-                        <h4>
-
-                            Fecha límite para el registro de bonos
-
+                    <div class="alert alert-info">
+                        <h4 class="mb-2">
+                            <i class="fas fa-stopwatch"></i> Fecha límite para registrar bonos
                         </h4>
-
-                        <h4>
-
-                            <i class="fas fa-stopwatch"></i>
-
-                            {{\Carbon\Carbon::parse(Config::bonus_timestamp())->format('d/m/Y')}}
-
-                            a las
-
-                            {{\Carbon\Carbon::parse(Config::bonus_timestamp())->format('H:i')}}
-
-                        </h4>
-
-                        <div class="countdown_container" style="display: none">
-
+                        <p class="mb-0">
+                            {{ \Carbon\Carbon::parse(\Config::bonus_timestamp())->format('d/m/Y \a \l\a\s H:i') }}
+                        </p>
+                        <div class="countdown_container mt-2" style="display: none">
                             <p>
-
-                                Quedan
-
-                                <b>
-                                    <span id="countdown"></span>
-                                </b>
-
-                                para registrar bonos de horas.
-
+                                Quedan <b><span id="countdown"></span></b> para registrar bonos de horas.
                             </p>
-
                         </div>
+                    </div>
 
+                    <div class="mt-3">
+                        <h5>Acerca del registro de bonos</h5>
+                        <p class="text-justify">
+                            Los bonos deben registrarse antes de la fecha límite establecida. Una vez pasado el plazo, no se admitirán solicitudes ni modificaciones, salvo casos excepcionales y debidamente justificados.
+                            <br><br>
+                            Te recomendamos no esperar al último momento para evitar imprevistos y garantizar que tu solicitud quede correctamente registrada.
+                        </p>
                     </div>
 
                 </div>
-
             </div>
+
 
         </div>
 

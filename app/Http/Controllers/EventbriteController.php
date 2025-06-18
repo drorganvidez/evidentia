@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\EventsExport;
+use App\Exports\AttendeesExport;
 use App\Models\Attendee;
 use App\Models\Configuration;
 use App\Models\Event;

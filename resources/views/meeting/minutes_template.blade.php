@@ -110,10 +110,10 @@
                 <td>Tipo de reunión</td>
                 <td>
                     @switch($meeting_minutes->meeting->type)
-                        @case('ORDINARY')
+                        @case('1')
                         Ordinaria
                         @break
-                        @case('EXTRAORDINARY')
+                        @case('2')
                         Extraordinaria
                         @break
                     @endswitch
@@ -124,13 +124,13 @@
                 <td>Modalidad</td>
                 <td>
                     @switch($meeting_minutes->meeting->modality)
-                        @case('F2F')
+                        @case('1')
                         Presencial
                         @break
-                        @case('TELEMATIC')
+                        @case('2')
                         Telemática
                         @break
-                        @case('MIXED')
+                        @case('3')
                         Híbrida
                         @break
                     @endswitch
@@ -147,7 +147,6 @@
                 <th>Rol</th>
                 <th>Apellidos</th>
                 <th>Nombre</th>
-                <th>Asistencia</th>
             </tr>
 
             @foreach($meeting_minutes->meeting->committee->coordinators as $coordinator)
@@ -163,11 +162,6 @@
                     </td>
                     <td>
                         {{$coordinator->user->name}}
-                    </td>
-                    <td class="X">
-                        @if($meeting_minutes->meeting->users->contains($coordinator->user))
-                            X
-                        @endif
                     </td>
                 </tr>
             @endforeach
@@ -186,9 +180,6 @@
                     <td>
                         {{$secretary->user->name}}
                     </td>
-                    <td class="X">
-                        X
-                    </td>
                 </tr>
             @endforeach
 
@@ -206,9 +197,6 @@
                     </td>
                     <td>
                         {{$user->name}}
-                    </td>
-                    <td class="X">
-                        X
                     </td>
                 </tr>
             @endforeach
@@ -306,7 +294,7 @@
             </h3>
 
             <h4>
-                Secretario de {{$meeting_minutes->meeting->committee->name}}
+                Secretaría de {{$meeting_minutes->meeting->committee->name}}
             </h4>
         </div>
 

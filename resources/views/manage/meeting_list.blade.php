@@ -42,7 +42,7 @@
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$meeting->users->count()}}</td>
                                 <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ \Carbon\Carbon::parse($meeting->datetime)->diffForHumans() }}</td>
                                 <td>
-                                    <a class="btn btn-primary btn-sm" href="{{route('download.minutes',['id' => $meeting->meeting_minutes->id])}}">
+                                    <a class="btn btn-primary btn-sm" href="{{route('download.minutes',['id' => $meeting->meetingMinutes->id])}}">
                                         <i class="nav-icon nav-icon far fa-file-pdf"></i>
                                     </a>
                                 </td>

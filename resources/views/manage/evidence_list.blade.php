@@ -13,24 +13,6 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <div class="row mb-3">
-                <p style="padding: 5px 25px 0px 15px">Exportar tabla:</p>
-                <div class="col-lg-1 mt-12">
-                    <a href="{{route('management.export',['ext' => 'xlsx'])}}"
-                       class="btn btn-info btn-block" role="button">
-                        XLSX</a>
-                </div>
-                <div class="col-lg-1 mt-12">
-                    <a href="{{route('management.export',['ext' => 'csv'])}}"
-                       class="btn btn-info btn-block" role="button">
-                        CSV</a>
-                </div>
-                <div class="col-lg-1 mt-12">
-                    <a href="{{route('management.export',['ext' => 'pdf'])}}"
-                       class="btn btn-info btn-block" role="button">
-                        PDF</a>
-                </div>
-            </div>
 
             <div class="card">
 

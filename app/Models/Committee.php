@@ -55,22 +55,22 @@ class Committee extends Model
         return $this->evidences()->where('status', '!=', 'DRAFT')->orderByDesc('updated_at');
     }
 
-    public function evidences_draft()
+    public function evidencesDraft()
     {
         return $this->evidences()->where('status', 'DRAFT')->orderByDesc('updated_at');
     }
 
-    public function evidences_pending()
+    public function evidencesPending()
     {
         return $this->evidences()->where('status', 'PENDING')->orderByDesc('updated_at');
     }
 
-    public function evidences_accepted()
+    public function evidencesAccepted()
     {
         return $this->evidences()->where('status', 'ACCEPTED')->orderByDesc('updated_at');
     }
 
-    public function evidences_rejected()
+    public function evidencesRejected()
     {
         return $this->evidences()->where('status', 'REJECTED')->orderByDesc('updated_at');
     }

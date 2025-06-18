@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('type');
             $table->string('route');
             $table->unsignedBigInteger('size');
+            $table->string('stamp')->nullable();
             $table->timestamps();
         });
     }

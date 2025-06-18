@@ -12,17 +12,15 @@
 
     <div class="row">
 
-        <div class="col-md-4">
+        <div class="col-md-5">
 
             <x-profile :user="$user"/>
 
         </div>
 
-        <div class="col-md-8">
+        <div class="col-md-7">
 
             <div class="card">
-
-
 
                 <div class="card-body">
 

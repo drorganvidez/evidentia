@@ -89,3 +89,7 @@ a:hover {
 .alert.alert-info{
     background-color: #002033;
 }
+
+.nav-item{
+    color: white;
+}
