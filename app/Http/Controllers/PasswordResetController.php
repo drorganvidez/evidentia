@@ -50,7 +50,7 @@ class PasswordResetController extends Controller
             $token = Token::create([
                 "token" => $token_str,
                 "used" => 0,
-                "valid_until_timestamp" => \Carbon\Carbon::now()->addHours(24)->toDateTime(),
+                "valid_until_timestamp" => \Carbon\Carbon::now()->addHours(24),
                 "user_id" => $user->id
             ]);
 

@@ -276,14 +276,6 @@ Route::middleware(CheckNotNull::class . ':User')->group(function () {
         Route::post('randomize/save', [RandomizeController::class, 'randomize_save'])->name('randomize.save');
     });
 
-    // PASSWORD RESET
-    Route::prefix('password')->group(function () {
-        Route::get('reset', [PasswordResetController::class, 'reset'])->name('password.reset');
-        Route::post('reset_p', [PasswordResetController::class, 'reset_p'])->name('password.reset_p');
-        Route::get('update/{token}', [PasswordResetController::class, 'update'])->name('password.update');
-        Route::post('update_p/{token}', [PasswordResetController::class, 'update_p'])->name('password.update_p');
-    });
-
     // SUGGESTIONS MAILBOX
     Route::get('suggestionsmailbox', [SuggestionsMailboxController::class, 'suggestionsmailbox'])->name('suggestionsmailbox');
     Route::post('suggestionsmailbox_p', [SuggestionsMailboxController::class, 'suggestionsmailbox_p'])->name('suggestionsmailbox_p');
@@ -361,5 +353,19 @@ Route::middleware(CheckNotNull::class . ':User')->group(function () {
             });
         });
     });
+    
 
+});
+
+
+/**
+ *  RESET PASSWORDS
+ */
+
+Route::prefix('password')->group(function () {
+    Route::get('/reset', [PasswordResetController::class, 'reset'])->name('password.custom_reset');
+    Route::post('/reset_p', [PasswordResetController::class, 'reset_p'])->name('password.reset_p');
+
+    Route::get('/update/{token}', [PasswordResetController::class, 'update'])->name('password.update');
+    Route::post('/update_p/{token}', [PasswordResetController::class, 'update_p'])->name('password.update_p');
 });
