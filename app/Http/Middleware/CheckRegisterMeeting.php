@@ -21,7 +21,7 @@ class CheckRegisterMeeting
         $datetime = \Config::meetings_timestamp();
 
         if($now->gt($datetime)){
-            return redirect()->route('home');
+            abort(404);
         }
 
         return $next($request);

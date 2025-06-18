@@ -20,7 +20,6 @@ class DefaultListSecretaryController extends Controller
     public function list()
     {
         
-
         $defaultlists = Auth::user()->secretary->defaultLists()->get();
 
         return view('defaultlist.list',
@@ -29,7 +28,6 @@ class DefaultListSecretaryController extends Controller
 
     public function create()
     {
-        
 
         $users = User::orderBy('surname')->get();
 
@@ -39,8 +37,6 @@ class DefaultListSecretaryController extends Controller
 
     public function new(Request $request)
     {
-
-        
 
         $validatedData = $request->validate([
             'name' => 'required|max:255',

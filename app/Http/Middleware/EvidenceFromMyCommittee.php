@@ -28,7 +28,7 @@ class EvidenceFromMyCommittee
 
         if($evidence->committee->id != Auth::user()->coordinator->committee->id)
         {
-            return redirect()->route('home');
+            abort(404);
         }
 
         return $next($request);
