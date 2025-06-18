@@ -46,28 +46,35 @@
             <div class="container">
                 <div class="row">
 
-                    <div class="col-12 mt-3">
+                    <div style="max-width: 600px; margin: 0 auto; padding: 2rem; font-family: Arial, sans-serif; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
 
-                        <div class="callout">
+    <div style="text-align: center; margin-bottom: 1.5rem;">
+        <img src="https://evidentia.us.es/dist/img/logo_light.svg" alt="Evidentia Logo" style="max-width: 180px;">
+    </div>
 
-                            <img class="img-fluid" width="200px" alt="blablabla" src="https://evidentia.us.es/dist/img/logo_light.svg">
+    <p style="font-size: 16px; color: #212529;">Hola, <strong>{{ $user->name }}</strong>:</p>
 
-                            <br>
+    <p style="font-size: 15px; color: #212529;">
+        Has solicitado restablecer la contraseña de tu cuenta de <strong>Evidentia</strong>. 
+        Si no has sido tú, puedes ignorar este mensaje sin hacer nada.
+    </p>
 
-                            <p>Hola, {{$user->name}}:</p>
+    <div style="text-align: center; margin: 2rem 0;">
+        <a href="https://evidentia.us.es/password/update/{{ $token->token }}" 
+           style="display: inline-block; padding: 12px 24px; background-color: #2e6da4; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            Restablecer contraseña
+        </a>
+    </div>
 
-                            <p>Has solicitado un restablecimiento de la contraseña de tu cuenta de Evidentia Cloud.
-                            Si no eres tú la persona que lo ha solicitado, ignora este mensaje.</p>
+    <p style="font-size: 14px; color: #6c757d;">
+        Nota: el enlace de restablecimiento caduca en 24 horas.
+    </p>
 
-                            <p><a style="color: #2e6da4; text-decoration: none;" href="https://evidentia.us.es/password/update/{{$token->token}}">Haz click aquí para restablecer tu contraseña.</a></p>
+    <p style="font-size: 13px; font-style: italic; color: #6c757d;">
+        Por favor, no respondas a este correo. Esta dirección no está supervisada.
+    </p>
+</div>
 
-                            <p>Nota: El link de restablecimiento caducará a las 24 horas.</p>
-
-                            <p><i>Por favor, no respondas a este mensaje, es una cuenta desatendida.</i></p>
-
-                        </div>
-
-                    </div>
                 </div>
             </div>
         </section>

@@ -7,7 +7,7 @@
     <div class="card shadow-lg">
 
         <div class="card-body">
-            <form action="{{route('password.update_p',["instance" => $instance, "token" => $token])}}" method="post">
+            <form action="{{route('password.update_p',["token" => $token])}}" method="post">
                 @csrf
 
                 <div class="input-group mb-3">

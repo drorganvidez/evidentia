@@ -56,11 +56,13 @@ class PasswordResetController extends Controller
 
             $token->save();
 
-            try{
-                Mail::to($user)->send(new PasswordReset($token,$user));
-            }catch(\Exception $e){
-
+            try {
+                Mail::to($user)->send(new PasswordReset($token, $user));
+                \Log::info("Correo enviado a {$user->email}");
+            } catch (\Exception $e) {
+                \Log::error("Fallo al enviar correo: " . $e->getMessage());
             }
+
         }
 
         return redirect()->route('login')->with('light', 'Si el email se encuentra en nuestros registros, recibirás un correo con instrucciones para restablecer tu contraseña.');
@@ -73,7 +75,7 @@ class PasswordResetController extends Controller
 
         if($token_entity != null){
 
-            if($token_entity->is_valid()){
+            if($token_entity->isValid()){
                 return view('auth.passwords.update',
                     ['token' => $token]);
             }
