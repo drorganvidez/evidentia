@@ -12,14 +12,14 @@
 
     <div class="row">
 
-        <div class="col-md-4">
+        <div class="col-md-5">
 
             <x-profile :user="Auth::user()"/>
 
         </div>
 
-        <div class="col-md-8">
-            <div class="card shadow-lg">
+        <div class="col-md-7">
+            <div class="card">
                 <div class="card-header p-2">
                     <ul class="nav nav-pills">
                         <li class="nav-item"><a class="nav-link active" href="#data" data-toggle="tab">Personal</a></li>
@@ -67,7 +67,7 @@
                                 </div>
 
                                 <div class="form-row">
-                                    <div class="col-lg-3">
+                                    <div class="col-4">
                                         <button type="submit" class="btn btn-primary btn-block" data-dismiss="modal">Actualizar perfil</button>
                                     </div>
                                 </div>
@@ -84,7 +84,7 @@
 
                                 <div class="form-row">
                                     <div class="form-group col-md-4">
-                                        <label for="participation">Nivel de participación</label>
+                                        <label for="participation">Nivel de implicación</label>
                                         <select id="participation" class="selectpicker form-control @error('participation') is-invalid @enderror" name="participation" value="{{ old('participation') }}" required autofocus>
 
                                             <option {{old('participation') == 1 || Auth::user()->participation == 'ORGANIZATION' ? 'selected' : 'NO'}} value="1">COLABORATIVO</option>
@@ -113,7 +113,7 @@
                                 </div>
 
                                 <div class="form-row">
-                                    <div class="col-lg-3">
+                                    <div class="col-4">
                                         <button type="submit" class="btn btn-primary btn-block" data-dismiss="modal">Actualizar resumen</button>
                                     </div>
                                 </div>
@@ -134,7 +134,7 @@
                                 </div>
 
                                 <div class="form-row">
-                                    <div class="col-lg-3">
+                                    <div class="col-4">
                                         <button type="submit" class="btn btn-primary btn-block" data-dismiss="modal">Actualizar contraseña</button>
                                     </div>
                                 </div>

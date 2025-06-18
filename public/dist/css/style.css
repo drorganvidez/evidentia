@@ -46,3 +46,42 @@ filepond--root.filepond--hopper{
 
 .biography{
 }
+
+.main-sidebar {
+    background-color: #002033 !important;
+}
+
+.nav-link.active{
+    background-color: #891436 !important;
+}
+
+.info{
+    margin-top: 10px;
+}
+
+.brand-link.text-center{
+    background-color: #002033;
+    border-bottom: 0px;
+}
+
+.btn-primary{
+    background-color: #891436;
+    border-color: #891436;
+}
+
+.btn-primary:hover{
+    background-color: #4e0016;
+    border-color: #891436;
+}
+
+a {
+    color: #4e0016;
+}
+
+a:hover {
+    color: #4e0016;
+}
+
+.bg-info{
+    background-color: #002033 !important;
+}
