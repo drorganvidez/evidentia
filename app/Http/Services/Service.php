@@ -2,16 +2,14 @@
 
 namespace App\Http\Services;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 
 abstract class Service
 {
-
     protected string $model;
+
     protected array $validation_rules;
+
     protected Request $request;
 
     public function __construct($model)
@@ -38,12 +36,14 @@ abstract class Service
     public function create($array)
     {
         $this->validate();
+
         return $this->model::create($array);
     }
 
-    public function update($id,$array)
+    public function update($id, $array)
     {
         $this->validate();
+
         return $this->model::where('id', $id)->update($array);
     }
 
@@ -87,5 +87,4 @@ abstract class Service
     {
         return $this->model::all()->sortByDesc($field);
     }
-
 }

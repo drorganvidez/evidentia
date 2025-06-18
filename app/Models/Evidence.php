@@ -3,10 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Proof;
-use App\Models\User;
-use App\Models\Committee;
-use App\Models\ReasonRejection;
 
 class Evidence extends Model
 {
@@ -22,7 +18,7 @@ class Evidence extends Model
         'status',
         'stamp',
         'rand',
-        'last'
+        'last',
     ];
 
     // Relaciones
@@ -51,7 +47,7 @@ class Evidence extends Model
     {
         $previous = static::find($this->points_to);
 
-        if (!$previous) {
+        if (! $previous) {
             return collect([$this]);
         }
 
@@ -67,6 +63,7 @@ class Evidence extends Model
         }
 
         $previous = static::find($evidence->points_to);
+
         return $this->previousEvidencesRecursive($previous, $collection);
     }
 
@@ -75,7 +72,7 @@ class Evidence extends Model
     {
         $next = static::where('points_to', $this->id)->first();
 
-        if (!$next) {
+        if (! $next) {
             return collect([$this]);
         }
 
@@ -91,6 +88,7 @@ class Evidence extends Model
         }
 
         $next = static::where('points_to', $evidence->id)->first();
+
         return $this->laterEvidencesRecursive($next, $collection);
     }
 
@@ -117,18 +115,19 @@ class Evidence extends Model
         }
 
         $next = static::where('points_to', $evidence->id)->first();
+
         return $this->findHeaderEvidenceRecursive($next);
     }
 
     public function getStatusLabelAttribute(): string
     {
         return match ($this->status) {
-            'DRAFT'    => 'En borrador',
-            'PENDING'  => 'Pendiente de revisión',
+            'DRAFT' => 'En borrador',
+            'PENDING' => 'Pendiente de revisión',
             'ACCEPTED' => 'Aceptada',
             'REJECTED' => 'Rechazada',
-            'BIN'      => 'Eliminada',
-            default    => 'Desconocido',
+            'BIN' => 'Eliminada',
+            default => 'Desconocido',
         };
     }
 

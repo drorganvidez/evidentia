@@ -16,7 +16,8 @@
 
             <div class="row mb-3">
                 <div class="col-lg-2 mt-1">
-                    <a href="{{route('secretary.defaultlist.create',[])}}" class="btn btn-primary btn-block" role="button"><i class="fas fa-plus"></i> &nbsp;Crear nueva lista</a>
+                    <a href="{{ route('secretary.defaultlist.create', []) }}" class="btn btn-primary btn-block"
+                        role="button"><i class="fas fa-plus"></i> &nbsp;Crear nueva lista</a>
                 </div>
             </div>
 
@@ -26,30 +27,32 @@
                 <div class="card-body">
                     <table id="dataset" class="table table-hover table-responsive">
                         <thead>
-                        <tr>
-                            <th>Título de la lista</th>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Creada</th>
-                            <th>Herramientas</th>
-                        </tr>
+                            <tr>
+                                <th>Título de la lista</th>
+                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Creada</th>
+                                <th>Herramientas</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        @foreach($defaultlists as $defaultlist)
-                            <tr>
-                                <td>{{$defaultlist->name}}</td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ \Carbon\Carbon::parse($defaultlist->created_at)->diffForHumans() }}</td>
-                                <td>
-                                    <a class="btn btn-primary btn-sm"
-                                       href="{{route('secretary.defaultlist.edit',['id' => $defaultlist->id])}}"
-                                       role="button">
-                                        <i class="far fa-edit"></i>
-                                        <span class="d-none d-sm-none d-md-none d-lg-inline">Editar lista</span>
-                                    </a>
+                            @foreach ($defaultlists as $defaultlist)
+                                <tr>
+                                    <td>{{ $defaultlist->name }}</td>
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                        {{ \Carbon\Carbon::parse($defaultlist->created_at)->diffForHumans() }}</td>
+                                    <td>
+                                        <a class="btn btn-primary btn-sm"
+                                            href="{{ route('secretary.defaultlist.edit', ['id' => $defaultlist->id]) }}"
+                                            role="button">
+                                            <i class="far fa-edit"></i>
+                                            <span class="d-none d-sm-none d-md-none d-lg-inline">Editar lista</span>
+                                        </a>
 
-                                    <x-buttonconfirm :id="$defaultlist->id" route="secretary.defaultlist.remove" title="¿Seguro?" description="Esta acción es permanente." type="REMOVE" />
+                                        <x-buttonconfirm :id="$defaultlist->id" route="secretary.defaultlist.remove"
+                                            title="¿Seguro?" description="Esta acción es permanente." type="REMOVE" />
 
-                                </td>
-                            </tr>
-                        @endforeach
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
 

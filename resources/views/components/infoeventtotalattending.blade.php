@@ -4,8 +4,8 @@
     <div class="info-box-content">
         <span class="info-box-text">Eventos pendientes</span>
         <span class="info-box-number">
-                  {{$user->attendees_pending_count()}}
-                </span>
+            {{ $user->attendees_pending_count() }}
+        </span>
     </div>
 
 </div>

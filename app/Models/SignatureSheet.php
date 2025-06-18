@@ -4,9 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
-use App\Models\MeetingRequest;
-use App\Models\Secretary;
 
 class SignatureSheet extends Model
 {
@@ -27,8 +24,8 @@ class SignatureSheet extends Model
     public function users()
     {
         return $this->belongsToMany(User::class)
-                    ->withTimestamps()
-                    ->orderByDesc('created_at');
+            ->withTimestamps()
+            ->orderByDesc('created_at');
     }
 
     /**

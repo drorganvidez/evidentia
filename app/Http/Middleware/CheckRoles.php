@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -10,7 +11,9 @@ class CheckRoles
     public function handle(Request $request, Closure $next, ...$roles)
     {
         $user = Auth::user();
-        if (!$user) return redirect()->route('login');
+        if (! $user) {
+            return redirect()->route('login');
+        }
 
         foreach ($user->roles as $rol) {
             if (in_array($rol->rol, $roles)) {

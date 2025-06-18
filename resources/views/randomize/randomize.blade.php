@@ -18,7 +18,7 @@
 
                 <div class="card-body">
 
-                    <form action="{{$route}}" method="POST">
+                    <form action="{{ $route }}" method="POST">
                         @csrf
 
                         <div class="row">

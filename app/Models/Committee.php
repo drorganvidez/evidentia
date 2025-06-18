@@ -4,12 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use App\Models\Evidence;
-use App\Models\Coordinator;
-use App\Models\Secretary;
-use App\Models\Meeting;
-use App\Models\MeetingRequest;
-use App\Models\Bonus;
 
 class Committee extends Model
 {

@@ -2,7 +2,6 @@
 
 namespace App\Imports;
 
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -11,13 +10,13 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 class UsersImport implements ToModel, WithHeadingRow
 {
     /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
     public function model(array $row)
     {
-        if(!array_filter($row)) return null;
+        if (! array_filter($row)) {
+            return null;
+        }
 
         return new User([
             'surname' => trim($row['apellidos']),

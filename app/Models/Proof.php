@@ -3,12 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Evidence;
-use App\Models\File;
 
 class Proof extends Model
 {
-
     protected $table = 'proofs';
 
     protected $fillable = [

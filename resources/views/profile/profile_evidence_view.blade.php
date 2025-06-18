@@ -1,11 +1,12 @@
 @extends('layouts.app')
 
-@section('title', $user->surname . ', ' .$user->name . ': ' . $evidence->title)
+@section('title', $user->surname . ', ' . $user->name . ': ' . $evidence->title)
 @section('title-icon', 'nav-icon fas fa-user')
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item"><a  href="{{route('profiles.view',['id' => $user->id])}}">{{$user->surname}}, {{$user->name}}</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('profiles.view', ['id' => $user->id]) }}">{{ $user->surname }},
+            {{ $user->name }}</a></li>
     <li class="breadcrumb-item active">@yield('title')</li>
 @endsection
 
@@ -16,7 +17,7 @@
 
         <div class="col-md-4">
 
-            <x-profile :user="$user"/>
+            <x-profile :user="$user" />
 
         </div>
 
@@ -31,17 +32,17 @@
                         <div class="col-lg-8">
 
                             <h5>
-                                <x-evidencecommittee :evidence="$evidence"/>
+                                <x-evidencecommittee :evidence="$evidence" />
 
                                 <span class="badge badge-secondary">
-                                    <i class="far fa-clock"></i> {{$evidence->hours}} horas
+                                    <i class="far fa-clock"></i> {{ $evidence->hours }} horas
                                 </span>
 
                                 <span class="badge badge-secondary">
-                                    @if($evidence->integrity())
+                                    @if ($evidence->integrity())
                                         Integridad <i class="fas fa-check-circle"></i>
                                     @else
-                                        <i  class="fas fa-times-circle"></i>
+                                        <i class="fas fa-times-circle"></i>
                                     @endif
                                 </span>
 
@@ -50,7 +51,7 @@
 
 
 
-                            <h4>{{$evidence->title}}</h4>
+                            <h4>{{ $evidence->title }}</h4>
 
                             <div class="post text-justify">
                                 {!! $evidence->description !!}
@@ -62,22 +63,22 @@
 
                             <div class="text-muted">
                                 <p class="text-sm">Última edición
-                                    <b class="d-block">{{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }}</b>
+                                    <b
+                                        class="d-block">{{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }}</b>
                                 </p>
                             </div>
 
-                            <x-evidencestatus :evidence="$evidence"/>
+                            <x-evidencestatus :evidence="$evidence" />
 
 
                             <br>
 
-                            @foreach($evidence->proofs as $proof)
-
-                                <a style="margin-bottom: 10px" class="btn btn-primary btn-sm" href="{{route('proof.download',['id' => $proof->id])}}">
+                            @foreach ($evidence->proofs as $proof)
+                                <a style="margin-bottom: 10px" class="btn btn-primary btn-sm"
+                                    href="{{ route('proof.download', ['id' => $proof->id]) }}">
                                     <i class="fas fa-download"></i>
-                                    {{$proof->file->name}} ({{$proof->file->sizeForHuman()}})
+                                    {{ $proof->file->name }} ({{ $proof->file->sizeForHuman() }})
                                 </a>
-
                             @endforeach
 
 

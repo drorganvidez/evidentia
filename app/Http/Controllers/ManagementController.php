@@ -4,43 +4,40 @@ namespace App\Http\Controllers;
 
 use App\Exports\ManagementEvidencesExport;
 use App\Exports\ManagementStudentExport;
+use App\Http\Middleware\CheckRoles;
 use App\Http\Services\UserService;
 use App\Models\Committee;
-use App\Models\Coordinator;
 use App\Models\Evidence;
 use App\Models\Meeting;
 use App\Models\Role;
-use App\Models\Secretary;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Http\Middleware\CheckRoles;
 
 class ManagementController extends Controller
 {
-
     private $user_service;
 
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware(CheckRoles::class . ':LECTURE,PRESIDENT');
-        $this->user_service = new UserService();
+        $this->middleware(CheckRoles::class.':LECTURE,PRESIDENT');
+        $this->user_service = new UserService;
     }
 
     public function user_list()
     {
-        
+
         $users = User::all();
 
         // el presidente no puede editar los usuarios de tipo profesor
         $filtered_users = collect();
         if (Auth::user()->hasRole('PRESIDENT')) {
             $users->each(function ($item, $key) use ($filtered_users) {
-                if (!$item->hasRole('LECTURE')) {
+                if (! $item->hasRole('LECTURE')) {
                     $filtered_users->push($item);
                 }
             });
@@ -54,7 +51,7 @@ class ManagementController extends Controller
 
     public function evidence_list()
     {
-        
+
         $evidences = Evidence::evidencesNotDraft();
 
         return view('manage.evidence_list',
@@ -63,7 +60,7 @@ class ManagementController extends Controller
 
     public function meeting_list()
     {
-        
+
         $meetings = Meeting::all();
 
         return view('manage.meeting_list',
@@ -72,7 +69,7 @@ class ManagementController extends Controller
 
     public function committee_list()
     {
-        
+
         $committees = Committee::all();
 
         $route = null;
@@ -94,15 +91,15 @@ class ManagementController extends Controller
 
     public function committee_new(Request $request)
     {
-        
+
         $request->validate([
             'icon' => 'max:255',
-            'name' => 'required|max:255|unique:committees'
+            'name' => 'required|max:255|unique:committees',
         ]);
 
         Committee::create([
             'icon' => $request->input('icon'),
-            'name' => $request->input('name')
+            'name' => $request->input('name'),
         ]);
 
         if (Auth::user()->hasRole('PRESIDENT')) {
@@ -114,22 +111,21 @@ class ManagementController extends Controller
 
     public function committee_save(Request $request)
     {
-        
+
         $returned_route = null;
         if (Auth::user()->hasRole('PRESIDENT')) {
-            $returned_route = "president.committee.list";
+            $returned_route = 'president.committee.list';
         } else {
-            $returned_route = "lecture.committee.list";
+            $returned_route = 'lecture.committee.list';
         }
 
         // por sl algún usuario avispao modifica los ID en el HTML
         try {
             foreach (Committee::all() as $committee) {
 
-
             }
         } catch (\Exception $e) {
-            return redirect()->route($returned_route)->with('error', 'Error en la integridad de los comités.' . $e->getMessage());
+            return redirect()->route($returned_route)->with('error', 'Error en la integridad de los comités.'.$e->getMessage());
         }
 
         foreach (Committee::all() as $committee) {
@@ -141,10 +137,10 @@ class ManagementController extends Controller
             ]);
             */
 
-            $new_icon = $request->input('icon_' . $committee->id);
-            $new_name = $request->input('name_' . $committee->id);
+            $new_icon = $request->input('icon_'.$committee->id);
+            $new_name = $request->input('name_'.$committee->id);
 
-            if ($new_name != "") {
+            if ($new_name != '') {
 
                 $saved_committee = Committee::find($committee->id);
                 $saved_committee->icon = $new_icon;
@@ -159,17 +155,18 @@ class ManagementController extends Controller
 
     public function committee_remove(Request $request)
     {
-        
+
         $returned_route = null;
         if (Auth::user()->hasRole('PRESIDENT')) {
-            $returned_route = "president.committee.list";
+            $returned_route = 'president.committee.list';
         } else {
-            $returned_route = "lecture.committee.list";
+            $returned_route = 'lecture.committee.list';
         }
 
         $committee = Committee::find($request->input('_id'));
         if ($committee->can_be_removed()) {
             $committee->delete();
+
             return redirect()->route($returned_route)->with('success', 'Comité eliminado con éxito.');
         } else {
             return redirect()->route($returned_route)->with('error', 'El comité no ha podido ser eliminado.');
@@ -179,7 +176,7 @@ class ManagementController extends Controller
 
     public function user_management($id)
     {
-        
+
         $user = User::findOrFail($id);
 
         $route = null;
@@ -188,7 +185,6 @@ class ManagementController extends Controller
         } else {
             $route = route('lecture.user.management.save');
         }
-
 
         // el presidente no puede crear usuarios de tipo profesor
         $roles = null;
@@ -207,7 +203,6 @@ class ManagementController extends Controller
     public function user_management_save(Request $request)
     {
 
-        
         $user = User::find($request->input('user_id'));
 
         // guardar bloqueo
@@ -256,7 +251,7 @@ class ManagementController extends Controller
 
             $request->validate([
                 'name' => 'required|max:255',
-                'surname' => 'required|max:255'
+                'surname' => 'required|max:255',
             ]);
 
             // si se cambia el uvus, comprueba que el nuevo sea único
@@ -280,11 +275,10 @@ class ManagementController extends Controller
             $user->clean_name = strtoupper(trim(preg_replace('~[^0-9a-z]+~i', '', preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($request->input('name'), ENT_QUOTES, 'UTF-8'))), ' '));
             $user->clean_surname = strtoupper(trim(preg_replace('~[^0-9a-z]+~i', '', preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($request->input('surname'), ENT_QUOTES, 'UTF-8'))), ' '));
 
-
             // si se cambia la contraseña
-            if ($request->input('password') != "") {
+            if ($request->input('password') != '') {
                 $request->validate([
-                    'password' => 'required|confirmed|min:6'
+                    'password' => 'required|confirmed|min:6',
                 ]);
                 $user->password = Hash::make($request->input('password'));
             }
@@ -303,13 +297,11 @@ class ManagementController extends Controller
     public function user_management_new(Request $request)
     {
 
-        
-
         $request->validate([
             'name' => 'required|max:255',
             'surname' => 'required|max:255',
             'email' => 'required|max:255|unique:users',
-            'username' => 'required|max:255|unique:users'
+            'username' => 'required|max:255|unique:users',
         ]);
 
         $user = User::create([
@@ -346,15 +338,15 @@ class ManagementController extends Controller
             if (ob_get_level()) {
                 ob_end_clean();
             }
-            if (!in_array($ext, ['csv', 'pdf', 'xlsx'])) {
+            if (! in_array($ext, ['csv', 'pdf', 'xlsx'])) {
                 return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
             }
-            return Excel::download(new ManagementEvidencesExport(), 'evidencias-' . \Illuminate\Support\Carbon::now() . '.' . $ext);
+
+            return Excel::download(new ManagementEvidencesExport, 'evidencias-'.\Illuminate\Support\Carbon::now().'.'.$ext);
         } catch (\Exception $e) {
-            return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
+            return back()->with('error', 'Ocurrió un error: '.$e->getMessage());
         }
     }
-
 
     public function management_student_export($ext)
     {
@@ -362,12 +354,13 @@ class ManagementController extends Controller
             if (ob_get_level()) {
                 ob_end_clean();
             }
-            if(!in_array($ext, ['csv', 'pdf', 'xlsx'])){
+            if (! in_array($ext, ['csv', 'pdf', 'xlsx'])) {
                 return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
             }
-            return Excel::download(new ManagementStudentExport(), 'alumnos-' . \Illuminate\Support\Carbon::now() . '.' . $ext);
+
+            return Excel::download(new ManagementStudentExport, 'alumnos-'.\Illuminate\Support\Carbon::now().'.'.$ext);
         } catch (\Exception $e) {
-            return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
+            return back()->with('error', 'Ocurrió un error: '.$e->getMessage());
         }
     }
 }

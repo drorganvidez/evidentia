@@ -23,24 +23,25 @@
                         <div class="col-lg-12">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default">Acciones</button>
-                                <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
+                                <button type="button" class="btn btn-default dropdown-toggle dropdown-icon"
+                                    data-toggle="dropdown" aria-expanded="false">
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <div class="dropdown-menu" role="menu" style="">
 
-                                    @if(\Illuminate\Support\Facades\Auth::user()->hasRole('LECTURE'))
+                                    @if (\Illuminate\Support\Facades\Auth::user()->hasRole('LECTURE'))
+                                        <a class="dropdown-item" href="{{ route('lecture.import') }}">Importación masiva de
+                                            usuarios</a>
 
-                                        <a class="dropdown-item" href="{{route('lecture.import')}}">Importación masiva de usuarios</a>
-
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#borrar_todo">
-                                        Borrar todos los usuarios
-                                    </a>
-
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="#" data-toggle="modal"
+                                            data-target="#borrar_todo">
+                                            Borrar todos los usuarios
+                                        </a>
                                     @endif
 
-                                    @if(\Illuminate\Support\Facades\Auth::user()->hasRole('PRESIDENT'))
-                                            <a class="dropdown-item" href="#">Coming soon...</a>
+                                    @if (\Illuminate\Support\Facades\Auth::user()->hasRole('PRESIDENT'))
+                                        <a class="dropdown-item" href="#">Coming soon...</a>
                                     @endif
                                 </div>
                             </div>
@@ -50,50 +51,50 @@
 
                     <table id="dataset" class="table table-hover table-responsive">
                         <thead>
-                        <tr>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">DNI</th>
-                            <th>Apellidos</th>
-                            <th>Nombre</th>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">UVUS</th>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Roles</th>
-                            <th></th>
-                        </tr>
+                            <tr>
+                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">DNI</th>
+                                <th>Apellidos</th>
+                                <th>Nombre</th>
+                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">UVUS</th>
+                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Roles</th>
+                                <th></th>
+                            </tr>
                         </thead>
                         <tbody>
 
-                        @foreach($users as $user)
+                            @foreach ($users as $user)
+                                @if ($user->id != Auth::id())
+                                    @if ($user->block)
+                                        <tr class="bg-danger">
+                                        @else
+                                        <tr>
+                                    @endif
 
-                            @if($user->id != Auth::id())
-
-                                @if($user->block)
-                                    <tr class="bg-danger">
-                                @else
-                                    <tr>
-                                @endif
-
-                                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$user->dni}}</td>
-                                        <td><a  href="{{route('profiles.view',['id' => $user->id])}}">{{$user->surname}}</a></td>
-                                        <td><a  href="{{route('profiles.view',['id' => $user->id])}}">{{$user->name}}</a></td>
-                                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$user->username}}</td>
-                                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                            <x-roles :user="$user"/>
-                                        </td>
-                                        <td>
-                                            @if(Auth::user()->hasRole('PRESIDENT'))
-                                                <a class="btn btn-primary btn-sm" href="{{route('president.user.management',['id' => $user->id])}}">
-                                                    <i class="nav-icon nav-icon fas fa-users-cog"></i>
-                                                </a>
-                                            @else
-                                                <a class="btn btn-primary btn-sm" href="{{route('lecture.user.management',['id' => $user->id])}}">
-                                                    <i class="nav-icon nav-icon fas fa-users-cog"></i>
-                                                </a>
-                                            @endif
-                                        </td>
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ $user->dni }}</td>
+                                    <td><a href="{{ route('profiles.view', ['id' => $user->id]) }}">{{ $user->surname }}</a>
+                                    </td>
+                                    <td><a href="{{ route('profiles.view', ['id' => $user->id]) }}">{{ $user->name }}</a>
+                                    </td>
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ $user->username }}</td>
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                        <x-roles :user="$user" />
+                                    </td>
+                                    <td>
+                                        @if (Auth::user()->hasRole('PRESIDENT'))
+                                            <a class="btn btn-primary btn-sm"
+                                                href="{{ route('president.user.management', ['id' => $user->id]) }}">
+                                                <i class="nav-icon nav-icon fas fa-users-cog"></i>
+                                            </a>
+                                        @else
+                                            <a class="btn btn-primary btn-sm"
+                                                href="{{ route('lecture.user.management', ['id' => $user->id]) }}">
+                                                <i class="nav-icon nav-icon fas fa-users-cog"></i>
+                                            </a>
+                                        @endif
+                                    </td>
                                     </tr>
-
-                            @endif
-
-                        @endforeach
+                                @endif
+                            @endforeach
 
                         </tbody>
                     </table>
@@ -106,27 +107,29 @@
 
         <div class="col-lg-6 col-sm-12 col-md-12">
 
-                        <div class="card">
+            <div class="card">
 
                 <div class="card-body">
 
                     <h4>Añadir nuevo usuario</h4>
 
-                    <form method="POST" enctype="multipart/form-data" action="{{route('management.user.new')}}">
+                    <form method="POST" enctype="multipart/form-data" action="{{ route('management.user.new') }}">
                         @csrf
 
                         <div class="form-row">
-                            <x-input col="6" attr="name" label="Nombre"/>
-                            <x-input col="6" attr="surname" label="Apellidos"/>
+                            <x-input col="6" attr="name" label="Nombre" />
+                            <x-input col="6" attr="surname" label="Apellidos" />
                         </div>
 
                         <div class="form-row">
-                            <x-input col="6" attr="email" label="Email"/>
+                            <x-input col="6" attr="email" label="Email" />
                         </div>
 
                         <div class="form-row">
-                            <x-input col="6" attr="username"  label="UVUS" description="El UVUS será el nombre de usuario"/>
-                            <x-input col="6" attr="password" disabled="true" :edit="true" label="Password" description="La contraseña por defecto es aleatoria y debe ser restablecida"/>
+                            <x-input col="6" attr="username" label="UVUS"
+                                description="El UVUS será el nombre de usuario" />
+                            <x-input col="6" attr="password" disabled="true" :edit="true" label="Password"
+                                description="La contraseña por defecto es aleatoria y debe ser restablecida" />
                         </div>
                         <div class="form-row">
 
@@ -162,13 +165,14 @@
                 </div>
 
 
-                <form action="{{route('management.user.delete.all')}}" method="POST">
+                <form action="{{ route('management.user.delete.all') }}" method="POST">
                     @csrf
                     <div class="modal-body text-wrap">
                         <h2>Aviso</h2>
                         <p>
                             Esta acción está pensada al principio del uso de este software, cuando se
-                            acaban de importar todos los usuarios mediante un archivo XLS y/o se están haciendo pruebas. Esta función es <b>muy destructiva.</b>
+                            acaban de importar todos los usuarios mediante un archivo XLS y/o se están haciendo pruebas.
+                            Esta función es <b>muy destructiva.</b>
                         </p>
 
                         <p>Se borrarán:</p>

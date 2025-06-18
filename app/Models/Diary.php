@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\MeetingRequest;
-use App\Models\DiaryPoint;
 
 class Diary extends Model
 {

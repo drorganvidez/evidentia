@@ -12,7 +12,6 @@ class CheckProofDownload
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -23,27 +22,25 @@ class CheckProofDownload
          *      2. Soy coordinador y la prueba es de una evidencia dirigida a mi comité
          *      3. Soy profesor o presidente
          */
-        
-
         $id = $request->route('id');
         $proof = Proof::find($id);
 
         // 1. La prueba es mía
-        if($proof->evidence->user->id == Auth::id()){
+        if ($proof->evidence->user->id == Auth::id()) {
             return $next($request);
         }
 
         // 2. Soy coordinador y la prueba es de una evidencia dirigida a mi comité
-        if(Auth::user()->hasRole('COORDINATOR')){
+        if (Auth::user()->hasRole('COORDINATOR')) {
             $committee = $proof->evidence->committee;
             $my_committee = Auth::user()->coordinator->committee;
-            if($committee->id == $my_committee->id){
+            if ($committee->id == $my_committee->id) {
                 return $next($request);
             }
         }
 
         // 3. Soy profesor o presidente
-        if(Auth::user()->hasRole('LECTURE') || Auth::user()->hasRole('PRESIDENT')){
+        if (Auth::user()->hasRole('LECTURE') || Auth::user()->hasRole('PRESIDENT')) {
             return $next($request);
         }
 

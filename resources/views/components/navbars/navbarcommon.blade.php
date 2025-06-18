@@ -8,7 +8,7 @@
 
         <li class="nav-item d-none d-sm-inline-block">
             <a href="{{ route('updates.list') }}" class="nav-link">
-                <i class="fab fa-github"></i> Versión del software: {{env('EVIDENTIA_VERSION','')}}</a>
+                <i class="fab fa-github"></i> Versión del software: {{ env('EVIDENTIA_VERSION', '') }}</a>
         </li>
 
 
@@ -19,8 +19,8 @@
 
         <!-- Logout -->
         <li class="nav-item">
-            <a href="{{ route('logout') }}"  class="nav-link"
-               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <a href="{{ route('logout') }}" class="nav-link"
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="nav-icon fas fa-sign-out-alt"></i> Salir
             </a>
         </li>

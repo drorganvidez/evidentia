@@ -1,17 +1,9 @@
-<div class="form-group col-md-{{$col}}">
+<div class="form-group col-md-{{ $col }}">
 
     <label for="{{ $attr }}">{{ $label }}</label>
 
-    <select
-
-        id="{{ $id }}"
-
-        class="selectpicker form-control @error('committee') is-invalid @enderror"
-
-        name="{{ $attr }}"
-
-         autofocus
-    >
+    <select id="{{ $id }}" class="selectpicker form-control @error('committee') is-invalid @enderror"
+        name="{{ $attr }}" autofocus>
 
         {{ $slot }}
 

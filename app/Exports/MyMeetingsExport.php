@@ -2,7 +2,6 @@
 
 namespace App\Exports;
 
-use App\Models\Meeting;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -17,21 +16,22 @@ class MyMeetingsExport implements FromCollection, WithHeadings
         $meetings = Auth::user()->meetings()->get();
 
         $res = collect();
-        foreach($meetings as $meeting){
+        foreach ($meetings as $meeting) {
 
-            if(Auth::User()->hasRole('STUDENT')) {
+            if (Auth::User()->hasRole('STUDENT')) {
 
                 $array = [
                     'Reunión' => strtoupper(trim($meeting->title)),
                     'Lugar' => strtoupper(trim($meeting->place)),
                     'Horas' => strtoupper(trim($meeting->hours)),
-                    'Fecha de realización' =>  strtoupper(trim($meeting->datetime)),
+                    'Fecha de realización' => strtoupper(trim($meeting->datetime)),
                 ];
 
                 $object = (object) $array;
                 $res->push($object);
             }
         }
+
         return $res;
     }
 

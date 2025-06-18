@@ -4,8 +4,8 @@
     <div class="info-box-content">
         <span class="info-box-text">Evidencias rechazadas</span>
         <span class="info-box-number">
-                  {{$user->evidences_rejected_count()}}
-                </span>
+            {{ $user->evidences_rejected_count() }}
+        </span>
     </div>
 
 </div>

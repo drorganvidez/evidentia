@@ -3,11 +3,9 @@
 namespace App\Exports;
 
 use App\Models\MeetingRequest;
-use App\Models\User;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class MeetingRequestExport implements FromCollection, WithHeadings
 {
@@ -16,16 +14,16 @@ class MeetingRequestExport implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        $meeting_requests= MeetingRequest::where("secretary_id","=",Auth::User()->secretary->id)->get();
+        $meeting_requests = MeetingRequest::where('secretary_id', '=', Auth::User()->secretary->id)->get();
         $res = collect();
-        foreach($meeting_requests as $request){
+        foreach ($meeting_requests as $request) {
 
-            if(Auth::User()->hasRole('SECRETARY')) {
+            if (Auth::User()->hasRole('SECRETARY')) {
 
                 $array = [
                     'Titulo' => strtoupper(trim($request->title)),
                     'Programado_para' => strtoupper(trim($request->datetime)),
-                    'Ultima_modificacion' => strtoupper(trim($request->updated_at))
+                    'Ultima_modificacion' => strtoupper(trim($request->updated_at)),
 
                 ];
 
@@ -33,6 +31,7 @@ class MeetingRequestExport implements FromCollection, WithHeadings
                 $res->push($object);
             }
         }
+
         return $res;
     }
 
@@ -41,9 +40,8 @@ class MeetingRequestExport implements FromCollection, WithHeadings
         return [
             'Título',
             'Programada para',
-            'Última modificación'
+            'Última modificación',
 
         ];
     }
-
 }

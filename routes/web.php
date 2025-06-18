@@ -1,48 +1,46 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-
+use App\Http\Controllers\AttendeeController;
+use App\Http\Controllers\AvatarController;
 // Controladores importados explícitamente
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\BonusSecretaryController;
+use App\Http\Controllers\ConfigController;
+use App\Http\Controllers\DefaultListSecretaryController;
+use App\Http\Controllers\EventbriteController;
+use App\Http\Controllers\EvidenceController;
+use App\Http\Controllers\EvidenceCoordinatorController;
+use App\Http\Controllers\FileController;
+use App\Http\Controllers\GeneralPurposeController;
 use App\Http\Controllers\GitController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ImportExportController;
+use App\Http\Controllers\IntegrityController;
+use App\Http\Controllers\ManagementController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\MeetingSecretaryController;
-use App\Http\Controllers\DefaultListSecretaryController;
-use App\Http\Controllers\BonusSecretaryController;
-use App\Http\Controllers\AttendeeController;
-use App\Http\Controllers\ProofController;
-use App\Http\Controllers\FileController;
-use App\Http\Controllers\AvatarController;
-use App\Http\Controllers\EventbriteController;
-use App\Http\Controllers\ConfigController;
-use App\Http\Controllers\ManagementController;
-use App\Http\Controllers\IntegrityController;
-use App\Http\Controllers\ImportExportController;
-use App\Http\Controllers\RandomizeController;
-use App\Http\Controllers\PasswordResetController;
-use App\Http\Controllers\SuggestionsMailboxController;
-use App\Http\Controllers\EvidenceController;
-use App\Http\Controllers\UploadController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProofController;
+use App\Http\Controllers\RandomizeController;
 use App\Http\Controllers\SignController;
-use App\Http\Controllers\GeneralPurposeController;
-use App\Http\Controllers\EvidenceCoordinatorController;
-
-use App\Http\Middleware\CheckRoles;
-use App\Http\Middleware\CheckUploadEvidences;
-use App\Http\Middleware\CheckRegisterBonus;
+use App\Http\Controllers\SuggestionsMailboxController;
+use App\Http\Controllers\UploadController;
 use App\Http\Middleware\CheckNotNull;
 use App\Http\Middleware\CheckProofDownload;
-use App\Http\Middleware\CheckValidateEvidences;
+use App\Http\Middleware\CheckRegisterBonus;
 use App\Http\Middleware\CheckRegisterEventsAndAttendings;
-use App\Http\Middleware\MeetingRequestMine;
-use App\Http\Middleware\MeetingMinutesMine;
-use App\Http\Middleware\SignatureSheetMine;
+use App\Http\Middleware\CheckRoles;
+use App\Http\Middleware\CheckUploadEvidences;
+use App\Http\Middleware\CheckValidateEvidences;
+use App\Http\Middleware\EvidenceCanBeEdited;
 use App\Http\Middleware\EvidenceFromMyCommittee;
 use App\Http\Middleware\EvidenceMine;
-use App\Http\Middleware\EvidenceCanBeEdited;
+use App\Http\Middleware\MeetingMinutesMine;
+use App\Http\Middleware\MeetingRequestMine;
+use App\Http\Middleware\SignatureSheetMine;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 // Rutas de autenticación
 Auth::routes();
@@ -158,8 +156,8 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::middleware([
-            CheckNotNull::class . ':Bonus',
-            CheckRegisterBonus::class
+            CheckNotNull::class.':Bonus',
+            CheckRegisterBonus::class,
         ])->group(function () {
             Route::get('bonus/edit/{id}', [BonusSecretaryController::class, 'edit'])->name('secretary.bonus.edit');
             Route::post('bonus/save', [BonusSecretaryController::class, 'save'])->name('secretary.bonus.save');
@@ -175,9 +173,9 @@ Route::middleware('auth')->group(function () {
     Route::post('proof/remove', [ProofController::class, 'remove'])->name('proof.remove');
 
     Route::middleware([
-            CheckNotNull::class . ':Proof',
-            CheckProofDownload::class
-        ])->group(function () {
+        CheckNotNull::class.':Proof',
+        CheckProofDownload::class,
+    ])->group(function () {
         Route::get('proof/download/{id}', [ProofController::class, 'download'])->name('proof.download');
     });
 
@@ -185,7 +183,7 @@ Route::middleware('auth')->group(function () {
     Route::post('file/remove', [FileController::class, 'remove'])->name('file.remove');
 
     // AVATAR
-    Route::middleware([CheckNotNull::class . ':User',])->group(function () {
+    Route::middleware([CheckNotNull::class.':User'])->group(function () {
         Route::get('avatar/{id}', [AvatarController::class, 'avatar'])->name('avatar');
     });
 
@@ -204,7 +202,7 @@ Route::middleware('auth')->group(function () {
     Route::get('registercoordinator/event/export/{ext}', [EventbriteController::class, 'events_export'])->name('registercoordinator.events.export');
 
     // PRESIDENT routes with middleware checkroles:PRESIDENT
-    Route::middleware([CheckRoles::class . ':PRESIDENT,LECTURE'])->group(function () {
+    Route::middleware([CheckRoles::class.':PRESIDENT,LECTURE'])->group(function () {
         Route::get('president/config', [ConfigController::class, 'config'])->name('president.config');
         Route::post('president/config/save', [ConfigController::class, 'config_save'])->name('president.config.save');
 
@@ -230,7 +228,7 @@ Route::middleware('auth')->group(function () {
     Route::get('management/export/{ext}', [ManagementController::class, 'evidences_export'])->name('management.export');
 
     // LECTURE routes with middleware checkroles:LECTURE
-    Route::middleware([CheckRoles::class . ':LECTURE'])->group(function () {
+    Route::middleware([CheckRoles::class.':LECTURE'])->group(function () {
         Route::get('lecture/config', [ConfigController::class, 'config'])->name('lecture.config');
         Route::post('lecture/config/save', [ConfigController::class, 'config_save'])->name('lecture.config.save');
 
@@ -263,15 +261,15 @@ Route::middleware('auth')->group(function () {
     Route::post('management/user/new', [ManagementController::class, 'user_management_new'])->name('management.user.new');
 
     // PROFILES - visible for LECTURE and PRESIDENT only
-    Route::middleware([CheckRoles::class . ':PRESIDENT,LECTURE'])->group(function () {
-Route::middleware(CheckNotNull::class . ':User')->group(function () {
-    Route::get('profiles/view/{id}', [ProfileController::class, 'profiles_view'])->name('profiles.view');
-});
+    Route::middleware([CheckRoles::class.':PRESIDENT,LECTURE'])->group(function () {
+        Route::middleware(CheckNotNull::class.':User')->group(function () {
+            Route::get('profiles/view/{id}', [ProfileController::class, 'profiles_view'])->name('profiles.view');
+        });
         Route::get('profiles/view/{id_user}/evidence/{id_evidence}', [ProfileController::class, 'evidences_view'])->name('profiles.view.evidence');
     });
 
     // RANDOMIZE EVIDENCES - LECTURE only
-    Route::middleware([CheckRoles::class . ':LECTURE'])->group(function () {
+    Route::middleware([CheckRoles::class.':LECTURE'])->group(function () {
         Route::get('randomize', [RandomizeController::class, 'randomize'])->name('randomize.randomize');
         Route::post('randomize/save', [RandomizeController::class, 'randomize_save'])->name('randomize.save');
     });
@@ -294,9 +292,9 @@ Route::middleware(CheckNotNull::class . ':User')->group(function () {
     Route::get('evidence/list/export/{ext}', [EvidenceController::class, 'export'])->name('evidence.list.export');
 
     Route::middleware([
-            CheckNotNull::class . ':Evidence',
-            EvidenceMine::class
-        ])->group(function () {
+        CheckNotNull::class.':Evidence',
+        EvidenceMine::class,
+    ])->group(function () {
         Route::get('evidence/view/{id}', [EvidenceController::class, 'view'])->name('evidence.view');
 
         Route::middleware(CheckUploadEvidences::class)->group(function () {
@@ -342,8 +340,8 @@ Route::middleware(CheckNotNull::class . ':User')->group(function () {
         Route::get('/evidence/export/{type}/{ext}', [EvidenceCoordinatorController::class, 'evidences_export'])->name('coordinator.evidence.export');
 
         Route::middleware([
-            CheckNotNull::class . ':Evidence',
-            EvidenceFromMyCommittee::class
+            CheckNotNull::class.':Evidence',
+            EvidenceFromMyCommittee::class,
         ])->group(function () {
             Route::get('/evidence/view/{id}', [EvidenceController::class, 'view'])->name('coordinator.evidence.view');
 
@@ -353,15 +351,12 @@ Route::middleware(CheckNotNull::class . ':User')->group(function () {
             });
         });
     });
-    
 
 });
-
 
 /**
  *  RESET PASSWORDS
  */
-
 Route::prefix('password')->group(function () {
     Route::get('/reset', [PasswordResetController::class, 'reset'])->name('password.custom_reset');
     Route::post('/reset_p', [PasswordResetController::class, 'reset_p'])->name('password.reset_p');

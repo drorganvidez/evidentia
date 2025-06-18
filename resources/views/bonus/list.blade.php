@@ -14,10 +14,11 @@
     <div class="row">
 
         <div class="col-lg-12">
-            @if(!\Carbon\Carbon::now()->gt(\Config::bonus_timestamp()))
+            @if (!\Carbon\Carbon::now()->gt(\Config::bonus_timestamp()))
                 <div class="row mb-3">
                     <div class="col-lg-3 mt-1">
-                        <a href="{{route('secretary.bonus.create',[])}}" class="btn btn-primary btn-block" role="button"><i class="fas fa-plus"></i> &nbsp;Crear nuevo bono de horas</a>
+                        <a href="{{ route('secretary.bonus.create', []) }}" class="btn btn-primary btn-block" role="button"><i
+                                class="fas fa-plus"></i> &nbsp;Crear nuevo bono de horas</a>
                     </div>
                 </div>
             @endif
@@ -32,41 +33,44 @@
 
                 <div class="card-body">
                     <table id="dataset" class="table table-hover table-responsive">
-                            <thead>
+                        <thead>
                             <tr>
                                 <th scope="col">Razón</th>
                                 <th scope="col">Horas</th>
-                                @if(!\Carbon\Carbon::now()->gt(\Config::bonus_timestamp()))
-                                <th scope="col">Herramientas</th>
+                                @if (!\Carbon\Carbon::now()->gt(\Config::bonus_timestamp()))
+                                    <th scope="col">Herramientas</th>
                                 @endif
                             </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($bonus as $bono)
+                        </thead>
+                        <tbody>
+                            @foreach ($bonus as $bono)
                                 <tr scope="row">
-                                    <td>{{$bono->reason}}</td>
-                                    <td>{{$bono->hours}}</td>
-                                    @if(!\Carbon\Carbon::now()->gt(\Config::bonus_timestamp()))
-                                    <td>
-                                        <a class="btn btn-primary btn-sm"
-                                           href="{{route('secretary.bonus.edit',['id' => $bono->id])}}"
-                                           role="button">
-                                            <i class="far fa-edit"></i>
-                                            <span class="d-none d-sm-none d-md-none d-lg-inline">Editar bono</span>
-                                        </a>
+                                    <td>{{ $bono->reason }}</td>
+                                    <td>{{ $bono->hours }}</td>
+                                    @if (!\Carbon\Carbon::now()->gt(\Config::bonus_timestamp()))
+                                        <td>
+                                            <a class="btn btn-primary btn-sm"
+                                                href="{{ route('secretary.bonus.edit', ['id' => $bono->id]) }}"
+                                                role="button">
+                                                <i class="far fa-edit"></i>
+                                                <span class="d-none d-sm-none d-md-none d-lg-inline">Editar bono</span>
+                                            </a>
 
-                                        <x-buttonconfirm :id="$bono->id" route="secretary.bonus.remove" title="¿Seguro?" description="Las horas asociadas a los alumnos se borrarán." type="REMOVE" />
+                                            <x-buttonconfirm :id="$bono->id" route="secretary.bonus.remove"
+                                                title="¿Seguro?"
+                                                description="Las horas asociadas a los alumnos se borrarán."
+                                                type="REMOVE" />
 
-                                    </td>
+                                        </td>
                                     @endif
                                 </tr>
                             @endforeach
-                            </tbody>
-                        </table>
-
-                    </div>
+                        </tbody>
+                    </table>
 
                 </div>
+
+            </div>
 
         </div>
 
@@ -92,9 +96,11 @@
                     <div class="mt-3">
                         <h5>Acerca del registro de bonos</h5>
                         <p class="text-justify">
-                            Los bonos deben registrarse antes de la fecha límite establecida. Una vez pasado el plazo, no se admitirán solicitudes ni modificaciones, salvo casos excepcionales y debidamente justificados.
+                            Los bonos deben registrarse antes de la fecha límite establecida. Una vez pasado el plazo, no se
+                            admitirán solicitudes ni modificaciones, salvo casos excepcionales y debidamente justificados.
                             <br><br>
-                            Te recomendamos no esperar al último momento para evitar imprevistos y garantizar que tu solicitud quede correctamente registrada.
+                            Te recomendamos no esperar al último momento para evitar imprevistos y garantizar que tu
+                            solicitud quede correctamente registrada.
                         </p>
                     </div>
 
@@ -110,11 +116,11 @@
 @section('scripts')
 
     <script>
-
-        $(document).ready(function(){
-            countdown("{{\Carbon\Carbon::create(\Carbon\Carbon::now())->diffInSeconds(Config::bonus_timestamp(),false)}}");
+        $(document).ready(function() {
+            countdown(
+                "{{ \Carbon\Carbon::create(\Carbon\Carbon::now())->diffInSeconds(Config::bonus_timestamp(), false) }}"
+                );
         });
-
     </script>
 
 @endsection

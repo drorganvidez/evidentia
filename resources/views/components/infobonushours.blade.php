@@ -4,8 +4,8 @@
     <div class="info-box-content">
         <span class="info-box-text">Bonificación de horas</span>
         <span class="info-box-number">
-                  {{$user->bonus_hours()}}
-                </span>
+            {{ $user->bonus_hours() }}
+        </span>
     </div>
 
 </div>

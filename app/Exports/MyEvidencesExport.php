@@ -14,19 +14,19 @@ class MyEvidencesExport implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        $evidencias = Evidence::where("user_id","=",Auth::id())->get();
+        $evidencias = Evidence::where('user_id', '=', Auth::id())->get();
 
         $res = collect();
-        foreach($evidencias as $evidencia){
+        foreach ($evidencias as $evidencia) {
 
-            if(Auth::User()->hasRole('STUDENT')) {
+            if (Auth::User()->hasRole('STUDENT')) {
 
                 $array = [
                     'Titulo' => strtoupper(trim($evidencia->title)),
                     'Horas' => strtoupper(trim($evidencia->hours)),
                     'Comité' => strtoupper(trim($evidencia->comittee->name)),
-                    'Creada' =>  strtoupper(trim($evidencia->created_at)),
-                    'Estado' =>  strtoupper(trim($evidencia->status))
+                    'Creada' => strtoupper(trim($evidencia->created_at)),
+                    'Estado' => strtoupper(trim($evidencia->status)),
 
                 ];
 
@@ -34,6 +34,7 @@ class MyEvidencesExport implements FromCollection, WithHeadings
                 $res->push($object);
             }
         }
+
         return $res;
     }
 
@@ -44,7 +45,7 @@ class MyEvidencesExport implements FromCollection, WithHeadings
             'Horas',
             'Comité',
             'Creada',
-            'Estado'
+            'Estado',
         ];
     }
 }

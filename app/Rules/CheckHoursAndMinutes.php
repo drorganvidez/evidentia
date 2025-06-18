@@ -29,7 +29,7 @@ class CheckHoursAndMinutes implements Rule
     {
         $minutes = $value;
 
-        if($this->comparing == 0 && $value == 0){
+        if ($this->comparing == 0 && $value == 0) {
             return false;
         }
 

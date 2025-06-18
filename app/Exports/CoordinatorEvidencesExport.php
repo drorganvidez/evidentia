@@ -2,7 +2,6 @@
 
 namespace App\Exports;
 
-use App\Models\Evidence;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -14,26 +13,27 @@ class CoordinatorEvidencesExport implements FromCollection, WithHeadings
      */
     public $type = null;
 
-    public function __construct($type){
+    public function __construct($type)
+    {
         $this->type = $type;
     }
 
     public function collection()
     {
         $evidences = null;
-        if($this->type=="all") {
+        if ($this->type == 'all') {
             $coordinator = Auth::user()->coordinator;
             $comittee = $coordinator->comittee;
             $evidences = $comittee->evidencesNotDraft()->get();
-        } else if($this->type=="pending") {
+        } elseif ($this->type == 'pending') {
             $coordinator = Auth::user()->coordinator;
             $comittee = $coordinator->comittee;
             $evidences = $comittee->evidencesPending()->get();
-        } else if($this->type=="accepted") {
+        } elseif ($this->type == 'accepted') {
             $coordinator = Auth::user()->coordinator;
             $comittee = $coordinator->comittee;
             $evidences = $comittee->evidencesAccepted()->get();
-        } else if($this->type=="rejected") {
+        } elseif ($this->type == 'rejected') {
             $coordinator = Auth::user()->coordinator;
             $comittee = $coordinator->comittee;
             $evidences = $comittee->evidencesRejected()->get();
@@ -49,13 +49,14 @@ class CoordinatorEvidencesExport implements FromCollection, WithHeadings
                     'Horas' => strtoupper(trim($evidence->hours)),
                     'Comite' => strtoupper(trim($evidence->comittee->name)),
                     'Creada' => strtoupper(trim($evidence->created_at)),
-                    'Estado' => trim($evidence->status)
+                    'Estado' => trim($evidence->status),
                 ];
 
-                $object = (object)$array;
+                $object = (object) $array;
                 $res->push($object);
             }
         }
+
         return $res;
     }
 
@@ -68,8 +69,7 @@ class CoordinatorEvidencesExport implements FromCollection, WithHeadings
             'Horas',
             'Comité',
             'Creada',
-            'Estado'
+            'Estado',
         ];
     }
-
 }

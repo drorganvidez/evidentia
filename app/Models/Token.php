@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use App\Models\User;
 
 class Token extends Model
 {
@@ -22,7 +21,7 @@ class Token extends Model
      */
     public function isValid(): bool
     {
-        return !$this->used && Carbon::now()->lt($this->valid_until_timestamp);
+        return ! $this->used && Carbon::now()->lt($this->valid_until_timestamp);
     }
 
     /**

@@ -11,8 +11,8 @@
 
     <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-            <a href="{{ route('instance.logout') }}"  class="nav-link"
-               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <a href="{{ route('instance.logout') }}" class="nav-link"
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="nav-icon fas fa-sign-out-alt"></i> Salir
             </a>
         </li>

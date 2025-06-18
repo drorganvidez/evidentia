@@ -7,7 +7,7 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class AttendeesExport implements FromCollection, WithHeadings, ShouldAutoSize
+class AttendeesExport implements FromCollection, ShouldAutoSize, WithHeadings
 {
     /**
      * @return \Illuminate\Support\Collection
@@ -17,10 +17,10 @@ class AttendeesExport implements FromCollection, WithHeadings, ShouldAutoSize
         $users = User::all();
         $users = $users->sortBy('clean_surname');
         $res = collect();
-        foreach($users as $user){
+        foreach ($users as $user) {
 
             // los profesores no se incluyen
-            if(!$user->hasRole('LECTURE')) {
+            if (! $user->hasRole('LECTURE')) {
 
                 $array = [
                     'apellidos' => strtoupper(trim($user->surname)),
@@ -45,7 +45,7 @@ class AttendeesExport implements FromCollection, WithHeadings, ShouldAutoSize
             'Apellidos',
             'Nombre',
             'Uvus',
-            'Horas de asistencia'
+            'Horas de asistencia',
         ];
     }
 }

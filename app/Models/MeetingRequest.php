@@ -4,10 +4,6 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Diary;
-use App\Models\Committee;
-use App\Models\Secretary;
-use App\Models\SignatureSheet;
 
 class MeetingRequest extends Model
 {

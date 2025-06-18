@@ -11,7 +11,7 @@
 
 @section('content')
 
-    <form method="POST" action="{{$route}}">
+    <form method="POST" action="{{ $route }}">
         @csrf
 
         <div class="row">
@@ -28,9 +28,15 @@
 
                         <div class="form-row">
 
-                            <x-input col="6" attr="upload_evidences_date" type="date" :value="\Carbon\Carbon::parse($configuration->upload_evidences_timestamp)->format('Y-m-d') ?? ''" label="Día" description="Indica el día límite."/>
+                            <x-input col="6" attr="upload_evidences_date" type="date" :value="\Carbon\Carbon::parse($configuration->upload_evidences_timestamp)->format(
+                                'Y-m-d',
+                            ) ?? ''"
+                                label="Día" description="Indica el día límite." />
 
-                            <x-input col="6" attr="upload_evidences_time" type="time" :value="\Carbon\Carbon::parse($configuration->upload_evidences_timestamp)->format('H:i') ?? ''" label="Hora" description="Indica la hora límite."/>
+                            <x-input col="6" attr="upload_evidences_time" type="time" :value="\Carbon\Carbon::parse($configuration->upload_evidences_timestamp)->format(
+                                'H:i',
+                            ) ?? ''"
+                                label="Hora" description="Indica la hora límite." />
 
                         </div>
 
@@ -43,9 +49,15 @@
 
                         <div class="form-row">
 
-                            <x-input col="6" attr="validate_evidences_date" type="date" :value="\Carbon\Carbon::parse($configuration->validate_evidences_timestamp)->format('Y-m-d') ?? ''" label="Día" description="Indica el día límite."/>
+                            <x-input col="6" attr="validate_evidences_date" type="date" :value="\Carbon\Carbon::parse($configuration->validate_evidences_timestamp)->format(
+                                'Y-m-d',
+                            ) ?? ''"
+                                label="Día" description="Indica el día límite." />
 
-                            <x-input col="6" attr="validate_evidences_time" type="time" :value="\Carbon\Carbon::parse($configuration->validate_evidences_timestamp)->format('H:i') ?? ''" label="Hora" description="Indica la hora límite."/>
+                            <x-input col="6" attr="validate_evidences_time" type="time" :value="\Carbon\Carbon::parse($configuration->validate_evidences_timestamp)->format(
+                                'H:i',
+                            ) ?? ''"
+                                label="Hora" description="Indica la hora límite." />
 
                         </div>
 
@@ -58,9 +70,11 @@
 
                         <div class="form-row">
 
-                            <x-input col="6" attr="meetings_date" type="date" :value="\Carbon\Carbon::parse($configuration->meetings_timestamp)->format('Y-m-d') ?? ''" label="Día" description="Indica el día límite."/>
+                            <x-input col="6" attr="meetings_date" type="date" :value="\Carbon\Carbon::parse($configuration->meetings_timestamp)->format('Y-m-d') ?? ''" label="Día"
+                                description="Indica el día límite." />
 
-                            <x-input col="6" attr="meetings_time" type="time" :value="\Carbon\Carbon::parse($configuration->meetings_timestamp)->format('H:i') ?? ''" label="Hora" description="Indica la hora límite."/>
+                            <x-input col="6" attr="meetings_time" type="time" :value="\Carbon\Carbon::parse($configuration->meetings_timestamp)->format('H:i') ?? ''" label="Hora"
+                                description="Indica la hora límite." />
 
                         </div>
 
@@ -73,9 +87,11 @@
 
                         <div class="form-row">
 
-                            <x-input col="6" attr="bonus_date" type="date" :value="\Carbon\Carbon::parse($configuration->bonus_timestamp)->format('Y-m-d') ?? ''" label="Día" description="Indica el día límite."/>
+                            <x-input col="6" attr="bonus_date" type="date" :value="\Carbon\Carbon::parse($configuration->bonus_timestamp)->format('Y-m-d') ?? ''" label="Día"
+                                description="Indica el día límite." />
 
-                            <x-input col="6" attr="bonus_time" type="time" :value="\Carbon\Carbon::parse($configuration->bonus_timestamp)->format('H:i') ?? ''" label="Hora" description="Indica la hora límite."/>
+                            <x-input col="6" attr="bonus_time" type="time" :value="\Carbon\Carbon::parse($configuration->bonus_timestamp)->format('H:i') ?? ''" label="Hora"
+                                description="Indica la hora límite." />
 
                         </div>
 
@@ -88,9 +104,11 @@
 
                         <div class="form-row">
 
-                            <x-input col="6" attr="attendees_date" type="date" :value="\Carbon\Carbon::parse($configuration->attendee_timestamp)->format('Y-m-d') ?? ''" label="Día" description="Indica el día límite."/>
+                            <x-input col="6" attr="attendees_date" type="date" :value="\Carbon\Carbon::parse($configuration->attendee_timestamp)->format('Y-m-d') ?? ''" label="Día"
+                                description="Indica el día límite." />
 
-                            <x-input col="6" attr="attendees_time" type="time" :value="\Carbon\Carbon::parse($configuration->attendee_timestamp)->format('H:i') ?? ''" label="Hora" description="Indica la hora límite."/>
+                            <x-input col="6" attr="attendees_time" type="time" :value="\Carbon\Carbon::parse($configuration->attendee_timestamp)->format('H:i') ?? ''" label="Hora"
+                                description="Indica la hora límite." />
 
                         </div>
 

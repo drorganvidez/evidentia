@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Evidence;
-use App\Http\Middleware\EvidenceCanBeEdited;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class RandomizeController extends Controller
 {
@@ -16,18 +14,17 @@ class RandomizeController extends Controller
 
     public function randomize()
     {
-        
+
         $route = route('randomize.save');
 
-        return view('randomize.randomize',['route' => $route]);
+        return view('randomize.randomize', ['route' => $route]);
     }
 
     public function randomize_save()
     {
-        
 
         // eliminamos la aleatorización previa (si la hubiera)
-        $previousEvidences = Evidence::where('rand','=', '1')->get();
+        $previousEvidences = Evidence::where('rand', '=', '1')->get();
         $previousEvidences->each(function ($item, $key) {
             $item->rand = false;
             $item->save();
@@ -35,19 +32,19 @@ class RandomizeController extends Controller
 
         $users = User::all();
 
-        foreach ($users as $user){
+        foreach ($users as $user) {
 
-            try{
+            try {
 
                 $filtered_evidences = $user->evidences->filter(function ($value, $key) {
-                    return $value->status == "ACCEPTED";
+                    return $value->status == 'ACCEPTED';
                 });
 
                 $evidence = $filtered_evidences->random();
                 $evidence->rand = true;
                 $evidence->save();
 
-            }catch(\Exception $e){
+            } catch (\Exception $e) {
 
             }
         }

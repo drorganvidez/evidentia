@@ -4,8 +4,8 @@
     <div class="info-box-content">
         <span class="info-box-text">Reuniones asistidas</span>
         <span class="info-box-number">
-                  {{$user->meetings_count()}}
-                </span>
+            {{ $user->meetings_count() }}
+        </span>
     </div>
 
 </div>

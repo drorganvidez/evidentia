@@ -4,8 +4,8 @@
     <div class="info-box-content">
         <span class="info-box-text">Eventos asistidos</span>
         <span class="info-box-number">
-                  {{$user->attendees_checkedin_count()}}
-                </span>
+            {{ $user->attendees_checkedin_count() }}
+        </span>
     </div>
 
 </div>

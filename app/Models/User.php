@@ -6,24 +6,14 @@ use Config;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
-use App\Models\Role;
-use App\Models\Evidence;
-use App\Models\Coordinator;
-use App\Models\Secretary;
-use App\Models\Meeting;
-use App\Models\Bonus;
-use App\Models\Avatar;
-use App\Models\Attendee;
-use App\Models\SignatureSheet;
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'surname', 'name', 'username', 'password', 'email', 'block', 'biography', 'clean_name', 'clean_surname', 'participation'
+        'surname', 'name', 'username', 'password', 'email', 'block', 'biography', 'clean_name', 'clean_surname', 'participation',
     ];
 
     protected $hidden = [
@@ -50,12 +40,12 @@ class User extends Authenticatable
 
     public function hasRole($rol_param): bool
     {
-        return $this->roles->contains(fn($role) => $role->rol === $rol_param);
+        return $this->roles->contains(fn ($role) => $role->rol === $rol_param);
     }
 
     public function isAdmin(): bool
     {
-        return (bool)($this->administrator ?? false);
+        return (bool) ($this->administrator ?? false);
     }
 
     public function coordinator()
@@ -106,7 +96,7 @@ class User extends Authenticatable
                 'id_evidence' => $this->evidence_rand()->id,
             ]);
         } catch (\Exception $e) {
-            return "";
+            return '';
         }
     }
 
@@ -237,8 +227,11 @@ class User extends Authenticatable
 
     public function attendees_hours()
     {
-        if ($this->attendees_checkedin_count() === 0) return 0;
-        return $this->attendees_checkedin()->sum(fn($a) => $a->event->hours);
+        if ($this->attendees_checkedin_count() === 0) {
+            return 0;
+        }
+
+        return $this->attendees_checkedin()->sum(fn ($a) => $a->event->hours);
     }
 
     public function events_hours()
@@ -269,7 +262,7 @@ class User extends Authenticatable
     public function avatar_route()
     {
         return $this->avatar
-            ? URL::to('/uploads/avatars/' . $this->avatar->file->name . '.' . $this->avatar->file->type)
+            ? URL::to('/uploads/avatars/'.$this->avatar->file->name.'.'.$this->avatar->file->type)
             : URL::to('/uploads/avatars/default.png');
     }
 
@@ -280,14 +273,15 @@ class User extends Authenticatable
         } elseif ($this->hasRole('SECRETARY')) {
             return $this->secretary->committee->name ?? 'None';
         }
+
         return 'None';
     }
 
     public function committee_belonging()
     {
         $names = $this->evidences
-            ->filter(fn($e) => $e->status === 'ACCEPTED' && $e->committee)
-            ->map(fn($e) => $e->committee->name)
+            ->filter(fn ($e) => $e->status === 'ACCEPTED' && $e->committee)
+            ->map(fn ($e) => $e->committee->name)
             ->unique()
             ->filter();
 
@@ -309,5 +303,4 @@ class User extends Authenticatable
             default => null,
         };
     }
-
 }

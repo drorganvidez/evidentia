@@ -3,12 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Committee;
-use App\Models\User;
-use App\Models\DefaultList;
-use App\Models\MeetingRequest;
-use App\Models\SignatureSheet;
-use App\Models\MeetingMinutes;
 
 class Secretary extends Model
 {

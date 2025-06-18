@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Gestionar evidencias de '.Auth::user()->coordinator->committee->name)
+@section('title', 'Gestionar evidencias de ' . Auth::user()->coordinator->committee->name)
 
 @section('title-icon', 'fas fa-clipboard-check')
 
@@ -11,7 +11,7 @@
 
 @section('content')
 
-    <x-evidencelistcoordinator/>
+    <x-evidencelistcoordinator />
 
     <div class="row">
 
@@ -22,41 +22,43 @@
                 <div class="card-body">
                     <table id="dataset" class="table table-hover table-responsive">
                         <thead>
-                        <tr>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">ID</th>
-                            <th>Título</th>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Alumna/o</th>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Horas</th>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Recibida</th>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Estado</th>
-                            <th>Herramientas</th>
-                        </tr>
+                            <tr>
+                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">ID</th>
+                                <th>Título</th>
+                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Alumna/o</th>
+                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Horas</th>
+                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Recibida</th>
+                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Estado</th>
+                                <th>Herramientas</th>
+                            </tr>
                         </thead>
                         <tbody>
 
-                        @foreach($evidences as $evidence)
-                            <tr>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$evidence->id}}</td>
-                                <td>
-                                    <a href="{{route('coordinator.evidence.view',
-                                                ['id' => $evidence->id])}}">
-                                        {{$evidence->title}}
-                                    </a>
-                                </td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$evidence->user->surname}}
-                                    , {{$evidence->user->name}}</td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{$evidence->hours}}</td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"> {{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }} </td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                    <x-evidencestatus :evidence="$evidence"/>
-                                </td>
+                            @foreach ($evidences as $evidence)
+                                <tr>
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ $evidence->id }}</td>
+                                    <td>
+                                        <a
+                                            href="{{ route('coordinator.evidence.view', ['id' => $evidence->id]) }}">
+                                            {{ $evidence->title }}
+                                        </a>
+                                    </td>
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                        {{ $evidence->user->surname }}
+                                        , {{ $evidence->user->name }}</td>
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ $evidence->hours }}</td>
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                        {{ \Carbon\Carbon::parse($evidence->created_at)->diffForHumans() }} </td>
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                        <x-evidencestatus :evidence="$evidence" />
+                                    </td>
 
-                                <td class="align-middle">
-                                    <x-evidenceoptionscoordinator :evidence="$evidence"/>
-                                </td>
+                                    <td class="align-middle">
+                                        <x-evidenceoptionscoordinator :evidence="$evidence" />
+                                    </td>
 
-                            </tr>
-                        @endforeach
+                                </tr>
+                            @endforeach
 
                         </tbody>
                     </table>
@@ -91,9 +93,11 @@
                     <div class="mt-3">
                         <h5>Importancia de validar a tiempo</h5>
                         <p class="text-justify">
-                            La validación o rechazo de evidencias es clave para cerrar el proceso correctamente. Como coordinador, revisa con antelación para evitar prisas de última hora y posibles errores.
+                            La validación o rechazo de evidencias es clave para cerrar el proceso correctamente. Como
+                            coordinador, revisa con antelación para evitar prisas de última hora y posibles errores.
                             <br><br>
-                            **No lo dejes para el final**: cuanto antes valides, más margen tendrán tus compañeros/as para subsanar cualquier problema.
+                            **No lo dejes para el final**: cuanto antes valides, más margen tendrán tus compañeros/as para
+                            subsanar cualquier problema.
                         </p>
                     </div>
 
@@ -107,11 +111,11 @@
 @section('scripts')
 
     <script>
-
-        $(document).ready(function () {
-            countdown("{{\Carbon\Carbon::create(\Carbon\Carbon::now())->diffInSeconds(Config::validate_evidences_timestamp(),false)}}");
+        $(document).ready(function() {
+            countdown(
+                "{{ \Carbon\Carbon::create(\Carbon\Carbon::now())->diffInSeconds(Config::validate_evidences_timestamp(), false) }}"
+                );
         });
-
     </script>
 
 @endsection

@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Avatar;
 use App\Models\Evidence;
 use App\Models\File;
-use App\Models\Proof;
+use App\Models\User;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -41,11 +40,11 @@ class ProfileController extends Controller
 
         $request->validate([
             'name' => 'required|max:255',
-            'surname' => 'required|max:255'
+            'surname' => 'required|max:255',
         ]);
 
         // si el usuario cambia el email, comprueba que el nuevo sea único
-        if($request->input('email') != $user->email) {
+        if ($request->input('email') != $user->email) {
             $request->validate([
                 'email' => 'required|max:255|unique:users',
             ]);
@@ -62,11 +61,11 @@ class ProfileController extends Controller
 
         try {
 
-            if($request->has('avatar')) {
+            if ($request->has('avatar')) {
 
                 // almacenamos en disco el avatar
                 $file = $request->file('avatar');
-                $path = Storage::putFileAs('/avatares/' . $user->username, $file, $this->file_name_parser($file));
+                $path = Storage::putFileAs('/avatares/'.$user->username, $file, $this->file_name_parser($file));
 
                 // almacenamos en la BBDD la información del archivo
                 $file_entity = File::create([
@@ -81,7 +80,7 @@ class ProfileController extends Controller
                 $file_entity->save();
 
                 // borramos el avatar antiguo (si lo tuviera)
-                if ($user->avatar != null){
+                if ($user->avatar != null) {
                     Storage::delete($user->avatar->file->route);
                     $user->avatar->file->delete();
                     $user->avatar->delete();
@@ -90,7 +89,7 @@ class ProfileController extends Controller
                 // almacenamos en la BBDD el avatar
                 $avatar = Avatar::create([
                     'user_id' => $user->id,
-                    'file_id' => $file_entity->id
+                    'file_id' => $file_entity->id,
                 ]);
 
                 $avatar->save();
@@ -101,18 +100,18 @@ class ProfileController extends Controller
             return $e;
         }
 
-
         return redirect()->route('profile.view')->with('success', 'Datos personales editados con éxito.');
 
     }
 
-    private function file_name_parser($file){
+    private function file_name_parser($file)
+    {
         $name = $file->getClientOriginalName();
-        $file_from_ddbb = File::where("name",$name)->first();
+        $file_from_ddbb = File::where('name', $name)->first();
 
         // si ya hay un avatar con ese nombre, ponerle otro nombre al nuevo
-        if($file_from_ddbb != null){
-            $name .= " (copy)." . strtolower($file->getClientOriginalExtension());
+        if ($file_from_ddbb != null) {
+            $name .= ' (copy).'.strtolower($file->getClientOriginalExtension());
         }
 
         return $name;
@@ -120,12 +119,11 @@ class ProfileController extends Controller
 
     public function upload_biography(Request $request)
     {
-        
 
         $user = Auth::user();
 
         $request->validate([
-            'biography' => ['required',new MinCharacters(10),new MaxCharacters(20000)],
+            'biography' => ['required', new MinCharacters(10), new MaxCharacters(20000)],
             'participation' => 'required|numeric|min:1|max:3',
         ]);
 
@@ -141,12 +139,10 @@ class ProfileController extends Controller
     public function upload_pass(Request $request)
     {
 
-        
-
         $user = Auth::user();
 
         $request->validate([
-            'password' => 'required|confirmed|min:6'
+            'password' => 'required|confirmed|min:6',
         ]);
 
         $user->password = Hash::make($request->input('password'));
@@ -159,7 +155,7 @@ class ProfileController extends Controller
 
     public function profiles_view($id)
     {
-        
+
         $user = User::find($id);
 
         return view('profile.generalview',
@@ -168,14 +164,14 @@ class ProfileController extends Controller
 
     public function evidences_view($id_user, $id_evidence)
     {
-        
+
         $user = User::find($id_user);
         $evidence = Evidence::find($id_evidence);
 
-        if($evidence == null){
-            return redirect()->route('home',[]);
-        }else if($evidence->status == "DRAFT"){
-            return redirect()->route('home',[]);
+        if ($evidence == null) {
+            return redirect()->route('home', []);
+        } elseif ($evidence->status == 'DRAFT') {
+            return redirect()->route('home', []);
         }
 
         return view('profile.profile_evidence_view',

@@ -44,3 +44,15 @@ Use Mailhog to inspect outgoing emails in development:
 ```
 http://localhost:8025
 ```
+
+## 🧹 Auto-format PHP files
+
+```
+./vendor/bin/pint 
+```
+
+## 🧹 Auto-format Blade files
+
+```
+npx blade-formatter "resources/views/**/*.blade.php" --write
+```

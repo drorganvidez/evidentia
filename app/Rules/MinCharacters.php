@@ -11,7 +11,6 @@ class MinCharacters implements Rule
      *
      * @return void
      */
-
     public $min;
 
     public function __construct($min)

@@ -13,26 +13,17 @@
 
 <div class="form-group col-md-{{ $col }}">
     <label for="{{ $attr }}">{{ $label }}</label>
-    <textarea id="summernote" type="{{ $type }}" class="textarea form-control {{ $class }}
+    <textarea id="summernote" type="{{ $type }}"
+        class="textarea form-control {{ $class }}
            @error($attr) is-invalid @enderror"
-           name="{{ $attr }}"
+        name="{{ $attr }}" required
+        @if ($edit == true) @if ($disabled == true)
+           disabled @endif @endif>
 
-
-
-           required
-
-           @if($edit == true)
-           @if($disabled == true)
-           disabled
-           @endif
-           @endif
-
-    >
-
-        @if(old($attr))
+        @if (old($attr))
             {{ old($attr) }}
-        @else
-            {!! $value !!}
+@else
+{!! $value !!}
         @endif
 
     </textarea>
@@ -46,9 +37,8 @@
     <small class="form-text text-muted">{{ $description }}</small>
 
     @error($attr)
-    <span class="invalid-feedback d-block" role="alert">
-        <strong>{{ $message }}</strong>
-    </span>
+        <span class="invalid-feedback d-block" role="alert">
+            <strong>{{ $message }}</strong>
+        </span>
     @enderror
 </div>
-

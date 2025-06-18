@@ -11,7 +11,6 @@ class MaxCharacters implements Rule
      *
      * @return void
      */
-
     public $max;
 
     public function __construct($max)

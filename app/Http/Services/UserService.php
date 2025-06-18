@@ -6,7 +6,6 @@ use App\Models\User;
 
 class UserService extends Service
 {
-
     public function __construct()
     {
         parent::__construct(User::class);
@@ -20,5 +19,4 @@ class UserService extends Service
     {
         return User::where('id', '!=', auth()->id())->orderBy('surname')->get();
     }
-
 }

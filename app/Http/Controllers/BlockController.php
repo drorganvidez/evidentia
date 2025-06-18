@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class BlockController extends Controller
@@ -14,12 +13,11 @@ class BlockController extends Controller
 
     public function block()
     {
-        if(Auth::user()->block){
+        if (Auth::user()->block) {
             return view('block');
-        }else{
+        } else {
             return redirect()->route('home');
         }
 
     }
-
 }

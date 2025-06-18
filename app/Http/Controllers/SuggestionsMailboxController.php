@@ -20,7 +20,7 @@ class SuggestionsMailboxController extends Controller
 
         $route = route('suggestionsmailbox_p');
 
-        return view('suggestionsmailbox',['route' => $route]);
+        return view('suggestionsmailbox', ['route' => $route]);
     }
 
     public function suggestionsmailbox_p(Request $request)
@@ -28,14 +28,14 @@ class SuggestionsMailboxController extends Controller
 
         $request->validate([
             'subject' => 'required',
-            'comment' => ['required',new MinCharacters(10),new MaxCharacters(20000)],
+            'comment' => ['required', new MinCharacters(10), new MaxCharacters(20000)],
         ]);
 
         $subject_form = $request->input('subject');
         $comment = $request->input('comment');
 
-        Mail::to('drorganvidez@us.es')->send(new SuggestionsMailbox($subject_form,$comment));
+        Mail::to('drorganvidez@us.es')->send(new SuggestionsMailbox($subject_form, $comment));
 
-        return redirect()->route('suggestionsmailbox')->with('success',"Mensaje enviado con éxito. ¡Muchas gracias!");
+        return redirect()->route('suggestionsmailbox')->with('success', 'Mensaje enviado con éxito. ¡Muchas gracias!');
     }
 }

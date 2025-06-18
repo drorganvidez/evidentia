@@ -4,8 +4,8 @@
     <div class="info-box-content">
         <span class="info-box-text">Evidencias registradas</span>
         <span class="info-box-number">
-                  {{$user->evidences_count()}}
-                </span>
+            {{ $user->evidences_count() }}
+        </span>
     </div>
 
 </div>

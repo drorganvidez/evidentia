@@ -18,7 +18,7 @@
 
                 <div class="card-body">
 
-                    <form action="{{$route}}" method="POST">
+                    <form action="{{ $route }}" method="POST">
                         @csrf
 
                         <div class="row">
@@ -27,7 +27,7 @@
 
                                 <i>Powered by</i>
                                 <br>
-                                <img src="{{asset('dist/img/eventbrite.svg')}}" width="200px"/>
+                                <img src="{{ asset('dist/img/eventbrite.svg') }}" width="200px" />
 
                                 <br>
                                 <br>
@@ -37,7 +37,8 @@
                                 </p>
 
                                 <p>
-                                    <a href="https://www.eventbrite.com/platform/api-keys" target="_blank">Obtener el token.</a>
+                                    <a href="https://www.eventbrite.com/platform/api-keys" target="_blank">Obtener el
+                                        token.</a>
                                 </p>
 
                             </div>
@@ -46,7 +47,8 @@
 
                         <div class="form-row">
 
-                            <x-input col="6" attr="token" :value="$token" label="Token" description="Introduce el token proporcionado por Eventbrite"/>
+                            <x-input col="6" attr="token" :value="$token" label="Token"
+                                description="Introduce el token proporcionado por Eventbrite" />
 
                         </div>
 

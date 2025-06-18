@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\File;
 use App\Models\Proof;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ProofController extends Controller
 {
-
-    public function download($id){
+    public function download($id)
+    {
 
         $proof = Proof::find($id);
         $file = $proof->file;
@@ -24,5 +22,4 @@ class ProofController extends Controller
 
         return $response;
     }
-
 }

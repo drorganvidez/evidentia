@@ -2,10 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\MeetingMinutes;
-use App\Models\SignatureSheet;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\URL;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
@@ -18,22 +15,23 @@ class MeetingMinutesExport implements FromCollection, WithHeadings
     {
         $meeting_minutes = Auth::user()->secretary->meetingMinutes;
         $res = collect();
-        foreach($meeting_minutes as $m){
+        foreach ($meeting_minutes as $m) {
 
-            if(Auth::User()->hasRole('SECRETARY')) {
+            if (Auth::User()->hasRole('SECRETARY')) {
 
                 $array = [
                     'Titulo' => strtoupper(trim($m->meeting->title)),
                     'Lugar' => strtoupper(trim($m->meeting->place)),
-                    'Realizada' => strtoupper(\Carbon\Carbon::parse($m->meeting->datetime)->format('d/m/Y') . ' ' .
+                    'Realizada' => strtoupper(\Carbon\Carbon::parse($m->meeting->datetime)->format('d/m/Y').' '.
                                                     \Carbon\Carbon::parse($m->meeting->datetime)->format('H:i')),
-                    'Duración' =>  strtoupper(trim($m->meeting->hours))
+                    'Duración' => strtoupper(trim($m->meeting->hours)),
                 ];
 
                 $object = (object) $array;
                 $res->push($object);
             }
         }
+
         return $res;
     }
 
@@ -43,7 +41,7 @@ class MeetingMinutesExport implements FromCollection, WithHeadings
             'Título',
             'Lugar',
             'Fecha de realización',
-            'Horas'
+            'Horas',
         ];
     }
 }

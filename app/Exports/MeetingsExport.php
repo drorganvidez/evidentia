@@ -3,24 +3,22 @@
 namespace App\Exports;
 
 use App\Models\Meeting;
-use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Illuminate\Support\Facades\Auth;
 
 class MeetingsExport implements FromCollection, WithHeadings
 {
     /**
      * @return \Illuminate\Support\Collection
      */
-
     public function collection()
     {
-        $meetings= Meeting::all();
+        $meetings = Meeting::all();
         $res = collect();
-        foreach($meetings as $meeting){
+        foreach ($meetings as $meeting) {
 
-            if(Auth::User()->hasRole('PRESIDENT') or Auth::User()->hasRole('LECTURE')) {
+            if (Auth::User()->hasRole('PRESIDENT') or Auth::User()->hasRole('LECTURE')) {
 
                 $array = [
                     'Reunion' => strtoupper(trim($meeting->title)),
@@ -28,7 +26,7 @@ class MeetingsExport implements FromCollection, WithHeadings
                     'Horas' => strtoupper(trim($meeting->hours)),
                     'Comite' => strtoupper(trim($meeting->comittee->name)),
                     'NºAsistentes' => strtoupper(trim($meeting->users->count())),
-                    'Realizada' => strtoupper(trim($meeting->datetime))
+                    'Realizada' => strtoupper(trim($meeting->datetime)),
 
                 ];
 
@@ -36,6 +34,7 @@ class MeetingsExport implements FromCollection, WithHeadings
                 $res->push($object);
             }
         }
+
         return $res;
     }
 
@@ -47,9 +46,8 @@ class MeetingsExport implements FromCollection, WithHeadings
             'Horas',
             'Comité',
             'NºAsistentes',
-            'Realizada'
+            'Realizada',
 
         ];
     }
-
 }

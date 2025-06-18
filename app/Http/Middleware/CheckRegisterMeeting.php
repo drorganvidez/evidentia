@@ -11,16 +11,15 @@ class CheckRegisterMeeting
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
-        
+
         $now = Carbon::now();
         $datetime = \Config::meetings_timestamp();
 
-        if($now->gt($datetime)){
+        if ($now->gt($datetime)) {
             abort(404);
         }
 

@@ -10,7 +10,7 @@
 @endsection
 
 @section('info')
-    <x-slimreminder :datetime="\Config::attendee_timestamp()"/>
+    <x-slimreminder :datetime="\Config::attendee_timestamp()" />
 @endsection
 
 @section('content')
@@ -18,15 +18,15 @@
     <div class="row">
         <div class="col-lg-12">
 
-            @if(!\Carbon\Carbon::now()->gt(\Config::attendee_timestamp()))
-            <div class="row mb-3">
-                <div class="col-lg-4 mt-1">
-                    <a href="{{route('registercoordinator.attendee.export',[])}}"
-                       class="btn btn-info btn-block" role="button">
-                        <i class="fas fa-file-export"></i> &nbsp;Exportar asistencias</a>
-                </div>
+            @if (!\Carbon\Carbon::now()->gt(\Config::attendee_timestamp()))
+                <div class="row mb-3">
+                    <div class="col-lg-4 mt-1">
+                        <a href="{{ route('registercoordinator.attendee.export', []) }}" class="btn btn-info btn-block"
+                            role="button">
+                            <i class="fas fa-file-export"></i> &nbsp;Exportar asistencias</a>
+                    </div>
 
-            </div>
+                </div>
             @endif
 
             <div class="card">
@@ -34,20 +34,21 @@
                 <div class="card-body">
                     <table id="dataset" class="table table-hover table-responsive">
                         <thead>
-                        <tr>
-                            <th scope="col">Alumna/o</th>
-                            <th scope="col">Evento</th>
-                            <th scope="col">Asistencia</th>
-                        </tr>
+                            <tr>
+                                <th scope="col">Alumna/o</th>
+                                <th scope="col">Evento</th>
+                                <th scope="col">Asistencia</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        @foreach($attendees as $attendee)
-                            <tr scope="row">
-                                <td>{{$attendee->user->surname}}, {{$attendee->user->name}}</td>
-                                <td><a href="{{$attendee->event->url}}" target="_blank">{!! $attendee->event->name !!}</a></td>
-                                <td><x-attendeestatus :attendee="$attendee"/></td>
-                            </tr>
-                        @endforeach
+                            @foreach ($attendees as $attendee)
+                                <tr scope="row">
+                                    <td>{{ $attendee->user->surname }}, {{ $attendee->user->name }}</td>
+                                    <td><a href="{{ $attendee->event->url }}" target="_blank">{!! $attendee->event->name !!}</a>
+                                    </td>
+                                    <td><x-attendeestatus :attendee="$attendee" /></td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
 

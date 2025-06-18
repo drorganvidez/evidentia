@@ -7,11 +7,12 @@
     <div class="card shadow-lg">
 
         <div class="card-body">
-            <form action="{{route('password.update_p',["token" => $token])}}" method="post">
+            <form action="{{ route('password.update_p', ['token' => $token]) }}" method="post">
                 @csrf
 
                 <div class="input-group mb-3">
-                    <input name="password" required type="password" class="form-control" placeholder="Nueva contraseña" autocomplete="password">
+                    <input name="password" required type="password" class="form-control" placeholder="Nueva contraseña"
+                        autocomplete="password">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-lock"></span>
@@ -20,7 +21,8 @@
                 </div>
 
                 <div class="input-group mb-3">
-                    <input name="password_confirmation" required type="password" class="form-control" placeholder="Repita nueva contraseña" autocomplete="password">
+                    <input name="password_confirmation" required type="password" class="form-control"
+                        placeholder="Repita nueva contraseña" autocomplete="password">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-lock"></span>
@@ -30,7 +32,7 @@
 
                 <div class="form-row">
                     <div class="col-lg-12">
-                        <button type="submit"  class="btn btn-primary btn-block">Actualizar contraseña</button>
+                        <button type="submit" class="btn btn-primary btn-block">Actualizar contraseña</button>
                     </div>
                 </div>
 
@@ -41,4 +43,3 @@
     </div>
 
 @endsection
-

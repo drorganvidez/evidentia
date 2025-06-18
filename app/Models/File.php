@@ -13,7 +13,7 @@ class File extends Model
         'type',
         'route',
         'size',
-        'stamp'
+        'stamp',
     ];
 
     /**
@@ -28,18 +28,17 @@ class File extends Model
         $KB = 1_000;
 
         if ($bytes >= $GB) {
-            return round($bytes / $GB, 2) . ' GB';
+            return round($bytes / $GB, 2).' GB';
         }
 
         if ($bytes >= $MB) {
-            return round($bytes / $MB, 2) . ' MB';
+            return round($bytes / $MB, 2).' MB';
         }
 
         if ($bytes >= $KB) {
-            return round($bytes / $KB, 2) . ' KB';
+            return round($bytes / $KB, 2).' KB';
         }
 
-        return $bytes . ' B';
+        return $bytes.' B';
     }
-
 }

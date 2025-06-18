@@ -3,13 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
-use App\Models\Committee;
-use App\Models\MeetingMinutes;
 
 class Meeting extends Model
 {
-
     protected $table = 'meetings';
 
     protected $fillable = [

@@ -3,21 +3,21 @@
 
     <div class="info-box-content">
 
-        @if($title != "")
-            <span class="info-box-text">{{$title}}</span>
+        @if ($title != '')
+            <span class="info-box-text">{{ $title }}</span>
         @endif
 
         <span class="info-box-number">
 
-            @if($datetime == null)
+            @if ($datetime == null)
                 Sin límite programado de tiempo
             @else
                 Quedan
 
-                @if(\Carbon\Carbon::create($datetime)->lt(\Carbon\Carbon::now()))
+                @if (\Carbon\Carbon::create($datetime)->lt(\Carbon\Carbon::now()))
                     0 días, 0 horas y 0 minutos
                 @else
-                    {{\Carbon\Carbon::create($datetime)->diff(\Carbon\Carbon::now(),false)->format('%M meses, %d días, %H horas y %i minutos')}}
+                    {{ \Carbon\Carbon::create($datetime)->diff(\Carbon\Carbon::now(), false)->format('%M meses, %d días, %H horas y %i minutos') }}
                 @endif
 
             @endif

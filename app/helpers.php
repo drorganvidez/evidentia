@@ -1,11 +1,9 @@
 <?php
 
-use Dotenv\Exception\InvalidPathException;
-use Illuminate\Support\Facades\Artisan;
+use App\Models\Configuration;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Storage;use Illuminate\Support\Str;
-use App\Models\Configuration;
+use Illuminate\Support\Facades\Storage;
 
 /*
  *  SELLO DE UN ARCHIVO Y DE UNA EVIDENCIA
@@ -15,7 +13,7 @@ class Stamp
 {
     public static function compute_file($file)
     {
-        $salt =  \Config::secret();
+        $salt = \Config::secret();
         $hash_file = hash_file('sha256', Storage::disk('local')->path($file->route));
         $file->stamp = hash('sha256',
             $file->name.
@@ -26,13 +24,15 @@ class Stamp
             $file->upload_at.
             $hash_file.
             $salt);
+
         return $file;
     }
 
     public static function get_stamp_file($file)
     {
-        $salt =  \Config::secret();
+        $salt = \Config::secret();
         $hash_file = hash_file('sha256', storage_path('/app/'.$file->route));
+
         return hash('sha256',
             $file->name.
             $file->size.
@@ -46,7 +46,7 @@ class Stamp
 
     public static function compute_evidence($evidence)
     {
-        $salt =  \Config::secret();
+        $salt = \Config::secret();
         $evidence->stamp = hash('sha256',
             $evidence->title.
             $evidence->description.
@@ -54,12 +54,14 @@ class Stamp
             $evidence->created_at.
             $evidence->upload_at.
             $salt);
+
         return $evidence;
     }
 
     public static function get_stamp_evidence($evidence)
     {
-        $salt =  \Config::secret();
+        $salt = \Config::secret();
+
         return hash('sha256',
             $evidence->title.
             $evidence->description.
@@ -72,7 +74,6 @@ class Stamp
 
 class Config
 {
-
     private static function config_entity()
     {
         return Configuration::all()->find(1);
@@ -159,33 +160,37 @@ class Config
     {
         return self::config_entity()->eventbrite_token;
     }
-
 }
 
-class Time{
-
+class Time
+{
     // extrae las horas (enteras) del campo hours
-    public static function complex_shape_hours($hours){
-        if(is_numeric($hours)) return intval($hours);
+    public static function complex_shape_hours($hours)
+    {
+        if (is_numeric($hours)) {
+            return intval($hours);
+        }
     }
 
     // extrae los minutos del campo hours
-    public static function complex_shape_minutes($hours){
-        if(is_numeric($hours)) return round((($hours-intval($hours)))*60);
+    public static function complex_shape_minutes($hours)
+    {
+        if (is_numeric($hours)) {
+            return round((($hours - intval($hours))) * 60);
+        }
     }
-
 }
 
-class StringUtilites{
-
-    public static function clean($string){
+class StringUtilites
+{
+    public static function clean($string)
+    {
         return strtoupper(trim(preg_replace('~[^0-9a-z]+~i', '', preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($string, ENT_QUOTES, 'UTF-8'))), ' '));
     }
 }
 
 class Filepond
 {
-
     public function getServerIdFromPath($path)
     {
         return Crypt::encryptString($path);
@@ -227,9 +232,7 @@ class Random
         for ($i = 0; $i < $length; $i++) {
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
+
         return $randomString;
     }
 }
-
-
-?>

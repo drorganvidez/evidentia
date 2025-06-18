@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -17,10 +16,12 @@ class PasswordReset extends Mailable
      * @return void
      */
     public $instance;
+
     public $token;
+
     public $user;
 
-    public function __construct($token,$user)
+    public function __construct($token, $user)
     {
         $this->token = $token;
         $this->user = $user;

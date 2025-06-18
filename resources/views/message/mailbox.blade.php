@@ -75,32 +75,34 @@
                     <div class="table-responsive mailbox-messages">
                         <table class="table table-hover table-striped">
                             <tbody>
-                            <tr>
-                                <td>
-                                    <div class="icheck-primary">
-                                        <input type="checkbox" value="" id="check1">
-                                        <label for="check1"></label>
-                                    </div>
-                                </td>
-                                <td class="mailbox-name"><a href="read-mail.html">David Romero</a></td>
-                                <td class="mailbox-subject"><b>Esto es un asunto</b> - Este es el cuerpo de un mensaje...
-                                </td>
-                                <td class="mailbox-attachment"></td>
-                                <td class="mailbox-date">hace 5 minutos</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="icheck-primary">
-                                        <input type="checkbox" value="" id="check1">
-                                        <label for="check1"></label>
-                                    </div>
-                                </td>
-                                <td class="mailbox-name"><a href="read-mail.html">David Romero</a></td>
-                                <td class="mailbox-subject"><b>Esto es otro asunto</b> - Este es otro cuerpo de un mensaje...
-                                </td>
-                                <td class="mailbox-attachment"></td>
-                                <td class="mailbox-date">hace 10 minutos</td>
-                            </tr>
+                                <tr>
+                                    <td>
+                                        <div class="icheck-primary">
+                                            <input type="checkbox" value="" id="check1">
+                                            <label for="check1"></label>
+                                        </div>
+                                    </td>
+                                    <td class="mailbox-name"><a href="read-mail.html">David Romero</a></td>
+                                    <td class="mailbox-subject"><b>Esto es un asunto</b> - Este es el cuerpo de un
+                                        mensaje...
+                                    </td>
+                                    <td class="mailbox-attachment"></td>
+                                    <td class="mailbox-date">hace 5 minutos</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="icheck-primary">
+                                            <input type="checkbox" value="" id="check1">
+                                            <label for="check1"></label>
+                                        </div>
+                                    </td>
+                                    <td class="mailbox-name"><a href="read-mail.html">David Romero</a></td>
+                                    <td class="mailbox-subject"><b>Esto es otro asunto</b> - Este es otro cuerpo de un
+                                        mensaje...
+                                    </td>
+                                    <td class="mailbox-attachment"></td>
+                                    <td class="mailbox-date">hace 10 minutos</td>
+                                </tr>
                             </tbody>
                         </table>
                         <!-- /.table -->

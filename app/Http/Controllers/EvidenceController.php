@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\MyEvidencesExport;
+use App\Http\Middleware\CheckRoles;
 use App\Models\Committee;
 use App\Models\Evidence;
 use App\Models\File;
@@ -10,22 +11,17 @@ use App\Models\Proof;
 use App\Rules\CheckHoursAndMinutes;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Http\Middleware\CheckRoles;
 
 class EvidenceController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware(CheckRoles::class . ':PRESIDENT,COORDINATOR,REGISTER_COORDINATOR,SECRETARY,STUDENT');
+        $this->middleware(CheckRoles::class.':PRESIDENT,COORDINATOR,REGISTER_COORDINATOR,SECRETARY,STUDENT');
     }
 
     public function view($id)
@@ -38,7 +34,7 @@ class EvidenceController extends Controller
 
     public function list()
     {
-        $evidences = Evidence::where(['user_id' => Auth::id(),'last' => true])->get();
+        $evidences = Evidence::where(['user_id' => Auth::id(), 'last' => true])->get();
 
         $evidences = $evidences->reverse();
 
@@ -56,41 +52,39 @@ class EvidenceController extends Controller
         $committees = Committee::all();
 
         return view('evidence.createandedit', ['route_draft' => route('evidence.draft'),
-                                            'route_publish' => route('evidence.publish'),
-                                            'committees' => $committees]);
+            'route_publish' => route('evidence.publish'),
+            'committees' => $committees]);
     }
 
     public function draft(Request $request)
     {
-        return $this->new($request,"DRAFT");
+        return $this->new($request, 'DRAFT');
     }
 
     public function publish(Request $request)
     {
-        return $this->new($request,"PENDING");
+        return $this->new($request, 'PENDING');
     }
 
-    private function new($request,$status)
+    private function new($request, $status)
     {
 
-        
+        $evidence = $this->new_evidence($request, $status);
 
-        $evidence = $this->new_evidence($request,$status);
-
-        $this->save_files($request,$evidence);
+        $this->save_files($request, $evidence);
 
         return redirect()->route('evidence.list')->with('success', 'Evidencia creada con éxito.');
 
     }
 
-    private function new_evidence($request,$status)
+    private function new_evidence($request, $status)
     {
 
         $request->validate([
             'title' => 'required|min:5|max:255',
-            'hours' => ['required_without:minutes','nullable','numeric','sometimes','max:99',new CheckHoursAndMinutes($request->input('minutes'))],
-            'minutes' => ['required_without:hours','nullable','numeric','sometimes','max:60',new CheckHoursAndMinutes($request->input('hours'))],
-            'description' => ['required',new MinCharacters(10),new MaxCharacters(20000)],
+            'hours' => ['required_without:minutes', 'nullable', 'numeric', 'sometimes', 'max:99', new CheckHoursAndMinutes($request->input('minutes'))],
+            'minutes' => ['required_without:hours', 'nullable', 'numeric', 'sometimes', 'max:60', new CheckHoursAndMinutes($request->input('hours'))],
+            'description' => ['required', new MinCharacters(10), new MaxCharacters(20000)],
         ]);
 
         // datos necesarios para crear evidencias
@@ -101,10 +95,10 @@ class EvidenceController extends Controller
         $evidence = Evidence::create([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
-            'hours' => $request->input('hours') + floor(($minutes*100)/60)/100,
+            'hours' => $request->input('hours') + floor(($minutes * 100) / 60) / 100,
             'status' => $status,
             'user_id' => $user->id,
-            'committee_id' => $request->input('committee')
+            'committee_id' => $request->input('committee'),
         ]);
 
         // cómputo del sello
@@ -117,7 +111,7 @@ class EvidenceController extends Controller
     private function save_files($request, $evidence)
     {
         $user = Auth::user();
-        
+
         $token = $request->session()->token();
         $tmp = 'tmp/'.$user->username.'/'.$token.'/';
 
@@ -129,7 +123,7 @@ class EvidenceController extends Controller
             $old_directory = $filename;
             $new_directory = 'proofs/'.$user->username.'/evidence_'.$evidence->id.'/'.$name.'.'.$type;
 
-            try{
+            try {
                 // movemos
                 Storage::move($old_directory, $new_directory);
 
@@ -148,7 +142,7 @@ class EvidenceController extends Controller
                 // almacenamos en la BBDD la información de la prueba de la evidencia
                 $proof = Proof::create([
                     'evidence_id' => $evidence->id,
-                    'file_id' => $file_entity->id
+                    'file_id' => $file_entity->id,
                 ]);
             } catch (\Exception $e) {
                 dd('Error al guardar Proof:', $e->getMessage());
@@ -165,7 +159,7 @@ class EvidenceController extends Controller
     {
 
         $user = Auth::user();
-        
+
         $token = session()->token();
 
         $proofs_folder = 'proofs/'.$user->username.'/evidence_'.$evidence->id;
@@ -197,7 +191,7 @@ class EvidenceController extends Controller
     {
 
         $user = Auth::user();
-        
+
         $token = session()->token();
 
         $evidence = Evidence::find($id);
@@ -222,23 +216,22 @@ class EvidenceController extends Controller
 
     public function draft_edit(Request $request)
     {
-        return $this->save($request,"DRAFT");
+        return $this->save($request, 'DRAFT');
     }
 
     public function publish_edit(Request $request)
     {
-        return $this->save($request,"PENDING");
+        return $this->save($request, 'PENDING');
     }
 
-    private function save($request,$status)
+    private function save($request, $status)
     {
-        
 
         // evidencia desde la que hemos decidido partir
         $evidence_previous = Evidence::find($request->_id);
 
         // creamos la nueva evidencia a partir de la seleccionada para editar
-        $evidence_new = $this->new_evidence($request,$status);
+        $evidence_new = $this->new_evidence($request, $status);
 
         // evidencia cabecera en el flujo de ediciones (la última)
         $evidence_header = $evidence_previous->findHeaderEvidence();
@@ -250,11 +243,11 @@ class EvidenceController extends Controller
         $evidence_new->save();
 
         // copiamos ahora los archivos de la carpeta temporal a la nueva evidencia
-        $this->save_files($request,$evidence_new);
+        $this->save_files($request, $evidence_new);
 
-        if($status == "DRAFT") {
+        if ($status == 'DRAFT') {
             return redirect()->route('evidence.list')->with('success', 'Evidencia editada con éxito.');
-        }else{
+        } else {
             return redirect()->route('evidence.list')->with('success', 'Evidencia publicada con éxito.');
         }
 
@@ -268,7 +261,6 @@ class EvidenceController extends Controller
     {
         $id = $request->_id;
         $evidence = Evidence::find($id);
-        
 
         // eliminamos recursivamente la evidencia y todas las versiones anteriores, incluyendo archivos
         $this->delete_evidence($evidence);
@@ -278,7 +270,7 @@ class EvidenceController extends Controller
 
     private function delete_evidence($evidence)
     {
-        
+
         $user = Auth::user();
 
         // por si la evidencia apunta a otra anterior
@@ -289,16 +281,14 @@ class EvidenceController extends Controller
         Storage::deleteDirectory('proofs/'.$user->username.'/evidence_'.$evidence->id.'');
         $evidence->delete();
 
-        if($evidence_previous != null)
-        {
+        if ($evidence_previous != null) {
             $this->delete_evidence($evidence_previous);
         }
     }
 
     private function delete_files($evidence)
     {
-        foreach($evidence->proofs as $proof)
-        {
+        foreach ($evidence->proofs as $proof) {
             $proof->file->delete();
         }
     }
@@ -311,30 +301,27 @@ class EvidenceController extends Controller
     {
         $id = $request->_id;
         $evidence = Evidence::find($id);
-        
 
-        $evidence->status = "DRAFT";
+        $evidence->status = 'DRAFT';
 
         $evidence->save();
 
         return redirect()->route('evidence.list')->with('success', 'Evidencia reasignada como borrador con éxito.');
     }
 
-
-    public function export( $ext)
+    public function export($ext)
     {
         try {
             if (ob_get_level()) {
                 ob_end_clean();
             }
-            if(!in_array($ext, ['csv', 'pdf', 'xlsx'])){
+            if (! in_array($ext, ['csv', 'pdf', 'xlsx'])) {
                 return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
             }
-            return Excel::download(new MyEvidencesExport(), 'misevidencias-' . \Illuminate\Support\Carbon::now() . '.' . $ext);
+
+            return Excel::download(new MyEvidencesExport, 'misevidencias-'.\Illuminate\Support\Carbon::now().'.'.$ext);
         } catch (\Exception $e) {
-            return back()->with('error', 'Ocurrió un error: ' . $e->getMessage());
+            return back()->with('error', 'Ocurrió un error: '.$e->getMessage());
         }
     }
-
-
 }

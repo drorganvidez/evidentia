@@ -27,13 +27,14 @@ class ManagementEvidencesExport implements FromCollection, WithHeadings
                     'Horas' => strtoupper(trim($evidence->hours)),
                     'Comite' => strtoupper(trim($evidence->comittee->name)),
                     'Creada' => strtoupper(trim($evidence->created_at)),
-                    'Estado' => trim($evidence->status)
+                    'Estado' => trim($evidence->status),
                 ];
 
-                $object = (object)$array;
+                $object = (object) $array;
                 $res->push($object);
             }
         }
+
         return $res;
     }
 
@@ -46,8 +47,7 @@ class ManagementEvidencesExport implements FromCollection, WithHeadings
             'Horas',
             'Comité',
             'Creada',
-            'Estado'
+            'Estado',
         ];
     }
-
 }

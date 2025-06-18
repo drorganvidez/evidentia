@@ -12,31 +12,26 @@ class MeetingMinutesMine
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
     {
-        
 
         $id = $request->route('id');
-        if($id == null) // si se recibe por POST
-        {
+        if ($id == null) { // si se recibe por POST
             $id = $request->_id;
 
-            if($id == null)
-            {
+            if ($id == null) {
                 $id = $request->input('meeting_minutes_id');
             }
         }
 
         $meeting_minutes = MeetingMinutes::findOrFail($id);
 
-        if($meeting_minutes->secretary_id != Auth::user()->secretary->id)
-        {
+        if ($meeting_minutes->secretary_id != Auth::user()->secretary->id) {
             abort('404');
         }
+
         return $next($request);
     }
 }

@@ -10,7 +10,7 @@
 @endsection
 
 @section('info')
-    <x-slimreminder :datetime="\Config::attendee_timestamp()"/>
+    <x-slimreminder :datetime="\Config::attendee_timestamp()" />
 @endsection
 
 @section('content')
@@ -24,34 +24,37 @@
                 <div class="card-body">
                     <table id="dataset" class="table table-hover table-responsive">
                         <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Descripción</th>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Fecha de inicio</th>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Fecha de fin</th>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Capacidad</th>
-                            <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Horas</th>
-                            <th>Estado</th>
-                            <th>Cargar Asistencia</th>
-                        </tr>
+                            <tr>
+                                <th>Nombre</th>
+                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Descripción</th>
+                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Fecha de inicio</th>
+                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Fecha de fin</th>
+                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Capacidad</th>
+                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Horas</th>
+                                <th>Estado</th>
+                                <th>Cargar Asistencia</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        @foreach($events as $event)
-                            <tr>
-                                <td><a href="{{$event->url}}" target="_blank">{!! $event->name !!}</a></td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{!! $event->description !!}</td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ \Carbon\Carbon::parse($event->start_datetime) }}</td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ \Carbon\Carbon::parse($event->end_datetime) }}</td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ $event->capacity }}</td>
-                                <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ $event->hours }}</td>
-                                <td>
-                                    <x-eventstatus :event="$event"/>
-                                </td>
-                                <td><a href="{{route('registercoordinator.attendee.load',['id' => $event->id_eventbrite])}}"
-                                    class="btn btn-primary btn-block" role="button">
-                                    <i class="fas fa-cloud-download-alt"></i></a></td>
-                            </tr>
-                        @endforeach
+                            @foreach ($events as $event)
+                                <tr>
+                                    <td><a href="{{ $event->url }}" target="_blank">{!! $event->name !!}</a></td>
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{!! $event->description !!}
+                                    </td>
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                        {{ \Carbon\Carbon::parse($event->start_datetime) }}</td>
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
+                                        {{ \Carbon\Carbon::parse($event->end_datetime) }}</td>
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ $event->capacity }}</td>
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ $event->hours }}</td>
+                                    <td>
+                                        <x-eventstatus :event="$event" />
+                                    </td>
+                                    <td><a href="{{ route('registercoordinator.attendee.load', ['id' => $event->id_eventbrite]) }}"
+                                            class="btn btn-primary btn-block" role="button">
+                                            <i class="fas fa-cloud-download-alt"></i></a></td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
 

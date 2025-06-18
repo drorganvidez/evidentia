@@ -26,10 +26,10 @@
                                         <h5>¡Fácil y rápido!</h5>
 
                                         <p>Puedes exportar un XLS con las evidencias, reuniones y asistencias de cada
-                                        alumno y alumna.</p>
+                                            alumno y alumna.</p>
                                     </div>
 
-                                    <form method="POST" action="{{$route}}">
+                                    <form method="POST" action="{{ $route }}">
 
                                         @csrf
 
@@ -41,22 +41,26 @@
                                                     <div class="form-group">
 
                                                         <div class="form-check">
-                                                            <input class="form-check-input" name="evidences" type="checkbox" checked="">
+                                                            <input class="form-check-input" name="evidences" type="checkbox"
+                                                                checked="">
                                                             <label class="form-check-label">Evidencias</label>
                                                         </div>
 
                                                         <div class="form-check">
-                                                            <input class="form-check-input" name="meetings" type="checkbox"  checked="">
+                                                            <input class="form-check-input" name="meetings" type="checkbox"
+                                                                checked="">
                                                             <label class="form-check-label">Reuniones</label>
                                                         </div>
 
                                                         <div class="form-check">
-                                                            <input class="form-check-input" name="events" type="checkbox"  checked="">
+                                                            <input class="form-check-input" name="events" type="checkbox"
+                                                                checked="">
                                                             <label class="form-check-label">Eventos</label>
                                                         </div>
 
                                                         <div class="form-check">
-                                                            <input class="form-check-input" name="bonus" type="checkbox"  checked="">
+                                                            <input class="form-check-input" name="bonus" type="checkbox"
+                                                                checked="">
                                                             <label class="form-check-label">Bono de horas</label>
                                                         </div>
 
@@ -67,7 +71,8 @@
                                             <div class="form-row">
 
                                                 <div class="col-lg-6 mt-1">
-                                                    <button type="submit"  class="btn btn-primary btn-block">Exportar evidencias</button>
+                                                    <button type="submit" class="btn btn-primary btn-block">Exportar
+                                                        evidencias</button>
                                                 </div>
                                             </div>
 
@@ -92,4 +97,4 @@
 
 
 
-@endsection
+    @endsection

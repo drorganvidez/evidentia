@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,43 +17,46 @@
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
+
 <body class="hold-transition lockscreen">
-<!-- Automatic element centering -->
-<div class="lockscreen-wrapper">
-    <div class="lockscreen-logo">
-        <x-lilogo/>
+    <!-- Automatic element centering -->
+    <div class="lockscreen-wrapper">
+        <div class="lockscreen-logo">
+            <x-lilogo />
+        </div>
+        <!-- User name -->
+        <div class="lockscreen-name">{{ Auth::user()->name }}, lo sentimos :(</div>
+
+        <div class="help-block text-center">
+            Tu cuenta ha sido bloqueada por alguna razón. Contacta con tu profesor o con el presidente
+            de las jornadas de este año.
+        </div>
+
+        <div class="text-center">
+            <br>
+            <a href="{{ route('logout') }}" class="nav-link"
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <i class="nav-icon fas fa-sign-out-alt"></i> Cerrar sesión
+            </a>
+
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
+
+        </div>
+        <div class="lockscreen-footer text-center">
+            GNU/GPL 3.0 · <a href="https://github.com/drorganvidez/evidentia"><i class="fab fa-github"></i> Repositorio
+                en GitHub</a>
+            <br>
+            Hecho con <i class="fas fa-heart"></i>
+        </div>
     </div>
-    <!-- User name -->
-    <div class="lockscreen-name">{{Auth::user()->name}}, lo sentimos :(</div>
+    <!-- /.center -->
 
-    <div class="help-block text-center">
-        Tu cuenta ha sido bloqueada por alguna razón. Contacta con tu profesor o con el presidente
-        de las jornadas de este año.
-    </div>
-
-    <div class="text-center">
-        <br>
-        <a href="{{ route('logout') }}"  class="nav-link"
-           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-            <i class="nav-icon fas fa-sign-out-alt"></i> Cerrar sesión
-        </a>
-
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-            @csrf
-        </form>
-
-    </div>
-    <div class="lockscreen-footer text-center">
-        GNU/GPL 3.0 · <a href="https://github.com/drorganvidez/evidentia"><i class="fab fa-github"></i> Repositorio en GitHub</a>
-        <br>
-        Hecho con <i class="fas fa-heart"></i>
-    </div>
-</div>
-<!-- /.center -->
-
-<!-- jQuery -->
-<script src="../../plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="../../plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

@@ -4,8 +4,8 @@
     <div class="info-box-content">
         <span class="info-box-text">Horas de reuniones</span>
         <span class="info-box-number">
-                  {{$user->meetings_hours()}}
-                </span>
+            {{ $user->meetings_hours() }}
+        </span>
     </div>
 
 </div>

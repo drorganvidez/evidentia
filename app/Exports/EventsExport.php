@@ -2,10 +2,10 @@
 
 namespace App\Exports;
 
+use App\Models\Event;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use App\Models\Event;
 
 class EventsExport implements FromCollection, WithHeadings
 {
@@ -27,13 +27,14 @@ class EventsExport implements FromCollection, WithHeadings
                     'Capacidad' => strtoupper(trim($event->capacity)),
                     'Horas' => strtoupper(trim($event->hours)),
                     'Estado' => strtoupper(trim($event->status)),
-                    'Url' => trim($event->url)
+                    'Url' => trim($event->url),
                 ];
 
-                $object = (object)$array;
+                $object = (object) $array;
                 $res->push($object);
             }
         }
+
         return $res;
     }
 
@@ -46,8 +47,7 @@ class EventsExport implements FromCollection, WithHeadings
             'Capacidad',
             'Horas',
             'Estado',
-            'Url'
+            'Url',
         ];
     }
-
 }

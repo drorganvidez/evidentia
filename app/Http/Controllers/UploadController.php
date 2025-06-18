@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Storage;
 
 class UploadController extends Controller
 {
-
     private $filepond;
 
     public function __construct(Filepond $filepond)
@@ -26,20 +25,20 @@ class UploadController extends Controller
         $files = $request->file('files');
         $file = is_array($files) ? $files[0] : $files;
 
-        if (!$file || !$file->isValid()) {
+        if (! $file || ! $file->isValid()) {
             \Log::error('Archivo inválido o no recibido correctamente.');
+
             return response('Archivo inválido', 400);
         }
 
-        $relativePath = 'tmp/' . $user->username . '/' . $token . '/';
+        $relativePath = 'tmp/'.$user->username.'/'.$token.'/';
         $path = Storage::putFileAs($relativePath, $file, $file->getClientOriginalName());
 
-        \Log::info('Archivo subido correctamente a: ' . $path);
+        \Log::info('Archivo subido correctamente a: '.$path);
 
         return response($this->filepond->getServerIdFromPath($path), 200)
             ->header('Content-Type', 'text/plain');
     }
-
 
     public function delete(Request $request)
     {
@@ -50,7 +49,6 @@ class UploadController extends Controller
         return Response::make('', 200, [
             'Content-Type' => 'text/plain',
         ]);
-
 
     }
 
@@ -76,7 +74,7 @@ class UploadController extends Controller
     public function remove($file_name)
     {
         $user = Auth::user();
-        
+
         $token = session()->token();
         $tmp = '/tmp/'.$user->username.'/'.$token.'/';
         $path = $tmp.'/'.$file_name;

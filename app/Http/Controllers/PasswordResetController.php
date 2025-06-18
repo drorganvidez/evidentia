@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Mail\PasswordReset;
 use App\Models\Token;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -13,7 +12,6 @@ use Illuminate\Support\Str;
 
 class PasswordResetController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('guest');
@@ -31,16 +29,16 @@ class PasswordResetController extends Controller
     {
 
         $request->validate([
-            'email' => 'required'
+            'email' => 'required',
         ]);
 
-        $user = User::where('email',$request->email)->first();
+        $user = User::where('email', $request->email)->first();
 
-        if($user != null){
+        if ($user != null) {
 
             // medida de seguridad: si se genera un nuevo token, todos los anteriores se invalidan
-            $tokens = Token::where("user_id",$user->id)->get();
-            foreach ($tokens as $t){
+            $tokens = Token::where('user_id', $user->id)->get();
+            foreach ($tokens as $t) {
                 $t->used = true;
                 $t->save();
             }
@@ -48,10 +46,10 @@ class PasswordResetController extends Controller
             $token_str = Str::random(255);
 
             $token = Token::create([
-                "token" => $token_str,
-                "used" => 0,
-                "valid_until_timestamp" => \Carbon\Carbon::now()->addHours(24),
-                "user_id" => $user->id
+                'token' => $token_str,
+                'used' => 0,
+                'valid_until_timestamp' => \Carbon\Carbon::now()->addHours(24),
+                'user_id' => $user->id,
             ]);
 
             $token->save();
@@ -60,7 +58,7 @@ class PasswordResetController extends Controller
                 Mail::to($user)->send(new PasswordReset($token, $user));
                 \Log::info("Correo enviado a {$user->email}");
             } catch (\Exception $e) {
-                \Log::error("Fallo al enviar correo: " . $e->getMessage());
+                \Log::error('Fallo al enviar correo: '.$e->getMessage());
             }
 
         }
@@ -71,11 +69,11 @@ class PasswordResetController extends Controller
     public function update($token)
     {
 
-        $token_entity = Token::where("token", $token)->first();
+        $token_entity = Token::where('token', $token)->first();
 
-        if($token_entity != null){
+        if ($token_entity != null) {
 
-            if($token_entity->isValid()){
+            if ($token_entity->isValid()) {
                 return view('auth.passwords.update',
                     ['token' => $token]);
             }
@@ -91,12 +89,12 @@ class PasswordResetController extends Controller
     public function update_p(Request $request)
     {
         $request->validate([
-            'password' => 'required|confirmed|min:6'
+            'password' => 'required|confirmed|min:6',
         ]);
 
-        $token_entity = Token::where("token", $request->route('token'))->first();
+        $token_entity = Token::where('token', $request->route('token'))->first();
 
-        if($token_entity != null){
+        if ($token_entity != null) {
 
             // cambio de contraseña
             $user = User::find($token_entity->user_id);
@@ -108,10 +106,9 @@ class PasswordResetController extends Controller
             $token_entity->save();
 
             return redirect()->route('login')->with('success', 'Contraseña cambiada con éxito. Ahora puedes iniciar sesión.');
-        }else{
+        } else {
             return redirect()->route('login')->with('error', 'El token no es válido o ha caducado.');
         }
-
 
     }
 }

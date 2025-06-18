@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Committee;
-use App\Models\User;
 
 class Coordinator extends Model
 {
