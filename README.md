@@ -25,6 +25,7 @@ export GID=$(id -g)
 ### Generate app key
 
 ```
+cp .env.example.dev .env
 php -r "echo 'APP_KEY=base64:' . base64_encode(random_bytes(32)) . PHP_EOL;" >> .env
 ```
 
@@ -79,3 +80,10 @@ docker compose -f docker/docker-compose.prod.yml up -d --build
 ```
 
 You can see Evidentia app running on `localhost`
+
+### Create new professor
+
+```
+docker exec -it evidentia_app_container bash
+php artisan create:professor
+```
