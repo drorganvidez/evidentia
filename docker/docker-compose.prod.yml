@@ -50,6 +50,16 @@ services:
     networks:
       - evidentia_net
 
+  watchtower:
+    container_name: watchtower_container
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --cleanup --interval 120 evidentia_app_container_prod
+    restart: unless-stopped
+    networks:
+      - evidentia_net
+
 volumes:
   db_data_prod:
 
