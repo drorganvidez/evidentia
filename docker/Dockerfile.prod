@@ -7,7 +7,8 @@ RUN apt-get update && apt-get install -y \
     zip unzip git curl libpng-dev libonig-dev libxml2-dev libzip-dev libjpeg-dev libfreetype6-dev \
     nodejs npm default-mysql-client \
     && docker-php-ext-install pdo_mysql mbstring zip exif pcntl gd \
-    && pecl install redis && docker-php-ext-enable redis
+    && pecl install redis && docker-php-ext-enable redis \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -17,21 +18,21 @@ RUN groupadd -g ${GROUP_ID} laravelgroup && \
     chown -R laraveluser:laravelgroup /var/www/html
 
 USER laraveluser
-
 WORKDIR /var/www/html
 
-# Copiar solo package.json y package-lock.json con permisos correctos
-COPY --chown=laraveluser:laravelgroup package*.json ./
 
-RUN npm install
-
-# Copiar el resto del código con permisos correctos
 COPY --chown=laraveluser:laravelgroup . .
+RUN rm -rf docker
+RUN mkdir -p bootstrap/cache && chown -R laraveluser:laravelgroup bootstrap/cache
 
-RUN npm run build
+RUN composer install --no-dev --optimize-autoloader
 
-# ⚠️ Copia el entrypoint si lo usas (ajusta la ruta si necesario)
+RUN npm install && npm run build
+
 COPY --chown=laraveluser:laravelgroup docker/entrypoint.prod.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
+
+ARG VERSION_TAG
+RUN echo $VERSION_TAG > /var/www/html/.version
 
 ENTRYPOINT ["entrypoint.sh"]

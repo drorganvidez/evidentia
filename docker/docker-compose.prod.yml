@@ -2,16 +2,17 @@ services:
   app:
     image: drorganvidez/evidentia:latest
     container_name: evidentia_app_container_prod
+    restart: unless-stopped
     volumes:
       - ../.env:/var/www/html/.env
       - ../storage:/var/www/html/storage
-    env_file:
-      - ../.env
     expose:
-      - "9000"  # Solo NGINX accede a él
+      - "9000"
     depends_on:
       - mysql
       - redis
+    env_file:
+      - ../.env
     networks:
       - evidentia_net
 
@@ -51,7 +52,6 @@ services:
 
 volumes:
   db_data_prod:
-
 
 networks:
   evidentia_net:

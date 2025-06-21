@@ -10,7 +10,7 @@ services:
     user: "${UID}:${GID}"
     volumes:
       - ../:/var/www/html
-      - ../storage/app/private:/var/www/html/storage/app/private
+      - ../storage:/var/www/html/storage
     ports:
       - "${APP_PORT:-8000}:8000"
     depends_on:
@@ -20,6 +20,8 @@ services:
     env_file:
       - ../.env
     entrypoint: ["sh", "/var/www/html/docker/entrypoint.dev.sh"]
+    networks:
+      - evidentia_net
 
 
   mysql:
@@ -32,6 +34,8 @@ services:
       - "${DB_FORWARD_PORT:-3306}:3306"
     volumes:
       - db_data_dev:/var/lib/mysql
+    networks:
+      - evidentia_net
 
   redis:
     image: redis:7
@@ -39,6 +43,8 @@ services:
     restart: unless-stopped
     ports:
       - "6379:6379"
+    networks:
+      - evidentia_net
 
   mailhog:
     image: mailhog/mailhog
@@ -46,6 +52,11 @@ services:
     restart: unless-stopped
     ports:
       - "8025:8025"
+    networks:
+      - evidentia_net
 
 volumes:
   db_data_dev:
+
+networks:
+  evidentia_net:
