@@ -1,7 +1,7 @@
 services:
   app:
     image: drorganvidez/evidentia:latest
-    container_name: evidentia_app_container_prod
+    container_name: evidentia_app_container
     restart: unless-stopped
     volumes:
       - ../.env:/var/www/html/.env
@@ -18,7 +18,7 @@ services:
 
   mysql:
     image: mysql:8
-    container_name: evidentia_mysql_container_prod
+    container_name: evidentia_mysql_container
     restart: unless-stopped
     env_file:
       - ../.env
@@ -31,14 +31,14 @@ services:
 
   redis:
     image: redis:7
-    container_name: evidentia_redis_container_prod
+    container_name: evidentia_redis_container
     restart: unless-stopped
     networks:
       - evidentia_net
 
   nginx:
     image: nginx:alpine
-    container_name: evidentia_nginx_container_prod
+    container_name: evidentia_nginx_container
     restart: unless-stopped
     ports:
       - "80:80"
@@ -51,11 +51,11 @@ services:
       - evidentia_net
 
   watchtower:
-    container_name: watchtower_container
+    container_name: evidentia_watchtower_container
     image: containrrr/watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --cleanup --interval 120 evidentia_app_container_prod
+    command: --cleanup --interval 120 evidentia_app_container
     restart: unless-stopped
     networks:
       - evidentia_net
