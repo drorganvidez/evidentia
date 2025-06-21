@@ -161,8 +161,8 @@
                 Hecho con <i class="fas fa-heart"></i>
             </div>
             <!-- Default to the left -->
-            VERSIÓN {{ env('EVIDENTIA_VERSION', '') }} · GNU/GPL 3.0 · <a
-                href="https://github.com/drorganvidez/evidentia"><i class="fab fa-github"></i> Repositorio en GitHub</a>
+            GNU/GPL 3.0 · <a href="https://github.com/drorganvidez/evidentia"><i class="fab fa-github"></i> Código
+                fuente</a>
         </footer>
     </div>
     <!-- ./wrapper -->

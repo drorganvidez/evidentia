@@ -237,10 +237,11 @@ class Random
     }
 }
 
-if (!function_exists('evidentia_version')) {
+if (! function_exists('evidentia_version')) {
     function evidentia_version(): ?string
     {
         $path = base_path('.version');
+
         return file_exists($path) ? trim(file_get_contents($path)) : null;
     }
 }

@@ -37,7 +37,8 @@
 
                 @endphp
 
-                <form method="POST" action="{{ route('secretary.meeting.manage.request.' . $verb) }}" id="request_form">
+                <form method="POST" action="{{ route('secretary.meeting.manage.request.' . $verb) }}"
+                    id="request_form">
                     @csrf
 
                     <input type="hidden" name="points_list" id="points_list" />

@@ -8,10 +8,11 @@
 
         @if ($version = evidentia_version())
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="https://github.com/drorganvidez/evidentia/releases/tag/{{ $version }}" class="nav-link" target="_blank">
+                <a href="https://github.com/drorganvidez/evidentia/releases/tag/{{ $version }}" class="nav-link"
+                    target="_blank">
                     <i class="fab fa-github"></i> Versión del software: {{ $version }}
                 </a>
-            </li>      
+            </li>
         @endif
 
     </ul>

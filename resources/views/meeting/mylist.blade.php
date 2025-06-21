@@ -83,7 +83,7 @@
         $(document).ready(function() {
             countdown(
                 "{{ \Carbon\Carbon::create(\Carbon\Carbon::now())->diffInSeconds(Config::meetings_timestamp(), false) }}"
-                );
+            );
         });
     </script>
 

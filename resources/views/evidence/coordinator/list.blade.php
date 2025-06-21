@@ -38,8 +38,7 @@
                                 <tr>
                                     <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ $evidence->id }}</td>
                                     <td>
-                                        <a
-                                            href="{{ route('coordinator.evidence.view', ['id' => $evidence->id]) }}">
+                                        <a href="{{ route('coordinator.evidence.view', ['id' => $evidence->id]) }}">
                                             {{ $evidence->title }}
                                         </a>
                                     </td>
@@ -114,7 +113,7 @@
         $(document).ready(function() {
             countdown(
                 "{{ \Carbon\Carbon::create(\Carbon\Carbon::now())->diffInSeconds(Config::validate_evidences_timestamp(), false) }}"
-                );
+            );
         });
     </script>
 

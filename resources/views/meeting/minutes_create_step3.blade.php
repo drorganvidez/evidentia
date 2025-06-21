@@ -621,7 +621,7 @@
                             error: function() {
                                 console.log(
                                     "No se ha podido obtener la información de todos los usuarios"
-                                    );
+                                );
                             }
                         });
 

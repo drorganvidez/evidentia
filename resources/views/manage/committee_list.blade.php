@@ -38,7 +38,8 @@
                                         <td
                                             class="align-middle text-center d-none d-sm-none d-md-table-cell d-lg-table-cell">
                                             <span id="icon_prev_{{ $committee->id }}"
-                                                style="font-size: 20px">{!! $committee->icon ?? '' !!}</span></td>
+                                                style="font-size: 20px">{!! $committee->icon ?? '' !!}</span>
+                                        </td>
                                         <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><input
                                                 name="icon_{{ $committee->id }}" id="icon_{{ $committee->id }}"
                                                 oninput="prev({{ $committee->id }})" type="text" class="form-control"

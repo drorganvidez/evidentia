@@ -110,7 +110,7 @@
         $(document).ready(function() {
             countdown(
                 "{{ \Carbon\Carbon::create(\Carbon\Carbon::now())->diffInSeconds(\Config::upload_evidences_timestamp(), false) }}"
-                );
+            );
         });
     </script>
 

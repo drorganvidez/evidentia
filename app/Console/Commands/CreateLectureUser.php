@@ -4,8 +4,8 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class CreateLectureUser extends Command
 {
@@ -34,7 +34,8 @@ class CreateLectureUser extends Command
         $surname = $this->ask('Apellido (opcional)', 'Ejemplo');
 
         if (User::where('email', $email)->exists()) {
-            $this->error("Ya existe un usuario con ese email.");
+            $this->error('Ya existe un usuario con ese email.');
+
             return Command::FAILURE;
         }
 
@@ -43,16 +44,18 @@ class CreateLectureUser extends Command
 
         if ($password !== $confirm) {
             $this->error('Las contraseñas no coinciden.');
+
             return Command::FAILURE;
         }
 
-        $this->info("Se va a crear el siguiente usuario:");
+        $this->info('Se va a crear el siguiente usuario:');
         $this->line("Email: $email");
         $this->line("Usuario: $username");
         $this->line("Nombre: $name $surname");
 
-        if (!$this->confirm('¿Deseas continuar?')) {
+        if (! $this->confirm('¿Deseas continuar?')) {
             $this->info('Operación cancelada.');
+
             return Command::SUCCESS;
         }
 
