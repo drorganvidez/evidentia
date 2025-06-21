@@ -1,19 +1,19 @@
 services:
   app:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
+    image: drorganvidez/evidentia:latest
     container_name: evidentia_app_container_prod
     volumes:
-      - ../:/var/www/html
-    ports:
-      - "${APP_PORT:-9000}:9000"
+      - ../.env:/var/www/html/.env
+      - ../storage:/var/www/html/storage
+    env_file:
+      - ../.env
+    expose:
+      - "9000"  # Solo NGINX accede a él
     depends_on:
       - mysql
       - redis
-    env_file:
-      - ../.env
-    entrypoint: ["sh", "/var/www/html/docker/entrypoint.prod.sh"]
+    networks:
+      - evidentia_net
 
   mysql:
     image: mysql:8
@@ -25,13 +25,33 @@ services:
       - "${DB_FORWARD_PORT:-3307}:3306"
     volumes:
       - db_data_prod:/var/lib/mysql
+    networks:
+      - evidentia_net
 
   redis:
     image: redis:7
     container_name: evidentia_redis_container_prod
     restart: unless-stopped
+    networks:
+      - evidentia_net
+
+  nginx:
+    image: nginx:alpine
+    container_name: evidentia_nginx_container_prod
+    restart: unless-stopped
     ports:
-      - "6379:6379"
+      - "80:80"
+    depends_on:
+      - app
+    volumes:
+      - ../:/var/www/html
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - evidentia_net
 
 volumes:
   db_data_prod:
+
+
+networks:
+  evidentia_net:

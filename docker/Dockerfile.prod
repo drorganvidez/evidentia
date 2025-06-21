@@ -5,7 +5,7 @@ ARG GROUP_ID=1000
 
 RUN apt-get update && apt-get install -y \
     zip unzip git curl libpng-dev libonig-dev libxml2-dev libzip-dev libjpeg-dev libfreetype6-dev \
-    nodejs npm \
+    nodejs npm default-mysql-client \
     && docker-php-ext-install pdo_mysql mbstring zip exif pcntl gd \
     && pecl install redis && docker-php-ext-enable redis
 
@@ -30,4 +30,8 @@ COPY --chown=laraveluser:laravelgroup . .
 
 RUN npm run build
 
-CMD ["php-fpm"]
+# ⚠️ Copia el entrypoint si lo usas (ajusta la ruta si necesario)
+COPY --chown=laraveluser:laravelgroup docker/entrypoint.prod.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["entrypoint.sh"]

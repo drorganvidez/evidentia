@@ -22,20 +22,21 @@ export GID=$(id -g)
 
 ##  🚀 Step 2 – Start development environment
 
+### Generate app key
+
 ```
-cp .env.example.dev .env
+php -r "echo 'APP_KEY=base64:' . base64_encode(random_bytes(32)) . PHP_EOL;" >> .env
+```
+
+### Run containers
+
+```
 docker compose -f docker/docker-compose.dev.yml up -d --build
 ```
 
 This will build and start the Laravel, MySQL, Redis, and Mailhog containers.
 
-## 🛠️ Step 3 – Run migrations and seeders
-
-```
-docker exec -it evidentia_app_container bash
-php artisan migrate
-php artisan db:seed
-```
+You can see Evidentia app running on `localhost:8000`
 
 ## 📧 View test emails
 
@@ -56,3 +57,25 @@ http://localhost:8025
 ```
 npx blade-formatter "resources/views/**/*.blade.php" --write
 ```
+
+## Deployment in production
+
+### Copy environment files and set
+
+```
+cp .env.example.prod .env
+```
+
+### Generate app key
+
+```
+php -r "echo 'APP_KEY=base64:' . base64_encode(random_bytes(32)) . PHP_EOL;" >> .env
+```
+
+### Run containers
+
+```
+docker compose -f docker/docker-compose.prod.yml up -d --build
+```
+
+You can see Evidentia app running on `localhost`

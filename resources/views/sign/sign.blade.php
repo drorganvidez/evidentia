@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Software libre para la gestión de evidencias de trabajo en jornadas docentes" />
 
-    <title>Firmar asistencia | Evidentia Cloud</title>
+    <title>Firmar asistencia | Evidentia</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">

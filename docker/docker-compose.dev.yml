@@ -2,7 +2,7 @@ services:
   app:
     build:
       context: ..
-      dockerfile: docker/Dockerfile
+      dockerfile: docker/Dockerfile.dev
       args:
         USER_ID: ${UID}
         GROUP_ID: ${GID}

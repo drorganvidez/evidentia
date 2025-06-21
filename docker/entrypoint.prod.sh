@@ -1,14 +1,15 @@
 #!/bin/sh
 
-echo "🚀 [PROD] Entrypoint iniciado..."
+echo "🚀 [PROD] Entrypoint started..."
 
 composer install --no-dev --optimize-autoloader
 
 php artisan config:clear
-php artisan key:generate
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
+
+sh ./scripts/wait-for-db.sh
 php artisan migrate --force
 
-php artisan serve --host=0.0.0.0 --port=${APP_PORT:-9000}
+exec php-fpm
