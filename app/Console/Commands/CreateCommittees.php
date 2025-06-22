@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 class CreateCommittees extends Command
 {
     protected $signature = 'create:committees';
+
     protected $description = 'Inserta los comités predefinidos si no existen o los actualiza';
 
     public function handle()
@@ -27,6 +28,7 @@ class CreateCommittees extends Command
         DB::table('committees')->upsert($committees, ['id'], ['name', 'icon']);
 
         $this->info('✅ Comités creados o actualizados correctamente');
+
         return Command::SUCCESS;
     }
 }

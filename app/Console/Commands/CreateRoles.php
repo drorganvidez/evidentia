@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\Role;
+use Illuminate\Console\Command;
 
 class CreateRoles extends Command
 {
@@ -37,6 +37,7 @@ class CreateRoles extends Command
 
         if (Role::count() > 0 && ! $this->confirm('Ya existen roles. ¿Deseas sobrescribirlos? Esta acción los borrará todos.')) {
             $this->info('❌ Operación cancelada.');
+
             return Command::SUCCESS;
         }
 
@@ -44,6 +45,7 @@ class CreateRoles extends Command
         Role::insert($roles);
 
         $this->info('✅ Roles creados correctamente.');
+
         return Command::SUCCESS;
     }
 }
