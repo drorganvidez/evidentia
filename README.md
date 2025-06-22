@@ -83,10 +83,22 @@ docker compose -f docker/docker-compose.prod.yml up -d --build
 
 You can see Evidentia app running on `localhost` or your own web domain
 
-### Create new professor
+Remember to enter inside the `evidentia_app_container` to execute the rest of the commands
 
 ```
 docker exec -it evidentia_app_container bash
+```
+
+### Create default values
+
+```
+php artisan create:roles
+php artisan create:committees
+```
+
+### Create new professor
+
+```
 php artisan create:professor
 ```
 
