@@ -44,6 +44,11 @@ class ConfigController extends Controller
 
         $configuration = Configuration::find(1);
 
+        if (! $configuration) {
+            $configuration = new Configuration;
+            $configuration->id = 1;
+        }
+
         $configuration->upload_evidences_timestamp = $request->input('upload_evidences_date').' '.$request->input('upload_evidences_time');
         $configuration->validate_evidences_timestamp = $request->input('validate_evidences_date').' '.$request->input('validate_evidences_time');
         $configuration->meetings_timestamp = $request->input('meetings_date').' '.$request->input('meetings_time');
