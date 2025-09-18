@@ -6,7 +6,7 @@ services:
     volumes:
       - ../.env:/var/www/html/.env
       - ../storage:/var/www/html/storage
-      - ../scripts:/www/html/scripts
+      - ../scripts:/var/www/html/scripts
     expose:
       - "9000"
     depends_on:

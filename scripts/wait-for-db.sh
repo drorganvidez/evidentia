@@ -16,7 +16,7 @@ echo "Starting wait-for-db.sh"
 echo "Host: $DB_HOST, Port: 3306, User: $DB_USERNAME"
 
 # Wait until the database is available
-while ! mysql -h"$DB_HOST" -P"3306" -u"$DB_USERNAME" -p"$DB_PASSWORD" -e 'SELECT 1' 2>/dev/null; do
+while ! mysql --skip-ssl -h"$DB_HOST" -P"3306" -u"$DB_USERNAME" -p"$DB_PASSWORD" -e 'SELECT 1' 2>/dev/null; do
   echo "MySQL is unavailable - sleeping"
   sleep 1
 done
