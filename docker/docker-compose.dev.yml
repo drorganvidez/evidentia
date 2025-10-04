@@ -7,7 +7,6 @@ services:
         USER_ID: ${UID}
         GROUP_ID: ${GID}
     container_name: evidentia_app_container
-    restart: unless-stopped
     user: "${UID}:${GID}"
     volumes:
       - ../:/var/www/html
@@ -28,7 +27,6 @@ services:
   mysql:
     image: mysql:8
     container_name: evidentia_mysql_container
-    restart: unless-stopped
     env_file:
       - ../.env
     ports:
@@ -41,7 +39,6 @@ services:
   redis:
     image: redis:7
     container_name: evidentia_redis_container
-    restart: unless-stopped
     ports:
       - "6379:6379"
     networks:
@@ -50,7 +47,6 @@ services:
   mailhog:
     image: mailhog/mailhog
     container_name: evidentia_mailhog_container
-    restart: unless-stopped
     ports:
       - "8025:8025"
     networks:

@@ -202,96 +202,86 @@ class ManagementController extends Controller
 
     public function user_management_save(Request $request)
     {
-
         $user = User::find($request->input('user_id'));
 
         // guardar bloqueo
-        if ($request->input('pass') == 'on') {
-            $user->block = false;
-        } else {
-            $user->block = true;
-        }
+        $user->block = $request->input('pass') == 'on' ? false : true;
         $user->save();
 
-        // aqui se cambian los roles
+        // cambiar roles y comité
         $roles_id = $request->input('roles', []);
         $committee_id = $request->input('committee');
+
         if (Committee::find($committee_id) == null) {
-            return redirect()->route('lecture.user.management', ['id' => $user->id])->with('error', 'Comité no válido.');
+            return redirect()->route('lecture.user.management', ['id' => $user->id])
+                ->with('error', 'Comité no válido.');
         }
 
-        // elimino toda asociación previa
+        // eliminar asociaciones anteriores
         DB::table('coordinators')->where(['user_id' => $user->id])->delete();
         DB::table('secretaries')->where(['user_id' => $user->id])->delete();
-
-        // elimino roles anteriores
         $user->roles()->detach();
 
-        // asigno los nuevos roles
+        // asignar nuevos roles
         foreach ($roles_id as $rol_id) {
             $rol = Role::find($rol_id);
-            $user->roles()->attach($rol);
-            $user->save();
+            if ($rol) {
+                $user->roles()->attach($rol);
+            }
         }
 
-        // ¿tiene rol de coordinador?
+        // asignar coordinador o secretario
         if ($user->hasRole('COORDINATOR')) {
             DB::table('coordinators')->insert(['committee_id' => $committee_id, 'user_id' => $user->id]);
         }
 
-        // ¿tiene rol de secretario?
         if ($user->hasRole('SECRETARY')) {
             DB::table('secretaries')->insert(['committee_id' => $committee_id, 'user_id' => $user->id]);
         }
 
+        // ✅ validaciones y actualización de datos personales
+        $request->validate([
+            'name' => 'required|max:255',
+            'surname' => 'required|max:255',
+        ]);
+
+        if ($request->input('username') != $user->username) {
+            $request->validate([
+                'username' => 'required|max:255|unique:users',
+            ]);
+        }
+
+        if ($request->input('email') != $user->email) {
+            $request->validate([
+                'email' => 'required|max:255|unique:users',
+            ]);
+        }
+
+        $user->username = $request->input('username');
+        $user->name = $request->input('name');
+        $user->surname = $request->input('surname');
+        $user->email = $request->input('email');
+        $user->clean_name = \StringUtilites::clean(trim($request->input('name')));
+        $user->clean_surname = \StringUtilites::clean(trim($request->input('surname')));
+
+        // ✅ cambio de contraseña (si se indica)
+        if ($request->filled('password')) {
+            $request->validate([
+                'password' => 'required|confirmed|min:6',
+            ]);
+            $user->password = Hash::make($request->input('password'));
+        }
+
         $user->save();
 
-        // el profesor tiene potestad para cambiar datos sensibles de un alumno
-        if (Auth::user()->hasRole('LECTURE')) {
-
-            $request->validate([
-                'name' => 'required|max:255',
-                'surname' => 'required|max:255',
-            ]);
-
-            // si se cambia el uvus, comprueba que el nuevo sea único
-            if ($request->input('username') != $user->username) {
-                $request->validate([
-                    'username' => 'required|max:255|unique:users',
-                ]);
-            }
-
-            // si se cambia el email, comprueba que el nuevo sea único
-            if ($request->input('email') != $user->email) {
-                $request->validate([
-                    'email' => 'required|max:255|unique:users',
-                ]);
-            }
-
-            $user->username = $request->input('username');
-            $user->name = $request->input('name');
-            $user->surname = $request->input('surname');
-            $user->email = $request->input('email');
-            $user->clean_name = strtoupper(trim(preg_replace('~[^0-9a-z]+~i', '', preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($request->input('name'), ENT_QUOTES, 'UTF-8'))), ' '));
-            $user->clean_surname = strtoupper(trim(preg_replace('~[^0-9a-z]+~i', '', preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($request->input('surname'), ENT_QUOTES, 'UTF-8'))), ' '));
-
-            // si se cambia la contraseña
-            if ($request->input('password') != '') {
-                $request->validate([
-                    'password' => 'required|confirmed|min:6',
-                ]);
-                $user->password = Hash::make($request->input('password'));
-            }
-
-            $user->save();
-
+        // redirección según el rol del que ejecuta la acción
+        if (Auth::user()->hasRole('PRESIDENT')) {
+            return redirect()->route('president.user.list', ['id' => $user->id])
+                ->with('success', 'Usuario actualizado con éxito');
         }
 
-        if ($user->hasRole('PRESIDENT')) {
-            return redirect()->route('president.user.list', ['id' => $user->id])->with('success', 'Usuario actualizado con éxito');
-        }
-
-        return redirect()->route('lecture.user.list', ['id' => $user->id])->with('success', 'Usuario actualizado con éxito');
+        return redirect()->route('lecture.user.list', ['id' => $user->id])
+            ->with('success', 'Usuario actualizado con éxito');
     }
 
     public function user_management_new(Request $request)
