@@ -33,7 +33,7 @@ jobs:
           TAG=${{ github.event.release.tag_name }}
           IMAGE=${{ secrets.DOCKER_USER }}/evidentia
 
-          docker build --build-arg VERSION_TAG=$TAG -t $IMAGE:$TAG -f docker/images/Dockerfile.prod .
+          docker build --build-arg VERSION_TAG=$TAG -t $IMAGE:$TAG -f docker/Dockerfile.prod .
           docker push $IMAGE:$TAG
 
           docker tag $IMAGE:$TAG $IMAGE:latest
