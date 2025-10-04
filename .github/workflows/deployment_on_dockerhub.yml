@@ -1,43 +1,40 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-# GitHub recommends pinning actions to a commit SHA.
-# To get a newer version, you will need to update the SHA.
-# You can also reference a tag or branch, but the action may change without warning.
+# ----------------------------------------------------------------------------
+# Publish image in Docker Hub Workflow
+# This workflow builds and pushes a Docker image to Docker Hub whenever
+# a new release is published on GitHub.
+# ----------------------------------------------------------------------------
 
 name: Publish image in Docker Hub
 
 on:
   release:
+    # Trigger only when a release is published
     types: [published]
 
 jobs:
   push_to_registry:
-    name: Push Docker image to Docker Hub
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v3
+    runs-on: ubuntu-24.04
 
+    steps:
+      
+      # Step 1: Check out the repository code
+      - uses: actions/checkout@v5
+
+      # Step 2: Log in to Docker Hub using secrets
       - name: Log in to Docker Hub
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        uses: docker/login-action@v3.6.0
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      # Step 3: Build and push the Docker image
       - name: Build and push Docker image
-        run: docker build --build-arg VERSION_TAG=${{ github.event.release.tag_name }} -t drorganvidez/evidentia:${{ github.event.release.tag_name }} -f docker/Dockerfile.prod .
-        env:
-          DOCKER_CLI_EXPERIMENTAL: enabled
-
-      - name: Push Docker image to Docker Hub
-        run: docker push drorganvidez/evidentia:${{ github.event.release.tag_name }}
-
-      - name: Tag and push latest
         run: |
-          docker tag drorganvidez/evidentia:${{ github.event.release.tag_name }} drorganvidez/evidentia:latest
-          docker push drorganvidez/evidentia:latest
-        env:
-          DOCKER_CLI_EXPERIMENTAL: enabled
+          TAG=${{ github.event.release.tag_name }}
+          IMAGE=${{ secrets.DOCKER_USER }}/evidentia
+
+          docker build --build-arg VERSION_TAG=$TAG -t $IMAGE:$TAG -f docker/images/Dockerfile.prod .
+          docker push $IMAGE:$TAG
+
+          docker tag $IMAGE:$TAG $IMAGE:latest
+          docker push $IMAGE:latest
