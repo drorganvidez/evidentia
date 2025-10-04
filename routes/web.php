@@ -228,7 +228,7 @@ Route::middleware('auth')->group(function () {
     Route::get('management/export/{ext}', [ManagementController::class, 'evidences_export'])->name('management.export');
 
     // LECTURE routes with middleware checkroles:LECTURE
-    Route::middleware([CheckRoles::class.':LECTURE'])->group(function () {
+    Route::middleware([CheckRoles::class.':LECTURE,PRESIDENT'])->group(function () {
         Route::get('lecture/config', [ConfigController::class, 'config'])->name('lecture.config');
         Route::post('lecture/config/save', [ConfigController::class, 'config_save'])->name('lecture.config.save');
 
@@ -240,9 +240,6 @@ Route::middleware('auth')->group(function () {
 
         Route::get('lecture/integrity', [IntegrityController::class, 'integrity'])->name('lecture.integrity');
 
-        Route::get('lecture/import', [ImportExportController::class, 'import'])->name('lecture.import');
-        Route::post('lecture/import/save', [ImportExportController::class, 'import_save'])->name('lecture.import.save');
-
         Route::get('lecture/export', [ImportExportController::class, 'export'])->name('lecture.export');
         Route::post('lecture/export/save', [ImportExportController::class, 'export_save'])->name('lecture.export.save');
 
@@ -253,8 +250,16 @@ Route::middleware('auth')->group(function () {
         Route::get('lecture/evidence/list', [ManagementController::class, 'evidence_list'])->name('lecture.evidence.list');
         Route::get('lecture/meeting/list', [ManagementController::class, 'meeting_list'])->name('lecture.meeting.list');
 
+    });
+
+    Route::middleware([CheckRoles::class.':LECTURE'])->group(function () {
+
+        Route::get('lecture/import', [ImportExportController::class, 'import'])->name('lecture.import');
+        Route::post('lecture/import/save', [ImportExportController::class, 'import_save'])->name('lecture.import.save');
+
         // User management delete all
         Route::post('management/user/delete/all', [ManagementController::class, 'user_management_delete_all'])->name('management.user.delete.all');
+
     });
 
     // User management new (open)
