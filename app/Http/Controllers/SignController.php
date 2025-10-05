@@ -40,16 +40,17 @@ class SignController extends Controller
             }
 
             // comprobamos que no haya firmado con anterioridad
-            if (! Auth::user()->signature_sheets->contains($signature_sheet->id)) {
+            if (! Auth::user()->signatureSheets->contains($signature_sheet->id)) {
 
                 // firma
-                Auth::user()->signature_sheets()->attach($signature_sheet->id);
+                Auth::user()->signatureSheets()->attach($signature_sheet->id);
 
                 Auth::logout();
 
                 $sign_message = 'Tu firma ha sido validada y registrada correctamente.';
 
-                return redirect()->route('sign.finish', [])->with('sign_message', $sign_message);
+                return redirect()->route('sign.finish')->with('sign_message', $sign_message);
+
             }
 
             Auth::logout();
@@ -71,8 +72,6 @@ class SignController extends Controller
         }
 
         return redirect()->route('home');
-
-        // return "hola";
 
     }
 }

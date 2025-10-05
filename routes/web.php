@@ -45,6 +45,13 @@ use Illuminate\Support\Facades\Route;
 // Rutas de autenticación
 Auth::routes();
 
+// Sign
+Route::prefix('sign')->withoutMiddleware('auth')->group(function () {
+    Route::get('/finish', [SignController::class, 'finish'])->name('sign.finish');
+    Route::post('/sign_p', [SignController::class, 'sign_p'])->name('sign_p');
+    Route::get('/{random_identifier}', [SignController::class, 'sign'])->name('sign');
+});
+
 // Home autenticado
 Route::middleware('auth')->group(function () {
 
@@ -323,13 +330,6 @@ Route::middleware('auth')->group(function () {
 
     // MESSAGES
     Route::get('mailbox', [MessageController::class, 'mailbox'])->name('message.mailbox');
-
-    // Sign
-    Route::prefix('sign')->group(function () {
-        Route::get('/{random_identifier}', [SignController::class, 'sign'])->name('sign');
-        Route::post('/sign_p', [SignController::class, 'sign_p'])->name('sign_p');
-        Route::get('/finish', [SignController::class, 'finish'])->name('sign.finish');
-    });
 
     /**
      *  GENERAL PURPOSE
