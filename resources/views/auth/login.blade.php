@@ -31,8 +31,14 @@
                 </div>
 
                 <div class="input-group">
-                    <a href="{{ route('password.custom_reset') }}" class="text-sm mt-2 mb-3">
+                    <a href="{{ route('password.custom_reset') }}" class="text-sm mt-2">
                         He olvidado mi contraseña o soy nuev@ en Evidentia
+                    </a>
+                </div>
+
+                <div class="input-group">
+                    <a href="https://t.me/evidentia_sat" class="text-sm mb-3">
+                        Necesito asistencia técnica (grupo de Telegram)
                     </a>
                 </div>
 
