@@ -36,6 +36,12 @@
                     </a>
                 </div>
 
+                <div class="input-group">
+                    <a href="https://t.me/evidentia_sat" class="text-sm mb-3">
+                        Necesito asistencia técnica (grupo de Telegram)
+                    </a>
+                </div>
+
                 <div class="row">
                     <div class="col-8">
                     </div>
