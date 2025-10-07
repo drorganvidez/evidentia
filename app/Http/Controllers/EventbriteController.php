@@ -162,7 +162,7 @@ class EventbriteController extends Controller
         }
 
         // Borrar asistencias previas relacionadas con el evento
-        DB::table('attendee')->where('event_id', $event_id)->delete();
+        DB::table('attendees')->where('event_id', $event_id)->delete();
 
         try {
             $client = new Client(['base_uri' => 'https://www.eventbriteapi.com/v3/']);
