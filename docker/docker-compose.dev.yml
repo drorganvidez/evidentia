@@ -4,10 +4,10 @@ services:
       context: ..
       dockerfile: docker/Dockerfile.dev
       args:
-        USER_ID: ${UID}
-        GROUP_ID: ${GID}
+        USER_ID: 1000
+        GROUP_ID: 1000
     container_name: evidentia_app_container
-    user: "${UID}:${GID}"
+    user: "1000:1000"
     volumes:
       - ../:/var/www/html
       - ../storage:/var/www/html/storage
@@ -22,7 +22,6 @@ services:
     entrypoint: ["sh", "/var/www/html/docker/entrypoint.dev.sh"]
     networks:
       - evidentia_net
-
 
   mysql:
     image: mysql:8
