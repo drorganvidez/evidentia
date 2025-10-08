@@ -6,6 +6,7 @@ use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\BonusSecretaryController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\DefaultListSecretaryController;
+use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\EventbriteController;
 use App\Http\Controllers\EvidenceController;
 use App\Http\Controllers\EvidenceCoordinatorController;
@@ -140,7 +141,7 @@ Route::middleware('auth')->group(function () {
                 Route::get('create/step3', [MeetingSecretaryController::class, 'minutes_create_step3'])->name('secretary.meeting.manage.minutes.create.step3');
                 Route::post('create/step3_p', [MeetingSecretaryController::class, 'minutes_create_step3_p'])->name('secretary.meeting.manage.minutes.create.step3_p');
 
-                Route::get('download/{id}', [MeetingSecretaryController::class, 'minutes_download'])->name('secretary.meeting.manage.minutes.download');
+                Route::get('download/{id}', [DownloadController::class, 'minutes_download'])->name('download.minutes');
                 Route::get('export/{ext}', [MeetingSecretaryController::class, 'meeting_minutes_export'])->name('secretary.meeting.manage.minutes.export');
 
                 Route::middleware(MeetingMinutesMine::class)->group(function () {

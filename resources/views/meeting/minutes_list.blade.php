@@ -54,7 +54,7 @@
                                     </td>
                                     <td>
                                         <a class="btn btn-primary btn-sm"
-                                            href="{{ route('secretary.meeting.manage.minutes.download', ['id' => $m->id]) }}"><i
+                                            href="{{ route('download.minutes', ['id' => $m->id]) }}"><i
                                                 class="fas fa-file-pdf"></i></a>
 
                                         <a class="btn btn-info btn-sm"
