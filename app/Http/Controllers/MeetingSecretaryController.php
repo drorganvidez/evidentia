@@ -738,20 +738,6 @@ class MeetingSecretaryController extends Controller
 
     }
 
-    public function minutes_download($id)
-    {
-        $meeting_minutes = MeetingMinutes::findOrFail($id);
-
-        $response = Storage::download('/meeting_minutes/meeting_minutes_'.$meeting_minutes->id.'.pdf');
-
-        // limpiar búfer de salida
-        if (ob_get_level()) {
-            ob_end_clean();
-        }
-
-        return $response;
-    }
-
     public function meeting_requests_export($ext)
     {
         try {
