@@ -50,9 +50,19 @@
                                     <td>
                                         <x-eventstatus :event="$event" />
                                     </td>
-                                    <td><a href="{{ route('registercoordinator.attendee.load', ['id' => $event->id_eventbrite]) }}"
-                                            class="btn btn-primary btn-block" role="button">
-                                            <i class="fas fa-cloud-download-alt"></i></a></td>
+                                    <td class="text-center">
+                                        <a href="{{ route('registercoordinator.attendee.load', ['id' => $event->id_eventbrite]) }}"
+                                            class="btn btn-primary btn-block mb-1" role="button">
+                                            <i class="fas fa-cloud-download-alt"></i>
+                                        </a>
+
+                                        <form action="{{ route('registercoordinator.event.hide', ['id' => $event->id_eventbrite]) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-warning btn-block" title="Ocultar evento">
+                                                <i class="fas fa-eye-slash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

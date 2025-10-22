@@ -239,10 +239,42 @@ class EventbriteController extends Controller
     public function event_list()
     {
 
-        $events = Event::all();
+        // Only show events that are not hidden to the register coordinator list
+        $events = Event::where('hidden', false)->get();
 
-        return view('eventbrite.event_list',
-            ['events' => $events]);
+        return view('eventbrite.event_list', ['events' => $events]);
+    }
+
+    /**
+     * Hide an event so it doesn't appear in the coordinator list.
+     */
+    public function hide($id_eventbrite)
+    {
+        $event = Event::where('id_eventbrite', $id_eventbrite)->first();
+        if (! $event) {
+            return back()->with('error', 'Evento no encontrado.');
+        }
+
+        $event->hidden = true;
+        $event->save();
+
+        return back()->with('success', 'Evento ocultado correctamente.');
+    }
+
+    /**
+     * Unhide an event so it appears again in the coordinator list.
+     */
+    public function unhide($id_eventbrite)
+    {
+        $event = Event::where('id_eventbrite', $id_eventbrite)->first();
+        if (! $event) {
+            return back()->with('error', 'Evento no encontrado.');
+        }
+
+        $event->hidden = false;
+        $event->save();
+
+        return back()->with('success', 'Evento visible nuevamente.');
     }
 
     public function attendee_list()
