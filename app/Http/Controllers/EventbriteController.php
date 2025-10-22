@@ -239,14 +239,14 @@ class EventbriteController extends Controller
     public function event_list()
     {
 
-        // Only show events that are not hidden to the register coordinator list
-        $events = Event::where('hidden', false)->get();
+        // Show all events to the register coordinator (including hidden ones)
+        $events = Event::all();
 
         return view('eventbrite.event_list', ['events' => $events]);
     }
 
     /**
-     * Hide an event so it doesn't appear in the coordinator list.
+     * Hide an event so it doesn't appear.
      */
     public function hide($id_eventbrite)
     {
@@ -262,7 +262,7 @@ class EventbriteController extends Controller
     }
 
     /**
-     * Unhide an event so it appears again in the coordinator list.
+     * Unhide an event so it appears again.
      */
     public function unhide($id_eventbrite)
     {
