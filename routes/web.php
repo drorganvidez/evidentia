@@ -202,10 +202,10 @@ Route::middleware('auth')->group(function () {
 
         Route::get('registercoordinator/event/load', [EventbriteController::class, 'event_load'])->name('registercoordinator.event.load');
         Route::get('registercoordinator/attendee/load/{id}', [EventbriteController::class, 'attendee_load'])->name('registercoordinator.attendee.load');
-        
-            // Hide/unhide events
-            Route::post('registercoordinator/event/hide/{id}', [EventbriteController::class, 'hide'])->name('registercoordinator.event.hide');
-            Route::post('registercoordinator/event/unhide/{id}', [EventbriteController::class, 'unhide'])->name('registercoordinator.event.unhide');
+
+        // Hide/unhide events
+        Route::post('registercoordinator/event/hide/{id}', [EventbriteController::class, 'hide'])->name('registercoordinator.event.hide');
+        Route::post('registercoordinator/event/unhide/{id}', [EventbriteController::class, 'unhide'])->name('registercoordinator.event.unhide');
     });
 
     Route::get('registercoordinator/event/list', [EventbriteController::class, 'event_list'])->name('registercoordinator.event.list');

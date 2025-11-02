@@ -63,16 +63,22 @@
                                         </a>
 
                                         @if (!empty($event->hidden) && $event->hidden)
-                                            <form action="{{ route('registercoordinator.event.unhide', ['id' => $event->id_eventbrite]) }}" method="POST">
+                                            <form
+                                                action="{{ route('registercoordinator.event.unhide', ['id' => $event->id_eventbrite]) }}"
+                                                method="POST">
                                                 @csrf
-                                                <button type="submit" class="btn btn-success btn-block" title="Mostrar evento">
+                                                <button type="submit" class="btn btn-success btn-block"
+                                                    title="Mostrar evento">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
                                             </form>
                                         @else
-                                            <form action="{{ route('registercoordinator.event.hide', ['id' => $event->id_eventbrite]) }}" method="POST">
+                                            <form
+                                                action="{{ route('registercoordinator.event.hide', ['id' => $event->id_eventbrite]) }}"
+                                                method="POST">
                                                 @csrf
-                                                <button type="submit" class="btn btn-warning btn-block" title="Ocultar evento">
+                                                <button type="submit" class="btn btn-warning btn-block"
+                                                    title="Ocultar evento">
                                                     <i class="fas fa-eye-slash"></i>
                                                 </button>
                                             </form>

@@ -44,9 +44,9 @@
                                     <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
                                         {{ \Carbon\Carbon::parse($meeting->datetime)->diffForHumans() }}</td>
                                     <td>
-                                        @if($meeting->meetingMinutes)
+                                        @if ($meeting->meetingMinutes)
                                             <a class="btn btn-primary btn-sm"
-                                            href="{{ route('download.minutes', ['id' => $meeting->meetingMinutes->id]) }}">
+                                                href="{{ route('download.minutes', ['id' => $meeting->meetingMinutes->id]) }}">
                                                 <i class="nav-icon far fa-file-pdf"></i>
                                             </a>
                                         @else
