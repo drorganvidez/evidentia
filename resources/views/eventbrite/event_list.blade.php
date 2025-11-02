@@ -38,7 +38,13 @@
                         <tbody>
                             @foreach ($events as $event)
                                 <tr>
-                                    <td><a href="{{ $event->url }}" target="_blank">{!! $event->name !!}</a></td>
+                                    <td>
+                                        <a href="{{ $event->url }}" target="_blank">{!! $event->name !!}</a>
+                                        @if (!empty($event->hidden) && $event->hidden)
+                                            <br>
+                                            <span class="badge badge-secondary mt-1">Oculto</span>
+                                        @endif
+                                    </td>
                                     <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{!! $event->description !!}
                                     </td>
                                     <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
@@ -50,9 +56,28 @@
                                     <td>
                                         <x-eventstatus :event="$event" />
                                     </td>
-                                    <td><a href="{{ route('registercoordinator.attendee.load', ['id' => $event->id_eventbrite]) }}"
-                                            class="btn btn-primary btn-block" role="button">
-                                            <i class="fas fa-cloud-download-alt"></i></a></td>
+                                    <td class="text-center">
+                                        <a href="{{ route('registercoordinator.attendee.load', ['id' => $event->id_eventbrite]) }}"
+                                            class="btn btn-primary btn-block mb-1" role="button">
+                                            <i class="fas fa-cloud-download-alt"></i>
+                                        </a>
+
+                                        @if (!empty($event->hidden) && $event->hidden)
+                                            <form action="{{ route('registercoordinator.event.unhide', ['id' => $event->id_eventbrite]) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="btn btn-success btn-block" title="Mostrar evento">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </form>
+                                        @else
+                                            <form action="{{ route('registercoordinator.event.hide', ['id' => $event->id_eventbrite]) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="btn btn-warning btn-block" title="Ocultar evento">
+                                                    <i class="fas fa-eye-slash"></i>
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
