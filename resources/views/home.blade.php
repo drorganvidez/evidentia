@@ -127,7 +127,7 @@
                 <div class="card-footer" style="padding-top: 10px;">
                     <div class="row">
                         <div class="col-lg-12 mt-3">
-                            @forelse(\App\Models\Event::all() as $event)
+                            @forelse(\App\Models\Event::where('hidden', false)->orderBy('start_datetime')->get() as $event)
                                 <div class="callout callout-info">
                                     <h5>{{ $event->name }}</h5>
                                     <a target="_blank" href="{{ $event->url }}">{{ $event->url }}</a>

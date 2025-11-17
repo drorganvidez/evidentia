@@ -6,6 +6,7 @@ use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\BonusSecretaryController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\DefaultListSecretaryController;
+use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\EventbriteController;
 use App\Http\Controllers\EvidenceController;
 use App\Http\Controllers\EvidenceCoordinatorController;
@@ -44,6 +45,13 @@ use Illuminate\Support\Facades\Route;
 
 // Rutas de autenticación
 Auth::routes();
+
+// Sign
+Route::prefix('sign')->withoutMiddleware('auth')->group(function () {
+    Route::get('/finish', [SignController::class, 'finish'])->name('sign.finish');
+    Route::post('/sign_p', [SignController::class, 'sign_p'])->name('sign_p');
+    Route::get('/{random_identifier}', [SignController::class, 'sign'])->name('sign');
+});
 
 // Home autenticado
 Route::middleware('auth')->group(function () {
@@ -133,7 +141,7 @@ Route::middleware('auth')->group(function () {
                 Route::get('create/step3', [MeetingSecretaryController::class, 'minutes_create_step3'])->name('secretary.meeting.manage.minutes.create.step3');
                 Route::post('create/step3_p', [MeetingSecretaryController::class, 'minutes_create_step3_p'])->name('secretary.meeting.manage.minutes.create.step3_p');
 
-                Route::get('download/{id}', [MeetingSecretaryController::class, 'minutes_download'])->name('secretary.meeting.manage.minutes.download');
+                Route::get('download/{id}', [DownloadController::class, 'minutes_download'])->name('download.minutes');
                 Route::get('export/{ext}', [MeetingSecretaryController::class, 'meeting_minutes_export'])->name('secretary.meeting.manage.minutes.export');
 
                 Route::middleware(MeetingMinutesMine::class)->group(function () {
@@ -194,6 +202,10 @@ Route::middleware('auth')->group(function () {
 
         Route::get('registercoordinator/event/load', [EventbriteController::class, 'event_load'])->name('registercoordinator.event.load');
         Route::get('registercoordinator/attendee/load/{id}', [EventbriteController::class, 'attendee_load'])->name('registercoordinator.attendee.load');
+
+        // Hide/unhide events
+        Route::post('registercoordinator/event/hide/{id}', [EventbriteController::class, 'hide'])->name('registercoordinator.event.hide');
+        Route::post('registercoordinator/event/unhide/{id}', [EventbriteController::class, 'unhide'])->name('registercoordinator.event.unhide');
     });
 
     Route::get('registercoordinator/event/list', [EventbriteController::class, 'event_list'])->name('registercoordinator.event.list');
@@ -228,7 +240,7 @@ Route::middleware('auth')->group(function () {
     Route::get('management/export/{ext}', [ManagementController::class, 'evidences_export'])->name('management.export');
 
     // LECTURE routes with middleware checkroles:LECTURE
-    Route::middleware([CheckRoles::class.':LECTURE'])->group(function () {
+    Route::middleware([CheckRoles::class.':LECTURE,PRESIDENT'])->group(function () {
         Route::get('lecture/config', [ConfigController::class, 'config'])->name('lecture.config');
         Route::post('lecture/config/save', [ConfigController::class, 'config_save'])->name('lecture.config.save');
 
@@ -240,9 +252,6 @@ Route::middleware('auth')->group(function () {
 
         Route::get('lecture/integrity', [IntegrityController::class, 'integrity'])->name('lecture.integrity');
 
-        Route::get('lecture/import', [ImportExportController::class, 'import'])->name('lecture.import');
-        Route::post('lecture/import/save', [ImportExportController::class, 'import_save'])->name('lecture.import.save');
-
         Route::get('lecture/export', [ImportExportController::class, 'export'])->name('lecture.export');
         Route::post('lecture/export/save', [ImportExportController::class, 'export_save'])->name('lecture.export.save');
 
@@ -253,8 +262,16 @@ Route::middleware('auth')->group(function () {
         Route::get('lecture/evidence/list', [ManagementController::class, 'evidence_list'])->name('lecture.evidence.list');
         Route::get('lecture/meeting/list', [ManagementController::class, 'meeting_list'])->name('lecture.meeting.list');
 
+    });
+
+    Route::middleware([CheckRoles::class.':LECTURE'])->group(function () {
+
+        Route::get('lecture/import', [ImportExportController::class, 'import'])->name('lecture.import');
+        Route::post('lecture/import/save', [ImportExportController::class, 'import_save'])->name('lecture.import.save');
+
         // User management delete all
         Route::post('management/user/delete/all', [ManagementController::class, 'user_management_delete_all'])->name('management.user.delete.all');
+
     });
 
     // User management new (open)
@@ -318,13 +335,6 @@ Route::middleware('auth')->group(function () {
 
     // MESSAGES
     Route::get('mailbox', [MessageController::class, 'mailbox'])->name('message.mailbox');
-
-    // Sign
-    Route::prefix('sign')->group(function () {
-        Route::get('/{random_identifier}', [SignController::class, 'sign'])->name('sign');
-        Route::post('/sign_p', [SignController::class, 'sign_p'])->name('sign_p');
-        Route::get('/finish', [SignController::class, 'finish'])->name('sign.finish');
-    });
 
     /**
      *  GENERAL PURPOSE

@@ -697,24 +697,19 @@ class MeetingSecretaryController extends Controller
             ]);
 
             foreach ($point['agreements'] as $agreement) {
-
                 $new_agreement = Agreement::create([
                     'point_id' => $new_point->id,
                     'description' => $agreement['description'],
+                    'identificator' => 'tmp', // valor provisional, luego lo actualizas bien
                 ]);
 
-                // generamos el identificador único para este acuerdo
-                $identificator = 'ISD';
-                $identificator .= '-';
-                $identificator .= Carbon::now()->format('Y-m-d');
-                $identificator .= '-';
-                $identificator .= Auth::user()->secretary->committee->id;
-                $identificator .= '-';
-                $identificator .= $meeting->id;
-                $identificator .= '-';
-                $identificator .= $new_point->id;
-                $identificator .= '-';
-                $identificator .= $new_agreement->id;
+                // ahora generas el identificador definitivo
+                $identificator = 'ISD'
+                    .'-'.Carbon::now()->format('Y-m-d')
+                    .'-'.Auth::user()->secretary->committee->id
+                    .'-'.$meeting->id
+                    .'-'.$new_point->id
+                    .'-'.$new_agreement->id;
 
                 $new_agreement->identificator = $identificator;
                 $new_agreement->save();
@@ -741,20 +736,6 @@ class MeetingSecretaryController extends Controller
 
         return redirect()->route('secretary.meeting.manage.minutes.list')->with('success', 'Acta de reunión eliminada con éxito.');
 
-    }
-
-    public function minutes_download($id)
-    {
-        $meeting_minutes = MeetingMinutes::findOrFail($id);
-
-        $response = Storage::download('/meeting_minutes/meeting_minutes_'.$meeting_minutes->id.'.pdf');
-
-        // limpiar búfer de salida
-        if (ob_get_level()) {
-            ob_end_clean();
-        }
-
-        return $response;
     }
 
     public function meeting_requests_export($ext)

@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Storage;
 
 class DownloadController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function request_download($id)
     {
         $meeting_request = MeetingRequest::findOrFail($id);

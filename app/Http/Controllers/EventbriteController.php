@@ -162,7 +162,7 @@ class EventbriteController extends Controller
         }
 
         // Borrar asistencias previas relacionadas con el evento
-        DB::table('attendee')->where('event_id', $event_id)->delete();
+        DB::table('attendees')->where('event_id', $event_id)->delete();
 
         try {
             $client = new Client(['base_uri' => 'https://www.eventbriteapi.com/v3/']);
@@ -239,10 +239,42 @@ class EventbriteController extends Controller
     public function event_list()
     {
 
+        // Show all events to the register coordinator (including hidden ones)
         $events = Event::all();
 
-        return view('eventbrite.event_list',
-            ['events' => $events]);
+        return view('eventbrite.event_list', ['events' => $events]);
+    }
+
+    /**
+     * Hide an event so it doesn't appear.
+     */
+    public function hide($id_eventbrite)
+    {
+        $event = Event::where('id_eventbrite', $id_eventbrite)->first();
+        if (! $event) {
+            return back()->with('error', 'Evento no encontrado.');
+        }
+
+        $event->hidden = true;
+        $event->save();
+
+        return back()->with('success', 'Evento ocultado correctamente.');
+    }
+
+    /**
+     * Unhide an event so it appears again.
+     */
+    public function unhide($id_eventbrite)
+    {
+        $event = Event::where('id_eventbrite', $id_eventbrite)->first();
+        if (! $event) {
+            return back()->with('error', 'Evento no encontrado.');
+        }
+
+        $event->hidden = false;
+        $event->save();
+
+        return back()->with('success', 'Evento visible nuevamente.');
     }
 
     public function attendee_list()

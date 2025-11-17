@@ -18,6 +18,7 @@ class Event extends Model
         'status',
         'url',
         'hours',
+        'hidden',
     ];
 
     /**

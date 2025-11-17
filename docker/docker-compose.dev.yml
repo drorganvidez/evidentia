@@ -4,11 +4,10 @@ services:
       context: ..
       dockerfile: docker/Dockerfile.dev
       args:
-        USER_ID: ${UID}
-        GROUP_ID: ${GID}
+        USER_ID: 1000
+        GROUP_ID: 1000
     container_name: evidentia_app_container
-    restart: unless-stopped
-    user: "${UID}:${GID}"
+    user: "1000:1000"
     volumes:
       - ../:/var/www/html
       - ../storage:/var/www/html/storage
@@ -24,11 +23,9 @@ services:
     networks:
       - evidentia_net
 
-
   mysql:
     image: mysql:8
     container_name: evidentia_mysql_container
-    restart: unless-stopped
     env_file:
       - ../.env
     ports:
@@ -41,7 +38,6 @@ services:
   redis:
     image: redis:7
     container_name: evidentia_redis_container
-    restart: unless-stopped
     ports:
       - "6379:6379"
     networks:
@@ -50,7 +46,6 @@ services:
   mailhog:
     image: mailhog/mailhog
     container_name: evidentia_mailhog_container
-    restart: unless-stopped
     ports:
       - "8025:8025"
     networks:

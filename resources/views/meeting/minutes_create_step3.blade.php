@@ -638,50 +638,47 @@
 
             var form = $("#request_form");
 
-            form.submit(function() {
-
+            form.submit(function(e) {
                 jsonObj = [];
+                let hasError = false;
 
-                // para cada punto...
                 $(".point_body").each(function() {
+                    let item = {}
+                    let $this = $(this);
 
-                    item = {}
+                    let point_title = $this.find('.point_title').val().trim();
+                    if (!point_title) {
+                        alert("⚠️ Hay un punto sin título, por favor rellénalo antes de guardar.");
+                        hasError = true;
+                        return false; // rompe el each
+                    }
 
-                    var $this = $(this);
-
-                    // id del punto
-                    let point_id = $this.find('.point_id').html();
-                    item["id"] = point_id;
-
-                    // título del punto
-                    let point_title = $this.find('.point_title').val();
+                    item["id"] = $this.find('.point_id').html();
                     item["title"] = point_title;
+                    item["duration"] = $this.find('.point_duration').val();
+                    item["description"] = $this.find('.point_description').val();
 
-                    // duración del punto
-                    let point_duration = $this.find('.point_duration').val();
-                    item["duration"] = point_duration;
-
-                    // descripción del punto
-                    let point_description = $this.find('.point_description').val();
-                    item["description"] = point_description;
-
-                    // acuerdos del punto
-                    agreements = []
+                    let agreements = []
                     $this.find('.point_agreement').each(function() {
-                        agreement_item = {}
-                        let agreement = $(this).find('textarea').val();
-                        agreement_item["description"] = agreement
-                        agreements.push(agreement_item);
+                        let desc = $(this).find('textarea').val().trim();
+                        if (desc) { // solo si no está vacío
+                            agreements.push({
+                                description: desc
+                            });
+                        }
                     });
 
                     item["agreements"] = agreements;
 
                     jsonObj.push(item);
-
                 });
 
-                $("#points_json").val(JSON.stringify(jsonObj));
+                if (hasError) {
+                    e.preventDefault();
+                    return false;
+                }
 
+                $("#points_json").val(JSON.stringify(jsonObj));
                 return true;
             });
 
