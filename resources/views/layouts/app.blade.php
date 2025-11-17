@@ -337,7 +337,7 @@
                 class: 'bg-light',
                 autohide: true,
                 delay: 7000,
-                body: '{!! session('light') !!}'
+                body: @json(session('light'))
             });
         @endif
 
