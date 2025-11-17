@@ -30,6 +30,22 @@ services:
     networks:
       - evidentia_net
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8080:80
+    environment:
+      PMA_ARBITRARY: 0
+      PMA_HOST: evidentia_mysql_container
+      PMA_ABSOLUTE_URI: https://vm.diverso-lab.us.es/phpmyadmin/evidentia
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 300M
+    depends_on:
+      - mysql
+    networks:
+      - evidentia_net
+    restart: always
+
   redis:
     image: redis:7
     container_name: evidentia_redis_container
