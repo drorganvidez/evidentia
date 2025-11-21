@@ -22,6 +22,13 @@
 
 
                 <div class="card-body">
+
+                    <div class="mb-3">
+                        <a href="{{ route('registercoordinator.event.load') }}" class="btn btn-success">
+                            <i class="fas fa-sync"></i> Cargar eventos desde Eventbrite
+                        </a>
+                    </div>
+
                     <table id="dataset" class="table table-hover table-responsive">
                         <thead>
                             <tr>

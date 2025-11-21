@@ -67,87 +67,107 @@ class EventbriteController extends Controller
 
     public function event_load()
     {
-
         $token = \Config::eventbrite_token();
 
         try {
-            $client = new Client(['base_uri' => 'https://www.eventbriteapi.com/v3/']);
+            $client = new \GuzzleHttp\Client([
+                'base_uri' => 'https://www.eventbriteapi.com/v3/',
+            ]);
 
-            // obtenemos las organizaciones
-            $organizations = $client->request('GET', 'users/me/organizations', [
+            // 1. Obtener organizaciones
+            $response = $client->request('GET', 'users/me/organizations', [
                 'query' => ['token' => $token],
             ]);
-            $organizations = json_decode($organizations->getBody());
-            $organizations = (array) $organizations->organizations;
 
-            // se itera sobre todas las organizaciones, si hubiera más de una
+            $organizations = json_decode($response->getBody())->organizations ?? [];
+            $organizations = (array) $organizations;
+
             foreach ($organizations as $organization) {
 
-                // averiguamos el ID de la organizacion
                 $organization_id = $organization->id;
 
-                // obtenemos los eventos
-                $events = $client->request('GET', 'organizations/'.$organization_id.'/events', [
-                    'query' => ['token' => $token],
-                ]);
-                $events = json_decode($events->getBody());
-                $events = (array) $events->events;
+                // ==============================================
+                // 2. PAGINACIÓN DE EVENTOS
+                // ==============================================
+                $all_events = [];
+                $page = 1;
 
-                foreach ($events as $event) {
+                do {
+                    $resp_page = $client->request('GET', 'organizations/'.$organization_id.'/events', [
+                        'query' => [
+                            'token' => $token,
+                            'page' => $page,
+                            'page_size' => 200, // máximo permitido
+                        ],
+                    ]);
 
-                    // ¿el evento ha sido ya creado?
-                    $saved_event = Event::where('id_eventbrite', $event->id)->first();
-                    if ($saved_event != null) {
-                        $saved_event->name = $event->name->html;
-                        $saved_event->description = $event->description->html;
-                        $saved_event->start_datetime = $event->start->local;
-                        $saved_event->end_datetime = $event->end->local;
-                        $saved_event->capacity = $event->capacity;
-                        $saved_event->status = $event->status;
-                        $saved_event->url = $event->url;
+                    $data = json_decode($resp_page->getBody());
 
-                        // Cálculo de las horas
-                        $start = new Carbon($saved_event->start_datetime);
-                        $end = new Carbon($saved_event->end_datetime);
-                        $hours = $end->diffInMinutes($start, true);
-                        $hours = $hours / 60;
-                        $saved_event->hours = $hours;
+                    $events_page = $data->events ?? [];
+                    $pagination = $data->pagination ?? null;
 
-                        $saved_event->save();
-                    } else {
-                        $new_event = Event::create([
-                            'name' => $event->name->html,
-                            'description' => $event->description->html,
-                            'id_eventbrite' => $event->id,
-                            'start_datetime' => $event->start->local,
-                            'end_datetime' => $event->end->local,
-                            'capacity' => $event->capacity,
-                            'status' => $event->status,
-                            'url' => $event->url,
-                        ]);
-
-                        // Cálculo de las horas
-                        $start = new Carbon($new_event->start_datetime);
-                        $end = new Carbon($new_event->end_datetime);
-                        $hours = $end->diffInMinutes($start, true);
-                        $hours = $hours / 60;
-                        $new_event->hours = $hours;
-
-                        $new_event->save();
+                    if (! empty($events_page)) {
+                        $all_events = array_merge($all_events, $events_page);
                     }
 
-                }
+                    $page++;
 
+                } while ($pagination && $pagination->has_more_items);
+
+                // ==============================================
+                // 3. GUARDADO / ACTUALIZACIÓN DE EVENTOS
+                // ==============================================
+                foreach ($all_events as $event) {
+
+                    $saved_event = Event::where('id_eventbrite', $event->id)->first();
+
+                    $data_event = [
+                        'name' => $event->name->html,
+                        'description' => $event->description->html,
+                        'start_datetime' => $event->start->local,
+                        'end_datetime' => $event->end->local,
+                        'capacity' => $event->capacity,
+                        'status' => $event->status,
+                        'url' => $event->url,
+                    ];
+
+                    if ($saved_event) {
+                        $saved_event->update($data_event);
+
+                        // Calcular horas
+                        $start = new Carbon($saved_event->start_datetime);
+                        $end = new Carbon($saved_event->end_datetime);
+                        $saved_event->hours = $end->diffInMinutes($start, true) / 60;
+                        $saved_event->save();
+
+                    } else {
+                        $new_event = Event::create(array_merge($data_event, [
+                            'id_eventbrite' => $event->id,
+                        ]));
+
+                        // Calcular horas
+                        $start = new Carbon($new_event->start_datetime);
+                        $end = new Carbon($new_event->end_datetime);
+                        $new_event->hours = $end->diffInMinutes($start, true) / 60;
+                        $new_event->save();
+                    }
+                }
             }
 
+            // 4. Marca de tiempo
             $config = Configuration::find(1);
             $config->events_uploaded_timestamp = Carbon::now();
             $config->save();
 
-            return redirect()->route('registercoordinator.event.list')->with('success', 'Eventos cargados con éxito.');
+            return redirect()
+                ->route('registercoordinator.event.list')
+                ->with('success', 'Eventos cargados con éxito.');
 
         } catch (\Exception $e) {
-            return back()->with('error', 'Ups, parece que hay un problema con el token. Comprueba que es válido.'.$e->getMessage());
+            return back()->with(
+                'error',
+                'Ups, parece que hay un problema con el token o la API. '.$e->getMessage()
+            );
         }
     }
 
