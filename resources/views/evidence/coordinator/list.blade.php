@@ -66,7 +66,6 @@
 
             </div>
 
-            {{ $evidences->links() }}
 
         </div>
 
