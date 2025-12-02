@@ -92,6 +92,20 @@
                         <x-evidencestatus :evidence="$evidence" />
                     </div>
 
+                    @if ($evidence->allRejectionReasons()->isNotEmpty())
+                        <div class="alert alert-warning mt-3">
+                            <h5 class="mb-2">
+                                <i class="fas fa-exclamation-circle"></i> Motivos de rechazo anteriores
+                            </h5>
+
+                            <ul class="mb-0">
+                                @foreach ($evidence->allRejectionReasons() as $reason)
+                                    <li>{{ $reason->reason }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <div class="mt-4">
 
                         @if ($evidence->proofs->isEmpty())

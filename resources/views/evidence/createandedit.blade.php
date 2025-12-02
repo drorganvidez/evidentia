@@ -205,6 +205,21 @@
 
                 <div class="card-body">
 
+                    @isset($edit)
+                        @if ($evidence->allRejectionReasons()->isNotEmpty())
+                            <div class="alert alert-warning mb-4">
+                                <h5 class="mb-2">
+                                    <i class="fas fa-exclamation-circle"></i> Motivos de rechazo anteriores
+                                </h5>
+                                <ul class="mb-0">
+                                    @foreach ($evidence->allRejectionReasons() as $reason)
+                                        <li>{{ $reason->reason }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                    @endisset
+
                     <label>Adjuntar pruebas</label>
 
                     <input type="file" name="files[]" id="files" multiple>

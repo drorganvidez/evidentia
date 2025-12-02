@@ -161,4 +161,15 @@ class Evidence extends Model
     {
         return $this->stamp === \Stamp::get_stamp_evidence($this);
     }
+
+    public function allRejectionReasons()
+    {
+        return $this->previousEvidences()
+            ->push($this)
+            ->unique('id')
+            ->map(fn ($ev) => $ev->reasonRejection)
+            ->filter()
+            ->values()
+            ->unique('id');
+    }
 }
