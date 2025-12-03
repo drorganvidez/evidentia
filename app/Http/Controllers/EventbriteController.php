@@ -351,4 +351,84 @@ class EventbriteController extends Controller
             return back()->with('error', 'Ocurrió un error: '.$e->getMessage());
         }
     }
+
+    public function attendee_edit($id)
+    {
+        $attendee = Attendee::findOrFail($id);
+        $events = Event::all();
+        $users = \App\Models\User::orderBy('surname')->get();
+
+        return view('eventbrite.attendee_edit', compact('attendee', 'events', 'users'));
+    }
+
+    public function attendee_update(Request $request, $id)
+    {
+        $attendee = Attendee::findOrFail($id);
+
+        $request->validate([
+            'event_id' => 'required|exists:events,id',
+            'user_id' => 'required|exists:users,id',
+            'status' => 'required|string|max:255',
+        ]);
+
+        // Comprobar si ya existe otra asistencia con esa tupla usuario-evento
+        $exists = Attendee::where('event_id', $request->event_id)
+            ->where('user_id', $request->user_id)
+            ->where('id', '!=', $attendee->id)
+            ->exists();
+
+        if ($exists) {
+            return redirect()
+                ->route('registercoordinator.attendee.list')
+                ->with('error', 'Ya existe una asistencia para ese usuario y ese evento.');
+        }
+
+        $attendee->update($request->only('event_id', 'user_id', 'status'));
+
+        return redirect()->route('registercoordinator.attendee.list')
+            ->with('success', 'Asistencia actualizada con éxito.');
+    }
+
+    public function attendee_create()
+    {
+        $events = Event::all();
+        $users = \App\Models\User::orderBy('surname')->get();
+
+        return view('eventbrite.attendee_create', compact('events', 'users'));
+    }
+
+    public function attendee_store(Request $request)
+    {
+        $request->validate([
+            'event_id' => 'required|exists:events,id',
+            'user_id' => 'required|exists:users,id',
+            'status' => 'required|string|max:255',
+        ]);
+
+        // Comprobar si ya existe una asistencia con esa tupla usuario-evento
+        $exists = Attendee::where('event_id', $request->event_id)
+            ->where('user_id', $request->user_id)
+            ->exists();
+
+        if ($exists) {
+            return redirect()
+                ->route('registercoordinator.attendee.list')
+                ->with('error', 'Ya existe una asistencia para ese usuario y ese evento.');
+        }
+
+        Attendee::create($request->only('event_id', 'user_id', 'status'));
+
+        return redirect()->route('registercoordinator.attendee.list')
+            ->with('success', 'Asistencia creada con éxito.');
+    }
+
+    public function attendee_destroy($id)
+    {
+        $attendee = Attendee::findOrFail($id);
+        $attendee->delete();
+
+        return redirect()
+            ->route('registercoordinator.attendee.list')
+            ->with('success', 'Asistencia eliminada con éxito.');
+    }
 }

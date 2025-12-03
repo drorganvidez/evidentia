@@ -208,6 +208,21 @@ Route::middleware('auth')->group(function () {
         Route::post('registercoordinator/event/unhide/{id}', [EventbriteController::class, 'unhide'])->name('registercoordinator.event.unhide');
     });
 
+    Route::prefix('attendees')->middleware(['auth', CheckRoles::class.':REGISTER_COORDINATOR'])->group(function () {
+
+        Route::get('/', [EventbriteController::class, 'attendee_list'])->name('registercoordinator.attendee.list');
+
+        // NUEVAS
+        Route::get('/{id}/edit', [EventbriteController::class, 'attendee_edit'])->name('attendee.edit');
+        Route::post('/{id}/edit', [EventbriteController::class, 'attendee_update'])->name('attendee.update');
+
+        Route::get('/create', [EventbriteController::class, 'attendee_create'])->name('attendee.create');
+        Route::post('/create', [EventbriteController::class, 'attendee_store'])->name('attendee.store');
+
+        Route::delete('/{id}', [EventbriteController::class, 'attendee_destroy'])->name('attendee.destroy');
+
+    });
+
     Route::get('registercoordinator/event/list', [EventbriteController::class, 'event_list'])->name('registercoordinator.event.list');
     Route::get('registercoordinator/attendee/list', [EventbriteController::class, 'attendee_list'])->name('registercoordinator.attendee.list');
     Route::get('registercoordinator/attendee/export', [EventbriteController::class, 'attendee_export'])->name('registercoordinator.attendee.export');
