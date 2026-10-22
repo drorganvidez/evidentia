@@ -240,7 +240,7 @@ Route::middleware('auth')->group(function () {
 
         Route::post('president/committee/management/save', [ManagementController::class, 'committee_save'])->name('president.committee.management.save');
         Route::post('president/committee/management/new', [ManagementController::class, 'committee_new'])->name('president.committee.management.new');
-        Route::middleware(CheckNotNull::class, ':Committee')->post('president/committee/management/remove', [ManagementController::class, 'committee_remove'])->name('president.committee.management.remove');
+        Route::middleware(CheckNotNull::class.':Committee')->post('president/committee/management/remove', [ManagementController::class, 'committee_remove'])->name('president.committee.management.remove');
 
         Route::get('president/user/management/{id}', [ManagementController::class, 'user_management'])->name('president.user.management');
         Route::post('president/user/management/save', [ManagementController::class, 'user_management_save'])->name('president.user.management.save');
@@ -263,7 +263,7 @@ Route::middleware('auth')->group(function () {
         Route::post('lecture/committee/management/save', [ManagementController::class, 'committee_save'])->name('lecture.committee.management.save');
         Route::post('lecture/committee/management/new', [ManagementController::class, 'committee_new'])->name('lecture.committee.management.new');
 
-        Route::middleware(CheckNotNull::class, ':Committee')->post('lecture/committee/management/remove', [ManagementController::class, 'committee_remove'])->name('lecture.committee.management.remove');
+        Route::middleware(CheckNotNull::class.':Committee')->post('lecture/committee/management/remove', [ManagementController::class, 'committee_remove'])->name('lecture.committee.management.remove');
 
         Route::get('lecture/integrity', [IntegrityController::class, 'integrity'])->name('lecture.integrity');
 
