@@ -87,7 +87,7 @@ Route::middleware('auth')->group(function () {
             Route::get('defaultlist/list/create', 'create')->name('secretary.defaultlist.create');
             Route::post('defaultlist/list/new', 'new')->name('secretary.defaultlist.new');
 
-            Route::middleware(CheckNotNull::class, ':DefaultList')->group(function () {
+            Route::middleware(CheckNotNull::class.':DefaultList')->group(function () {
                 Route::get('defaultlist/edit/{id}', 'edit')->name('secretary.defaultlist.edit');
                 Route::post('defaultlist/save', 'save')->name('secretary.defaultlist.save');
                 Route::post('defaultlist/remove', 'remove')->name('secretary.defaultlist.remove');
