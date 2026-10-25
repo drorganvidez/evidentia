@@ -34,6 +34,7 @@ use App\Http\Middleware\CheckRegisterEventsAndAttendings;
 use App\Http\Middleware\CheckRoles;
 use App\Http\Middleware\CheckUploadEvidences;
 use App\Http\Middleware\CheckValidateEvidences;
+use App\Http\Middleware\DefaultListMine;
 use App\Http\Middleware\EvidenceCanBeEdited;
 use App\Http\Middleware\EvidenceFromMyCommittee;
 use App\Http\Middleware\EvidenceMine;
@@ -87,7 +88,10 @@ Route::middleware('auth')->group(function () {
             Route::get('defaultlist/list/create', 'create')->name('secretary.defaultlist.create');
             Route::post('defaultlist/list/new', 'new')->name('secretary.defaultlist.new');
 
-            Route::middleware(CheckNotNull::class.':DefaultList')->group(function () {
+            Route::middleware([
+                CheckNotNull::class.':DefaultList',
+                DefaultListMine::class,
+            ])->group(function () {
                 Route::get('defaultlist/edit/{id}', 'edit')->name('secretary.defaultlist.edit');
                 Route::post('defaultlist/save', 'save')->name('secretary.defaultlist.save');
                 Route::post('defaultlist/remove', 'remove')->name('secretary.defaultlist.remove');
@@ -153,7 +157,10 @@ Route::middleware('auth')->group(function () {
         });
 
         // AJAX default list
-        Route::get('meeting/defaultlist/{id}', [MeetingSecretaryController::class, 'defaultlist'])->name('secretary.meeting.defaultlist');
+        Route::middleware([
+            CheckNotNull::class.':DefaultList',
+            DefaultListMine::class,
+        ])->get('meeting/defaultlist/{id}', [MeetingSecretaryController::class, 'defaultlist'])->name('secretary.meeting.defaultlist');
 
         // Bonus
         Route::get('bonus/list', [BonusSecretaryController::class, 'list'])->name('secretary.bonus.list');

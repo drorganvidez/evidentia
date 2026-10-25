@@ -14,7 +14,6 @@ class CommitteeIconGuidanceTest extends TestCase
 
     public function test_committee_icon_help_matches_the_bundled_font_awesome_version(): void
     {
-        config(['app.key' => 'base64:'.base64_encode(str_repeat('a', 32))]);
         $user = User::factory()->create();
         $user->roles()->attach(Role::forceCreate(['rol' => 'PRESIDENT', 'slug' => 'president']));
         $icon = '<i class="far fa-compass"></i>';

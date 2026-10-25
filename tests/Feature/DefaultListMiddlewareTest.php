@@ -14,13 +14,6 @@ class DefaultListMiddlewareTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        config(['app.key' => 'base64:'.base64_encode(str_repeat('a', 32))]);
-    }
-
     public function test_a_secretary_can_edit_an_existing_list(): void
     {
         $this->withoutExceptionHandling();
@@ -125,27 +118,19 @@ class DefaultListMiddlewareTest extends TestCase
     {
         $list = $this->createListForSecretary();
         $list->users()->attach(User::factory()->create());
-        $snapshot = static function (): string {
-            $data = [];
-            foreach (\Illuminate\Support\Facades\DB::select("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name") as $table) {
-                $data[$table->name] = \Illuminate\Support\Facades\DB::table($table->name)->orderBy('rowid')->get()->all();
-            }
-
-            return hash('sha256', serialize($data));
-        };
-        $before = $snapshot();
+        $before = $this->databaseSnapshot();
         foreach ([0, -1, 'not-an-id', 999999] as $id) {
             $this->get('/secretary/defaultlist/edit/'.$id)->assertNotFound();
-            $this->assertSame($before, $snapshot());
+            $this->assertSame($before, $this->databaseSnapshot());
             foreach (['save', 'remove'] as $action) {
                 $this->post('/secretary/defaultlist/'.$action, ['_id' => $id, 'name' => 'Rejected'])->assertNotFound();
-                $this->assertSame($before, $snapshot());
+                $this->assertSame($before, $this->databaseSnapshot());
             }
         }
         foreach (['', str_repeat('x', 256)] as $name) {
             $this->postJson('/secretary/defaultlist/save', ['_id' => $list->id, 'name' => $name])
                 ->assertUnprocessable()->assertJsonValidationErrors('name');
-            $this->assertSame($before, $snapshot());
+            $this->assertSame($before, $this->databaseSnapshot());
         }
     }
 

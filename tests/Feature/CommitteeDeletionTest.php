@@ -17,13 +17,6 @@ class CommitteeDeletionTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        config(['app.key' => 'base64:'.base64_encode(str_repeat('a', 32))]);
-    }
-
     public static function roles(): array
     {
         return [['PRESIDENT', 'president'], ['LECTURE', 'lecture']];
@@ -122,19 +115,11 @@ class CommitteeDeletionTest extends TestCase
     public function test_rejected_committee_requests_preserve_all_stored_data(string $role, string $unused): void
     {
         $user = $this->signInWithRole($role);
-        $snapshot = static function (): string {
-            $data = [];
-            foreach (\Illuminate\Support\Facades\DB::select("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name") as $table) {
-                $data[$table->name] = \Illuminate\Support\Facades\DB::table($table->name)->orderBy('rowid')->get()->all();
-            }
-
-            return hash('sha256', serialize($data));
-        };
-        $before = $snapshot();
+        $before = $this->databaseSnapshot();
         foreach (['president', 'lecture'] as $prefix) {
             foreach ([null, 0, -1, 'not-an-id', 999999] as $id) {
                 $this->post('/'.$prefix.'/committee/management/remove', ['_id' => $id])->assertNotFound();
-                $this->assertSame($before, $snapshot());
+                $this->assertSame($before, $this->databaseSnapshot());
             }
         }
         foreach ([Coordinator::class, Secretary::class, Evidence::class, Meeting::class] as $model) {
@@ -147,12 +132,12 @@ class CommitteeDeletionTest extends TestCase
                 $attributes['title'] = 'Related';
             }
             $model::forceCreate($attributes);
-            $before = $snapshot();
+            $before = $this->databaseSnapshot();
             foreach (['president', 'lecture'] as $prefix) {
                 $this->post('/'.$prefix.'/committee/management/remove', ['_id' => $committee->id])
                     ->assertRedirect('/'.strtolower($role).'/committee/list')
                     ->assertSessionHas('error', 'El comité no ha podido ser eliminado.');
-                $this->assertSame($before, $snapshot());
+                $this->assertSame($before, $this->databaseSnapshot());
             }
         }
     }
