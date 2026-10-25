@@ -231,7 +231,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::get('registercoordinator/event/list', [EventbriteController::class, 'event_list'])->name('registercoordinator.event.list');
-    Route::get('registercoordinator/attendee/list', [EventbriteController::class, 'attendee_list'])->name('registercoordinator.attendee.list');
+    Route::get('registercoordinator/attendee/list', [EventbriteController::class, 'attendee_list']);
     Route::get('registercoordinator/attendee/export', [EventbriteController::class, 'attendee_export'])->name('registercoordinator.attendee.export');
     Route::get('registercoordinator/event/export/{ext}', [EventbriteController::class, 'events_export'])->name('registercoordinator.events.export');
 
@@ -393,6 +393,6 @@ Route::prefix('password')->group(function () {
     Route::get('/reset', [PasswordResetController::class, 'reset'])->name('password.custom_reset');
     Route::post('/reset_p', [PasswordResetController::class, 'reset_p'])->name('password.reset_p');
 
-    Route::get('/update/{token}', [PasswordResetController::class, 'update'])->name('password.update');
+    Route::get('/update/{token}', [PasswordResetController::class, 'update'])->name('password.custom_update');
     Route::post('/update_p/{token}', [PasswordResetController::class, 'update_p'])->name('password.update_p');
 });
