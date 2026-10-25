@@ -70,6 +70,9 @@ services:
   watchtower:
     container_name: evidentia_watchtower_container
     image: containrrr/watchtower
+    environment:
+      # Docker 29+ rechaza la API 1.25 que usa watchtower por defecto
+      - DOCKER_API_VERSION=1.44
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command: --cleanup --interval 120 evidentia_app_container
