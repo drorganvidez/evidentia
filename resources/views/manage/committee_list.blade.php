@@ -82,8 +82,11 @@
 
                     <h4>Crear nuevo comité</h4>
 
-                    <p>Puedes encontrar más iconos en <a target="_blank" href="https://fontawesome.com/icons?d=gallery">Font
-                            Awesome</a></p>
+                    <p>Utiliza iconos gratuitos de <a target="_blank" rel="noopener noreferrer"
+                            href="https://fontawesome.com/v5/search?m=free">Font Awesome 5.15.3</a>.
+                        Por ejemplo: <code>{{ '<i class="far fa-compass"></i>' }}</code> para una brújula regular.
+                        Usa los prefijos <code>fas</code>, <code>far</code> o <code>fab</code>;
+                        las clases de versiones posteriores, como <code>fa-regular</code>, no son compatibles.</p>
 
                     <form method="POST" action="{{ $route_new }}">
                         @csrf
