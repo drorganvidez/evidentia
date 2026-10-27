@@ -365,10 +365,14 @@
     @section('scripts')
 
         <script>
+            // Cada elección de lista invalida las respuestas de la anterior, para no duplicar opciones
+            var peticion_lista = 0;
+
             function getLista(sel) {
 
                 if (sel.value != -1) {
 
+                    var peticion = ++peticion_lista;
                     var demo = $('.duallistbox').bootstrapDualListbox();
                     $("#users").empty();
 
@@ -377,6 +381,8 @@
                     $.ajax({
                         url: '/secretary/meeting/defaultlist/' + sel.value,
                         success: function(respuesta) {
+
+                            if (peticion != peticion_lista) return;
 
                             for (var i = 0; i < respuesta.length; i++) {
                                 demo.append('<option value="' + respuesta[i].id + '" selected>' + respuesta[i]
@@ -388,6 +394,8 @@
                             $.ajax({
                                 url: '/gp/users/all/',
                                 success: function(respuesta) {
+
+                                    if (peticion != peticion_lista) return;
 
                                     for (var i = 0; i < respuesta.length; i++) {
                                         if (seleccionados.indexOf(respuesta[i].id) == -1) {
