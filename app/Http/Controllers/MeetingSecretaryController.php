@@ -531,6 +531,7 @@ class MeetingSecretaryController extends Controller
                 $new_agreement = Agreement::create([
                     'point_id' => $new_point->id,
                     'description' => $agreement['description'],
+                    'identificator' => 'tmp', // valor provisional hasta conocer el id del acuerdo
                 ]);
 
                 // generamos el identificador único para este acuerdo
