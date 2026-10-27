@@ -53,15 +53,9 @@ class BonusSecretaryController extends Controller
 
         $bonus->save();
 
-        // Asociamos los usuarios a la reunión
+        // Asociamos los usuarios al bono, sin repetidos
         $users_ids = $request->input('users', []);
-
-        foreach ($users_ids as $user_id) {
-
-            $user = User::find($user_id);
-            $bonus->users()->attach($user);
-
-        }
+        $bonus->users()->sync(array_unique(array_map('intval', $users_ids)));
 
         return redirect()->route('secretary.bonus.list')->with('success', 'Bono de horas creado con éxito.');
 
@@ -91,19 +85,9 @@ class BonusSecretaryController extends Controller
 
         $bonus->save();
 
-        // Asociamos los usuarios a la reunión
+        // Sustituimos los usuarios del bono, sin repetidos
         $users_ids = $request->input('users', []);
-
-        // eliminamos usuarios antiguos del bono
-        foreach ($bonus->users as $user) {
-            $bonus->users()->detach($user);
-        }
-
-        // agregamos los usuarios nuevos del bono
-        foreach ($users_ids as $user_id) {
-            $user = User::find($user_id);
-            $bonus->users()->attach($user);
-        }
+        $bonus->users()->sync(array_unique(array_map('intval', $users_ids)));
 
         return redirect()->route('secretary.bonus.list')->with('success', 'Bono editado con éxito.');
 

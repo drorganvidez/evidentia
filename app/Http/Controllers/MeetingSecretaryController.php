@@ -504,17 +504,10 @@ class MeetingSecretaryController extends Controller
 
         $meeting->save();
 
-        // Asociamos los usuarios a la reunión
+        // Asociamos los usuarios a la reunión junto al secretario, sin repetidos
         $users_ids = $request->input('users', []);
-        foreach ($users_ids as $user_id) {
-
-            $user = User::find($user_id);
-            $meeting->users()->attach($user);
-
-        }
-
-        // Añadimos el secretario a la reunión
-        $meeting->users()->attach(Auth::user()->secretary->user);
+        $users_ids[] = Auth::user()->secretary->user_id;
+        $meeting->users()->sync(array_unique(array_map('intval', $users_ids)));
 
         // Guardamos los puntos y los acuerdos tomados
         $meeting_minutes = MeetingMinutes::create([
@@ -646,19 +639,10 @@ class MeetingSecretaryController extends Controller
         $meeting->datetime = $request->input('date').' '.$request->input('time');
         $meeting->save();
 
-        // Asociamos los usuarios a la reunión
+        // Sustituimos los usuarios de la reunión junto al secretario, sin repetidos
         $users_ids = $request->input('users', []);
-
-        // eliminamos usuarios antiguos de la reunión
-        foreach ($meeting->users as $user) {
-            $meeting->users()->detach($user);
-        }
-
-        // agregamos los usuarios nuevos de la reunión
-        foreach ($users_ids as $user_id) {
-            $user = User::find($user_id);
-            $meeting->users()->attach($user);
-        }
+        $users_ids[] = Auth::user()->secretary->user_id;
+        $meeting->users()->sync(array_unique(array_map('intval', $users_ids)));
 
         // borramos los puntos y acuerdos previos
         if ($meeting->meetingMinutes->points) {
@@ -675,9 +659,6 @@ class MeetingSecretaryController extends Controller
 
         // borramos el acta antigua
         $meeting->meetingMinutes->delete();
-
-        // Añadimos el secretario a la reunión
-        $meeting->users()->attach(Auth::user()->secretary->user);
 
         // Guardamos los puntos y los acuerdos tomados
         $meeting_minutes = MeetingMinutes::create([
