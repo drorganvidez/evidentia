@@ -13,7 +13,7 @@ class Stamp
 {
     public static function compute_file($file)
     {
-        $salt = \Config::secret();
+        $salt = Config::secret();
         $hash_file = hash_file('sha256', Storage::disk('local')->path($file->route));
         $file->stamp = hash('sha256',
             $file->name.
@@ -30,7 +30,7 @@ class Stamp
 
     public static function get_stamp_file($file)
     {
-        $salt = \Config::secret();
+        $salt = Config::secret();
         $hash_file = hash_file('sha256', storage_path('/app/'.$file->route));
 
         return hash('sha256',
@@ -46,7 +46,7 @@ class Stamp
 
     public static function compute_evidence($evidence)
     {
-        $salt = \Config::secret();
+        $salt = Config::secret();
         $evidence->stamp = hash('sha256',
             $evidence->title.
             $evidence->description.
@@ -60,7 +60,7 @@ class Stamp
 
     public static function get_stamp_evidence($evidence)
     {
-        $salt = \Config::secret();
+        $salt = Config::secret();
 
         return hash('sha256',
             $evidence->title.

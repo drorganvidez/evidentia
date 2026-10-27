@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -26,7 +27,7 @@ class EvidencesExport implements FromCollection, ShouldAutoSize, WithHeadings
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function collection()
     {

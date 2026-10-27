@@ -12,6 +12,7 @@ use App\Rules\CheckHoursAndMinutes;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
@@ -319,7 +320,7 @@ class EvidenceController extends Controller
                 return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
             }
 
-            return Excel::download(new MyEvidencesExport, 'misevidencias-'.\Illuminate\Support\Carbon::now().'.'.$ext);
+            return Excel::download(new MyEvidencesExport, 'misevidencias-'.Carbon::now().'.'.$ext);
         } catch (\Exception $e) {
             return back()->with('error', 'Ocurrió un error: '.$e->getMessage());
         }

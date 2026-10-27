@@ -12,6 +12,7 @@ use App\Models\Meeting;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -332,7 +333,7 @@ class ManagementController extends Controller
                 return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
             }
 
-            return Excel::download(new ManagementEvidencesExport, 'evidencias-'.\Illuminate\Support\Carbon::now().'.'.$ext);
+            return Excel::download(new ManagementEvidencesExport, 'evidencias-'.Carbon::now().'.'.$ext);
         } catch (\Exception $e) {
             return back()->with('error', 'Ocurrió un error: '.$e->getMessage());
         }
@@ -348,7 +349,7 @@ class ManagementController extends Controller
                 return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
             }
 
-            return Excel::download(new ManagementStudentExport, 'alumnos-'.\Illuminate\Support\Carbon::now().'.'.$ext);
+            return Excel::download(new ManagementStudentExport, 'alumnos-'.Carbon::now().'.'.$ext);
         } catch (\Exception $e) {
             return back()->with('error', 'Ocurrió un error: '.$e->getMessage());
         }

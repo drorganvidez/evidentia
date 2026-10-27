@@ -107,7 +107,7 @@ class MeetingSecretaryController extends Controller
         }
 
         // Genera PDF de la convocatoria
-        $pdf = PDF::loadView('meeting.request_template', ['meeting_request' => $meeting_request]);
+        $pdf = Pdf::loadView('meeting.request_template', ['meeting_request' => $meeting_request]);
         $content = $pdf->download()->getOriginalContent();
         Storage::put('/meeting_requests/meeting_request_'.$meeting_request->id.'.pdf', $content);
 
@@ -209,7 +209,7 @@ class MeetingSecretaryController extends Controller
         Storage::delete('/meeting_requests/meeting_request_'.$meeting_request->id.'.pdf');
 
         // Genera PDF de la convocatoria
-        $pdf = PDF::loadView('meeting.request_template', ['meeting_request' => $meeting_request]);
+        $pdf = Pdf::loadView('meeting.request_template', ['meeting_request' => $meeting_request]);
         $content = $pdf->download()->getOriginalContent();
         Storage::put('/meeting_requests/meeting_request_'.$meeting_request->id.'.pdf', $content);
 
@@ -553,7 +553,7 @@ class MeetingSecretaryController extends Controller
         }
 
         // Genera PDF del acta
-        $pdf = PDF::loadView('meeting.minutes_template', ['meeting_minutes' => $meeting_minutes]);
+        $pdf = Pdf::loadView('meeting.minutes_template', ['meeting_minutes' => $meeting_minutes]);
         $content = $pdf->download()->getOriginalContent();
         Storage::put('/meeting_minutes/meeting_minutes_'.$meeting_minutes->id.'.pdf', $content);
 
@@ -699,7 +699,7 @@ class MeetingSecretaryController extends Controller
         }
 
         // Generamos de nuevo el PDF
-        $pdf = PDF::loadView('meeting.minutes_template', ['meeting_minutes' => $meeting_minutes]);
+        $pdf = Pdf::loadView('meeting.minutes_template', ['meeting_minutes' => $meeting_minutes]);
         $content = $pdf->download()->getOriginalContent();
         Storage::put('/meeting_minutes/meeting_minutes_'.$meeting_minutes->id.'.pdf', $content);
 

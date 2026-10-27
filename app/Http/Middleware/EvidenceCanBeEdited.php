@@ -4,13 +4,14 @@ namespace App\Http\Middleware;
 
 use App\Models\Evidence;
 use Closure;
+use Illuminate\Http\Request;
 
 class EvidenceCanBeEdited
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return mixed
      */
     public function handle($request, Closure $next)

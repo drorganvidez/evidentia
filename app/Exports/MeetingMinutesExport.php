@@ -2,6 +2,8 @@
 
 namespace App\Exports;
 
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -9,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 class MeetingMinutesExport implements FromCollection, WithHeadings
 {
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function collection()
     {
@@ -22,8 +24,8 @@ class MeetingMinutesExport implements FromCollection, WithHeadings
                 $array = [
                     'Titulo' => strtoupper(trim($m->meeting->title)),
                     'Lugar' => strtoupper(trim($m->meeting->place)),
-                    'Realizada' => strtoupper(\Carbon\Carbon::parse($m->meeting->datetime)->format('d/m/Y').' '.
-                                                    \Carbon\Carbon::parse($m->meeting->datetime)->format('H:i')),
+                    'Realizada' => strtoupper(Carbon::parse($m->meeting->datetime)->format('d/m/Y').' '.
+                                                    Carbon::parse($m->meeting->datetime)->format('H:i')),
                     'Duración' => strtoupper(trim($m->meeting->hours)),
                 ];
 

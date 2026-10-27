@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\PasswordReset;
 use App\Models\Token;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -48,7 +49,7 @@ class PasswordResetController extends Controller
             $token = Token::create([
                 'token' => $token_str,
                 'used' => 0,
-                'valid_until_timestamp' => \Carbon\Carbon::now()->addHours(24),
+                'valid_until_timestamp' => Carbon::now()->addHours(24),
                 'user_id' => $user->id,
             ]);
 

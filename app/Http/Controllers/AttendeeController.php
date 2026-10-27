@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\MyAttendeesExport;
 use App\Http\Middleware\CheckRoles;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -37,7 +38,7 @@ class AttendeeController extends Controller
                 return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
             }
 
-            return Excel::download(new MyAttendeesExport, 'misasistencias-'.\Illuminate\Support\Carbon::now().'.'.$ext);
+            return Excel::download(new MyAttendeesExport, 'misasistencias-'.Carbon::now().'.'.$ext);
         } catch (\Exception $e) {
             return back()->with('error', 'Ocurrió un error: '.$e->getMessage());
         }

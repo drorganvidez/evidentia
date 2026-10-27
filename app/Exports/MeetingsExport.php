@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Meeting;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -10,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 class MeetingsExport implements FromCollection, WithHeadings
 {
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function collection()
     {

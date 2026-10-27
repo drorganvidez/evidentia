@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\SignatureSheet;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -11,7 +12,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 class SignaturesheetExport implements FromCollection, WithHeadings
 {
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function collection()
     {

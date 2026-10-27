@@ -8,6 +8,7 @@ use App\Http\Middleware\CheckRoles;
 use App\Models\Attendee;
 use App\Models\Configuration;
 use App\Models\Event;
+use App\Models\User;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -70,7 +71,7 @@ class EventbriteController extends Controller
         $token = \Config::eventbrite_token();
 
         try {
-            $client = new \GuzzleHttp\Client([
+            $client = new Client([
                 'base_uri' => 'https://www.eventbriteapi.com/v3/',
             ]);
 
@@ -356,7 +357,7 @@ class EventbriteController extends Controller
     {
         $attendee = Attendee::findOrFail($id);
         $events = Event::all();
-        $users = \App\Models\User::orderBy('surname')->get();
+        $users = User::orderBy('surname')->get();
 
         return view('eventbrite.attendee_edit', compact('attendee', 'events', 'users'));
     }
@@ -392,7 +393,7 @@ class EventbriteController extends Controller
     public function attendee_create()
     {
         $events = Event::all();
-        $users = \App\Models\User::orderBy('surname')->get();
+        $users = User::orderBy('surname')->get();
 
         return view('eventbrite.attendee_create', compact('events', 'users'));
     }

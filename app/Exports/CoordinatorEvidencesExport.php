@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -9,7 +10,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 class CoordinatorEvidencesExport implements FromCollection, WithHeadings
 {
     /**
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public $type = null;
 

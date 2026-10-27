@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\DefaultList;
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class DefaultListMine
@@ -11,7 +12,7 @@ class DefaultListMine
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return mixed
      */
     public function handle($request, Closure $next)
