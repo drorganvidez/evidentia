@@ -287,7 +287,10 @@
             })
 
             //Bootstrap Duallistbox
-            var demo = $('.duallistbox').bootstrapDualListbox();
+            // Las listas auxiliares van sin nombre: PHP leería "users[]_helper2" como "users[]" y enviaría repetidos
+            var demo = $('.duallistbox').bootstrapDualListbox({
+                helperSelectNamePostfix: false
+            });
             demo.bootstrapDualListbox('setSelectOrMinimalHeight', 200);
 
         });
