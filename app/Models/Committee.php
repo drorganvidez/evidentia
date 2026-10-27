@@ -82,11 +82,11 @@ class Committee extends Model
     // Métodos auxiliares
     public function get_all_meeting_requests(): Collection
     {
-        return $this->secretaries->flatMap(fn ($s) => $s->meeting_requests);
+        return $this->secretaries->flatMap(fn ($s) => $s->meetingRequests);
     }
 
     public function get_all_meeting_minutes(): Collection
     {
-        return $this->secretaries->flatMap(fn ($s) => $s->meeting_minutes);
+        return $this->secretaries->flatMap(fn ($s) => $s->meetingMinutes);
     }
 }

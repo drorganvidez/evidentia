@@ -76,6 +76,9 @@ Route::middleware('auth')->group(function () {
         Route::get('list/export/{ext}', [MeetingController::class, 'export'])->name('meeting.list.export');
     });
 
+    // DOWNLOADS
+    Route::get('download/request/{id}', [DownloadController::class, 'request_download'])->name('download.request');
+
     Route::prefix('president')->group(function () {
         Route::get('meeting/export/{ext}', [MeetingController::class, 'meeting_export'])->name('president.manage.meeting.export');
     });
