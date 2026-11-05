@@ -498,6 +498,7 @@ class MeetingSecretaryController extends Controller
             'date' => 'required|date_format:Y-m-d',
             'time' => 'required|date_format:H:i',
             'users' => 'required|array|min:1',
+            'users.*' => 'integer|exists:users,id',
         ]);
 
         if ($validator->fails()) {
@@ -637,6 +638,7 @@ class MeetingSecretaryController extends Controller
             'date' => 'required|date_format:Y-m-d',
             'time' => 'required|date_format:H:i',
             'users' => 'required|array|min:1',
+            'users.*' => 'integer|exists:users,id',
         ]);
 
         if ($validator->fails()) {

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Bonus;
 use App\Models\Committee;
 use App\Models\Configuration;
 use App\Models\Meeting;
@@ -55,6 +56,22 @@ class MeetingInputValidationTest extends TestCase
         }
 
         $this->assertSame(0, MeetingRequest::count());
+    }
+
+    public function test_attendees_and_bonus_users_must_exist(): void
+    {
+        Configuration::find(1)->update(['bonus_timestamp' => now()->addMonth()]);
+
+        $this->post(route('secretary.meeting.manage.minutes.create.step3_p'), [
+            'title' => 'Reunión inicial de Logística', 'type' => 1, 'modality' => 1, 'hours' => 1,
+            'place' => 'Aula A3.10', 'date' => '2026-10-16', 'time' => '16:30',
+            'users' => [999], 'points_json' => '[]',
+        ])->assertSessionHasErrors('users.0');
+        $this->post(route('secretary.bonus.new'), ['reason' => 'Montaje del escenario', 'hours' => 2, 'users' => [999]])
+            ->assertSessionHasErrors('users.0');
+
+        $this->assertSame(0, Meeting::count());
+        $this->assertSame(0, Bonus::count());
     }
 
     private function request(): array
