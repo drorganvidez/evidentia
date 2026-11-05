@@ -10,6 +10,7 @@
             <x-li route="president.evidence.list" icon='fas fa-clipboard-check' name="Gestionar evidencias" />
             <x-li route="president.meeting.list" icon='far fa-handshake' name="Gestionar reuniones" />
             <x-li route="president.committee.list" icon='fas fa-sitemap' name="Gestionar comités" />
+            <x-li route="president.integrity" icon='fas fa-check-double' name="Comprobar integridad" />
             <x-li route="president.export" icon='fas fa-file-export' name="Exportaciones" />
 
         </ul>

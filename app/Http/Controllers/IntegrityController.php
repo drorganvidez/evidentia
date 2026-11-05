@@ -11,7 +11,7 @@ class IntegrityController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware(CheckRoles::class.':LECTURE');
+        $this->middleware(CheckRoles::class.':LECTURE,PRESIDENT');
     }
 
     public function integrity()

@@ -243,6 +243,8 @@ Route::middleware('auth')->group(function () {
         Route::get('president/user/management/{id}', [ManagementController::class, 'user_management'])->name('president.user.management');
         Route::post('president/user/management/save', [ManagementController::class, 'user_management_save'])->name('president.user.management.save');
 
+        Route::get('president/integrity', [IntegrityController::class, 'integrity'])->name('president.integrity');
+
         Route::get('president/export', [ImportExportController::class, 'export'])->name('president.export');
         Route::post('president/export/save', [ImportExportController::class, 'export_save'])->name('president.export.save');
 

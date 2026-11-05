@@ -211,6 +211,20 @@ class UserManagementTest extends TestCase
         $this->assertNull(User::where('username', 'lucper')->first());
     }
 
+    public function test_only_the_lecturer_imports_or_deletes_users_and_randomizes(): void
+    {
+        $president = User::factory()->create();
+        $president->roles()->attach($this->role('PRESIDENT'));
+        $this->actingAs($president);
+
+        $this->post(route('management.user.delete.all'))->assertNotFound();
+        $this->post(route('lecture.import.save'))->assertNotFound();
+        $this->post(route('randomize.save'))->assertNotFound();
+        $this->get(route('president.integrity'))->assertOk();
+
+        $this->assertSame(2, User::count());
+    }
+
     private function role(string $name): Role
     {
         return Role::where('rol', $name)->first() ?? Role::forceCreate(['rol' => $name, 'slug' => strtolower($name)]);
