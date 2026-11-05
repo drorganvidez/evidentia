@@ -105,29 +105,35 @@ class User extends Authenticatable
         return optional($this->evidence_rand())->hours ?? 0;
     }
 
+    // solo cuenta la última versión de cada evidencia; las anteriores son su historial
+    private function latestEvidences()
+    {
+        return $this->evidences->where('last', true);
+    }
+
     public function evidencesDraft()
     {
-        return $this->evidences->where('status', 'DRAFT');
+        return $this->latestEvidences()->where('status', 'DRAFT');
     }
 
     public function evidencesNotDraft()
     {
-        return $this->evidences->where('status', '!=', 'DRAFT');
+        return $this->latestEvidences()->where('status', '!=', 'DRAFT');
     }
 
     public function evidencesPending()
     {
-        return $this->evidences->where('status', 'PENDING');
+        return $this->latestEvidences()->where('status', 'PENDING');
     }
 
     public function evidencesAccepted()
     {
-        return $this->evidences->where('status', 'ACCEPTED');
+        return $this->latestEvidences()->where('status', 'ACCEPTED');
     }
 
     public function evidencesRejected()
     {
-        return $this->evidences->where('status', 'REJECTED');
+        return $this->latestEvidences()->where('status', 'REJECTED');
     }
 
     public function attendees_pending()

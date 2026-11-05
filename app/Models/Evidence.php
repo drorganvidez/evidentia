@@ -134,27 +134,27 @@ class Evidence extends Model
     // Scopes estáticos
     public static function evidencesNotDraft()
     {
-        return static::where('status', '!=', 'DRAFT')->orderByDesc('updated_at')->get();
+        return static::where('last', true)->where('status', '!=', 'DRAFT')->orderByDesc('updated_at')->get();
     }
 
     public static function evidencesDraft()
     {
-        return static::where('status', 'DRAFT')->whereNull('points_to')->orderByDesc('updated_at')->get();
+        return static::where('last', true)->where('status', 'DRAFT')->whereNull('points_to')->orderByDesc('updated_at')->get();
     }
 
     public static function evidencesPending()
     {
-        return static::where('status', 'PENDING')->orderByDesc('updated_at')->get();
+        return static::where('last', true)->where('status', 'PENDING')->orderByDesc('updated_at')->get();
     }
 
     public static function evidencesAccepted()
     {
-        return static::where('status', 'ACCEPTED')->orderByDesc('updated_at')->get();
+        return static::where('last', true)->where('status', 'ACCEPTED')->orderByDesc('updated_at')->get();
     }
 
     public static function evidencesRejected()
     {
-        return static::where('status', 'REJECTED')->orderByDesc('updated_at')->get();
+        return static::where('last', true)->where('status', 'REJECTED')->orderByDesc('updated_at')->get();
     }
 
     public function integrity(): bool

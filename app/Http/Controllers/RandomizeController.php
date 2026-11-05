@@ -36,11 +36,7 @@ class RandomizeController extends Controller
 
             try {
 
-                $filtered_evidences = $user->evidences->filter(function ($value, $key) {
-                    return $value->status == 'ACCEPTED';
-                });
-
-                $evidence = $filtered_evidences->random();
+                $evidence = $user->evidencesAccepted()->random();
                 $evidence->rand = true;
                 $evidence->save();
 

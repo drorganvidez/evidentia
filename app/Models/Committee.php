@@ -46,27 +46,27 @@ class Committee extends Model
     // Filtros de evidencias
     public function evidencesNotDraft()
     {
-        return $this->evidences()->where('status', '!=', 'DRAFT')->orderByDesc('updated_at');
+        return $this->evidences()->where('last', true)->where('status', '!=', 'DRAFT')->orderByDesc('updated_at');
     }
 
     public function evidencesDraft()
     {
-        return $this->evidences()->where('status', 'DRAFT')->orderByDesc('updated_at');
+        return $this->evidences()->where('last', true)->where('status', 'DRAFT')->orderByDesc('updated_at');
     }
 
     public function evidencesPending()
     {
-        return $this->evidences()->where('status', 'PENDING')->orderByDesc('updated_at');
+        return $this->evidences()->where('last', true)->where('status', 'PENDING')->orderByDesc('updated_at');
     }
 
     public function evidencesAccepted()
     {
-        return $this->evidences()->where('status', 'ACCEPTED')->orderByDesc('updated_at');
+        return $this->evidences()->where('last', true)->where('status', 'ACCEPTED')->orderByDesc('updated_at');
     }
 
     public function evidencesRejected()
     {
-        return $this->evidences()->where('status', 'REJECTED')->orderByDesc('updated_at');
+        return $this->evidences()->where('last', true)->where('status', 'REJECTED')->orderByDesc('updated_at');
     }
 
     // Lógica de eliminación
