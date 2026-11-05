@@ -98,6 +98,20 @@ class SecretaryOwnershipTest extends TestCase
             ->assertNotFound();
     }
 
+    public function test_a_secretary_links_sheets_only_to_their_own_meeting_requests(): void
+    {
+        $foreign = $this->requestOf($this->secretary());
+        $intruder = $this->secretary();
+        $sheet = $this->sheetOf($intruder);
+        $this->actingAs($intruder->user);
+
+        $this->post(route('secretary.meeting.manage.signaturesheet.new'), ['title' => 'Hoja intrusa', 'meeting_request' => $foreign->id])
+            ->assertSessionHasErrors('meeting_request');
+        $this->post(route('secretary.meeting.manage.signaturesheet.save'), ['_id' => $sheet->id, 'title' => 'Hoja propia', 'meeting_request_id' => $foreign->id]);
+
+        $this->assertNull($foreign->fresh()->signatureSheet);
+    }
+
     public function test_users_without_a_secretary_profile_get_not_found_on_requests_and_sheets(): void
     {
         $secretary = $this->secretary();

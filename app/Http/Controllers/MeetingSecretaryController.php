@@ -280,8 +280,14 @@ class MeetingSecretaryController extends Controller
             'title' => 'required|min:5|max:255',
         ]);
 
-        // una convocatoria tiene como mucho una hoja de firmas
-        $meeting_request = MeetingRequest::find($request->input('meeting_request'));
+        // solo convocatorias propias, y cada una tiene como mucho una hoja de firmas
+        $meeting_request = null;
+        if ($request->filled('meeting_request')) {
+            $meeting_request = Auth::user()->secretary->meetingRequests()->find($request->input('meeting_request'));
+            if ($meeting_request == null) {
+                return back()->withInput()->withErrors(['meeting_request' => 'Convocatoria no válida.']);
+            }
+        }
         if ($meeting_request != null && $meeting_request->signatureSheet != null) {
             return back()->withInput()->withErrors(['meeting_request' => 'Esta convocatoria ya tiene una hoja de firmas.']);
         }
@@ -352,7 +358,7 @@ class MeetingSecretaryController extends Controller
         $signature_sheet->save();
 
         // actualizamos la convocatoria asociada
-        $meeting_request = MeetingRequest::find($request->input('meeting_request_id'));
+        $meeting_request = Auth::user()->secretary->meetingRequests()->find($request->input('meeting_request_id'));
 
         if ($meeting_request != null) {
             if ($meeting_request->signatureSheet == null) {
