@@ -75,7 +75,7 @@
         <form action="{{ route('sign_p') }}" method="post">
             @csrf
 
-            <input type="hidden" name="signature_sheet" value="{{ $signature_sheet->id }}" />
+            <input type="hidden" name="signature_sheet" value="{{ $signature_sheet->random_identifier }}" />
 
             <div class="row">
 

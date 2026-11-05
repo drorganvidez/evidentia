@@ -57,7 +57,8 @@ class BlockedUserTest extends TestCase
             ])->id,
         ]);
 
-        $this->post(route('sign_p'), ['signature_sheet' => $sheet->id, 'email' => 'ana@us.es', 'password' => 'secret123']);
+        $this->post(route('sign_p'), ['signature_sheet' => '7391', 'email' => 'ana@us.es', 'password' => 'secret123'])
+            ->assertSessionHas('error');
 
         $this->assertFalse($sheet->users()->whereKey($this->student->id)->exists());
         $this->assertGuest();

@@ -24,7 +24,8 @@ class SignController extends Controller
     public function sign_p(Request $request)
     {
 
-        $signature_sheet = SignatureSheet::findOrFail($request->input('signature_sheet'));
+        // la hoja se identifica por el código de su enlace, no por su id secuencial
+        $signature_sheet = SignatureSheet::where('random_identifier', (string) $request->input('signature_sheet'))->firstOrFail();
         $credentials = $request->only('email', 'password') + ['block' => false];
 
         if (Auth::attempt($credentials)) {
