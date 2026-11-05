@@ -68,13 +68,17 @@
                                     <div class="form-row">
 
                                         <div class="form-group col-md-6">
-                                            <label for="$signature_sheet">Asociar hoja de firmas</label>
+                                            <label for="signature_sheet">Asociar hoja de firmas</label>
 
-                                            @if ($meeting_request == null)
-
+                                            @if ($meeting_request != null && $meeting_request->signatureSheet != null)
+                                                <br>
+                                                Esta convocatoria ya tiene asociada una hoja de firmas.
+                                                <input type="hidden" name="signature_sheet"
+                                                    value="{{ $meeting_request->signatureSheet->id }}" />
+                                            @else
                                                 <select id="signature_sheet"
                                                     class="selectpicker form-control @error('signature_sheet') is-invalid @enderror"
-                                                    name="signature_sheet" value="{{ old('signature_sheet') }}" autofocus>
+                                                    name="signature_sheet" autofocus>
 
                                                     <option value="">
                                                         No asociar ninguna hoja de firmas
@@ -82,7 +86,7 @@
 
                                                     @foreach ($signature_sheets as $signature_sheet)
                                                         <option
-                                                            {{ $signature_sheet->id == old('$signature_sheet') ? 'selected' : '' }}
+                                                            {{ $signature_sheet->id == old('signature_sheet') ? 'selected' : '' }}
                                                             value="{{ $signature_sheet->id }}">
                                                             {{ $signature_sheet->title }}
                                                         </option>
@@ -92,37 +96,6 @@
                                                 <small class="form-text text-muted">
                                                     Asocia una hoja de firmas al acta.
                                                 </small>
-                                            @else
-                                                @if ($meeting_request->signature_sheet == null)
-
-                                                    <select id="$signature_sheet"
-                                                        class="selectpicker form-control @error('$signature_sheet') is-invalid @enderror"
-                                                        name="$signature_sheet" value="{{ old('$signature_sheet') }}"
-                                                        autofocus>
-
-                                                        <option value="">
-                                                            No asociar ninguna hoja de firmas
-                                                        </option>
-
-                                                        @foreach ($signature_sheets as $signature_sheet)
-                                                            <option
-                                                                {{ $signature_sheet->id == old('$signature_sheet') ? 'selected' : '' }}
-                                                                value="{{ $signature_sheet->id }}">
-                                                                {{ $signature_sheet->title }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-
-                                                    <small class="form-text text-muted">
-                                                        Asocia una hoja de firmas al acta.
-                                                    </small>
-                                                @else
-                                                    <br>
-                                                    Esta convocatoria ya tiene asociada una hoja de firmas.
-                                                    <input type="hidden" name="signature_sheet"
-                                                        value="{{ $meeting_request->signature_sheet->id }}" />
-                                                @endif
-
                                             @endif
 
 
