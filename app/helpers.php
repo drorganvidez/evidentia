@@ -223,13 +223,12 @@ class Filepond
 
 class Random
 {
+    // cifras aleatorias seguras: se usan en contraseñas iniciales y en los enlaces de las hojas de firmas
     public static function getRandomIdentifier($length = 16)
     {
-        $characters = '0123456789';
-        $charactersLength = strlen($characters);
         $randomString = '';
         for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
+            $randomString .= random_int(0, 9);
         }
 
         return $randomString;
