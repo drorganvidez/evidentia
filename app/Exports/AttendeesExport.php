@@ -24,8 +24,8 @@ class AttendeesExport implements FromCollection, ShouldAutoSize, WithHeadings
             if (! $user->hasRole('LECTURE')) {
 
                 $array = [
-                    'apellidos' => strtoupper(trim($user->surname)),
-                    'nombre' => strtoupper(trim($user->name)),
+                    'apellidos' => mb_strtoupper(trim($user->surname)),
+                    'nombre' => mb_strtoupper(trim($user->name)),
                     'uvus' => trim($user->username),
                     'horas_asistencia' => $user->attendees_hours(),
                 ];
