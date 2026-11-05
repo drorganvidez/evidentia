@@ -187,9 +187,9 @@
                                 <label>Seleccionar alumnos</label>
                                 <select id="users" name="users[]" class="duallistbox"
                                     multiple="multiple @error('users') is-invalid @enderror">
+                                    @php $selected_users = array_map('intval', old('users', $meeting_minutes->meeting->users->modelKeys())); @endphp
                                     @foreach ($users as $user)
-                                        <option @if ($meeting_minutes->meeting->users->contains($user)) selected @endif
-                                            {{ $user->id == old('user') ? 'selected' : '' }} value="{{ $user->id }}">
+                                        <option @selected(in_array($user->id, $selected_users)) value="{{ $user->id }}">
                                             {{ trim($user->surname) }}, {{ trim($user->name) }}
                                         </option>
                                     @endforeach
