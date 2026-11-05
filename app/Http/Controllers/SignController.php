@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\SignatureSheet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 
 class SignController extends Controller
 {
@@ -28,7 +30,14 @@ class SignController extends Controller
         $signature_sheet = SignatureSheet::where('random_identifier', (string) $request->input('signature_sheet'))->firstOrFail();
         $credentials = $request->only('email', 'password') + ['block' => false];
 
+        // como en el login: 5 intentos por minuto para cada email y dirección
+        $throttle_key = 'sign|'.Str::lower((string) $request->input('email')).'|'.$request->ip();
+        if (RateLimiter::tooManyAttempts($throttle_key, 5)) {
+            return back()->withInput()->with('error', 'Demasiados intentos. Vuelve a intentarlo en '.RateLimiter::availableIn($throttle_key).' segundos.');
+        }
+
         if (Auth::attempt($credentials)) {
+            RateLimiter::clear($throttle_key);
 
             // compruebo que el usuario no es un secretario e intenta firmar en su propia hoja
             if (Auth::user()->secretary != null) {
@@ -61,6 +70,8 @@ class SignController extends Controller
             return redirect()->route('sign.finish', [])->with('sign_message', $sign_message);
 
         }
+
+        RateLimiter::hit($throttle_key);
 
         return back()->withInput()->with('error', 'Las credenciales no son válidas.');
     }

@@ -52,6 +52,18 @@ class SignTest extends TestCase
         $this->assertFalse($this->sheet->users()->whereKey($this->student->id)->exists());
     }
 
+    public function test_password_guesses_are_limited_like_on_the_login_page(): void
+    {
+        foreach (range(1, 5) as $guess) {
+            $this->sign('7391', "wrong-$guess")->assertSessionHas('error');
+        }
+
+        $this->sign('7391')->assertSessionHas('error');
+
+        $this->assertFalse($this->sheet->users()->whereKey($this->student->id)->exists());
+        $this->assertGuest();
+    }
+
     private function sign(string $sheet, string $password = 'secret123')
     {
         return $this->post(route('sign_p'), ['signature_sheet' => $sheet, 'email' => 'ana@us.es', 'password' => $password]);
