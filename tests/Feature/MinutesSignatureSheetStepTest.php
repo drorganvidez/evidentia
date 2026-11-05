@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Committee;
+use App\Models\Configuration;
 use App\Models\Diary;
 use App\Models\MeetingRequest;
 use App\Models\Role;
@@ -27,6 +28,7 @@ class MinutesSignatureSheetStepTest extends TestCase
     {
         parent::setUp();
         Storage::fake();
+        Configuration::forceCreate(['meetings_timestamp' => now()->addMonth()]);
         $user = User::factory()->create();
         $user->roles()->attach(Role::forceCreate(['rol' => 'SECRETARY', 'slug' => 'secretary']));
         $committee = Committee::create(['name' => 'Logística']);

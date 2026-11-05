@@ -21,6 +21,7 @@
                     </a>
                 </li>
 
+                @if (!\Carbon\Carbon::now()->gt(\Config::meetings_timestamp()))
                 <li class="nav-item">
                     <a href="{{ route('secretary.meeting.manage.minutes.create') }}"
                         class="nav-link
@@ -35,6 +36,7 @@
                         <i class="fas fa-scroll me-2"></i> Crear acta
                     </a>
                 </li>
+                @endif
 
             </ul>
         </div>

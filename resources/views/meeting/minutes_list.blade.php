@@ -57,14 +57,16 @@
                                             href="{{ route('download.minutes', ['id' => $m->id]) }}"><i
                                                 class="fas fa-file-pdf"></i></a>
 
-                                        <a class="btn btn-info btn-sm"
-                                            href="{{ route('secretary.meeting.manage.minutes.edit', ['id' => $m->id]) }}"><i
-                                                class="fas fa-edit"></i></a>
+                                        @if (!\Carbon\Carbon::now()->gt(\Config::meetings_timestamp()))
+                                            <a class="btn btn-info btn-sm"
+                                                href="{{ route('secretary.meeting.manage.minutes.edit', ['id' => $m->id]) }}"><i
+                                                    class="fas fa-edit"></i></a>
 
-                                        <a class="btn btn-danger btn-sm" href="#" data-toggle="modal"
-                                            data-target="#modal-confirm-REMOVE-{{ $m->id }}">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
+                                            <a class="btn btn-danger btn-sm" href="#" data-toggle="modal"
+                                                data-target="#modal-confirm-REMOVE-{{ $m->id }}">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        @endif
 
                                     </td>
                                 </tr>

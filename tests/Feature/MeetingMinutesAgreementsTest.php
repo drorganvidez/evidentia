@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Agreement;
 use App\Models\Committee;
+use App\Models\Configuration;
 use App\Models\Meeting;
 use App\Models\Role;
 use App\Models\Secretary;
@@ -19,6 +20,7 @@ class MeetingMinutesAgreementsTest extends TestCase
     public function test_creating_minutes_saves_their_agreements(): void
     {
         Storage::fake();
+        Configuration::forceCreate(['meetings_timestamp' => now()->addMonth()]);
         $user = User::factory()->create();
         $user->roles()->attach(Role::forceCreate(['rol' => 'SECRETARY', 'slug' => 'secretary']));
         $committee = Committee::create(['name' => 'Logística']);

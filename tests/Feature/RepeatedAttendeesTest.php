@@ -25,7 +25,7 @@ class RepeatedAttendeesTest extends TestCase
 
         Storage::fake();
         // Config lee siempre la fila con id 1
-        DB::table('configuration')->insert(['id' => 1, 'bonus_timestamp' => now()->addMonth()]);
+        DB::table('configuration')->insert(['id' => 1, 'bonus_timestamp' => now()->addMonth(), 'meetings_timestamp' => now()->addMonth()]);
         $user = User::factory()->create();
         $user->roles()->attach(Role::forceCreate(['rol' => 'SECRETARY', 'slug' => 'secretary']));
         $committee = Committee::create(['name' => 'Logística']);

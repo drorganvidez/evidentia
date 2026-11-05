@@ -32,6 +32,7 @@ use App\Http\Middleware\CheckNotNull;
 use App\Http\Middleware\CheckProofDownload;
 use App\Http\Middleware\CheckRegisterBonus;
 use App\Http\Middleware\CheckRegisterEventsAndAttendings;
+use App\Http\Middleware\CheckRegisterMeeting;
 use App\Http\Middleware\CheckRoles;
 use App\Http\Middleware\CheckUploadEvidences;
 use App\Http\Middleware\CheckValidateEvidences;
@@ -141,21 +142,23 @@ Route::middleware('auth')->group(function () {
             // Minutes
             Route::prefix('minutes')->group(function () {
                 Route::get('list', [MeetingSecretaryController::class, 'minutes_list'])->name('secretary.meeting.manage.minutes.list');
-                Route::get('create', [MeetingSecretaryController::class, 'minutes_create'])->name('secretary.meeting.manage.minutes.create');
+                Route::middleware(CheckRegisterMeeting::class)->group(function () {
+                    Route::get('create', [MeetingSecretaryController::class, 'minutes_create'])->name('secretary.meeting.manage.minutes.create');
 
-                Route::get('create/step1', [MeetingSecretaryController::class, 'minutes_create_step1'])->name('secretary.meeting.manage.minutes.create.step1');
-                Route::post('create/step1_p', [MeetingSecretaryController::class, 'minutes_create_step1_p'])->name('secretary.meeting.manage.minutes.create.step1_p');
+                    Route::get('create/step1', [MeetingSecretaryController::class, 'minutes_create_step1'])->name('secretary.meeting.manage.minutes.create.step1');
+                    Route::post('create/step1_p', [MeetingSecretaryController::class, 'minutes_create_step1_p'])->name('secretary.meeting.manage.minutes.create.step1_p');
 
-                Route::get('create/step2', [MeetingSecretaryController::class, 'minutes_create_step2'])->name('secretary.meeting.manage.minutes.create.step2');
-                Route::post('create/step2_p', [MeetingSecretaryController::class, 'minutes_create_step2_p'])->name('secretary.meeting.manage.minutes.create.step2_p');
+                    Route::get('create/step2', [MeetingSecretaryController::class, 'minutes_create_step2'])->name('secretary.meeting.manage.minutes.create.step2');
+                    Route::post('create/step2_p', [MeetingSecretaryController::class, 'minutes_create_step2_p'])->name('secretary.meeting.manage.minutes.create.step2_p');
 
-                Route::get('create/step3', [MeetingSecretaryController::class, 'minutes_create_step3'])->name('secretary.meeting.manage.minutes.create.step3');
-                Route::post('create/step3_p', [MeetingSecretaryController::class, 'minutes_create_step3_p'])->name('secretary.meeting.manage.minutes.create.step3_p');
+                    Route::get('create/step3', [MeetingSecretaryController::class, 'minutes_create_step3'])->name('secretary.meeting.manage.minutes.create.step3');
+                    Route::post('create/step3_p', [MeetingSecretaryController::class, 'minutes_create_step3_p'])->name('secretary.meeting.manage.minutes.create.step3_p');
+                });
 
                 Route::get('download/{id}', [DownloadController::class, 'minutes_download'])->name('download.minutes');
                 Route::get('export/{ext}', [MeetingSecretaryController::class, 'meeting_minutes_export'])->name('secretary.meeting.manage.minutes.export');
 
-                Route::middleware(MeetingMinutesMine::class)->group(function () {
+                Route::middleware([MeetingMinutesMine::class, CheckRegisterMeeting::class])->group(function () {
                     Route::get('edit/{id}', [MeetingSecretaryController::class, 'minutes_edit'])->name('secretary.meeting.manage.minutes.edit');
                     Route::post('save', [MeetingSecretaryController::class, 'minutes_save'])->name('secretary.meeting.manage.minutes.save');
                     Route::post('remove', [MeetingSecretaryController::class, 'minutes_remove'])->name('secretary.meeting.manage.minutes.remove');
