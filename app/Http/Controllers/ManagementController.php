@@ -117,13 +117,10 @@ class ManagementController extends Controller
             $returned_route = 'lecture.committee.list';
         }
 
-        // por sl algún usuario avispao modifica los ID en el HTML
-        try {
-            foreach (Committee::all() as $committee) {
-
-            }
-        } catch (\Exception $e) {
-            return redirect()->route($returned_route)->with('error', 'Error en la integridad de los comités.'.$e->getMessage());
+        // los nombres resultantes no pueden repetirse, igual que al crear un comité
+        $names = Committee::all()->map(fn ($committee) => mb_strtolower(trim($request->input('name_'.$committee->id) ?: $committee->name)));
+        if ($names->duplicates()->isNotEmpty()) {
+            return redirect()->route($returned_route)->with('error', 'Dos comités no pueden llamarse igual.');
         }
 
         foreach (Committee::all() as $committee) {
