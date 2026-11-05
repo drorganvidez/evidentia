@@ -168,6 +168,17 @@ class UserManagementTest extends TestCase
         $this->assertSame($password, $this->lecture->fresh()->password);
     }
 
+    public function test_the_lecturer_deletes_every_other_user(): void
+    {
+        User::factory()->count(3)->create();
+
+        $this->actingAs($this->lecture)
+            ->post(route('management.user.delete.all'))
+            ->assertRedirect(route('lecture.user.list'));
+
+        $this->assertSame([$this->lecture->id], User::pluck('id')->all());
+    }
+
     private function role(string $name): Role
     {
         return Role::where('rol', $name)->first() ?? Role::forceCreate(['rol' => $name, 'slug' => strtolower($name)]);
