@@ -1,0 +1,41 @@
+# ----------------------------------------------------------------------------
+# Tests Workflow
+# This workflow checks the code style and runs the test suite on every push
+# to main and on every pull request.
+# ----------------------------------------------------------------------------
+
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-24.04
+
+    steps:
+
+      # Step 1: Check out the repository code
+      - uses: actions/checkout@v5
+
+      # Step 2: Set up PHP with the extensions the app needs
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: gd, zip, exif, mbstring, pdo_sqlite
+          coverage: none
+
+      # Step 3: Install Composer dependencies
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      # Step 4: Check the code style
+      - name: Check code style
+        run: vendor/bin/pint --test
+
+      # Step 5: Run the test suite
+      - name: Run tests
+        run: vendor/bin/phpunit
