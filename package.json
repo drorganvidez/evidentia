@@ -7,14 +7,10 @@
         "dev": "vite"
     },
     "devDependencies": {
-        "@popperjs/core": "^2.11.6",
         "@tailwindcss/vite": "^4.3.4",
-        "axios": "^1.21.0",
         "blade-formatter": "^1.44.6",
-        "bootstrap": "^5.3.8",
         "concurrently": "^10.0.6",
         "laravel-vite-plugin": "^3.2.1",
-        "sass": "^1.107.1",
         "tailwindcss": "^4.3.4",
         "vite": "^8.3.6"
     },
