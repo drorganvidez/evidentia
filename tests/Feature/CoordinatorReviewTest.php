@@ -120,6 +120,17 @@ class CoordinatorReviewTest extends TestCase
         $this->actingAs($secretary)->get(route('coordinator.evidence.list.all'))->assertNotFound();
     }
 
+    public function test_users_without_a_coordinator_profile_cannot_review(): void
+    {
+        $evidence = $this->evidence('PENDING');
+        $this->actingAs($this->student);
+
+        $this->get(route('coordinator.evidence.view', ['id' => $evidence->id]))->assertNotFound();
+        $this->post(route('coordinator.evidence.accept', ['id' => $evidence->id]))->assertNotFound();
+
+        $this->assertSame('PENDING', $evidence->fresh()->status);
+    }
+
     private function proofOf(Evidence $evidence): Proof
     {
         $file = File::create(['name' => 'certificado', 'type' => 'pdf', 'route' => 'proofs/certificado.pdf', 'size' => 3]);

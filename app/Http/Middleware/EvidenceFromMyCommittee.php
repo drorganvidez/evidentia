@@ -22,10 +22,11 @@ class EvidenceFromMyCommittee
         if ($id == null) { // si se recibe por POST
             $id = $request->_id;
         }
-        $evidence = Evidence::find($id);
+        $evidence = Evidence::findOrFail($id);
+        $coordinator = Auth::user()->coordinator;
 
-        // los borradores no se han enviado al coordinador
-        if ($evidence->committee->id != Auth::user()->coordinator->committee->id || $evidence->status == 'DRAFT') {
+        // solo el coordinador del comité, y los borradores no se le han enviado
+        if ($coordinator == null || $evidence->committee_id != $coordinator->committee_id || $evidence->status == 'DRAFT') {
             abort(404);
         }
 
