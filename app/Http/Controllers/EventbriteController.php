@@ -10,6 +10,7 @@ use App\Models\Event;
 use App\Models\User;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -33,13 +34,17 @@ class EventbriteController extends Controller
 
     private static function validate_token($token)
     {
-        $client = new Client(['base_uri' => 'https://www.eventbriteapi.com/v3/']);
-        $response = $client->request('GET', 'users/me/', [
-            'query' => ['token' => $token],
-        ]);
+        // Eventbrite responde con un error (que Guzzle lanza) si el token no es válido
+        try {
+            $client = new Client(['base_uri' => 'https://www.eventbriteapi.com/v3/']);
+            $response = $client->request('GET', 'users/me/', [
+                'query' => ['token' => $token],
+            ]);
+        } catch (GuzzleException $e) {
+            return false;
+        }
 
-        return $response->getStatusCode() == 200 ? true : false;
-
+        return $response->getStatusCode() == 200;
     }
 
     public function token_save(Request $request)
