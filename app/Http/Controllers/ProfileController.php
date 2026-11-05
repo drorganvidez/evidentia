@@ -9,6 +9,7 @@ use App\Rules\MinCharacters;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
@@ -38,14 +39,8 @@ class ProfileController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'surname' => 'required|max:255',
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
         ]);
-
-        // si el usuario cambia el email, comprueba que el nuevo sea único
-        if ($request->input('email') != $user->email) {
-            $request->validate([
-                'email' => 'required|max:255|unique:users',
-            ]);
-        }
 
         $user->name = $request->input('name');
         $user->surname = $request->input('surname');

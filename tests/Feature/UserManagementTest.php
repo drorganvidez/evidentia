@@ -196,6 +196,21 @@ class UserManagementTest extends TestCase
         }
     }
 
+    public function test_managed_users_need_a_valid_email(): void
+    {
+        $user = User::factory()->create();
+        $user->roles()->attach($this->role('STUDENT'));
+        $this->actingAs($this->lecture);
+
+        $this->post(route('lecture.user.management.save'), ['email' => 'not-an-email'] + $this->form($user, ['STUDENT']))
+            ->assertSessionHasErrors('email');
+        $this->post(route('management.user.new'), ['name' => 'Lucía', 'surname' => 'Pérez', 'email' => 'not-an-email', 'username' => 'lucper'])
+            ->assertSessionHasErrors('email');
+
+        $this->assertNotSame('not-an-email', $user->fresh()->email);
+        $this->assertNull(User::where('username', 'lucper')->first());
+    }
+
     private function role(string $name): Role
     {
         return Role::where('rol', $name)->first() ?? Role::forceCreate(['rol' => $name, 'slug' => strtolower($name)]);

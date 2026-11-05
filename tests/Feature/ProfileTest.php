@@ -1,0 +1,71 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Mail\SuggestionsMailbox;
+use App\Models\Role;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Tests\TestCase;
+
+class ProfileTest extends TestCase
+{
+    use RefreshDatabase;
+
+    private User $user;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->user = User::factory()->create(['email' => 'ana@us.es', 'password' => Hash::make('secret123')]);
+        $this->user->roles()->attach(Role::forceCreate(['rol' => 'STUDENT', 'slug' => 'student']));
+        $this->actingAs($this->user);
+    }
+
+    public function test_users_update_their_personal_data(): void
+    {
+        $this->post(route('profile.upload.info'), ['name' => 'Ana María', 'surname' => 'García Núñez', 'email' => 'anamaria@us.es'])
+            ->assertRedirect(route('profile.view'));
+
+        $this->user->refresh();
+        $this->assertSame(['Ana María', 'García Núñez', 'anamaria@us.es'], [$this->user->name, $this->user->surname, $this->user->email]);
+        $this->assertSame(['ANAMARIA', 'GARCIANUNEZ'], [$this->user->clean_name, $this->user->clean_surname]);
+    }
+
+    public function test_the_email_must_be_valid_and_free(): void
+    {
+        User::factory()->create(['email' => 'taken@us.es']);
+
+        $this->post(route('profile.upload.info'), ['name' => 'Ana', 'surname' => 'García', 'email' => 'not-an-email'])
+            ->assertSessionHasErrors('email');
+        $this->post(route('profile.upload.info'), ['name' => 'Ana', 'surname' => 'García', 'email' => 'taken@us.es'])
+            ->assertSessionHasErrors('email');
+
+        $this->assertSame('ana@us.es', $this->user->fresh()->email);
+    }
+
+    public function test_users_write_their_biography(): void
+    {
+        $this->post(route('profile.upload.biography'), ['biography' => '<p>He colaborado en logística.</p>', 'participation' => 2])
+            ->assertRedirect(route('profile.view'));
+        $this->post(route('profile.upload.biography'), ['biography' => '<p>He colaborado en logística.</p>', 'participation' => 7])
+            ->assertSessionHasErrors('participation');
+
+        $this->assertSame('<p>He colaborado en logística.</p>', $this->user->fresh()->biography);
+        $this->assertEquals(2, $this->user->fresh()->participation);
+    }
+
+    public function test_users_send_suggestions(): void
+    {
+        Mail::fake();
+
+        $this->post(route('suggestionsmailbox_p'), ['subject' => 'Mejora', 'comment' => '<p>Estaría bien poder exportar mis horas.</p>'])
+            ->assertRedirect(route('suggestionsmailbox'));
+        $this->post(route('suggestionsmailbox_p'), ['subject' => '', 'comment' => 'corto'])
+            ->assertSessionHasErrors(['subject', 'comment']);
+
+        Mail::assertSent(SuggestionsMailbox::class, 1);
+    }
+}

@@ -205,7 +205,7 @@ class ManagementController extends Controller
             'name' => 'required|max:255',
             'surname' => 'required|max:255',
             'username' => ['required', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'email' => ['required', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => 'nullable|confirmed|min:6',
             'committee' => $needs_committee ? 'required|exists:committees,id' : 'nullable',
         ], [
@@ -269,7 +269,7 @@ class ManagementController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'surname' => 'required|max:255',
-            'email' => 'required|max:255|unique:users',
+            'email' => 'required|email|max:255|unique:users',
             'username' => 'required|max:255|unique:users',
         ]);
 
