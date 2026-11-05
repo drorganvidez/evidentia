@@ -1,1 +1,6 @@
-// Punto de entrada del front. Se rellena en la Fase 2 del rediseño.
+import '../css/app.css';
+
+import { bootAlpine } from './alpine/boot';
+import * as components from './components';
+
+bootAlpine({ components });

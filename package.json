@@ -23,6 +23,7 @@
         "dev": "vite"
     },
     "devDependencies": {
+        "@alpinejs/csp": "^3.17.5",
         "@tailwindcss/vite": "^4.3.4",
         "blade-formatter": "^1.44.6",
         "concurrently": "^10.0.6",
