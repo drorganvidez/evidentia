@@ -158,19 +158,9 @@
                                                     <select id="type"
                                                         class="selectpicker form-control @error('type') is-invalid @enderror"
                                                         name="type" value="{{ old('type') }}" autofocus>
-
-                                                        @isset($meeting_request)
-                                                            <option
-                                                                {{ $meeting_request->type == old('type') || $meeting_request->type == 'ORDINARY' ? 'selected' : '' }}
-                                                                value="1">ORDINARIA</option>
-                                                            <option
-                                                                {{ $meeting_request->type == old('type') || $meeting_request->type == 'EXTRAORDINARY' ? 'selected' : '' }}
-                                                                value="2">EXTRAORDINARIA</option>
-                                                        @else
-                                                            <option value="1">ORDINARIA</option>
-                                                            <option value="2">EXTRAORDINARIA</option>
-                                                        @endisset
-
+                                                        @foreach ([1 => 'ORDINARIA', 2 => 'EXTRAORDINARIA'] as $value => $label)
+                                                            <option value="{{ $value }}" @selected(old('type', $meeting_request->type ?? null) == $value)>{{ $label }}</option>
+                                                        @endforeach
                                                     </select>
 
                                                     <small class="form-text text-muted">Elige el tipo de reunión.</small>
@@ -187,23 +177,9 @@
                                                     <select id="modality"
                                                         class="selectpicker form-control @error('modality') is-invalid @enderror"
                                                         name="modality" value="{{ old('modality') }}" autofocus>
-
-                                                        @isset($meeting_request)
-                                                            <option
-                                                                {{ $meeting_request->modality == old('modality') || $meeting_request->modality == 'F2F' ? 'selected' : '' }}
-                                                                value="1">PRESENCIAL</option>
-                                                            <option
-                                                                {{ $meeting_request->modality == old('modality') || $meeting_request->modality == 'TELEMATIC' ? 'selected' : '' }}
-                                                                value="2">TELEMÁTICA</option>
-                                                            <option
-                                                                {{ $meeting_request->modality == old('modality') || $meeting_request->modality == 'MIXED' ? 'selected' : '' }}
-                                                                value="3">HÍBRIDA</option>
-                                                        @else
-                                                            <option value="1">PRESENCIAL</option>
-                                                            <option value="2">TELEMÁTICA</option>
-                                                            <option value="3">HÍBRIDA</option>
-                                                        @endisset
-
+                                                        @foreach ([1 => 'PRESENCIAL', 2 => 'TELEMÁTICA', 3 => 'HÍBRIDA'] as $value => $label)
+                                                            <option value="{{ $value }}" @selected(old('modality', $meeting_request->modality ?? null) == $value)>{{ $label }}</option>
+                                                        @endforeach
                                                     </select>
 
                                                     <small class="form-text text-muted">Elige la modalidad de
