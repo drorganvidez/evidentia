@@ -286,7 +286,9 @@ class ManagementController extends Controller
         $student_role = Role::where('rol', 'STUDENT')->get();
         $user->roles()->attach($student_role);
 
-        return redirect()->route('lecture.user.list', ['id' => $user->id])->with('success', 'Usuario creado con éxito');
+        $list = Auth::user()->hasRole('PRESIDENT') ? 'president.user.list' : 'lecture.user.list';
+
+        return redirect()->route($list)->with('success', 'Usuario creado con éxito');
 
     }
 

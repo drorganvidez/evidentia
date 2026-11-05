@@ -179,6 +179,23 @@ class UserManagementTest extends TestCase
         $this->assertSame([$this->lecture->id], User::pluck('id')->all());
     }
 
+    public function test_lecturers_and_presidents_add_students_by_hand(): void
+    {
+        $president = User::factory()->create();
+        $president->roles()->attach($this->role('PRESIDENT'));
+        $this->role('STUDENT');
+
+        foreach (['lecture' => $this->lecture, 'president' => $president] as $prefix => $manager) {
+            $this->actingAs($manager)->post(route('management.user.new'), [
+                'name' => 'Lucía', 'surname' => 'Pérez López', 'email' => $prefix.'@alum.us.es', 'username' => $prefix.'user',
+            ])->assertRedirect(route($prefix.'.user.list'));
+
+            $user = User::where('username', $prefix.'user')->sole();
+            $this->assertTrue($user->hasRole('STUDENT'));
+            $this->assertSame('PEREZLOPEZ', $user->clean_surname);
+        }
+    }
+
     private function role(string $name): Role
     {
         return Role::where('rol', $name)->first() ?? Role::forceCreate(['rol' => $name, 'slug' => strtolower($name)]);
