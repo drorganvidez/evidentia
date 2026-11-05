@@ -28,10 +28,7 @@ class EvidencesExport implements FromCollection, ShouldAutoSize, WithHeadings, W
         $this->bonus = $bonus;
     }
 
-    /**
-     * @return Collection
-     */
-    public function collection()
+    public function collection(): Collection
     {
 
         $users = User::all();

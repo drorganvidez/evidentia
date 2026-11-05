@@ -10,10 +10,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class UsersImport implements ToModel, WithHeadingRow
 {
-    /**
-     * @return Model|null
-     */
-    public function model(array $row)
+    public function model(array $row): ?Model
     {
         if (! array_filter($row)) {
             return null;

@@ -12,10 +12,7 @@ use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 // estricto con los nulos: unas horas a 0 se exportan como 0, no como una celda vacía
 class AttendeesExport implements FromCollection, ShouldAutoSize, WithHeadings, WithStrictNullComparison
 {
-    /**
-     * @return Collection
-     */
-    public function collection()
+    public function collection(): Collection
     {
         $users = User::all();
         $users = $users->sortBy('clean_surname');
