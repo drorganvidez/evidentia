@@ -55,8 +55,7 @@ class RepeatedAttendeesTest extends TestCase
         $meeting = Meeting::sole();
 
         $this->post(route('secretary.meeting.manage.minutes.save'), $this->minutes([$pedro->id, $pedro->id, $ana->id, $ana->id]) + [
-            'meeting_id' => $meeting->id,
-            'meeting_minutes_id' => $meeting->meetingMinutes->id,
+            '_id' => $meeting->meetingMinutes->id,
         ])->assertRedirect(route('secretary.meeting.manage.minutes.list'));
 
         $this->assertAttendees($meeting, [$ana->id, $pedro->id, $this->secretary->user_id]);

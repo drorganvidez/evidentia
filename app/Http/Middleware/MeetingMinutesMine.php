@@ -17,14 +17,7 @@ class MeetingMinutesMine
     public function handle(Request $request, Closure $next)
     {
 
-        $id = $request->route('id');
-        if ($id == null) { // si se recibe por POST
-            $id = $request->_id;
-
-            if ($id == null) {
-                $id = $request->input('meeting_minutes_id');
-            }
-        }
+        $id = $request->route('id') ?? $request->input('_id');
 
         $meeting_minutes = MeetingMinutes::findOrFail($id);
 

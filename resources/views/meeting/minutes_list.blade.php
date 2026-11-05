@@ -103,7 +103,7 @@
                             action="{{ route('secretary.meeting.manage.minutes.remove') }}" method="post">
                             @csrf
 
-                            <input type="hidden" name="meeting_minutes_id" value="{{ $m->id }}" />
+                            <input type="hidden" name="_id" value="{{ $m->id }}" />
 
                         </form>
 

@@ -630,8 +630,8 @@ class MeetingSecretaryController extends Controller
             ]);
         }
 
-        // modificamos la info básica de la reunión
-        $meeting = Meeting::where('id', $request->input('meeting_id'))->first();
+        // modificamos la info básica de la reunión del acta comprobada por MeetingMinutesMine
+        $meeting = MeetingMinutes::findOrFail($request->input('_id'))->meeting;
         $meeting->title = $request->input('title');
         $meeting->hours = $request->input('hours') + floor(($minutes * 100) / 60) / 100;
         $meeting->type = $request->input('type');
@@ -708,7 +708,7 @@ class MeetingSecretaryController extends Controller
 
     public function minutes_remove(Request $request)
     {
-        $meeting_minutes = MeetingMinutes::where('id', $request->input('meeting_minutes_id'))->first();
+        $meeting_minutes = MeetingMinutes::findOrFail($request->input('_id'));
 
         // borramos el pdf del acta antigua
         Storage::delete('/meeting_minutes/meeting_minutes_'.$meeting_minutes->id.'.pdf');

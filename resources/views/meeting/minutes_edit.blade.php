@@ -26,9 +26,7 @@
                     <form method="POST" action="{{ route('secretary.meeting.manage.minutes.save') }}" id="request_form">
                         @csrf
 
-                        <input type="hidden" name="meeting_id" value="{{ $meeting_minutes->meeting->id }}" />
-
-                        <input type="hidden" name="meeting_minutes_id" value="{{ $meeting_minutes->id }}" />
+                        <input type="hidden" name="_id" value="{{ $meeting_minutes->id }}" />
 
                         <input type="hidden" name="points_json" id="points_json" />
 
