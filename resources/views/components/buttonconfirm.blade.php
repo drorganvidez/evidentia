@@ -1,7 +1,7 @@
 <a class="btn
 
     @if ($type == 'REMOVE') btn-danger
-    @elseif($type == 'INFO')
+    @elseif($type == 'EDIT')
         btn-info @endif
 
 
@@ -11,8 +11,8 @@
 
     @if ($type == 'REMOVE')
         <i class="fas fa-trash"></i> <span class="d-none d-sm-none d-md-none d-lg-inline">{{ $name ?? '' }} </span>
-    @elseif($type == 'INFO')
-        <i class="fas fa-info"></i> <span class="d-none d-sm-none d-md-none d-lg-inline">{{ $name ?? '' }}</span>
+    @elseif($type == 'EDIT')
+        <i class="fas fa-pencil-alt"></i> <span class="d-none d-sm-none d-md-none d-lg-inline">{{ $name ?? '' }}</span>
     @endif
 
 </a>
@@ -36,14 +36,14 @@
                     <button type="button"
                         onclick="event.preventDefault(); document.getElementById('buttonconfirm-form-{{ $type }}-{{ $id }}').submit();"
                         @if ($type == 'REMOVE') class="btn btn-danger"
-                        @elseif($type == 'INFO')
+                        @elseif($type == 'EDIT')
                             class="btn btn-info" @endif
                         data-dismiss="modal">
 
                         @if ($type == 'REMOVE')
                             <i class="fas fa-trash"></i> &nbsp;Sí, eliminar
-                        @elseif($type == 'INFO')
-                            Sí, aceptar
+                        @elseif($type == 'EDIT')
+                            <i class="fas fa-pencil-alt"></i> &nbsp;Sí, editar
                         @endif
                     </button>
                 </div>
