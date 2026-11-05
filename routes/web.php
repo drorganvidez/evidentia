@@ -3,6 +3,7 @@
 use App\Http\Controllers\AttendeeController;
 use App\Http\Controllers\AvatarController;
 // Controladores importados explícitamente
+use App\Http\Controllers\BlockController;
 use App\Http\Controllers\BonusSecretaryController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\DefaultListSecretaryController;
@@ -46,6 +47,9 @@ use Illuminate\Support\Facades\Route;
 
 // Rutas de autenticación
 Auth::routes();
+
+// Aviso para los usuarios bloqueados
+Route::get('block', [BlockController::class, 'block'])->name('block');
 
 // Sign
 Route::prefix('sign')->withoutMiddleware('auth')->group(function () {

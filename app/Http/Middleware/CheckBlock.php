@@ -17,7 +17,7 @@ class CheckBlock
     public function handle($request, Closure $next)
     {
 
-        if (Auth::check() && Auth::user()->block) {
+        if (Auth::check() && Auth::user()->block && ! $request->routeIs('block', 'logout')) {
             return redirect()->route('block');
         }
 
