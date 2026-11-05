@@ -651,7 +651,8 @@ class MeetingSecretaryController extends Controller
         }
 
         // modificamos la info básica de la reunión del acta comprobada por MeetingMinutesMine
-        $meeting = MeetingMinutes::findOrFail($request->input('_id'))->meeting;
+        $meeting_minutes = MeetingMinutes::findOrFail($request->input('_id'));
+        $meeting = $meeting_minutes->meeting;
         $meeting->title = $request->input('title');
         $meeting->hours = $request->input('hours') + floor(($minutes * 100) / 60) / 100;
         $meeting->type = $request->input('type');
@@ -665,27 +666,17 @@ class MeetingSecretaryController extends Controller
         $users_ids[] = Auth::user()->secretary->user_id;
         $meeting->users()->sync(array_unique(array_map('intval', $users_ids)));
 
-        // borramos los puntos y acuerdos previos
-        if ($meeting->meetingMinutes->points) {
-            foreach ($meeting->meetingMinutes->points as $point) {
-                foreach ($point->agreements as $agreement) {
-                    $agreement->delete();
-                }
-                $point->delete();
+        // los acuerdos que no cambian conservan su identificador
+        $previous_identificators = [];
+
+        // sustituimos los puntos y acuerdos previos; el acta se conserva para que no cambien sus enlaces
+        foreach ($meeting_minutes->points as $point) {
+            foreach ($point->agreements as $agreement) {
+                $previous_identificators[$point->title."\n".$agreement->description] = $agreement->identificator;
+                $agreement->delete();
             }
+            $point->delete();
         }
-
-        // borramos el pdf del acta antigua
-        Storage::delete('/meeting_minutes/meeting_minutes_'.$meeting->meetingMinutes->id.'.pdf');
-
-        // borramos el acta antigua
-        $meeting->meetingMinutes->delete();
-
-        // Guardamos los puntos y los acuerdos tomados
-        $meeting_minutes = MeetingMinutes::create([
-            'meeting_id' => $meeting->id,
-            'secretary_id' => Auth::user()->secretary->id,
-        ]);
 
         $points = json_decode($request->input('points_json'), true);
         $points = collect($points);
@@ -706,7 +697,7 @@ class MeetingSecretaryController extends Controller
                 ]);
 
                 // ahora generas el identificador definitivo
-                $identificator = 'ISD'
+                $identificator = $previous_identificators[$point['title']."\n".$agreement['description']] ?? 'ISD'
                     .'-'.Carbon::now()->format('Y-m-d')
                     .'-'.Auth::user()->secretary->committee->id
                     .'-'.$meeting->id
@@ -718,7 +709,8 @@ class MeetingSecretaryController extends Controller
             }
         }
 
-        // Generamos de nuevo el PDF
+        // Generamos de nuevo el PDF con los puntos recién guardados
+        $meeting_minutes->refresh();
         $pdf = Pdf::loadView('meeting.minutes_template', ['meeting_minutes' => $meeting_minutes]);
         $content = $pdf->download()->getOriginalContent();
         Storage::put('/meeting_minutes/meeting_minutes_'.$meeting_minutes->id.'.pdf', $content);
