@@ -83,6 +83,7 @@ class EvidenceController extends Controller
             'hours' => ['required_without:minutes', 'nullable', 'numeric', 'sometimes', 'max:99', new CheckHoursAndMinutes($request->input('minutes'))],
             'minutes' => ['required_without:hours', 'nullable', 'numeric', 'sometimes', 'max:60', new CheckHoursAndMinutes($request->input('hours'))],
             'description' => ['required', new MinCharacters(10), new MaxCharacters(20000)],
+            'committee' => 'required|exists:committees,id',
         ]);
 
         // datos necesarios para crear evidencias

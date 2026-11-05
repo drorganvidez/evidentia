@@ -90,6 +90,19 @@ class EvidenceEditTest extends TestCase
         $this->assertSame(1, Evidence::count());
     }
 
+    public function test_an_evidence_needs_an_existing_committee(): void
+    {
+        $this->actingAs($this->student());
+        $form = $this->form(0);
+        unset($form['_id'], $form['committee']);
+
+        $this->post(route('evidence.publish'), $form)->assertSessionHasErrors('committee');
+        $this->post(route('evidence.publish'), ['committee' => 999] + $form)->assertSessionHasErrors('committee');
+
+        $this->assertSame(0, Evidence::count());
+        $this->get(route('evidence.list'))->assertOk();
+    }
+
     private function student(): User
     {
         $student = User::factory()->create();
