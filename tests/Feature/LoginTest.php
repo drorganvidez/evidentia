@@ -13,6 +13,20 @@ class LoginTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_there_is_no_public_registration(): void
+    {
+        $this->get('/register')->assertNotFound();
+        $this->post('/register', ['name' => 'Intrusa', 'email' => 'x@us.es', 'password' => 'secret123', 'password_confirmation' => 'secret123'])
+            ->assertNotFound();
+
+        $this->assertSame(0, User::count());
+    }
+
+    public function test_passwords_are_recovered_through_the_app_own_form(): void
+    {
+        $this->get(route('password.custom_reset'))->assertOk();
+    }
+
     public function test_logging_in_from_the_login_page_lands_on_the_dashboard(): void
     {
         Configuration::forceCreate([]);

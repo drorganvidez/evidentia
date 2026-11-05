@@ -46,8 +46,8 @@ use App\Http\Middleware\SignatureSheetMine;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-// Rutas de autenticación
-Auth::routes();
+// Rutas de autenticación: solo login y logout (las cuentas las crea la gestión y la contraseña se recupera en /password)
+Auth::routes(['register' => false, 'reset' => false, 'confirm' => false, 'verify' => false]);
 
 // Aviso para los usuarios bloqueados
 Route::get('block', [BlockController::class, 'block'])->name('block');
