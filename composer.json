@@ -6,7 +6,7 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "barryvdh/laravel-dompdf": "^3.1",
         "ezyang/htmlpurifier": "^4.18",
         "laravel/framework": "^12.0",
@@ -70,6 +70,9 @@
     },
     "config": {
         "optimize-autoloader": true,
+        "platform": {
+            "php": "8.4"
+        },
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
