@@ -93,6 +93,11 @@ class EvidenceCoordinatorController extends Controller
     {
 
         $evidence = $this->reviewable($request->_id);
+
+        if (blank($request->input('reasonrejection'))) {
+            return back()->with('error', 'Escribe el motivo del rechazo.');
+        }
+
         $evidence->status = 'REJECTED';
         $evidence->save();
 

@@ -85,6 +85,17 @@ class CoordinatorReviewTest extends TestCase
         $this->assertSame('REJECTED', $old->fresh()->status);
     }
 
+    public function test_rejecting_needs_a_reason(): void
+    {
+        $evidence = $this->evidence('PENDING');
+
+        $this->actingAs($this->coordinator)
+            ->post(route('coordinator.evidence.reject'), ['_id' => $evidence->id, 'reasonrejection' => '   '])
+            ->assertSessionHas('error');
+
+        $this->assertSame('PENDING', $evidence->fresh()->status);
+    }
+
     private function proofOf(Evidence $evidence): Proof
     {
         $file = File::create(['name' => 'certificado', 'type' => 'pdf', 'route' => 'proofs/certificado.pdf', 'size' => 3]);
