@@ -37,9 +37,15 @@ class Evidence extends Model
         return $this->belongsTo(Committee::class);
     }
 
+    // el último motivo de rechazo (una evidencia puede rechazarse varias veces)
     public function reasonRejection()
     {
-        return $this->hasOne(ReasonRejection::class);
+        return $this->hasOne(ReasonRejection::class)->latestOfMany();
+    }
+
+    public function reasonRejections()
+    {
+        return $this->hasMany(ReasonRejection::class)->orderBy('id');
     }
 
     // Evidencias anteriores (recursivo)
@@ -167,9 +173,9 @@ class Evidence extends Model
         return $this->previousEvidences()
             ->push($this)
             ->unique('id')
-            ->map(fn ($ev) => $ev->reasonRejection)
-            ->filter()
-            ->values()
-            ->unique('id');
+            ->sortBy('id')
+            ->flatMap(fn ($ev) => $ev->reasonRejections)
+            ->unique('id')
+            ->values();
     }
 }

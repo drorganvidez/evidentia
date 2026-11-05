@@ -96,6 +96,21 @@ class CoordinatorReviewTest extends TestCase
         $this->assertSame('PENDING', $evidence->fresh()->status);
     }
 
+    public function test_the_student_sees_the_latest_rejection_reason(): void
+    {
+        $evidence = $this->evidence('PENDING');
+        $this->actingAs($this->coordinator);
+        $this->post(route('coordinator.evidence.reject'), ['_id' => $evidence->id, 'reasonrejection' => 'Falta el certificado.']);
+        $this->post(route('coordinator.evidence.accept', ['id' => $evidence->id]));
+        $this->post(route('coordinator.evidence.reject'), ['_id' => $evidence->id, 'reasonrejection' => 'Las horas no cuadran con el acta.']);
+
+        $this->actingAs($this->student)
+            ->get(route('evidence.view', ['id' => $evidence->id]))
+            ->assertOk()
+            ->assertSee('Rechazada: Las horas no cuadran con el acta.')
+            ->assertSeeInOrder(['Motivos de rechazo anteriores', 'Falta el certificado.', 'Las horas no cuadran con el acta.']);
+    }
+
     private function proofOf(Evidence $evidence): Proof
     {
         $file = File::create(['name' => 'certificado', 'type' => 'pdf', 'route' => 'proofs/certificado.pdf', 'size' => 3]);
