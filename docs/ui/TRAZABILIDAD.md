@@ -54,3 +54,15 @@ Petición recogida el 6 de noviembre de 2026. Un alumno se equivoca a veces de c
 - Cada corrección se anota en el registro de actividad con el antes y el después.
 
 Entra en la fase de trazabilidad, junto al registro de actividad, porque es lógica de negocio y ambas cosas se apoyan en lo mismo.
+
+## Mensajes a los responsables
+
+Petición recogida el 6 de noviembre de 2026. Ante cualquier eventualidad, un alumno debe poder escribir a quien puede resolverla sin salir de la aplicación. Hoy el "buzón" de la aplicación está vacío y el buzón de sugerencias envía un correo a una dirección fija del profesor.
+
+- Destinatarios posibles para un alumno. El coordinador y el secretario de su comité, el coordinador de registro y la presidencia. El profesorado recibe los mensajes dirigidos a la presidencia y puede intervenir en cualquiera.
+- Un mensaje puede ir enlazado a una evidencia, un acta o una convocatoria concretas; desde su detalle hay un botón "Escribir al coordinador" (o al secretario) que ya trae el enlace puesto.
+- Las conversaciones son hilos con respuestas, estado (abierto, resuelto) y aviso por correo al destinatario con enlace a la aplicación. Cada envío queda anotado en el registro de actividad con el rol con el que se escribe.
+- El responsable las ve en una bandeja "Mensajes" con contador en el menú, filtrable por comité y estado. El alumno ve las suyas en "Mis mensajes".
+- El buzón de sugerencias pasa a ser un hilo más, dirigido al profesorado, en vez de un correo a una dirección fija.
+
+Entra también en la fase de trazabilidad. Reutiliza el aviso por correo que ya existe y sustituye las dos pantallas de buzón actuales.
