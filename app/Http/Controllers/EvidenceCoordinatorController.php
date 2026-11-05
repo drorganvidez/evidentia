@@ -70,17 +70,29 @@ class EvidenceCoordinatorController extends Controller
     public function accept($id)
     {
 
-        $evidence = Evidence::find($id);
+        $evidence = $this->reviewable($id);
         $evidence->status = 'ACCEPTED';
         $evidence->save();
 
         return redirect()->route('coordinator.evidence.list.accepted')->with('success', 'Evidencia aceptada con éxito.');
     }
 
+    // solo se revisa la última versión de una evidencia; las anteriores las ha sustituido el alumno
+    private function reviewable($id): Evidence
+    {
+        $evidence = Evidence::findOrFail($id);
+
+        if (! $evidence->last) {
+            abort(404);
+        }
+
+        return $evidence;
+    }
+
     public function reject(Request $request)
     {
 
-        $evidence = Evidence::find($request->_id);
+        $evidence = $this->reviewable($request->_id);
         $evidence->status = 'REJECTED';
         $evidence->save();
 

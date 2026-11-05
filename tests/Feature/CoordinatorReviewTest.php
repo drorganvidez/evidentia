@@ -6,6 +6,8 @@ use App\Models\Committee;
 use App\Models\Configuration;
 use App\Models\Coordinator;
 use App\Models\Evidence;
+use App\Models\File;
+use App\Models\Proof;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -54,6 +56,40 @@ class CoordinatorReviewTest extends TestCase
         $this->actingAs($this->coordinator)->get('/coordinator/evidence/accept/'.$evidence->id);
 
         $this->assertSame('PENDING', $evidence->fresh()->status);
+    }
+
+    public function test_the_coordinator_cannot_see_or_review_a_draft(): void
+    {
+        $draft = $this->evidence('DRAFT');
+        $this->actingAs($this->coordinator);
+
+        $this->get(route('coordinator.evidence.view', ['id' => $draft->id]))->assertNotFound();
+        $this->get(route('proof.download', ['id' => $this->proofOf($draft)->id]))->assertNotFound();
+        $this->post(route('coordinator.evidence.accept', ['id' => $draft->id]))->assertNotFound();
+        $this->post(route('coordinator.evidence.reject'), ['_id' => $draft->id, 'reasonrejection' => 'Falta el certificado.'])->assertNotFound();
+
+        $this->assertSame('DRAFT', $draft->fresh()->status);
+    }
+
+    public function test_the_coordinator_cannot_accept_a_version_the_student_replaced(): void
+    {
+        $old = $this->evidence('REJECTED');
+        $old->update(['last' => false]);
+        $new = $this->evidence('PENDING');
+        $new->update(['points_to' => $old->id]);
+
+        $this->actingAs($this->coordinator)
+            ->post(route('coordinator.evidence.accept', ['id' => $old->id]))
+            ->assertNotFound();
+
+        $this->assertSame('REJECTED', $old->fresh()->status);
+    }
+
+    private function proofOf(Evidence $evidence): Proof
+    {
+        $file = File::create(['name' => 'certificado', 'type' => 'pdf', 'route' => 'proofs/certificado.pdf', 'size' => 3]);
+
+        return Proof::create(['evidence_id' => $evidence->id, 'file_id' => $file->id]);
     }
 
     private function evidence(string $status): Evidence

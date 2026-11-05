@@ -24,7 +24,8 @@ class EvidenceFromMyCommittee
         }
         $evidence = Evidence::find($id);
 
-        if ($evidence->committee->id != Auth::user()->coordinator->committee->id) {
+        // los borradores no se han enviado al coordinador
+        if ($evidence->committee->id != Auth::user()->coordinator->committee->id || $evidence->status == 'DRAFT') {
             abort(404);
         }
 

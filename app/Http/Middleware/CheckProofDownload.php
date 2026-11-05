@@ -31,8 +31,8 @@ class CheckProofDownload
             return $next($request);
         }
 
-        // 2. Soy coordinador y la prueba es de una evidencia dirigida a mi comité
-        if (Auth::user()->hasRole('COORDINATOR')) {
+        // 2. Soy coordinador y la prueba es de una evidencia enviada a mi comité
+        if (Auth::user()->hasRole('COORDINATOR') && $proof->evidence->status != 'DRAFT') {
             $committee = $proof->evidence->committee;
             $my_committee = Auth::user()->coordinator->committee;
             if ($committee->id == $my_committee->id) {
