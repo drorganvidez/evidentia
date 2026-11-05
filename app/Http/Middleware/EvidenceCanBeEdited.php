@@ -17,10 +17,12 @@ class EvidenceCanBeEdited
     public function handle($request, Closure $next)
     {
 
-        $id = $request->route('id');
-        $evidence = Evidence::find($id);
+        $evidence = Evidence::findOrFail($request->route('id') ?? $request->input('_id'));
 
-        if ($evidence->status != 'DRAFT' and $evidence->status != 'REJECTED') {
+        // se decide por la última versión: una versión antigua no puede reabrir una evidencia ya enviada
+        $status = $evidence->findHeaderEvidence()->status;
+
+        if ($status != 'DRAFT' && $status != 'REJECTED') {
             abort(404);
         }
 

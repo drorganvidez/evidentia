@@ -56,6 +56,40 @@ class EvidenceEditTest extends TestCase
         $this->assertSame(1, Evidence::count());
     }
 
+    public function test_publishing_the_same_edit_twice_leaves_one_version_to_review(): void
+    {
+        $student = $this->student();
+        $draft = $this->evidence($student, 'DRAFT');
+        $this->actingAs($student);
+
+        $this->post(route('evidence.publish.edit'), $this->form($draft->id))->assertRedirect(route('evidence.list'));
+        $this->post(route('evidence.publish.edit'), $this->form($draft->id))->assertNotFound();
+
+        $this->assertSame(1, Evidence::where('status', 'PENDING')->count());
+    }
+
+    public function test_an_old_draft_cannot_reopen_an_evidence_already_published(): void
+    {
+        $student = $this->student();
+        $draft = $this->evidence($student, 'DRAFT');
+        $this->actingAs($student)->post(route('evidence.publish.edit'), $this->form($draft->id));
+
+        $this->get(route('evidence.edit', ['id' => $draft->id]))->assertNotFound();
+        $this->post(route('evidence.draft.edit'), $this->form($draft->id))->assertNotFound();
+    }
+
+    public function test_an_accepted_evidence_cannot_be_edited(): void
+    {
+        $student = $this->student();
+        $accepted = $this->evidence($student, 'ACCEPTED');
+        $this->actingAs($student);
+
+        $this->get(route('evidence.edit', ['id' => $accepted->id]))->assertNotFound();
+        $this->post(route('evidence.publish.edit'), $this->form($accepted->id))->assertNotFound();
+
+        $this->assertSame(1, Evidence::count());
+    }
+
     private function student(): User
     {
         $student = User::factory()->create();
