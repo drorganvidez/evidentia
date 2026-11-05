@@ -27,6 +27,7 @@ use App\Http\Controllers\RandomizeController;
 use App\Http\Controllers\SignController;
 use App\Http\Controllers\SuggestionsMailboxController;
 use App\Http\Controllers\UploadController;
+use App\Http\Middleware\BonusMine;
 use App\Http\Middleware\CheckNotNull;
 use App\Http\Middleware\CheckProofDownload;
 use App\Http\Middleware\CheckRegisterBonus;
@@ -175,6 +176,7 @@ Route::middleware('auth')->group(function () {
 
         Route::middleware([
             CheckNotNull::class.':Bonus',
+            BonusMine::class,
             CheckRegisterBonus::class,
         ])->group(function () {
             Route::get('bonus/edit/{id}', [BonusSecretaryController::class, 'edit'])->name('secretary.bonus.edit');
