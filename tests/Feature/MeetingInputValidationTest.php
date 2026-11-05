@@ -47,6 +47,16 @@ class MeetingInputValidationTest extends TestCase
         $this->assertSame(0, Meeting::count());
     }
 
+    public function test_a_meeting_request_needs_a_valid_agenda(): void
+    {
+        foreach (['Reparto de tareas', '{"title": 5}', '[["Reparto"]]'] as $agenda) {
+            $this->post(route('secretary.meeting.manage.request.new'), ['points_list' => $agenda] + $this->request())
+                ->assertSessionHasErrors('points_list');
+        }
+
+        $this->assertSame(0, MeetingRequest::count());
+    }
+
     private function request(): array
     {
         return [

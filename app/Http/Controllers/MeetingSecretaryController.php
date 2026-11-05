@@ -66,7 +66,7 @@ class MeetingSecretaryController extends Controller
             'time' => 'required|date_format:H:i',
             'type' => 'required|numeric|min:1|max:2',
             'modality' => 'required|numeric|min:1|max:3',
-            'points_list' => 'required',
+            'points_list' => $this->points_list_rules(),
         ]);
 
         if ($validator->fails()) {
@@ -121,6 +121,17 @@ class MeetingSecretaryController extends Controller
         return redirect()->route('secretary.meeting.manage.request.list')->with('success', 'Convocatoria de reunión creada con éxito.');
     }
 
+    // el orden del día llega como una lista JSON de textos
+    private function points_list_rules(): array
+    {
+        return ['required', 'json', function ($attribute, $value, $fail) {
+            $points = json_decode($value, true);
+            if (! is_array($points) || collect($points)->contains(fn ($point) => ! is_string($point))) {
+                $fail('El orden del día no es válido.');
+            }
+        }];
+    }
+
     public function request_edit($id)
     {
 
@@ -150,7 +161,7 @@ class MeetingSecretaryController extends Controller
             'time' => 'required|date_format:H:i',
             'type' => 'required|numeric|min:1|max:2',
             'modality' => 'required|numeric|min:1|max:3',
-            'points_list' => 'required',
+            'points_list' => $this->points_list_rules(),
         ]);
 
         if ($validator->fails()) {
