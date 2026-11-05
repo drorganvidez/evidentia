@@ -41,7 +41,7 @@ class SignController extends Controller
 
             // compruebo que el usuario no es un secretario e intenta firmar en su propia hoja
             if (Auth::user()->secretary != null) {
-                if (Auth::user()->secretary->id == $signature_sheet->secretary->id) {
+                if (Auth::user()->secretary->id == $signature_sheet->secretary_id) {
                     Auth::logout();
                     $sign_message = 'Eres el secretario de esta reunión, no es necesario que firmes en tu propia hoja de firmas.';
 

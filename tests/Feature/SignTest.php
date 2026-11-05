@@ -64,6 +64,19 @@ class SignTest extends TestCase
         $this->assertGuest();
     }
 
+    public function test_a_secretary_signs_a_sheet_left_without_secretary(): void
+    {
+        $this->sheet->update(['secretary_id' => null]);
+        Secretary::forceCreate([
+            'user_id' => $this->student->id,
+            'committee_id' => Committee::create(['name' => 'Programa'])->id,
+        ]);
+
+        $this->sign('7391')->assertRedirect(route('sign.finish'));
+
+        $this->assertTrue($this->sheet->users()->whereKey($this->student->id)->exists());
+    }
+
     private function sign(string $sheet, string $password = 'secret123')
     {
         return $this->post(route('sign_p'), ['signature_sheet' => $sheet, 'email' => 'ana@us.es', 'password' => $password]);
