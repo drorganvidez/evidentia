@@ -412,7 +412,7 @@ class MeetingSecretaryController extends Controller
     public function minutes_create_step1_p(Request $request)
     {
 
-        $meeting_request = MeetingRequest::find($request->input('meeting_request'));
+        $meeting_request = Auth::user()->secretary->meetingRequests()->find($request->input('meeting_request'));
 
         return redirect()->route('secretary.meeting.manage.minutes.create.step2', [
 
@@ -423,7 +423,7 @@ class MeetingSecretaryController extends Controller
     public function minutes_create_step2(Request $request)
     {
 
-        $meeting_request = MeetingRequest::find($request->input('meeting_request'));
+        $meeting_request = Auth::user()->secretary->meetingRequests()->find($request->input('meeting_request'));
 
         $signature_sheets = Auth::user()->secretary->signatureSheets;
 
@@ -440,8 +440,8 @@ class MeetingSecretaryController extends Controller
         $meeting_request_input = $request->input('meeting_request');
         $signature_sheet_input = $request->input('signature_sheet');
 
-        $meeting_request = MeetingRequest::find($meeting_request_input);
-        $signature_sheet = SignatureSheet::find($signature_sheet_input);
+        $meeting_request = Auth::user()->secretary->meetingRequests()->find($meeting_request_input);
+        $signature_sheet = Auth::user()->secretary->signatureSheets()->find($signature_sheet_input);
 
         if ($signature_sheet != null) {
 
@@ -463,8 +463,8 @@ class MeetingSecretaryController extends Controller
     public function minutes_create_step3(Request $request)
     {
 
-        $meeting_request = MeetingRequest::find($request->input('meeting_request'));
-        $signature_sheet = SignatureSheet::find($request->input('signature_sheet'));
+        $meeting_request = Auth::user()->secretary->meetingRequests()->find($request->input('meeting_request'));
+        $signature_sheet = Auth::user()->secretary->signatureSheets()->find($request->input('signature_sheet'));
 
         $users = $this->user_service->all_except_logged();
         $defaultlists = Auth::user()->secretary->defaultLists;

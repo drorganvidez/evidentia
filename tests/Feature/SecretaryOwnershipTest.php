@@ -112,6 +112,24 @@ class SecretaryOwnershipTest extends TestCase
         $this->assertNull($foreign->fresh()->signatureSheet);
     }
 
+    public function test_minutes_cannot_use_another_committees_request_or_signers(): void
+    {
+        $owner = $this->secretary();
+        $foreignRequest = $this->requestOf($owner);
+        $foreignSheet = $this->sheetOf($owner);
+        $foreignSheet->users()->attach(User::factory()->create(['name' => 'Firmante ajeno']));
+        $foreignRequest->update(['title' => 'Convocatoria ajena']);
+        $this->actingAs($this->secretary()->user);
+
+        $this->get(route('secretary.meeting.manage.minutes.create.step3', [
+            'meeting_request' => $foreignRequest->id,
+            'signature_sheet' => $foreignSheet->id,
+        ]))
+            ->assertOk()
+            ->assertDontSee('Convocatoria ajena')
+            ->assertViewHas('signature_sheet', null);
+    }
+
     public function test_users_without_a_secretary_profile_get_not_found_on_requests_and_sheets(): void
     {
         $secretary = $this->secretary();
