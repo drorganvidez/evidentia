@@ -33,4 +33,22 @@ class ConfigDeadlinesTest extends TestCase
         $this->assertSame($closed->format('Y-m-d').' 23:59', Carbon::parse($configuration->upload_evidences_timestamp)->format('Y-m-d H:i'));
         $this->assertSame($extended->format('Y-m-d').' 23:59', Carbon::parse($configuration->validate_evidences_timestamp)->format('Y-m-d H:i'));
     }
+
+    public function test_the_president_saves_the_configuration_too(): void
+    {
+        Configuration::forceCreate([]);
+        $president = User::factory()->create();
+        $president->roles()->attach(Role::forceCreate(['rol' => 'PRESIDENT', 'slug' => 'president']));
+        $date = now()->addWeek()->format('Y-m-d');
+
+        $this->actingAs($president)->post(route('president.config.save'), [
+            'upload_evidences_date' => $date, 'upload_evidences_time' => '20:00',
+            'validate_evidences_date' => $date, 'validate_evidences_time' => '21:00',
+            'meetings_date' => $date, 'meetings_time' => '20:00',
+            'bonus_date' => $date, 'bonus_time' => '20:00',
+            'attendees_date' => $date, 'attendees_time' => '20:00',
+        ])->assertRedirect(route('president.config'));
+
+        $this->assertSame($date.' 21:00', Carbon::parse(Configuration::find(1)->validate_evidences_timestamp)->format('Y-m-d H:i'));
+    }
 }
