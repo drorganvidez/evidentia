@@ -42,3 +42,15 @@ Con el registro ya se ve la trampa; para cortarla de raíz: **nadie puede acepta
 ## Coste
 
 Una migración, un modelo, el helper, unas 40 llamadas en controladores y eventos, tres vistas y sus tests (incluido uno que recorre todas las rutas de escritura y comprueba que cada una deja anotación). Es una fase de trabajo aparte, sin riesgo para lo demás.
+
+## Subsanación, dentro de plazo
+
+Petición recogida el 6 de noviembre de 2026. Un alumno se equivoca a veces de comité al subir una evidencia. Eso, y en general cualquier error, debe poder corregirse sin tirar el trabajo, siempre dentro del plazo correspondiente.
+
+- El alumno puede cambiar el comité de una evidencia propia mientras esté en borrador o rechazada (hoy ya puede, al editarla) y también mientras esté pendiente de revisión, sin perder las pruebas ni la descripción.
+- El coordinador puede mover una evidencia pendiente de su comité a otro comité. Deja de verla él y pasa a la cola del coordinador de destino, con anotación en el registro de actividad y aviso al alumno.
+- El mismo criterio para el resto de objetos. El secretario corrige una convocatoria, una hoja de firmas, un acta o un bono mientras el plazo de reuniones siga abierto; el coordinador de registro corrige asistencias mientras el plazo de asistencias siga abierto.
+- Fuera de plazo, solo profesorado y presidencia, y queda anotado con el flag `after_deadline`.
+- Cada corrección se anota en el registro de actividad con el antes y el después.
+
+Entra en la fase de trazabilidad, junto al registro de actividad, porque es lógica de negocio y ambas cosas se apoyan en lo mismo.
