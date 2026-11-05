@@ -1,8 +1,10 @@
 @if ($evidence->status != 'ACCEPTED' and !\Carbon\Carbon::now()->gt(\Config::validate_evidences_timestamp()))
-    <a class="btn btn-success btn-sm" href="{{ route('coordinator.evidence.accept', ['id' => $evidence->id]) }}">
-        <i class="far fa-thumbs-up"></i>
-        <span class="d-none d-sm-none d-md-none d-lg-inline"></span>
-    </a>
+    <form class="d-inline" method="POST" action="{{ route('coordinator.evidence.accept', ['id' => $evidence->id]) }}">
+        @csrf
+        <button type="submit" class="btn btn-success btn-sm" title="Aceptar evidencia">
+            <i class="far fa-thumbs-up"></i>
+        </button>
+    </form>
 @endif
 
 @if ($evidence->status != 'REJECTED' and !\Carbon\Carbon::now()->gt(\Config::validate_evidences_timestamp()))

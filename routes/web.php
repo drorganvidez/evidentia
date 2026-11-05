@@ -381,7 +381,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/evidence/view/{id}', [EvidenceController::class, 'view'])->name('coordinator.evidence.view');
 
             Route::middleware([CheckValidateEvidences::class])->group(function () {
-                Route::get('/evidence/accept/{id}', [EvidenceCoordinatorController::class, 'accept'])->name('coordinator.evidence.accept');
+                Route::post('/evidence/accept/{id}', [EvidenceCoordinatorController::class, 'accept'])->name('coordinator.evidence.accept');
                 Route::post('/evidence/reject/', [EvidenceCoordinatorController::class, 'reject'])->name('coordinator.evidence.reject');
             });
         });
