@@ -218,26 +218,17 @@ class ManagementController extends Controller
                 ->with('error', 'Comité no válido.');
         }
 
-        // eliminar asociaciones anteriores
-        DB::table('coordinators')->where(['user_id' => $user->id])->delete();
-        DB::table('secretaries')->where(['user_id' => $user->id])->delete();
-        $user->roles()->detach();
-
         // asignar nuevos roles
-        foreach ($roles_id as $rol_id) {
-            $rol = Role::find($rol_id);
-            if ($rol) {
-                $user->roles()->attach($rol);
+        $user->roles()->sync(Role::whereIn('id', $roles_id)->pluck('id'));
+        $user->load('roles');
+
+        // asignar coordinador o secretario, conservando su fila (actas, convocatorias, listas...)
+        foreach (['coordinators' => 'COORDINATOR', 'secretaries' => 'SECRETARY'] as $table => $role) {
+            if ($user->hasRole($role)) {
+                DB::table($table)->updateOrInsert(['user_id' => $user->id], ['committee_id' => $committee_id]);
+            } else {
+                DB::table($table)->where('user_id', $user->id)->delete();
             }
-        }
-
-        // asignar coordinador o secretario
-        if ($user->hasRole('COORDINATOR')) {
-            DB::table('coordinators')->insert(['committee_id' => $committee_id, 'user_id' => $user->id]);
-        }
-
-        if ($user->hasRole('SECRETARY')) {
-            DB::table('secretaries')->insert(['committee_id' => $committee_id, 'user_id' => $user->id]);
         }
 
         // ✅ validaciones y actualización de datos personales
