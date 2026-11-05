@@ -238,7 +238,7 @@ class MeetingSecretaryController extends Controller
         Storage::delete('/meeting_requests/meeting_request_'.$meeting_request->id.'.pdf');
 
         // desemparejamos signature sheet (si la hubiera)
-        $signature_sheet = $meeting_request->signature_sheet;
+        $signature_sheet = $meeting_request->signatureSheet;
         if ($signature_sheet != null) {
             $signature_sheet->meeting_request_id = null;
             $signature_sheet->save();
@@ -267,7 +267,7 @@ class MeetingSecretaryController extends Controller
         $available_meeting_requests = Auth::user()->secretary->meetingRequests;
 
         $available_meeting_requests = $available_meeting_requests->filter(function ($value, $key) {
-            return $value->signature_sheet == null;
+            return $value->signatureSheet == null;
         });
 
         return view('meeting.signaturesheet_create', ['available_meeting_requests' => $available_meeting_requests]);
@@ -280,10 +280,16 @@ class MeetingSecretaryController extends Controller
             'title' => 'required|min:5|max:255',
         ]);
 
+        // una convocatoria tiene como mucho una hoja de firmas
+        $meeting_request = MeetingRequest::find($request->input('meeting_request'));
+        if ($meeting_request != null && $meeting_request->signatureSheet != null) {
+            return back()->withInput()->withErrors(['meeting_request' => 'Esta convocatoria ya tiene una hoja de firmas.']);
+        }
+
         SignatureSheet::create([
             'title' => $request->input('title'),
             'random_identifier' => $this->generate_random_identifier_for_signature(4),
-            'meeting_request_id' => $request->input('meeting_request'),
+            'meeting_request_id' => $meeting_request?->id,
             'secretary_id' => Auth::user()->secretary->id,
         ]);
 
@@ -321,7 +327,7 @@ class MeetingSecretaryController extends Controller
         $available_meeting_requests = Auth::user()->secretary->meetingRequests;
 
         $available_meeting_requests = $available_meeting_requests->filter(function ($value, $key) {
-            return $value->signature_sheet == null;
+            return $value->signatureSheet == null;
         });
 
         return view('meeting.signaturesheet_edit', [
@@ -349,7 +355,7 @@ class MeetingSecretaryController extends Controller
         $meeting_request = MeetingRequest::find($request->input('meeting_request_id'));
 
         if ($meeting_request != null) {
-            if ($meeting_request->signature_sheet == null) {
+            if ($meeting_request->signatureSheet == null) {
                 $signature_sheet->meeting_request_id = $meeting_request->id;
                 $signature_sheet->save();
             }
