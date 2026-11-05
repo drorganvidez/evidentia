@@ -225,14 +225,16 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/', [EventbriteController::class, 'attendee_list'])->name('registercoordinator.attendee.list');
 
-        // NUEVAS
-        Route::get('/{id}/edit', [EventbriteController::class, 'attendee_edit'])->name('attendee.edit');
-        Route::post('/{id}/edit', [EventbriteController::class, 'attendee_update'])->name('attendee.update');
+        // gestión manual de asistencias, solo dentro del plazo de asistencias
+        Route::middleware(CheckRegisterEventsAndAttendings::class)->group(function () {
+            Route::get('/{id}/edit', [EventbriteController::class, 'attendee_edit'])->name('attendee.edit');
+            Route::post('/{id}/edit', [EventbriteController::class, 'attendee_update'])->name('attendee.update');
 
-        Route::get('/create', [EventbriteController::class, 'attendee_create'])->name('attendee.create');
-        Route::post('/create', [EventbriteController::class, 'attendee_store'])->name('attendee.store');
+            Route::get('/create', [EventbriteController::class, 'attendee_create'])->name('attendee.create');
+            Route::post('/create', [EventbriteController::class, 'attendee_store'])->name('attendee.store');
 
-        Route::delete('/{id}', [EventbriteController::class, 'attendee_destroy'])->name('attendee.destroy');
+            Route::delete('/{id}', [EventbriteController::class, 'attendee_destroy'])->name('attendee.destroy');
+        });
 
     });
 

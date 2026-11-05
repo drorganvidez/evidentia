@@ -26,10 +26,12 @@
                         Exportar asistencias
                     </a>
 
-                    <a href="{{ route('attendee.create') }}" class="btn btn-danger">
-                        <i class="fas fa-plus"></i>
-                        Añadir asistencia
-                    </a>
+                    @if (!\Carbon\Carbon::now()->gt(\Config::attendee_timestamp()))
+                        <a href="{{ route('attendee.create') }}" class="btn btn-danger">
+                            <i class="fas fa-plus"></i>
+                            Añadir asistencia
+                        </a>
+                    @endif
 
                 </div>
             </div>
@@ -58,15 +60,17 @@
                                     </td>
                                     <td><x-attendeestatus :attendee="$attendee" /></td>
                                     <td>
-                                        <a href="{{ route('attendee.edit', $attendee->id) }}"
-                                            class="btn btn-sm btn-warning">
-                                            Editar
-                                        </a>
+                                        @if (!\Carbon\Carbon::now()->gt(\Config::attendee_timestamp()))
+                                            <a href="{{ route('attendee.edit', $attendee->id) }}"
+                                                class="btn btn-sm btn-warning">
+                                                Editar
+                                            </a>
 
-                                        <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
-                                            data-target="#deleteAttendeeModal" data-attendee-id="{{ $attendee->id }}">
-                                            Borrar
-                                        </button>
+                                            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
+                                                data-target="#deleteAttendeeModal" data-attendee-id="{{ $attendee->id }}">
+                                                Borrar
+                                            </button>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
