@@ -34,12 +34,18 @@ class ConfigController extends Controller
     public function config_save(Request $request)
     {
 
+        // un plazo puede estar ya cerrado: así se guarda la configuración sin tener que reabrirlo
         $request->validate([
-            'upload_evidences_date' => 'required|date_format:Y-m-d|after:today',
-            'validate_evidences_date' => 'required|date_format:Y-m-d|after:today|after:upload_evidences_date',
-            'meetings_date' => 'required|date_format:Y-m-d|after:today',
-            'bonus_date' => 'required|date_format:Y-m-d|after:today',
-            'attendees_date' => 'required|date_format:Y-m-d|after:today',
+            'upload_evidences_date' => 'required|date_format:Y-m-d',
+            'validate_evidences_date' => 'required|date_format:Y-m-d|after_or_equal:upload_evidences_date',
+            'meetings_date' => 'required|date_format:Y-m-d',
+            'bonus_date' => 'required|date_format:Y-m-d',
+            'attendees_date' => 'required|date_format:Y-m-d',
+            'upload_evidences_time' => 'required|date_format:H:i',
+            'validate_evidences_time' => 'required|date_format:H:i',
+            'meetings_time' => 'required|date_format:H:i',
+            'bonus_time' => 'required|date_format:H:i',
+            'attendees_time' => 'required|date_format:H:i',
         ]);
 
         $configuration = Configuration::find(1);
