@@ -112,7 +112,7 @@
                             action="{{ route('secretary.meeting.manage.signaturesheet.remove') }}" method="post">
                             @csrf
 
-                            <input type="hidden" name="signature_sheet_id" value="{{ $signature_sheet->id }}" />
+                            <input type="hidden" name="_id" value="{{ $signature_sheet->id }}" />
 
                         </form>
 

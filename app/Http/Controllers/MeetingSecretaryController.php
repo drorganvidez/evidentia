@@ -232,7 +232,7 @@ class MeetingSecretaryController extends Controller
 
     public function request_remove(Request $request)
     {
-        $meeting_request = MeetingRequest::where('id', $request->input('meeting_request_id'))->first();
+        $meeting_request = MeetingRequest::findOrFail($request->input('_id'));
 
         // borramos el pdf del acta antigua
         Storage::delete('/meeting_requests/meeting_request_'.$meeting_request->id.'.pdf');
@@ -361,7 +361,7 @@ class MeetingSecretaryController extends Controller
 
     public function signaturesheet_remove(Request $request)
     {
-        $signature_sheet = SignatureSheet::where('id', $request->input('signature_sheet_id'))->first();
+        $signature_sheet = SignatureSheet::findOrFail($request->input('_id'));
 
         // eliminamos la entidad en sí
         $signature_sheet->delete();

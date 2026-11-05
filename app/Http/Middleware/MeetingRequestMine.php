@@ -17,14 +17,7 @@ class MeetingRequestMine
     public function handle(Request $request, Closure $next)
     {
 
-        $id = $request->route('id');
-        if ($id == null) { // si se recibe por POST
-            $id = $request->_id;
-
-            if ($id == null) {
-                $id = $request->input('meeting_request_id');
-            }
-        }
+        $id = $request->route('id') ?? $request->input('_id');
 
         $meeting_request = MeetingRequest::findOrFail($id);
 
