@@ -140,6 +140,10 @@
                                 @csrf
 
                                 <div class="form-row">
+                                    <x-input col="6" attr="current_password" type="password" label="Contraseña actual" />
+                                </div>
+
+                                <div class="form-row">
                                     <x-input col="6" attr="password" type="password" label="Nueva contraseña" />
                                 </div>
 

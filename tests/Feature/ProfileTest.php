@@ -57,6 +57,17 @@ class ProfileTest extends TestCase
         $this->assertEquals(2, $this->user->fresh()->participation);
     }
 
+    public function test_changing_the_password_needs_the_current_one(): void
+    {
+        $this->post(route('profile.upload.pass'), ['current_password' => 'wrong', 'password' => 'new-secret', 'password_confirmation' => 'new-secret'])
+            ->assertSessionHasErrors('current_password');
+        $this->assertTrue(Hash::check('secret123', $this->user->fresh()->password));
+
+        $this->post(route('profile.upload.pass'), ['current_password' => 'secret123', 'password' => 'new-secret', 'password_confirmation' => 'new-secret'])
+            ->assertRedirect(route('profile.view'));
+        $this->assertTrue(Hash::check('new-secret', $this->user->fresh()->password));
+    }
+
     public function test_users_send_suggestions(): void
     {
         Mail::fake();
