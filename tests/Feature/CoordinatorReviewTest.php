@@ -111,6 +111,15 @@ class CoordinatorReviewTest extends TestCase
             ->assertSeeInOrder(['Motivos de rechazo anteriores', 'Falta el certificado.', 'Las horas no cuadran con el acta.']);
     }
 
+    public function test_only_coordinators_see_the_evidence_lists(): void
+    {
+        $secretary = User::factory()->create();
+        $secretary->roles()->attach(Role::forceCreate(['rol' => 'SECRETARY', 'slug' => 'secretary']));
+
+        $this->actingAs($this->coordinator)->get(route('coordinator.evidence.list.all'))->assertOk();
+        $this->actingAs($secretary)->get(route('coordinator.evidence.list.all'))->assertNotFound();
+    }
+
     private function proofOf(Evidence $evidence): Proof
     {
         $file = File::create(['name' => 'certificado', 'type' => 'pdf', 'route' => 'proofs/certificado.pdf', 'size' => 3]);
