@@ -63,7 +63,7 @@ class MeetingSecretaryController extends Controller
             'title' => 'required|min:5|max:255',
             'place' => 'required|min:5|max:255',
             'date' => 'required|date_format:Y-m-d|after:yesterday',
-            'time' => 'required',
+            'time' => 'required|date_format:H:i',
             'type' => 'required|numeric|min:1|max:2',
             'modality' => 'required|numeric|min:1|max:3',
             'points_list' => 'required',
@@ -147,7 +147,7 @@ class MeetingSecretaryController extends Controller
             'title' => 'required|min:5|max:255',
             'place' => 'required|min:5|max:255',
             'date' => 'required|date_format:Y-m-d|after:yesterday',
-            'time' => 'required',
+            'time' => 'required|date_format:H:i',
             'type' => 'required|numeric|min:1|max:2',
             'modality' => 'required|numeric|min:1|max:3',
             'points_list' => 'required',
@@ -485,7 +485,7 @@ class MeetingSecretaryController extends Controller
             'minutes' => ['required_without:hours', 'nullable', 'numeric', 'sometimes', 'min:0', 'max:60', new CheckHoursAndMinutes($request->input('hours'))],
             'place' => 'required|min:5|max:255',
             'date' => 'required|date_format:Y-m-d',
-            'time' => 'required',
+            'time' => 'required|date_format:H:i',
             'users' => 'required|array|min:1',
         ]);
 
@@ -624,7 +624,7 @@ class MeetingSecretaryController extends Controller
             'minutes' => ['required_without:hours', 'nullable', 'numeric', 'sometimes', 'min:0', 'max:60', new CheckHoursAndMinutes($request->input('hours'))],
             'place' => 'required|min:5|max:255',
             'date' => 'required|date_format:Y-m-d',
-            'time' => 'required',
+            'time' => 'required|date_format:H:i',
             'users' => 'required|array|min:1',
         ]);
 
