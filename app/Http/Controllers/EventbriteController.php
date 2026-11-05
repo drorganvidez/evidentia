@@ -172,6 +172,29 @@ class EventbriteController extends Controller
         }
     }
 
+    // primero por email exacto; si no, por nombre y apellidos exactos, y solo si no hay dudas sobre quién es
+    private function find_attendee_user(string $first_name, string $last_name, ?string $email)
+    {
+        if ($email) {
+            $user = DB::table('users')->whereRaw('LOWER(email) = ?', [strtolower(trim($email))])->first();
+            if ($user) {
+                return $user;
+            }
+        }
+
+        if ($first_name === '' || $last_name === '') {
+            return null;
+        }
+
+        $users = DB::table('users')
+            ->where('clean_name', $first_name)
+            ->where('clean_surname', $last_name)
+            ->limit(2)
+            ->get();
+
+        return $users->count() === 1 ? $users->first() : null;
+    }
+
     public function attendee_load($eventbrite_id)
     {
         $token = \Config::eventbrite_token();
@@ -219,14 +242,7 @@ class EventbriteController extends Controller
                     $status = $attendee->status;
 
                     // Buscar usuario local
-                    $user = DB::table('users')
-                        ->where('clean_name', 'like', "%$first_name%")
-                        ->where('clean_surname', 'like', "%$last_name%")
-                        ->first();
-
-                    if (! $user) {
-                        $user = DB::table('users')->where('email', 'like', "%$email%")->first();
-                    }
+                    $user = $this->find_attendee_user($first_name, $last_name, $email);
 
                     if (! $user) {
                         continue; // Ignorar usuarios sin correspondencia en tu sistema
