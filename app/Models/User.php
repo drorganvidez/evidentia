@@ -42,11 +42,6 @@ class User extends Authenticatable
         return $this->roles->contains(fn ($role) => $role->rol === $rol_param);
     }
 
-    public function isAdmin(): bool
-    {
-        return (bool) ($this->administrator ?? false);
-    }
-
     public function coordinator()
     {
         return $this->hasOne(Coordinator::class);
@@ -150,36 +145,6 @@ class User extends Authenticatable
         return $collection->count();
     }
 
-    public function evidences_hours()
-    {
-        return $this->collection_hours($this->evidences);
-    }
-
-    public function evidences_count()
-    {
-        return $this->collection_count($this->evidences);
-    }
-
-    public function evidences_draft_hours()
-    {
-        return $this->collection_hours($this->evidencesDraft());
-    }
-
-    public function evidences_draft_count()
-    {
-        return $this->collection_count($this->evidencesDraft());
-    }
-
-    public function evidences_pending_hours()
-    {
-        return $this->collection_hours($this->evidencesPending());
-    }
-
-    public function evidences_pending_count()
-    {
-        return $this->collection_count($this->evidencesPending());
-    }
-
     public function evidences_accepted_hours()
     {
         return $this->collection_hours($this->evidencesAccepted());
@@ -190,16 +155,6 @@ class User extends Authenticatable
         return $this->collection_count($this->evidencesAccepted());
     }
 
-    public function evidences_rejected_hours()
-    {
-        return $this->collection_hours($this->evidencesRejected());
-    }
-
-    public function evidences_rejected_count()
-    {
-        return $this->collection_count($this->evidencesRejected());
-    }
-
     public function meetings_hours()
     {
         return $this->collection_hours($this->meetings);
@@ -208,16 +163,6 @@ class User extends Authenticatable
     public function meetings_count()
     {
         return $this->collection_count($this->meetings);
-    }
-
-    public function meetings_total_count()
-    {
-        return Meeting::count();
-    }
-
-    public function attendees_pending_count()
-    {
-        return $this->collection_count($this->attendees_pending());
     }
 
     public function attendees_checkedin_count()

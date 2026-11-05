@@ -81,39 +81,9 @@ class Config
         return Configuration::all()->find(1);
     }
 
-    public static function max_attachment_number()
-    {
-        return self::config_entity()->max_attachment_number;
-    }
-
-    public static function max_attachment_size()
-    {
-        return self::config_entity()->max_attachment_size;
-    }
-
-    public static function max_proof_number()
-    {
-        return self::config_entity()->max_proof_number;
-    }
-
-    public static function max_proof_size()
-    {
-        return self::config_entity()->max_proof_size;
-    }
-
-    public static function max_evidence_number()
-    {
-        return self::config_entity()->max_evidence_number;
-    }
-
     public static function max_attendees_hours()
     {
         return self::config_entity()->max_attendees_hours;
-    }
-
-    public static function max_assist_number()
-    {
-        return self::config_entity()->max_assist_number;
     }
 
     // configuración de fechas límite

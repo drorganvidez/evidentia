@@ -33,11 +33,6 @@ class Committee extends Model
         return $this->hasMany(Meeting::class)->orderByDesc('datetime');
     }
 
-    public function meetings_requests()
-    {
-        return $this->hasMany(MeetingRequest::class)->orderByDesc('datetime');
-    }
-
     public function bonus()
     {
         return $this->hasMany(Bonus::class)->orderByDesc('created_at');
