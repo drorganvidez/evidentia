@@ -21,8 +21,10 @@ class SignatureSheetMine
 
         $signature_sheet = SignatureSheet::findOrFail($id);
 
-        if ($signature_sheet->secretary_id != Auth::user()->secretary->id) {
-            abort('404');
+        $secretary = Auth::user()->secretary;
+
+        if ($secretary == null or $signature_sheet->secretary_id != $secretary->id) {
+            abort(404);
         }
 
         return $next($request);

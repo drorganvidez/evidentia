@@ -21,8 +21,10 @@ class MeetingRequestMine
 
         $meeting_request = MeetingRequest::findOrFail($id);
 
-        if ($meeting_request->secretary_id != Auth::user()->secretary->id) {
-            abort('404');
+        $secretary = Auth::user()->secretary;
+
+        if ($secretary == null or $meeting_request->secretary_id != $secretary->id) {
+            abort(404);
         }
 
         return $next($request);

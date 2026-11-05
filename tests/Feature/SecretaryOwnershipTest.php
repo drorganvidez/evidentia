@@ -77,6 +77,19 @@ class SecretaryOwnershipTest extends TestCase
         $this->assertModelExists($foreign);
     }
 
+    public function test_users_without_a_secretary_profile_get_not_found_on_requests_and_sheets(): void
+    {
+        $secretary = $this->secretary();
+        $request = $this->requestOf($secretary);
+        $orphanSheet = SignatureSheet::create(['title' => 'Hoja huérfana', 'random_identifier' => '4321', 'secretary_id' => null]);
+        $student = User::factory()->create();
+        $student->roles()->attach(Role::forceCreate(['rol' => 'STUDENT', 'slug' => 'student']));
+        $this->actingAs($student);
+
+        $this->get(route('secretary.meeting.manage.request.edit', $request->id))->assertNotFound();
+        $this->get(route('secretary.meeting.manage.signaturesheet.edit', $orphanSheet->id))->assertNotFound();
+    }
+
     private function secretary(): Secretary
     {
         $user = User::factory()->create();
