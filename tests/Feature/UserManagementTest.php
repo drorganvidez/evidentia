@@ -126,6 +126,48 @@ class UserManagementTest extends TestCase
         $this->assertFalse($user->fresh()->hasRole('SECRETARY'));
     }
 
+    public function test_the_president_manages_students(): void
+    {
+        $president = User::factory()->create();
+        $president->roles()->attach($this->role('PRESIDENT'));
+        $student = User::factory()->create();
+        $student->roles()->attach($this->role('STUDENT'));
+        $this->actingAs($president);
+
+        $this->get(route('president.user.management', ['id' => $student->id]))->assertOk();
+        $this->post(route('president.user.management.save'), $this->form($student, ['SECRETARY']))
+            ->assertSessionHas('success');
+
+        $this->assertTrue($student->fresh()->hasRole('SECRETARY'));
+    }
+
+    public function test_the_president_cannot_grant_the_lecture_role(): void
+    {
+        $president = User::factory()->create();
+        $president->roles()->attach($this->role('PRESIDENT'));
+
+        $this->actingAs($president)->post(route('president.user.management.save'), $this->form($president, ['PRESIDENT', 'LECTURE']));
+
+        $president->refresh();
+        $this->assertTrue($president->hasRole('PRESIDENT'));
+        $this->assertFalse($president->hasRole('LECTURE'));
+    }
+
+    public function test_the_president_cannot_manage_lecturers(): void
+    {
+        $president = User::factory()->create();
+        $president->roles()->attach($this->role('PRESIDENT'));
+        $password = $this->lecture->password;
+        $this->actingAs($president);
+
+        $this->get(route('president.user.management', ['id' => $this->lecture->id]))->assertNotFound();
+        $this->post(route('president.user.management.save'), [
+            'password' => 'hijacked', 'password_confirmation' => 'hijacked',
+        ] + $this->form($this->lecture, ['LECTURE']))->assertNotFound();
+
+        $this->assertSame($password, $this->lecture->fresh()->password);
+    }
+
     private function role(string $name): Role
     {
         return Role::where('rol', $name)->first() ?? Role::forceCreate(['rol' => $name, 'slug' => strtolower($name)]);

@@ -180,6 +180,7 @@ class ManagementController extends Controller
     {
 
         $user = User::findOrFail($id);
+        $this->abort_unless_can_manage($user);
 
         $route = null;
         if (Auth::user()->hasRole('PRESIDENT')) {
@@ -205,8 +206,12 @@ class ManagementController extends Controller
     public function user_management_save(Request $request)
     {
         $user = User::findOrFail($request->input('user_id'));
+        $this->abort_unless_can_manage($user);
 
-        $roles_id = Role::whereIn('id', $request->input('roles', []))->pluck('id');
+        // el presidente no puede dar el rol de profesor
+        $roles_id = Role::whereIn('id', $request->input('roles', []))
+            ->when(! Auth::user()->hasRole('LECTURE'), fn ($query) => $query->where('rol', '!=', 'LECTURE'))
+            ->pluck('id');
         $needs_committee = Role::whereIn('id', $roles_id)->whereIn('rol', ['COORDINATOR', 'SECRETARY'])->exists();
 
         // validamos todo antes de modificar nada
@@ -262,6 +267,14 @@ class ManagementController extends Controller
 
         return redirect()->route('lecture.user.list', ['id' => $user->id])
             ->with('success', 'Usuario actualizado con éxito');
+    }
+
+    // el presidente no puede editar los usuarios de tipo profesor
+    private function abort_unless_can_manage(User $user): void
+    {
+        if (! Auth::user()->hasRole('LECTURE') && $user->hasRole('LECTURE')) {
+            abort(404);
+        }
     }
 
     public function user_management_new(Request $request)
