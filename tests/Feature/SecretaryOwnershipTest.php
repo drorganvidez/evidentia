@@ -77,6 +77,27 @@ class SecretaryOwnershipTest extends TestCase
         $this->assertModelExists($foreign);
     }
 
+    public function test_a_secretary_views_the_signers_of_their_own_signature_sheet(): void
+    {
+        $secretary = $this->secretary();
+        $sheet = $this->sheetOf($secretary);
+        $sheet->users()->attach(User::factory()->create(['name' => 'Firmante']));
+
+        $this->actingAs($secretary->user)
+            ->get(route('secretary.meeting.manage.signaturesheet.view', ['id' => $sheet->id]))
+            ->assertOk()
+            ->assertSee('Firmante');
+    }
+
+    public function test_a_secretary_cannot_view_another_committees_signature_sheet(): void
+    {
+        $foreign = $this->sheetOf($this->secretary());
+
+        $this->actingAs($this->secretary()->user)
+            ->get(route('secretary.meeting.manage.signaturesheet.view', ['id' => $foreign->id]))
+            ->assertNotFound();
+    }
+
     public function test_users_without_a_secretary_profile_get_not_found_on_requests_and_sheets(): void
     {
         $secretary = $this->secretary();

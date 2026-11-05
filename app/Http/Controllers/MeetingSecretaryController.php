@@ -306,9 +306,9 @@ class MeetingSecretaryController extends Controller
         return $random_identifier;
     }
 
-    public function signaturesheet_view($signature_sheet)
+    public function signaturesheet_view($id)
     {
-        $signature_sheet = SignatureSheet::findOrFail($signature_sheet);
+        $signature_sheet = SignatureSheet::findOrFail($id);
 
         return view('meeting.signaturesheet_view', ['signature_sheet' => $signature_sheet]);
     }

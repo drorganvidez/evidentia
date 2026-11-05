@@ -37,7 +37,7 @@
                                 <tr scope="row">
                                     <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
                                         <a
-                                            href="{{ route('secretary.meeting.manage.signaturesheet.view', ['signature_sheet' => $signature_sheet]) }}">
+                                            href="{{ route('secretary.meeting.manage.signaturesheet.view', ['id' => $signature_sheet->id]) }}">
                                             {{ $signature_sheet->title }}
                                         </a>
                                     </td>
@@ -63,7 +63,7 @@
                                             Copiar</button>
 
                                         <a class="btn btn-primary btn-xs"
-                                            href="{{ route('secretary.meeting.manage.signaturesheet.view', ['signature_sheet' => $signature_sheet]) }}">
+                                            href="{{ route('secretary.meeting.manage.signaturesheet.view', ['id' => $signature_sheet->id]) }}">
                                             <i class="fas fa-signature"></i>
                                         </a>
 
