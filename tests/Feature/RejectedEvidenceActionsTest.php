@@ -54,6 +54,17 @@ class RejectedEvidenceActionsTest extends TestCase
             ->assertSee('Necesito que me mandes un documento con el trabajo realizado');
     }
 
+    public function test_only_rejected_evidences_go_back_to_draft(): void
+    {
+        $evidence = $this->rejectedEvidence();
+
+        foreach (['PENDING', 'ACCEPTED'] as $status) {
+            $evidence->update(['status' => $status]);
+            $this->post(route('evidence.reedit'), ['_id' => $evidence->id])->assertNotFound();
+            $this->assertSame($status, $evidence->fresh()->status);
+        }
+    }
+
     public function test_rejected_evidences_cannot_be_edited_again_after_the_upload_deadline(): void
     {
         $evidence = $this->rejectedEvidence();

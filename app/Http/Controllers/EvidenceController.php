@@ -298,8 +298,12 @@ class EvidenceController extends Controller
 
     public function reedit(Request $request)
     {
-        $id = $request->_id;
-        $evidence = Evidence::find($id);
+        $evidence = Evidence::findOrFail($request->_id);
+
+        // solo una evidencia rechazada (y que siga siendo la última versión) vuelve a borrador
+        if ($evidence->status != 'REJECTED' || ! $evidence->last) {
+            abort(404);
+        }
 
         $evidence->status = 'DRAFT';
 
