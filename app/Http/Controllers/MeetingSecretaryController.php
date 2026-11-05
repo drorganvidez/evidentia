@@ -474,8 +474,8 @@ class MeetingSecretaryController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|min:5|max:255',
             'type' => 'required|numeric|min:1|max:2',
-            'hours' => ['required_without:minutes', 'nullable', 'numeric', 'sometimes', 'max:99', new CheckHoursAndMinutes($request->input('minutes'))],
-            'minutes' => ['required_without:hours', 'nullable', 'numeric', 'sometimes', 'max:60', new CheckHoursAndMinutes($request->input('hours'))],
+            'hours' => ['required_without:minutes', 'nullable', 'numeric', 'sometimes', 'min:0', 'max:99', new CheckHoursAndMinutes($request->input('minutes'))],
+            'minutes' => ['required_without:hours', 'nullable', 'numeric', 'sometimes', 'min:0', 'max:60', new CheckHoursAndMinutes($request->input('hours'))],
             'place' => 'required|min:5|max:255',
             'date' => 'required|date_format:Y-m-d',
             'time' => 'required',
@@ -613,8 +613,8 @@ class MeetingSecretaryController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|min:5|max:255',
             'type' => 'required|numeric|min:1|max:2',
-            'hours' => ['required_without:minutes', 'nullable', 'numeric', 'sometimes', 'max:99', new CheckHoursAndMinutes($request->input('minutes'))],
-            'minutes' => ['required_without:hours', 'nullable', 'numeric', 'sometimes', 'max:60', new CheckHoursAndMinutes($request->input('hours'))],
+            'hours' => ['required_without:minutes', 'nullable', 'numeric', 'sometimes', 'min:0', 'max:99', new CheckHoursAndMinutes($request->input('minutes'))],
+            'minutes' => ['required_without:hours', 'nullable', 'numeric', 'sometimes', 'min:0', 'max:60', new CheckHoursAndMinutes($request->input('hours'))],
             'place' => 'required|min:5|max:255',
             'date' => 'required|date_format:Y-m-d',
             'time' => 'required',
