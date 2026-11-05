@@ -12,10 +12,12 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Tests\TestCase;
 
 /**
- * Real .xlsx files: the exports are downloaded and read back.
+ * Real .xlsx files in and out: the import reads a spreadsheet written here and the exports are read back.
  */
 class SpreadsheetTest extends TestCase
 {
@@ -34,6 +36,37 @@ class SpreadsheetTest extends TestCase
         $this->lecture->roles()->attach(Role::forceCreate(['rol' => 'LECTURE', 'slug' => 'lecture']));
         $this->student = User::factory()->create(['name' => 'Ana', 'surname' => 'García', 'username' => 'anagar']);
         $this->student->roles()->attach(Role::forceCreate(['rol' => 'STUDENT', 'slug' => 'student']));
+    }
+
+    public function test_the_lecturer_imports_students_from_a_spreadsheet(): void
+    {
+        $this->storeUpload('alumnos.xlsx', [
+            ['apellidos', 'nombre', 'uvus', 'email'],
+            [' Pérez López ', 'Lucía', 'lucperlop', 'lucia@alum.us.es'],
+            ['Martín', 'Pedro', 'pedmar', 'pedro@alum.us.es'],
+            [null, null, null, null],
+        ]);
+
+        $this->post(route('lecture.import.save'))
+            ->assertRedirect(route('lecture.user.list'))
+            ->assertSessionHas('success');
+
+        $lucia = User::where('username', 'lucperlop')->sole();
+        $this->assertSame(['Pérez López', 'Lucía', 'lucia@alum.us.es'], [$lucia->surname, $lucia->name, $lucia->email]);
+        $this->assertSame('PEREZLOPEZ', $lucia->clean_surname);
+        $this->assertTrue($lucia->hasRole('STUDENT'));
+        $this->assertTrue(User::where('username', 'pedmar')->sole()->hasRole('STUDENT'));
+        $this->assertSame(4, User::count());
+    }
+
+    public function test_importing_without_a_file_says_so(): void
+    {
+        $this->actingAs($this->lecture)->withSession(['_token' => 'import-token'])
+            ->post(route('lecture.import.save'))
+            ->assertRedirect(route('lecture.import'))
+            ->assertSessionHas('error');
+
+        $this->assertSame(2, User::count());
     }
 
     public function test_the_final_hours_export_downloads_a_spreadsheet(): void
@@ -66,6 +99,19 @@ class SpreadsheetTest extends TestCase
         $this->assertSame(['Apellidos', 'Nombre', 'Uvus', 'Horas de asistencia'], $rows[0]);
         $this->assertContains(['GARCÍA', 'ANA', 'anagar', 2], $rows);
         $this->assertSame(0, collect($rows)->firstWhere(2, $coordinator->username)[3]);
+    }
+
+    private function storeUpload(string $name, array $rows): void
+    {
+        $spreadsheet = new Spreadsheet;
+        $spreadsheet->getActiveSheet()->fromArray($rows);
+        $path = tempnam(sys_get_temp_dir(), 'xlsx');
+        (new Xlsx($spreadsheet))->save($path);
+
+        // where the upload widget leaves the file for the current session
+        $this->actingAs($this->lecture)->withSession(['_token' => 'import-token']);
+        Storage::put('tmp/'.$this->lecture->username.'/import-token/'.$name, file_get_contents($path));
+        unlink($path);
     }
 
     private function download(string $url, array $data = []): array

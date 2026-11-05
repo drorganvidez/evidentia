@@ -37,6 +37,10 @@ class ImportExportController extends Controller
         $token = $request->session()->token();
         $tmp = 'tmp/'.$user->username.'/'.$token.'/';
 
+        if (empty(Storage::files($tmp))) {
+            return redirect()->route('lecture.import')->with('error', 'Sube primero el archivo con los alumnos.');
+        }
+
         try {
             foreach (Storage::files($tmp) as $filename) {
                 $name = pathinfo($filename, PATHINFO_FILENAME);
