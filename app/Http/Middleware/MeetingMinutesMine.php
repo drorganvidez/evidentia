@@ -21,8 +21,10 @@ class MeetingMinutesMine
 
         $meeting_minutes = MeetingMinutes::findOrFail($id);
 
-        if ($meeting_minutes->secretary_id != Auth::user()->secretary->id) {
-            abort('404');
+        $secretary = Auth::user()->secretary;
+
+        if ($secretary == null || $meeting_minutes->secretary_id != $secretary->id) {
+            abort(404);
         }
 
         return $next($request);

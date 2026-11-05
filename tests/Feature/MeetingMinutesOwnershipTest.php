@@ -82,6 +82,18 @@ class MeetingMinutesOwnershipTest extends TestCase
         $this->assertModelExists($foreign->meeting);
     }
 
+    public function test_users_without_a_secretary_profile_get_not_found_on_minutes(): void
+    {
+        $minutes = $this->minutesOf($this->secretary());
+        $student = User::factory()->create();
+        $student->roles()->attach(Role::forceCreate(['rol' => 'STUDENT', 'slug' => 'student']));
+        $this->actingAs($student);
+
+        $this->get(route('secretary.meeting.manage.minutes.edit', ['id' => $minutes->id]))->assertNotFound();
+        $this->post(route('secretary.meeting.manage.minutes.remove'), ['_id' => $minutes->id])->assertNotFound();
+        $this->assertModelExists($minutes);
+    }
+
     private function secretary(): Secretary
     {
         $user = User::factory()->create();
