@@ -1,0 +1,862 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Evidentia · Dirección A «Aurora»</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%237d6af5%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%234fc3e8%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2218%22%20fill%3D%22url%28%23g%29%22/%3E%3Ctext%20x%3D%2232%22%20y%3D%2245%22%20text-anchor%3D%22middle%22%20font-family%3D%22Plus%20Jakarta%20Sans%2CArial%2Csans-serif%22%20font-weight%3D%22800%22%20font-size%3D%2238%22%20fill%3D%22%23fff%22%3Ee%3C/text%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/jakarta/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* ===== Fuentes autoalojadas (OFL) ===== */
+@font-face { font-family: 'Jakarta'; src: url('assets/fonts/jakarta/plus-jakarta-sans-latin-wght-normal.woff2') format('woff2-variations'); font-weight: 200 800; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('assets/fonts/jetbrains/jetbrains-mono-latin-wght-normal.woff2') format('woff2-variations'); font-weight: 100 800; font-display: swap; }
+
+/* ===== Tokens: escalas (OKLCH, generadas y verificadas AA) ===== */
+:root {
+  --aurora-50: oklch(97.5% 0.012 285);
+  --aurora-100: oklch(94.5% 0.027 285);
+  --aurora-200: oklch(88.5% 0.058 285);
+  --aurora-300: oklch(80.5% 0.102 285);
+  --aurora-400: oklch(71.5% 0.155 285);
+  --aurora-500: oklch(61.5% 0.200 285);
+  --aurora-600: oklch(51.5% 0.200 285);
+  --aurora-700: oklch(44.5% 0.184 285);
+  --aurora-800: oklch(37.0% 0.156 285);
+  --aurora-900: oklch(29.5% 0.120 285);
+  --aurora-950: oklch(21.5% 0.090 285);
+  --slate-50: oklch(97.5% 0.010 265);
+  --slate-100: oklch(94.5% 0.012 265);
+  --slate-200: oklch(88.5% 0.014 265);
+  --slate-300: oklch(80.5% 0.018 265);
+  --slate-400: oklch(71.5% 0.020 265);
+  --slate-500: oklch(61.5% 0.022 265);
+  --slate-600: oklch(51.5% 0.022 265);
+  --slate-700: oklch(44.5% 0.021 265);
+  --slate-800: oklch(37.0% 0.020 265);
+  --slate-900: oklch(29.5% 0.019 265);
+  --slate-950: oklch(21.5% 0.018 265);
+  --cyan-50: oklch(97.5% 0.019 215);
+  --cyan-100: oklch(94.5% 0.035 215);
+  --cyan-200: oklch(88.5% 0.067 215);
+  --cyan-300: oklch(80.5% 0.104 215);
+  --cyan-400: oklch(71.5% 0.126 215);
+  --cyan-500: oklch(61.5% 0.109 215);
+  --cyan-600: oklch(51.5% 0.091 215);
+  --cyan-700: oklch(44.5% 0.079 215);
+  --cyan-800: oklch(37.0% 0.066 215);
+  --cyan-900: oklch(29.5% 0.052 215);
+  --cyan-950: oklch(21.5% 0.038 215);
+  --rose-50: oklch(97.5% 0.015 345);
+  --rose-100: oklch(94.5% 0.035 345);
+  --rose-200: oklch(88.5% 0.071 345);
+  --rose-300: oklch(80.5% 0.111 345);
+  --rose-400: oklch(71.5% 0.144 345);
+  --rose-500: oklch(61.5% 0.170 345);
+  --rose-600: oklch(51.5% 0.170 345);
+  --rose-700: oklch(44.5% 0.156 345);
+  --rose-800: oklch(37.0% 0.133 345);
+  --rose-900: oklch(29.5% 0.102 345);
+  --rose-950: oklch(21.5% 0.076 345);
+  --exito-50: oklch(97.5% 0.017 155);
+  --exito-100: oklch(94.5% 0.031 155);
+  --exito-200: oklch(88.5% 0.059 155);
+  --exito-300: oklch(80.5% 0.091 155);
+  --exito-400: oklch(71.5% 0.119 155);
+  --exito-500: oklch(61.5% 0.140 155);
+  --exito-600: oklch(51.5% 0.127 155);
+  --exito-700: oklch(44.5% 0.110 155);
+  --exito-800: oklch(37.0% 0.092 155);
+  --exito-900: oklch(29.5% 0.073 155);
+  --exito-950: oklch(21.5% 0.054 155);
+  --aviso-50: oklch(97.5% 0.019 75);
+  --aviso-100: oklch(94.5% 0.035 75);
+  --aviso-200: oklch(88.5% 0.067 75);
+  --aviso-300: oklch(80.5% 0.104 75);
+  --aviso-400: oklch(71.5% 0.136 75);
+  --aviso-500: oklch(61.5% 0.130 75);
+  --aviso-600: oklch(51.5% 0.109 75);
+  --aviso-700: oklch(44.5% 0.094 75);
+  --aviso-800: oklch(37.0% 0.078 75);
+  --aviso-900: oklch(29.5% 0.063 75);
+  --aviso-950: oklch(21.5% 0.046 75);
+  --error-50: oklch(97.5% 0.012 25);
+  --error-100: oklch(94.5% 0.028 25);
+  --error-200: oklch(88.5% 0.061 25);
+  --error-300: oklch(80.5% 0.111 25);
+  --error-400: oklch(71.5% 0.162 25);
+  --error-500: oklch(61.5% 0.190 25);
+  --error-600: oklch(51.5% 0.190 25);
+  --error-700: oklch(44.5% 0.175 25);
+  --error-800: oklch(37.0% 0.148 25);
+  --error-900: oklch(29.5% 0.114 25);
+  --error-950: oklch(21.5% 0.086 25);
+  --info-50: oklch(97.5% 0.013 240);
+  --info-100: oklch(94.5% 0.029 240);
+  --info-200: oklch(88.5% 0.063 240);
+  --info-300: oklch(80.5% 0.098 240);
+  --info-400: oklch(71.5% 0.128 240);
+  --info-500: oklch(61.5% 0.141 240);
+  --info-600: oklch(51.5% 0.118 240);
+  --info-700: oklch(44.5% 0.102 240);
+  --info-800: oklch(37.0% 0.085 240);
+  --info-900: oklch(29.5% 0.068 240);
+  --info-950: oklch(21.5% 0.050 240);
+  --font-text: 'Jakarta', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --r-xs: 8px; --r-s: 12px; --r-m: 16px; --r-l: 20px; --r-xl: 28px; --r-pill: 999px;
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 20px; --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px;
+  --ease: cubic-bezier(.2,.8,.2,1); --t: .18s;
+  --glass-blur: blur(10px) saturate(1.15);
+}
+
+/* ===== Tokens semánticos: claro ===== */
+:root {
+  color-scheme: light;
+  --bg: var(--slate-50);
+  --text: var(--slate-900); --muted: var(--slate-600); --faint: var(--slate-500);
+  --rule: color-mix(in oklch, var(--slate-400) 28%, transparent);
+  --field: color-mix(in oklch, white 75%, transparent);
+  --glass: color-mix(in oklch, white 92%, transparent);
+  --glass-2: color-mix(in oklch, white 97%, transparent);
+  --glass-edge: color-mix(in oklch, white 85%, transparent);
+  --glass-hi: color-mix(in oklch, white 95%, transparent);
+  --shadow-c: color-mix(in oklch, var(--aurora-900) 18%, transparent);
+  --brand: var(--aurora-600); --brand-hi: var(--aurora-500); --brand-lo: var(--aurora-700); --brand-text: var(--aurora-700); --on-brand: #fff;
+  --brand-soft: var(--aurora-100); --brand-soft-text: var(--aurora-800);
+  --glow: color-mix(in oklch, var(--aurora-500) 45%, transparent);
+  --b1: var(--aurora-300); --b2: var(--cyan-200); --b3: var(--rose-200); --blob-op: .55;
+  --ok-bg: var(--exito-100); --ok-fg: var(--exito-700); --ok-dot: var(--exito-500);
+  --pend-bg: var(--aviso-100); --pend-fg: var(--aviso-700); --pend-dot: var(--aviso-500);
+  --err-bg: var(--error-100); --err-fg: var(--error-700); --err-dot: var(--error-500);
+  --draft-bg: var(--slate-100); --draft-fg: var(--slate-700); --draft-dot: var(--slate-500);
+  --info-bg: var(--info-100); --info-fg: var(--info-700); --info-dot: var(--info-500);
+  --avatar-bg: linear-gradient(135deg, var(--aurora-400), var(--cyan-400)); --avatar-fg: #fff;
+}
+/* ===== Tokens semánticos: oscuro ===== */
+:root[data-theme="dark"] { color-scheme: dark;
+  --bg: var(--slate-950);
+  --text: var(--slate-100); --muted: var(--slate-400); --faint: var(--slate-500);
+  --rule: color-mix(in oklch, var(--slate-600) 35%, transparent);
+  --field: color-mix(in oklch, var(--slate-900) 70%, transparent);
+  --glass: color-mix(in oklch, var(--slate-900) 88%, transparent);
+  --glass-2: color-mix(in oklch, var(--slate-800) 85%, transparent);
+  --glass-edge: color-mix(in oklch, white 14%, transparent);
+  --glass-hi: color-mix(in oklch, white 22%, transparent);
+  --shadow-c: color-mix(in oklch, black 55%, transparent);
+  --brand: var(--aurora-600); --brand-hi: var(--aurora-500); --brand-lo: var(--aurora-700); --brand-text: var(--aurora-300); --on-brand: #fff;
+  --brand-soft: var(--aurora-900); --brand-soft-text: var(--aurora-200);
+  --glow: color-mix(in oklch, var(--aurora-400) 55%, transparent);
+  --b1: var(--aurora-700); --b2: var(--cyan-800); --b3: var(--rose-800); --blob-op: .5;
+  --ok-bg: var(--exito-900); --ok-fg: var(--exito-300); --ok-dot: var(--exito-400);
+  --pend-bg: var(--aviso-900); --pend-fg: var(--aviso-300); --pend-dot: var(--aviso-400);
+  --err-bg: var(--error-900); --err-fg: var(--error-300); --err-dot: var(--error-400);
+  --draft-bg: var(--slate-800); --draft-fg: var(--slate-300); --draft-dot: var(--slate-400);
+  --info-bg: var(--info-900); --info-fg: var(--info-300); --info-dot: var(--info-400);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme]) { color-scheme: dark;
+  --bg: var(--slate-950);
+  --text: var(--slate-100); --muted: var(--slate-400); --faint: var(--slate-500);
+  --rule: color-mix(in oklch, var(--slate-600) 35%, transparent);
+  --field: color-mix(in oklch, var(--slate-900) 70%, transparent);
+  --glass: color-mix(in oklch, var(--slate-900) 88%, transparent);
+  --glass-2: color-mix(in oklch, var(--slate-800) 85%, transparent);
+  --glass-edge: color-mix(in oklch, white 14%, transparent);
+  --glass-hi: color-mix(in oklch, white 22%, transparent);
+  --shadow-c: color-mix(in oklch, black 55%, transparent);
+  --brand: var(--aurora-600); --brand-hi: var(--aurora-500); --brand-lo: var(--aurora-700); --brand-text: var(--aurora-300); --on-brand: #fff;
+  --brand-soft: var(--aurora-900); --brand-soft-text: var(--aurora-200);
+  --glow: color-mix(in oklch, var(--aurora-400) 55%, transparent);
+  --b1: var(--aurora-700); --b2: var(--cyan-800); --b3: var(--rose-800); --blob-op: .5;
+  --ok-bg: var(--exito-900); --ok-fg: var(--exito-300); --ok-dot: var(--exito-400);
+  --pend-bg: var(--aviso-900); --pend-fg: var(--aviso-300); --pend-dot: var(--aviso-400);
+  --err-bg: var(--error-900); --err-fg: var(--error-300); --err-dot: var(--error-400);
+  --draft-bg: var(--slate-800); --draft-fg: var(--slate-300); --draft-dot: var(--slate-400);
+  --info-bg: var(--info-900); --info-fg: var(--info-300); --info-dot: var(--info-400);
+} }
+
+/* ===== Cristal intenso (opcional, para comparar) ===== */
+:root[data-glass="intense"] { --glass-blur: blur(22px) saturate(1.5); --glass: color-mix(in oklch, white 66%, transparent); --glass-2: color-mix(in oklch, white 82%, transparent); --blob-op: .9; }
+:root[data-glass="intense"][data-theme="dark"] { --glass: color-mix(in oklch, var(--slate-900) 58%, transparent); --glass-2: color-mix(in oklch, var(--slate-800) 70%, transparent); --blob-op: .75; }
+@media (prefers-color-scheme: dark) { :root[data-glass="intense"]:not([data-theme]) { --glass: color-mix(in oklch, var(--slate-900) 58%, transparent); --glass-2: color-mix(in oklch, var(--slate-800) 70%, transparent); --blob-op: .75; } }
+
+
+/* ===== Base ===== */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--text); font: 450 15px/1.5 var(--font-text); letter-spacing: -0.005em; -webkit-font-smoothing: antialiased; }
+a { color: var(--brand-text); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--brand-hi); outline-offset: 3px; border-radius: var(--r-xs); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: 0; }
+.muted { color: var(--muted); }
+svg.i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.skip { position: absolute; left: var(--s-4); top: -64px; z-index: 50; padding: var(--s-2) var(--s-4); background: var(--brand); color: var(--on-brand); border-radius: var(--r-pill); }
+.skip:focus { top: var(--s-4); }
+
+/* ===== Aurora: luz de fondo ===== */
+.aurora { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.aurora span { position: absolute; border-radius: 50%; filter: blur(70px); opacity: var(--blob-op); will-change: transform; }
+.aurora .a1 { width: 56vw; height: 56vw; left: -14vw; top: -22vw; background: var(--b1); animation: drift1 26s var(--ease) infinite alternate; }
+.aurora .a2 { width: 44vw; height: 44vw; right: -10vw; top: 6vh; background: var(--b2); animation: drift2 32s var(--ease) infinite alternate; }
+.aurora .a3 { width: 48vw; height: 48vw; left: 22vw; bottom: -26vw; background: var(--b3); animation: drift3 38s var(--ease) infinite alternate; }
+@keyframes drift1 { to { transform: translate(8vw, 6vh) scale(1.08); } }
+@keyframes drift2 { to { transform: translate(-6vw, 10vh) scale(.94); } }
+@keyframes drift3 { to { transform: translate(-10vw, -8vh) scale(1.06); } }
+
+/* ===== Cristal ===== */
+.glass { background: var(--glass); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-edge); box-shadow: inset 0 1px 0 var(--glass-hi), 0 24px 60px -32px var(--shadow-c); border-radius: var(--r-xl); }
+
+/* ===== Shell ===== */
+.shell { display: grid; grid-template-columns: 272px minmax(0, 1fr); gap: var(--s-6); padding: var(--s-5); min-height: 100vh; max-width: 1520px; margin: 0 auto; }
+.sidebar { position: sticky; top: var(--s-5); height: calc(100vh - 40px); padding: var(--s-6) var(--s-5); display: flex; flex-direction: column; gap: var(--s-8); }
+.brand { display: flex; align-items: center; gap: var(--s-3); color: var(--text); text-decoration: none !important; padding: var(--s-1); }
+.brand strong { display: block; font-size: 19px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
+.brand small { display: block; color: var(--muted); font-size: 12.5px; font-weight: 500; }
+.mark { width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center; background: linear-gradient(135deg, var(--aurora-500), var(--cyan-400) 120%); color: #fff; box-shadow: 0 10px 24px -10px var(--glow), inset 0 1px 0 rgba(255,255,255,.45); font-weight: 800; font-size: 22px; letter-spacing: -0.05em; }
+.mark svg { width: 24px; height: 24px; }
+nav.menu { display: grid; gap: 3px; }
+nav.menu a { display: flex; align-items: center; gap: var(--s-3); padding: 10px 12px; border-radius: var(--r-s); color: var(--text); font-weight: 550; font-size: 14.5px; text-decoration: none !important; transition: background var(--t) var(--ease), color var(--t) var(--ease), transform var(--t) var(--ease); }
+nav.menu a:hover { background: var(--glass-2); }
+nav.menu a[aria-current="page"] { background: var(--brand-soft); color: var(--brand-soft-text); box-shadow: inset 0 1px 0 var(--glass-hi); }
+nav.menu a[aria-current="page"] svg { color: var(--brand-text); }
+nav.menu .count { margin-left: auto; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: var(--r-pill); background: var(--glass-2); color: var(--muted); }
+.deadline { margin-top: auto; padding: var(--s-4); border-radius: var(--r-l); background: var(--glass-2); border: 1px solid var(--glass-edge); display: grid; gap: var(--s-2); font-size: 13px; }
+.deadline-top { display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
+.tag { font-size: 11.5px; font-weight: 700; padding: 2px 9px; border-radius: var(--r-pill); background: var(--pend-bg); color: var(--pend-fg); }
+.meter { height: 6px; border-radius: 3px; background: var(--rule); overflow: hidden; }
+.meter span { display: block; height: 100%; width: var(--v); border-radius: 3px; background: linear-gradient(90deg, var(--aurora-500), var(--cyan-400)); box-shadow: 0 0 10px var(--glow); }
+.deadline small { color: var(--muted); }
+
+.main-col { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-6); align-content: start; }
+.topbar { position: sticky; top: var(--s-5); z-index: 5; display: flex; align-items: center; gap: var(--s-3); padding: var(--s-2) var(--s-2) var(--s-2) var(--s-5); border-radius: var(--r-pill); min-height: 56px; }
+.crumbs { display: flex; align-items: center; gap: var(--s-2); font-size: 14px; color: var(--muted); font-weight: 500; white-space: nowrap; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.crumbs a { color: var(--muted); }
+.crumbs svg { width: 16px; height: 16px; opacity: .6; }
+.crumbs [aria-current] { color: var(--text); font-weight: 600; }
+.topbar-end { margin-left: auto; display: flex; align-items: center; gap: var(--s-2); }
+.search { display: flex; align-items: center; gap: var(--s-2); padding: 8px 12px 8px 12px; border-radius: var(--r-pill); background: var(--field); border: 1px solid var(--glass-edge); color: var(--muted); font-size: 14px; min-width: 220px; cursor: text; }
+.search kbd { margin-left: auto; font: 600 11px var(--font-mono); padding: 1px 6px; border-radius: 6px; border: 1px solid var(--rule); color: var(--faint); }
+.seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: var(--r-pill); background: var(--field); border: 1px solid var(--glass-edge); }
+.seg button { border: 0; background: none; width: 34px; height: 30px; border-radius: var(--r-pill); display: grid; place-items: center; color: var(--muted); cursor: pointer; transition: background var(--t), color var(--t), box-shadow var(--t); }
+.seg button[aria-checked="true"] { background: var(--glass-2); color: var(--text); box-shadow: 0 2px 8px -2px var(--shadow-c), inset 0 1px 0 var(--glass-hi); }
+.seg.seg-text button { width: auto; padding: 0 11px; font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+.avatar { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font: 700 12.5px var(--font-text); background: var(--avatar-bg); color: var(--avatar-fg); box-shadow: 0 0 0 2px var(--glass-2), 0 0 0 3px color-mix(in oklch, var(--aurora-400) 50%, transparent); }
+.avatar-s { width: 24px; height: 24px; font-size: 10px; box-shadow: none; }
+.user { border: 0; background: none; padding: 2px; border-radius: 50%; cursor: pointer; }
+.icon-btn { width: 36px; height: 36px; border-radius: var(--r-pill); border: 1px solid transparent; background: none; color: var(--muted); display: grid; place-items: center; cursor: pointer; transition: background var(--t), color var(--t); }
+.icon-btn:hover { background: var(--glass-2); color: var(--text); }
+.menu-btn { display: none; }
+
+main { display: grid; gap: var(--s-8); align-content: start; outline: none; padding: var(--s-2) var(--s-2) var(--s-10); }
+
+.screen { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-8); align-content: start; }
+.screen[hidden] { display: none; }
+
+/* ===== Cabecera de página ===== */
+.hero { display: flex; justify-content: space-between; align-items: end; gap: var(--s-8); padding: var(--s-6) var(--s-3) 0; }
+h1 { margin: 0; font-size: 34px; font-weight: 750; letter-spacing: -0.035em; line-height: 1.1; }
+.lede { margin: var(--s-2) 0 0; color: var(--muted); max-width: 56ch; font-size: 15px; }
+h2 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -0.015em; }
+.eyebrow { margin: 0 0 var(--s-2); display: flex; flex-wrap: wrap; gap: var(--s-2); align-items: center; color: var(--muted); font-size: 13px; font-weight: 500; }
+
+/* ===== Botones ===== */
+.btn { display: inline-flex; align-items: center; gap: var(--s-2); height: 42px; padding: 0 var(--s-5); border-radius: var(--r-pill); font-weight: 650; font-size: 14.5px; border: 1px solid transparent; cursor: pointer; text-decoration: none !important; transition: transform var(--t) var(--ease), box-shadow var(--t) var(--ease), background var(--t) var(--ease); position: relative; overflow: hidden; white-space: nowrap; }
+.btn:active { transform: translateY(1px) scale(.99); }
+.btn-primary { background: var(--brand); color: var(--on-brand); box-shadow: 0 1px 0 rgba(255,255,255,.2) inset, 0 12px 28px -12px var(--glow); }
+.btn-primary::after { content: ''; position: absolute; inset: 0 0 50%; background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,0)); pointer-events: none; }
+.btn-primary:hover { background: var(--brand-hi); transform: translateY(-1px); box-shadow: 0 1px 0 rgba(255,255,255,.25) inset, 0 18px 36px -12px var(--glow); }
+.btn-quiet { background: var(--glass-2); border-color: var(--glass-edge); color: var(--text); box-shadow: inset 0 1px 0 var(--glass-hi); }
+.btn-quiet:hover { background: var(--glass-hi); }
+.btn-danger-quiet { background: transparent; border-color: var(--rule); color: var(--err-fg); }
+.btn-danger-quiet:hover { background: var(--err-bg); }
+
+/* ===== Estadísticas bento ===== */
+.stats { display: grid; grid-template-columns: 1.6fr repeat(3, 1fr); gap: var(--s-5); }
+.stat { padding: var(--s-6); display: grid; gap: var(--s-1); align-content: space-between; position: relative; min-height: 168px; }
+.stat-label { font-size: 13px; font-weight: 600; color: var(--muted); display: flex; align-items: center; gap: var(--s-2); }
+.stat-value { font: 650 30px/1 var(--font-mono); letter-spacing: -0.03em; margin-top: var(--s-2); }
+.stat-value .unit { display: block; font: 500 13.5px var(--font-text); color: var(--muted); margin: 6px 0 0; letter-spacing: 0; }
+.stat-foot { font-size: 12.5px; color: var(--muted); margin-top: var(--s-1); }
+.stat-main { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--s-4); }
+.ring { --pct: 48; width: 92px; height: 92px; border-radius: 50%; background: conic-gradient(var(--ok-dot) calc(var(--pct) * 1%), var(--pend-dot) 0 84%, var(--err-dot) 0 100%); -webkit-mask: radial-gradient(farthest-side, transparent 66%, #000 68%); mask: radial-gradient(farthest-side, transparent 66%, #000 68%); filter: drop-shadow(0 6px 14px var(--glow)); position: relative; }
+.ring-wrap { position: relative; display: grid; place-items: center; }
+.ring-wrap .ring-txt { position: absolute; font: 700 15px var(--font-mono); letter-spacing: -0.03em; }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: var(--d); box-shadow: 0 0 0 3px color-mix(in oklch, var(--d) 22%, transparent), 0 0 12px color-mix(in oklch, var(--d) 70%, transparent); flex: none; }
+.dot-ok { --d: var(--ok-dot); } .dot-pend { --d: var(--pend-dot); } .dot-err { --d: var(--err-dot); } .dot-draft { --d: var(--draft-dot); }
+.legend { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); font-size: 12.5px; color: var(--muted); margin-top: var(--s-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+/* ===== Panel del listado ===== */
+.panel { overflow: hidden; overflow-x: auto; }
+.panel-bar { display: flex; align-items: center; gap: var(--s-3); padding: var(--s-4) var(--s-5); border-bottom: 1px solid var(--rule); flex-wrap: wrap; }
+.tabs { display: inline-flex; gap: 2px; padding: 3px; border-radius: var(--r-pill); background: var(--field); border: 1px solid var(--glass-edge); overflow-x: auto; max-width: 100%; }
+.tabs button { border: 0; background: none; padding: 7px 14px; border-radius: var(--r-pill); font-weight: 600; font-size: 13.5px; color: var(--muted); cursor: pointer; white-space: nowrap; display: inline-flex; gap: 6px; align-items: center; transition: background var(--t), color var(--t), box-shadow var(--t); }
+.tabs button span { font: 600 11.5px var(--font-mono); padding: 1px 7px; border-radius: var(--r-pill); background: var(--rule); }
+.tabs button[aria-selected="true"] { background: var(--glass-2); color: var(--text); box-shadow: 0 2px 10px -3px var(--shadow-c), inset 0 1px 0 var(--glass-hi); }
+.panel-bar .right { margin-left: auto; display: flex; gap: var(--s-2); }
+.list { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+.list th { text-align: left; padding: 14px var(--s-5); font-size: 12px; font-weight: 650; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); white-space: nowrap; }
+.list th.num, .list td.num { text-align: right; }
+.list td { padding: 16px var(--s-5); border-top: 1px solid var(--rule); vertical-align: middle; height: 68px; }
+.list tbody tr { transition: background var(--t) var(--ease); }
+.list tbody tr:hover { background: var(--glass-2); }
+.sort { border: 0; background: none; padding: 0; font: inherit; color: inherit; text-transform: inherit; letter-spacing: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+.sort.is-active { color: var(--text); }
+.row-title { display: block; color: var(--text); font-weight: 650; text-decoration: none !important; letter-spacing: -0.01em; }
+.row-title:hover { color: var(--brand-text); }
+.sub { display: block; color: var(--muted); font-size: 13px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 40ch; }
+.committee { display: inline-flex; align-items: center; gap: 7px; font-weight: 550; font-size: 13.5px; padding: 4px 10px 4px 8px; border-radius: var(--r-pill); background: var(--glass-2); border: 1px solid var(--glass-edge); }
+.committee i { width: 8px; height: 8px; border-radius: 50%; background: oklch(70% 0.16 var(--h)); box-shadow: 0 0 8px oklch(70% 0.16 var(--h) / .7); }
+.when { display: block; font-size: 12px; color: var(--faint); font-family: var(--font-mono); }
+.list .act { width: 1%; }
+.list .act .icon-btn { opacity: .55; }
+.list tr:hover .act .icon-btn, .list .act .icon-btn:focus-visible { opacity: 1; }
+.panel-foot { padding: var(--s-4) var(--s-5); color: var(--muted); font-size: 13px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--rule); }
+.pager { display: inline-flex; gap: 4px; }
+.pager button { width: 32px; height: 32px; border-radius: var(--r-pill); border: 1px solid transparent; background: none; color: var(--muted); cursor: pointer; font-weight: 600; font-size: 13px; }
+.pager button[aria-current="page"] { background: var(--brand-soft); color: var(--brand-soft-text); }
+
+/* ===== Orbe de estado (firma visual) ===== */
+.orb { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px 5px 8px; border-radius: var(--r-pill); font-weight: 650; font-size: 13px; letter-spacing: -0.005em; background: var(--o-bg); color: var(--o-fg); white-space: nowrap; }
+.orb::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--o-dot); box-shadow: 0 0 0 3px color-mix(in oklch, var(--o-dot) 22%, transparent), 0 0 12px color-mix(in oklch, var(--o-dot) 75%, transparent); }
+.orb-ok { --o-bg: var(--ok-bg); --o-fg: var(--ok-fg); --o-dot: var(--ok-dot); }
+.orb-pend { --o-bg: var(--pend-bg); --o-fg: var(--pend-fg); --o-dot: var(--pend-dot); }
+.orb-pend::before { animation: pulse 2.2s var(--ease) infinite; }
+.orb-err { --o-bg: var(--err-bg); --o-fg: var(--err-fg); --o-dot: var(--err-dot); }
+.orb-draft { --o-bg: var(--draft-bg); --o-fg: var(--draft-fg); --o-dot: var(--draft-dot); }
+@keyframes pulse { 0%, 100% { box-shadow: 0 0 0 3px color-mix(in oklch, var(--o-dot) 22%, transparent), 0 0 12px color-mix(in oklch, var(--o-dot) 75%, transparent); } 50% { box-shadow: 0 0 0 6px color-mix(in oklch, var(--o-dot) 12%, transparent), 0 0 18px color-mix(in oklch, var(--o-dot) 90%, transparent); } }
+.orb-xl { font-size: 15px; padding: 10px 18px 10px 14px; gap: 10px; }
+.orb-xl::before { width: 12px; height: 12px; }
+
+
+/* ===== Fichas clicables y desglose de horas ===== */
+.stat-link { text-decoration: none !important; color: inherit; position: relative; transition: transform var(--t) var(--ease), box-shadow var(--t) var(--ease); cursor: pointer; }
+.stat-link:hover { transform: translateY(-2px); }
+.stat-go { position: absolute; right: 14px; top: 14px; width: 18px; height: 18px; color: var(--muted); opacity: .55; transition: opacity var(--t), transform var(--t); }
+.stat-link:hover .stat-go { opacity: 1; transform: translateX(2px); }
+.list tbody tr[data-href] { cursor: pointer; }
+.hours-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: var(--s-6); align-items: start; }
+.hours-total { display: grid; gap: var(--s-2); }
+.hbar { display: flex; gap: 4px; height: 12px; margin: var(--s-3) 0 var(--s-2); }
+.hbar span { display: block; height: 100%; border-radius: 6px; width: var(--w); background: var(--c); }
+.breakdown { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-3); }
+.bd { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: var(--s-4); padding: var(--s-4) var(--s-5); text-decoration: none !important; color: inherit; transition: transform var(--t) var(--ease); }
+.bd:hover { transform: translateY(-2px); }
+.bd-body { display: grid; gap: 2px; font-size: 14.5px; }
+.bd-body .muted { font-size: 13px; }
+.bd-val { font-weight: 650; font-size: 16px; }
+.bd-go { color: var(--muted); opacity: .6; }
+.bubble-a { width: 40px; height: 40px; border-radius: 13px; display: grid; place-items: center; background: color-mix(in oklch, var(--c) 18%, transparent); color: var(--c); }
+.bubble-a svg { width: 20px; height: 20px; }
+
+
+/* ===== Registro de actividad y pie ===== */
+.menu-admin { margin-top: var(--s-2); padding-top: var(--s-4); border-top: 1px solid var(--rule); }
+.nav-label { margin: 0 0 var(--s-2) 12px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.who { display: flex; align-items: center; gap: var(--s-2); }
+.who strong { display: block; font-weight: 650; }
+.who .role { display: block; font-size: 12.5px; color: var(--muted); }
+.act-chip { display: inline-block; font-weight: 650; font-size: 14px; color: var(--ac); }
+.act-ok { --ac: var(--ok-fg); } .act-err { --ac: var(--err-fg); } .act-pend { --ac: var(--pend-fg); } .act-info { --ac: var(--text); } .act-warn { --ac: var(--pend-fg); }
+.activity .sub { max-width: 36ch; }
+.activity tr.flag td:first-child { box-shadow: inset 4px 0 0 var(--pend-dot, var(--pend-ac)); }
+.app-footer { display: flex; align-items: center; gap: var(--s-6); flex-wrap: wrap; padding: var(--s-3) var(--s-5); margin-top: var(--s-2); font-size: 13.5px; border-radius: var(--r-l); min-height: 60px; }
+.foot-brand { display: inline-flex; align-items: center; gap: var(--s-2); color: var(--text); font-weight: 650; text-decoration: none !important; }
+.foot-brand:hover .ver { background: var(--brand); color: var(--on-brand); }
+.ver { font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: var(--r-pill); background: var(--brand-soft); color: var(--brand-soft-text); transition: background var(--t), color var(--t); }
+.foot-links { display: flex; gap: var(--s-1); flex-wrap: wrap; }
+.foot-links a { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: var(--r-pill); color: var(--muted); font-weight: 550; text-decoration: none !important; transition: background var(--t), color var(--t); }
+.foot-links a:hover { background: var(--glass-2, var(--surface-2)); color: var(--text); }
+.foot-links svg { width: 16px; height: 16px; }
+.foot-meta { margin-left: auto; white-space: nowrap; }
+.mark-s { width: 26px; height: 26px; border-radius: 8px; font-size: 14px; box-shadow: none; }
+.mark-s::after { display: none; }
+
+/* ===== Detalle ===== */
+.detail-hero { padding: var(--s-8); position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s-6); align-items: end; }
+.detail-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(60% 120% at 0% 0%, color-mix(in oklch, var(--aurora-400) 16%, transparent), transparent 60%), radial-gradient(50% 100% at 100% 0%, color-mix(in oklch, var(--cyan-400) 12%, transparent), transparent 60%); pointer-events: none; }
+.detail-hero > * { position: relative; }
+.chipline { display: flex; flex-wrap: wrap; gap: var(--s-2); align-items: center; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: var(--r-pill); background: var(--glass-2); border: 1px solid var(--glass-edge); font-size: 13px; font-weight: 600; color: var(--muted); }
+.actions { display: flex; gap: var(--s-2); align-items: center; flex-wrap: wrap; justify-content: end; }
+
+.rail { list-style: none; margin: 0; padding: var(--s-6) var(--s-8); display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s-3); position: relative; }
+.rail li { position: relative; display: grid; gap: 6px; padding-top: 18px; font-size: 13.5px; }
+.rail li::before { content: ''; position: absolute; left: 14px; right: -12px; top: 5px; height: 2px; background: var(--rule); border-radius: 1px; }
+.rail li:last-child::before { right: 50%; }
+.rail .node { position: absolute; left: 0; top: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--rule); border: 2px solid var(--glass-2); }
+.rail .done::before { background: linear-gradient(90deg, var(--aurora-500), var(--cyan-400)); }
+.rail .done .node { background: var(--aurora-500); box-shadow: 0 0 0 3px color-mix(in oklch, var(--aurora-500) 25%, transparent), 0 0 12px var(--glow); }
+.rail .err .node { background: var(--err-dot); box-shadow: 0 0 0 3px color-mix(in oklch, var(--err-dot) 25%, transparent), 0 0 14px color-mix(in oklch, var(--err-dot) 80%, transparent); }
+.rail .err::before { background: var(--rule); }
+.rail-label { font-weight: 650; }
+.rail [aria-current] .rail-label { color: var(--err-fg); }
+.rail time, .rail-hint { color: var(--muted); font-size: 12.5px; }
+
+.notice { display: grid; grid-template-columns: auto 1fr; gap: var(--s-5); padding: var(--s-6) var(--s-8); border-radius: var(--r-xl); background: color-mix(in oklch, var(--err-bg) 70%, var(--glass)); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); color: var(--err-fg); border: 1px solid color-mix(in oklch, var(--err-dot) 30%, transparent); }
+.notice-icon { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: color-mix(in oklch, var(--err-dot) 18%, transparent); box-shadow: inset 0 1px 0 var(--glass-hi); }
+.notice-icon svg { width: 22px; height: 22px; }
+.notice p { margin: 0; }
+.notice-title { font-weight: 700; font-size: 15px; }
+.notice blockquote { margin: var(--s-2) 0; padding: var(--s-3) var(--s-4); border-radius: var(--r-m); background: color-mix(in oklch, var(--bg) 55%, transparent); font-size: 15px; font-weight: 500; }
+.notice-meta { display: flex; align-items: center; gap: var(--s-2); font-size: 13px; opacity: .95; }
+.notice-cta { grid-column: 2; display: flex; gap: var(--s-3); align-items: center; flex-wrap: wrap; margin-top: var(--s-1); }
+.notice-cta .hint { font-size: 13px; opacity: .9; }
+
+.detail-grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: var(--s-6); align-items: start; }
+.stack { display: grid; gap: var(--s-6); }
+.card { padding: var(--s-6) var(--s-8); }
+.card > p { margin: var(--s-4) 0 0; line-height: 1.6; }
+.card-head { display: flex; justify-content: space-between; align-items: center; }
+.drop { margin-top: var(--s-4); padding: var(--s-6) var(--s-4); display: grid; justify-items: center; text-align: center; gap: var(--s-2); border: 1.5px dashed color-mix(in oklch, var(--aurora-500) 45%, transparent); border-radius: var(--r-l); background: color-mix(in oklch, var(--aurora-500) 6%, transparent); transition: background var(--t), box-shadow var(--t); }
+.drop:hover { background: color-mix(in oklch, var(--aurora-500) 10%, transparent); box-shadow: 0 0 0 4px color-mix(in oklch, var(--aurora-500) 12%, transparent); }
+.drop-icon { width: 48px; height: 48px; border-radius: 16px; display: grid; place-items: center; background: var(--brand-soft); color: var(--brand-soft-text); }
+.drop-icon svg { width: 24px; height: 24px; }
+.drop p { margin: 0; font-size: 14px; }
+.dlist { margin: var(--s-3) 0 0; display: grid; }
+.dlist div { display: grid; grid-template-columns: 100px 1fr; gap: var(--s-3); padding: 9px 0; border-top: 1px solid var(--rule); font-size: 14px; align-items: center; }
+.dlist dt { color: var(--muted); font-weight: 500; }
+.dlist dd { margin: 0; }
+.ok-inline { display: inline-flex; align-items: center; gap: 6px; color: var(--ok-fg); font-weight: 650; }
+.ok-inline svg { width: 16px; height: 16px; }
+.history { list-style: none; margin: var(--s-3) 0 0; padding: 0; display: grid; gap: var(--s-2); }
+.history li { display: grid; grid-template-columns: 20px 1fr; gap: var(--s-3); font-size: 13.5px; padding: var(--s-2) 0; }
+.history .dot { margin-top: 5px; }
+.history time { display: block; color: var(--faint); font-size: 12px; font-family: var(--font-mono); }
+.mock-note { text-align: center; color: var(--muted); font-size: 12.5px; padding: var(--s-4); margin: 0; }
+
+/* ===== Móvil ===== */
+/* ===== Elementos solo móvil (ocultos en escritorio) ===== */
+.bottom-nav, .mini-stats, .deadline-inline { display: none; }
+
+/* ===== Móvil: diseño propio ===== */
+@media (max-width: 720px) {
+  body { padding-bottom: 84px; }
+  .shell { grid-template-columns: 1fr; padding: var(--s-3); gap: var(--s-3); }
+  .sidebar { display: none; }
+  .menu-btn { display: grid; }
+  .topbar { top: var(--s-3); padding: var(--s-1) var(--s-2) var(--s-1) var(--s-2); min-height: 52px; border-radius: var(--r-l); }
+  .search, .user, .seg-text { display: none; }
+  .crumbs { font-size: 15px; }
+  .crumbs a, .crumbs > svg { display: none; }
+  main { gap: var(--s-6); padding: 0 0 var(--s-4); }
+  .screen { gap: var(--s-5); }
+  .hero { flex-direction: column; align-items: stretch; gap: var(--s-4); padding: var(--s-3) var(--s-2) 0; }
+  h1 { font-size: 28px; }
+  .lede { font-size: 14.5px; }
+  .deadline-inline { display: block; margin: 0; font-size: 13.5px; color: var(--muted); }
+  .deadline-inline .tag { margin-right: 4px; }
+  .hero .btn { justify-content: center; height: 48px; font-size: 15.5px; }
+  .stats { grid-template-columns: 1fr; gap: var(--s-3); }
+  .stat:not(.stat-main) { display: none; }
+  .stat-main { min-height: 0; padding: var(--s-5); grid-template-columns: minmax(0, 1fr) auto; }
+  .stat-value { font-size: 28px; }
+  .legend { display: none; }
+  .mini-stats { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); margin-top: var(--s-3); font-size: 13px; color: var(--muted); font-weight: 550; }
+  .mini-stats span { display: inline-flex; align-items: center; gap: 6px; }
+  .ring { width: 76px; height: 76px; }
+  .ring-wrap .ring-txt { font-size: 13px; }
+  .panel-bar { padding: var(--s-3); gap: var(--s-2); }
+  .panel-bar .right { display: none; }
+  .tabs { width: 100%; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .list thead { display: none; }
+  .list, .list tbody, .list tr, .list td { display: block; }
+  .list tr { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "title title" "meta status"; gap: var(--s-2) var(--s-3); padding: var(--s-4) var(--s-4); border-top: 1px solid var(--rule); align-items: center; }
+  .list td { padding: 0; border: 0; height: auto; }
+  .list td[data-label="Evidencia"] { grid-area: title; }
+  .list td[data-label="Estado"] { grid-area: status; justify-self: end; }
+  .list td[data-label="Actualizada"] { grid-area: meta; font-size: 13px; color: var(--muted); }
+  .list td[data-label="Actualizada"] .when { display: inline; margin-left: 6px; }
+  .list td[data-label="Comité"], .list td[data-label="Horas"], .list .act { display: none; }
+  .row-title { font-size: 15.5px; }
+  .sub { max-width: none; white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .panel-foot { flex-direction: column; gap: var(--s-2); align-items: start; }
+  /* detalle */
+  .detail-hero { grid-template-columns: 1fr; padding: var(--s-5); gap: var(--s-4); }
+  .detail-hero h1 { font-size: 26px; }
+  .actions { justify-content: stretch; display: grid; grid-template-columns: 1fr auto; gap: var(--s-2); }
+  .actions .btn-primary { order: -1; grid-column: 1; justify-content: center; }
+  .actions .btn-danger-quiet { grid-column: 2; }
+  .rail { grid-template-columns: 1fr; gap: 0; padding: var(--s-4) var(--s-5); }
+  .rail li { padding: 0 0 var(--s-4) 28px; grid-template-columns: 1fr; gap: 2px; }
+  .rail li:last-child { padding-bottom: 0; }
+  .rail li::before { left: 5px; right: auto; top: 16px; bottom: -4px; width: 2px; height: auto; }
+  .rail li:last-child::before { display: none; }
+  .rail .node { top: 3px; }
+  .notice { grid-template-columns: 1fr; padding: var(--s-4); gap: var(--s-3); }
+  .notice-cta { grid-column: 1; }
+  .notice-cta .btn { width: 100%; justify-content: center; }
+  .detail-grid { grid-template-columns: 1fr; gap: var(--s-4); }
+  .app-footer { gap: var(--s-3); padding: var(--s-4); }
+  .foot-meta { margin-left: 0; width: 100%; }
+  .activity tr { grid-template-areas: "title title" "meta meta"; }
+  .activity td[data-label="Cuándo"] { grid-area: meta; }
+  .activity td[data-label="Quién"] { grid-area: title; }
+  .activity td[data-label="Qué"] { grid-column: 1 / -1; }
+  .activity td[data-label="Sobre"] { grid-column: 1 / -1; font-size: 13.5px; }
+  .hours-grid { grid-template-columns: 1fr; gap: var(--s-4); }
+  .stat-go { opacity: .8; }
+  .bd { padding: var(--s-3) var(--s-4); gap: var(--s-3); }
+
+  .stack { gap: var(--s-4); }
+  .card { padding: var(--s-4) var(--s-5); }
+  .dlist div { grid-template-columns: 92px 1fr; }
+  .bottom-nav { position: fixed; left: var(--s-3); right: var(--s-3); bottom: calc(var(--s-3) + env(safe-area-inset-bottom)); z-index: 10; display: grid; grid-template-columns: repeat(5, 1fr); padding: 6px; border-radius: var(--r-l); }
+  .bottom-nav a { display: grid; justify-items: center; gap: 3px; padding: 7px 2px; border-radius: var(--r-s); color: var(--muted); font-size: 11px; font-weight: 600; text-decoration: none !important; }
+  .bottom-nav a[aria-current="page"] { color: var(--brand-text); background: var(--brand-soft); }
+  .bottom-nav svg { width: 22px; height: 22px; }
+  .mock-note { padding-bottom: var(--s-6); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora span, .orb-pend::before { animation: none !important; }
+  *, *::before, *::after { transition-duration: .001ms !important; }
+}
+
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Saltar al contenido</a>
+<div class="aurora" aria-hidden="true"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
+<div class="shell">
+  <aside class="sidebar glass" aria-label="Navegación principal">
+    <a class="brand" href="#listado" aria-label="Evidentia, inicio">
+      <span class="mark" aria-hidden="true">e</span>
+      <span><strong>Evidentia</strong><small>Jornadas InnoSoft 2026</small></span>
+    </a>
+    <nav class="menu">
+      <a href="#inicio"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11 12 4l8 7v8.5a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H5.5A1.5 1.5 0 0 1 4 19.5z"/></svg>Inicio</a>
+      <a href="#listado" aria-current="page"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h7l4.5 4.5v11a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5z"/><path d="M14 3.5V8h4.5M9 13h6M9 16.5h4"/></svg>Mis evidencias<span class="count">6</span></a>
+      <a href="#reuniones"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Mis reuniones</a>
+      <a href="#asistencias"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h11A2.5 2.5 0 0 1 20 8.5v7a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 15.5z"/><path d="M9.5 6v12M13 10.5h3.5M13 13.5h3.5"/></svg>Mis asistencias</a>
+      <a href="#perfil"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.4-3.6 4.1-5.5 7-5.5s5.6 1.9 7 5.5"/></svg>Perfil</a>
+    </nav>
+    <nav class="menu menu-admin" aria-label="Gestión (solo profesorado y presidencia)">
+      <p class="nav-label">Gestión</p>
+      <a href="#actividad"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h3l2.5-6 4 12 2.5-6H20"/></svg>Registro de actividad</a>
+    </nav>
+    <div class="deadline" role="note">
+      <div class="deadline-top"><span>Subida de evidencias</span><span class="tag">14 días</span></div>
+      <div class="meter" aria-hidden="true"><span style="--v:68%"></span></div>
+      <small>Cierra el <span class="mono">19/11 · 20:00</span></small>
+    </div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar glass">
+      <button class="icon-btn menu-btn" aria-label="Abrir menú"><svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <nav class="crumbs" aria-label="Migas de pan"><a href="#listado">Mis evidencias</a><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m10 7 5 5-5 5"/></svg><span id="crumb-current" aria-current="page">Todas</span></nav>
+      <div class="topbar-end">
+        <div class="search" role="search"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="m20 20-4.2-4.2"/></svg><span>Buscar evidencias</span><kbd>/</kbd></div>
+        <div class="seg seg-text" role="radiogroup" aria-label="Intensidad del cristal">
+          <button role="radio" data-glass-set="soft" aria-checked="true">Cristal suave</button>
+          <button role="radio" data-glass-set="intense" aria-checked="false">Intenso</button>
+        </div>
+        <div class="seg" role="radiogroup" aria-label="Tema">
+          <button role="radio" data-theme-set="light" aria-checked="false" title="Claro"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg><span class="sr">Claro</span></button>
+          <button role="radio" data-theme-set="dark" aria-checked="false" title="Oscuro"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.5A7.5 7.5 0 0 1 9.5 4.5a7.5 7.5 0 1 0 10 10z"/></svg><span class="sr">Oscuro</span></button>
+          <button role="radio" data-theme-set="system" aria-checked="true" title="Sistema"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="11" rx="2"/><path d="M8.5 19.5h7M12 15.5v4"/></svg><span class="sr">Sistema</span></button>
+        </div>
+        <button class="user" aria-label="Menú de usuario: Juan Pérez"><span class="avatar" aria-hidden="true">JP</span></button>
+      </div>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <!-- ===== LISTADO ===== -->
+      <section id="screen-listado" class="screen" aria-labelledby="t-listado">
+        <div class="hero">
+          <div>
+            <h1 id="t-listado">Hola, Juan</h1>
+            <p class="lede">Aquí están tus evidencias de las jornadas. Tu coordinador revisa las que publicas y las horas aceptadas cuentan para tu nota.</p>
+            <p class="deadline-inline"><span class="tag">14 días</span> para subir evidencias · cierra el <span class="mono">19/11 a las 20:00</span></p>
+          </div>
+          <a class="btn btn-primary" href="#nueva"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Nueva evidencia</a>
+        </div>
+
+        <div class="stats">
+          <a class="stat stat-main stat-link glass" href="#horas" aria-label="Ver el desglose de mis horas">
+            <div>
+              <span class="stat-label"><span class="dot dot-ok"></span>Horas aceptadas</span>
+              <div class="stat-value">4,00<span class="unit">de 8,25 h declaradas</span></div>
+              <div class="legend"><span><span class="dot dot-ok"></span>Aceptadas</span><span><span class="dot dot-pend"></span>Pendientes</span><span><span class="dot dot-err"></span>Rechazadas</span></div>
+<div class="mini-stats" aria-label="Resumen"><span><i class="dot dot-pend"></i>2 pendientes</span><span><i class="dot dot-err"></i>1 rechazada</span><span><i class="dot dot-draft"></i>1 borrador</span></div>
+            </div>
+            <div class="ring-wrap"><div class="ring" style="--pct:48" role="img" aria-label="48 % de las horas declaradas están aceptadas"></div><span class="ring-txt">48%</span></div>
+            <svg class="i stat-go" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+          </a>
+          <a class="stat stat-link glass" href="#listado/pendientes"><span class="stat-label"><span class="dot dot-pend"></span>Pendientes</span><span class="stat-value">2</span><span class="stat-foot">3,75 h en revisión</span><svg class="i stat-go" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a>
+          <a class="stat stat-link glass" href="#listado/rechazadas"><span class="stat-label"><span class="dot dot-err"></span>Rechazadas</span><span class="stat-value">1</span><span class="stat-foot">1 por corregir</span><svg class="i stat-go" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a>
+          <a class="stat stat-link glass" href="#listado/borradores"><span class="stat-label"><span class="dot dot-draft"></span>Borradores</span><span class="stat-value">1</span><span class="stat-foot">sin publicar</span><svg class="i stat-go" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a>
+        </div>
+
+        <div class="panel glass">
+          <div class="panel-bar">
+            <div class="tabs" role="tablist" aria-label="Filtrar por estado">
+              <button role="tab" data-filter="todas" aria-selected="true">Todas<span>6</span></button>
+              <button role="tab" data-filter="pendientes" aria-selected="false">Pendientes<span>2</span></button>
+              <button role="tab" data-filter="aceptadas" aria-selected="false">Aceptadas<span>2</span></button>
+              <button role="tab" data-filter="rechazadas" aria-selected="false">Rechazadas<span>1</span></button>
+              <button role="tab" data-filter="borradores" aria-selected="false">Borradores<span>1</span></button>
+            </div>
+            <div class="right"><button class="btn btn-quiet" style="height:36px"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filtros</button></div>
+          </div>
+          <table class="list">
+            <caption class="sr">Evidencias de Juan Pérez, ordenadas por la última modificación</caption>
+            <thead><tr>
+              <th scope="col">Evidencia</th><th scope="col">Comité</th>
+              <th scope="col" class="num">Horas</th><th scope="col">Estado</th>
+              <th scope="col"><button class="sort is-active" aria-label="Ordenado por fecha de actualización, más reciente primero">Actualizada <svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button></th>
+              <th scope="col"><span class="sr">Abrir</span></th>
+            </tr></thead>
+            <tbody>
+              <tr data-status="borradores" data-href="#detalle">
+                <td data-label="Evidencia"><a class="row-title" href="#detalle">Montaje del photocall</a><span class="sub">Borrador: montaje del photocall en el hall.</span></td>
+                <td data-label="Comité"><span class="committee"><i style="--h:150"></i>Logística</span></td>
+                <td data-label="Horas" class="num mono">1,00</td>
+                <td data-label="Estado"><span class="orb orb-draft">Borrador</span></td>
+                <td data-label="Actualizada"><time datetime="2026-11-05T22:40">hace 20 min</time><span class="when">05/11 22:40</span></td>
+                <td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir Montaje del photocall"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td>
+              </tr>
+              <tr data-status="rechazadas" data-href="#detalle">
+                <td data-label="Evidencia"><a class="row-title" href="#detalle">Pokemon</a><span class="sub">Planeando qué pokemons banear, qué estrategias son ilegales…</span></td>
+                <td data-label="Comité"><span class="committee"><i style="--h:300"></i>Programa</span></td>
+                <td data-label="Horas" class="num mono">1,75</td>
+                <td data-label="Estado"><span class="orb orb-err">Rechazada</span></td>
+                <td data-label="Actualizada"><time datetime="2026-11-05T17:02">hace 6 h</time><span class="when">05/11 17:02</span></td>
+                <td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir Pokemon"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td>
+              </tr>
+              <tr data-status="pendientes" data-href="#detalle">
+                <td data-label="Evidencia"><a class="row-title" href="#detalle">Preparación de la agenda de ponentes</a><span class="sub">Contacté con los ponentes y cerré la agenda del segundo día.</span></td>
+                <td data-label="Comité"><span class="committee"><i style="--h:300"></i>Programa</span></td>
+                <td data-label="Horas" class="num mono">3,00</td>
+                <td data-label="Estado"><span class="orb orb-pend">Pendiente</span></td>
+                <td data-label="Actualizada"><time datetime="2026-11-05T16:10">hace 7 h</time><span class="when">05/11 16:10</span></td>
+                <td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir Preparación de la agenda de ponentes"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td>
+              </tr>
+              <tr data-status="pendientes" data-href="#detalle">
+                <td data-label="Evidencia"><a class="row-title" href="#detalle">Recogida de ponentes en la estación</a><span class="sub">Fui a buscar a dos ponentes a Santa Justa el miércoles.</span></td>
+                <td data-label="Comité"><span class="committee"><i style="--h:150"></i>Logística</span></td>
+                <td data-label="Horas" class="num mono">0,75</td>
+                <td data-label="Estado"><span class="orb orb-pend">Pendiente</span></td>
+                <td data-label="Actualizada"><time datetime="2026-11-04T19:30">ayer</time><span class="when">04/11 19:30</span></td>
+                <td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir Recogida de ponentes en la estación"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td>
+              </tr>
+              <tr data-status="aceptadas" data-href="#detalle">
+                <td data-label="Evidencia"><a class="row-title" href="#detalle">Moderación de la mesa redonda de IA</a><span class="sub">Moderé la mesa redonda sobre inteligencia artificial del jueves.</span></td>
+                <td data-label="Comité"><span class="committee"><i style="--h:300"></i>Programa</span></td>
+                <td data-label="Horas" class="num mono">2,50</td>
+                <td data-label="Estado"><span class="orb orb-ok">Aceptada</span></td>
+                <td data-label="Actualizada"><time datetime="2026-11-03T18:40">hace 2 días</time><span class="when">03/11 18:40</span></td>
+                <td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir Moderación de la mesa redonda de IA"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td>
+              </tr>
+              <tr data-status="aceptadas" data-href="#detalle">
+                <td data-label="Evidencia"><a class="row-title" href="#detalle">Diseño del cartel de las jornadas</a><span class="sub">Diseñé el cartel y las versiones para redes.</span></td>
+                <td data-label="Comité"><span class="committee"><i style="--h:40"></i>Comunicación</span></td>
+                <td data-label="Horas" class="num mono">1,50</td>
+                <td data-label="Estado"><span class="orb orb-ok">Aceptada</span></td>
+                <td data-label="Actualizada"><time datetime="2026-10-28T11:05">hace 8 días</time><span class="when">28/10 11:05</span></td>
+                <td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir Diseño del cartel de las jornadas"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="panel-foot"><span>6 evidencias · <span class="mono">8,25 h</span> declaradas · <span class="mono">4,00 h</span> aceptadas</span><nav class="pager" aria-label="Paginación"><button aria-current="page">1</button><button>2</button><button aria-label="Siguiente">›</button></nav></div>
+        </div>
+      </section>
+
+      <!-- ===== DETALLE ===== -->
+      <section id="screen-detalle" class="screen" aria-labelledby="t-detalle" hidden>
+        <div class="detail-hero glass">
+          <div>
+            <div class="chipline eyebrow"><span class="orb orb-err">Rechazada</span><span class="chip mono">EV-0033</span><span class="committee"><i style="--h:300"></i>Programa</span><span class="chip mono">1,75 h</span><span class="chip">versión 2</span></div>
+            <h1 id="t-detalle">Pokemon</h1>
+            <p class="lede">Creada el <span class="mono">04/11/2026</span> · revisada por Carlos Navarro el <span class="mono">05/11/2026</span></p>
+          </div>
+          <div class="actions">
+            <button class="btn btn-danger-quiet"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M10 7V4.5h4V7M7 7l1 12.5h8L17 7"/></svg>Eliminar</button>
+            <a class="btn btn-primary" href="#editar"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5h4l10-10-4-4-10 10z"/></svg>Editar evidencia</a>
+          </div>
+        </div>
+
+        <ol class="rail glass" aria-label="Recorrido de la evidencia">
+          <li class="done"><span class="node" aria-hidden="true"></span><span class="rail-label">Borrador</span><time class="mono" datetime="2026-11-04T21:15">04/11 21:15</time></li>
+          <li class="done"><span class="node" aria-hidden="true"></span><span class="rail-label">Enviada a revisión</span><time class="mono" datetime="2026-11-05T12:40">05/11 12:40</time></li>
+          <li class="done err" aria-current="step"><span class="node" aria-hidden="true"></span><span class="rail-label">Rechazada</span><time class="mono" datetime="2026-11-05T17:02">05/11 17:02</time></li>
+          <li><span class="node" aria-hidden="true"></span><span class="rail-label">Aceptada</span><span class="rail-hint">cuando la corrijas y la vuelvan a revisar</span></li>
+        </ol>
+
+        <div class="notice" role="note">
+          <span class="notice-icon" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M12 8v5M12 16.5v.5"/><path d="M10.3 4.3 3.2 17a2 2 0 0 0 1.7 3h14.2a2 2 0 0 0 1.7-3L13.7 4.3a2 2 0 0 0-3.4 0z"/></svg></span>
+          <div>
+            <p class="notice-title">Tu coordinador necesita más pruebas</p>
+            <blockquote>«Necesito que me mandes un documento con el trabajo realizado.»</blockquote>
+            <p class="notice-meta"><span class="avatar avatar-s" aria-hidden="true">CN</span>Carlos Navarro · coordinador de Programa · hace 6 h</p>
+          </div>
+          <div class="notice-cta"><a class="btn btn-primary" href="#editar">Corregir y volver a enviar</a><span class="hint">Pasará a borrador; al publicarla, la revisarán de nuevo.</span></div>
+        </div>
+
+        <div class="detail-grid">
+          <div class="stack">
+            <article class="card glass">
+              <h2>Descripción</h2>
+              <p>Planeando qué pokemons banear, qué estrategias son ilegales, leyéndonos las leyes actuales…</p>
+            </article>
+            <article class="card glass">
+              <div class="card-head"><h2>Pruebas</h2><span class="muted">0 archivos</span></div>
+              <div class="drop" tabindex="0" role="button" aria-label="Añadir pruebas: arrastra archivos o pulsa para elegirlos">
+                <span class="drop-icon" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M12 15V5M8 9l4-4 4 4"/><path d="M5 15v3.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V15"/></svg></span>
+                <p><strong>Arrastra aquí el documento</strong> o pulsa para elegirlo</p>
+                <p class="muted">PDF, imágenes o ZIP · hasta 20 MB</p>
+              </div>
+            </article>
+          </div>
+          <aside class="stack" aria-label="Datos de la evidencia">
+            <article class="card glass">
+              <h2>Detalles</h2>
+              <dl class="dlist">
+                <div><dt>Registro</dt><dd class="mono">EV-0033</dd></div>
+                <div><dt>Comité</dt><dd>Programa</dd></div>
+                <div><dt>Horas</dt><dd class="mono">1,75</dd></div>
+                <div><dt>Estado</dt><dd><span class="orb orb-err">Rechazada</span></dd></div>
+                <div><dt>Integridad</dt><dd><span class="ok-inline"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 5 6.2v5.3c0 4 3 7.3 7 8.5 4-1.2 7-4.5 7-8.5V6.2z"/><path d="m9 12 2 2 4-4.5"/></svg>Verificada</span></dd></div>
+              </dl>
+            </article>
+            <article class="card glass">
+              <h2>Historial</h2>
+              <ol class="history">
+                <li><span class="dot dot-err"></span><div><strong>Rechazada</strong> por Carlos Navarro<time datetime="2026-11-05T17:02">05/11 17:02</time></div></li>
+                <li><span class="dot dot-pend"></span><div><strong>Enviada a revisión</strong> · versión 2<time datetime="2026-11-05T12:40">05/11 12:40</time></div></li>
+                <li><span class="dot dot-draft"></span><div><strong>Borrador</strong> creado · versión 1<time datetime="2026-11-04T21:15">04/11 21:15</time></div></li>
+              </ol>
+            </article>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ===== MIS HORAS ===== -->
+      <section id="screen-horas" class="screen" aria-labelledby="t-horas" hidden>
+        <div class="hero">
+          <div>
+            <h1 id="t-horas">Mis horas</h1>
+            <p class="lede">Todo lo que computa para tu nota, de dónde sale y cuánto queda por confirmar.</p>
+          </div>
+        </div>
+        <div class="hours-grid">
+          <div class="card glass hours-total">
+            <span class="stat-label">Total computado</span>
+            <div class="stat-value">10,50<span class="unit">horas confirmadas</span></div>
+            <div class="hbar" role="img" aria-label="Evidencias 4 h, reuniones 1,5 h, asistencias 2 h, bonos 3 h"><span style="--w:38%;--c:var(--ok-dot)"></span><span style="--w:14%;--c:var(--info-dot)"></span><span style="--w:19%;--c:var(--pend-dot)"></span><span style="--w:29%;--c:var(--aurora-400)"></span></div>
+            <p class="muted" style="margin:0;font-size:13.5px">Además hay <strong>3,75 h</strong> de evidencias pendientes de revisión que aún no cuentan.</p>
+          </div>
+          <ul class="breakdown">
+            <li><a class="bd glass" href="#listado/aceptadas"><span class="bubble-a" style="--c:var(--ok-dot)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5 9.5-10"/></svg></span><span class="bd-body"><strong>Evidencias aceptadas</strong><span class="muted">2 evidencias · comités de Programa y Comunicación</span></span><span class="bd-val mono">4,00 h</span><svg class="i bd-go" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a></li>
+            <li><a class="bd glass" href="#reuniones"><span class="bubble-a" style="--c:var(--info-dot)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span><span class="bd-body"><strong>Reuniones</strong><span class="muted">1 reunión de Logística con acta</span></span><span class="bd-val mono">1,50 h</span><svg class="i bd-go" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a></li>
+            <li><a class="bd glass" href="#asistencias"><span class="bubble-a" style="--c:var(--pend-dot)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h11A2.5 2.5 0 0 1 20 8.5v7a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 15.5z"/><path d="M9.5 6v12"/></svg></span><span class="bd-body"><strong>Asistencia a eventos</strong><span class="muted">1 charla con asistencia confirmada</span></span><span class="bd-val mono">2,00 h</span><svg class="i bd-go" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a></li>
+            <li><a class="bd glass" href="#bonos"><span class="bubble-a" style="--c:var(--aurora-400)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 14.6 9l6 .6-4.5 4.1 1.3 5.9L12 16.5 6.6 19.6l1.3-5.9L3.4 9.6l6-.6z"/></svg></span><span class="bd-body"><strong>Bonos de horas</strong><span class="muted">Montaje del escenario principal</span></span><span class="bd-val mono">3,00 h</span><svg class="i bd-go" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===== REGISTRO DE ACTIVIDAD (profesorado y presidencia) ===== -->
+      <section id="screen-actividad" class="screen" aria-labelledby="t-actividad" hidden>
+        <div class="hero">
+          <div>
+            <h1 id="t-actividad">Registro de actividad</h1>
+            <p class="lede">Constancia de todo lo que pasa en Evidentia: quién hace qué, cuándo y con qué rol. No se puede editar ni borrar.</p>
+          </div>
+          <a class="btn btn-quiet" href="#actividad"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>Exportar</a>
+        </div>
+        <div class="panel glass">
+          <div class="panel-bar">
+            <div class="tabs" role="tablist" aria-label="Filtrar por tipo">
+              <button role="tab" aria-selected="true">Todo<span>128</span></button>
+              <button role="tab" aria-selected="false">Accesos<span>61</span></button>
+              <button role="tab" aria-selected="false">Evidencias<span>44</span></button>
+              <button role="tab" aria-selected="false">Reuniones<span>15</span></button>
+              <button role="tab" aria-selected="false">Usuarios y roles<span>8</span></button>
+            </div>
+            <div class="right"><button class="btn btn-quiet" style="height:36px"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filtros</button></div>
+          </div>
+          <table class="list activity">
+            <caption class="sr">Registro de actividad, más reciente primero</caption>
+            <thead><tr><th scope="col">Cuándo</th><th scope="col">Quién</th><th scope="col">Qué</th><th scope="col">Sobre</th><th scope="col"><span class="sr">Abrir</span></th></tr></thead>
+            <tbody>
+              <tr data-href="#detalle"><td data-label="Cuándo"><time datetime="2026-11-05T17:02">hace 6 h</time><span class="when">05/11 17:02</span></td><td data-label="Quién"><span class="who"><span class="avatar avatar-s" aria-hidden="true">CN</span><span><strong>Carlos Navarro</strong><span class="role">como coordinador de Programa</span></span></span></td><td data-label="Qué"><span class="act-chip act-err">Rechazó una evidencia</span><span class="sub">«Necesito que me mandes un documento…»</span></td><td data-label="Sobre"><a href="#detalle">EV-0033 · Pokemon</a> <span class="muted">de Juan Pérez</span></td><td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir EV-0033"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td></tr>
+              <tr data-href="#detalle"><td data-label="Cuándo"><time datetime="2026-11-05T16:48">hace 6 h</time><span class="when">05/11 16:48</span></td><td data-label="Quién"><span class="who"><span class="avatar avatar-s" aria-hidden="true">CN</span><span><strong>Carlos Navarro</strong><span class="role">como coordinador de Programa</span></span></span></td><td data-label="Qué"><span class="act-chip act-info">Inició sesión</span><span class="sub">Desde la red de la US · Chrome en macOS</span></td><td data-label="Sobre"><span class="muted">—</span></td><td class="act"></td></tr>
+              <tr data-href="#detalle"><td data-label="Cuándo"><time datetime="2026-11-05T12:40">hace 10 h</time><span class="when">05/11 12:40</span></td><td data-label="Quién"><span class="who"><span class="avatar avatar-s" aria-hidden="true">JP</span><span><strong>Juan Pérez</strong><span class="role">como estudiante</span></span></span></td><td data-label="Qué"><span class="act-chip act-pend">Publicó una evidencia</span><span class="sub">versión 2 · 1,75 h · sin pruebas adjuntas</span></td><td data-label="Sobre"><a href="#detalle">EV-0033 · Pokemon</a></td><td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir EV-0033"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td></tr>
+              <tr data-href="#detalle"><td data-label="Cuándo"><time datetime="2026-11-05T11:05">hace 11 h</time><span class="when">05/11 11:05</span></td><td data-label="Quién"><span class="who"><span class="avatar avatar-s" aria-hidden="true">LP</span><span><strong>Lucía Pérez</strong><span class="role">como secretaria de Logística</span></span></span></td><td data-label="Qué"><span class="act-chip act-ok">Creó un acta</span><span class="sub">Reunión inicial de Logística · 3 asistentes · 1,5 h</span></td><td data-label="Sobre"><a href="#detalle">Acta AC-0012</a></td><td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir el acta AC-0012"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td></tr>
+              <tr data-href="#detalle" class="flag"><td data-label="Cuándo"><time datetime="2026-11-04T19:52">ayer</time><span class="when">04/11 19:52</span></td><td data-label="Quién"><span class="who"><span class="avatar avatar-s" aria-hidden="true">CN</span><span><strong>Carlos Navarro</strong><span class="role">como coordinador de Programa</span></span></span></td><td data-label="Qué"><span class="act-chip act-warn">Aceptó su propia evidencia</span><span class="sub">Es también estudiante: conflicto de interés señalado</span></td><td data-label="Sobre"><a href="#detalle">EV-0029 · Coordinación de ponentes</a> <span class="muted">de Carlos Navarro</span></td><td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir EV-0029"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td></tr>
+              <tr data-href="#detalle"><td data-label="Cuándo"><time datetime="2026-11-04T09:15">ayer</time><span class="when">04/11 09:15</span></td><td data-label="Quién"><span class="who"><span class="avatar avatar-s" aria-hidden="true">EM</span><span><strong>Elena Martín</strong><span class="role">como presidenta</span></span></span></td><td data-label="Qué"><span class="act-chip act-info">Cambió los roles de un usuario</span><span class="sub">Añadió «Secretario» a Lucía Pérez (Logística)</span></td><td data-label="Sobre"><a href="#detalle">Lucía Pérez</a></td><td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir la ficha de Lucía Pérez"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td></tr>
+            </tbody>
+          </table>
+          <div class="panel-foot"><span>128 anotaciones desde el <span class="mono">01/10/2026</span> · se conservan 5 cursos</span><nav class="pager" aria-label="Paginación"><button aria-current="page">1</button><button>2</button><button>3</button><button aria-label="Siguiente">›</button></nav></div>
+        </div>
+      </section>
+    </main>
+    <footer class="app-footer glass">
+      <a class="foot-brand" href="#novedades" title="Ver las novedades de la versión 4.0.0">
+        <span class="mark mark-s" aria-hidden="true">e</span>
+        <span>Evidentia</span><span class="ver mono">v4.0.0</span>
+      </a>
+      <nav class="foot-links" aria-label="Enlaces del pie">
+        <a href="https://github.com/drorganvidez/evidentia"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 20c-4 1.5-4-2-6-2.5M16 21v-3.5a3 3 0 0 0-.8-2.3c2.7-.3 5.5-1.3 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.3 4.3 0 0 0-.1-3.2s-1-.3-3.3 1.2a11.5 11.5 0 0 0-6 0C7.7 2.5 6.7 2.8 6.7 2.8a4.3 4.3 0 0 0-.1 3.2A4.6 4.6 0 0 0 5.3 9.2c0 4.7 2.8 5.7 5.5 6a3 3 0 0 0-.8 2.3V21"/></svg>Repositorio</a>
+        <a href="https://www.gnu.org/licenses/gpl-3.0.html"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h7l4.5 4.5v11a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5z"/><path d="M14 3.5V8h4.5M9 13h6M9 16.5h4"/></svg>GPL-3.0</a>
+        <a href="#guia"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5M12 17v.5"/></svg>Ayuda</a>
+        <a href="#sugerencias"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H9l-5 4z"/></svg>Sugerencias</a>
+      </nav>
+      <span class="foot-meta muted">Universidad de Sevilla · ETSII</span>
+    </footer>
+
+  </div>
+</div>
+
+<nav class="bottom-nav glass" aria-label="Navegación principal (móvil)">
+  <a href="#inicio"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11 12 4l8 7v8.5a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H5.5A1.5 1.5 0 0 1 4 19.5z"/></svg><span>Inicio</span></a>
+  <a href="#listado" aria-current="page"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h7l4.5 4.5v11a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5z"/><path d="M14 3.5V8h4.5M9 13h6M9 16.5h4"/></svg><span>Evidencias</span></a>
+  <a href="#reuniones"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span>Reuniones</span></a>
+  <a href="#asistencias"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h11A2.5 2.5 0 0 1 20 8.5v7a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 15.5z"/><path d="M9.5 6v12M13 10.5h3.5M13 13.5h3.5"/></svg><span>Asistencias</span></a>
+  <a href="#perfil"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.4-3.6 4.1-5.5 7-5.5s5.6 1.9 7 5.5"/></svg><span>Perfil</span></a>
+</nav>
+<p class="mock-note">Maqueta estática · Dirección A «Aurora» · <a href="#listado">listado</a> · <a href="#detalle">detalle</a> · tema arriba a la derecha</p>
+<script>
+  const root = document.documentElement;
+  const setTheme = (t) => {
+    if (t === 'system') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', t);
+    document.querySelectorAll('[data-theme-set]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.themeSet === t)));
+    try { localStorage.setItem('ev-theme-a', t); } catch (e) {}
+  };
+  document.querySelectorAll('[data-theme-set]').forEach(b => b.addEventListener('click', () => setTheme(b.dataset.themeSet)));
+  let saved = 'system'; try { saved = localStorage.getItem('ev-theme-a') || 'system'; } catch (e) {}
+  setTheme(saved);
+  const setGlass = (g) => {
+    if (g === 'intense') root.setAttribute('data-glass', 'intense'); else root.removeAttribute('data-glass');
+    document.querySelectorAll('[data-glass-set]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.glassSet === g)));
+    try { localStorage.setItem('ev-glass-a', g); } catch (e) {}
+  };
+  document.querySelectorAll('[data-glass-set]').forEach(b => b.addEventListener('click', () => setGlass(b.dataset.glassSet)));
+  let glass = 'soft'; try { glass = localStorage.getItem('ev-glass-a') || 'soft'; } catch (e) {}
+  setGlass(glass);
+
+  // Enrutado de la maqueta: #listado, #listado/pendientes, #detalle, #horas
+  const titles = { listado: 'Todas', detalle: 'Pokemon', horas: 'Mis horas', actividad: 'Registro de actividad' };
+  const show = () => {
+    const [screen = 'listado', filter = 'todas'] = location.hash.replace('#', '').split('/');
+    const id = ['listado', 'detalle', 'horas', 'actividad'].includes(screen) ? screen : 'listado';
+    document.querySelectorAll('.screen').forEach(s => s.hidden = s.id !== 'screen-' + id);
+    document.querySelectorAll('[role=tab][data-filter]').forEach(t => t.setAttribute('aria-selected', String(t.dataset.filter === filter)));
+    document.querySelectorAll('tr[data-status]').forEach(r => r.hidden = filter !== 'todas' && r.dataset.status !== filter);
+    const label = filter === 'todas' ? 'Todas' : filter[0].toUpperCase() + filter.slice(1);
+    document.getElementById('crumb-current').textContent = id === 'listado' ? label : titles[id];
+    document.querySelectorAll('nav a[href="#listado"]').forEach(a => a.toggleAttribute('aria-current', !['horas', 'actividad'].includes(id)));
+    document.querySelectorAll('nav a[href="#actividad"]').forEach(a => a.toggleAttribute('aria-current', id === 'actividad'));
+    window.scrollTo(0, 0);
+  };
+  document.querySelectorAll('[role=tab][data-filter]').forEach(t => t.addEventListener('click', () => { location.hash = t.dataset.filter === 'todas' ? '#listado' : '#listado/' + t.dataset.filter; }));
+  document.querySelectorAll('tr[data-href]').forEach(r => r.addEventListener('click', (e) => { if (!e.target.closest('a, button')) location.hash = r.dataset.href; }));
+  addEventListener('hashchange', show); show();
+</script>
+</body>
+</html>

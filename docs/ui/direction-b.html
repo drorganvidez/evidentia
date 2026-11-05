@@ -1,0 +1,794 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Evidentia · Dirección B «Bento»</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2220%22%20fill%3D%22%23b33600%22/%3E%3Ctext%20x%3D%2230%22%20y%3D%2245%22%20text-anchor%3D%22middle%22%20font-family%3D%22Outfit%2CArial%2Csans-serif%22%20font-weight%3D%22800%22%20font-size%3D%2238%22%20fill%3D%22%23fff%22%3Ee%3C/text%3E%3Ccircle%20cx%3D%2252%22%20cy%3D%2212%22%20r%3D%228%22%20fill%3D%22%232fb79b%22%20stroke%3D%22%23fbf6f0%22%20stroke-width%3D%223%22/%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/outfit/outfit-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/figtree/figtree-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* ===== Fuentes autoalojadas (OFL) ===== */
+@font-face { font-family: 'Outfit'; src: url('assets/fonts/outfit/outfit-latin-wght-normal.woff2') format('woff2-variations'); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: 'Figtree'; src: url('assets/fonts/figtree/figtree-latin-wght-normal.woff2') format('woff2-variations'); font-weight: 300 900; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('assets/fonts/jetbrains/jetbrains-mono-latin-wght-normal.woff2') format('woff2-variations'); font-weight: 100 800; font-display: swap; }
+
+:root {
+  --coral-50: oklch(97.5% 0.013 38);
+  --coral-100: oklch(94.5% 0.029 38);
+  --coral-200: oklch(88.5% 0.063 38);
+  --coral-300: oklch(80.5% 0.114 38);
+  --coral-400: oklch(71.5% 0.153 38);
+  --coral-500: oklch(61.5% 0.180 38);
+  --coral-600: oklch(51.5% 0.169 38);
+  --coral-700: oklch(44.5% 0.146 38);
+  --coral-800: oklch(37.0% 0.121 38);
+  --coral-900: oklch(29.5% 0.097 38);
+  --coral-950: oklch(21.5% 0.071 38);
+  --arena-50: oklch(97.5% 0.010 70);
+  --arena-100: oklch(94.5% 0.012 70);
+  --arena-200: oklch(88.5% 0.014 70);
+  --arena-300: oklch(80.5% 0.018 70);
+  --arena-400: oklch(71.5% 0.020 70);
+  --arena-500: oklch(61.5% 0.022 70);
+  --arena-600: oklch(51.5% 0.022 70);
+  --arena-700: oklch(44.5% 0.021 70);
+  --arena-800: oklch(37.0% 0.020 70);
+  --arena-900: oklch(29.5% 0.019 70);
+  --arena-950: oklch(21.5% 0.018 70);
+  --menta-50: oklch(97.5% 0.016 170);
+  --menta-100: oklch(94.5% 0.029 170);
+  --menta-200: oklch(88.5% 0.055 170);
+  --menta-300: oklch(80.5% 0.085 170);
+  --menta-400: oklch(71.5% 0.111 170);
+  --menta-500: oklch(61.5% 0.122 170);
+  --menta-600: oklch(51.5% 0.102 170);
+  --menta-700: oklch(44.5% 0.088 170);
+  --menta-800: oklch(37.0% 0.073 170);
+  --menta-900: oklch(29.5% 0.059 170);
+  --menta-950: oklch(21.5% 0.043 170);
+  --exito-50: oklch(97.5% 0.017 152);
+  --exito-100: oklch(94.5% 0.031 152);
+  --exito-200: oklch(88.5% 0.059 152);
+  --exito-300: oklch(80.5% 0.091 152);
+  --exito-400: oklch(71.5% 0.119 152);
+  --exito-500: oklch(61.5% 0.140 152);
+  --exito-600: oklch(51.5% 0.136 152);
+  --exito-700: oklch(44.5% 0.117 152);
+  --exito-800: oklch(37.0% 0.098 152);
+  --exito-900: oklch(29.5% 0.078 152);
+  --exito-950: oklch(21.5% 0.057 152);
+  --aviso-50: oklch(97.5% 0.019 80);
+  --aviso-100: oklch(94.5% 0.035 80);
+  --aviso-200: oklch(88.5% 0.067 80);
+  --aviso-300: oklch(80.5% 0.104 80);
+  --aviso-400: oklch(71.5% 0.136 80);
+  --aviso-500: oklch(61.5% 0.128 80);
+  --aviso-600: oklch(51.5% 0.107 80);
+  --aviso-700: oklch(44.5% 0.092 80);
+  --aviso-800: oklch(37.0% 0.077 80);
+  --aviso-900: oklch(29.5% 0.061 80);
+  --aviso-950: oklch(21.5% 0.045 80);
+  --error-50: oklch(97.5% 0.012 22);
+  --error-100: oklch(94.5% 0.027 22);
+  --error-200: oklch(88.5% 0.060 22);
+  --error-300: oklch(80.5% 0.111 22);
+  --error-400: oklch(71.5% 0.162 22);
+  --error-500: oklch(61.5% 0.190 22);
+  --error-600: oklch(51.5% 0.190 22);
+  --error-700: oklch(44.5% 0.175 22);
+  --error-800: oklch(37.0% 0.148 22);
+  --error-900: oklch(29.5% 0.114 22);
+  --error-950: oklch(21.5% 0.086 22);
+  --info-50: oklch(97.5% 0.012 250);
+  --info-100: oklch(94.5% 0.027 250);
+  --info-200: oklch(88.5% 0.058 250);
+  --info-300: oklch(80.5% 0.098 250);
+  --info-400: oklch(71.5% 0.128 250);
+  --info-500: oklch(61.5% 0.150 250);
+  --info-600: oklch(51.5% 0.146 250);
+  --info-700: oklch(44.5% 0.126 250);
+  --info-800: oklch(37.0% 0.105 250);
+  --info-900: oklch(29.5% 0.084 250);
+  --info-950: oklch(21.5% 0.062 250);
+  --font-display: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+  --font-text: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --r-s: 12px; --r-m: 16px; --r-l: 22px; --r-xl: 28px; --r-pill: 999px;
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 20px; --s-6: 24px; --s-8: 32px; --s-10: 40px;
+  --ease: cubic-bezier(.2,.8,.2,1); --t: .18s;
+}
+:root { color-scheme: light;
+  --bg: var(--arena-50); --surface: #fff; --surface-2: var(--arena-100); --text: var(--arena-900); --muted: var(--arena-600); --faint: var(--arena-500);
+  --line: var(--arena-200); --field-border: var(--arena-500);
+  --shadow: 0 1px 2px color-mix(in oklch, var(--arena-900) 6%, transparent), 0 14px 36px -18px color-mix(in oklch, var(--arena-900) 22%, transparent);
+  --brand: var(--coral-600); --brand-hover: var(--coral-700); --brand-text: var(--coral-700); --on-brand: #fff; --brand-soft: var(--coral-100); --brand-soft-text: var(--coral-800); --glow: color-mix(in oklch, var(--coral-500) 40%, transparent);
+  --mint: var(--menta-600); --mint-soft: var(--menta-100); --mint-text: var(--menta-800);
+  --blob1: var(--coral-100); --blob2: var(--menta-100); --blob-op: .8;
+  --ok-bg: var(--exito-100); --ok-fg: var(--exito-700); --ok-ac: var(--exito-500);
+  --pend-bg: var(--aviso-100); --pend-fg: var(--aviso-700); --pend-ac: var(--aviso-500);
+  --err-bg: var(--error-100); --err-fg: var(--error-700); --err-ac: var(--error-500);
+  --draft-bg: var(--arena-200); --draft-fg: var(--arena-800); --draft-ac: var(--arena-500);
+  --hero-grad: linear-gradient(135deg, var(--coral-600), var(--coral-500) 70%, oklch(72% 0.16 55));
+}
+:root[data-theme="dark"] { color-scheme: dark;
+  --bg: var(--arena-950); --surface: var(--arena-900); --surface-2: var(--arena-800); --text: var(--arena-100); --muted: var(--arena-400); --faint: var(--arena-500);
+  --line: color-mix(in oklch, var(--arena-700) 70%, transparent); --field-border: var(--arena-600);
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 18px 40px -20px rgba(0,0,0,.7);
+  --brand: var(--coral-600); --brand-hover: var(--coral-500); --brand-text: var(--coral-300); --on-brand: #fff; --brand-soft: var(--coral-900); --brand-soft-text: var(--coral-200); --glow: color-mix(in oklch, var(--coral-500) 45%, transparent);
+  --mint: var(--menta-400); --mint-soft: var(--menta-900); --mint-text: var(--menta-200);
+  --blob1: var(--coral-900); --blob2: var(--menta-900); --blob-op: .5;
+  --ok-bg: var(--exito-900); --ok-fg: var(--exito-300); --ok-ac: var(--exito-400);
+  --pend-bg: var(--aviso-900); --pend-fg: var(--aviso-300); --pend-ac: var(--aviso-400);
+  --err-bg: var(--error-900); --err-fg: var(--error-300); --err-ac: var(--error-400);
+  --draft-bg: var(--arena-800); --draft-fg: var(--arena-300); --draft-ac: var(--arena-500);
+  --hero-grad: linear-gradient(135deg, var(--coral-700), var(--coral-600) 70%, oklch(55% 0.15 55));
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme]) { color-scheme: dark;
+  --bg: var(--arena-950); --surface: var(--arena-900); --surface-2: var(--arena-800); --text: var(--arena-100); --muted: var(--arena-400); --faint: var(--arena-500);
+  --line: color-mix(in oklch, var(--arena-700) 70%, transparent); --field-border: var(--arena-600);
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 18px 40px -20px rgba(0,0,0,.7);
+  --brand: var(--coral-600); --brand-hover: var(--coral-500); --brand-text: var(--coral-300); --on-brand: #fff; --brand-soft: var(--coral-900); --brand-soft-text: var(--coral-200); --glow: color-mix(in oklch, var(--coral-500) 45%, transparent);
+  --mint: var(--menta-400); --mint-soft: var(--menta-900); --mint-text: var(--menta-200);
+  --blob1: var(--coral-900); --blob2: var(--menta-900); --blob-op: .5;
+  --ok-bg: var(--exito-900); --ok-fg: var(--exito-300); --ok-ac: var(--exito-400);
+  --pend-bg: var(--aviso-900); --pend-fg: var(--aviso-300); --pend-ac: var(--aviso-400);
+  --err-bg: var(--error-900); --err-fg: var(--error-300); --err-ac: var(--error-400);
+  --draft-bg: var(--arena-800); --draft-fg: var(--arena-300); --draft-ac: var(--arena-500);
+  --hero-grad: linear-gradient(135deg, var(--coral-700), var(--coral-600) 70%, oklch(55% 0.15 55));
+} }
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--text); font: 450 15.5px/1.5 var(--font-text); -webkit-font-smoothing: antialiased; }
+a { color: var(--brand-text); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid color-mix(in oklch, var(--brand) 55%, transparent); outline-offset: 3px; border-radius: var(--r-s); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+svg.i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.skip { position: absolute; left: var(--s-4); top: -64px; z-index: 50; padding: var(--s-2) var(--s-4); background: var(--brand); color: var(--on-brand); border-radius: var(--r-pill); }
+.skip:focus { top: var(--s-4); }
+.blobs { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.blobs span { position: absolute; border-radius: 50%; filter: blur(90px); opacity: var(--blob-op); }
+.blobs .b1 { width: 50vw; height: 50vw; left: -18vw; top: -20vw; background: var(--blob1); }
+.blobs .b2 { width: 40vw; height: 40vw; right: -12vw; bottom: -14vw; background: var(--blob2); }
+
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-xl); box-shadow: var(--shadow); }
+
+/* ===== Shell ===== */
+.shell { display: grid; grid-template-columns: 276px minmax(0, 1fr); gap: var(--s-6); padding: var(--s-6); min-height: 100vh; max-width: 1520px; margin: 0 auto; }
+.sidebar { position: sticky; top: var(--s-6); height: calc(100vh - 48px); padding: var(--s-6) var(--s-5); display: flex; flex-direction: column; gap: var(--s-8); }
+.brand { display: flex; align-items: center; gap: var(--s-3); color: var(--text); text-decoration: none !important; padding: var(--s-1); }
+.brand strong { display: block; font: 700 21px/1.1 var(--font-display); letter-spacing: -0.02em; }
+.brand small { display: block; color: var(--muted); font-size: 12.5px; font-weight: 500; }
+.mark { position: relative; width: 44px; height: 44px; border-radius: 15px; display: grid; place-items: center; background: var(--brand); color: #fff; font: 800 24px var(--font-display); box-shadow: 0 10px 22px -10px var(--glow); }
+.mark::after { content: ''; position: absolute; right: -3px; top: -3px; width: 13px; height: 13px; border-radius: 50%; background: var(--mint); border: 3px solid var(--surface); }
+nav.menu { display: grid; gap: 4px; }
+nav.menu a { display: flex; align-items: center; gap: var(--s-3); padding: 11px 14px; border-radius: var(--r-pill); color: var(--text); font-weight: 600; font-size: 15px; text-decoration: none !important; transition: background var(--t) var(--ease), color var(--t) var(--ease); }
+nav.menu a:hover { background: var(--surface-2); }
+nav.menu a[aria-current="page"] { background: var(--brand-soft); color: var(--brand-soft-text); }
+nav.menu .count { margin-left: auto; font: 700 12px var(--font-display); padding: 2px 9px; border-radius: var(--r-pill); background: var(--brand); color: #fff; }
+nav.menu a:not([aria-current]) .count { background: var(--surface-2); color: var(--muted); }
+.deadline { margin-top: auto; padding: var(--s-4); border-radius: var(--r-l); background: var(--mint-soft); color: var(--mint-text); display: grid; gap: var(--s-2); font-size: 13.5px; }
+.deadline-top { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-family: var(--font-display); font-size: 14.5px; }
+.deadline small { opacity: .9; }
+.meter { height: 8px; border-radius: 4px; background: color-mix(in oklch, var(--mint) 25%, transparent); overflow: hidden; }
+.meter span { display: block; height: 100%; width: var(--v); border-radius: 4px; background: var(--mint); }
+
+.main-col { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-6); align-content: start; }
+.topbar { display: flex; align-items: center; gap: var(--s-3); padding: var(--s-2) var(--s-3) var(--s-2) var(--s-5); border-radius: var(--r-pill); min-height: 60px; }
+.crumbs { display: flex; align-items: center; gap: var(--s-2); font-size: 14.5px; color: var(--muted); font-weight: 500; white-space: nowrap; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.crumbs a { color: var(--muted); }
+.crumbs svg { width: 16px; height: 16px; opacity: .6; }
+.crumbs [aria-current] { color: var(--text); font-weight: 700; }
+.topbar-end { margin-left: auto; display: flex; align-items: center; gap: var(--s-2); }
+.search { display: flex; align-items: center; gap: var(--s-2); padding: 9px 14px; border-radius: var(--r-pill); background: var(--surface-2); color: var(--muted); font-size: 14px; min-width: 230px; cursor: text; }
+.search kbd { margin-left: auto; font: 600 11px var(--font-mono); padding: 1px 6px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--faint); }
+.seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: var(--r-pill); background: var(--surface-2); }
+.seg button { border: 0; background: none; width: 36px; height: 32px; border-radius: var(--r-pill); display: grid; place-items: center; color: var(--muted); cursor: pointer; transition: background var(--t), color var(--t), box-shadow var(--t); }
+.seg button[aria-checked="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+.avatar { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font: 700 13px var(--font-display); background: var(--coral-500); color: #fff; }
+.avatar-s { width: 26px; height: 26px; font-size: 10.5px; }
+.user { border: 0; background: none; padding: 2px; border-radius: 50%; cursor: pointer; }
+.icon-btn { width: 38px; height: 38px; border-radius: var(--r-pill); border: 0; background: none; color: var(--muted); display: grid; place-items: center; cursor: pointer; transition: background var(--t), color var(--t); }
+.icon-btn:hover { background: var(--surface-2); color: var(--text); }
+.menu-btn { display: none; }
+main { display: grid; gap: var(--s-8); align-content: start; outline: none; padding-bottom: var(--s-10); }
+
+.screen { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-8); align-content: start; }
+.screen[hidden] { display: none; }
+
+/* ===== Cabecera ===== */
+.hero { display: flex; justify-content: space-between; align-items: end; gap: var(--s-8); padding: var(--s-5) var(--s-3) 0; }
+h1 { margin: 0; font: 700 38px/1.1 var(--font-display); letter-spacing: -0.025em; }
+.lede { margin: var(--s-2) 0 0; color: var(--muted); max-width: 58ch; }
+h2 { margin: 0; font: 700 17px/1.3 var(--font-display); letter-spacing: -0.01em; }
+.eyebrow { margin: 0 0 var(--s-2); display: flex; flex-wrap: wrap; gap: var(--s-2); align-items: center; font-size: 13.5px; font-weight: 500; }
+
+/* ===== Botones ===== */
+.btn { display: inline-flex; align-items: center; gap: var(--s-2); height: 44px; padding: 0 var(--s-5); border-radius: var(--r-pill); font: 650 15px var(--font-display); letter-spacing: 0; border: 0; cursor: pointer; text-decoration: none !important; transition: transform var(--t) var(--ease), box-shadow var(--t) var(--ease), background var(--t) var(--ease); white-space: nowrap; }
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--brand); color: var(--on-brand); box-shadow: 0 10px 24px -10px var(--glow); }
+.btn-primary:hover { background: var(--brand-hover); transform: translateY(-1px); box-shadow: 0 16px 30px -12px var(--glow); }
+.btn-quiet { background: var(--surface-2); color: var(--text); }
+.btn-quiet:hover { background: var(--line); }
+.btn-danger-quiet { background: transparent; color: var(--err-fg); box-shadow: inset 0 0 0 1.5px var(--line); }
+.btn-danger-quiet:hover { background: var(--err-bg); }
+
+/* ===== Bento de estadísticas ===== */
+.stats { display: grid; grid-template-columns: 1.7fr repeat(3, 1fr); gap: var(--s-5); }
+.stat { padding: var(--s-6); display: grid; gap: var(--s-1); align-content: space-between; }
+.stat-label { font-size: 14px; font-weight: 600; color: var(--muted); display: flex; align-items: center; gap: var(--s-2); }
+.bubble { width: 36px; height: 36px; border-radius: 12px; display: grid; place-items: center; background: var(--bb); color: var(--bf); }
+.bubble svg { width: 18px; height: 18px; }
+.bubble-ok { --bb: var(--ok-bg); --bf: var(--ok-fg); } .bubble-pend { --bb: var(--pend-bg); --bf: var(--pend-fg); } .bubble-err { --bb: var(--err-bg); --bf: var(--err-fg); } .bubble-draft { --bb: var(--draft-bg); --bf: var(--draft-fg); }
+.stat-value { font: 700 36px/1 var(--font-display); letter-spacing: -0.03em; margin-top: var(--s-2); font-variant-numeric: tabular-nums; }
+.stat-value .unit { font: 500 14px var(--font-text); color: var(--muted); margin-left: 8px; letter-spacing: 0; }
+.stat-foot { font-size: 13px; color: var(--muted); margin-top: var(--s-1); }
+.stat-main .stat-value { font-size: 52px; }
+.stat-main { gap: 0; }
+.bar { display: flex; gap: 4px; height: 12px; margin-top: var(--s-4); }
+.bar span { display: block; height: 100%; border-radius: 6px; width: var(--w); }
+.bar .ok { background: var(--ok-ac); } .bar .pend { background: var(--pend-ac); } .bar .err { background: var(--err-ac); }
+.legend { display: flex; gap: var(--s-4); font-size: 13px; color: var(--muted); margin-top: var(--s-3); flex-wrap: wrap; row-gap: 6px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 3px; background: var(--c); }
+
+/* ===== Listado como fichas ===== */
+.panel { padding: var(--s-5) var(--s-6) var(--s-6); display: grid; gap: var(--s-4); overflow-x: auto; }
+.panel-bar { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+.pills { display: flex; gap: var(--s-2); flex-wrap: wrap; }
+.pills button { border: 0; background: var(--surface-2); padding: 8px 14px; border-radius: var(--r-pill); font: 600 14px var(--font-display); color: var(--muted); cursor: pointer; display: inline-flex; gap: 7px; align-items: center; transition: background var(--t), color var(--t); }
+.pills button span { font: 700 11.5px var(--font-mono); padding: 1px 7px; border-radius: var(--r-pill); background: color-mix(in oklch, var(--text) 8%, transparent); }
+.pills button[aria-selected="true"] { background: var(--text); color: var(--bg); }
+.pills button[aria-selected="true"] span { background: color-mix(in oklch, var(--bg) 25%, transparent); }
+.panel-bar .right { margin-left: auto; display: flex; gap: var(--s-2); }
+.list { width: 100%; border-collapse: separate; border-spacing: 0 12px; font-size: 15px; margin-top: -12px; }
+.list th { text-align: left; padding: 6px var(--s-4) 0; font: 600 12.5px var(--font-text); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); white-space: nowrap; }
+.list th.num, .list td.num { text-align: right; }
+.list tbody tr { --st: var(--draft-ac); }
+.list tr.row-ok { --st: var(--ok-ac); } .list tr.row-pend { --st: var(--pend-ac); } .list tr.row-err { --st: var(--err-ac); }
+.list td { padding: 18px var(--s-5); background: var(--surface-2); vertical-align: middle; border-top: 1px solid transparent; border-bottom: 1px solid transparent; transition: background var(--t); }
+.list td:first-child { border-left: 6px solid var(--st); border-radius: var(--r-m) 0 0 var(--r-m); }
+.list td:last-child { border-radius: 0 var(--r-m) var(--r-m) 0; }
+.list tbody tr:hover td { background: color-mix(in oklch, var(--brand-soft) 50%, var(--surface-2)); }
+.sort { border: 0; background: none; padding: 0; font: inherit; color: inherit; text-transform: inherit; letter-spacing: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+.sort.is-active { color: var(--text); }
+.row-title { display: block; color: var(--text); font: 650 16px var(--font-display); text-decoration: none !important; letter-spacing: -0.01em; }
+.row-title:hover { color: var(--brand-text); }
+.sub { display: block; color: var(--muted); font-size: 13.5px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 40ch; }
+.committee { display: inline-flex; align-items: center; gap: 7px; font-weight: 600; font-size: 13.5px; }
+.committee i { width: 22px; height: 22px; border-radius: 8px; display: grid; place-items: center; background: oklch(93% 0.05 var(--h)); color: oklch(45% 0.15 var(--h)); font: 700 11px var(--font-display); }
+:root[data-theme="dark"] .committee i { background: oklch(32% 0.07 var(--h)); color: oklch(85% 0.1 var(--h)); }
+.when { display: block; font-size: 12px; color: var(--faint); font-family: var(--font-mono); }
+.list .act { width: 1%; }
+.panel-foot { color: var(--muted); font-size: 13.5px; display: flex; justify-content: space-between; align-items: center; padding: 0 var(--s-2); }
+.pager { display: inline-flex; gap: 4px; }
+.pager button { width: 34px; height: 34px; border-radius: var(--r-pill); border: 0; background: none; color: var(--muted); cursor: pointer; font: 700 13.5px var(--font-display); }
+.pager button[aria-current="page"] { background: var(--text); color: var(--bg); }
+
+/* ===== Chip de estado (firma visual) ===== */
+.chip { display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px 6px 9px; border-radius: var(--r-pill); font: 700 13px var(--font-display); background: var(--c-bg); color: var(--c-fg); white-space: nowrap; }
+.chip svg { width: 15px; height: 15px; stroke-width: 2.6; }
+.chip-ok { --c-bg: var(--ok-bg); --c-fg: var(--ok-fg); } .chip-pend { --c-bg: var(--pend-bg); --c-fg: var(--pend-fg); } .chip-err { --c-bg: var(--err-bg); --c-fg: var(--err-fg); } .chip-draft { --c-bg: var(--draft-bg); --c-fg: var(--draft-fg); }
+.chip-xl { font-size: 15px; padding: 10px 18px 10px 14px; }
+.chip-xl svg { width: 18px; height: 18px; }
+.tagchip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: var(--r-pill); background: rgba(255,255,255,.18); color: #fff; font-size: 13px; font-weight: 600; backdrop-filter: blur(6px); }
+
+
+/* ===== Fichas clicables y desglose de horas ===== */
+.stat-link { text-decoration: none !important; color: inherit; position: relative; transition: transform var(--t) var(--ease), box-shadow var(--t) var(--ease); cursor: pointer; }
+.stat-link:hover { transform: translateY(-2px); }
+.stat-go { position: absolute; right: 14px; top: 14px; width: 18px; height: 18px; color: var(--muted); opacity: .55; transition: opacity var(--t), transform var(--t); }
+.stat-link:hover .stat-go { opacity: 1; transform: translateX(2px); }
+.list tbody tr[data-href] { cursor: pointer; }
+.hours-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: var(--s-6); align-items: start; }
+.hours-total { display: grid; gap: var(--s-2); }
+.hbar { display: flex; gap: 4px; height: 12px; margin: var(--s-3) 0 var(--s-2); }
+.hbar span { display: block; height: 100%; border-radius: 6px; width: var(--w); background: var(--c); }
+.breakdown { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-3); }
+.bd { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: var(--s-4); padding: var(--s-4) var(--s-5); text-decoration: none !important; color: inherit; transition: transform var(--t) var(--ease); }
+.bd:hover { transform: translateY(-2px); }
+.bd-body { display: grid; gap: 2px; font-size: 14.5px; }
+.bd-body .muted { font-size: 13px; }
+.bd-val { font-weight: 650; font-size: 16px; }
+.bd-go { color: var(--muted); opacity: .6; }
+.bubble-a { width: 40px; height: 40px; border-radius: 13px; display: grid; place-items: center; background: color-mix(in oklch, var(--c) 18%, transparent); color: var(--c); }
+.bubble-a svg { width: 20px; height: 20px; }
+
+
+/* ===== Registro de actividad y pie ===== */
+.menu-admin { margin-top: var(--s-2); padding-top: var(--s-4); border-top: 1px solid var(--rule); }
+.nav-label { margin: 0 0 var(--s-2) 12px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.who { display: flex; align-items: center; gap: var(--s-2); }
+.who strong { display: block; font-weight: 650; }
+.who .role { display: block; font-size: 12.5px; color: var(--muted); }
+.act-chip { display: inline-block; font-weight: 650; font-size: 14px; color: var(--ac); }
+.act-ok { --ac: var(--ok-fg); } .act-err { --ac: var(--err-fg); } .act-pend { --ac: var(--pend-fg); } .act-info { --ac: var(--text); } .act-warn { --ac: var(--pend-fg); }
+.activity .sub { max-width: 36ch; }
+.activity tr.flag td:first-child { box-shadow: inset 4px 0 0 var(--pend-dot, var(--pend-ac)); }
+.app-footer { display: flex; align-items: center; gap: var(--s-6); flex-wrap: wrap; padding: var(--s-3) var(--s-5); margin-top: var(--s-2); font-size: 13.5px; border-radius: var(--r-l); min-height: 60px; }
+.foot-brand { display: inline-flex; align-items: center; gap: var(--s-2); color: var(--text); font-weight: 650; text-decoration: none !important; }
+.foot-brand:hover .ver { background: var(--brand); color: var(--on-brand); }
+.ver { font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: var(--r-pill); background: var(--brand-soft); color: var(--brand-soft-text); transition: background var(--t), color var(--t); }
+.foot-links { display: flex; gap: var(--s-1); flex-wrap: wrap; }
+.foot-links a { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: var(--r-pill); color: var(--muted); font-weight: 550; text-decoration: none !important; transition: background var(--t), color var(--t); }
+.foot-links a:hover { background: var(--glass-2, var(--surface-2)); color: var(--text); }
+.foot-links svg { width: 16px; height: 16px; }
+.foot-meta { margin-left: auto; white-space: nowrap; }
+.mark-s { width: 26px; height: 26px; border-radius: 8px; font-size: 14px; box-shadow: none; }
+.mark-s::after { display: none; }
+
+/* ===== Detalle ===== */
+.cover { padding: var(--s-8) var(--s-10); border-radius: var(--r-xl); background: var(--hero-grad); color: #fff; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s-6); align-items: end; box-shadow: 0 24px 50px -28px var(--glow); position: relative; overflow: hidden; }
+.cover::after { content: ''; position: absolute; right: -80px; top: -120px; width: 320px; height: 320px; border-radius: 50%; background: rgba(255,255,255,.12); }
+.cover h1 { color: #fff; }
+.cover .lede { color: rgba(255,255,255,.85); }
+.cover > * { position: relative; }
+.cover .actions { display: flex; gap: var(--s-2); align-items: center; flex-wrap: wrap; justify-content: end; }
+.cover .btn-primary { background: #fff; color: var(--coral-700); box-shadow: 0 10px 24px -10px rgba(0,0,0,.35); }
+.cover .btn-primary:hover { background: var(--coral-50); }
+.cover .btn-danger-quiet { color: #fff; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.45); }
+.cover .btn-danger-quiet:hover { background: rgba(255,255,255,.14); }
+.tagchip-status { background: rgba(255,255,255,.92); color: var(--error-700); font-weight: 700; }
+.tagchip-status svg { width: 14px; height: 14px; stroke-width: 2.6; }
+
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s-4); padding: var(--s-5); }
+.step { display: flex; align-items: center; gap: var(--s-3); padding: var(--s-3) var(--s-4); border-radius: var(--r-m); background: var(--surface-2); font-size: 14px; }
+.step .n { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font: 700 13px var(--font-display); background: var(--line); color: var(--muted); flex: none; }
+.step.done { background: var(--mint-soft); color: var(--mint-text); }
+.step.done .n { background: var(--mint); color: #fff; }
+.step.err { background: var(--err-bg); color: var(--err-fg); }
+.step.err .n { background: var(--err-ac); color: #fff; }
+.step strong { display: block; font-family: var(--font-display); font-weight: 700; }
+.step small { display: block; font-size: 12.5px; opacity: .85; font-family: var(--font-mono); }
+
+.notice { display: grid; grid-template-columns: auto 1fr; gap: var(--s-5); padding: var(--s-6) var(--s-8); border-radius: var(--r-xl); background: var(--err-bg); color: var(--err-fg); }
+.notice-icon { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: var(--surface); color: var(--err-fg); box-shadow: var(--shadow); }
+.notice-icon svg { width: 26px; height: 26px; }
+.notice p { margin: 0; }
+.notice-title { font: 700 17px var(--font-display); }
+.notice blockquote { margin: var(--s-2) 0; padding: var(--s-3) var(--s-4); border-radius: var(--r-m); background: var(--surface); color: var(--text); font-size: 15.5px; }
+.notice-meta { display: flex; align-items: center; gap: var(--s-2); font-size: 13.5px; }
+.notice-cta { grid-column: 2; display: flex; gap: var(--s-3); align-items: center; flex-wrap: wrap; margin-top: var(--s-1); }
+.notice-cta .hint { font-size: 13.5px; }
+
+.detail-grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: var(--s-6); align-items: start; }
+.stack { display: grid; gap: var(--s-6); }
+.card { padding: var(--s-6) var(--s-8); }
+.card > p { margin: var(--s-4) 0 0; line-height: 1.6; }
+.card-head { display: flex; justify-content: space-between; align-items: center; }
+.drop { margin-top: var(--s-4); padding: var(--s-8) var(--s-4); display: grid; justify-items: center; text-align: center; gap: var(--s-2); border: 2px dashed color-mix(in oklch, var(--brand) 40%, transparent); border-radius: var(--r-l); background: var(--brand-soft); color: var(--brand-soft-text); transition: transform var(--t), box-shadow var(--t); cursor: pointer; }
+.drop:hover { transform: translateY(-2px); box-shadow: 0 16px 30px -18px var(--glow); }
+.drop-icon { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: var(--brand); color: #fff; box-shadow: 0 10px 24px -10px var(--glow); }
+.drop-icon svg { width: 26px; height: 26px; }
+.drop p { margin: 0; font-size: 14.5px; }
+.drop .muted { color: var(--brand-soft-text); opacity: .8; }
+.dlist { margin: var(--s-3) 0 0; display: grid; }
+.dlist div { display: grid; grid-template-columns: 100px 1fr; gap: var(--s-3); padding: 10px 0; border-top: 1px solid var(--line); font-size: 14.5px; align-items: center; }
+.dlist dt { color: var(--muted); font-weight: 500; }
+.dlist dd { margin: 0; }
+.ok-inline { display: inline-flex; align-items: center; gap: 6px; color: var(--ok-fg); font-weight: 700; font-family: var(--font-display); }
+.ok-inline svg { width: 17px; height: 17px; }
+.history { list-style: none; margin: var(--s-3) 0 0; padding: 0; display: grid; gap: var(--s-2); }
+.history li { display: grid; grid-template-columns: auto 1fr; gap: var(--s-3); font-size: 14px; align-items: start; }
+.history .bubble { width: 32px; height: 32px; border-radius: 10px; }
+.history time { display: block; color: var(--faint); font-size: 12px; font-family: var(--font-mono); }
+.mock-note { text-align: center; color: var(--muted); font-size: 12.5px; padding: var(--s-4); margin: 0; }
+
+/* ===== Elementos solo móvil (ocultos en escritorio) ===== */
+.bottom-nav, .mini-stats, .deadline-inline { display: none; }
+
+/* ===== Móvil: diseño propio ===== */
+@media (max-width: 720px) {
+  body { padding-bottom: 84px; }
+  .shell { grid-template-columns: 1fr; padding: var(--s-3); gap: var(--s-3); }
+  .sidebar { display: none; }
+  .menu-btn { display: grid; }
+  .topbar { top: var(--s-3); padding: var(--s-1) var(--s-2) var(--s-1) var(--s-2); min-height: 52px; border-radius: var(--r-l); }
+  .search, .user { display: none; }
+  .crumbs { font-size: 15px; }
+  .crumbs a, .crumbs > svg { display: none; }
+  main { gap: var(--s-6); padding: 0 0 var(--s-4); }
+  .screen { gap: var(--s-5); }
+  .hero { flex-direction: column; align-items: stretch; gap: var(--s-4); padding: var(--s-3) var(--s-2) 0; }
+  h1 { font-size: 28px; }
+  .lede { font-size: 14.5px; }
+  .deadline-inline { display: block; margin: 0; font-size: 13.5px; color: var(--muted); }
+  .deadline-inline .tag { margin-right: 4px; }
+  .hero .btn { justify-content: center; height: 48px; font-size: 15.5px; }
+  .stats { grid-template-columns: 1fr; gap: var(--s-3); }
+  .stat:not(.stat-main) { display: none; }
+  .stat-main { padding: var(--s-5); }
+  .stat-main .stat-value { font-size: 40px; }
+  .stat-value .unit { display: block; margin: 4px 0 0; }
+  .legend { display: none; }
+  .mini-stats { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); margin-top: var(--s-3); font-size: 13px; color: var(--muted); font-weight: 550; }
+  .mini-stats span { display: inline-flex; align-items: center; gap: 6px; }
+  .bar { height: 10px; }
+  .panel-bar { padding: var(--s-3); gap: var(--s-2); }
+  .panel-bar .right { display: none; }
+  .tabs { width: 100%; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .list thead { display: none; }
+  .pills { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
+  .pills::-webkit-scrollbar { display: none; }
+  .list { border-spacing: 0; margin-top: 0; }
+  .list, .list tbody { display: block; }
+  .list tr { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "title title" "meta status"; gap: var(--s-2) var(--s-3); padding: var(--s-4); margin-bottom: var(--s-3); background: var(--surface-2); border-radius: var(--r-m); border-left: 6px solid var(--st); align-items: center; }
+  .list td { display: block; padding: 0; background: none !important; border: 0 !important; border-radius: 0 !important; }
+  .list td[data-label="Evidencia"] { grid-area: title; }
+  .list td[data-label="Estado"] { grid-area: status; justify-self: end; }
+  .list td[data-label="Actualizada"] { grid-area: meta; font-size: 13px; color: var(--muted); }
+  .list td[data-label="Actualizada"] .when { display: inline; margin-left: 6px; }
+  .list td[data-label="Comité"], .list td[data-label="Horas"], .list .act { display: none; }
+  .row-title { font-size: 15.5px; }
+  .sub { max-width: none; white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .panel-foot { flex-direction: column; gap: var(--s-2); align-items: start; }
+  /* detalle */
+  .cover { grid-template-columns: 1fr; padding: var(--s-5); gap: var(--s-4); }
+  .cover h1 { font-size: 26px; }
+  .actions { justify-content: stretch; display: grid; grid-template-columns: 1fr auto; gap: var(--s-2); }
+  .actions .btn-primary { order: -1; grid-column: 1; justify-content: center; }
+  .actions .btn-danger-quiet { grid-column: 2; }
+  .steps { grid-template-columns: 1fr; gap: var(--s-2); padding: var(--s-3); }
+  .notice { grid-template-columns: 1fr; padding: var(--s-4); gap: var(--s-3); }
+  .notice-cta { grid-column: 1; }
+  .notice-cta .btn { width: 100%; justify-content: center; }
+  .detail-grid { grid-template-columns: 1fr; gap: var(--s-4); }
+  .app-footer { gap: var(--s-3); padding: var(--s-4); }
+  .foot-meta { margin-left: 0; width: 100%; }
+  .activity tr { grid-template-areas: "title title" "meta meta"; }
+  .activity td[data-label="Cuándo"] { grid-area: meta; }
+  .activity td[data-label="Quién"] { grid-area: title; }
+  .activity td[data-label="Qué"] { grid-column: 1 / -1; }
+  .activity td[data-label="Sobre"] { grid-column: 1 / -1; font-size: 13.5px; }
+  .hours-grid { grid-template-columns: 1fr; gap: var(--s-4); }
+  .stat-go { opacity: .8; }
+  .bd { padding: var(--s-3) var(--s-4); gap: var(--s-3); }
+
+  .stack { gap: var(--s-4); }
+  .card { padding: var(--s-4) var(--s-5); }
+  .dlist div { grid-template-columns: 92px 1fr; }
+  .bottom-nav { position: fixed; left: var(--s-3); right: var(--s-3); bottom: calc(var(--s-3) + env(safe-area-inset-bottom)); z-index: 10; display: grid; grid-template-columns: repeat(5, 1fr); padding: 6px; border-radius: var(--r-l); }
+  .bottom-nav a { display: grid; justify-items: center; gap: 3px; padding: 7px 2px; border-radius: var(--r-s); color: var(--muted); font-size: 11px; font-weight: 600; text-decoration: none !important; }
+  .bottom-nav a[aria-current="page"] { color: var(--brand-soft-text); background: var(--brand-soft); }
+  .bottom-nav svg { width: 22px; height: 22px; }
+  .mock-note { padding-bottom: var(--s-6); }
+}
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .001ms !important; animation: none !important; } }
+
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Saltar al contenido</a>
+<div class="blobs" aria-hidden="true"><span class="b1"></span><span class="b2"></span></div>
+<div class="shell">
+  <aside class="sidebar tile" aria-label="Navegación principal">
+    <a class="brand" href="#listado" aria-label="Evidentia, inicio">
+      <span class="mark" aria-hidden="true">e</span>
+      <span><strong>Evidentia</strong><small>Jornadas InnoSoft 2026</small></span>
+    </a>
+    <nav class="menu">
+      <a href="#inicio"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11 12 4l8 7v8.5a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H5.5A1.5 1.5 0 0 1 4 19.5z"/></svg>Inicio</a>
+      <a href="#listado" aria-current="page"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h7l4.5 4.5v11a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5z"/><path d="M14 3.5V8h4.5M9 13h6M9 16.5h4"/></svg>Mis evidencias<span class="count">6</span></a>
+      <a href="#reuniones"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Mis reuniones</a>
+      <a href="#asistencias"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h11A2.5 2.5 0 0 1 20 8.5v7a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 15.5z"/><path d="M9.5 6v12M13 10.5h3.5M13 13.5h3.5"/></svg>Mis asistencias</a>
+      <a href="#perfil"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.4-3.6 4.1-5.5 7-5.5s5.6 1.9 7 5.5"/></svg>Perfil</a>
+    </nav>
+    <nav class="menu menu-admin" aria-label="Gestión (solo profesorado y presidencia)">
+      <p class="nav-label">Gestión</p>
+      <a href="#actividad"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h3l2.5-6 4 12 2.5-6H20"/></svg>Registro de actividad</a>
+    </nav>
+    <div class="deadline" role="note">
+      <div class="deadline-top"><span>Subida de evidencias</span><span>14 días</span></div>
+      <div class="meter" aria-hidden="true"><span style="--v:68%"></span></div>
+      <small>Cierra el <span class="mono">19/11 · 20:00</span></small>
+    </div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar tile">
+      <button class="icon-btn menu-btn" aria-label="Abrir menú"><svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <nav class="crumbs" aria-label="Migas de pan"><a href="#listado">Mis evidencias</a><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m10 7 5 5-5 5"/></svg><span id="crumb-current" aria-current="page">Todas</span></nav>
+      <div class="topbar-end">
+        <div class="search" role="search"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="m20 20-4.2-4.2"/></svg><span>Buscar evidencias</span><kbd>/</kbd></div>
+        <div class="seg" role="radiogroup" aria-label="Tema">
+          <button role="radio" data-theme-set="light" aria-checked="false" title="Claro"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg><span class="sr">Claro</span></button>
+          <button role="radio" data-theme-set="dark" aria-checked="false" title="Oscuro"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 14.5A7.5 7.5 0 0 1 9.5 4.5a7.5 7.5 0 1 0 10 10z"/></svg><span class="sr">Oscuro</span></button>
+          <button role="radio" data-theme-set="system" aria-checked="true" title="Sistema"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="11" rx="2"/><path d="M8.5 19.5h7M12 15.5v4"/></svg><span class="sr">Sistema</span></button>
+        </div>
+        <button class="user" aria-label="Menú de usuario: Juan Pérez"><span class="avatar" aria-hidden="true">JP</span></button>
+      </div>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <!-- ===== LISTADO ===== -->
+      <section id="screen-listado" class="screen" aria-labelledby="t-listado">
+        <div class="hero">
+          <div>
+            <h1 id="t-listado">Hola, Juan</h1>
+            <p class="lede">Aquí están tus evidencias de las jornadas. Tu coordinador revisa las que publicas y las horas aceptadas cuentan para tu nota.</p>
+            <p class="deadline-inline"><span class="tag">14 días</span> para subir evidencias · cierra el <span class="mono">19/11 a las 20:00</span></p>
+          </div>
+          <a class="btn btn-primary" href="#nueva"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Nueva evidencia</a>
+        </div>
+
+        <div class="stats">
+          <a class="stat stat-main stat-link tile" href="#horas" aria-label="Ver el desglose de mis horas">
+            <span class="stat-label"><span class="bubble bubble-ok"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5 9.5-10"/></svg></span>Horas aceptadas</span>
+            <div class="stat-value">4,00<span class="unit">de 8,25 h declaradas</span></div>
+            <div class="bar" role="img" aria-label="48 % aceptadas, 36 % pendientes, 16 % rechazadas"><span class="ok" style="--w:48%"></span><span class="pend" style="--w:36%"></span><span class="err" style="--w:16%"></span></div>
+            <div class="mini-stats" aria-label="Resumen"><span><i class="dot" style="--c:var(--pend-ac)"></i>2 pendientes</span><span><i class="dot" style="--c:var(--err-ac)"></i>1 rechazada</span><span><i class="dot" style="--c:var(--draft-ac)"></i>1 borrador</span></div>
+            <div class="legend"><span><i style="--c:var(--ok-ac)"></i>Aceptadas 4,00 h</span><span><i style="--c:var(--pend-ac)"></i>Pendientes 3,75 h</span><span><i style="--c:var(--err-ac)"></i>Rechazadas 1,75 h</span></div>
+            <svg class="i stat-go" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+          </a>
+          <a class="stat stat-link tile" href="#listado/pendientes"><span class="stat-label"><span class="bubble bubble-pend"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l2.5 2"/></svg></span>Pendientes</span><span class="stat-value">2</span><span class="stat-foot">3,75 h en revisión</span><svg class="i stat-go" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a>
+          <a class="stat stat-link tile" href="#listado/rechazadas"><span class="stat-label"><span class="bubble bubble-err"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17"/></svg></span>Rechazadas</span><span class="stat-value">1</span><span class="stat-foot">1 por corregir</span><svg class="i stat-go" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a>
+          <a class="stat stat-link tile" href="#listado/borradores"><span class="stat-label"><span class="bubble bubble-draft"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5h4l10-10-4-4-10 10z"/></svg></span>Borradores</span><span class="stat-value">1</span><span class="stat-foot">sin publicar</span><svg class="i stat-go" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a>
+        </div>
+
+        <div class="panel tile">
+          <div class="panel-bar">
+            <div class="pills" role="tablist" aria-label="Filtrar por estado">
+              <button role="tab" data-filter="todas" aria-selected="true">Todas<span>6</span></button>
+              <button role="tab" data-filter="pendientes" aria-selected="false">Pendientes<span>2</span></button>
+              <button role="tab" data-filter="aceptadas" aria-selected="false">Aceptadas<span>2</span></button>
+              <button role="tab" data-filter="rechazadas" aria-selected="false">Rechazadas<span>1</span></button>
+              <button role="tab" data-filter="borradores" aria-selected="false">Borradores<span>1</span></button>
+            </div>
+            <div class="right"><button class="btn btn-quiet" style="height:38px"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filtros</button></div>
+          </div>
+          <table class="list">
+            <caption class="sr">Evidencias de Juan Pérez, ordenadas por la última modificación</caption>
+            <thead><tr>
+              <th scope="col">Evidencia</th><th scope="col">Comité</th>
+              <th scope="col" class="num">Horas</th><th scope="col">Estado</th>
+              <th scope="col"><button class="sort is-active" aria-label="Ordenado por fecha de actualización, más reciente primero">Actualizada <svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button></th>
+              <th scope="col"><span class="sr">Abrir</span></th>
+            </tr></thead>
+            <tbody>
+              <tr class="row-draft" data-status="borradores" data-href="#detalle">
+                <td data-label="Evidencia"><a class="row-title" href="#detalle">Montaje del photocall</a><span class="sub">Borrador: montaje del photocall en el hall.</span></td>
+                <td data-label="Comité"><span class="committee"><i style="--h:150">L</i>Logística</span></td>
+                <td data-label="Horas" class="num mono">1,00</td>
+                <td data-label="Estado"><span class="chip chip-draft"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5h4l10-10-4-4-10 10z"/></svg>Borrador</span></td>
+                <td data-label="Actualizada"><time datetime="2026-11-05T22:40">hace 20 min</time><span class="when">05/11 22:40</span></td>
+                <td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir Montaje del photocall"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td>
+              </tr>
+              <tr class="row-err" data-status="rechazadas" data-href="#detalle">
+                <td data-label="Evidencia"><a class="row-title" href="#detalle">Pokemon</a><span class="sub">Planeando qué pokemons banear, qué estrategias son ilegales…</span></td>
+                <td data-label="Comité"><span class="committee"><i style="--h:300">P</i>Programa</span></td>
+                <td data-label="Horas" class="num mono">1,75</td>
+                <td data-label="Estado"><span class="chip chip-err"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17"/></svg>Rechazada</span></td>
+                <td data-label="Actualizada"><time datetime="2026-11-05T17:02">hace 6 h</time><span class="when">05/11 17:02</span></td>
+                <td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir Pokemon"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td>
+              </tr>
+              <tr class="row-pend" data-status="pendientes" data-href="#detalle">
+                <td data-label="Evidencia"><a class="row-title" href="#detalle">Preparación de la agenda de ponentes</a><span class="sub">Contacté con los ponentes y cerré la agenda del segundo día.</span></td>
+                <td data-label="Comité"><span class="committee"><i style="--h:300">P</i>Programa</span></td>
+                <td data-label="Horas" class="num mono">3,00</td>
+                <td data-label="Estado"><span class="chip chip-pend"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l2.5 2"/></svg>Pendiente</span></td>
+                <td data-label="Actualizada"><time datetime="2026-11-05T16:10">hace 7 h</time><span class="when">05/11 16:10</span></td>
+                <td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir Preparación de la agenda de ponentes"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td>
+              </tr>
+              <tr class="row-pend" data-status="pendientes" data-href="#detalle">
+                <td data-label="Evidencia"><a class="row-title" href="#detalle">Recogida de ponentes en la estación</a><span class="sub">Fui a buscar a dos ponentes a Santa Justa el miércoles.</span></td>
+                <td data-label="Comité"><span class="committee"><i style="--h:150">L</i>Logística</span></td>
+                <td data-label="Horas" class="num mono">0,75</td>
+                <td data-label="Estado"><span class="chip chip-pend"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l2.5 2"/></svg>Pendiente</span></td>
+                <td data-label="Actualizada"><time datetime="2026-11-04T19:30">ayer</time><span class="when">04/11 19:30</span></td>
+                <td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir Recogida de ponentes en la estación"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td>
+              </tr>
+              <tr class="row-ok" data-status="aceptadas" data-href="#detalle">
+                <td data-label="Evidencia"><a class="row-title" href="#detalle">Moderación de la mesa redonda de IA</a><span class="sub">Moderé la mesa redonda sobre inteligencia artificial del jueves.</span></td>
+                <td data-label="Comité"><span class="committee"><i style="--h:300">P</i>Programa</span></td>
+                <td data-label="Horas" class="num mono">2,50</td>
+                <td data-label="Estado"><span class="chip chip-ok"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5 9.5-10"/></svg>Aceptada</span></td>
+                <td data-label="Actualizada"><time datetime="2026-11-03T18:40">hace 2 días</time><span class="when">03/11 18:40</span></td>
+                <td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir Moderación de la mesa redonda de IA"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td>
+              </tr>
+              <tr class="row-ok" data-status="aceptadas" data-href="#detalle">
+                <td data-label="Evidencia"><a class="row-title" href="#detalle">Diseño del cartel de las jornadas</a><span class="sub">Diseñé el cartel y las versiones para redes.</span></td>
+                <td data-label="Comité"><span class="committee"><i style="--h:40">C</i>Comunicación</span></td>
+                <td data-label="Horas" class="num mono">1,50</td>
+                <td data-label="Estado"><span class="chip chip-ok"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5 9.5-10"/></svg>Aceptada</span></td>
+                <td data-label="Actualizada"><time datetime="2026-10-28T11:05">hace 8 días</time><span class="when">28/10 11:05</span></td>
+                <td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir Diseño del cartel de las jornadas"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="panel-foot"><span>6 evidencias · <span class="mono">8,25 h</span> declaradas · <span class="mono">4,00 h</span> aceptadas</span><nav class="pager" aria-label="Paginación"><button aria-current="page">1</button><button>2</button><button aria-label="Siguiente">›</button></nav></div>
+        </div>
+      </section>
+
+      <!-- ===== DETALLE ===== -->
+      <section id="screen-detalle" class="screen" aria-labelledby="t-detalle" hidden>
+        <div class="cover">
+          <div>
+            <div class="eyebrow"><span class="tagchip tagchip-status"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17"/></svg>Rechazada</span><span class="tagchip mono">EV-0033</span><span class="tagchip">Programa</span><span class="tagchip mono">1,75 h</span><span class="tagchip">versión 2</span></div>
+            <h1 id="t-detalle">Pokemon</h1>
+            <p class="lede">Creada el <span class="mono">04/11/2026</span> · revisada por Carlos Navarro el <span class="mono">05/11/2026</span></p>
+          </div>
+          <div class="actions">
+            <button class="btn btn-danger-quiet"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M10 7V4.5h4V7M7 7l1 12.5h8L17 7"/></svg>Eliminar</button>
+            <a class="btn btn-primary" href="#editar"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5h4l10-10-4-4-10 10z"/></svg>Editar evidencia</a>
+          </div>
+        </div>
+
+        <ol class="steps tile" aria-label="Recorrido de la evidencia" style="list-style:none;margin:0">
+          <li class="step done"><span class="n" aria-hidden="true">1</span><div><strong>Borrador</strong><small>04/11 21:15</small></div></li>
+          <li class="step done"><span class="n" aria-hidden="true">2</span><div><strong>Enviada a revisión</strong><small>05/11 12:40</small></div></li>
+          <li class="step err" aria-current="step"><span class="n" aria-hidden="true">3</span><div><strong>Rechazada</strong><small>05/11 17:02</small></div></li>
+          <li class="step"><span class="n" aria-hidden="true">4</span><div><strong>Aceptada</strong><small>cuando la corrijas</small></div></li>
+        </ol>
+
+        <div class="notice" role="note">
+          <span class="notice-icon" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M12 8v5M12 16.5v.5"/><path d="M10.3 4.3 3.2 17a2 2 0 0 0 1.7 3h14.2a2 2 0 0 0 1.7-3L13.7 4.3a2 2 0 0 0-3.4 0z"/></svg></span>
+          <div>
+            <p class="notice-title">Tu coordinador necesita más pruebas</p>
+            <blockquote>«Necesito que me mandes un documento con el trabajo realizado.»</blockquote>
+            <p class="notice-meta"><span class="avatar avatar-s" aria-hidden="true">CN</span>Carlos Navarro · coordinador de Programa · hace 6 h</p>
+          </div>
+          <div class="notice-cta"><a class="btn btn-primary" href="#editar">Corregir y volver a enviar</a><span class="hint">Pasará a borrador; al publicarla, la revisarán de nuevo.</span></div>
+        </div>
+
+        <div class="detail-grid">
+          <div class="stack">
+            <article class="card tile">
+              <h2>Descripción</h2>
+              <p>Planeando qué pokemons banear, qué estrategias son ilegales, leyéndonos las leyes actuales…</p>
+            </article>
+            <article class="card tile">
+              <div class="card-head"><h2>Pruebas</h2><span class="muted">0 archivos</span></div>
+              <div class="drop" tabindex="0" role="button" aria-label="Añadir pruebas: arrastra archivos o pulsa para elegirlos">
+                <span class="drop-icon" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M12 15V5M8 9l4-4 4 4"/><path d="M5 15v3.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V15"/></svg></span>
+                <p><strong>Arrastra aquí el documento</strong> o pulsa para elegirlo</p>
+                <p class="muted">PDF, imágenes o ZIP · hasta 20 MB</p>
+              </div>
+            </article>
+          </div>
+          <aside class="stack" aria-label="Datos de la evidencia">
+            <article class="card tile">
+              <h2>Detalles</h2>
+              <dl class="dlist">
+                <div><dt>Registro</dt><dd class="mono">EV-0033</dd></div>
+                <div><dt>Comité</dt><dd>Programa</dd></div>
+                <div><dt>Horas</dt><dd class="mono">1,75</dd></div>
+                <div><dt>Estado</dt><dd><span class="chip chip-err"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17"/></svg>Rechazada</span></dd></div>
+                <div><dt>Integridad</dt><dd><span class="ok-inline"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 5 6.2v5.3c0 4 3 7.3 7 8.5 4-1.2 7-4.5 7-8.5V6.2z"/><path d="m9 12 2 2 4-4.5"/></svg>Verificada</span></dd></div>
+              </dl>
+            </article>
+            <article class="card tile">
+              <h2>Historial</h2>
+              <ol class="history">
+                <li><span class="bubble bubble-err"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17"/></svg></span><div><strong>Rechazada</strong> por Carlos Navarro<time datetime="2026-11-05T17:02">05/11 17:02</time></div></li>
+                <li><span class="bubble bubble-pend"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h12M12 6l6 6-6 6"/></svg></span><div><strong>Enviada a revisión</strong> · versión 2<time datetime="2026-11-05T12:40">05/11 12:40</time></div></li>
+                <li><span class="bubble bubble-draft"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5h4l10-10-4-4-10 10z"/></svg></span><div><strong>Borrador</strong> creado · versión 1<time datetime="2026-11-04T21:15">04/11 21:15</time></div></li>
+              </ol>
+            </article>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ===== MIS HORAS ===== -->
+      <section id="screen-horas" class="screen" aria-labelledby="t-horas" hidden>
+        <div class="hero">
+          <div>
+            <h1 id="t-horas">Mis horas</h1>
+            <p class="lede">Todo lo que computa para tu nota, de dónde sale y cuánto queda por confirmar.</p>
+          </div>
+        </div>
+        <div class="hours-grid">
+          <div class="card tile hours-total">
+            <span class="stat-label">Total computado</span>
+            <div class="stat-value">10,50<span class="unit">horas confirmadas</span></div>
+            <div class="hbar" role="img" aria-label="Evidencias 4 h, reuniones 1,5 h, asistencias 2 h, bonos 3 h"><span style="--w:38%;--c:var(--ok-ac)"></span><span style="--w:14%;--c:var(--mint)"></span><span style="--w:19%;--c:var(--pend-ac)"></span><span style="--w:29%;--c:var(--coral-500)"></span></div>
+            <p class="muted" style="margin:0;font-size:13.5px">Además hay <strong>3,75 h</strong> de evidencias pendientes de revisión que aún no cuentan.</p>
+          </div>
+          <ul class="breakdown">
+            <li><a class="bd tile" href="#listado/aceptadas"><span class="bubble-a" style="--c:var(--ok-ac)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5 9.5-10"/></svg></span><span class="bd-body"><strong>Evidencias aceptadas</strong><span class="muted">2 evidencias · comités de Programa y Comunicación</span></span><span class="bd-val mono">4,00 h</span><svg class="i bd-go" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a></li>
+            <li><a class="bd tile" href="#reuniones"><span class="bubble-a" style="--c:var(--mint)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span><span class="bd-body"><strong>Reuniones</strong><span class="muted">1 reunión de Logística con acta</span></span><span class="bd-val mono">1,50 h</span><svg class="i bd-go" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a></li>
+            <li><a class="bd tile" href="#asistencias"><span class="bubble-a" style="--c:var(--pend-ac)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h11A2.5 2.5 0 0 1 20 8.5v7a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 15.5z"/><path d="M9.5 6v12"/></svg></span><span class="bd-body"><strong>Asistencia a eventos</strong><span class="muted">1 charla con asistencia confirmada</span></span><span class="bd-val mono">2,00 h</span><svg class="i bd-go" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a></li>
+            <li><a class="bd tile" href="#bonos"><span class="bubble-a" style="--c:var(--coral-500)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 14.6 9l6 .6-4.5 4.1 1.3 5.9L12 16.5 6.6 19.6l1.3-5.9L3.4 9.6l6-.6z"/></svg></span><span class="bd-body"><strong>Bonos de horas</strong><span class="muted">Montaje del escenario principal</span></span><span class="bd-val mono">3,00 h</span><svg class="i bd-go" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===== REGISTRO DE ACTIVIDAD (profesorado y presidencia) ===== -->
+      <section id="screen-actividad" class="screen" aria-labelledby="t-actividad" hidden>
+        <div class="hero">
+          <div>
+            <h1 id="t-actividad">Registro de actividad</h1>
+            <p class="lede">Constancia de todo lo que pasa en Evidentia: quién hace qué, cuándo y con qué rol. No se puede editar ni borrar.</p>
+          </div>
+          <a class="btn btn-quiet" href="#actividad"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 19h14"/></svg>Exportar</a>
+        </div>
+        <div class="panel tile">
+          <div class="panel-bar">
+            <div class="pills" role="tablist" aria-label="Filtrar por tipo">
+              <button role="tab" aria-selected="true">Todo<span>128</span></button>
+              <button role="tab" aria-selected="false">Accesos<span>61</span></button>
+              <button role="tab" aria-selected="false">Evidencias<span>44</span></button>
+              <button role="tab" aria-selected="false">Reuniones<span>15</span></button>
+              <button role="tab" aria-selected="false">Usuarios y roles<span>8</span></button>
+            </div>
+            <div class="right"><button class="btn btn-quiet" style="height:36px"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filtros</button></div>
+          </div>
+          <table class="list activity">
+            <caption class="sr">Registro de actividad, más reciente primero</caption>
+            <thead><tr><th scope="col">Cuándo</th><th scope="col">Quién</th><th scope="col">Qué</th><th scope="col">Sobre</th><th scope="col"><span class="sr">Abrir</span></th></tr></thead>
+            <tbody>
+              <tr data-href="#detalle"><td data-label="Cuándo"><time datetime="2026-11-05T17:02">hace 6 h</time><span class="when">05/11 17:02</span></td><td data-label="Quién"><span class="who"><span class="avatar avatar-s" aria-hidden="true">CN</span><span><strong>Carlos Navarro</strong><span class="role">como coordinador de Programa</span></span></span></td><td data-label="Qué"><span class="act-chip act-err">Rechazó una evidencia</span><span class="sub">«Necesito que me mandes un documento…»</span></td><td data-label="Sobre"><a href="#detalle">EV-0033 · Pokemon</a> <span class="muted">de Juan Pérez</span></td><td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir EV-0033"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td></tr>
+              <tr data-href="#detalle"><td data-label="Cuándo"><time datetime="2026-11-05T16:48">hace 6 h</time><span class="when">05/11 16:48</span></td><td data-label="Quién"><span class="who"><span class="avatar avatar-s" aria-hidden="true">CN</span><span><strong>Carlos Navarro</strong><span class="role">como coordinador de Programa</span></span></span></td><td data-label="Qué"><span class="act-chip act-info">Inició sesión</span><span class="sub">Desde la red de la US · Chrome en macOS</span></td><td data-label="Sobre"><span class="muted">—</span></td><td class="act"></td></tr>
+              <tr data-href="#detalle"><td data-label="Cuándo"><time datetime="2026-11-05T12:40">hace 10 h</time><span class="when">05/11 12:40</span></td><td data-label="Quién"><span class="who"><span class="avatar avatar-s" aria-hidden="true">JP</span><span><strong>Juan Pérez</strong><span class="role">como estudiante</span></span></span></td><td data-label="Qué"><span class="act-chip act-pend">Publicó una evidencia</span><span class="sub">versión 2 · 1,75 h · sin pruebas adjuntas</span></td><td data-label="Sobre"><a href="#detalle">EV-0033 · Pokemon</a></td><td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir EV-0033"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td></tr>
+              <tr data-href="#detalle"><td data-label="Cuándo"><time datetime="2026-11-05T11:05">hace 11 h</time><span class="when">05/11 11:05</span></td><td data-label="Quién"><span class="who"><span class="avatar avatar-s" aria-hidden="true">LP</span><span><strong>Lucía Pérez</strong><span class="role">como secretaria de Logística</span></span></span></td><td data-label="Qué"><span class="act-chip act-ok">Creó un acta</span><span class="sub">Reunión inicial de Logística · 3 asistentes · 1,5 h</span></td><td data-label="Sobre"><a href="#detalle">Acta AC-0012</a></td><td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir el acta AC-0012"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td></tr>
+              <tr data-href="#detalle" class="flag"><td data-label="Cuándo"><time datetime="2026-11-04T19:52">ayer</time><span class="when">04/11 19:52</span></td><td data-label="Quién"><span class="who"><span class="avatar avatar-s" aria-hidden="true">CN</span><span><strong>Carlos Navarro</strong><span class="role">como coordinador de Programa</span></span></span></td><td data-label="Qué"><span class="act-chip act-warn">Aceptó su propia evidencia</span><span class="sub">Es también estudiante: conflicto de interés señalado</span></td><td data-label="Sobre"><a href="#detalle">EV-0029 · Coordinación de ponentes</a> <span class="muted">de Carlos Navarro</span></td><td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir EV-0029"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td></tr>
+              <tr data-href="#detalle"><td data-label="Cuándo"><time datetime="2026-11-04T09:15">ayer</time><span class="when">04/11 09:15</span></td><td data-label="Quién"><span class="who"><span class="avatar avatar-s" aria-hidden="true">EM</span><span><strong>Elena Martín</strong><span class="role">como presidenta</span></span></span></td><td data-label="Qué"><span class="act-chip act-info">Cambió los roles de un usuario</span><span class="sub">Añadió «Secretario» a Lucía Pérez (Logística)</span></td><td data-label="Sobre"><a href="#detalle">Lucía Pérez</a></td><td class="act"><a class="icon-btn" href="#detalle" aria-label="Abrir la ficha de Lucía Pérez"><svg class="i" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></a></td></tr>
+            </tbody>
+          </table>
+          <div class="panel-foot"><span>128 anotaciones desde el <span class="mono">01/10/2026</span> · se conservan 5 cursos</span><nav class="pager" aria-label="Paginación"><button aria-current="page">1</button><button>2</button><button>3</button><button aria-label="Siguiente">›</button></nav></div>
+        </div>
+      </section>
+    </main>
+    <footer class="app-footer tile">
+      <a class="foot-brand" href="#novedades" title="Ver las novedades de la versión 4.0.0">
+        <span class="mark mark-s" aria-hidden="true">e</span>
+        <span>Evidentia</span><span class="ver mono">v4.0.0</span>
+      </a>
+      <nav class="foot-links" aria-label="Enlaces del pie">
+        <a href="https://github.com/drorganvidez/evidentia"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 20c-4 1.5-4-2-6-2.5M16 21v-3.5a3 3 0 0 0-.8-2.3c2.7-.3 5.5-1.3 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.3 4.3 0 0 0-.1-3.2s-1-.3-3.3 1.2a11.5 11.5 0 0 0-6 0C7.7 2.5 6.7 2.8 6.7 2.8a4.3 4.3 0 0 0-.1 3.2A4.6 4.6 0 0 0 5.3 9.2c0 4.7 2.8 5.7 5.5 6a3 3 0 0 0-.8 2.3V21"/></svg>Repositorio</a>
+        <a href="https://www.gnu.org/licenses/gpl-3.0.html"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h7l4.5 4.5v11a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5z"/><path d="M14 3.5V8h4.5M9 13h6M9 16.5h4"/></svg>GPL-3.0</a>
+        <a href="#guia"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5M12 17v.5"/></svg>Ayuda</a>
+        <a href="#sugerencias"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H9l-5 4z"/></svg>Sugerencias</a>
+      </nav>
+      <span class="foot-meta muted">Universidad de Sevilla · ETSII</span>
+    </footer>
+
+  </div>
+</div>
+
+<nav class="bottom-nav tile" aria-label="Navegación principal (móvil)">
+  <a href="#inicio"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11 12 4l8 7v8.5a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H5.5A1.5 1.5 0 0 1 4 19.5z"/></svg><span>Inicio</span></a>
+  <a href="#listado" aria-current="page"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h7l4.5 4.5v11a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5z"/><path d="M14 3.5V8h4.5M9 13h6M9 16.5h4"/></svg><span>Evidencias</span></a>
+  <a href="#reuniones"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span>Reuniones</span></a>
+  <a href="#asistencias"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h11A2.5 2.5 0 0 1 20 8.5v7a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 15.5z"/><path d="M9.5 6v12M13 10.5h3.5M13 13.5h3.5"/></svg><span>Asistencias</span></a>
+  <a href="#perfil"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.4-3.6 4.1-5.5 7-5.5s5.6 1.9 7 5.5"/></svg><span>Perfil</span></a>
+</nav>
+<p class="mock-note">Maqueta estática · Dirección B «Bento» · <a href="#listado">listado</a> · <a href="#detalle">detalle</a> · tema arriba a la derecha</p>
+<script>
+  const root = document.documentElement;
+  const setTheme = (t) => {
+    if (t === 'system') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', t);
+    document.querySelectorAll('[data-theme-set]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.themeSet === t)));
+    try { localStorage.setItem('ev-theme-b', t); } catch (e) {}
+  };
+  document.querySelectorAll('[data-theme-set]').forEach(b => b.addEventListener('click', () => setTheme(b.dataset.themeSet)));
+  let saved = 'system'; try { saved = localStorage.getItem('ev-theme-b') || 'system'; } catch (e) {}
+  setTheme(saved);
+
+  // Enrutado de la maqueta: #listado, #listado/pendientes, #detalle, #horas
+  const titles = { listado: 'Todas', detalle: 'Pokemon', horas: 'Mis horas', actividad: 'Registro de actividad' };
+  const show = () => {
+    const [screen = 'listado', filter = 'todas'] = location.hash.replace('#', '').split('/');
+    const id = ['listado', 'detalle', 'horas', 'actividad'].includes(screen) ? screen : 'listado';
+    document.querySelectorAll('.screen').forEach(s => s.hidden = s.id !== 'screen-' + id);
+    document.querySelectorAll('[role=tab][data-filter]').forEach(t => t.setAttribute('aria-selected', String(t.dataset.filter === filter)));
+    document.querySelectorAll('tr[data-status]').forEach(r => r.hidden = filter !== 'todas' && r.dataset.status !== filter);
+    const label = filter === 'todas' ? 'Todas' : filter[0].toUpperCase() + filter.slice(1);
+    document.getElementById('crumb-current').textContent = id === 'listado' ? label : titles[id];
+    document.querySelectorAll('nav a[href="#listado"]').forEach(a => a.toggleAttribute('aria-current', !['horas', 'actividad'].includes(id)));
+    document.querySelectorAll('nav a[href="#actividad"]').forEach(a => a.toggleAttribute('aria-current', id === 'actividad'));
+    window.scrollTo(0, 0);
+  };
+  document.querySelectorAll('[role=tab][data-filter]').forEach(t => t.addEventListener('click', () => { location.hash = t.dataset.filter === 'todas' ? '#listado' : '#listado/' + t.dataset.filter; }));
+  document.querySelectorAll('tr[data-href]').forEach(r => r.addEventListener('click', (e) => { if (!e.target.closest('a, button')) location.hash = r.dataset.href; }));
+  addEventListener('hashchange', show); show();
+</script>
+</body>
+</html>
