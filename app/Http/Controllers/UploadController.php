@@ -60,6 +60,10 @@ class UploadController extends Controller
 
         $route = '/tmp/'.$user->username.'/'.$token.'/'.$file_name;
 
+        if (! Storage::exists($route)) {
+            abort(404);
+        }
+
         $response = Storage::download($route);
 
         // limpiar búfer de salida
