@@ -40,6 +40,7 @@ class DefaultListSecretaryController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|max:255',
             'users' => 'required|array|min:1',
+            'users.*' => 'integer|exists:users,id',
         ]);
 
         $users_ids = $request->input('users', []);
@@ -81,6 +82,8 @@ class DefaultListSecretaryController extends Controller
 
         $validatedData = $request->validate([
             'name' => 'required|max:255',
+            'users' => 'array',
+            'users.*' => 'integer|exists:users,id',
         ]);
 
         $users_ids = $request->input('users', []);
