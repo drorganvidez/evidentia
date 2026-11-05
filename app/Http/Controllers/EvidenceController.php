@@ -61,7 +61,13 @@ class EvidenceController extends Controller
 
     public function publish(Request $request)
     {
-        return $this->new($request, 'PENDING');
+        return $this->new($request, $this->published_status());
+    }
+
+    // nadie valida las evidencias de los presidentes: se aceptan al publicarlas
+    private function published_status(): string
+    {
+        return Auth::user()->hasRole('PRESIDENT') ? 'ACCEPTED' : 'PENDING';
     }
 
     private function new($request, $status)
@@ -220,7 +226,7 @@ class EvidenceController extends Controller
 
     public function publish_edit(Request $request)
     {
-        return $this->save($request, 'PENDING');
+        return $this->save($request, $this->published_status());
     }
 
     private function save($request, $status)
