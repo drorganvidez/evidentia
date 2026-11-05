@@ -34,7 +34,7 @@
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                     <button type="button"
-                        onclick="event.preventDefault(); document.getElementById('buttonconfirm-form-{{ $id }}').submit();"
+                        onclick="event.preventDefault(); document.getElementById('buttonconfirm-form-{{ $type }}-{{ $id }}').submit();"
                         @if ($type == 'REMOVE') class="btn btn-danger"
                         @elseif($type == 'INFO')
                             class="btn btn-info" @endif
@@ -51,7 +51,7 @@
         </div>
     </div>
 
-    <form id="buttonconfirm-form-{{ $id }}" action="{{ route($route) }}" method="POST"
+    <form id="buttonconfirm-form-{{ $type }}-{{ $id }}" action="{{ route($route) }}" method="POST"
         style="display: none;">
         @csrf
         <input type="hidden" name="_id" value="{{ $id }}" />
