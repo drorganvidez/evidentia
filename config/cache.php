@@ -105,4 +105,17 @@ return [
 
     'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Serializable Classes
+    |--------------------------------------------------------------------------
+    |
+    | The app only caches plain values (such as login attempts), so no PHP
+    | object may be unserialized from the cache. This blocks gadget chain
+    | attacks if the application key ever leaks.
+    |
+    */
+
+    'serializable_classes' => false,
+
 ];
