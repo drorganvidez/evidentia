@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Attendee;
+use App\Models\Committee;
 use App\Models\Configuration;
 use App\Models\Event;
+use App\Models\Evidence;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -34,6 +36,23 @@ class SpreadsheetTest extends TestCase
         $this->student->roles()->attach(Role::forceCreate(['rol' => 'STUDENT', 'slug' => 'student']));
     }
 
+    public function test_the_final_hours_export_downloads_a_spreadsheet(): void
+    {
+        $committee = Committee::create(['name' => 'Programa']);
+        Evidence::forceCreate([
+            'title' => 'Organización de mesas', 'hours' => 2, 'status' => 'ACCEPTED',
+            'user_id' => $this->student->id, 'committee_id' => $committee->id,
+        ]);
+
+        $rows = $this->download(route('lecture.export.save'), ['evidences' => 'on', 'events' => 'on', 'meetings' => 'on', 'bonus' => 'on']);
+
+        $this->assertSame('Apellidos', $rows[0][0]);
+        $ana = collect($rows)->first(fn ($row) => $row[2] === 'anagar');
+        $this->assertEquals(2, $ana[array_search('Horas de evidencias', $rows[0])]);
+        $this->assertSame(0, $ana[array_search('Horas de reuniones', $rows[0])]);
+        $this->assertEquals(2, $ana[array_search('Horas en total', $rows[0])]);
+    }
+
     public function test_the_attendances_export_downloads_a_spreadsheet(): void
     {
         $coordinator = User::factory()->create();
@@ -46,6 +65,7 @@ class SpreadsheetTest extends TestCase
 
         $this->assertSame(['Apellidos', 'Nombre', 'Uvus', 'Horas de asistencia'], $rows[0]);
         $this->assertContains(['GARCÍA', 'ANA', 'anagar', 2], $rows);
+        $this->assertSame(0, collect($rows)->firstWhere(2, $coordinator->username)[3]);
     }
 
     private function download(string $url, array $data = []): array

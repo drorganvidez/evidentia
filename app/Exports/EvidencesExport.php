@@ -7,8 +7,10 @@ use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 
-class EvidencesExport implements FromCollection, ShouldAutoSize, WithHeadings
+// estricto con los nulos: unas horas a 0 se exportan como 0, no como una celda vacía
+class EvidencesExport implements FromCollection, ShouldAutoSize, WithHeadings, WithStrictNullComparison
 {
     public $evidences_select = null;
 
