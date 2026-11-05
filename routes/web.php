@@ -10,7 +10,6 @@ use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\EventbriteController;
 use App\Http\Controllers\EvidenceController;
 use App\Http\Controllers\EvidenceCoordinatorController;
-use App\Http\Controllers\FileController;
 use App\Http\Controllers\GeneralPurposeController;
 use App\Http\Controllers\GitController;
 use App\Http\Controllers\HomeController;
@@ -190,17 +189,12 @@ Route::middleware('auth')->group(function () {
     Route::get('attendee/list/export/{ext}', [AttendeeController::class, 'export'])->name('attendee.list.export');
 
     // PROOFS
-    Route::post('proof/remove', [ProofController::class, 'remove'])->name('proof.remove');
-
     Route::middleware([
         CheckNotNull::class.':Proof',
         CheckProofDownload::class,
     ])->group(function () {
         Route::get('proof/download/{id}', [ProofController::class, 'download'])->name('proof.download');
     });
-
-    // FILES
-    Route::post('file/remove', [FileController::class, 'remove'])->name('file.remove');
 
     // AVATAR
     Route::middleware([CheckNotNull::class.':User'])->group(function () {
