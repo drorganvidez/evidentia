@@ -56,18 +56,15 @@ class EventbriteController extends Controller
 
         $token = $request->input('token');
 
-        try {
-            if (EventbriteController::validate_token($token)) {
-                $configuration = Configuration::find(1);
-                $configuration->eventbrite_token = $token;
-                $configuration->save();
-
-                return redirect()->route('registercoordinator.token')->with('success', 'Token validado y guardado con éxito.');
-            }
-        } catch (\Exception $e) {
+        if (! EventbriteController::validate_token($token)) {
             return back()->withInput()->with('error', 'Ups, parece que hay un problema con el token. Comprueba que es válido.');
         }
 
+        $configuration = Configuration::find(1);
+        $configuration->eventbrite_token = $token;
+        $configuration->save();
+
+        return redirect()->route('registercoordinator.token')->with('success', 'Token validado y guardado con éxito.');
     }
 
     public function event_load()
