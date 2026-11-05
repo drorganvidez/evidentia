@@ -74,7 +74,7 @@ class ImportExportController extends Controller
     public function export()
     {
 
-        $route = route('lecture.export.save');
+        $route = Auth::user()->hasRole('LECTURE') ? route('lecture.export.save') : route('president.export.save');
 
         return view('importexport.export',
             ['route' => $route]);
