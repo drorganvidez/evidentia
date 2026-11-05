@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\MeetingMinutesExport;
-use App\Exports\MeetingRequestExport;
-use App\Exports\SignaturesheetExport;
 use App\Http\Middleware\CheckRoles;
 use App\Http\Services\UserService;
 use App\Models\Agreement;
@@ -24,7 +21,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Maatwebsite\Excel\Facades\Excel;
 
 class MeetingSecretaryController extends Controller
 {
@@ -730,54 +726,6 @@ class MeetingSecretaryController extends Controller
 
         return redirect()->route('secretary.meeting.manage.minutes.list')->with('success', 'Acta de reunión eliminada con éxito.');
 
-    }
-
-    public function meeting_requests_export($ext)
-    {
-        try {
-            if (ob_get_level()) {
-                ob_end_clean();
-            }
-            if (! in_array($ext, ['csv', 'pdf', 'xlsx'])) {
-                return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
-            }
-
-            return Excel::download(new MeetingRequestExport, 'convocatorias-'.\Illuminate\Support\Carbon::now().'.'.$ext);
-        } catch (\Exception $e) {
-            return back()->with('error', 'Ocurrió un error: '.$e->getMessage());
-        }
-    }
-
-    public function signaturesheet_export($ext)
-    {
-        try {
-            if (ob_get_level()) {
-                ob_end_clean();
-            }
-            if (! in_array($ext, ['csv', 'pdf', 'xlsx'])) {
-                return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
-            }
-
-            return Excel::download(new SignaturesheetExport, 'firmas-'.\Illuminate\Support\Carbon::now().'.'.$ext);
-        } catch (\Exception $e) {
-            return back()->with('error', 'Ocurrió un error: '.$e->getMessage());
-        }
-    }
-
-    public function meeting_minutes_export($ext)
-    {
-        try {
-            if (ob_get_level()) {
-                ob_end_clean();
-            }
-            if (! in_array($ext, ['csv', 'pdf', 'xlsx'])) {
-                return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
-            }
-
-            return Excel::download(new MeetingMinutesExport, 'actas-'.\Illuminate\Support\Carbon::now().'.'.$ext);
-        } catch (\Exception $e) {
-            return back()->with('error', 'Ocurrió un error: '.$e->getMessage());
-        }
     }
 
     /*

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\MyEvidencesExport;
 use App\Http\Middleware\CheckRoles;
 use App\Models\Committee;
 use App\Models\Evidence;
@@ -12,10 +11,8 @@ use App\Rules\CheckHoursAndMinutes;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Maatwebsite\Excel\Facades\Excel;
 
 class EvidenceController extends Controller
 {
@@ -308,21 +305,5 @@ class EvidenceController extends Controller
         $evidence->save();
 
         return redirect()->route('evidence.list')->with('success', 'Evidencia reasignada como borrador con éxito.');
-    }
-
-    public function export($ext)
-    {
-        try {
-            if (ob_get_level()) {
-                ob_end_clean();
-            }
-            if (! in_array($ext, ['csv', 'pdf', 'xlsx'])) {
-                return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
-            }
-
-            return Excel::download(new MyEvidencesExport, 'misevidencias-'.Carbon::now().'.'.$ext);
-        } catch (\Exception $e) {
-            return back()->with('error', 'Ocurrió un error: '.$e->getMessage());
-        }
     }
 }

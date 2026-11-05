@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\CoordinatorEvidencesExport;
 use App\Http\Middleware\CheckRoles;
 use App\Models\Evidence;
 use App\Models\ReasonRejection;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Maatwebsite\Excel\Facades\Excel;
 
 class EvidenceCoordinatorController extends Controller
 {
@@ -108,21 +105,5 @@ class EvidenceCoordinatorController extends Controller
         $reasonrejection->save();
 
         return redirect()->route('coordinator.evidence.list.rejected')->with('success', 'Evidencia rechazada con éxito.');
-    }
-
-    public function evidences_export($type, $ext)
-    {
-        try {
-            if (ob_get_level()) {
-                ob_end_clean();
-            }
-            if (! in_array($ext, ['csv', 'pdf', 'xlsx'])) {
-                return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
-            }
-
-            return Excel::download(new CoordinatorEvidencesExport($type), 'eventos-'.Carbon::now().'.'.$ext);
-        } catch (\Exception $e) {
-            return back()->with('error', 'Ocurrió un error: '.$e->getMessage());
-        }
     }
 }

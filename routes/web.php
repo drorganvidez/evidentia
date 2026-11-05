@@ -78,15 +78,10 @@ Route::middleware('auth')->group(function () {
     // MEETINGS, LISTS AND BONUS
     Route::prefix('meeting')->group(function () {
         Route::get('list', [MeetingController::class, 'list'])->name('meeting.list');
-        Route::get('list/export/{ext}', [MeetingController::class, 'export'])->name('meeting.list.export');
     });
 
     // DOWNLOADS
     Route::get('download/request/{id}', [DownloadController::class, 'request_download'])->name('download.request');
-
-    Route::prefix('president')->group(function () {
-        Route::get('meeting/export/{ext}', [MeetingController::class, 'meeting_export'])->name('president.manage.meeting.export');
-    });
 
     Route::prefix('secretary')->middleware('auth')->group(function () {
 
@@ -122,7 +117,6 @@ Route::middleware('auth')->group(function () {
                     Route::post('save', [MeetingSecretaryController::class, 'request_save'])->name('secretary.meeting.manage.request.save');
                     Route::post('remove', [MeetingSecretaryController::class, 'request_remove'])->name('secretary.meeting.manage.request.remove');
                 });
-                Route::get('export/{ext}', [MeetingSecretaryController::class, 'meeting_requests_export'])->name('secretary.meeting.manage.request.export');
             });
 
             // Signature Sheets
@@ -136,7 +130,6 @@ Route::middleware('auth')->group(function () {
                     Route::post('save', [MeetingSecretaryController::class, 'signaturesheet_save'])->name('secretary.meeting.manage.signaturesheet.save');
                     Route::post('remove', [MeetingSecretaryController::class, 'signaturesheet_remove'])->name('secretary.meeting.manage.signaturesheet.remove');
                 });
-                Route::get('export/{ext}', [MeetingSecretaryController::class, 'signaturesheet_export'])->name('secretary.meeting.manage.signaturesheet.export');
             });
 
             // Minutes
@@ -156,7 +149,6 @@ Route::middleware('auth')->group(function () {
                 });
 
                 Route::get('download/{id}', [DownloadController::class, 'minutes_download'])->name('download.minutes');
-                Route::get('export/{ext}', [MeetingSecretaryController::class, 'meeting_minutes_export'])->name('secretary.meeting.manage.minutes.export');
 
                 Route::middleware([MeetingMinutesMine::class, CheckRegisterMeeting::class])->group(function () {
                     Route::get('edit/{id}', [MeetingSecretaryController::class, 'minutes_edit'])->name('secretary.meeting.manage.minutes.edit');
@@ -193,7 +185,6 @@ Route::middleware('auth')->group(function () {
 
     // ATTENDEES
     Route::get('attendee/list', [AttendeeController::class, 'list'])->name('attendee.list');
-    Route::get('attendee/list/export/{ext}', [AttendeeController::class, 'export'])->name('attendee.list.export');
 
     // PROOFS
     Route::middleware([
@@ -241,7 +232,6 @@ Route::middleware('auth')->group(function () {
     Route::get('registercoordinator/event/list', [EventbriteController::class, 'event_list'])->name('registercoordinator.event.list');
     Route::get('registercoordinator/attendee/list', [EventbriteController::class, 'attendee_list']);
     Route::get('registercoordinator/attendee/export', [EventbriteController::class, 'attendee_export'])->name('registercoordinator.attendee.export');
-    Route::get('registercoordinator/event/export/{ext}', [EventbriteController::class, 'events_export'])->name('registercoordinator.events.export');
 
     // PRESIDENT routes with middleware checkroles:PRESIDENT
     Route::middleware([CheckRoles::class.':PRESIDENT,LECTURE'])->group(function () {
@@ -263,11 +253,7 @@ Route::middleware('auth')->group(function () {
         Route::get('president/export', [ImportExportController::class, 'export'])->name('president.export');
         Route::post('president/export/save', [ImportExportController::class, 'export_save'])->name('president.export.save');
 
-        Route::get('president/user/export/{ext}', [ManagementController::class, 'management_student_export'])->name('president.manage.student.export');
     });
-
-    // MANAGEMENT export
-    Route::get('management/export/{ext}', [ManagementController::class, 'evidences_export'])->name('management.export');
 
     // LECTURE routes with middleware checkroles:LECTURE
     Route::middleware([CheckRoles::class.':LECTURE,PRESIDENT'])->group(function () {
@@ -334,8 +320,6 @@ Route::middleware('auth')->group(function () {
         Route::post('evidence/publish', [EvidenceController::class, 'publish'])->name('evidence.publish');
     });
 
-    Route::get('evidence/list/export/{ext}', [EvidenceController::class, 'export'])->name('evidence.list.export');
-
     Route::middleware([
         CheckNotNull::class.':Evidence',
         EvidenceMine::class,
@@ -377,7 +361,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/evidence/list/pending', [EvidenceCoordinatorController::class, 'pending'])->name('coordinator.evidence.list.pending');
         Route::get('/evidence/list/accepted', [EvidenceCoordinatorController::class, 'accepted'])->name('coordinator.evidence.list.accepted');
         Route::get('/evidence/list/rejected', [EvidenceCoordinatorController::class, 'rejected'])->name('coordinator.evidence.list.rejected');
-        Route::get('/evidence/export/{type}/{ext}', [EvidenceCoordinatorController::class, 'evidences_export'])->name('coordinator.evidence.export');
 
         Route::middleware([
             CheckNotNull::class.':Evidence',

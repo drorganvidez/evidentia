@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\ManagementEvidencesExport;
-use App\Exports\ManagementStudentExport;
 use App\Http\Middleware\CheckRoles;
 use App\Http\Services\UserService;
 use App\Models\Committee;
@@ -12,12 +10,10 @@ use App\Models\Meeting;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
-use Maatwebsite\Excel\Facades\Excel;
 
 class ManagementController extends Controller
 {
@@ -313,37 +309,5 @@ class ManagementController extends Controller
         }
 
         return redirect()->route('lecture.user.list', [])->with('success', 'Usuarios borrados con éxito');
-    }
-
-    public function evidences_export($ext)
-    {
-        try {
-            if (ob_get_level()) {
-                ob_end_clean();
-            }
-            if (! in_array($ext, ['csv', 'pdf', 'xlsx'])) {
-                return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
-            }
-
-            return Excel::download(new ManagementEvidencesExport, 'evidencias-'.Carbon::now().'.'.$ext);
-        } catch (\Exception $e) {
-            return back()->with('error', 'Ocurrió un error: '.$e->getMessage());
-        }
-    }
-
-    public function management_student_export($ext)
-    {
-        try {
-            if (ob_get_level()) {
-                ob_end_clean();
-            }
-            if (! in_array($ext, ['csv', 'pdf', 'xlsx'])) {
-                return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
-            }
-
-            return Excel::download(new ManagementStudentExport, 'alumnos-'.Carbon::now().'.'.$ext);
-        } catch (\Exception $e) {
-            return back()->with('error', 'Ocurrió un error: '.$e->getMessage());
-        }
     }
 }

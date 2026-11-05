@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Exports\AttendeesExport;
-use App\Exports\EventsExport;
 use App\Http\Middleware\CheckRoles;
 use App\Models\Attendee;
 use App\Models\Configuration;
@@ -348,22 +347,6 @@ class EventbriteController extends Controller
             }
 
             return Excel::download(new AttendeesExport, 'asistencias'.\Illuminate\Support\Carbon::now().'.xlsx');
-        } catch (\Exception $e) {
-            return back()->with('error', 'Ocurrió un error: '.$e->getMessage());
-        }
-    }
-
-    public function events_export($ext)
-    {
-        try {
-            if (ob_get_level()) {
-                ob_end_clean();
-            }
-            if (! in_array($ext, ['csv', 'pdf', 'xlsx'])) {
-                return back()->with('error', 'Solo se permite exportar los siguientes formatos: csv, pdf y xlsx');
-            }
-
-            return Excel::download(new EventsExport, 'eventos-'.\Illuminate\Support\Carbon::now().'.'.$ext);
         } catch (\Exception $e) {
             return back()->with('error', 'Ocurrió un error: '.$e->getMessage());
         }
