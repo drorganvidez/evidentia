@@ -81,6 +81,51 @@ class UserManagementTest extends TestCase
         $this->assertFalse($user->hasRole('SECRETARY'));
     }
 
+    public function test_a_rejected_save_changes_nothing(): void
+    {
+        $user = User::factory()->create();
+        $user->roles()->attach($this->role('STUDENT'));
+
+        $this->actingAs($this->lecture)
+            ->from(route('lecture.user.management', ['id' => $user->id]))
+            ->post(route('lecture.user.management.save'), ['email' => $this->lecture->email, 'pass' => null] + $this->form($user, ['COORDINATOR']))
+            ->assertSessionHasErrors('email');
+
+        $user->refresh();
+        $this->assertTrue($user->hasRole('STUDENT'));
+        $this->assertFalse($user->hasRole('COORDINATOR'));
+        $this->assertNull($user->coordinator);
+        $this->assertFalse((bool) $user->block);
+    }
+
+    public function test_a_student_is_saved_without_a_committee(): void
+    {
+        $user = User::factory()->create(['surname' => 'Pollo']);
+        $user->roles()->attach($this->role('STUDENT'));
+        $form = ['surname' => 'Polo'] + $this->form($user, ['STUDENT']);
+        unset($form['committee']);
+
+        $this->actingAs($this->lecture)
+            ->post(route('lecture.user.management.save'), $form)
+            ->assertSessionHas('success');
+
+        $this->assertSame('Polo', $user->fresh()->surname);
+    }
+
+    public function test_a_secretary_needs_a_committee(): void
+    {
+        $user = User::factory()->create();
+        $user->roles()->attach($this->role('STUDENT'));
+
+        $this->actingAs($this->lecture)
+            ->from(route('lecture.user.management', ['id' => $user->id]))
+            ->post(route('lecture.user.management.save'), ['committee' => 999] + $this->form($user, ['SECRETARY']))
+            ->assertRedirect(route('lecture.user.management', ['id' => $user->id]))
+            ->assertSessionHasErrors('committee');
+
+        $this->assertFalse($user->fresh()->hasRole('SECRETARY'));
+    }
+
     private function role(string $name): Role
     {
         return Role::where('rol', $name)->first() ?? Role::forceCreate(['rol' => $name, 'slug' => strtolower($name)]);

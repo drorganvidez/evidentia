@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ManagementController extends Controller
@@ -203,23 +204,31 @@ class ManagementController extends Controller
 
     public function user_management_save(Request $request)
     {
-        $user = User::find($request->input('user_id'));
+        $user = User::findOrFail($request->input('user_id'));
+
+        $roles_id = Role::whereIn('id', $request->input('roles', []))->pluck('id');
+        $needs_committee = Role::whereIn('id', $roles_id)->whereIn('rol', ['COORDINATOR', 'SECRETARY'])->exists();
+
+        // validamos todo antes de modificar nada
+        $request->validate([
+            'name' => 'required|max:255',
+            'surname' => 'required|max:255',
+            'username' => ['required', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'email' => ['required', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'password' => 'nullable|confirmed|min:6',
+            'committee' => $needs_committee ? 'required|exists:committees,id' : 'nullable',
+        ], [
+            'committee.required' => 'Comité no válido.',
+            'committee.exists' => 'Comité no válido.',
+        ]);
+
+        $committee_id = $request->input('committee');
 
         // guardar bloqueo
         $user->block = $request->input('pass') == 'on' ? false : true;
-        $user->save();
-
-        // cambiar roles y comité
-        $roles_id = $request->input('roles', []);
-        $committee_id = $request->input('committee');
-
-        if (Committee::find($committee_id) == null) {
-            return redirect()->route('lecture.user.management', ['id' => $user->id])
-                ->with('error', 'Comité no válido.');
-        }
 
         // asignar nuevos roles
-        $user->roles()->sync(Role::whereIn('id', $roles_id)->pluck('id'));
+        $user->roles()->sync($roles_id);
         $user->load('roles');
 
         // asignar coordinador o secretario, conservando su fila (actas, convocatorias, listas...)
@@ -231,24 +240,6 @@ class ManagementController extends Controller
             }
         }
 
-        // ✅ validaciones y actualización de datos personales
-        $request->validate([
-            'name' => 'required|max:255',
-            'surname' => 'required|max:255',
-        ]);
-
-        if ($request->input('username') != $user->username) {
-            $request->validate([
-                'username' => 'required|max:255|unique:users',
-            ]);
-        }
-
-        if ($request->input('email') != $user->email) {
-            $request->validate([
-                'email' => 'required|max:255|unique:users',
-            ]);
-        }
-
         $user->username = $request->input('username');
         $user->name = $request->input('name');
         $user->surname = $request->input('surname');
@@ -256,11 +247,8 @@ class ManagementController extends Controller
         $user->clean_name = \StringUtilites::clean(trim($request->input('name')));
         $user->clean_surname = \StringUtilites::clean(trim($request->input('surname')));
 
-        // ✅ cambio de contraseña (si se indica)
+        // cambio de contraseña (si se indica)
         if ($request->filled('password')) {
-            $request->validate([
-                'password' => 'required|confirmed|min:6',
-            ]);
             $user->password = Hash::make($request->input('password'));
         }
 

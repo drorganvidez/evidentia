@@ -96,6 +96,11 @@
                             </select>
                             <small class="form-text text-muted">Los roles "COORDINADOR" o "SECRETARIO"
                                 exigen tener un comité asociado.</small>
+                            @error('committee')
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
 
 
