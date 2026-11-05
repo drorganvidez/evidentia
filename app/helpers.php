@@ -31,7 +31,9 @@ class Stamp
     public static function get_stamp_file($file)
     {
         $salt = Config::secret();
-        $hash_file = hash_file('sha256', storage_path('/app/'.$file->route));
+        // el mismo disco en el que se calculó el sello; un archivo que falta no es íntegro
+        $path = Storage::disk('local')->path($file->route);
+        $hash_file = is_file($path) ? hash_file('sha256', $path) : '';
 
         return hash('sha256',
             $file->name.
