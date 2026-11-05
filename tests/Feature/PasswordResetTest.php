@@ -1,0 +1,76 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\Token;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Tests\TestCase;
+
+class PasswordResetTest extends TestCase
+{
+    use RefreshDatabase;
+
+    private User $user;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Mail::fake();
+        $this->user = User::factory()->create(['email' => 'ana@us.es', 'password' => Hash::make('original-pass')]);
+    }
+
+    public function test_a_valid_link_changes_the_password_once(): void
+    {
+        $token = $this->token(used: false, validUntil: now()->addDay());
+
+        $this->changePassword($token->token, 'new-pass')
+            ->assertRedirect(route('login'))
+            ->assertSessionHas('success');
+        $this->assertTrue(Hash::check('new-pass', $this->user->fresh()->password));
+
+        $this->changePassword($token->token, 'another-pass')->assertSessionHas('error');
+        $this->assertTrue(Hash::check('new-pass', $this->user->fresh()->password));
+    }
+
+    public function test_an_expired_link_does_not_change_the_password(): void
+    {
+        $token = $this->token(used: false, validUntil: now()->subDay());
+
+        $this->changePassword($token->token, 'attacker-pass')->assertSessionHas('error');
+
+        $this->assertTrue(Hash::check('original-pass', $this->user->fresh()->password));
+    }
+
+    public function test_requesting_a_new_link_invalidates_the_old_one(): void
+    {
+        $this->post(route('password.reset_p'), ['email' => 'ana@us.es']);
+        $old = Token::sole()->token;
+        $this->post(route('password.reset_p'), ['email' => 'ana@us.es']);
+
+        $this->changePassword($old, 'attacker-pass')->assertSessionHas('error');
+
+        $this->assertTrue(Hash::check('original-pass', $this->user->fresh()->password));
+    }
+
+    private function token(bool $used, $validUntil): Token
+    {
+        return Token::create([
+            'token' => Str::random(255),
+            'used' => $used,
+            'valid_until_timestamp' => $validUntil,
+            'user_id' => $this->user->id,
+        ]);
+    }
+
+    private function changePassword(string $token, string $password)
+    {
+        return $this->post(route('password.update_p', ['token' => $token]), [
+            'password' => $password,
+            'password_confirmation' => $password,
+        ]);
+    }
+}

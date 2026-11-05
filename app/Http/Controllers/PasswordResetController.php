@@ -95,7 +95,7 @@ class PasswordResetController extends Controller
 
         $token_entity = Token::where('token', $request->route('token'))->first();
 
-        if ($token_entity != null) {
+        if ($token_entity != null && $token_entity->isValid()) {
 
             // cambio de contraseña
             $user = User::find($token_entity->user_id);
