@@ -6,6 +6,8 @@ use Illuminate\Contracts\Validation\Rule;
 
 class MaxCharacters implements Rule
 {
+    use CountsVisibleCharacters;
+
     /**
      * Create a new rule instance.
      *
@@ -27,7 +29,7 @@ class MaxCharacters implements Rule
      */
     public function passes($attribute, $value)
     {
-        return strlen(trim(strip_tags(trim($value)))) <= $this->max;
+        return $this->visibleLength($value) <= $this->max;
     }
 
     /**
