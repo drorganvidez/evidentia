@@ -26,6 +26,7 @@
         "@tailwindcss/vite": "^4.3.4",
         "blade-formatter": "^1.44.6",
         "concurrently": "^10.0.6",
+        "fontaine": "^1.0.3",
         "laravel-vite-plugin": "^3.2.1",
         "tailwindcss": "^4.3.4",
         "vite": "^8.3.6"
