@@ -13,7 +13,6 @@ use App\Models\MeetingMinutes;
 use App\Models\MeetingRequest;
 use App\Models\Point;
 use App\Models\SignatureSheet;
-use App\Models\User;
 use App\Rules\CheckHoursAndMinutes;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -728,151 +727,8 @@ class MeetingSecretaryController extends Controller
 
     }
 
-    /*
-    public function list()
-    {
-
-
-        $meetings = Auth::user()->secretary->committee->meetings()->get();
-
-        return view('meeting.list',
-            ['meetings' => $meetings]);
-    }
-    */
-
-    /*
-    public function create()
-    {
-
-
-        $users = User::orderBy('surname')->get();
-        $defaultlists = Auth::user()->secretary->defaultLists;
-
-        return view('meeting.createandedit',
-            ['users' => $users, 'defaultlists' => $defaultlists, 'route' => route('secretary.meeting.new')]);
-    }
-    */
-
-    /*
-    public function new(Request $request)
-    {
-
-
-        $minutes = $request->input('minutes');
-
-        $validatedData = $request->validate([
-            'title' => 'required|min:5|max:255',
-            'type' => 'required|numeric|min:1|max:2',
-            'hours' => ['required_without:minutes','nullable','numeric','sometimes','max:99',new CheckHoursAndMinutes($request->input('minutes'))],
-            'minutes' => ['required_without:hours','nullable','numeric','sometimes','max:60',new CheckHoursAndMinutes($request->input('hours'))],
-            'place' => 'required|min:5|max:255',
-            'date' => 'required|date_format:Y-m-d|before:tomorrow',
-            'time' => 'required',
-            'users' => 'required|array|min:1'
-        ]);
-
-        $meeting = Meeting::create([
-            'title' => $request->input('title'),
-            'hours' => $request->input('hours') + floor(($minutes*100)/60)/100,
-            'type' => $request->input('type'),
-            'place' => $request->input('place'),
-            'datetime' => $request->input('date')." ".$request->input('time')
-        ]);
-
-        $meeting->committee()->associate(Auth::user()->secretary->committee);
-
-        $meeting->save();
-
-        // Asociamos los usuarios a la reunión
-        $users_ids = $request->input('users',[]);
-
-        foreach($users_ids as $user_id)
-        {
-
-            $user = User::find($user_id);
-            $meeting->users()->attach($user);
-
-        }
-
-        return redirect()->route('secretary.meeting.list')->with('success', 'Reunión creada con éxito.');
-
-    }
-    */
-
-    /*
-    public function edit($id)
-    {
-        $meeting = Meeting::find($id);
-        $users = User::orderBy('surname')->get();
-        $defaultlists = Auth::user()->secretary->defaultLists;
-
-        return view('meeting.createandedit',
-            ['meeting' => $meeting, 'edit' => true, 'users' => $users, 'defaultlists' => $defaultlists, 'route' => route('secretary.meeting.save')]);
-    }
-    */
-
     public function defaultlist($id)
     {
         return DefaultList::find($id)->users;
     }
-
-    /*
-    public function save(Request $request)
-    {
-
-
-        $minutes = $request->input('minutes');
-
-        $validatedData = $request->validate([
-            'title' => 'required|min:5|max:255',
-            'type' => 'required|numeric|min:1|max:2',
-            'hours' => ['required_without:minutes','nullable','numeric','sometimes','max:99',new CheckHoursAndMinutes($request->input('minutes'))],
-            'minutes' => ['required_without:hours','nullable','numeric','sometimes','max:60',new CheckHoursAndMinutes($request->input('hours'))],
-            'place' => 'required|min:5|max:255',
-            'date' => 'required|date_format:Y-m-d|before:tomorrow',
-            'time' => 'required',
-            'users' => 'required|array|min:1'
-        ]);
-
-        $meeting = Meeting::find($request->_id);
-        $meeting->title = $request->input('title');
-        $meeting->hours = $request->input('hours') + floor(($minutes*100)/60)/100;
-        $meeting->type = $request->input('type');
-        $meeting->place = $request->input('place');
-        $meeting->datetime = $request->input('date')." ".$request->input('time');
-
-        $meeting->save();
-
-        // Asociamos los usuarios a la reunión
-        $users_ids = $request->input('users',[]);
-
-        // eliminamos usuarios antiguos de la reunión
-        foreach($meeting->users as $user)
-        {
-            $meeting->users()->detach($user);
-        }
-
-        // agregamos los usuarios nuevos de la reunión
-        foreach($users_ids as $user_id)
-        {
-            $user = User::find($user_id);
-            $meeting->users()->attach($user);
-        }
-
-        return redirect()->route('secretary.meeting.list')->with('success', 'Reunión editada con éxito.');
-
-    }
-    */
-
-    /*
-    public function remove(Request $request)
-    {
-        $meeting = Meeting::find($request->_id);
-
-
-        $meeting->delete();
-
-        return redirect()->route('secretary.meeting.list')->with('success', 'Reunión eliminada con éxito.');
-    }
-    */
 }

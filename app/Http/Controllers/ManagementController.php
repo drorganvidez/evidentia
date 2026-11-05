@@ -128,13 +128,6 @@ class ManagementController extends Controller
 
         foreach (Committee::all() as $committee) {
 
-            /*
-            $request->validate([
-                'icon_' . $committee->id => 'max:255',
-                'name_' . $committee->id => 'required|max:255|unique:committees'
-            ]);
-            */
-
             $new_icon = $request->input('icon_'.$committee->id);
             $new_name = $request->input('name_'.$committee->id);
 

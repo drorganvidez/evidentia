@@ -93,7 +93,6 @@
                     @if (Request::is('admin') || Request::is('admin/*'))
                         <x-menus.menuadmin />
                     @else
-                        <x-liavatar />
 
                         <x-menus.menucommon />
                         <x-menus.menusecretary />
