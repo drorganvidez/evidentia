@@ -329,8 +329,6 @@ Route::middleware('auth')->group(function () {
         Route::get('evidence/create', [EvidenceController::class, 'create'])->name('evidence.create');
         Route::post('evidence/draft', [EvidenceController::class, 'draft'])->name('evidence.draft');
         Route::post('evidence/publish', [EvidenceController::class, 'publish'])->name('evidence.publish');
-        Route::post('evidence/draft/edit', [EvidenceController::class, 'draft_edit'])->name('evidence.draft.edit');
-        Route::post('evidence/publish/edit', [EvidenceController::class, 'publish_edit'])->name('evidence.publish.edit');
     });
 
     Route::get('evidence/list/export/{ext}', [EvidenceController::class, 'export'])->name('evidence.list.export');
@@ -343,6 +341,8 @@ Route::middleware('auth')->group(function () {
 
         Route::middleware(CheckUploadEvidences::class)->group(function () {
             Route::get('evidence/edit/{id}', [EvidenceController::class, 'edit'])->name('evidence.edit')->middleware(EvidenceCanBeEdited::class);
+            Route::post('evidence/draft/edit', [EvidenceController::class, 'draft_edit'])->name('evidence.draft.edit');
+            Route::post('evidence/publish/edit', [EvidenceController::class, 'publish_edit'])->name('evidence.publish.edit');
             Route::post('evidence/reedit', [EvidenceController::class, 'reedit'])->name('evidence.reedit');
             Route::post('evidence/remove', [EvidenceController::class, 'remove'])->name('evidence.remove');
         });
