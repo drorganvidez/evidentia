@@ -230,7 +230,6 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::get('registercoordinator/event/list', [EventbriteController::class, 'event_list'])->name('registercoordinator.event.list');
-    Route::get('registercoordinator/attendee/list', [EventbriteController::class, 'attendee_list']);
     Route::get('registercoordinator/attendee/export', [EventbriteController::class, 'attendee_export'])->name('registercoordinator.attendee.export');
 
     // PRESIDENT routes with middleware checkroles:PRESIDENT
