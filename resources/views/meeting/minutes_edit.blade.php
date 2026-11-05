@@ -383,8 +383,7 @@
                             if (peticion != peticion_lista) return;
 
                             for (var i = 0; i < respuesta.length; i++) {
-                                demo.append('<option value="' + respuesta[i].id + '" selected>' + respuesta[i]
-                                    .surname + ', ' + respuesta[i].name + '</option>')
+                                demo.append($('<option selected>').val(respuesta[i].id).text(respuesta[i].surname + ', ' + respuesta[i].name))
                                 seleccionados.push(respuesta[i].id);
                             }
 
@@ -397,9 +396,7 @@
 
                                     for (var i = 0; i < respuesta.length; i++) {
                                         if (seleccionados.indexOf(respuesta[i].id) == -1) {
-                                            demo.append('<option value="' + respuesta[i].id + '">' +
-                                                respuesta[i].surname + ', ' + respuesta[i].name +
-                                                '</option>')
+                                            demo.append($('<option>').val(respuesta[i].id).text(respuesta[i].surname + ', ' + respuesta[i].name))
                                         }
 
                                     }
