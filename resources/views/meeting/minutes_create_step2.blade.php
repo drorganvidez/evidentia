@@ -84,7 +84,7 @@
                                                         <option
                                                             {{ $signature_sheet->id == old('$signature_sheet') ? 'selected' : '' }}
                                                             value="{{ $signature_sheet->id }}">
-                                                            {!! $signature_sheet->title !!}
+                                                            {{ $signature_sheet->title }}
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -108,7 +108,7 @@
                                                             <option
                                                                 {{ $signature_sheet->id == old('$signature_sheet') ? 'selected' : '' }}
                                                                 value="{{ $signature_sheet->id }}">
-                                                                {!! $signature_sheet->title !!}
+                                                                {{ $signature_sheet->title }}
                                                             </option>
                                                         @endforeach
                                                     </select>

@@ -81,7 +81,7 @@
                                                     <option
                                                         {{ $meeting_request->id == old('$meeting_request') ? 'selected' : '' }}
                                                         value="{{ $meeting_request->id }}">
-                                                        {!! $meeting_request->title !!}
+                                                        {{ $meeting_request->title }}
                                                     </option>
                                                 @endforeach
                                             </select>

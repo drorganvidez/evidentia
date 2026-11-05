@@ -133,7 +133,7 @@
                                         <option {{ $committee->id == old('committee') ? 'selected' : '' }}
                                             value="{{ $committee->id }}">
                                         @endisset
-                                        {!! $committee->name !!}
+                                        {{ $committee->name }}
                                     </option>
                                 @endforeach
                             </select>

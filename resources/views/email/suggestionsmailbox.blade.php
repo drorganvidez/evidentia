@@ -56,7 +56,7 @@
                             <h3>[{{ $subject_form }}]</h3>
 
                             <p>
-                                {!! $comment_form !!}
+                                {!! \Html::clean($comment_form) !!}
                             </p>
 
                         </div>

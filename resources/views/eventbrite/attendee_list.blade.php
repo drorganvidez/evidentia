@@ -54,7 +54,7 @@
                             @foreach ($attendees as $attendee)
                                 <tr scope="row">
                                     <td>{{ $attendee->user->surname }}, {{ $attendee->user->name }}</td>
-                                    <td><a href="{{ $attendee->event->url }}" target="_blank">{!! $attendee->event->name !!}</a>
+                                    <td><a href="{{ $attendee->event->url }}" target="_blank">{!! \Html::clean($attendee->event->name) !!}</a>
                                     </td>
                                     <td><x-attendeestatus :attendee="$attendee" /></td>
                                     <td>

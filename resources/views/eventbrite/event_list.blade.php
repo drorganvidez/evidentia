@@ -46,7 +46,7 @@
                             @foreach ($events as $event)
                                 <tr>
                                     <td>
-                                        <a href="{{ $event->url }}" target="_blank">{!! $event->name !!}</a>
+                                        <a href="{{ $event->url }}" target="_blank">{!! \Html::clean($event->name) !!}</a>
                                         @if (!empty($event->hidden) && $event->hidden)
                                             <br>
                                             <span class="badge badge-secondary mt-1">Oculto</span>
