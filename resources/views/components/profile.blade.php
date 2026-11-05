@@ -72,7 +72,7 @@
                         </div>
                     @endif
 
-                    {!! $user->biography !!}
+                    {!! \Html::clean($user->biography) !!}
                 </p>
             </div>
         </div>

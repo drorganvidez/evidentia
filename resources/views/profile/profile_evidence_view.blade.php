@@ -54,7 +54,7 @@
                             <h4>{{ $evidence->title }}</h4>
 
                             <div class="post text-justify">
-                                {!! $evidence->description !!}
+                                {!! \Html::clean($evidence->description) !!}
                             </div>
 
                         </div>

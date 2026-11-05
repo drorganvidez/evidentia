@@ -181,6 +181,33 @@ class Time
     }
 }
 
+/*
+ *  HTML ENRIQUECIDO (SUMMERNOTE)
+ */
+
+class Html
+{
+    private static ?HTMLPurifier $purifier = null;
+
+    // deja solo las etiquetas de formato del editor, sin scripts ni atributos de eventos
+    public static function clean(?string $html): string
+    {
+        if (self::$purifier === null) {
+            $config = HTMLPurifier_Config::createDefault();
+            $config->set('Cache.DefinitionImpl', null);
+            $config->set('HTML.Allowed', 'p[style],br,b,strong,i,em,u,s,strike,sub,sup,span[style],ul,ol,li,'
+                .'a[href|title|target],h1,h2,h3,h4,h5,h6,blockquote,pre,code,hr,'
+                .'table,thead,tbody,tr,th[colspan|rowspan],td[colspan|rowspan],img[src|alt|width|height|style]');
+            $config->set('CSS.AllowedProperties', 'color,background-color,text-align,font-weight,font-style,text-decoration,width,height');
+            $config->set('URI.AllowedSchemes', ['http' => true, 'https' => true, 'mailto' => true, 'data' => true]);
+            $config->set('Attr.AllowedFrameTargets', ['_blank']);
+            self::$purifier = new HTMLPurifier($config);
+        }
+
+        return self::$purifier->purify($html ?? '');
+    }
+}
+
 class StringUtilites
 {
     public static function clean($string)

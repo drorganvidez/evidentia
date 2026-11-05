@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b499a7e73f698678dbff58d1da190486",
+    "content-hash": "f764774ca3add84c1d56abca900d7537",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -955,7 +955,8 @@
                 "issues": "https://github.com/ezyang/htmlpurifier/issues",
                 "source": "https://github.com/ezyang/htmlpurifier/tree/v4.19.1"
             },
-            "time": "2026-09-15T15:42:51+00:00"
+            "time": "2026-09-15T15:42:51+00:00",
+            "published-time": "2026-09-15T15:42:56+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -9514,5 +9515,5 @@
         "php": "^8.2"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.11.0"
 }

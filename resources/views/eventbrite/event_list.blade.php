@@ -52,7 +52,7 @@
                                             <span class="badge badge-secondary mt-1">Oculto</span>
                                         @endif
                                     </td>
-                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{!! $event->description !!}
+                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{!! \Html::clean($event->description) !!}
                                     </td>
                                     <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
                                         {{ \Carbon\Carbon::parse($event->start_datetime) }}</td>
