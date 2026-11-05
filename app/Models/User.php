@@ -6,7 +6,6 @@ use Config;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\URL;
 
 class User extends Authenticatable
 {
@@ -66,11 +65,6 @@ class User extends Authenticatable
     public function bonus()
     {
         return $this->belongsToMany(Bonus::class);
-    }
-
-    public function avatar()
-    {
-        return $this->hasOne(Avatar::class);
     }
 
     public function attendees()
@@ -266,13 +260,6 @@ class User extends Authenticatable
     public function total_computed_hours()
     {
         return $this->evidences_accepted_hours() + $this->meetings_hours() + $this->events_hours() + $this->bonus_hours();
-    }
-
-    public function avatar_route()
-    {
-        return $this->avatar
-            ? URL::to('/uploads/avatars/'.$this->avatar->file->name.'.'.$this->avatar->file->type)
-            : URL::to('/uploads/avatars/default.png');
     }
 
     public function associate_committee()

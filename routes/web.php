@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AttendeeController;
-use App\Http\Controllers\AvatarController;
 // Controladores importados explícitamente
 use App\Http\Controllers\BlockController;
 use App\Http\Controllers\BonusSecretaryController;
@@ -192,11 +191,6 @@ Route::middleware('auth')->group(function () {
         CheckProofDownload::class,
     ])->group(function () {
         Route::get('proof/download/{id}', [ProofController::class, 'download'])->name('proof.download');
-    });
-
-    // AVATAR
-    Route::middleware([CheckNotNull::class.':User'])->group(function () {
-        Route::get('avatar/{id}', [AvatarController::class, 'avatar'])->name('avatar');
     });
 
     // REGISTER COORDINATOR

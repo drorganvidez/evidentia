@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Avatar;
 use App\Models\Evidence;
-use App\Models\File;
 use App\Models\User;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -59,62 +56,8 @@ class ProfileController extends Controller
 
         $user->save();
 
-        try {
-
-            if ($request->has('avatar')) {
-
-                // almacenamos en disco el avatar
-                $file = $request->file('avatar');
-                $path = Storage::putFileAs('/avatares/'.$user->username, $file, $this->file_name_parser($file));
-
-                // almacenamos en la BBDD la información del archivo
-                $file_entity = File::create([
-                    'name' => $this->file_name_parser($file),
-                    'type' => strtolower($file->getClientOriginalExtension()),
-                    'route' => $path,
-                    'size' => $file->getSize(),
-                ]);
-
-                // cómputo del sello
-                $file_entity = \Stamp::compute_file($file_entity);
-                $file_entity->save();
-
-                // borramos el avatar antiguo (si lo tuviera)
-                if ($user->avatar != null) {
-                    Storage::delete($user->avatar->file->route);
-                    $user->avatar->file->delete();
-                    $user->avatar->delete();
-                }
-
-                // almacenamos en la BBDD el avatar
-                $avatar = Avatar::create([
-                    'user_id' => $user->id,
-                    'file_id' => $file_entity->id,
-                ]);
-
-                $avatar->save();
-
-            }
-
-        } catch (\Exception $e) {
-            return $e;
-        }
-
         return redirect()->route('profile.view')->with('success', 'Datos personales editados con éxito.');
 
-    }
-
-    private function file_name_parser($file)
-    {
-        $name = $file->getClientOriginalName();
-        $file_from_ddbb = File::where('name', $name)->first();
-
-        // si ya hay un avatar con ese nombre, ponerle otro nombre al nuevo
-        if ($file_from_ddbb != null) {
-            $name .= ' (copy).'.strtolower($file->getClientOriginalExtension());
-        }
-
-        return $name;
     }
 
     public function upload_biography(Request $request)
