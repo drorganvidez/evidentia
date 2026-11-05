@@ -227,17 +227,8 @@ class EventbriteController extends Controller
                 foreach ($attendees as $attendee) {
 
                     // Limpieza nombres
-                    $first_name = strtoupper(trim(preg_replace('~[^0-9a-z]+~i', '', preg_replace(
-                        '~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i',
-                        '$1',
-                        htmlentities($attendee->profile->first_name, ENT_QUOTES, 'UTF-8')
-                    )), ' '));
-
-                    $last_name = strtoupper(trim(preg_replace('~[^0-9a-z]+~i', '', preg_replace(
-                        '~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i',
-                        '$1',
-                        htmlentities($attendee->profile->last_name, ENT_QUOTES, 'UTF-8')
-                    )), ' '));
+                    $first_name = \StringUtilites::clean($attendee->profile->first_name);
+                    $last_name = \StringUtilites::clean($attendee->profile->last_name);
 
                     $email = $attendee->profile->email;
                     $status = $attendee->status;

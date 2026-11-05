@@ -182,9 +182,14 @@ class Html
 
 class StringUtilites
 {
+    // letras sin tildes y cifras, en mayúsculas: sirve para comparar nombres ("Pérez López" -> "PEREZLOPEZ")
     public static function clean($string)
     {
-        return strtoupper(trim(preg_replace('~[^0-9a-z]+~i', '', preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($string, ENT_QUOTES, 'UTF-8'))), ' '));
+        $entities = htmlentities((string) $string, ENT_QUOTES, 'UTF-8');
+        $unaccented = preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', $entities);
+        $without_entities = preg_replace('~&[^;]+;~', '', $unaccented);
+
+        return strtoupper(preg_replace('~[^0-9a-z]+~i', '', $without_entities));
     }
 }
 
