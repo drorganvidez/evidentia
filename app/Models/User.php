@@ -247,7 +247,10 @@ class User extends Authenticatable
 
     public function max_events_hours()
     {
-        return min($this->attendees_hours(), Config::max_attendees_hours());
+        // sin un límite configurado cuentan todas las horas de asistencia, como en el perfil
+        $limit = Config::max_attendees_hours();
+
+        return $limit === null ? $this->attendees_hours() : min($this->attendees_hours(), $limit);
     }
 
     public function events_count()
