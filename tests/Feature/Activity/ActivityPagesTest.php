@@ -17,7 +17,8 @@ class ActivityPagesTest extends ScreenTestCase
     {
         $this->login('estudiante');
 
-        $response = $this->screen('profesor', route('activity.index'))
+        // 10 per page by default: the whole seed fits in one page of 50
+        $response = $this->screen('profesor', route('activity.index', ['per_page' => 50]))
             ->assertSee('Registro de actividad')
             ->assertSee('Descargar CSV');
         $this->assertNoAutofocus($response->getContent());
@@ -58,14 +59,14 @@ class ActivityPagesTest extends ScreenTestCase
         $this->assertStringContainsString('1 anotación', $flagged->getContent());
 
         // invalid values are ignored, never an error
-        $this->assertRows($this->screen('profesor', route('activity.index', ['type' => 'nada', 'from' => '2026-02-31', 'role' => 'NADIE'])), ['Comité editado']);
+        $this->assertRows($this->screen('profesor', route('activity.index', ['type' => 'nada', 'from' => '2026-02-31', 'role' => 'NADIE', 'per_page' => 50])), ['Comité editado']);
     }
 
     public function test_one_action_groups_its_annotations(): void
     {
         $request = ActivityLog::where('action', 'sheet.created')->sole()->request_id;
 
-        $this->screen('profesor', route('activity.index'))
+        $this->screen('profesor', route('activity.index', ['per_page' => 50]))
             ->assertSee('+1 en la misma acción')
             ->assertSee(route('activity.index', ['request' => $request]), false);
 
@@ -83,16 +84,16 @@ class ActivityPagesTest extends ScreenTestCase
         $this->screen('profesor', route('activity.index'))
             ->assertSee('<nav aria-label="Paginación del registro"', false)
             ->assertSee('aria-label="Filas por página"', false);
-        $this->assertRows($this->screen('profesor', route('activity.index', ['page' => 2])), ['Comité editado']);
+        $this->assertRows($this->screen('profesor', route('activity.index', ['page' => 2, 'per_page' => 50])), ['Comité editado']);
         // a page past the last shows the last; the size of the query string stays in the filters
-        $this->assertRows($this->screen('profesor', route('activity.index', ['page' => 40])), ['Comité editado']);
+        $this->assertRows($this->screen('profesor', route('activity.index', ['page' => 40, 'per_page' => 50])), ['Comité editado']);
         $smaller = $this->screen('profesor', route('activity.index', ['per_page' => 10]))
             ->assertSee('<nav aria-label="Paginación del registro"', false)
             ->assertSee('<input type="hidden" name="per_page" value="10">', false)
             ->getContent();
         $this->assertMatchesRegularExpression('/per_page=10"\s+aria-current="true"/', $smaller);
-        // 100 is no longer a size: the log keeps its own 50
-        $this->assertMatchesRegularExpression('/per_page=50"\s+aria-current="true"/', $this->screen('profesor', route('activity.index', ['per_page' => 100]))->getContent());
+        // 100 is no longer a size: the log keeps its own 10
+        $this->assertMatchesRegularExpression('/per_page=10"\s+aria-current="true"/', $this->screen('profesor', route('activity.index', ['per_page' => 100]))->getContent());
     }
 
     public function test_each_person_sees_their_own_activity(): void

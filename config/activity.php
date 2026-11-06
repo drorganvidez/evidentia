@@ -22,6 +22,6 @@ return [
 
     'read_notification_retention_days' => (int) env('ACTIVITY_READ_NOTIFICATION_RETENTION_DAYS', 180),
 
-    'page_size' => 50,
+    'page_size' => 10,
 
 ];
