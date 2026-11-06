@@ -4,7 +4,8 @@
  * - push({ tone, text, timeout }) adds a notice and announces it, rejected and pending as an alert and the rest
  *   as a status (the visible stack is not live); accepted and notice close themselves after 8 s, rejected and
  *   pending stay until the person closes them (WCAG 2.2.1), unless a timeout is given
- * - pause(id) and resume(id) hold the countdown while the pointer or the focus is on the notice
+ * - pause(id, source) and resume(id, source) hold the countdown while the pointer or the focus is on the notice;
+ *   each source counts apart, so the pointer leaving does not restart a notice that still has the focus
  * - announce(text, 'status' | 'alert') writes to the hidden live region and clears it 5 s later, so the
  *   same text can be announced again; on its own it is for messages without a visible notice
  *
@@ -61,10 +62,16 @@ export default {
         this.items = this.items.filter((item) => item.id !== id);
     },
 
-    pause(id) {
+    pause(id, source = 'pointer') {
         const timer = timers.get(id);
 
-        if (!timer || timer.handle === null) {
+        if (!timer) {
+            return;
+        }
+
+        timer.holds.add(source);
+
+        if (timer.handle === null) {
             return;
         }
 
@@ -73,10 +80,16 @@ export default {
         timer.remaining = Math.max(1000, timer.due - Date.now());
     },
 
-    resume(id) {
+    resume(id, source = 'pointer') {
         const timer = timers.get(id);
 
-        if (!timer || timer.handle !== null) {
+        if (!timer) {
+            return;
+        }
+
+        timer.holds.delete(source);
+
+        if (timer.holds.size > 0 || timer.handle !== null) {
             return;
         }
 
@@ -88,6 +101,7 @@ export default {
             handle: setTimeout(() => this.dismiss(id), delay),
             due: Date.now() + delay,
             remaining: delay,
+            holds: timers.get(id)?.holds ?? new Set(),
         });
     },
 

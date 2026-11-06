@@ -29,8 +29,9 @@
     <div role="alert" class="sr-only" x-text="alertText"></div>
     <div role="region" aria-label="Avisos" class="{{ $stack }}">
         <template x-for="item in items" x-bind:key="item.id">
-            <div role="group" x-bind:data-tone="item.tone" x-on:mouseenter="pause(item.id)"
-                x-on:mouseleave="resume(item.id)" x-on:focusin="pause(item.id)" x-on:focusout="resume(item.id)"
+            <div role="group" x-bind:data-tone="item.tone" x-on:mouseenter="pause(item.id, 'pointer')"
+                x-on:mouseleave="resume(item.id, 'pointer')" x-on:focusin="pause(item.id, 'focus')"
+                x-on:focusout="resume(item.id, 'focus')"
                 class="glass flex items-start gap-3 rounded-lg p-4 text-md text-ink animate-rise motion-reduce:animate-none data-[tone=accepted]:border-accepted/40 data-[tone=accepted]:bg-accepted-glass data-[tone=notice]:border-notice/40 data-[tone=notice]:bg-notice-glass data-[tone=pending]:border-pending/40 data-[tone=pending]:bg-pending-glass data-[tone=rejected]:border-rejected/40 data-[tone=rejected]:bg-rejected-glass">
                 <x-lucide-circle-check x-show="item.tone === 'accepted'" class="size-5.5 shrink-0 text-accepted"
                     aria-hidden="true" />

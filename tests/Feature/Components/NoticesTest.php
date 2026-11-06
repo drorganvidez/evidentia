@@ -13,7 +13,8 @@ class NoticesTest extends ComponentTestCase
         $this->assertStringContainsString('<div role="alert" class="sr-only" x-text="alertText"></div>', $html);
         $this->assertStringContainsString('<div role="region" aria-label="Avisos" class="fixed right-5 bottom-5 z-40 grid w-96 max-w-[calc(100vw-1.5rem)] gap-3 max-md:inset-x-3 max-md:right-3 max-md:bottom-24 max-md:w-auto">', $html);
         $this->assertStringContainsString('<template x-for="item in items" x-bind:key="item.id">', $html);
-        $this->assertMatchesRegularExpression('/<div role="group" x-bind:data-tone="item.tone" x-on:mouseenter="pause\(item.id\)"\s+x-on:mouseleave="resume\(item.id\)" x-on:focusin="pause\(item.id\)" x-on:focusout="resume\(item.id\)"/', $html);
+        // The pointer and the focus hold the countdown apart: it runs again only when neither is on the notice
+        $this->assertMatchesRegularExpression("/<div role=\"group\" x-bind:data-tone=\"item.tone\" x-on:mouseenter=\"pause\\(item.id, 'pointer'\\)\"\\s+x-on:mouseleave=\"resume\\(item.id, 'pointer'\\)\" x-on:focusin=\"pause\\(item.id, 'focus'\\)\"\\s+x-on:focusout=\"resume\\(item.id, 'focus'\\)\"/", $html);
         $this->assertStringContainsString('animate-rise motion-reduce:animate-none', $html);
         $this->assertStringContainsString('data-[tone=rejected]:bg-rejected-glass', $html);
         $this->assertStringContainsString('<p class="min-w-0 flex-1 pt-0.5" x-text="item.text"></p>', $html);

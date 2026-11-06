@@ -37,12 +37,13 @@ export default function notices() {
             this.$store.notices.dismiss(id);
         },
 
-        pause(id) {
-            this.$store.notices.pause(id);
+        /** x-on:mouseenter="pause(item.id, 'pointer')", x-on:focusin="pause(item.id, 'focus')" */
+        pause(id, source) {
+            this.$store.notices.pause(id, source);
         },
 
-        resume(id) {
-            this.$store.notices.resume(id);
+        resume(id, source) {
+            this.$store.notices.resume(id, source);
         },
 
         get items() {

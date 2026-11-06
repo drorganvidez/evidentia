@@ -5,6 +5,24 @@ const STATUS = '[x-data="notices"] [role="status"]';
 const ALERT = '[x-data="notices"] [role="alert"]';
 const NOTICE = '[aria-label="Avisos"] [role="group"]';
 
+/** Focuses the last control before the stack of notices, so the next Tab enters the stack. */
+async function focusBeforeTheStack(page) {
+    await page.evaluate(() => {
+        const stack = document.querySelector('[aria-label="Avisos"]');
+        const controls = [
+            ...document.querySelectorAll('a[href], button, input, select, textarea, summary'),
+        ].filter(
+            (control) =>
+                control.tabIndex >= 0 &&
+                !control.disabled &&
+                control.checkVisibility() &&
+                control.compareDocumentPosition(stack) & Node.DOCUMENT_POSITION_FOLLOWING,
+        );
+
+        controls.at(-1).focus();
+    });
+}
+
 test.describe('Avisos', () => {
     test.beforeEach(async ({ page }) => {
         // Paused after the load (a running fake clock gets ahead of the wall clock): the 5 s and 8 s timers
@@ -80,6 +98,56 @@ test.describe('Avisos', () => {
         await expect(notice).toBeVisible();
 
         await page.mouse.move(0, 0);
+        await page.clock.fastForward(9_000);
+        await expect(notice).toHaveCount(0);
+    });
+
+    test('el foco en el cierre de un aviso detiene la cuenta atrás mientras lo tiene', async ({
+        page,
+        ui,
+    }) => {
+        await ui.section('notices').getByRole('button', { name: 'Aviso de éxito' }).click();
+
+        const notice = page.locator(NOTICE).filter({ hasText: 'Evidencia guardada' });
+        const close = notice.getByRole('button', { name: 'Cerrar aviso' });
+
+        await expect(notice).toBeVisible();
+
+        // The stack follows the header in the document, so Tab reaches it from the last control of the header
+        await focusBeforeTheStack(page);
+        await page.keyboard.press('Tab');
+        await expect(close).toBeFocused();
+
+        await page.clock.fastForward(15_000);
+        await expect(notice).toBeVisible();
+
+        await page.keyboard.press('Tab');
+        await expect(close).not.toBeFocused();
+        await page.clock.fastForward(9_000);
+        await expect(notice).toHaveCount(0);
+    });
+
+    test('si el puntero sale pero el foco sigue en el aviso, la cuenta atrás no vuelve', async ({
+        page,
+        ui,
+    }, testInfo) => {
+        test.skip(testInfo.project.name !== 'chromium', 'El hover es cosa del puntero fino');
+
+        await ui.section('notices').getByRole('button', { name: 'Aviso informativo' }).click();
+
+        const notice = page.locator(NOTICE).filter({ hasText: 'nueva versión' });
+
+        await notice.hover();
+        await focusBeforeTheStack(page);
+        await page.keyboard.press('Tab');
+        await expect(notice.getByRole('button', { name: 'Cerrar aviso' })).toBeFocused();
+
+        await page.mouse.move(0, 0);
+        await page.clock.fastForward(15_000);
+        await expect(notice).toBeVisible();
+
+        // Once the focus leaves too, the countdown runs again
+        await page.keyboard.press('Tab');
         await page.clock.fastForward(9_000);
         await expect(notice).toHaveCount(0);
     });
