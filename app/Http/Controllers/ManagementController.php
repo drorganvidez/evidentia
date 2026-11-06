@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityAction;
+use App\Enums\ActivityFlag;
+use App\Facades\Activity;
 use App\Http\Middleware\CheckRoles;
 use App\Http\Services\UserService;
 use App\Models\Committee;
@@ -9,6 +12,8 @@ use App\Models\Evidence;
 use App\Models\Meeting;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\Activity\SubjectInfo;
+use App\Support\Changes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -119,10 +124,14 @@ class ManagementController extends Controller
             'name' => 'required|max:255|unique:committees',
         ]);
 
-        Committee::create([
-            'icon' => $request->input('icon'),
-            'name' => $request->input('name'),
-        ]);
+        DB::transaction(function () use ($request) {
+            $committee = Committee::create([
+                'icon' => $request->input('icon'),
+                'name' => $request->input('name'),
+            ]);
+
+            Activity::record(ActivityAction::CommitteeCreated, $committee);
+        });
 
         if (Auth::user()->hasRole('PRESIDENT')) {
             return redirect()->route('president.committee.list')->with('success', 'Comité creado con éxito.');
@@ -156,10 +165,16 @@ class ManagementController extends Controller
                 if ($new_name != '') {
 
                     $saved_committee = Committee::find($committee->id);
+                    $before = $saved_committee->only(['icon', 'name']);
                     $saved_committee->icon = $new_icon;
                     $saved_committee->name = $new_name;
 
                     $saved_committee->save();
+
+                    // solo los comités que cambian
+                    if (Changes::any($before, $saved_committee->only(['icon', 'name']))) {
+                        Activity::record(ActivityAction::CommitteeEdited, $saved_committee, details: Changes::between($before, $saved_committee->only(['icon', 'name'])));
+                    }
                 }
             }
         });
@@ -179,7 +194,12 @@ class ManagementController extends Controller
 
         $committee = Committee::find($request->input('_id'));
         if ($committee->can_be_removed()) {
-            $committee->delete();
+            DB::transaction(function () use ($committee) {
+                // se anota antes de borrar: el registro copia el nombre del comité
+                Activity::record(ActivityAction::CommitteeDeleted, $committee, subjectTitle: $committee->name);
+
+                $committee->delete();
+            });
 
             return redirect()->route($returned_route)->with('success', 'Comité eliminado con éxito.');
         } else {
@@ -240,8 +260,9 @@ class ManagementController extends Controller
         ]);
 
         $committee_id = $request->input('committee');
+        $before = $this->user_snapshot($user);
 
-        DB::transaction(function () use ($request, $user, $roles_id, $committee_id) {
+        DB::transaction(function () use ($request, $user, $roles_id, $committee_id, $before) {
             // guardar bloqueo
             $user->block = $request->input('pass') == 'on' ? false : true;
 
@@ -271,6 +292,8 @@ class ManagementController extends Controller
             }
 
             $user->save();
+
+            $this->record_user_changes($user, $before, $this->user_snapshot($user), $request->filled('password'));
         });
 
         // redirección según el rol del que ejecuta la acción
@@ -281,6 +304,52 @@ class ManagementController extends Controller
 
         return redirect()->route('lecture.user.list', ['id' => $user->id])
             ->with('success', 'Usuario actualizado con éxito');
+    }
+
+    // datos, roles, comité y bloqueo de un usuario, tal como se anotan
+    private function user_snapshot(User $user): array
+    {
+        $committee_id = DB::table('coordinators')->where('user_id', $user->id)->value('committee_id')
+            ?? DB::table('secretaries')->where('user_id', $user->id)->value('committee_id');
+
+        return [
+            'data' => $user->only(['username', 'name', 'surname', 'email']),
+            'roles' => $user->roles()->pluck('rol')->sort()->values()->all(),
+            'committee' => $committee_id === null ? null : Committee::whereKey($committee_id)->value('name'),
+            'block' => (bool) $user->block,
+        ];
+    }
+
+    // una anotación por cada clase de cambio; el gestor que se cambia a sí mismo queda señalado
+    private function record_user_changes(User $user, array $before, array $after, bool $password): void
+    {
+        $record = fn (ActivityAction $action, array $details = []) => Activity::record(
+            $action,
+            $user,
+            $user,
+            details: $details,
+            flags: (int) $user->id === (int) Auth::id() ? [ActivityFlag::RoleOverlap] : [],
+        );
+
+        $data = ['committee' => $before['committee']] + $before['data'];
+        $new_data = ['committee' => $after['committee']] + $after['data'];
+        if (Changes::any($data, $new_data)) {
+            $record(ActivityAction::UserEdited, Changes::between($data, $new_data));
+        }
+
+        $roles = ['roles' => $before['roles'], 'committee' => $before['committee']];
+        $new_roles = ['roles' => $after['roles'], 'committee' => $after['committee']];
+        if (Changes::any($roles, $new_roles)) {
+            $record(ActivityAction::UserRolesChanged, ['before' => $roles, 'after' => $new_roles]);
+        }
+
+        if ($before['block'] !== $after['block']) {
+            $record($after['block'] ? ActivityAction::UserBlocked : ActivityAction::UserUnblocked);
+        }
+
+        if ($password) {
+            $record(ActivityAction::UserPasswordChangedByManager);
+        }
     }
 
     // el presidente no puede editar los usuarios de tipo profesor
@@ -314,6 +383,9 @@ class ManagementController extends Controller
 
             $student_role = Role::where('rol', 'STUDENT')->get();
             $user->roles()->attach($student_role);
+
+            // nunca la contraseña
+            Activity::record(ActivityAction::UserCreated, $user, $user, details: ['username' => $user->username, 'roles' => ['STUDENT']]);
         });
 
         $list = Auth::user()->hasRole('PRESIDENT') ? 'president.user.list' : 'lecture.user.list';
@@ -326,8 +398,19 @@ class ManagementController extends Controller
     {
         $users = $this->user_service->all_except_logged();
 
+        // una transacción por usuario; todas las anotaciones comparten la petición
         foreach ($users as $user) {
-            $this->user_service->delete($user->id);
+            DB::transaction(function () use ($user) {
+                Activity::record(
+                    ActivityAction::UserDeleted,
+                    $user,
+                    $user,
+                    details: ['bulk' => true, 'roles' => $user->roles()->pluck('rol')->sort()->values()->all()],
+                    subjectTitle: SubjectInfo::personName($user),
+                );
+
+                $this->user_service->delete($user->id);
+            });
         }
 
         return redirect()->route('lecture.user.list', [])->with('success', 'Usuarios borrados con éxito');

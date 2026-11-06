@@ -2,11 +2,15 @@
 
 namespace Tests\Feature\Activity\WriteRoutes;
 
+use App\Models\Committee;
 use App\Models\Event;
 use App\Models\Evidence;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Tests\Feature\Activity\AuthenticationActivityTest;
 use Tests\Feature\Activity\EventbriteSyncActivityTest;
 use Tests\TestCase;
@@ -67,6 +71,81 @@ final class LegacyWrites
         ];
     }
 
+    /** A case of the management (PRESIDENT or LECTURE) that posts to a route. */
+    private static function management(string $role, string $route, array $expect, ?\Closure $data = null, ?\Closure $setup = null): array
+    {
+        return array_filter([
+            'role' => $role,
+            'method' => 'POST',
+            'setup' => $setup,
+            'uri' => fn (array $ids) => route($route),
+            'data' => $data,
+            'expect' => $expect,
+            'acting_role' => $role,
+        ], fn ($value) => $value !== null);
+    }
+
+    /** The form of the person in charge for the student of the fixtures, with a new name. */
+    private static function userForm(array $ids): array
+    {
+        $student = User::find($ids['student']);
+
+        return [
+            'user_id' => $student->id, 'pass' => 'on', 'roles' => [Role::where('rol', 'STUDENT')->value('id')],
+            'committee' => $ids['logistica'], 'username' => $student->username, 'name' => 'Lucía',
+            'surname' => $student->surname, 'email' => $student->email,
+        ];
+    }
+
+    private static function config(): array
+    {
+        $date = now()->addWeeks(2)->format('Y-m-d');
+
+        return [
+            'upload_evidences_date' => $date, 'upload_evidences_time' => '20:00', 'validate_evidences_date' => $date,
+            'validate_evidences_time' => '23:59', 'meetings_date' => $date, 'meetings_time' => '23:59',
+            'bonus_date' => $date, 'bonus_time' => '23:59', 'attendees_date' => $date, 'attendees_time' => '23:59',
+        ];
+    }
+
+    /** Every management case, once for each of the two prefixes that share the controller. */
+    private static function managementCases(): array
+    {
+        $cases = [];
+        foreach (['president' => 'PRESIDENT', 'lecture' => 'LECTURE'] as $prefix => $role) {
+            $cases += [
+                "$prefix.committee.management.new" => self::management($role, "$prefix.committee.management.new", ['committee.created'],
+                    fn (array $ids) => ['icon' => 'megaphone', 'name' => 'Comunicación']),
+                "$prefix.committee.management.save" => self::management($role, "$prefix.committee.management.save", ['committee.edited'],
+                    fn (array $ids) => ['name_'.$ids['logistica'] => 'Logística y montaje', 'icon_'.$ids['logistica'] => 'truck']),
+                "$prefix.committee.management.remove" => self::management($role, "$prefix.committee.management.remove", ['committee.deleted'],
+                    fn (array $ids) => ['_id' => Committee::create(['name' => 'Sin uso'])->id]),
+                "$prefix.config.save" => self::management($role, "$prefix.config.save", ['config.changed'], fn (array $ids) => self::config()),
+                "$prefix.export.save" => self::management($role, "$prefix.export.save", ['export.evidences'],
+                    fn (array $ids) => ['evidences' => 'on', 'bonus' => 'on']),
+                "$prefix.user.management.save" => self::management($role, "$prefix.user.management.save", ['user.edited'],
+                    fn (array $ids) => self::userForm($ids)),
+            ];
+        }
+
+        return $cases + [
+            'management.user.new' => self::management('LECTURE', 'management.user.new', ['user.created'],
+                fn (array $ids) => ['name' => 'Lucía', 'surname' => 'Pérez', 'email' => 'lucia@alum.us.es', 'username' => 'lucper']),
+            'management.user.delete.all' => self::management('LECTURE', 'management.user.delete.all', ['user.deleted']),
+            'randomize.save' => self::management('LECTURE', 'randomize.save', ['randomize.run']),
+            'lecture.import.save' => self::management('LECTURE', 'lecture.import.save', ['import.users'], setup: function (TestCase $test, array $ids): void {
+                $spreadsheet = new Spreadsheet;
+                $spreadsheet->getActiveSheet()->fromArray([['apellidos', 'nombre', 'uvus', 'email'], ['Pérez', 'Lucía', 'lucper', 'lucia@alum.us.es']]);
+                $path = tempnam(sys_get_temp_dir(), 'xlsx');
+                (new Xlsx($spreadsheet))->save($path);
+                $lecture = User::whereHas('roles', fn ($query) => $query->where('rol', 'LECTURE'))->first();
+                $test->withSession(['_token' => 'barrido']);
+                Storage::put('tmp/'.$lecture->username.'/barrido/alumnos.xlsx', file_get_contents($path));
+                unlink($path);
+            }),
+        ];
+    }
+
     /**
      * Routes that annotate, with a happy request that the sweep sends.
      *
@@ -74,7 +153,7 @@ final class LegacyWrites
      */
     public static function writes(): array
     {
-        return [
+        return self::managementCases() + [
             'evidence.draft' => self::evidence('evidence.created', 'evidence.draft', expect: ['proof.uploaded']),
             'evidence.publish' => self::evidence('evidence.published', 'evidence.publish', expect: ['proof.uploaded']),
             'evidence.draft.edit' => self::evidence('evidence.edited', 'evidence.draft.edit', 'draft'),
@@ -246,22 +325,6 @@ final class LegacyWrites
             'registercoordinator.event.store' => 'F',
             'registercoordinator.event.update' => 'F',
             'registercoordinator.event.destroy' => 'F',
-            'president.committee.management.new' => 'A',
-            'president.committee.management.save' => 'A',
-            'president.committee.management.remove' => 'A',
-            'lecture.committee.management.new' => 'A',
-            'lecture.committee.management.save' => 'A',
-            'lecture.committee.management.remove' => 'A',
-            'president.user.management.save' => 'A',
-            'lecture.user.management.save' => 'A',
-            'management.user.new' => 'A',
-            'management.user.delete.all' => 'A',
-            'president.config.save' => 'A',
-            'lecture.config.save' => 'A',
-            'lecture.import.save' => 'A',
-            'president.export.save' => 'A',
-            'lecture.export.save' => 'A',
-            'randomize.save' => 'A',
             'profile.upload.info' => 'A',
             'profile.upload.biography' => 'A',
             'profile.upload.pass' => 'A',

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityAction;
+use App\Facades\Activity;
 use App\Models\Evidence;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -34,6 +36,7 @@ class RandomizeController extends Controller
             });
 
             $users = User::all();
+            $count = 0;
 
             foreach ($users as $user) {
 
@@ -42,11 +45,14 @@ class RandomizeController extends Controller
                     $evidence = $user->evidencesAccepted()->random();
                     $evidence->rand = true;
                     $evidence->save();
+                    $count++;
 
                 } catch (\Exception $e) {
 
                 }
             }
+
+            Activity::record(ActivityAction::RandomizeRun, details: ['count' => $count]);
         });
 
         return redirect()->route('randomize.randomize')->with('success', 'Evidencias aleatorizadas con éxito.');

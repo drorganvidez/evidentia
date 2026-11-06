@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityAction;
 use App\Exports\EvidencesExport;
+use App\Facades\Activity;
 use App\Http\Middleware\CheckRoles;
 use App\Imports\UsersImport;
 use App\Models\Role;
@@ -10,6 +12,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -41,14 +44,22 @@ class ImportExportController extends Controller
             return redirect()->route('lecture.import')->with('error', 'Sube primero el archivo con los alumnos.');
         }
 
+        // los importados son los que quedan por encima del último usuario de antes
+        $before = User::max('id') ?? 0;
+
         try {
             foreach (Storage::files($tmp) as $filename) {
                 $name = pathinfo($filename, PATHINFO_FILENAME);
                 $type = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
                 $path = $tmp.$name.'.'.$type;
 
-                Excel::import(new UsersImport, $path);
-                $this->set_student_rol();
+                DB::transaction(function () use ($path, $name, $type, $before) {
+                    Excel::import(new UsersImport, $path);
+                    $this->set_student_rol();
+
+                    $created = User::where('id', '>', $before)->pluck('id')->all();
+                    Activity::record(ActivityAction::ImportUsers, details: ['file' => $name.'.'.$type, 'created' => count($created)], targets: $created);
+                });
                 Storage::delete($path);
 
                 break;
@@ -97,6 +108,11 @@ class ImportExportController extends Controller
             if (ob_get_level()) {
                 ob_end_clean();
             }
+
+            $sections = array_filter([
+                'Evidencias' => $evidences_select, 'Reuniones' => $meetings_select, 'Eventos' => $events_select, 'Bono de horas' => $bonus,
+            ], fn ($value) => filled($value));
+            Activity::record(ActivityAction::ExportEvidences, details: ['sections' => array_keys($sections)]);
 
             return Excel::download(new EvidencesExport($evidences_select, $meetings_select, $events_select, $bonus), 'evidencias'.Carbon::now().'.xlsx');
         } catch (\Exception $e) {
