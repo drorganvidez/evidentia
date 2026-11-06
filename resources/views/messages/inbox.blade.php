@@ -1,5 +1,5 @@
 {{--
-    Inbox of the people in charge: the threads addressed to their audiences or in which they wrote; the lecturers can
+    Inbox of the people in charge: the threads addressed to their audiences or in which they wrote; the management can
     also read every thread.
 --}}
 @php

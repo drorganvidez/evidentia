@@ -9,6 +9,9 @@
             <x-ui.badge :tone="$thread->isResolved() ? 'accepted' : 'pending'"
                 size="sm">{{ $thread->isResolved() ? 'Resuelto' : 'Abierto' }}</x-ui.badge>
             <x-ui.badge variant="chip">Para {{ $thread->audienceLabel() }}</x-ui.badge>
+            @cannot('takePart', $thread)
+                <x-ui.badge variant="chip" mono>Solo lectura</x-ui.badge>
+            @endcannot
         </x-slot:eyebrow>
         @canany(['resolve', 'reopen'], $thread)
             <x-slot:actions>

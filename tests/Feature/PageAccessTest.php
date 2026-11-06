@@ -258,7 +258,7 @@ class PageAccessTest extends TestCase
             'messages.inbox' => [[], ['COORDINATOR', 'SECRETARY', 'REGISTER_COORDINATOR', ...self::MANAGEMENT]],
             'messages.mine' => [[], self::EVERYONE],
             'messages.create' => [[], self::EVERYONE],
-            'messages.show' => [['thread' => 'thread'], ['STUDENT', 'COORDINATOR', 'LECTURE']],
+            'messages.show' => [['thread' => 'thread'], ['STUDENT', 'COORDINATOR', 'PRESIDENT', 'LECTURE']],
         ];
     }
 

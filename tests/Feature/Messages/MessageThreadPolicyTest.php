@@ -26,7 +26,8 @@ class MessageThreadPolicyTest extends TestCase
             'profesor' => ['view' => true, 'reply' => true, 'resolve' => true, 'reopen' => false],
             'estudiante' => ['view' => false, 'reply' => false, 'resolve' => false, 'reopen' => false],
             'secretario' => ['view' => false, 'reply' => false, 'resolve' => false, 'reopen' => false],
-            'presidente' => ['view' => false, 'reply' => false, 'resolve' => false, 'reopen' => false],
+            // the president reads every thread, only reading
+            'presidente' => ['view' => true, 'reply' => false, 'resolve' => false, 'reopen' => false, 'takePart' => false],
         ];
         foreach ($expected as $who => $abilities) {
             foreach ($abilities as $ability => $allowed) {
@@ -36,7 +37,7 @@ class MessageThreadPolicyTest extends TestCase
 
         // resolved → nobody answers; author, audience and lecturers reopen
         $thread->update(['state' => 'resolved']);
-        foreach (['companero' => true, 'coordinador' => true, 'profesor' => true, 'estudiante' => false] as $who => $allowed) {
+        foreach (['companero' => true, 'coordinador' => true, 'profesor' => true, 'estudiante' => false, 'presidente' => false] as $who => $allowed) {
             $this->assertFalse($can($who, 'reply', $thread), "$who responde resuelto");
             $this->assertFalse($can($who, 'resolve', $thread), "$who resuelve resuelto");
             $this->assertSame($allowed, $can($who, 'reopen', $thread), "$who reabre");
@@ -45,6 +46,7 @@ class MessageThreadPolicyTest extends TestCase
         // the presidency includes the lecturers
         $president = MessageThread::where('subject', 'Propuesta para el cierre')->sole();
         $this->assertTrue($can('presidente', 'resolve', $president));
+        $this->assertTrue($can('presidente', 'takePart', $president));
         $this->assertTrue($can('profesor', 'resolve', $president));
         $this->assertFalse($can('coordinador', 'view', $president));
     }

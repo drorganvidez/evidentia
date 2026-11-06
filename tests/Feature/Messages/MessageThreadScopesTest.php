@@ -122,13 +122,13 @@ class MessageThreadScopesTest extends TestCase
         $this->assertSame(['luisToPrograma', 'luisToPresidency', 'juanToLecturers'], $this->names(MessageThread::inbox($this->u['lecturer'])));
     }
 
-    public function test_the_lecturers_see_every_thread_and_the_rest_only_theirs(): void
+    public function test_the_lecturers_and_the_president_see_every_thread_and_the_rest_only_theirs(): void
     {
         $this->assertCount(5, MessageThread::visibleTo($this->u['lecturer'])->get());
+        $this->assertCount(5, MessageThread::visibleTo($this->u['president'])->get());
         $this->assertSame(['juanToLogistica', 'juanToLecturers'], $this->names(MessageThread::visibleTo($this->u['juan'])));
         $this->assertSame(['luisToPrograma', 'luisToPresidency'], $this->names(MessageThread::visibleTo($this->u['luis'])));
         $this->assertSame(['juanToLogistica', 'coordinatorToSecretary'], $this->names(MessageThread::visibleTo($this->u['coordinator'])));
-        $this->assertSame(['luisToPresidency'], $this->names(MessageThread::visibleTo($this->u['president'])));
     }
 
     public function test_the_search_never_widens_what_one_sees(): void

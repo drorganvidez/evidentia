@@ -46,6 +46,25 @@ test.describe('Mensajes', () => {
         await audit(page, ui);
     });
 
+    test('el presidente lee todos los hilos en solo lectura', async ({ page, ui }) => {
+        await signIn(page, 'presidente');
+        await page.goto('/messages?to=all&state=all');
+
+        const table = page.getByRole('table', { name: 'Mensajes recibidos' });
+        await expect(page.getByLabel('Dirigido a')).toHaveValue('all');
+        await table
+            .getByRole('link', { name: 'Cambio de turno en el registro', exact: true })
+            .click();
+
+        await expect(
+            page.getByRole('heading', { level: 1, name: 'Cambio de turno en el registro' }),
+        ).toBeVisible();
+        await expect(page.getByText('Solo lectura')).toBeVisible();
+        await expect(page.getByLabel('Tu respuesta')).toHaveCount(0);
+        await expect(page.getByRole('button', { name: 'Marcar como resuelto' })).toHaveCount(0);
+        await audit(page, ui);
+    });
+
     test('la estudiante ve sus hilos y la respuesta sin leer', async ({ page, ui }) => {
         await signIn(page, 'estudiante');
         await page.goto('/messages/mine');

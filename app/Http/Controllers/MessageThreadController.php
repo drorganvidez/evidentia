@@ -30,7 +30,8 @@ class MessageThreadController extends Controller
     {
         $me = $request->user();
         $audiences = Audience::of($me)->map(fn (Audience $audience) => ['value' => $audience->key(), 'label' => $audience->label()]);
-        if ($me->hasRole('LECTURE')) {
+        // The management reads every thread; the president without taking part in those of others (MessageThreadPolicy)
+        if (Roles::isManager($me)) {
             $audiences->push(['value' => 'all', 'label' => 'Todos los hilos']);
         }
 

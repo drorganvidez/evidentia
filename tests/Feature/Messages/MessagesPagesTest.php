@@ -5,6 +5,7 @@ namespace Tests\Feature\Messages;
 use App\Models\Committee;
 use App\Models\Evidence;
 use App\Models\MeetingRequest;
+use App\Models\Message;
 use App\Models\MessageThread;
 use Tests\Feature\Screens\Management\ScreenTestCase;
 
@@ -140,7 +141,28 @@ class MessagesPagesTest extends ScreenTestCase
 
         $this->screen('coordinador', route('messages.show', $thread))->assertSee('Marcar como resuelto');
         $this->actingAs($this->person('companero'))->get(route('messages.show', $thread))->assertForbidden();
-        $this->actingAs($this->person('presidente'))->get(route('messages.show', $thread))->assertForbidden();
+        $this->screen('presidente', route('messages.show', $thread))
+            ->assertSee('Solo lectura')
+            ->assertSee('¿Cuento también el desmontaje del photocall o solo el montaje?')
+            ->assertDontSee('Tu respuesta')
+            ->assertDontSee('Marcar como resuelto')
+            ->assertDontSee('action="'.route('messages.reopen', $thread).'"', false);
+    }
+
+    public function test_the_president_reads_every_thread_without_taking_part_in_those_of_others(): void
+    {
+        $thread = $this->thread('Cambio de turno en el registro');
+        $president = $this->person('presidente');
+
+        $this->screen('presidente', route('messages.inbox', ['to' => 'all', 'state' => 'all']))
+            ->assertSee('Todos los hilos')
+            ->assertSee('Cambio de turno en el registro');
+
+        $this->actingAs($president)->post(route('messages.reply', $thread), ['body' => 'Me meto'])->assertForbidden();
+        $this->actingAs($president)->post(route('messages.resolve', $thread))->assertForbidden();
+        $thread->update(['state' => 'resolved']);
+        $this->actingAs($president)->post(route('messages.reopen', $thread))->assertForbidden();
+        $this->assertFalse(Message::where('message_thread_id', $thread->id)->where('body', 'Me meto')->exists());
     }
 
     public function test_reply_resolve_and_reopen(): void

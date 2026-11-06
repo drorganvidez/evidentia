@@ -100,10 +100,10 @@ class MessageThread extends Model
         $query->whereHas('messages', fn (Builder $messages) => $messages->where('user_id', $user->getKey()));
     }
 
-    /** The lecturers see every thread; the rest their own, the ones addressed to them and the ones they wrote in. */
+    /** The lecturers and the president see every thread; the rest their own, the ones addressed to them and the ones they wrote in. */
     public function scopeVisibleTo(Builder $query, User $user): void
     {
-        if ($user->hasRole('LECTURE')) {
+        if ($user->hasRole('LECTURE') || $user->hasRole('PRESIDENT')) {
             return;
         }
 
