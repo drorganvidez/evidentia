@@ -112,7 +112,7 @@ Adaptaciones aprendidas en los lotes. `$root` y `$refs` se resuelven desde el el
 | `home/main`, `auth/*`, `sign/*`, `block`, errores | `x-layout.public` + `card` + `form` + `field` + `choice switch` + `button block` + `count-chip` + `dl` + `alert` + `empty` |
 | DataTables y tablas secundarias | `table` (+ `tabs`, `pagination`, `time`, `hours`, `badge`, `button icon-only`) |
 | `x-evidencestatus`, `x-attendeestatus`, `x-eventstatus`, `x-evidencecommittee`, `x-meetingcommittee`, `x-roles` | `evidence-status`, `attendee-status`, `event-status`, `committee-chip`, `badge variant="chip"` |
-| `x-input`, selects, textareas, pares horas y minutos | `field` (fieldset y legend compuestos en la vista) |
+| `x-input`, selects y selectpicker de una opción, textareas, pares horas y minutos | `field` (el select con buscador; fieldset y legend compuestos en la vista) |
 | dual listbox, select2, `getLista` | `picker` con listas predeterminadas |
 | iCheck, form-check, «Recordarme» | `choice`, `checkbox-group` |
 | bootstrap-select de tipo y modalidad | `segmented` |
