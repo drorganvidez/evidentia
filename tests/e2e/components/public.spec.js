@@ -15,6 +15,28 @@ async function settle(page) {
     );
 }
 
+/**
+ * Records the text of the first figure on every frame from the moment the document is parsed (Alpine has
+ * started by then), so the trail does not depend on how long the page takes to load.
+ */
+async function recordFirstFigure(page) {
+    await page.addInitScript(() => {
+        window.figureTrail = [];
+        document.addEventListener('DOMContentLoaded', () => {
+            const figure = document.querySelector('[x-data="countUp"]');
+            const read = () => {
+                window.figureTrail.push(figure.textContent.trim());
+
+                if (window.figureTrail.length < 30) {
+                    requestAnimationFrame(read);
+                }
+            };
+
+            read();
+        });
+    });
+}
+
 test.describe('Página de acceso', () => {
     test('se abre con la entrada ligera, bajo la CSP y sin errores', async ({ page, ui }) => {
         const response = await page.goto('/_ui/public');
@@ -92,15 +114,29 @@ test.describe('Página de acceso', () => {
         });
     }
 
-    test('las cifras llegan a su valor', async ({ page }) => {
+    test('las cifras cuentan desde cero y llegan a su valor en menos de 2 s', async ({ page }) => {
+        await recordFirstFigure(page);
         await page.goto('/_ui/public');
 
         const figures = page.locator('[x-data="countUp"]');
 
         await expect(figures).toHaveCount(3);
-        await expect(figures.nth(0)).toHaveText('1.204');
-        await expect(figures.nth(1)).toHaveText('312');
-        await expect(figures.nth(2)).toHaveText('10,5');
+        await expect(figures.nth(0)).toHaveText('1.204', { timeout: 2000 });
+        await expect(figures.nth(1)).toHaveText('312', { timeout: 2000 });
+        await expect(figures.nth(2)).toHaveText('10,5', { timeout: 2000 });
+        expect((await page.evaluate(() => window.figureTrail))[0], 'Primera cifra').toBe('0');
+    });
+
+    test('con movimiento reducido las cifras muestran su valor final desde el principio', async ({
+        page,
+    }) => {
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await recordFirstFigure(page);
+        await page.goto('/_ui/public');
+
+        await expect.poll(() => page.evaluate(() => window.figureTrail.length)).toBe(30);
+        expect(new Set(await page.evaluate(() => window.figureTrail))).toEqual(new Set(['1.204']));
+        await expect(page.locator('[x-data="countUp"]').nth(2)).toHaveText('10,5');
     });
 
     test('en el teléfono es una sola columna sin desbordar', async ({ page, ui, isMobile }) => {
