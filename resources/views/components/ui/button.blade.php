@@ -46,7 +46,7 @@
         $variantClasses,
         $sizeClasses,
         'w-full justify-center' => $block,
-        'opacity-55 group-hover:opacity-100 focus-visible:opacity-100' => $dim,
+        'opacity-70 group-hover:opacity-100 focus-visible:opacity-100' => $dim,
     ]);
 @endphp
 <{{ $tag }} {{ $attrs }}

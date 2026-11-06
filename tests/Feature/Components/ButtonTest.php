@@ -143,8 +143,9 @@ class ButtonTest extends ComponentTestCase
         $end = $this->render('<x-ui.button icon="arrow-right" icon-end>Siguiente</x-ui.button>');
 
         $this->assertStringContainsString('w-full justify-center', $block);
-        $this->assertStringContainsString('opacity-55 group-hover:opacity-100 focus-visible:opacity-100', $dim);
-        $this->assertStringNotContainsString('opacity-55', $block);
+        // 70 % keeps the icon at 3:1 over the glass at rest (WCAG 1.4.11); hover and focus bring it to full
+        $this->assertStringContainsString('opacity-70 group-hover:opacity-100 focus-visible:opacity-100', $dim);
+        $this->assertStringNotContainsString('opacity-70', $block);
 
         $this->assertLessThan(strpos($start, 'Nueva'), strpos($start, '<svg'));
         $this->assertGreaterThan(strpos($end, 'Siguiente'), strpos($end, '<svg'));
