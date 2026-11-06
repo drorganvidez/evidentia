@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityAction;
+use App\Facades\Activity;
 use App\Mail\PasswordReset;
 use App\Models\Token;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Auth\Events\PasswordReset as PasswordResetEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -63,9 +66,13 @@ class PasswordResetController extends Controller
             try {
                 Mail::to($user)->send(new PasswordReset($token, $user));
                 \Log::info("Correo enviado a {$user->email}");
+                $sent = true;
             } catch (\Exception $e) {
                 \Log::error('Fallo al enviar correo: '.$e->getMessage());
+                $sent = false;
             }
+
+            Activity::system(ActivityAction::PasswordResetRequested, $user, $user, details: ['mail_sent' => $sent]);
 
         }
 
@@ -111,6 +118,8 @@ class PasswordResetController extends Controller
                 // el token deja de ser válido
                 $token_entity->used = true;
                 $token_entity->save();
+
+                event(new PasswordResetEvent($user));
             });
 
             return redirect()->route('login')->with('success', 'Contraseña cambiada con éxito. Ahora puedes iniciar sesión.');

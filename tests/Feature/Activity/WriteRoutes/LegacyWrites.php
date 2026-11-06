@@ -2,6 +2,10 @@
 
 namespace Tests\Feature\Activity\WriteRoutes;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use Tests\Feature\Activity\AuthenticationActivityTest;
+
 /**
  * Write routes of the screens that existed before the activity log. Each route is in exactly one of the four lists.
  */
@@ -14,7 +18,25 @@ final class LegacyWrites
      */
     public static function writes(): array
     {
-        return [];
+        return [
+            'password.reset_p' => [
+                'role' => 'GUEST',
+                'method' => 'POST',
+                'setup' => fn () => Mail::fake(),
+                'uri' => fn (array $ids) => route('password.reset_p'),
+                'data' => fn (array $ids) => ['email' => User::find($ids['student'])->email],
+                'expect' => ['password_reset_requested'],
+                'acting_role' => null,
+            ],
+            'password.update_p' => [
+                'role' => 'GUEST',
+                'method' => 'POST',
+                'uri' => fn (array $ids) => route('password.update_p', ['token' => $ids['token']]),
+                'data' => fn (array $ids) => ['password' => 'nueva-clave', 'password_confirmation' => 'nueva-clave'],
+                'expect' => ['password_reset'],
+                'acting_role' => null,
+            ],
+        ];
     }
 
     /** @return array<string, string> route => why it does not annotate */
@@ -41,17 +63,16 @@ final class LegacyWrites
     /** @return array<string, string> route => test class that checks its annotation */
     public static function coveredElsewhere(): array
     {
-        return [];
+        return [
+            'POST login' => AuthenticationActivityTest::class,
+            'logout' => AuthenticationActivityTest::class,
+        ];
     }
 
     /** @return array<string, string> route => batch that will annotate it */
     public static function pending(): array
     {
         return [
-            'POST login' => 'A',
-            'logout' => 'A',
-            'password.reset_p' => 'A',
-            'password.update_p' => 'A',
             'evidence.draft' => 'A',
             'evidence.publish' => 'A',
             'evidence.draft.edit' => 'A',
