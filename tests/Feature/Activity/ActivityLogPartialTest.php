@@ -3,6 +3,7 @@
 namespace Tests\Feature\Activity;
 
 use App\Models\ActivityLog;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\File;
@@ -43,6 +44,33 @@ class ActivityLogPartialTest extends TestCase
         $this->assertStringContainsString('Sistema', $html);
         $this->assertStringContainsString('Correo no enviado', $html);
         $this->assertStringNotContainsString('Sin anotaciones', $html);
+    }
+
+    public function test_a_log_of_many_subjects_names_each_one_and_links_the_ones_the_viewer_opens(): void
+    {
+        $lecturer = User::factory()->create();
+        $lecturer->roles()->attach(Role::forceCreate(['rol' => 'LECTURE', 'slug' => 'lecture']));
+        $student = User::factory()->create(['name' => 'Lucía', 'surname' => 'Pérez']);
+        $entries = collect([
+            ActivityLog::create([
+                'created_at' => now(), 'action' => 'profile.edited', 'user_id' => $student->id,
+                'subject_type' => 'user', 'subject_id' => $student->id, 'subject_title' => 'Lucía Pérez',
+            ]),
+            ActivityLog::create([
+                'created_at' => now(), 'action' => 'evidence.deleted', 'user_id' => $student->id,
+                'subject_type' => 'evidence', 'subject_id' => 999, 'subject_title' => 'Montaje <b>borrado</b>',
+            ]),
+        ]);
+
+        $html = view('activity.partials.log', ['entries' => $entries, 'viewer' => $lecturer, 'label' => 'Actividad', 'subjects' => true])->render();
+
+        $this->assertStringContainsString('href="'.route('profiles.view', ['id' => $student->id]).'"', $html);
+        $this->assertStringContainsString('Montaje &lt;b&gt;borrado&lt;/b&gt;', $html, 'A subject that no longer exists stays as escaped text');
+        $this->assertStringNotContainsString('<b>borrado</b>', $html);
+
+        $plain = view('activity.partials.log', ['entries' => $entries, 'viewer' => $lecturer])->render();
+
+        $this->assertStringNotContainsString('Montaje', $plain, 'Without subjects a history of one subject does not repeat it');
     }
 
     public function test_an_empty_history_says_so(): void

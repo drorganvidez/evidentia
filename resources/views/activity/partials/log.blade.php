@@ -1,7 +1,9 @@
 {{--
     Annotations of the activity log as a timeline: the histories of an evidence, a minutes, a meeting request and a thread.
     @include('activity.partials.log', ['entries' => $entries, 'viewer' => $me, 'label' => 'Historial de la evidencia'])
-    entries is a collection of ActivityLog with their user loaded; the empty state replaces the list.
+    @include('activity.partials.log', ['entries' => $entries, 'viewer' => $me, 'label' => 'Actividad', 'subjects' => true])
+    entries is a collection of ActivityLog with their user loaded; the empty state replaces the list. subjects adds the
+    title of what each annotation is about, linked to its page when the viewer can open it (a log of many subjects).
 --}}
 @inject('presenter', 'App\Services\Activity\ActivityPresenter')
 @if ($entries->isEmpty())
@@ -17,6 +19,16 @@
                         por {{ $presenter->actorName($entry) }} {{ $presenter->roleLine($entry) }}
                     @endif
                 </span>
+                @if (!empty($subjects) && filled($entry->subject_title))
+                    <span class="block">
+                        @if ($url = $presenter->subjectUrl($entry, $viewer))
+                            <a href="{{ $url }}"
+                                class="font-medium text-brand-ink pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center">{{ $entry->subject_title }}</a>
+                        @else
+                            {{ $entry->subject_title }}
+                        @endif
+                    </span>
+                @endif
                 @if ($version = $presenter->version($entry))
                     <span class="block">Versión {{ $version }}</span>
                 @endif
