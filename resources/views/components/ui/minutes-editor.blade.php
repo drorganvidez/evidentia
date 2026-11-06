@@ -87,8 +87,9 @@
                         x-bind:aria-describedby="describedBy(i, 'title')"
                         class="{{ $control }} aria-[invalid=true]:border-rejected">
                 </label>
+                {{-- No alert: the status says how many points to check and the focused title reads its error --}}
                 <span x-bind:id="errorId(i, 'title')" x-show="point.errors.title" x-text="point.errors.title"
-                    role="alert" class="text-sm font-medium text-rejected-ink"></span>
+                    class="text-sm font-medium text-rejected-ink"></span>
             </div>
             <div class="grid grid-cols-[minmax(0,1fr)] gap-4 md:grid-cols-[minmax(0,1fr)_8rem]">
                 <label class="grid gap-1.5">

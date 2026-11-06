@@ -64,9 +64,11 @@ test.describe('Editor de actas', () => {
         await expect(page).not.toHaveURL(/points_json=/);
         await expect(title(third)).toBeFocused();
         await expect(title(third)).toHaveAttribute('aria-invalid', 'true');
-        await expect(third.getByRole('alert')).toHaveText('El título es obligatorio');
+        await expect(third.getByText('El título es obligatorio')).toBeVisible();
         await expect(title(third)).toHaveAccessibleDescription('El título es obligatorio');
+        // One announcement: the status, plus the description of the field that takes the focus
         await expect(editor.locator('p[role="status"]')).toHaveText('Revisa 1 punto');
+        await expect(editor.getByRole('alert')).toHaveCount(0);
         await expect(title(points.nth(0))).not.toHaveAttribute('aria-invalid', 'true');
 
         // The editor cancels the submit before the busy state of x-ui.form: nothing stays locked
@@ -78,7 +80,7 @@ test.describe('Editor de actas', () => {
         // Typing a title clears the error and the second submit goes through
         await title(third).fill('Cierre');
         await expect(title(third)).not.toHaveAttribute('aria-invalid', 'true');
-        await expect(third.getByRole('alert')).toHaveCount(0);
+        await expect(third.getByText('El título es obligatorio')).toBeHidden();
 
         await save.click();
         await expect(page).toHaveURL(/points_json=/);

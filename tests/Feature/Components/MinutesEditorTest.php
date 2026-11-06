@@ -63,7 +63,7 @@ class MinutesEditorTest extends ComponentTestCase
         $this->assertStringContainsString('x-bind:aria-describedby="describedBy(i, \'title\')"', $html);
         $this->assertStringContainsString('aria-[invalid=true]:border-rejected', $html);
         $this->assertStringContainsString('x-bind:id="errorId(i, \'title\')" x-show="point.errors.title" x-text="point.errors.title"', $html);
-        $this->assertStringContainsString('role="alert"', $html);
+        $this->assertStringNotContainsString('role="alert"', $html, 'The status and the focused field announce the errors once');
         $this->assertStringContainsString('<textarea x-model="point.description" rows="3" data-field="description"', $html);
         $this->assertStringContainsString('field-sizing-content', $html);
         $this->assertStringContainsString('<input type="number" min="0" inputmode="numeric" x-model.number="point.duration"', $html);
