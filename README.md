@@ -115,6 +115,8 @@ docker compose -f docker/docker-compose.dev.yml exec app vendor/bin/pint
 docker compose -f docker/docker-compose.dev.yml exec app vendor/bin/phpunit
 ```
 
+The whole suite runs in one process; `phpunit.xml` raises its memory limit to 512 MB because the spreadsheet exports need more than the default 128 MB.
+
 ### Front end
 
 ```
@@ -127,7 +129,7 @@ The views that still use the old layout are listed in `.bladeignore`; remove a l
 
 ### End to end
 
-Playwright drives the app in Chromium, desktop and mobile. `playwright.config.js` starts `php artisan serve` unless something already answers at `APP_URL` (default `http://127.0.0.1:8000`).
+Playwright drives the app in Chromium, desktop and mobile. `playwright.config.js` starts `php artisan serve` with four PHP workers unless something already answers at `APP_URL` (default `http://127.0.0.1:8000`). The tests run one at a time by default, because the catalogue at `/_ui` is a heavy page and a navigation can wait behind the accessibility audit of another browser; set `PW_WORKERS` to run more in parallel on a roomy machine.
 
 ```
 npm run test:e2e
