@@ -12,6 +12,9 @@ test.describe('Formularios', () => {
         const section = ui.section('form');
         const summary = section.getByRole('group', { name: 'Revisa el formulario' });
 
+        // Nothing takes the focus on load
+        expect(await page.evaluate(() => document.activeElement === document.body)).toBe(true);
+
         await expect(summary).toBeVisible();
         await expect(summary).toHaveAttribute('tabindex', '-1');
         // The catalogue renders the summary without its autofocus (several forms on one page); the only
