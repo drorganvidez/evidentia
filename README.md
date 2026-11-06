@@ -115,7 +115,7 @@ docker compose -f docker/docker-compose.dev.yml exec app vendor/bin/pint
 docker compose -f docker/docker-compose.dev.yml exec app vendor/bin/phpunit
 ```
 
-The whole suite runs in one process; `phpunit.xml` raises its memory limit to 512 MB because the spreadsheet exports need more than the default 128 MB.
+`php artisan test --parallel` runs the suite in several processes (paratest), about three times faster. Run in one process, `phpunit.xml` raises the memory limit to 512 MB because the spreadsheet exports need more than the default 128 MB.
 
 ### Front end
 
