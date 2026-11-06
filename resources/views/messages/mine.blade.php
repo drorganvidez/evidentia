@@ -29,14 +29,14 @@
     </x-ui.page-header>
 
     <x-ui.table caption="Mensajes que has escrito" density="compact" :paginator="$threads"
-        pagination-label="Paginación de mis mensajes" :columns="[
+        pagination-label="Paginación de mis mensajes" :columns="$sort->columns([
             ['label' => 'Asunto', 'key' => 'subject'],
             ['label' => 'Para', 'key' => 'audience', 'hide' => true],
             ['label' => 'Sobre', 'key' => 'about', 'hide' => true],
             ['label' => 'Estado', 'key' => 'state'],
             ['label' => 'Última respuesta', 'key' => 'last'],
             ['label' => 'Abrir', 'srOnly' => true],
-        ]">
+        ])">
         <x-slot:toolbar>
             <x-ui.tabs label="Filtrar por estado" :items="$tabs" />
         </x-slot:toolbar>

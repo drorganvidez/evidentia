@@ -12,6 +12,7 @@ use App\Services\Activity\ActivityAccess;
 use App\Services\Activity\SubjectInfo;
 use App\Services\Messaging\Audience;
 use App\Services\Messaging\Messaging;
+use App\Support\ListSort;
 use App\Support\Roles;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -28,6 +29,19 @@ class MessageThreadController extends Controller
     private const STATES = ['open', 'resolved', 'all'];
 
     public function __construct(private Messaging $messaging) {}
+
+    /** Order of a table of threads, the last answered first by default */
+    private function threadSort(Request $request): ListSort
+    {
+        return ListSort::from($request, [
+            'subject' => 'subject',
+            'author' => ['author.surname', 'author.name', 'author_name'],
+            'audience' => ['recipient_role', 'committee.name'],
+            'about' => 'about_title',
+            'state' => ListSort::rank('state', ['open', 'resolved']),
+            'last' => ListSort::desc('last_message_at'),
+        ], 'last');
+    }
 
     public function inbox(Request $request)
     {
@@ -53,15 +67,15 @@ class MessageThreadController extends Controller
             ->when($committee !== null, fn (Builder $query) => $query->where('committee_id', $committee))
             ->when($q !== '', fn (Builder $query) => $query->search($q));
 
-        $threads = $this->paginateList($base()
+        $sort = $this->threadSort($request);
+        $threads = $this->paginateList($sort->apply($base()
             ->when($state !== 'all', fn (Builder $query) => $query->where('state', $state))
-            ->with(['author', 'lastMessage', 'committee'])
-            ->latest('last_message_at')
-            ->latest('id'), $request);
+            ->with(['author', 'lastMessage', 'committee'])), $request);
 
         return view('messages.inbox', [
             'me' => $me,
             'threads' => $threads,
+            'sort' => $sort,
             'state' => $state,
             'to' => $to,
             'committee' => $committee,
@@ -80,15 +94,15 @@ class MessageThreadController extends Controller
         $me = $request->user();
         $state = in_array($request->query('state'), self::STATES, true) ? $request->query('state') : 'all';
         $base = fn (): Builder => MessageThread::query()->where('author_id', $me->id);
+        $sort = $this->threadSort($request);
 
         return view('messages.mine', [
             'me' => $me,
             'state' => $state,
-            'threads' => $this->paginateList($base()
+            'sort' => $sort,
+            'threads' => $this->paginateList($sort->apply($base()
                 ->when($state !== 'all', fn (Builder $query) => $query->where('state', $state))
-                ->with(['lastMessage', 'committee'])
-                ->latest('last_message_at')
-                ->latest('id'), $request),
+                ->with(['lastMessage', 'committee'])), $request),
             'counts' => ['open' => $base()->open()->count(), 'resolved' => $base()->resolved()->count(), 'all' => $base()->count()],
             'unread' => MessageThread::unreadMineCount($me),
         ]);

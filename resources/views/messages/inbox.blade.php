@@ -40,7 +40,7 @@
     </x-ui.filter-bar>
 
     <x-ui.table caption="Mensajes recibidos" density="compact" :paginator="$threads"
-        pagination-label="Paginación de los mensajes" :columns="[
+        pagination-label="Paginación de los mensajes" :columns="$sort->columns([
             ['label' => 'Asunto', 'key' => 'subject'],
             ['label' => 'De', 'key' => 'author'],
             ['label' => 'Para', 'key' => 'audience', 'hide' => true],
@@ -48,7 +48,7 @@
             ['label' => 'Estado', 'key' => 'state'],
             ['label' => 'Última respuesta', 'key' => 'last'],
             ['label' => 'Abrir', 'srOnly' => true],
-        ]">
+        ])">
         <x-slot:toolbar>
             <x-ui.tabs label="Filtrar por estado" :items="$tabs" />
         </x-slot:toolbar>
