@@ -34,6 +34,20 @@ class FilterBarTest extends ComponentTestCase
         $this->assertCspSafe($html);
     }
 
+    public function test_keep_resends_the_rest_of_the_query_string_as_hidden_fields(): void
+    {
+        $html = $this->render('<x-ui.filter-bar action="/lista" :keep="$keep"><p>Campos</p></x-ui.filter-bar>', [
+            'keep' => ['estado' => 'pendientes', 'q' => '<b>montaje</b>', 'type' => ['a', 'b']],
+        ]);
+
+        $this->assertStringContainsString('<input type="hidden" name="estado" value="pendientes">', $html);
+        $this->assertStringContainsString('<input type="hidden" name="q" value="&lt;b&gt;montaje&lt;/b&gt;">', $html);
+        $this->assertStringContainsString('<input type="hidden" name="type[0]" value="a">', $html);
+        $this->assertStringContainsString('<input type="hidden" name="type[1]" value="b">', $html);
+        $this->assertStringNotContainsString('type="hidden"', $this->render('<x-ui.filter-bar action="/lista"><p>Campos</p></x-ui.filter-bar>'));
+        $this->assertCspSafe($html);
+    }
+
     public function test_open_counts_the_active_filters_and_offers_reset_and_download(): void
     {
         $html = $this->render(<<<'BLADE'

@@ -4,6 +4,8 @@
         :reset-href="route('activity.index')" :download="['href' => route('activity.export'), 'label' => 'Descargar CSV']">
         <x-ui.field name="type" label="Tipo" type="select" :options="$types" />
     </x-ui.filter-bar>
+    keep resends the rest of the query string of a paginated list (search, tab, order, rows per page) as hidden
+    fields: :keep="ListPage::query(['comite', 'desde', 'hasta'])", without the keys of the bar's own fields.
     The fields fill a grid of two columns from md and four from lg. The download button submits the same filters to
     download.href (so that url must not carry a query string) and keeps the form busy until the file arrives.
 --}}
@@ -15,6 +17,7 @@
     'resetHref' => null,
     'download' => null,
     'id' => null,
+    'keep' => [],
 ])
 @php
     throw_if(blank($action), InvalidArgumentException::class, 'The filter bar needs an action.');
@@ -37,6 +40,9 @@
     </summary>
     <x-ui.form method="get" :action="$action" :summary="false" :download="$downloadHref !== null" busy-label="Aplicando"
         class="border-t border-rule p-5">
+        @foreach (\App\Support\ListPage::fields($keep) as $name => $value)
+            <input type="hidden" name="{{ $name }}" value="{{ $value }}">
+        @endforeach
         <div class="grid grid-cols-[minmax(0,1fr)] gap-4 md:grid-cols-2 lg:grid-cols-4">{{ $slot }}</div>
         <div class="flex flex-col gap-3 *:justify-center md:flex-row md:items-center">
             <x-ui.button type="submit" variant="primary" size="sm">Aplicar</x-ui.button>
