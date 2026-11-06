@@ -9,8 +9,6 @@ resources/views/importexport/**
 resources/views/integrity/**
 resources/views/layouts/**
 resources/views/manage/committee_list.blade.php
-resources/views/manage/evidence_list.blade.php
-resources/views/manage/meeting_list.blade.php
 resources/views/meeting/**
 resources/views/message/**
 resources/views/profile/**

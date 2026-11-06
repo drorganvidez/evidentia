@@ -63,13 +63,21 @@ class ManagementController extends Controller
             ['users' => $filtered_users, 'roles' => $roles, 'filters' => $filters, 'sort' => $sort, 'dir' => $dir]);
     }
 
-    public function evidence_list()
+    public function evidence_list(Request $request)
     {
 
         $evidences = Evidence::evidencesNotDraft();
 
+        // filtro por estado, en la URL
+        $states = ['pendientes' => 'PENDING', 'aceptadas' => 'ACCEPTED', 'rechazadas' => 'REJECTED'];
+        $state = array_key_exists((string) $request->query('estado'), $states) ? $request->query('estado') : null;
+        $counts = $evidences->countBy('status');
+        if ($state !== null) {
+            $evidences = $evidences->where('status', $states[$state])->values();
+        }
+
         return view('manage.evidence_list',
-            ['evidences' => $evidences]);
+            ['evidences' => $evidences, 'state' => $state, 'counts' => $counts]);
     }
 
     public function meeting_list()
