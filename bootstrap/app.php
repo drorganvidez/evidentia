@@ -3,6 +3,7 @@
 use App\Http\Controllers\CspReportController;
 use App\Http\Middleware\CheckBlock;
 use App\Http\Middleware\ContentSecurityPolicy;
+use App\Services\Errors\ErrorRecorder;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -43,5 +44,10 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // Every reported error (the 500s; Laravel leaves 404, validation and authentication out) carries who and
+        // where in the log, and is kept, grouped and announced to the lecturers by the error recorder
+        $exceptions->context(fn () => app(ErrorRecorder::class)->context());
+        $exceptions->report(function (Throwable $exception): void {
+            app(ErrorRecorder::class)->record($exception);
+        });
     })->create();

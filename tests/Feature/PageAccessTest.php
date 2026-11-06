@@ -11,6 +11,7 @@ use App\Models\Coordinator;
 use App\Models\DefaultList;
 use App\Models\Diary;
 use App\Models\DiaryPoint;
+use App\Models\ErrorReport;
 use App\Models\Event;
 use App\Models\Evidence;
 use App\Models\File;
@@ -120,6 +121,10 @@ class PageAccessTest extends TestCase
 
         $event = Event::forceCreate(['name' => 'Charla IA', 'id_eventbrite' => '111', 'hours' => 2]);
         $attendee = Attendee::forceCreate(['event_id' => $event->id, 'user_id' => $student->id, 'status' => 'Checked In']);
+        $errorReport = ErrorReport::create([
+            'fingerprint' => sha1('demo'), 'exception' => \RuntimeException::class, 'message' => 'Fallo de prueba',
+            'occurrences' => 1, 'first_seen_at' => now(), 'last_seen_at' => now(),
+        ]);
         $manualEvent = Event::forceCreate(['name' => 'Taller de Git', 'hours' => 1.5, 'start_datetime' => now()->subWeek(), 'end_datetime' => now()->subWeek()->addMinutes(90)]);
 
         $token = Token::create(['token' => str_repeat('a', 60), 'used' => false, 'valid_until_timestamp' => now()->addDay(), 'user_id' => $student->id]);
@@ -127,7 +132,7 @@ class PageAccessTest extends TestCase
         $this->ids = [
             'evidence' => $evidence->id, 'draft' => $draft->id, 'proof' => $proof->id, 'student' => $student->id,
             'request' => $request->id, 'sheet' => $sheet->id, 'minutes' => $minutes->id, 'bonus' => $bonus->id,
-            'list' => $list->id, 'attendee' => $attendee->id, 'manualEvent' => $manualEvent->id, 'token' => $token->token,
+            'list' => $list->id, 'attendee' => $attendee->id, 'manualEvent' => $manualEvent->id, 'errorReport' => $errorReport->id, 'token' => $token->token,
         ];
     }
 
@@ -195,6 +200,8 @@ class PageAccessTest extends TestCase
             'registercoordinator.attendee.export' => [[], ['REGISTER_COORDINATOR']],
             'attendee.create' => [[], ['REGISTER_COORDINATOR']],
             'attendee.edit' => [['id' => 'attendee'], ['REGISTER_COORDINATOR']],
+            'lecture.errors' => [[], ['LECTURE']],
+            'lecture.errors.show' => [['id' => 'errorReport'], ['LECTURE']],
             'registercoordinator.event.create' => [[], ['REGISTER_COORDINATOR']],
             'registercoordinator.event.edit' => [['id' => 'manualEvent'], ['REGISTER_COORDINATOR']],
 

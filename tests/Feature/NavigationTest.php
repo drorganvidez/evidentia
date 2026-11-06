@@ -106,7 +106,7 @@ class NavigationTest extends TestCase
 
         $register = app(Navigation::class)->for($this->user('STUDENT', 'REGISTER_COORDINATOR'), 'attendee.create');
         $this->assertSame(['Eventbrite', 'Eventos', 'Asistencias'], $this->labels($register['nav'])['Asistencias y eventos']);
-        $this->assertSame('Registro de asistencias', $register['deadline']['label']);
+        $this->assertSame('Importación de eventos y asistencias', $register['deadline']['label']);
     }
 
     public function test_management_appears_once_and_the_lecturer_gets_the_lecture_routes(): void
@@ -115,7 +115,7 @@ class NavigationTest extends TestCase
 
         $labels = $this->labels($menu['nav']);
         $this->assertSame(1, collect($menu['nav'])->where('label', 'Gestión')->count());
-        $this->assertSame(['Configurar curso', 'Alumnos', 'Evidencias', 'Reuniones', 'Comités', 'Aleatorizar', 'Integridad', 'Importar', 'Exportar'], $labels['Gestión']);
+        $this->assertSame(['Configurar curso', 'Alumnos', 'Evidencias', 'Reuniones', 'Comités', 'Aleatorizar', 'Integridad', 'Importar', 'Exportar', 'Errores'], $labels['Gestión']);
         $this->assertStringContainsString('/lecture/', collect($menu['nav'])->firstWhere('label', 'Gestión')['items'][0]['href']);
         $this->assertSame(['Inicio', 'Evidencias', 'Alumnos', 'Reuniones', 'Perfil'], array_column($menu['mobileNav'], 'label'));
 
@@ -125,6 +125,7 @@ class NavigationTest extends TestCase
 
         $president = app(Navigation::class)->for($this->user('PRESIDENT'), 'home');
         $this->assertNotContains('Importar', $this->labels($president['nav'])['Gestión']);
+        $this->assertNotContains('Errores', $this->labels($president['nav'])['Gestión'], 'The server errors are for the lecturers');
     }
 
     public function test_the_layout_composes_the_navigation_when_the_page_does_not_pass_it(): void

@@ -7,6 +7,7 @@ use App\Http\Controllers\BonusSecretaryController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\DefaultListSecretaryController;
 use App\Http\Controllers\DownloadController;
+use App\Http\Controllers\ErrorReportController;
 use App\Http\Controllers\EventbriteController;
 use App\Http\Controllers\EvidenceController;
 use App\Http\Controllers\EvidenceCoordinatorController;
@@ -291,6 +292,12 @@ Route::middleware('auth')->group(function () {
         // User management delete all
         Route::post('management/user/delete/all', [ManagementController::class, 'user_management_delete_all'])->name('management.user.delete.all');
 
+        // Server errors, grouped and announced by App\Services\Errors\ErrorRecorder
+        Route::get('lecture/errors', [ErrorReportController::class, 'index'])->name('lecture.errors');
+        Route::get('lecture/errors/{id}', [ErrorReportController::class, 'show'])->whereNumber('id')->name('lecture.errors.show');
+        Route::post('lecture/errors/{id}/resolve', [ErrorReportController::class, 'resolve'])->whereNumber('id')->name('lecture.errors.resolve');
+        Route::post('lecture/errors/{id}/reopen', [ErrorReportController::class, 'reopen'])->whereNumber('id')->name('lecture.errors.reopen');
+
     });
 
     // User management new (open)
@@ -445,6 +452,13 @@ Route::middleware('csp:enforce')->prefix('_ui')->name('ui.')->group(function () 
 
         return response()->noContent();
     })->name('demo.remove');
+
+    // A server error on purpose, to see the error page and the errors screen of the lecturers
+    Route::get('/demo/boom', function () use ($development) {
+        $development();
+
+        throw new RuntimeException('Error de demostración del catálogo');
+    })->name('demo.boom');
 
     // Sink for the forms of the catalogue: they post, put or delete as the real screens will and come back with a notice
     Route::match(['post', 'put', 'patch', 'delete'], '/demo/submit', function () use ($development) {

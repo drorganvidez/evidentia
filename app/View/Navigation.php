@@ -2,8 +2,10 @@
 
 namespace App\View;
 
+use App\Enums\Deadline;
+use App\Models\ErrorReport;
 use App\Models\User;
-use Carbon\Carbon;
+use App\Services\Deadlines;
 
 /**
  * Navigation of the signed-in person for x-layout.app: the groups of the sidebar by role, the bottom bar of the
@@ -12,6 +14,8 @@ use Carbon\Carbon;
  */
 final class Navigation
 {
+    public function __construct(private Deadlines $deadlines) {}
+
     private const SECRETARY_MEETINGS = [
         'secretary.meeting.manage.request.create', 'secretary.meeting.manage.request.list',
         'secretary.meeting.manage.signaturesheet.create', 'secretary.meeting.manage.signaturesheet.list',
@@ -48,7 +52,7 @@ final class Navigation
         // Everybody but a lecturer on their own has evidences, meetings and (students) attendances
         if (array_diff($roles, ['LECTURE']) !== []) {
             $mine = [];
-            if ($this->open(\Config::upload_evidences_timestamp())) {
+            if ($this->deadlines->isOpenForMenu(Deadline::UploadEvidences)) {
                 $mine[] = $item('Nueva evidencia', 'evidence.create', 'plus');
             }
             $mine[] = $item('Mis evidencias', 'evidence.list', 'file-text', ['evidence.view', 'evidence.edit']);
@@ -80,7 +84,7 @@ final class Navigation
 
         if ($has('REGISTER_COORDINATOR')) {
             $items = [];
-            if ($this->open(\Config::attendee_timestamp())) {
+            if ($this->deadlines->isOpenForMenu(Deadline::Attendees)) {
                 $items[] = $item('Eventbrite', 'registercoordinator.token', 'key-round');
             }
             $items[] = $item('Eventos', 'registercoordinator.event.list', 'calendar', ['registercoordinator.event.create', 'registercoordinator.event.edit']);
@@ -105,6 +109,10 @@ final class Navigation
                 $items[] = $item('Importar', 'lecture.import', 'import');
             }
             $items[] = $item('Exportar', "$p.export", 'download');
+            if ($has('LECTURE')) {
+                $open = ErrorReport::open()->count();
+                $items[] = $item('Errores', 'lecture.errors', 'bug', ['lecture.errors.show'], $open > 0 ? ['count' => $open, 'countLabel' => 'abiertos'] : []);
+            }
             $nav[] = ['label' => 'Gestión', 'items' => $items];
         }
 
@@ -162,43 +170,20 @@ final class Navigation
     /** Deadline card of the current section, or the first that concerns the person; null when unset or closed. */
     private function deadline(array $roles, ?string $route): ?array
     {
-        $sections = [
-            'upload' => ['Subida de evidencias', \Config::upload_evidences_timestamp(), 'evidence.list'],
-            'validate' => ['Validación de evidencias', \Config::validate_evidences_timestamp(), 'coordinator.evidence.list.all'],
-            'bonus' => ['Registro de bonos', \Config::bonus_timestamp(), 'secretary.bonus.list'],
-            'meetings' => ['Registro de reuniones', \Config::meetings_timestamp(), 'secretary.meeting.manage'],
-            'attendees' => ['Registro de asistencias', \Config::attendee_timestamp(), 'registercoordinator.attendee.list'],
-        ];
-
         $section = match (true) {
             $route === null => null,
-            str_starts_with($route, 'evidence.'), in_array($route, ['meeting.list', 'attendee.list'], true) => 'upload',
-            str_starts_with($route, 'coordinator.') => 'validate',
-            str_starts_with($route, 'secretary.bonus.') => 'bonus',
-            str_starts_with($route, 'secretary.') => 'meetings',
-            str_starts_with($route, 'registercoordinator.'), in_array($route, ['attendee.create', 'attendee.edit'], true) => 'attendees',
+            str_starts_with($route, 'evidence.'), in_array($route, ['meeting.list', 'attendee.list'], true) => Deadline::UploadEvidences,
+            str_starts_with($route, 'coordinator.') => Deadline::ValidateEvidences,
+            str_starts_with($route, 'secretary.bonus.') => Deadline::Bonus,
+            str_starts_with($route, 'secretary.') => Deadline::Meetings,
+            str_starts_with($route, 'registercoordinator.'), in_array($route, ['attendee.create', 'attendee.edit'], true) => Deadline::Attendees,
             default => null,
         };
-        $section ??= match (true) {
-            array_intersect($roles, ['STUDENT', 'COORDINATOR', 'SECRETARY', 'REGISTER_COORDINATOR', 'PRESIDENT']) !== [] => 'upload',
-            default => null,
-        };
-
-        if ($section === null) {
-            return null;
-        }
-
-        [$label, $closesAt, $href] = $sections[$section];
-
-        return $this->open($closesAt)
-            ? ['label' => $label, 'closesAt' => Carbon::parse($closesAt), 'opensAt' => null, 'href' => route($href)]
+        $section ??= array_intersect($roles, ['STUDENT', 'COORDINATOR', 'SECRETARY', 'REGISTER_COORDINATOR', 'PRESIDENT']) !== []
+            ? Deadline::UploadEvidences
             : null;
-    }
 
-    /** Strict reading for the menu: a deadline without date is not open (as the old menus did). */
-    private function open(mixed $closesAt): bool
-    {
-        return $closesAt !== null && Carbon::now()->lt(Carbon::parse($closesAt));
+        return $section === null ? null : $this->deadlines->card($section);
     }
 
     private function strip(array $nav): array

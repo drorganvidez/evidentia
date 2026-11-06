@@ -18,10 +18,11 @@
     'version' => null,
     'showTheme' => true,
     'contentId' => 'main',
+    'skipLabel' => 'Saltar al formulario',
 ])
 <x-layout.base :title="$title" :entry="$entry">
     <x-slot:head>{{ $head ?? '' }}</x-slot:head>
-    <x-ui.skip-link :target="'#' . $contentId">Saltar al formulario</x-ui.skip-link>
+    <x-ui.skip-link :target="'#' . $contentId">{{ $skipLabel }}</x-ui.skip-link>
     <x-ui.aurora :intense="$intense" />
 
     <header class="absolute inset-x-0 top-0 flex items-center justify-between gap-4 p-4 md:px-6 md:py-5">
