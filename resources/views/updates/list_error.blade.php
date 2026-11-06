@@ -1,29 +1,14 @@
-@extends('layouts.app')
+{{-- The API of GitHub did not answer (its daily quota or the network): the way to the repository instead --}}
+<x-layout.app title="Actualizaciones" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Actualizaciones']]">
+    <x-ui.page-header title="Actualizaciones" />
 
-@section('title', 'Actualizaciones')
-
-@section('title-icon', 'fab fa-github')
-
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item active">@yield('title')</li>
-@endsection
-
-@section('content')
-
-    <div class="error-page">
-        <h2 class="headline text-warning"> 403</h2>
-
-        <div class="error-content">
-            <h3><i class="fas fa-exclamation-triangle text-warning"></i> Cuota diaria superada</h3>
-
-            <p>
-                Por desgracia, la API de GitHub establece una cuota diaria máxima de consulta.
-                Inténtalo más tarde o visita <a href="https://github.com/drorganvidez/evidentia"> el proyecto en GitHub</a>
-            </p>
-
-        </div>
-
-    </div>
-
-@endsection
+    <x-ui.card as="div">
+        <x-ui.empty code="403" title="GitHub no responde ahora" text="Vuelve a intentarlo más tarde."
+            :level="2">
+            <x-slot:actions>
+                <x-ui.button variant="primary" icon="github" href="https://github.com/drorganvidez/evidentia">Ver el
+                    proyecto en GitHub</x-ui.button>
+            </x-slot:actions>
+        </x-ui.empty>
+    </x-ui.card>
+</x-layout.app>

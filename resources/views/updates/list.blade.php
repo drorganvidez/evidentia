@@ -1,106 +1,64 @@
-@extends('layouts.app')
+{{-- The releases and the open issues of the repository, read from the API of GitHub --}}
+@php
+    $tones = ['bug' => 'rejected', 'enhancement' => 'accepted', 'question' => 'pending'];
+@endphp
+<x-layout.app title="Actualizaciones" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Actualizaciones']]">
+    <x-ui.page-header title="Actualizaciones" />
 
-@section('title', 'Actualizaciones')
-
-@section('title-icon', 'fab fa-github')
-
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item active">@yield('title')</li>
-@endsection
-
-@section('content')
-
-    <div class="row">
-        <div class="col-lg-8">
-
-            <div class="card">
-
-                <div class="card-body">
-
-                    @foreach ($releases as $release)
-                        <h3 class="mb-0"><a href="{{ $release->html_url }}">{{ $release->name }}</a>
-
-                        </h3>
-
-                        <span class="text-muted">
-                            {{ \Carbon\Carbon::createFromDate($release->published_at)->diffForHumans() }}
-                        </span>
-
-                        <br><br>
-
-                        <p>{!! nl2br(e($release->body)) !!}</p>
-
-                        <a class="btn btn-default btn-sm" href="{{ $release->zipball_url }}">
-                            <i class="fas fa-file-archive"></i>
-                            Código fuente (zip)
-                        </a>
-
-                        <a class="btn btn-default btn-sm" href="{{ $release->tarball_url }}">
-                            <i class="fas fa-file-archive"></i>
-                            Código fuente (tar.gz)
-                        </a>
-
-                        <br>
-                        <hr>
-                    @endforeach
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-lg-4">
-
-            <div class="card">
-                <div class="card-body">
-
-                    <h3 class="mb-4">
-                        <i class="fas fa-exclamation-circle me-2 text-danger"></i> Issues abiertas
-                    </h3>
-
-                    @forelse($issues as $issue)
-                        <div class="mb-4 pb-3 border-bottom">
-
-                            {{-- Labels --}}
-                            <div class="mb-2">
-                                @foreach ($issue->labels as $label)
-                                    <span
-                                        class="badge rounded-pill 
-                            @if ($label->name === 'bug') bg-danger 
-                            @elseif($label->name === 'enhancement') bg-success 
-                            @elseif($label->name === 'question') bg-warning text-dark 
-                            @else bg-secondary @endif">
-                                        {{ $label->name }}
-                                    </span>
-                                @endforeach
-                            </div>
-
-                            {{-- Título + enlace --}}
-                            <h6 class="mb-1">
-                                <a href="{{ $issue->html_url }}" target="_blank" class="text-decoration-none">
-                                    {{ $issue->title }}
-                                </a>
-                            </h6>
-
-                            {{-- Fecha --}}
-                            <small class="text-muted">
-                                Creado {{ \Carbon\Carbon::parse($issue->created_at)->diffForHumans() }}
-                            </small>
+    <div class="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)] lg:gap-8">
+        <div class="grid grid-cols-[minmax(0,1fr)] content-start gap-6">
+            @forelse ($releases as $release)
+                <x-ui.card :title="$release->name ?: $release->tag_name ?? 'Versión'" :level="2" :id="'release-' . $loop->index">
+                    <x-slot:extra>
+                        <x-ui.time :value="$release->published_at" format="relative" class="text-sm text-ink-muted" />
+                    </x-slot:extra>
+                    <div class="grid gap-4">
+                        @if (filled($release->body))
+                            <div class="prose-ui text-sm">{!! nl2br(e($release->body), false) !!}</div>
+                        @endif
+                        <div class="flex flex-wrap gap-2">
+                            <x-ui.button size="sm" icon="external-link" :href="$release->html_url">Ver en
+                                GitHub</x-ui.button>
+                            <x-ui.button size="sm" icon="download" :href="$release->zipball_url">Código fuente
+                                (zip)
+                            </x-ui.button>
+                            <x-ui.button size="sm" icon="download" :href="$release->tarball_url">Código fuente
+                                (tar.gz)</x-ui.button>
                         </div>
-
-                    @empty
-                        <p class="text-muted">No hay issues abiertas.</p>
-                    @endforelse
-
-                </div>
-            </div>
-
-
+                    </div>
+                </x-ui.card>
+            @empty
+                <x-ui.card as="div">
+                    <x-ui.empty icon="package" title="Aún no hay versiones publicadas" :level="2" />
+                </x-ui.card>
+            @endforelse
         </div>
 
+        <aside aria-label="Issues abiertas" class="grid grid-cols-[minmax(0,1fr)] content-start gap-6">
+            <x-ui.card title="Issues abiertas" :level="2" id="issues">
+                <x-slot:extra>
+                    <x-ui.badge variant="count">{{ count($issues) }}</x-ui.badge>
+                </x-slot:extra>
+                @if (count($issues) === 0)
+                    <x-ui.empty icon="circle-check" title="No hay issues abiertas" size="sm" :level="3" />
+                @else
+                    <ul class="divide-y divide-rule">
+                        @foreach ($issues as $issue)
+                            <li class="grid gap-1.5 py-3">
+                                <a href="{{ $issue->html_url }}" target="_blank" rel="noopener noreferrer"
+                                    class="font-semibold text-ink hover:text-brand-ink">{{ $issue->title }}<span
+                                        class="sr-only">(se abre en una pestaña nueva)</span></a>
+                                <span class="flex flex-wrap items-center gap-1.5 text-sm text-ink-muted">
+                                    @foreach ($issue->labels ?? [] as $label)
+                                        <x-ui.badge :tone="$tones[$label->name] ?? 'draft'" size="sm">{{ $label->name }}</x-ui.badge>
+                                    @endforeach
+                                    <x-ui.time :value="$issue->created_at" format="relative" />
+                                </span>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+            </x-ui.card>
+        </aside>
     </div>
-
-
-@endsection
+</x-layout.app>
