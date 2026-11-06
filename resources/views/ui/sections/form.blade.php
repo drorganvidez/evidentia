@@ -1,7 +1,6 @@
 {{-- Forms: the error summary, the access form, a GET search and a download with the busy state --}}
 @php
-    $inputClasses =
-        'h-10.5 w-full min-w-0 rounded-md border border-field-edge bg-field px-4 text-control text-ink outline-none transition focus:border-aurora-500 focus:ring-4 focus:ring-aurora-500/18';
+    $committees = [1 => 'Programa', 2 => 'Logística', 3 => 'Comunicación', 4 => 'Patrocinio'];
     $demoErrors = new Illuminate\Support\ViewErrorBag()->put(
         'default',
         new Illuminate\Support\MessageBag([
@@ -20,16 +19,20 @@
         <div class="glass-2 grid grid-cols-[minmax(0,1fr)] gap-4 rounded-lg p-5">
             <h3 class="text-lg font-bold tracking-tight">Resumen de errores</h3>
             <x-ui.form :action="route('ui.index')" files id="evidence-form" :fields="['title' => 'Título', 'description' => 'Descripción']">
-                <div class="grid gap-1.5">
-                    <label for="{{ ui_field_id('title') }}" class="text-sm font-semibold">Título</label>
-                    <input id="{{ ui_field_id('title') }}" name="title" type="text" value="Montaje del photocall"
-                        aria-invalid="true" class="{{ $inputClasses }}">
-                </div>
-                <div class="grid gap-1.5">
-                    <label for="{{ ui_field_id('description') }}" class="text-sm font-semibold">Descripción</label>
-                    <textarea id="{{ ui_field_id('description') }}" name="description" rows="3" aria-invalid="true"
-                        class="{{ $inputClasses }} h-auto py-2">Montaje y recogida del photocall.</textarea>
-                </div>
+                <x-ui.field name="title" label="Título" required value="" hint="Mínimo 5 caracteres" />
+                <fieldset class="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-1.5">
+                    <legend class="text-sm font-semibold">Duración</legend>
+                    <div class="grid grid-cols-2 gap-4">
+                        <x-ui.field name="hours" label="Horas" type="number" suffix="h" inputmode="decimal"
+                            min="0" step="0.25" value="1" />
+                        <x-ui.field name="minutes" label="Minutos" type="number" suffix="min" inputmode="numeric"
+                            min="0" max="59" step="15" value="30" />
+                    </div>
+                </fieldset>
+                <x-ui.field name="committee" label="Comité" type="select" :options="$committees"
+                    placeholder="Elige un comité" value="2" required />
+                <x-ui.field name="description" label="Descripción" type="textarea" :rows="3" :maxlength="1000"
+                    value="Montaje del photocall." />
                 <x-slot:actions>
                     <x-ui.button type="submit" variant="primary">Guardar</x-ui.button>
                     <x-ui.button href="{{ route('ui.index') }}#ui-form">Cancelar</x-ui.button>
@@ -43,18 +46,12 @@
         <div class="glass-2 grid grid-cols-[minmax(0,1fr)] gap-4 rounded-lg p-5">
             <h3 class="text-lg font-bold tracking-tight">Acceso</h3>
             <x-ui.form :action="route('ui.index')" busy-label="Entrando" id="access-form">
-                <div class="grid gap-1.5">
-                    <label for="{{ ui_field_id('login_user') }}" class="text-sm font-semibold">Usuario</label>
-                    <input id="{{ ui_field_id('login_user') }}" name="login_user" type="text" autocomplete="username"
-                        required class="{{ $inputClasses }}">
-                </div>
-                <div class="grid gap-1.5">
-                    <label for="{{ ui_field_id('login_password') }}" class="text-sm font-semibold">Contraseña</label>
-                    <input id="{{ ui_field_id('login_password') }}" name="login_password" type="password"
-                        autocomplete="current-password" required class="{{ $inputClasses }}">
-                </div>
+                <x-ui.field name="login_user" label="Usuario" size="lg" icon="user-round" autocomplete="username"
+                    required />
+                <x-ui.field name="login_password" label="Contraseña" type="password" size="lg" icon="lock"
+                    autocomplete="current-password" required />
                 <x-slot:actions>
-                    <x-ui.button type="submit" variant="primary" block>Entrar</x-ui.button>
+                    <x-ui.button type="submit" variant="primary" size="lg" block>Entrar</x-ui.button>
                 </x-slot:actions>
             </x-ui.form>
         </div>
@@ -62,11 +59,8 @@
         <div class="glass-2 grid grid-cols-[minmax(0,1fr)] gap-4 rounded-lg p-5">
             <h3 class="text-lg font-bold tracking-tight">Búsqueda</h3>
             <x-ui.form method="get" :action="route('ui.index')" :summary="false" busy-label="Buscando" id="search-form">
-                <div class="grid gap-1.5">
-                    <label for="{{ ui_field_id('search_q') }}" class="text-sm font-semibold">Buscar</label>
-                    <input id="{{ ui_field_id('search_q') }}" name="search_q" type="search"
-                        class="{{ $inputClasses }}">
-                </div>
+                <x-ui.field name="search_q" label="Buscar" type="search" icon="search" placeholder="Nombre o título"
+                    autocomplete="off" />
                 <x-slot:actions>
                     <x-ui.button type="submit" icon="search">Buscar</x-ui.button>
                 </x-slot:actions>
