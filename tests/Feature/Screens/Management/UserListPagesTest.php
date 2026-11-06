@@ -33,10 +33,10 @@ class UserListPagesTest extends ScreenTestCase
         $this->volume();
 
         $html = $this->screen('profesor', route('lecture.user.list'))
-            ->assertSee('46 usuarios')
-            ->assertSee('De la 1 a la 25 de 46')
-            ->assertSeeInOrder(['García López, Juan', 'Torres Gómez, Pablo', 'Zubiri 01, Ana', 'Zubiri 19, Ana'])
-            ->assertDontSee('Zubiri 20, Ana')
+            ->assertSee('47 usuarios')
+            ->assertSee('De la 1 a la 25 de 47')
+            ->assertSeeInOrder(['Castro Vidal, Inés', 'García López, Juan', 'Torres Gómez, Pablo', 'Zubiri 01, Ana', 'Zubiri 18, Ana'])
+            ->assertDontSee('Zubiri 19, Ana')
             ->assertDontSee('Romero Organvídez, David')
             ->getContent();
 
@@ -44,7 +44,7 @@ class UserListPagesTest extends ScreenTestCase
         $this->assertStringContainsString('href="'.route('lecture.user.list', ['page' => 2]).'" rel="next"', $html);
 
         // the president neither sees the lecturer nor themselves
-        $this->screen('presidente', route('president.user.list'))->assertSee('45 usuarios');
+        $this->screen('presidente', route('president.user.list'))->assertSee('46 usuarios');
     }
 
     public function test_the_order_the_filters_and_the_size_stay_in_every_link(): void
@@ -65,7 +65,7 @@ class UserListPagesTest extends ScreenTestCase
 
         $last = $this->screen('profesor', $url.'&page=2')->getContent();
 
-        $this->assertSame(20, $this->rows($last), '45 students but the lecturer, who is not one');
+        $this->assertSame(21, $this->rows($last), '46 students but the lecturer, who is not one');
         $this->assertStringContainsString('García López, Juan', $last);
     }
 
@@ -99,15 +99,15 @@ class UserListPagesTest extends ScreenTestCase
         User::where('username', 'anazub40')->update(['block' => true]);
 
         $html = $this->screen('profesor', route('lecture.user.list', ['page' => 7]))
-            ->assertSee('De la 26 a la 46 de 46')
+            ->assertSee('De la 26 a la 47 de 47')
             ->getContent();
 
-        $this->assertSame(21, $this->rows($html));
+        $this->assertSame(22, $this->rows($html));
 
         $this->screen('profesor', route('lecture.user.list', ['estado' => 'bloqueados']))
             ->assertSee('Zubiri 40, Ana')
             ->assertSee('1 usuario')
             ->assertDontSee('Zubiri 39, Ana');
-        $this->screen('profesor', route('lecture.user.list', ['estado' => 'activos']))->assertSee('45 usuarios');
+        $this->screen('profesor', route('lecture.user.list', ['estado' => 'activos']))->assertSee('46 usuarios');
     }
 }

@@ -30,17 +30,18 @@ class EvidenceListPagesTest extends ScreenTestCase
 
         $html = $this->screen('profesor', route('lecture.evidence.list'))
             ->assertSee('<nav aria-label="Paginación de Evidencias del curso"', false)
-            ->assertSee('De la 1 a la 25 de 64')
-            // 4 of the seed and 60 of the factory, 67,25 hours, newest first
+            ->assertSee('De la 1 a la 25 de 66')
+            // 6 of the seed (2 of them for the presidency) and 60 of the factory, 71,25 hours, newest first
             ->assertSeeInOrder(['Montaje del photocall', 'Volumen 01', 'Volumen 02'])
-            ->assertDontSee('Volumen 22')
-            ->assertSee('64 evidencias')
-            ->assertSee('67,25 h')
+            ->assertSee('Volumen 19')
+            ->assertDontSee('Volumen 20')
+            ->assertSee('66 evidencias')
+            ->assertSee('71,25 h')
             ->getContent();
 
         $this->assertSame(25, $this->rows($html));
-        $this->assertMatchesRegularExpression('/Pendientes\s*<span[^>]*>\s*62\s*</', $html);
-        $this->assertMatchesRegularExpression('/Todas\s*<span[^>]*>\s*64\s*</', $html);
+        $this->assertMatchesRegularExpression('/Pendientes\s*<span[^>]*>\s*64\s*</', $html);
+        $this->assertMatchesRegularExpression('/Todas\s*<span[^>]*>\s*66\s*</', $html);
         $this->assertStringContainsString('href="'.route('lecture.evidence.list', ['page' => 2]).'" rel="next"', $html);
     }
 
@@ -50,7 +51,8 @@ class EvidenceListPagesTest extends ScreenTestCase
         $committee = Committee::where('name', 'Logística')->sole();
         $url = route('lecture.evidence.list', ['estado' => 'pendientes', 'comite' => $committee->id, 'per_page' => 50]);
 
-        $html = $this->screen('profesor', $url)->assertSee('De la 1 a la 50 de 62')->getContent();
+        // 3 pending of the seed in Logística, one of them for the presidency, and 60 of the factory
+        $html = $this->screen('profesor', $url)->assertSee('De la 1 a la 50 de 63')->getContent();
 
         $this->assertSame(50, $this->rows($html));
         $this->assertStringContainsString('href="'.e($url.'&page=2').'" rel="next"', $html);
@@ -62,7 +64,7 @@ class EvidenceListPagesTest extends ScreenTestCase
 
         $page = $this->screen('profesor', $url.'&page=2')->getContent();
 
-        $this->assertSame(12, $this->rows($page));
+        $this->assertSame(13, $this->rows($page));
         $this->assertStringContainsString('aria-label="Página 2"', $page);
     }
 
@@ -100,11 +102,11 @@ class EvidenceListPagesTest extends ScreenTestCase
         $this->volume();
 
         $html = $this->screen('profesor', route('lecture.evidence.list', ['page' => 99]))
-            ->assertSee('De la 51 a la 64 de 64')
+            ->assertSee('De la 51 a la 66 de 66')
             ->assertSee('Volumen 60')
             ->getContent();
 
-        $this->assertSame(14, $this->rows($html));
+        $this->assertSame(16, $this->rows($html));
         $this->assertMatchesRegularExpression('/aria-label="Página 3"\s+aria-current="page"/', $html);
     }
 
@@ -113,7 +115,7 @@ class EvidenceListPagesTest extends ScreenTestCase
         $this->screen('profesor', route('lecture.evidence.list'))
             ->assertDontSee('aria-label="Paginación de', false)
             ->assertDontSee('Filas por página')
-            ->assertSee('4 evidencias')
+            ->assertSee('6 evidencias')
             ->assertSee('role="search"', false);
     }
 }
