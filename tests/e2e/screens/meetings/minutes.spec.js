@@ -1,6 +1,14 @@
 import { signIn } from '../../fixtures/auth.js';
 import { expect, test } from '../../fixtures/ui.js';
-import { auditThemes, confirmRemoval, mutatesData, notice, unique } from './helpers.js';
+import {
+    alpineReady,
+    auditThemes,
+    confirmRemoval,
+    expectNotice,
+    mutatesData,
+    pickerReady,
+    unique,
+} from './helpers.js';
 
 test.describe('Actas', () => {
     // Two themes, two audits and a reload per screen
@@ -67,6 +75,7 @@ test.describe('Actas', () => {
             await page.getByLabel('Horas').fill('1');
             await page.getByLabel('Minutos').fill('30');
 
+            await pickerReady(page);
             await page.getByLabel('Lista predeterminada').selectOption({ index: 1 });
             await page.getByRole('button', { name: 'Cargar' }).click();
             await page.getByRole('button', { name: 'Sustituir' }).click();
@@ -74,6 +83,7 @@ test.describe('Actas', () => {
                 page.getByRole('list', { name: 'Seleccionados' }).getByRole('listitem'),
             ).toHaveCount(2);
 
+            await alpineReady(page);
             await page.getByRole('button', { name: 'Añadir punto' }).click();
             const point = page.locator('[data-point]').first();
             await point.locator('[data-field="title"]').fill('Balance de las jornadas');
@@ -82,7 +92,7 @@ test.describe('Actas', () => {
             await point.locator('[data-field="agreement"]').fill('Enviar la memoria');
             await page.getByRole('button', { name: 'Crear acta' }).click();
 
-            await expect(notice(page, 'Acta de reunión creada con éxito.')).toBeVisible();
+            await expectNotice(page, 'Acta de reunión creada con éxito.');
             const row = page.getByRole('row').filter({ hasText: title });
             await expect(row).toContainText('1,50 h');
 
@@ -99,7 +109,7 @@ test.describe('Actas', () => {
             await page.getByLabel('Horas').fill('2');
             await page.getByLabel('Minutos').fill('0');
             await page.getByRole('button', { name: 'Guardar acta' }).click();
-            await expect(notice(page, 'Acta de reunión editada con éxito.')).toBeVisible();
+            await expectNotice(page, 'Acta de reunión editada con éxito.');
             await expect(page.getByRole('row').filter({ hasText: title })).toContainText('2,00 h');
 
             await page.getByRole('link', { name: title, exact: true }).click();

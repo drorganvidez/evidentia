@@ -38,10 +38,27 @@ export async function confirmRemoval(page, trigger, title, text) {
     await expect(dialog).toBeVisible();
     await expect(dialog.getByRole('button', { name: 'Cancelar' })).toBeFocused();
     await dialog.getByRole('button', { name: 'Sí, eliminar' }).click();
-    await expect(notice(page, text)).toBeVisible();
+    await expectNotice(page, text);
 }
 
-/** The notice of the session flash, inside the live region of the layout. */
-export function notice(page, text) {
-    return page.getByRole('region', { name: 'Avisos' }).getByText(text);
+/**
+ * The notice of the session flash, inside the live region of the layout. Saving a call or minutes renders a PDF
+ * first, so the next page may take a while; the notice then stays for 8 s.
+ */
+export async function expectNotice(page, text) {
+    await expect(page.getByRole('region', { name: 'Avisos' }).getByText(text)).toBeVisible({
+        timeout: 20_000,
+    });
+}
+
+/** Waits for the people picker to take over its native select, so a choice is never made before Alpine listens. */
+export async function pickerReady(page) {
+    await expect(page.locator('select[name="users[]"]')).toHaveAttribute('aria-hidden', 'true');
+}
+
+/** Waits until Alpine has bound every component of the page, so typing never lands before its listeners. */
+export async function alpineReady(page) {
+    await page.waitForFunction(() =>
+        Array.from(document.querySelectorAll('[x-data]')).every((element) => element._x_dataStack),
+    );
 }

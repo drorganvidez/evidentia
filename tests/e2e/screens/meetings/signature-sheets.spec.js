@@ -1,6 +1,6 @@
 import { signIn } from '../../fixtures/auth.js';
 import { expect, test } from '../../fixtures/ui.js';
-import { auditThemes, confirmRemoval, mutatesData, notice, unique } from './helpers.js';
+import { auditThemes, confirmRemoval, expectNotice, mutatesData, unique } from './helpers.js';
 
 test.describe('Hojas de firmas', () => {
     // Two themes, two audits and a reload per screen
@@ -47,7 +47,7 @@ test.describe('Hojas de firmas', () => {
             await page.goto('/secretary/meeting/manage/signaturesheet/create');
             await page.getByLabel('Título', { exact: true }).fill(title);
             await page.getByRole('button', { name: 'Crear hoja de firmas' }).click();
-            await expect(notice(page, 'Hoja de firmas creada con éxito.')).toBeVisible();
+            await expectNotice(page, 'Hoja de firmas creada con éxito.');
 
             await page.getByRole('link', { name: title, exact: true }).click();
             await expect(page.getByRole('heading', { level: 1, name: title })).toBeVisible();
@@ -60,7 +60,7 @@ test.describe('Hojas de firmas', () => {
             await page.getByRole('link', { name: 'Editar', exact: true }).click();
             await page.getByLabel('Título', { exact: true }).fill(`${title} renombrada`);
             await page.getByRole('button', { name: 'Guardar hoja de firmas' }).click();
-            await expect(notice(page, 'Hoja de firmas actualizada con éxito.')).toBeVisible();
+            await expectNotice(page, 'Hoja de firmas actualizada con éxito.');
 
             await page.getByRole('link', { name: `${title} renombrada`, exact: true }).click();
             await confirmRemoval(

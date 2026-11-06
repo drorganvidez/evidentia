@@ -1,6 +1,13 @@
 import { signIn } from '../../fixtures/auth.js';
 import { expect, test } from '../../fixtures/ui.js';
-import { auditThemes, confirmRemoval, mutatesData, notice, unique } from './helpers.js';
+import {
+    auditThemes,
+    confirmRemoval,
+    expectNotice,
+    mutatesData,
+    pickerReady,
+    unique,
+} from './helpers.js';
 
 test.describe('Listas predeterminadas', () => {
     // Two themes, two audits and a reload per screen
@@ -35,6 +42,7 @@ test.describe('Listas predeterminadas', () => {
             await page.goto('/secretary/defaultlist/list');
             await page.getByRole('link', { name: 'Nueva lista' }).click();
             await page.getByLabel('Nombre').fill(name);
+            await pickerReady(page);
             const people = page.getByRole('combobox', { name: 'Personas' });
             await people.fill('pérez');
             await people.press('Enter');
@@ -46,7 +54,7 @@ test.describe('Listas predeterminadas', () => {
             ).toHaveCount(2);
             await page.getByRole('button', { name: 'Guardar lista' }).click();
 
-            await expect(notice(page, 'Lista creada con éxito.')).toBeVisible();
+            await expectNotice(page, 'Lista creada con éxito.');
             const row = page.getByRole('row').filter({ hasText: name });
             await expect(row).toContainText('2');
 
@@ -57,7 +65,7 @@ test.describe('Listas predeterminadas', () => {
                 .first()
                 .click();
             await page.getByRole('button', { name: 'Guardar lista' }).click();
-            await expect(notice(page, 'Lista editada con éxito.')).toBeVisible();
+            await expectNotice(page, 'Lista editada con éxito.');
 
             await confirmRemoval(
                 page,

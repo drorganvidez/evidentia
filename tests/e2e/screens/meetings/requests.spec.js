@@ -1,6 +1,13 @@
 import { signIn } from '../../fixtures/auth.js';
 import { expect, test } from '../../fixtures/ui.js';
-import { auditThemes, confirmRemoval, mutatesData, notice, unique } from './helpers.js';
+import {
+    alpineReady,
+    auditThemes,
+    confirmRemoval,
+    expectNotice,
+    mutatesData,
+    unique,
+} from './helpers.js';
 
 test.describe('Convocatorias', () => {
     // Two themes, two audits and a reload per screen
@@ -45,6 +52,7 @@ test.describe('Convocatorias', () => {
             const title = unique('Convocatoria de prueba');
 
             await page.goto('/secretary/meeting/manage/request/create');
+            await alpineReady(page);
             await page.getByLabel('Título', { exact: true }).fill(title);
             await page.getByLabel('Fecha').fill('2030-03-14');
             await page.getByLabel('Hora', { exact: true }).fill('17:30');
@@ -64,7 +72,7 @@ test.describe('Convocatorias', () => {
             await page.getByRole('switch', { name: 'Crear su hoja de firmas' }).uncheck();
             await page.getByRole('button', { name: 'Crear convocatoria' }).click();
 
-            await expect(notice(page, 'Convocatoria de reunión creada con éxito.')).toBeVisible();
+            await expectNotice(page, 'Convocatoria de reunión creada con éxito.');
             const row = page.getByRole('row').filter({ hasText: title });
             await expect(row).toContainText('Sin hoja');
 
@@ -84,7 +92,7 @@ test.describe('Convocatorias', () => {
             );
             await page.getByLabel('Título', { exact: true }).fill(`${title} editada`);
             await page.getByRole('button', { name: 'Guardar convocatoria' }).click();
-            await expect(notice(page, 'Convocatoria de reunión editada con éxito.')).toBeVisible();
+            await expectNotice(page, 'Convocatoria de reunión editada con éxito.');
 
             await page.getByRole('link', { name: `${title} editada`, exact: true }).click();
             await confirmRemoval(
@@ -103,7 +111,7 @@ test.describe('Convocatorias', () => {
             await page.getByLabel('Título', { exact: true }).fill('Sin fecha');
             await page.getByRole('button', { name: 'Crear convocatoria' }).click();
 
-            await expect(notice(page, 'Hay errores en el formulario.')).toBeVisible();
+            await expectNotice(page, 'Hay errores en el formulario.');
             await expect(page.getByRole('group', { name: 'Revisa el formulario' })).toBeFocused();
             await expect(page.getByLabel('Título', { exact: true })).toHaveValue('Sin fecha');
         });

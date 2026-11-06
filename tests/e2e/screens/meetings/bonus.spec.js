@@ -1,6 +1,13 @@
 import { signIn } from '../../fixtures/auth.js';
 import { expect, test } from '../../fixtures/ui.js';
-import { auditThemes, confirmRemoval, mutatesData, notice, unique } from './helpers.js';
+import {
+    auditThemes,
+    confirmRemoval,
+    expectNotice,
+    mutatesData,
+    pickerReady,
+    unique,
+} from './helpers.js';
 
 test.describe('Bonos', () => {
     // Two themes, two audits and a reload per screen
@@ -38,12 +45,13 @@ test.describe('Bonos', () => {
             await page.getByRole('link', { name: 'Nuevo bono' }).click();
             await page.getByLabel('Motivo').fill(reason);
             await page.getByLabel('Horas').fill('1.5');
+            await pickerReady(page);
             await page.getByLabel('Lista predeterminada').selectOption({ index: 1 });
             await page.getByRole('button', { name: 'Cargar' }).click();
             await page.getByRole('button', { name: 'Sustituir' }).click();
             await page.getByRole('button', { name: 'Guardar bono' }).click();
 
-            await expect(notice(page, 'Bono de horas creado con éxito.')).toBeVisible();
+            await expectNotice(page, 'Bono de horas creado con éxito.');
             const row = page.getByRole('row').filter({ hasText: reason });
             await expect(row).toContainText('1,50 h');
 
@@ -53,7 +61,7 @@ test.describe('Bonos', () => {
             ).toHaveCount(2);
             await page.getByLabel('Horas').fill('2');
             await page.getByRole('button', { name: 'Guardar bono' }).click();
-            await expect(notice(page, 'Bono editado con éxito.')).toBeVisible();
+            await expectNotice(page, 'Bono editado con éxito.');
             await expect(page.getByRole('row').filter({ hasText: reason })).toContainText('2,00 h');
 
             await confirmRemoval(
