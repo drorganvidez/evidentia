@@ -8,15 +8,15 @@
     $profiles ??= false;
     $plural = fn(int $count, string $one, string $many): string => $count . ' ' . ($count === 1 ? $one : $many);
     $columns = [
-        ['label' => 'Miembro', 'key' => 'member'],
+        ['label' => 'Miembro', 'key' => 'member', 'sorted' => 'asc'],
         ['label' => 'Evidencias', 'key' => 'evidences'],
         ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
         ['label' => 'Reuniones', 'key' => 'meetings', 'align' => 'end'],
         ['label' => 'Última actividad', 'key' => 'last'],
     ];
 @endphp
-<x-ui.table id="members" :caption="'Miembros de ' . $committee->name" show-caption :columns="$columns" :filterable="$members->isNotEmpty()" count-label="miembros"
-    filter-placeholder="Filtrar miembros">
+<x-ui.table id="members" :caption="'Miembros de ' . $committee->name" show-caption :columns="$columns" sortable :filterable="$members->isNotEmpty()"
+    count-label="miembros" filter-placeholder="Filtrar miembros">
     @if ($members->isEmpty())
         <x-slot:empty>
             <x-ui.empty icon="users" title="Sin miembros todavía" size="sm" :level="3" />
@@ -38,7 +38,7 @@
                 <x-ui.person :name="$member['name']" :surname="$member['surname']" :role="$member['username']" size="sm" reverse
                     :href="$profiles ? route('profiles.view', ['id' => $member['id']]) : null" />
             </x-ui.table.cell>
-            <x-ui.table.cell label="Evidencias" full>
+            <x-ui.table.cell label="Evidencias" full :sort-value="sprintf('%05d%05d%05d', $member['accepted'], $member['pending'], $member['rejected'])">
                 @if ($member['accepted'] + $member['pending'] + $member['rejected'] === 0)
                     <span class="text-sm text-ink-muted">Sin evidencias</span>
                 @else
@@ -59,7 +59,8 @@
                 @endif
             </x-ui.table.cell>
             <x-ui.table.cell label="Horas" numeric><x-ui.hours :value="$member['hours']" /></x-ui.table.cell>
-            <x-ui.table.cell label="Reuniones" numeric meta end>{{ $member['meetings'] }}<span class="md:hidden">
+            <x-ui.table.cell label="Reuniones" numeric meta end :sort-value="$member['meetings']">{{ $member['meetings'] }}<span
+                    class="md:hidden">
                     {{ $member['meetings'] === 1 ? 'reunión' : 'reuniones' }}</span></x-ui.table.cell>
             <x-ui.table.cell label="Última actividad" meta>
                 @if ($member['last'])

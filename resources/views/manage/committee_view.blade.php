@@ -19,7 +19,7 @@
         ['label' => 'Evidencia', 'key' => 'title'],
         ['label' => 'Autor', 'key' => 'author'],
         ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
-        ['label' => 'Actualizada', 'key' => 'updated_at'],
+        ['label' => 'Actualizada', 'key' => 'updated_at', 'sorted' => 'desc'],
         ['label' => 'Estado', 'key' => 'status'],
     ];
 @endphp
@@ -166,7 +166,7 @@
         'profiles' => true,
     ])
 
-    <x-ui.table id="evidences" :caption="'Últimas evidencias de ' . $committee->name" show-caption :columns="$evidenceColumns">
+    <x-ui.table id="evidences" :caption="'Últimas evidencias de ' . $committee->name" show-caption :columns="$evidenceColumns" sortable>
         @if ($evidences->isEmpty())
             <x-slot:empty>
                 <x-ui.empty icon="list-checks" title="Sin evidencias" size="sm" :level="3" />

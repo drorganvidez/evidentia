@@ -5,7 +5,7 @@
         ['label' => 'Convocatoria', 'key' => 'title'],
         ['label' => 'Comité', 'key' => 'committee'],
         ['label' => 'Secretaría', 'key' => 'secretary', 'hide' => true],
-        ['label' => 'Programada', 'key' => 'datetime'],
+        ['label' => 'Programada', 'key' => 'datetime', 'sorted' => 'desc'],
         ['label' => 'Hoja de firmas', 'key' => 'sheet', 'hide' => true],
         ['label' => 'Acciones', 'srOnly' => true],
     ];
@@ -19,7 +19,7 @@
 
     @include('manage.partials.meeting-tabs')
 
-    <x-ui.table caption="Convocatorias de todos los comités" :columns="$columns" :filterable="$meeting_requests->isNotEmpty()"
+    <x-ui.table caption="Convocatorias de todos los comités" :columns="$columns" sortable :filterable="$meeting_requests->isNotEmpty()"
         count-label="convocatorias" filter-placeholder="Filtrar convocatorias">
         @if ($meeting_requests->isEmpty())
             <x-slot:empty>
@@ -55,7 +55,7 @@
                 <x-ui.table.cell label="Programada" meta>
                     <x-ui.time :value="$meeting_request->datetime" inline short />
                 </x-ui.table.cell>
-                <x-ui.table.cell label="Hoja de firmas" hide>
+                <x-ui.table.cell label="Hoja de firmas" hide :sort-value="$meeting_request->signatureSheet ? 1 : 0">
                     @if ($meeting_request->signatureSheet)
                         <x-ui.badge tone="accepted" size="sm">Con hoja</x-ui.badge>
                     @else

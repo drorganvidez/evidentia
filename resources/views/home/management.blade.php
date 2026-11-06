@@ -49,8 +49,8 @@
         </x-ui.card>
     </div>
 
-    <x-ui.table caption="Comités" show-caption :columns="[
-        ['label' => 'Comité', 'key' => 'name'],
+    <x-ui.table caption="Comités" show-caption sortable :columns="[
+        ['label' => 'Comité', 'key' => 'name', 'sorted' => 'asc'],
         ['label' => 'Coordinación', 'key' => 'coordinators'],
         ['label' => 'Evidencias', 'key' => 'state'],
         ['label' => 'Pendientes', 'key' => 'pending', 'align' => 'end'],
@@ -65,14 +65,14 @@
                         <a href="{{ $committeeHref }}">{{ $committee['name'] }}</a>
                     </span>
                 </x-ui.table.cell>
-                <x-ui.table.cell label="Coordinación" meta>
+                <x-ui.table.cell label="Coordinación" meta :sort-value="$committee['coordinators']">
                     @if ($committee['coordinators'] !== '')
                         {{ $committee['coordinators'] }}
                     @else
                         <x-ui.badge tone="pending" size="sm">Sin coordinación</x-ui.badge>
                     @endif
                 </x-ui.table.cell>
-                <x-ui.table.cell label="Evidencias">
+                <x-ui.table.cell label="Evidencias" :sort-value="$committee['total']">
                     @if ($committee['total'] > 0)
                         <div class="grid min-w-40 gap-1">
                             <x-ui.meter :segments="$committee['segments']" size="sm" :label="'Evidencias de ' .

@@ -220,7 +220,7 @@
     ];
     $activityColumns = [
         ['label' => 'Acción', 'key' => 'action'],
-        ['label' => 'Cuándo', 'key' => 'at'],
+        ['label' => 'Cuándo', 'key' => 'at', 'sorted' => 'desc'],
         ['label' => 'Quién', 'key' => 'who'],
         ['label' => 'Objeto', 'key' => 'object', 'hide' => true],
     ];
@@ -414,7 +414,7 @@
 
     <div class="grid grid-cols-[minmax(0,1fr)] gap-3">
         <h3 class="text-lg font-bold tracking-tight">Registro de actividad con una fila señalada</h3>
-        <x-ui.table caption="Registro de actividad" :columns="$activityColumns" show-caption>
+        <x-ui.table caption="Registro de actividad" :columns="$activityColumns" show-caption sortable>
             @foreach ($activity as $entry)
                 @php
                     [$name, $surname, $role] = $entry['who'];

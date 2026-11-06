@@ -5,7 +5,7 @@
     $columns = [
         ['label' => 'Persona', 'key' => 'name'],
         ['label' => 'UVUS', 'key' => 'username'],
-        ['label' => 'Firmada', 'key' => 'signed_at'],
+        ['label' => 'Firmada', 'key' => 'signed_at', 'sorted' => 'desc'],
     ];
 @endphp
 <x-layout.app :title="$signature_sheet->title" :breadcrumbs="[
@@ -30,7 +30,7 @@
     @include('meeting.partials.tabs')
 
     <div class="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)] lg:gap-8">
-        <x-ui.table caption="Firmas" :columns="$columns" :filterable="$signers->isNotEmpty()" count-label="firmas"
+        <x-ui.table caption="Firmas" :columns="$columns" sortable :filterable="$signers->isNotEmpty()" count-label="firmas"
             filter-placeholder="Filtrar firmas">
             @forelse ($signers as $user)
                 <x-ui.table.row>

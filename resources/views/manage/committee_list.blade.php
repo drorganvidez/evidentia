@@ -32,7 +32,7 @@
         </x-slot:actions>
     </x-ui.page-header>
 
-    <x-ui.table caption="Comités del curso" :columns="$columns">
+    <x-ui.table caption="Comités del curso" :columns="$columns" sortable>
         @if ($committees->isEmpty())
             <x-slot:empty>
                 <x-ui.empty icon="network" title="No hay comités" size="sm" :level="2" />
@@ -46,6 +46,10 @@
                     ->merge($summary['coordinators'])
                     ->map(fn($user) => trim($user->name . ' ' . $user->surname))
                     ->merge($summary['secretaries']->map(fn($user) => trim($user->name . ' ' . $user->surname)));
+                $team = $summary['coordinators']
+                    ->merge($summary['secretaries'])
+                    ->map(fn($user) => trim($user->surname . ' ' . $user->name))
+                    ->implode(' ');
                 $worst = collect($summary['signals'])
                     ->pluck('tone')
                     ->sortBy(fn($tone) => array_search($tone, ['rejected', 'pending', 'notice'], true))
@@ -55,7 +59,7 @@
                 <x-ui.table.cell label="Comité" primary>
                     <x-ui.committee-chip :committee="$committee" size="md" :href="$view" />
                 </x-ui.table.cell>
-                <x-ui.table.cell label="Equipo" hide>
+                <x-ui.table.cell label="Equipo" hide :sort-value="$team">
                     <span class="grid gap-0.5 text-sm">
                         @foreach ($summary['presidents'] as $user)
                             <span>{{ trim($user->name . ' ' . $user->surname) }} <span class="text-ink-muted">·
@@ -77,7 +81,7 @@
                         @endforelse
                     </span>
                 </x-ui.table.cell>
-                <x-ui.table.cell label="Pendientes" numeric>
+                <x-ui.table.cell label="Pendientes" numeric :sort-value="$summary['pending']">
                     {{ $summary['pending'] }}
                     @if ($summary['pendingDays'] !== null && $summary['pendingDays'] > 0)
                         <span
@@ -86,14 +90,14 @@
                 </x-ui.table.cell>
                 <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$summary['hours']" /></x-ui.table.cell>
                 <x-ui.table.cell label="Reuniones" numeric meta hide>{{ $summary['meetings'] }}</x-ui.table.cell>
-                <x-ui.table.cell label="Última actividad" meta hide>
+                <x-ui.table.cell label="Última actividad" meta hide :sort-value="$summary['last'] ?? ''">
                     @if ($summary['last'])
                         <x-ui.time :value="$summary['last']" format="relative" />
                     @else
                         Ninguna
                     @endif
                 </x-ui.table.cell>
-                <x-ui.table.cell label="Alertas">
+                <x-ui.table.cell label="Alertas" :sort-value="count($summary['signals'])">
                     @if ($summary['signals'] === [])
                         <x-ui.badge tone="accepted" size="sm">Todo en orden</x-ui.badge>
                     @else

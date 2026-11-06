@@ -2,7 +2,7 @@
 @php
     $columns = [
         ['label' => 'Convocatoria', 'key' => 'title'],
-        ['label' => 'Programada', 'key' => 'datetime'],
+        ['label' => 'Programada', 'key' => 'datetime', 'sorted' => 'desc'],
         ['label' => 'Hoja de firmas', 'key' => 'sheet', 'hide' => true],
         ['label' => 'Modificada', 'key' => 'updated_at', 'hide' => true],
         ['label' => 'Acciones', 'srOnly' => true],
@@ -23,7 +23,7 @@
 
     @include('meeting.partials.tabs')
 
-    <x-ui.table caption="Convocatorias" :columns="$columns" :filterable="$requests->isNotEmpty()" count-label="convocatorias"
+    <x-ui.table caption="Convocatorias" :columns="$columns" sortable :filterable="$requests->isNotEmpty()" count-label="convocatorias"
         filter-placeholder="Filtrar convocatorias">
         @forelse ($requests as $meeting_request)
             @php
@@ -37,7 +37,7 @@
                 <x-ui.table.cell label="Programada" meta>
                     <x-ui.time :value="$meeting_request->datetime" inline short />
                 </x-ui.table.cell>
-                <x-ui.table.cell label="Hoja de firmas" hide>
+                <x-ui.table.cell label="Hoja de firmas" hide :sort-value="$meeting_request->signatureSheet ? 1 : 0">
                     @if ($meeting_request->signatureSheet)
                         <x-ui.badge tone="accepted" size="sm">Con hoja</x-ui.badge>
                     @else

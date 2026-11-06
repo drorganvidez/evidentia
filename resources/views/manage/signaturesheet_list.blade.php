@@ -6,7 +6,7 @@
         ['label' => 'Comité', 'key' => 'committee'],
         ['label' => 'Convocatoria', 'key' => 'request', 'hide' => true],
         ['label' => 'Firmas', 'key' => 'signatures', 'align' => 'end'],
-        ['label' => 'Creada', 'key' => 'created_at', 'hide' => true],
+        ['label' => 'Creada', 'key' => 'created_at', 'hide' => true, 'sorted' => 'desc'],
     ];
     $names = fn($users) => $users
         ->sortBy(fn($user) => mb_strtolower($user->surname . ' ' . $user->name))
@@ -22,8 +22,8 @@
 
     @include('manage.partials.meeting-tabs')
 
-    <x-ui.table caption="Hojas de firmas de todos los comités" :columns="$columns" :filterable="$signature_sheets->isNotEmpty()" count-label="hojas"
-        filter-placeholder="Filtrar hojas de firmas">
+    <x-ui.table caption="Hojas de firmas de todos los comités" :columns="$columns" sortable :filterable="$signature_sheets->isNotEmpty()"
+        count-label="hojas" filter-placeholder="Filtrar hojas de firmas">
         @if ($signature_sheets->isEmpty())
             <x-slot:empty>
                 <x-ui.empty icon="file-signature" title="No hay hojas de firmas" size="sm" :level="2" />
@@ -52,7 +52,7 @@
                         <x-ui.committee-chip :committee="$committee" />
                     @endif
                 </x-ui.table.cell>
-                <x-ui.table.cell label="Convocatoria"
+                <x-ui.table.cell label="Convocatoria" :sort-value="$request?->title ?? ''"
                     hide>{{ $request?->title ?? 'Sin convocatoria' }}</x-ui.table.cell>
                 <x-ui.table.cell label="Firmas" numeric meta>{{ $signature_sheet->users->count() }}</x-ui.table.cell>
                 <x-ui.table.cell label="Creada" meta hide>

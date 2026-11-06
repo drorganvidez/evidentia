@@ -22,7 +22,7 @@
 
     @include('meeting.partials.tabs')
 
-    <x-ui.table caption="Hojas de firmas" :columns="$columns" :filterable="$signature_sheets->isNotEmpty()" count-label="hojas"
+    <x-ui.table caption="Hojas de firmas" :columns="$columns" sortable :filterable="$signature_sheets->isNotEmpty()" count-label="hojas"
         filter-placeholder="Filtrar hojas de firmas">
         @forelse ($signature_sheets as $signature_sheet)
             @php
@@ -34,7 +34,7 @@
                     <a href="{{ $view }}">{{ $signature_sheet->title }}</a>
                     <span class="mt-0.5 block font-mono text-sm text-ink-muted">{{ $signUrl }}</span>
                 </x-ui.table.cell>
-                <x-ui.table.cell label="Convocatoria" hide>
+                <x-ui.table.cell label="Convocatoria" hide :sort-value="$signature_sheet->meetingRequest->title ?? ''">
                     {{ $signature_sheet->meetingRequest->title ?? 'Sin convocatoria' }}
                 </x-ui.table.cell>
                 <x-ui.table.cell label="Firmas" numeric meta>{{ $signature_sheet->users->count() }}</x-ui.table.cell>

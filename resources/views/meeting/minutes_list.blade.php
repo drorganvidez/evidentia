@@ -3,7 +3,7 @@
     $meetingsOpen = !\Carbon\Carbon::now()->gt(\Config::meetings_timestamp() ?? now());
     $columns = [
         ['label' => 'Reunión', 'key' => 'title'],
-        ['label' => 'Celebrada', 'key' => 'datetime'],
+        ['label' => 'Celebrada', 'key' => 'datetime', 'sorted' => 'desc'],
         ['label' => 'Duración', 'key' => 'hours', 'align' => 'end'],
         ['label' => 'Modificada', 'key' => 'updated_at', 'hide' => true],
         ['label' => 'Acciones', 'srOnly' => true],
@@ -26,7 +26,8 @@
 
     @include('meeting.partials.tabs')
 
-    <x-ui.table caption="Actas" :columns="$columns" :filterable="$minutesList->isNotEmpty()" count-label="actas" filter-placeholder="Filtrar actas">
+    <x-ui.table caption="Actas" :columns="$columns" sortable :filterable="$minutesList->isNotEmpty()" count-label="actas"
+        filter-placeholder="Filtrar actas">
         @forelse ($minutesList as $m)
             @php
                 $pdf = route('download.minutes', ['id' => $m->id]);

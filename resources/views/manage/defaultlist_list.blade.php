@@ -6,7 +6,7 @@
         ['label' => 'Comité', 'key' => 'committee'],
         ['label' => 'Secretaría', 'key' => 'secretary', 'hide' => true],
         ['label' => 'Personas', 'key' => 'users', 'align' => 'end'],
-        ['label' => 'Creada', 'key' => 'created_at', 'hide' => true],
+        ['label' => 'Creada', 'key' => 'created_at', 'hide' => true, 'sorted' => 'desc'],
     ];
     $names = fn($users) => $users
         ->sortBy(fn($user) => mb_strtolower($user->surname . ' ' . $user->name))
@@ -22,7 +22,7 @@
 
     @include('manage.partials.meeting-tabs')
 
-    <x-ui.table caption="Listas de todos los comités" :columns="$columns" :filterable="$default_lists->isNotEmpty()" count-label="listas"
+    <x-ui.table caption="Listas de todos los comités" :columns="$columns" sortable :filterable="$default_lists->isNotEmpty()" count-label="listas"
         filter-placeholder="Filtrar listas">
         @if ($default_lists->isEmpty())
             <x-slot:empty>

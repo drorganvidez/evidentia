@@ -3,7 +3,7 @@
     $columns = [
         ['label' => 'Lista', 'key' => 'name'],
         ['label' => 'Personas', 'key' => 'users', 'align' => 'end'],
-        ['label' => 'Creada', 'key' => 'created_at', 'hide' => true],
+        ['label' => 'Creada', 'key' => 'created_at', 'hide' => true, 'sorted' => 'desc'],
         ['label' => 'Acciones', 'srOnly' => true],
     ];
 @endphp
@@ -14,7 +14,7 @@
         </x-slot:actions>
     </x-ui.page-header>
 
-    <x-ui.table caption="Listas" :columns="$columns" :filterable="$defaultlists->isNotEmpty()" count-label="listas"
+    <x-ui.table caption="Listas" :columns="$columns" sortable :filterable="$defaultlists->isNotEmpty()" count-label="listas"
         filter-placeholder="Filtrar listas">
         @forelse ($defaultlists as $defaultlist)
             @php

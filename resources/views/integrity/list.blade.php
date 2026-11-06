@@ -28,7 +28,7 @@
             ['label' => 'Propietario', 'key' => 'owner'],
             ['label' => 'Subida', 'key' => 'created_at'],
             ['label' => 'Integridad', 'key' => 'integrity'],
-        ]" :filterable="$proofs->isNotEmpty()" count-label="pruebas"
+        ]" sortable :filterable="$proofs->isNotEmpty()" count-label="pruebas"
             filter-placeholder="Filtrar pruebas">
             <x-slot:toolbar>
                 <x-ui.tabs label="Qué comprobar" :items="$tabs" />
@@ -47,7 +47,7 @@
                     <x-ui.table.cell label="Propietario" hide>{{ $owner($proof->evidence?->user) }}</x-ui.table.cell>
                     <x-ui.table.cell label="Subida" meta hide><x-ui.time :value="$proof->created_at" inline
                             short /></x-ui.table.cell>
-                    <x-ui.table.cell label="Integridad" end>
+                    <x-ui.table.cell label="Integridad" end :sort-value="$intact ? 1 : 0">
                         <x-ui.badge :tone="$intact ? 'accepted' : 'rejected'"
                             size="sm">{{ $intact ? 'Íntegra' : 'Alterada' }}</x-ui.badge>
                     </x-ui.table.cell>
@@ -60,7 +60,7 @@
             ['label' => 'Propietario', 'key' => 'owner'],
             ['label' => 'Subida', 'key' => 'created_at'],
             ['label' => 'Integridad', 'key' => 'integrity'],
-        ]" :filterable="$evidences->isNotEmpty()"
+        ]" sortable :filterable="$evidences->isNotEmpty()"
             count-label="evidencias" filter-placeholder="Filtrar evidencias">
             <x-slot:toolbar>
                 <x-ui.tabs label="Qué comprobar" :items="$tabs" />
@@ -87,7 +87,7 @@
                     </x-ui.table.cell>
                     <x-ui.table.cell label="Subida" meta hide><x-ui.time :value="$evidence->created_at" inline
                             short /></x-ui.table.cell>
-                    <x-ui.table.cell label="Integridad" end>
+                    <x-ui.table.cell label="Integridad" end :sort-value="$intact ? 1 : 0">
                         <x-ui.badge :tone="$intact ? 'accepted' : 'rejected'"
                             size="sm">{{ $intact ? 'Íntegra' : 'Alterada' }}</x-ui.badge>
                     </x-ui.table.cell>
