@@ -8,15 +8,13 @@
 @php
     $flagged = $flag !== null && $flag !== '';
     $html = $slot->toHtml();
-    // A tr takes no text of its own, so the notice of a flagged row opens its first cell
+    // A tr takes no text of its own, so the notice of a flagged row opens its first cell; the callback keeps
+    // a $1 or a backslash of the flag as text instead of a back reference
     if ($flagged) {
+        $notice = '<span class="sr-only">Señalada, ' . e($flag) . '. </span>';
         $html =
-            preg_replace(
-                '/<t[dh]\b[^>]*>/i',
-                '$0<span class="sr-only">Señalada, ' . e($flag) . '. </span>',
-                $html,
-                1,
-            ) ?? $html;
+            preg_replace_callback('/<t[dh]\b[^>]*>/i', fn(array $match): string => $match[0] . $notice, $html, 1) ??
+            $html;
     }
 @endphp
 <tr role="row"

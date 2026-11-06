@@ -186,6 +186,17 @@ class TableTest extends ComponentTestCase
         $this->assertStringNotContainsString('inset-shadow', $this->render('<x-ui.table.row><x-ui.table.cell>12:40</x-ui.table.cell></x-ui.table.row>'));
     }
 
+    public function test_the_flag_is_printed_as_written_even_with_replacement_tokens(): void
+    {
+        $html = $this->render('<x-ui.table.row :flag="$flag"><x-ui.table.cell>12:40</x-ui.table.cell><x-ui.table.cell>Firma</x-ui.table.cell></x-ui.table.row>', [
+            'flag' => 'Importe $100, $0 y \\1 ${1}',
+        ]);
+
+        $this->assertStringContainsString('><span class="sr-only">Señalada, Importe $100, $0 y \\1 ${1}. </span>12:40</td>', $html);
+        $this->assertSame(2, substr_count($html, '<td role="cell"'));
+        $this->assertSame(1, substr_count($html, 'Señalada'));
+    }
+
     public function test_every_cell_prop_maps_to_literal_classes(): void
     {
         $cell = fn (string $props): string => $this->render('<x-ui.table.cell '.$props.'>x</x-ui.table.cell>');
