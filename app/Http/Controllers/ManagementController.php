@@ -276,15 +276,24 @@ class ManagementController extends Controller
 
     public function bonus_list(Request $request)
     {
+        $sort = ListSort::from($request, [
+            'reason' => 'reason',
+            'committee' => 'committee.name',
+            'users' => ListSort::count('users'),
+            'hours' => 'hours',
+            'created_at' => ListSort::desc('created_at'),
+        ], 'created_at');
+
         // en páginas, con la búsqueda y las horas repartidas de todo el resultado
         $bonus = $this->searchList(Bonus::query(), $request, ['reason', 'committee.name', 'users.name', 'users.surname']);
         $hours = (float) $bonus->clone()->select(['bonuses.id', 'bonuses.hours'])->withCount('users')->get()
             ->sum(fn (Bonus $bono): float => (float) $bono->hours * $bono->users_count);
 
         return view('manage.bonus_list', [
-            'bonus' => $this->paginateList($bonus->with(['committee', 'users'])->latest()->latest('id'), $request),
+            'bonus' => $this->paginateList($sort->apply($bonus->with(['committee', 'users'])), $request),
             'hours' => $hours,
             'term' => ListPage::term($request),
+            'sort' => $sort,
         ]);
     }
 

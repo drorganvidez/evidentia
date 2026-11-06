@@ -1,11 +1,11 @@
 {{-- Hour bonuses of the committee of the secretary; while the bonus deadline is open each row opens its edition --}}
 @php
     $bonusOpen = !\Carbon\Carbon::now()->gt(\Config::bonus_timestamp() ?? now());
-    $columns = [
+    $columns = $sort->columns([
         ['label' => 'Bono', 'key' => 'reason'],
         ['label' => 'Personas', 'key' => 'users', 'align' => 'end'],
         ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
-    ];
+    ]);
     if ($bonusOpen) {
         $columns[] = ['label' => 'Acciones', 'srOnly' => true];
     }

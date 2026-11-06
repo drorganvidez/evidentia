@@ -3,13 +3,13 @@
     people of each and a search on the server. Read only.
 --}}
 @php
-    $columns = [
+    $columns = $sort->columns([
         ['label' => 'Bono', 'key' => 'reason'],
         ['label' => 'Comité', 'key' => 'committee'],
         ['label' => 'Personas', 'key' => 'users', 'align' => 'end'],
         ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
         ['label' => 'Creado', 'key' => 'created_at'],
-    ];
+    ]);
     $names = fn($users) => $users
         ->sortBy(fn($user) => mb_strtolower($user->surname . ' ' . $user->name))
         ->map(fn($user) => trim($user->surname . ', ' . $user->name, ', '))

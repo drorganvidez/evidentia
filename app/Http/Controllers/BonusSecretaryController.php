@@ -9,6 +9,7 @@ use App\Http\Middleware\CheckRoles;
 use App\Models\Bonus;
 use App\Models\User;
 use App\Support\Changes;
+use App\Support\ListSort;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -21,13 +22,18 @@ class BonusSecretaryController extends Controller
         $this->middleware(CheckRoles::class.':SECRETARY');
     }
 
-    public function list()
+    public function list(Request $request)
     {
-
-        $bonus = Auth::user()->secretary->committee->bonus()->latest()->latest('id')->get();
+        $sort = ListSort::from($request, [
+            'reason' => 'reason',
+            'users' => ListSort::count('users'),
+            'hours' => 'hours',
+            'created' => ListSort::desc('created_at'),
+        ], 'created');
+        $bonus = $sort->apply(Auth::user()->secretary->committee->bonus()->with('users'))->get();
 
         return view('bonus.list',
-            ['bonus' => $bonus]);
+            ['bonus' => $bonus, 'sort' => $sort]);
     }
 
     public function create()
