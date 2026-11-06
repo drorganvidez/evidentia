@@ -429,12 +429,17 @@
             --notice-ink: var(--color-info-300);
         }
 
-        /* More contrast when the system asks for it */
+        /* More contrast when the system asks for it. The field edge moves away from the field in each theme:
+         * slate-700 would sink to 1.8:1 over the dark field, slate-300 rises to 7.6:1. */
         @media (prefers-contrast: more) {
             --ink-muted: var(--ink);
             --ink-faint: var(--ink-muted);
             --field-edge: var(--color-slate-700);
             --rule: color-mix(in oklch, var(--color-slate-500) 60%, transparent);
+
+            @variant dark {
+                --field-edge: var(--color-slate-300);
+            }
         }
     }
 }

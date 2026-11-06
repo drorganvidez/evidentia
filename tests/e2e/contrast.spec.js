@@ -35,4 +35,31 @@ test.describe('Contraste de lo que axe no mide', () => {
             }
         });
     }
+
+    for (const [name, { theme, colorScheme }] of Object.entries({
+        claro: { theme: 'light' },
+        oscuro: { theme: 'dark' },
+        'oscuro del sistema': { theme: 'system', colorScheme: 'dark' },
+    })) {
+        test(`con más contraste el borde de un campo supera 3 a 1 en tema ${name}`, async ({
+            page,
+            ui,
+        }) => {
+            await page.emulateMedia({ contrast: 'more', colorScheme });
+            await page.goto('/_ui/public');
+            await ui.setTheme(theme);
+
+            // The box around the input carries the border, between the field and the card
+            const paint = await ui.paint(page.locator('#field-user').locator('xpath=..'));
+
+            expect(
+                contrast(paint.border, paint.fill),
+                'Borde frente al campo',
+            ).toBeGreaterThanOrEqual(3);
+            expect(
+                contrast(paint.border, paint.behind),
+                'Borde frente a la tarjeta',
+            ).toBeGreaterThanOrEqual(3);
+        });
+    }
 });
