@@ -1,6 +1,20 @@
 {{-- Tables: the evidence list with quick filter and active sort, a compact management list, the activity log with a flagged row and an empty one --}}
+@use('Illuminate\Pagination\LengthAwarePaginator')
 @php
     $now = now();
+    $link = fn(array $query): string => route('ui.index', $query) . '#ui-table';
+    $evidenceFilters = [
+        ['label' => 'Todas', 'href' => $link(['estado' => 'todas']), 'count' => 6, 'current' => true],
+        ['label' => 'Pendientes', 'href' => $link(['estado' => 'pendientes']), 'count' => 1],
+        ['label' => 'Aceptadas', 'href' => $link(['estado' => 'aceptadas']), 'count' => 3],
+        ['label' => 'Rechazadas', 'href' => $link(['estado' => 'rechazadas']), 'count' => 1],
+        ['label' => 'Borradores', 'href' => $link(['estado' => 'borradores']), 'count' => 1],
+    ];
+    $managementPages = new LengthAwarePaginator(range(1, 10), 128, 10, 3, [
+        'path' => route('ui.index'),
+        'pageName' => 'pagina',
+        'fragment' => 'ui-table',
+    ]);
     $hue = fn(int $id): int => (($id * 7) % 12) * 30;
     $statuses = [
         'DRAFT' => ['draft', 'En borrador', false],
@@ -191,6 +205,9 @@
         <h3 class="text-lg font-bold tracking-tight">Listado con filtro rápido</h3>
         <x-ui.table caption="Mis evidencias" :columns="$evidenceColumns" filterable count-label="evidencias"
             filter-placeholder="Filtrar evidencias">
+            <x-slot:toolbar>
+                <x-ui.tabs label="Filtrar evidencias por estado" :items="$evidenceFilters" />
+            </x-slot:toolbar>
             @foreach ($evidences as $evidence)
                 @php
                     [$tone, $label, $pulse] = $statuses[$evidence['status']];
@@ -260,6 +277,7 @@
             @endforeach
             <x-slot:footer>
                 <span>Mostrando de la 21 a la 30 de 128 evidencias</span>
+                <x-ui.pagination :paginator="$managementPages" label="Paginación de las evidencias de Programa" />
             </x-slot:footer>
         </x-ui.table>
     </div>
