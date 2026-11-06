@@ -1,3 +1,5 @@
+import { afterRender } from '../alpine/afterRender';
+
 /**
  * Agenda editor (<x-ui.agenda-editor>): the points of a meeting request as a list of inputs that are added,
  * reordered with buttons or Alt+arrows and removed in two steps. The hidden input receives the JSON array of
@@ -17,15 +19,6 @@ function makePoint(text) {
     counter += 1;
 
     return { key: `point-${counter}`, text, confirming: false };
-}
-
-/** Runs after Alpine has shown the elements of the last update (x-show shows on the next frame). */
-function afterRender(callback) {
-    if (document.visibilityState === 'visible') {
-        requestAnimationFrame(callback);
-    } else {
-        setTimeout(callback, 0);
-    }
 }
 
 export default function agendaEditor() {

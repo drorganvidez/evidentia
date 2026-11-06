@@ -1,3 +1,5 @@
+import { afterRender } from '../alpine/afterRender';
+
 /**
  * Combobox with a listbox and chips over a native <select> (<x-ui.picker>). The select stays the source of
  * truth: the options are read from it in init and every change is written back to it, so the form posts the
@@ -162,9 +164,12 @@ export default function picker() {
 
             if (option) {
                 option.active = true;
-                this.$nextTick(() => {
-                    document.getElementById(option.id)?.scrollIntoView({ block: 'nearest' });
-                });
+                // The list may have just opened: x-show shows it on the next frame
+                this.$nextTick(() =>
+                    afterRender(() => {
+                        document.getElementById(option.id)?.scrollIntoView({ block: 'nearest' });
+                    }),
+                );
             }
         },
 
@@ -293,8 +298,11 @@ export default function picker() {
                 return;
             }
 
+            const cancel = this.$refs.cancel;
+
             this.confirmingPreset = true;
-            this.$nextTick(() => this.$refs.cancel?.focus());
+            // x-show reveals the confirmation on the next frame; a hidden button cannot take the focus
+            this.$nextTick(() => afterRender(() => cancel?.focus()));
         },
 
         applyPreset() {

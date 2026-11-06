@@ -80,7 +80,9 @@ test.describe('Selector de personas', () => {
 
         await section.getByLabel('Lista predeterminada').selectOption('0');
         await expect(load).toBeEnabled();
-        await load.click();
+        // A click from script skips the input pipeline that lets Chromium paint before the timers, so the
+        // focus has to wait for the frame that shows the confirmation, as in Firefox and Safari
+        await load.evaluate((button) => button.click());
 
         const confirm = section.getByRole('group', { name: 'Confirmar la carga' });
 

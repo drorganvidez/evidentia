@@ -1,3 +1,5 @@
+import { afterRender } from '../alpine/afterRender';
+
 /**
  * Minutes editor (<x-ui.minutes-editor>): points with title, description, duration and agreements, reordered with
  * buttons and removed in two steps. The hidden input receives, through x-bind:value="json", the JSON the secretary
@@ -55,15 +57,6 @@ function makePoint(raw = {}) {
         errors: {},
         confirming: false,
     };
-}
-
-/** Runs after Alpine has shown the elements of the last update (x-show shows on the next frame). */
-function afterRender(callback) {
-    if (document.visibilityState === 'visible') {
-        requestAnimationFrame(callback);
-    } else {
-        setTimeout(callback, 0);
-    }
 }
 
 export default function minutesEditor() {
