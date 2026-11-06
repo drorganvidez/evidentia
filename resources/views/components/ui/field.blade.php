@@ -7,6 +7,8 @@
     <x-ui.field name="password" label="Contraseña" type="password" size="lg" autocomplete="current-password" />
     The consumer class goes to the root (layout); every other attribute (min, max, step, autocomplete, inputmode,
     pattern, x-model) lands on the control. old() wins over value; the error comes from $errors or the error prop.
+    value takes a scalar, a date (Y-m-d, H:i or Y-m-d\TH:i for those types, d/m/Y H:i otherwise), a backed enum or a
+    Stringable; any other object fails loudly.
 --}}
 @props([
     'name' => '',
@@ -54,7 +56,27 @@
     // Never assume $errors: the components also render through Blade::render
     $bag = $errors ?? null;
     $error ??= $bag instanceof \Illuminate\Support\ViewErrorBag ? ($bag->first($errorKey) ?: null) : null;
+    // old() brings strings, or arrays for a name[] field; the prop may also bring a date, an enum or a Stringable
     $current = old($errorKey) ?? $value;
+    if ($current instanceof DateTimeInterface) {
+        $current = $current->format(
+            match ($type) {
+                'date' => 'Y-m-d',
+                'time' => 'H:i',
+                'datetime-local' => 'Y-m-d\TH:i',
+                default => 'd/m/Y H:i',
+            },
+        );
+    } elseif ($current instanceof BackedEnum) {
+        $current = $current->value;
+    } elseif ($current instanceof Stringable) {
+        $current = (string) $current;
+    }
+    throw_if(
+        is_object($current),
+        InvalidArgumentException::class,
+        'The field value must be a scalar, a date, a backed enum or a Stringable.',
+    );
     $current = is_scalar($current) ? (string) $current : '';
 
     $isTextarea = $type === 'textarea';

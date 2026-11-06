@@ -2,8 +2,12 @@
 
 namespace Tests\Feature\Components;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
 use Illuminate\Support\ViewErrorBag;
+use Illuminate\View\ViewException;
+use InvalidArgumentException;
 
 class FieldTest extends ComponentTestCase
 {
@@ -93,6 +97,77 @@ class FieldTest extends ComponentTestCase
         $this->assertStringContainsString('value="Lo que escribí"', $this->render('<x-ui.field name="title" label="Título" value="Original" />'));
         $this->assertStringContainsString('value=""', $this->render('<x-ui.field name="notes" label="Notas" value="Original" />'));
         $this->assertStringContainsString('value="Original"', $this->render('<x-ui.field name="other" label="Otro" value="Original" />'));
+    }
+
+    public function test_a_date_takes_the_format_of_a_date_input(): void
+    {
+        $html = $this->render('<x-ui.field name="meetings_date" label="Día" type="date" :value="$value" />', ['value' => Carbon::parse('2026-11-06 09:30')]);
+
+        $this->assertMatchesRegularExpression('/<input id="field-meetings-date" name="meetings_date" type="date"\s+value="2026-11-06"/', $html);
+    }
+
+    public function test_a_date_takes_the_format_of_a_time_input(): void
+    {
+        $html = $this->render('<x-ui.field name="meetings_time" label="Hora" type="time" :value="$value" />', ['value' => Carbon::parse('2026-11-06 09:30')]);
+
+        $this->assertMatchesRegularExpression('/type="time"\s+value="09:30"/', $html);
+    }
+
+    public function test_a_date_takes_the_format_of_a_datetime_local_input(): void
+    {
+        $html = $this->render('<x-ui.field name="deadline" label="Plazo" type="datetime-local" :value="$value" />', ['value' => new \DateTimeImmutable('2026-11-06 09:30')]);
+
+        $this->assertMatchesRegularExpression('/type="datetime-local"\s+value="2026-11-06T09:30"/', $html);
+    }
+
+    public function test_a_date_in_any_other_control_reads_as_day_month_year(): void
+    {
+        $html = $this->render('<x-ui.field name="signed_at" label="Firmada" :value="$value" readonly />', ['value' => Carbon::parse('2026-11-06 09:30')]);
+
+        $this->assertMatchesRegularExpression('/type="text"\s+value="06\/11\/2026 09:30"/', $html);
+    }
+
+    public function test_a_backed_enum_gives_its_value_to_an_input_and_to_a_select(): void
+    {
+        $input = $this->render('<x-ui.field name="committee" label="Comité" :value="$value" />', ['value' => FieldTestCommittee::Logistics]);
+
+        $this->assertMatchesRegularExpression('/type="text"\s+value="logistica"/', $input);
+
+        $select = $this->render('<x-ui.field name="committee" label="Comité" type="select" :options="[\'programa\' => \'Programa\', \'logistica\' => \'Logística\']" :value="$value" />', ['value' => FieldTestCommittee::Logistics]);
+
+        $this->assertMatchesRegularExpression('/<option value="logistica"\s+selected\s*>\s*Logística<\/option>/', $select);
+        $this->assertDoesNotMatchRegularExpression('/<option value="programa"[^>]*selected/', $select);
+    }
+
+    public function test_a_stringable_prints_its_text(): void
+    {
+        $html = $this->render('<x-ui.field name="notes" label="Notas" type="textarea" :value="$value" />', ['value' => Str::of('Montaje del photocall')]);
+
+        $this->assertStringContainsString('>Montaje del photocall</textarea>', $html);
+    }
+
+    public function test_an_array_brought_back_by_old_input_prints_nothing(): void
+    {
+        $this->withOldInput(['tags' => ['a', 'b']]);
+
+        $html = $this->render('<x-ui.field name="tags[]" label="Etiquetas" value="Original" />');
+
+        $this->assertMatchesRegularExpression('/name="tags\[\]" type="text"\s+value=""/', $html);
+    }
+
+    public function test_any_other_object_as_the_value_fails_loudly(): void
+    {
+        try {
+            $this->render('<x-ui.field name="committee" label="Comité" :value="$value" />', ['value' => (object) ['id' => 2]]);
+            $this->fail('Rendered an object as the value');
+        } catch (ViewException $exception) {
+            while ($exception->getPrevious() !== null) {
+                $exception = $exception->getPrevious();
+            }
+
+            $this->assertInstanceOf(InvalidArgumentException::class, $exception);
+            $this->assertSame('The field value must be a scalar, a date, a backed enum or a Stringable.', $exception->getMessage());
+        }
     }
 
     public function test_a_select_marks_the_placeholder_or_the_chosen_option_and_never_prints_a_value(): void
@@ -225,4 +300,10 @@ class FieldTest extends ComponentTestCase
         $this->assertStringContainsString('placeholder="&lt;u&gt;ph&lt;/u&gt;"', $html);
         $this->assertStringNotContainsString('<script>', $html);
     }
+}
+
+enum FieldTestCommittee: string
+{
+    case Programme = 'programa';
+    case Logistics = 'logistica';
 }
