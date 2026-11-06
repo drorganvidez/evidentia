@@ -71,7 +71,7 @@
 
                                         @if (!empty($event->hidden) && $event->hidden)
                                             <form
-                                                action="{{ route('registercoordinator.event.unhide', ['id' => $event->id_eventbrite]) }}"
+                                                action="{{ route('registercoordinator.event.unhide', ['id' => $event->id]) }}"
                                                 method="POST">
                                                 @csrf
                                                 <button type="submit" class="btn btn-success btn-block"
@@ -81,7 +81,7 @@
                                             </form>
                                         @else
                                             <form
-                                                action="{{ route('registercoordinator.event.hide', ['id' => $event->id_eventbrite]) }}"
+                                                action="{{ route('registercoordinator.event.hide', ['id' => $event->id]) }}"
                                                 method="POST">
                                                 @csrf
                                                 <button type="submit" class="btn btn-warning btn-block"

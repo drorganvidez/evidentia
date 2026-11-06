@@ -56,10 +56,10 @@ class AttendanceManagementTest extends TestCase
 
     public function test_events_are_hidden_and_shown_again(): void
     {
-        $this->from(route('registercoordinator.event.list'))->post(route('registercoordinator.event.hide', ['id' => '111']));
+        $this->from(route('registercoordinator.event.list'))->post(route('registercoordinator.event.hide', ['id' => $this->event->id]));
         $this->assertTrue((bool) $this->event->fresh()->hidden);
 
-        $this->from(route('registercoordinator.event.list'))->post(route('registercoordinator.event.unhide', ['id' => '111']));
+        $this->from(route('registercoordinator.event.list'))->post(route('registercoordinator.event.unhide', ['id' => $this->event->id]));
         $this->assertFalse((bool) $this->event->fresh()->hidden);
     }
 }
