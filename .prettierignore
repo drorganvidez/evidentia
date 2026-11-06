@@ -20,3 +20,6 @@ docs/
 # Playwright output
 playwright-report/
 test-results/
+
+# Git worktrees of parallel work (Claude Code), each formatted from its own checkout
+.claude/

@@ -12,6 +12,8 @@ export default defineConfig([
         'docs/',
         'playwright-report/',
         'test-results/',
+        // Git worktrees of parallel work (Claude Code), each linted from its own checkout
+        '.claude/',
     ]),
 
     {
