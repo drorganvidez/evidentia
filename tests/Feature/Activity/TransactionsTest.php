@@ -7,6 +7,7 @@ use App\Facades\Activity;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Concerns\CreatesAppFixtures;
@@ -23,6 +24,8 @@ class TransactionsTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        // The failed annotation is a server error: the error recorder tells the lecturers, never through these tables
+        Notification::fake();
         $this->createAppFixtures();
     }
 

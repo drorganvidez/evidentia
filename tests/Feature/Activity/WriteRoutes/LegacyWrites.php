@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Activity\WriteRoutes;
 
+use App\Models\Attendee;
 use App\Models\Committee;
 use App\Models\Event;
 use App\Models\Evidence;
@@ -243,6 +244,34 @@ final class LegacyWrites
                 'expect' => ['attendee.deleted'],
                 'acting_role' => 'REGISTER_COORDINATOR',
             ],
+            'registercoordinator.event.store' => [
+                'role' => 'REGISTER_COORDINATOR',
+                'method' => 'POST',
+                'uri' => fn () => route('registercoordinator.event.store'),
+                'data' => fn () => ['name' => 'Taller de Git', 'start_datetime' => '2026-10-28T08:30', 'end_datetime' => '2026-10-28T10:00'],
+                'expect' => ['event.created'],
+                'acting_role' => 'REGISTER_COORDINATOR',
+            ],
+            'registercoordinator.event.update' => [
+                'role' => 'REGISTER_COORDINATOR',
+                'method' => 'POST',
+                'setup' => fn (TestCase $test, array $ids) => Event::whereKey($ids['event'])->update(['id_eventbrite' => null]),
+                'uri' => fn (array $ids) => route('registercoordinator.event.update', $ids['event']),
+                'data' => fn () => ['name' => 'Charla de IA', 'start_datetime' => '2026-10-28T08:30', 'end_datetime' => '2026-10-28T11:00'],
+                'expect' => ['event.edited'],
+                'acting_role' => 'REGISTER_COORDINATOR',
+            ],
+            'registercoordinator.event.destroy' => [
+                'role' => 'REGISTER_COORDINATOR',
+                'method' => 'DELETE',
+                'setup' => function (TestCase $test, array $ids) {
+                    Event::whereKey($ids['event'])->update(['id_eventbrite' => null]);
+                    Attendee::where('event_id', $ids['event'])->delete();
+                },
+                'uri' => fn (array $ids) => route('registercoordinator.event.destroy', $ids['event']),
+                'expect' => ['event.deleted'],
+                'acting_role' => 'REGISTER_COORDINATOR',
+            ],
             'registercoordinator.event.hide' => [
                 'role' => 'REGISTER_COORDINATOR',
                 'method' => 'POST',
@@ -326,6 +355,8 @@ final class LegacyWrites
             'ui.demo.revert' => 'Catálogo',
             'ui.demo.remove' => 'Catálogo',
             'ui.demo.submit' => 'Catálogo',
+            'lecture.errors.resolve' => 'Errores del servidor, fuera del registro de actividad (ErrorReportingTest)',
+            'lecture.errors.reopen' => 'Errores del servidor, fuera del registro de actividad (ErrorReportingTest)',
             'suggestionsmailbox_p' => 'Se sustituye por los mensajes',
         ];
     }
@@ -347,9 +378,6 @@ final class LegacyWrites
     public static function pending(): array
     {
         return [
-            'registercoordinator.event.store' => 'F',
-            'registercoordinator.event.update' => 'F',
-            'registercoordinator.event.destroy' => 'F',
         ];
     }
 }
