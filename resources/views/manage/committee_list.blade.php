@@ -1,200 +1,94 @@
-@extends('layouts.app')
+{{-- Committees of the course: their people and records, a new committee, and the name and icon of each one --}}
+@php
+    $columns = [
+        ['label' => 'Comité', 'key' => 'name'],
+        ['label' => 'Coordinadores', 'key' => 'coordinators', 'align' => 'end'],
+        ['label' => 'Secretarios', 'key' => 'secretaries', 'align' => 'end'],
+        ['label' => 'Evidencias', 'key' => 'evidences', 'align' => 'end'],
+        ['label' => 'Reuniones', 'key' => 'meetings', 'align' => 'end'],
+        ['label' => 'Acciones', 'srOnly' => true],
+    ];
+    $newFields = ['name' => 'Nombre', 'icon' => 'Icono'];
+@endphp
+<x-layout.app title="Comités" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Comités']]">
+    <x-ui.page-header title="Comités">
+        <x-slot:actions>
+            <x-ui.dialog id="new-committee" title="Nuevo comité" size="lg" trigger="Nuevo comité"
+                trigger-variant="primary" trigger-icon="plus" :open-on-load="$errors->hasAny(array_keys($newFields))">
+                <x-ui.form :action="$route_new" id="new-committee-form" :fields="$newFields" busy-label="Creando">
+                    <x-ui.field name="name" label="Nombre" required autocomplete="off" />
+                    <x-ui.icon-picker name="icon" label="Icono" :columns="8" />
+                    <x-slot:actions>
+                        <x-ui.button type="submit" variant="primary" icon="plus">Crear comité</x-ui.button>
+                    </x-slot:actions>
+                </x-ui.form>
+            </x-ui.dialog>
+        </x-slot:actions>
+    </x-ui.page-header>
 
-@section('title', 'Gestionar comités')
-
-@section('title-icon', 'fas fa-sitemap')
-
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item active">@yield('title')</li>
-@endsection
-
-@section('content')
-
-    <div class="row">
-
-        <div class="col-lg-8">
-
-            <div class="card">
-
-                <div class="card-body">
-
-                    <form method="POST" action="{{ $route }}">
-                        @csrf
-
-                        <table id="dataset" class="table table-hover table-responsive">
-                            <thead>
-                                <tr>
-                                    <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Previsualización</th>
-                                    <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Icono de Font Awesome</th>
-                                    <th>Nombre del comité</th>
-                                    <th>Opciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                @foreach ($committees as $committee)
-                                    <tr>
-                                        <td
-                                            class="align-middle text-center d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                            <span id="icon_prev_{{ $committee->id }}"
-                                                style="font-size: 20px">{!! $committee->icon ?? '' !!}</span>
-                                        </td>
-                                        <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell"><input
-                                                name="icon_{{ $committee->id }}" id="icon_{{ $committee->id }}"
-                                                oninput="prev({{ $committee->id }})" type="text" class="form-control"
-                                                placeholder="" value="{{ $committee->icon }}" autocomplete="icon"
-                                                autofocus=""></td>
-                                        <td><input name="name_{{ $committee->id }}" type="text" class="form-control"
-                                                placeholder="" value="{{ $committee->name }}" autocomplete="name"></td>
-                                        <td>
-                                            <a class="form-control btn btn-danger " href="#" data-toggle="modal"
-                                                data-target="#modal-{{ $committee->id }}">
-                                                <i class="fas fa-trash"></i> <span
-                                                    class="d-none d-sm-none d-md-none d-lg-inline">Eliminar</span>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-
-                            </tbody>
-                        </table>
-
-                        <div class="form-row">
-                            <div class="col-lg-3 mt-1">
-                                <button type="submit" class="btn btn-primary btn-block">Guardar comités</button>
-                            </div>
-                        </div>
-
-
-
-                    </form>
-
-                </div>
-
-            </div>
-        </div>
-
-        <div class="col-lg-4">
-            <div class="card">
-
-                <div class="card-body">
-
-                    <h4>Crear nuevo comité</h4>
-
-                    <p>Utiliza iconos gratuitos de <a target="_blank" rel="noopener noreferrer"
-                            href="https://fontawesome.com/v5/search?m=free">Font Awesome 5.15.3</a>.
-                        Por ejemplo: <code>{{ '<i class="far fa-compass"></i>' }}</code> para una brújula regular.
-                        Usa los prefijos <code>fas</code>, <code>far</code> o <code>fab</code>;
-                        las clases de versiones posteriores, como <code>fa-regular</code>, no son compatibles.</p>
-
-                    <form method="POST" action="{{ $route_new }}">
-                        @csrf
-
-                        <div class="form-row">
-
-                            <div class="form-group col-lg-2">
-                                <label for="icon">Prev.</label>
-                                <span id="write_new_icon"
-                                    class="align-middle form-control input-group-text text-center"></span>
-                            </div>
-
-                            <x-input col="10" id="new_icon" attr="icon" :required="false"
-                                label="Icono de Font Awesome" />
-
-                            <x-input col="12" attr="name" label="Nombre del comité" />
-
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-12 col-lg-6 col-sm-4">
-                                <button type="submit" class="btn btn-primary btn-block">Crear comité</button>
-                            </div>
-                        </div>
-
-                    </form>
-
-                </div>
-
-            </div>
-        </div>
-
-
-
-    </div>
-
-    <div class="container">
+    <x-ui.table caption="Comités del curso" :columns="$columns">
+        @if ($committees->isEmpty())
+            <x-slot:empty>
+                <x-ui.empty icon="network" title="No hay comités" size="sm" :level="2" />
+            </x-slot:empty>
+        @endif
         @foreach ($committees as $committee)
-            <div class="modal fade" id="modal-{{ $committee->id }}">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content" style="overflow: visible">
-
-                        <div class="modal-header">
-                            <h4 class="modal-title text-wrap">Eliminar comité</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-
-                        @if ($committee->can_be_removed())
-                            <form action="{{ $route_remove }}" method="POST">
+            <x-ui.table.row>
+                @php
+                    $counts = [
+                        [$committee->coordinators->count(), 'coordinador', 'coordinadores'],
+                        [$committee->secretaries->count(), 'secretario', 'secretarios'],
+                        [$committee->evidences->count(), 'evidencia', 'evidencias'],
+                        [$committee->meetings->count(), 'reunión', 'reuniones'],
+                    ];
+                @endphp
+                <x-ui.table.cell label="Comité" primary>
+                    <x-ui.committee-chip :committee="$committee" size="md" />
+                    <span class="mt-0.5 block text-sm text-ink-muted md:hidden">
+                        {{ collect($counts)->map(fn($count) => $count[0] . ' ' . ($count[0] === 1 ? $count[1] : $count[2]))->implode(' · ') }}
+                    </span>
+                </x-ui.table.cell>
+                @foreach ($counts as [$count, $one, $many])
+                    <x-ui.table.cell :label="ucfirst($many)" numeric meta hide>{{ $count }}</x-ui.table.cell>
+                @endforeach
+                <x-ui.table.cell end class="w-[1%] whitespace-nowrap">
+                    <div class="flex items-center justify-end gap-1">
+                        <x-ui.dialog :id="'edit-committee-' . $committee->id" title="Editar el comité" size="lg" :trigger="'Editar ' . $committee->name"
+                            trigger-variant="ghost" trigger-icon="pen-line" trigger-icon-only>
+                            <form id="edit-committee-form-{{ $committee->id }}" method="post"
+                                action="{{ $route }}" class="grid grid-cols-[minmax(0,1fr)] gap-5">
                                 @csrf
-                                <input type="hidden" name="_id" value="{{ $committee->id }}" />
-                                <div class="modal-body text-wrap">
-                                    Esta acción no se puede deshacer. ¿Deseas continuar?
-                                </div>
-                                <div class="modal-footer justify-content-between">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                    <button type="submit" class="btn btn-danger">
-                                        <i class="fas fa-trash"></i> &nbsp;Eliminar comité
-                                    </button>
-                                </div>
+                                {{-- An icon stored before the picker (Font Awesome markup) stays unless another is chosen --}}
+                                <input type="hidden" name="icon_{{ $committee->id }}" value="{{ $committee->icon }}">
+                                <x-ui.field :name="'name_' . $committee->id" label="Nombre" :value="$committee->name" required
+                                    autocomplete="off" />
+                                <x-ui.icon-picker :name="'icon_' . $committee->id" label="Icono" :value="$committee->icon"
+                                    :columns="8" />
                             </form>
-                        @else
-                            <div class="modal-body text-wrap">
-                                <p>No es posible eliminar este comité. Un comité puede ser eliminado si se cumplen las
-                                    <b>tres condiciones siguientes</b>:
-                                <ol>
-                                    <li>
-                                        <b>No tiene ningún coordinador ni secretario</b><br>
-                                        (coordinadores: {{ $committee->coordinators->count() }}, secretarios:
-                                        {{ $committee->secretaries->count() }})
-                                    </li>
-                                    <li><b>No tiene evidencias asociadas, sea cual sea su estado</b> (evidencias:
-                                        {{ $committee->evidences->count() }})</li>
-                                    <li><b>No hay reuniones asociadas</b> (reuniones: {{ $committee->meetings->count() }})
-                                    </li>
-                                </ol>
-                            </div>
-                            <div class="modal-footer justify-content-between">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                            </div>
+                            <x-slot:footer>
+                                <x-ui.button x-on:click="close">Cancelar</x-ui.button>
+                                <x-ui.button variant="primary" type="submit"
+                                    form="edit-committee-form-{{ $committee->id }}" icon="save">Guardar</x-ui.button>
+                            </x-slot:footer>
+                        </x-ui.dialog>
+                        @if ($committee->can_be_removed())
+                            <x-ui.dialog :id="'remove-committee-' . $committee->id" variant="alert" title="Eliminar el comité"
+                                :description="'Se eliminará ' . $committee->name . '. Esta acción no se puede deshacer.'" :trigger="'Eliminar ' . $committee->name" trigger-variant="ghost" trigger-icon="trash-2"
+                                trigger-icon-only>
+                                <x-slot:footer>
+                                    <x-ui.button x-on:click="close" autofocus>Cancelar</x-ui.button>
+                                    <form method="post" action="{{ $route_remove }}">
+                                        @csrf
+                                        <input type="hidden" name="_id" value="{{ $committee->id }}">
+                                        <x-ui.button variant="danger" type="submit" icon="trash-2" block>Sí,
+                                            eliminar</x-ui.button>
+                                    </form>
+                                </x-slot:footer>
+                            </x-ui.dialog>
                         @endif
-
-
-
                     </div>
-                </div>
-            </div>
+                </x-ui.table.cell>
+            </x-ui.table.row>
         @endforeach
-    </div>
-
-@section('scripts')
-
-    <script>
-        // previsualizar icono a la hora de crear un nuevo comité
-        $("#new_icon").on('input', function() {
-            var val = $("#new_icon").val();
-            $("#write_new_icon").html(val);
-        });
-
-        // previsualizar icono a la hora de modificar un comité
-        function prev(id) {
-            var val = $("#icon_" + id).val();
-            $("#icon_prev_" + id).html(val);
-        }
-    </script>
-
-@endsection
-
-@endsection
+    </x-ui.table>
+</x-layout.app>
