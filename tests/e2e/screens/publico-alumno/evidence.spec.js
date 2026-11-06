@@ -33,13 +33,16 @@ test.describe('Evidencias de la estudiante', () => {
         ).toBeVisible();
         await expect(table.getByText('Atención en el registro')).toHaveCount(0);
 
-        await page.getByRole('searchbox', { name: 'Filtrar evidencias' }).fill('photocall');
+        const search = page.getByRole('searchbox', { name: 'Buscar evidencias' });
+        await search.fill('photocall');
+        await search.press('Enter');
+        await expect(page).toHaveURL(/\/evidence\/list\?q=photocall$/);
         await expect(
             table.getByRole('link', { name: 'Montaje del photocall', exact: true }),
         ).toBeVisible();
         await expect(
             table.getByRole('link', { name: 'Cartelería del vestíbulo', exact: true }),
-        ).toBeHidden();
+        ).toHaveCount(0);
         await audit(page, ui);
     });
 

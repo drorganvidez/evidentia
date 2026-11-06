@@ -1,4 +1,7 @@
-{{-- The latest version of every evidence of the signed-in person, newest first, with what they can still do to each --}}
+{{--
+    The latest version of every evidence of the signed-in person, newest first and in pages, with a search and what
+    they can still do to each
+--}}
 @php
     $closesAt = \Config::upload_evidences_timestamp();
     // Open as the routes read it (CheckUploadEvidences): until the date passes, also when there is none
@@ -30,8 +33,8 @@
         </x-slot:actions>
     </x-ui.page-header>
 
-    <x-ui.table caption="Mis evidencias" :columns="$columns" :filterable="$evidences->isNotEmpty()" count-label="evidencias"
-        filter-placeholder="Filtrar evidencias">
+    <x-ui.table caption="Mis evidencias" :columns="$columns" :paginator="$evidences" filterable count-label="evidencias"
+        count-singular="evidencia" filter-placeholder="Buscar evidencias">
         @foreach ($evidences as $evidence)
             @php
                 $href = route('evidence.view', ['id' => $evidence->id]);
@@ -57,7 +60,12 @@
                 </x-ui.table.cell>
             </x-ui.table.row>
         @endforeach
-        @if ($evidences->isEmpty())
+        @if ($evidences->isEmpty() && $term !== null)
+            <x-slot:empty>
+                <x-ui.empty icon="file-text" title="Ninguna evidencia coincide con la búsqueda" size="sm"
+                    :level="2" />
+            </x-slot:empty>
+        @elseif ($evidences->isEmpty())
             <x-slot:empty>
                 <x-ui.empty icon="file-text" title="Aún no hay evidencias" size="sm" :level="2">
                     @if ($open)
@@ -70,8 +78,8 @@
             </x-slot:empty>
         @else
             <x-slot:footer>
-                <span>{{ $evidences->count() }} {{ $evidences->count() === 1 ? 'evidencia' : 'evidencias' }} ·
-                    <x-ui.hours :value="$evidences->sum('hours')" size="sm" class="text-ink" /> declaradas</span>
+                <span>{{ $evidences->total() }} {{ $evidences->total() === 1 ? 'evidencia' : 'evidencias' }} ·
+                    <x-ui.hours :value="$hours" size="sm" class="text-ink" /> declaradas</span>
             </x-slot:footer>
         @endif
     </x-ui.table>

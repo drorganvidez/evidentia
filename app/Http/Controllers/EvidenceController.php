@@ -6,6 +6,7 @@ use App\Enums\ActivityAction;
 use App\Enums\ActivityFlag;
 use App\Exceptions\ProofNotStored;
 use App\Facades\Activity;
+use App\Http\Controllers\Concerns\PaginatesLists;
 use App\Http\Middleware\CheckRoles;
 use App\Models\Committee;
 use App\Models\Evidence;
@@ -15,6 +16,7 @@ use App\Rules\CheckHoursAndMinutes;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
 use App\Support\Changes;
+use App\Support\ListPage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -22,6 +24,8 @@ use Illuminate\Support\Facades\Storage;
 
 class EvidenceController extends Controller
 {
+    use PaginatesLists;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -36,12 +40,17 @@ class EvidenceController extends Controller
             ['evidence' => $evidence]);
     }
 
-    public function list()
+    public function list(Request $request)
     {
-        $evidences = Evidence::where(['user_id' => Auth::id(), 'last' => true])->latest()->latest('id')->get();
+        // la búsqueda, el número y las horas cuentan todas las evidencias, no solo las de la página
+        $evidences = $this->searchList(Evidence::where(['user_id' => Auth::id(), 'last' => true]), $request, ['title', 'committee.name']);
+        $hours = (float) $evidences->clone()->sum('hours');
 
-        return view('evidence.list',
-            ['evidences' => $evidences]);
+        return view('evidence.list', [
+            'evidences' => $this->paginateList($evidences->with(['committee', 'reasonRejection'])->latest()->latest('id'), $request),
+            'hours' => $hours,
+            'term' => ListPage::term($request),
+        ]);
     }
 
     /****************************************************************************
