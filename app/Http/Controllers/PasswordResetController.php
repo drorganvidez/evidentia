@@ -7,6 +7,7 @@ use App\Facades\Activity;
 use App\Mail\PasswordReset;
 use App\Models\Token;
 use App\Models\User;
+use App\Support\StrongPassword;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\PasswordReset as PasswordResetEvent;
 use Illuminate\Http\Request;
@@ -102,7 +103,7 @@ class PasswordResetController extends Controller
     public function update_p(Request $request)
     {
         $request->validate([
-            'password' => 'required|confirmed|min:6',
+            'password' => ['required', 'confirmed', StrongPassword::rule()],
         ]);
 
         $token_entity = Token::where('token', $request->route('token'))->first();

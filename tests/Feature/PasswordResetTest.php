@@ -27,20 +27,20 @@ class PasswordResetTest extends TestCase
     {
         $token = $this->token(used: false, validUntil: now()->addDay());
 
-        $this->changePassword($token->token, 'new-pass')
+        $this->changePassword($token->token, 'Nueva-Pass-26')
             ->assertRedirect(route('login'))
             ->assertSessionHas('success');
-        $this->assertTrue(Hash::check('new-pass', $this->user->fresh()->password));
+        $this->assertTrue(Hash::check('Nueva-Pass-26', $this->user->fresh()->password));
 
-        $this->changePassword($token->token, 'another-pass')->assertSessionHas('error');
-        $this->assertTrue(Hash::check('new-pass', $this->user->fresh()->password));
+        $this->changePassword($token->token, 'Otra-Clave-26')->assertSessionHas('error');
+        $this->assertTrue(Hash::check('Nueva-Pass-26', $this->user->fresh()->password));
     }
 
     public function test_an_expired_link_does_not_change_the_password(): void
     {
         $token = $this->token(used: false, validUntil: now()->subDay());
 
-        $this->changePassword($token->token, 'attacker-pass')->assertSessionHas('error');
+        $this->changePassword($token->token, 'Atacante-Clave-26')->assertSessionHas('error');
 
         $this->assertTrue(Hash::check('original-pass', $this->user->fresh()->password));
     }
@@ -51,7 +51,7 @@ class PasswordResetTest extends TestCase
         $old = Token::sole()->token;
         $this->post(route('password.reset_p'), ['email' => 'ana@us.es']);
 
-        $this->changePassword($old, 'attacker-pass')->assertSessionHas('error');
+        $this->changePassword($old, 'Atacante-Clave-26')->assertSessionHas('error');
 
         $this->assertTrue(Hash::check('original-pass', $this->user->fresh()->password));
     }

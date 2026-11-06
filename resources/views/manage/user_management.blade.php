@@ -100,6 +100,8 @@
                     <x-ui.field name="password" label="Nueva contraseña" type="password" autocomplete="new-password" />
                     <x-ui.field name="password_confirmation" label="Repite la nueva contraseña" type="password"
                         autocomplete="new-password" />
+                    <x-ui.password-rules for="field-password" confirm="field-password-confirmation" optional
+                        class="md:col-span-2" />
                 </div>
             </x-ui.card>
 

@@ -14,6 +14,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Services\Activity\SubjectInfo;
 use App\Support\Changes;
+use App\Support\StrongPassword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -252,7 +253,7 @@ class ManagementController extends Controller
             'surname' => 'required|max:255',
             'username' => ['required', 'max:255', Rule::unique('users')->ignore($user->id)],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'password' => 'nullable|confirmed|min:6',
+            'password' => ['nullable', 'confirmed', StrongPassword::rule()],
             'committee' => $needs_committee ? 'required|exists:committees,id' : 'nullable',
         ], [
             'committee.required' => 'Comité no válido.',

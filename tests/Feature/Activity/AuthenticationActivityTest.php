@@ -199,7 +199,7 @@ class AuthenticationActivityTest extends TestCase
     {
         $token = Token::create(['token' => str_repeat('a', 60), 'used' => false, 'valid_until_timestamp' => now()->addDay(), 'user_id' => $this->student->id]);
 
-        $this->post(route('password.update_p', ['token' => $token->token]), ['password' => 'nueva-clave', 'password_confirmation' => 'nueva-clave'])
+        $this->post(route('password.update_p', ['token' => $token->token]), ['password' => 'Nueva-Clave-26', 'password_confirmation' => 'Nueva-Clave-26'])
             ->assertSessionHas('success');
 
         $log = ActivityLog::sole();

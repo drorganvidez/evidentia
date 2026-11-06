@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
 use App\Support\Changes;
+use App\Support\StrongPassword;
 use App\View\Dashboard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -101,7 +102,7 @@ class ProfileController extends Controller
 
         $request->validate([
             'current_password' => 'required|current_password',
-            'password' => 'required|confirmed|min:6',
+            'password' => ['required', 'confirmed', StrongPassword::rule()],
         ]);
 
         DB::transaction(function () use ($request, $user) {

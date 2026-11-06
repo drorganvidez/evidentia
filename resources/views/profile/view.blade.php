@@ -47,10 +47,11 @@
                         autocomplete="current-password" required />
                     <div class="grid items-start gap-5 md:grid-cols-2">
                         <x-ui.field name="password" label="Nueva contraseña" type="password" autocomplete="new-password"
-                            hint="Al menos 6 caracteres" required />
+                            required />
                         <x-ui.field name="password_confirmation" label="Repite la contraseña" type="password"
                             autocomplete="new-password" required />
                     </div>
+                    <x-ui.password-rules for="field-password" confirm="field-password-confirmation" />
                     <x-slot:actions>
                         <x-ui.button type="submit" variant="primary" icon="key-round">Cambiar la
                             contraseña</x-ui.button>

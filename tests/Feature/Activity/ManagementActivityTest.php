@@ -68,12 +68,12 @@ class ManagementActivityTest extends TestCase
     {
         $user = $this->student();
 
-        $this->post(route('lecture.user.management.save'), ['pass' => null, 'password' => 'nueva-clave', 'password_confirmation' => 'nueva-clave'] + $this->form($user, ['STUDENT']));
+        $this->post(route('lecture.user.management.save'), ['pass' => null, 'password' => 'Nueva-Clave-26', 'password_confirmation' => 'Nueva-Clave-26'] + $this->form($user, ['STUDENT']));
         $this->post(route('lecture.user.management.save'), $this->form($user, ['STUDENT']));
 
         $this->assertSame(['user.blocked', 'user.password_changed_by_manager', 'user.unblocked'], ActivityLog::orderBy('id')->pluck('action')->all());
         $this->assertSame(1, ActivityLog::where('action', '!=', 'user.unblocked')->distinct()->count('request_id'));
-        $this->assertStringNotContainsString('nueva-clave', ActivityLog::all()->toJson());
+        $this->assertStringNotContainsString('Nueva-Clave-26', ActivityLog::all()->toJson());
     }
 
     public function test_a_manager_who_edits_themselves_is_flagged(): void

@@ -51,7 +51,7 @@ class TransactionsTest extends TestCase
             'edición de usuario' => ['LECTURE', 'lecture.user.management.save', ActivityAction::UserPasswordChangedByManager, fn (array $ids) => [
                 'user_id' => $ids['student'], 'roles' => Role::whereIn('rol', ['STUDENT', 'COORDINATOR'])->pluck('id')->all(),
                 'committee' => $ids['programa'], 'username' => 'nuevo-uvus', 'name' => 'Lucía', 'surname' => 'Pérez',
-                'email' => 'lucia@alum.us.es', 'password' => 'nueva-clave', 'password_confirmation' => 'nueva-clave',
+                'email' => 'lucia@alum.us.es', 'password' => 'Nueva-Clave-26', 'password_confirmation' => 'Nueva-Clave-26',
             ]],
         ];
     }

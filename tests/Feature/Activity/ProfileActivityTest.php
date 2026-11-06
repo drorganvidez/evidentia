@@ -52,12 +52,12 @@ class ProfileActivityTest extends TestCase
 
     public function test_a_new_password_is_recorded_without_it(): void
     {
-        $this->post(route('profile.upload.pass'), ['current_password' => 'secret123', 'password' => 'nueva-clave', 'password_confirmation' => 'nueva-clave'])
+        $this->post(route('profile.upload.pass'), ['current_password' => 'secret123', 'password' => 'Nueva-Clave-26', 'password_confirmation' => 'Nueva-Clave-26'])
             ->assertRedirect(route('profile.view'));
 
         $log = ActivityLog::sole();
         $this->assertSame('user.password_changed', $log->action);
         $this->assertNull($log->details);
-        $this->assertStringNotContainsString('nueva-clave', json_encode($log->getAttributes()));
+        $this->assertStringNotContainsString('Nueva-Clave-26', json_encode($log->getAttributes()));
     }
 }

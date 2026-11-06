@@ -11,6 +11,7 @@ import dismissible from './components/dismissible';
 import notices from './components/notices';
 import pageProgress from './components/pageProgress';
 import passwordField from './components/passwordField';
+import passwordRules from './components/passwordRules';
 import noticesStore from './stores/notices';
 import theme from './stores/theme';
 
@@ -24,6 +25,7 @@ bootAlpine({
         notices,
         pageProgress,
         passwordField,
+        passwordRules,
     },
     stores: { notices: noticesStore, theme },
 });
