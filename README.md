@@ -134,7 +134,7 @@ docker compose -f docker/docker-compose.dev.yml run --rm vite npm run format    
 docker compose -f docker/docker-compose.dev.yml run --rm vite npm run format:check
 ```
 
-The views that still use the old layout are listed in `.bladeignore`; remove a line when its view moves to the new UI.
+`.bladeignore` keeps blade-formatter away from the Markdown mail templates, which it would break.
 
 ### End to end
 
