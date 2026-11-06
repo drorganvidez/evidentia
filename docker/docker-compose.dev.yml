@@ -76,7 +76,7 @@ services:
       - evidentia_net
 
   mysql:
-    image: mysql:8
+    image: mysql:26
     container_name: evidentia_mysql_container
     env_file:
       - ../.env
