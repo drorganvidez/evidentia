@@ -228,6 +228,39 @@ test.describe('Shell en su propia página', () => {
         await expect(toggle).not.toBeChecked();
     });
 
+    test('el anillo de foco de las migas cabe en su lista recortada', async ({
+        page,
+    }, testInfo) => {
+        test.skip(
+            testInfo.project.name !== 'chromium',
+            'Las migas anteriores viven en la topbar ancha',
+        );
+
+        const link = page.locator('nav[aria-label="Migas de pan"] a').first();
+
+        await page.keyboard.press('Shift');
+        await link.focus();
+
+        const room = await link.evaluate((a) => {
+            const style = getComputedStyle(a);
+            const reach = parseFloat(style.outlineWidth) + parseFloat(style.outlineOffset);
+            const own = a.getBoundingClientRect();
+            const list = a.closest('ol').getBoundingClientRect();
+
+            return {
+                reach,
+                top: own.top - list.top,
+                bottom: list.bottom - own.bottom,
+                left: own.left - list.left,
+            };
+        });
+
+        expect(room.reach).toBeGreaterThan(0);
+        expect(room.top, 'Arriba').toBeGreaterThanOrEqual(room.reach);
+        expect(room.bottom, 'Abajo').toBeGreaterThanOrEqual(room.reach);
+        expect(room.left, 'Izquierda').toBeGreaterThanOrEqual(room.reach);
+    });
+
     test('el menú de usuario abre desde el avatar con el nombre y Salir', async ({
         page,
     }, testInfo) => {

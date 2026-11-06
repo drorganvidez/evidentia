@@ -21,7 +21,8 @@ class BreadcrumbsTest extends ComponentTestCase
         $html = $this->render('<x-ui.breadcrumbs :items="$items" />', ['items' => $this->items()]);
 
         $this->assertStringStartsWith('<nav aria-label="Migas de pan" class="min-w-0">', trim($html));
-        $this->assertStringContainsString('<ol class="flex items-center gap-2 overflow-hidden text-md font-medium whitespace-nowrap text-ink-muted">', $html);
+        // The list clips its overflow: the padding taken back by the negative margin leaves room for the focus ring
+        $this->assertMatchesRegularExpression('/<ol\s+class="-m-1.5 flex items-center gap-2 overflow-hidden p-1.5 text-md font-medium whitespace-nowrap text-ink-muted">/', $html);
         $this->assertSame(1, substr_count($html, 'aria-current="page"'));
         // It takes the room the links leave and never drops below a readable minimum
         $this->assertStringContainsString('<li aria-current="page" class="min-w-16 flex-1 truncate font-semibold text-ink">Montaje del photocall</li>', $html);
