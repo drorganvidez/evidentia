@@ -54,6 +54,12 @@
         : ['label' => 'Mis evidencias', 'href' => route('evidence.list')];
     $sent = $evidence->status !== 'DRAFT';
     $reviewed = in_array($evidence->status, ['ACCEPTED', 'REJECTED'], true);
+    // The history, the messages and the change of committee live in the activity pages
+    $activityAccess = app(\App\Services\Activity\ActivityAccess::class);
+    $historyHref = route('activity.evidence', ['id' => $evidence->id]);
+    $canMove = $author
+        ? $activityAccess->canMoveAsStudent($user, $evidence)
+        : $reviewer && $activityAccess->canMoveAsCoordinator($user, $evidence);
 @endphp
 <x-layout.app :title="$evidence->title" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], $list, ['label' => $evidence->title]]">
     <x-ui.page-header :title="$evidence->title">
@@ -67,12 +73,10 @@
                 <x-ui.deadline label="Subida de evidencias" variant="inline" :verb="$evidence->status === 'REJECTED' ? 'para corregirla' : 'para enviarla'" :closes-at="$uploadClosesAt" />
             </x-slot:meta>
         @endif
-        @if ($author && $uploadOpen)
-            <x-slot:actions>
+        <x-slot:actions>
+            @if ($author && $uploadOpen)
                 @include('evidence.partials.actions', ['evidence' => $evidence])
-            </x-slot:actions>
-        @elseif ($reviewer && $validationOpen && $evidence->status !== 'DRAFT')
-            <x-slot:actions>
+            @elseif ($reviewer && $validationOpen && $evidence->status !== 'DRAFT')
                 @if ($evidence->status !== 'ACCEPTED')
                     <form method="post" action="{{ route('coordinator.evidence.accept', ['id' => $evidence->id]) }}">
                         @csrf
@@ -94,9 +98,21 @@
                         </x-ui.form>
                     </x-ui.dialog>
                 @endif
-            </x-slot:actions>
-        @endif
+            @endif
+            @if ($author)
+                <x-ui.button icon="message-square" :href="route('messages.create', ['evidence' => $evidence->id])">Escribir al coordinador</x-ui.button>
+            @endif
+            @if ($canMove)
+                <x-ui.button icon="arrow-right-left"
+                    :href="route('activity.evidence', ['id' => $evidence->id, 'move' => 1])">{{ $author ? 'Cambiar de comité' : 'Mover a otro comité' }}</x-ui.button>
+            @endif
+        </x-slot:actions>
     </x-ui.page-header>
+
+    <x-ui.tabs class="min-w-0" label="Secciones de la evidencia" size="md" :items="[
+        ['label' => 'Detalle', 'href' => url()->current(), 'current' => true],
+        ['label' => 'Historial', 'href' => $historyHref],
+    ]" />
 
     <x-ui.timeline variant="steps" label="Recorrido de la evidencia" :columns="3">
         <x-ui.timeline.item :state="$sent ? 'done' : 'current'" title="Borrador" :at="$first?->created_at" />

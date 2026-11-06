@@ -16,9 +16,14 @@
         <x-ui.table caption="Mis reuniones" :columns="$columns" :filterable="$list->isNotEmpty()" count-label="reuniones"
             filter-placeholder="Filtrar reuniones">
             @forelse ($list as $meeting)
-                <x-ui.table.row>
+                @php($minutesHref = $meeting->meetingMinutes ? route('activity.minutes', ['id' => $meeting->meetingMinutes->id]) : null)
+                <x-ui.table.row :href="$minutesHref">
                     <x-ui.table.cell label="Reunión" primary>
-                        <span class="font-semibold">{{ $meeting->title }}</span>
+                        @if ($minutesHref)
+                            <a href="{{ $minutesHref }}">{{ $meeting->title }}</a>
+                        @else
+                            <span class="font-semibold">{{ $meeting->title }}</span>
+                        @endif
                         <span class="mt-0.5 block text-sm text-ink-muted">{{ $meeting->place }}</span>
                     </x-ui.table.cell>
                     <x-ui.table.cell label="Comité" hide>

@@ -46,6 +46,8 @@
                 </x-ui.table.cell>
                 <x-ui.table.cell actions>
                     <span class="flex justify-end gap-0.5">
+                        <x-ui.button icon-only icon="history" variant="ghost" size="sm" :label="'Historial de ' . $m->meeting->title"
+                            :href="route('activity.minutes', ['id' => $m->id, 'tab' => 'historial'])" />
                         <x-ui.button icon-only icon="file-text" variant="ghost" size="sm" :label="'Descargar el PDF de ' . $m->meeting->title"
                             :href="$pdf" />
                         @if ($meetingsOpen)

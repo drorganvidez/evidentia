@@ -44,6 +44,10 @@
                 <x-ui.deadline label="Validación de evidencias" variant="inline" verb="para validar" :closes-at="$closesAt" />
             </x-slot:meta>
         @endif
+        <x-slot:actions>
+            <x-ui.button icon="activity" :href="route('activity.index')">Actividad del comité</x-ui.button>
+            <x-ui.button icon="inbox" :href="route('messages.inbox')">Mensajes</x-ui.button>
+        </x-slot:actions>
     </x-ui.page-header>
 
     <x-ui.table :caption="'Evidencias de ' . $committee->name" :columns="$columns" :filterable="$evidences->isNotEmpty()" count-label="evidencias"
@@ -106,6 +110,10 @@
                                         icon="circle-x">Rechazar</x-ui.button>
                                 </x-slot:footer>
                             </x-ui.dialog>
+                        @endif
+                        @if ($reviewable && $evidence->status === 'PENDING')
+                            <x-ui.button icon-only icon="arrow-right-left" :label="'Mover a otro comité ' . $evidence->title" :href="route('activity.evidence', ['id' => $evidence->id, 'move' => 1])"
+                                variant="ghost" />
                         @endif
                         <x-ui.button icon-only icon="eye" :label="'Abrir ' . $evidence->title" :href="$href" variant="ghost"
                             dim />
