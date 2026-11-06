@@ -98,6 +98,71 @@ test.describe('Formularios', () => {
         expect(requests).toBe(1);
     });
 
+    test('sin la validación del navegador el doble envío también se bloquea', async ({
+        page,
+        ui,
+    }) => {
+        const form = ui.section('form').locator('#access-form');
+        // The button renames itself while busy, so it is found by its type
+        const button = form.locator('button[type="submit"]');
+        let requests = 0;
+        let answered;
+        const answer = new Promise((resolve) => {
+            answered = resolve;
+        });
+
+        await page.route('**/_ui/demo/submit', async (route) => {
+            requests += 1;
+            await new Promise((resolve) => setTimeout(resolve, 400));
+            await route.fulfill({ status: 204 });
+            answered();
+        });
+
+        // The required fields are empty: with novalidate the browser lets the submit through
+        await button.click();
+
+        await expect(form).toHaveAttribute('aria-busy', 'true');
+        await expect(button).toHaveText('Entrando');
+        await expect(button).toBeDisabled();
+
+        await form.evaluate((element) => element.requestSubmit());
+        await answer;
+
+        expect(requests).toBe(1);
+    });
+
+    test('un input de envío queda ocupado y manda su valor original', async ({ page, ui }) => {
+        const form = ui.section('form').locator('#search-form');
+        let sent = null;
+
+        await page.route(
+            (url) => url.pathname === '/_ui' && url.searchParams.has('search_q'),
+            async (route) => {
+                sent = new URL(route.request().url()).searchParams.get('go');
+                await route.fulfill({ status: 204 });
+            },
+        );
+
+        await form.evaluate((element) => {
+            const input = document.createElement('input');
+
+            input.type = 'submit';
+            input.name = 'go';
+            input.value = 'Ir';
+            element.append(input);
+        });
+
+        const input = form.locator('input[type="submit"]');
+
+        await input.click();
+
+        await expect.poll(() => sent).toBe('Ir');
+        await expect(input).toBeDisabled();
+        await expect(input).toHaveAttribute('aria-busy', 'true');
+        await expect(input).toHaveValue('Buscando');
+        await expect(form.getByRole('button', { name: 'Buscar' })).toBeDisabled();
+    });
+
     test('un envío que cancela otro manejador deja el formulario libre', async ({ page, ui }) => {
         const form = ui.section('form').locator('#search-form');
         const button = form.getByRole('button', { name: 'Buscar' });
