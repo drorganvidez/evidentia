@@ -16,7 +16,7 @@ class MeetingController extends Controller
     public function list()
     {
 
-        $meetings = Auth::user()->meetings()->get();
+        $meetings = Auth::user()->meetings()->orderByDesc('datetime')->get();
 
         return view('meeting.mylist',
             ['meetings' => $meetings]);

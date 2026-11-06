@@ -38,9 +38,7 @@ class EvidenceController extends Controller
 
     public function list()
     {
-        $evidences = Evidence::where(['user_id' => Auth::id(), 'last' => true])->get();
-
-        $evidences = $evidences->reverse();
+        $evidences = Evidence::where(['user_id' => Auth::id(), 'last' => true])->latest()->latest('id')->get();
 
         return view('evidence.list',
             ['evidences' => $evidences]);

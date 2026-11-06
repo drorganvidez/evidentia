@@ -23,7 +23,7 @@ class DefaultListSecretaryController extends Controller
     public function list()
     {
 
-        $defaultlists = Auth::user()->secretary->defaultLists()->get();
+        $defaultlists = Auth::user()->secretary->defaultLists()->latest()->latest('id')->get();
 
         return view('defaultlist.list',
             ['defaultlists' => $defaultlists]);

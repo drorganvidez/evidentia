@@ -24,7 +24,7 @@ class BonusSecretaryController extends Controller
     public function list()
     {
 
-        $bonus = Auth::user()->secretary->committee->bonus()->get();
+        $bonus = Auth::user()->secretary->committee->bonus()->latest()->latest('id')->get();
 
         return view('bonus.list',
             ['bonus' => $bonus]);

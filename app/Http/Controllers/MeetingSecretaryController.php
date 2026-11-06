@@ -55,7 +55,7 @@ class MeetingSecretaryController extends Controller
     public function request_list()
     {
 
-        $meeting_requests = Auth::user()->secretary->meetingRequests;
+        $meeting_requests = Auth::user()->secretary->meetingRequests()->orderByDesc('datetime')->get();
 
         return view('meeting.request_list', ['meeting_requests' => $meeting_requests]);
     }
@@ -301,7 +301,7 @@ class MeetingSecretaryController extends Controller
     public function signaturesheet_list()
     {
 
-        $signature_sheets = Auth::user()->secretary->signatureSheets;
+        $signature_sheets = Auth::user()->secretary->signatureSheets()->latest()->latest('id')->get();
 
         return view('meeting.signaturesheet_list', ['signature_sheets' => $signature_sheets]);
     }

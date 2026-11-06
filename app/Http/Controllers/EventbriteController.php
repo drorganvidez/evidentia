@@ -323,7 +323,7 @@ class EventbriteController extends Controller
     {
 
         // Show all events to the register coordinator (including hidden ones)
-        $events = Event::all();
+        $events = Event::orderByDesc('start_datetime')->orderByDesc('id')->get();
 
         return view('eventbrite.event_list', ['events' => $events]);
     }
@@ -470,7 +470,7 @@ class EventbriteController extends Controller
     public function attendee_list()
     {
 
-        $attendees = Attendee::with(['user', 'event'])->get();
+        $attendees = Attendee::with(['user', 'event'])->get()->sortByDesc(fn ($attendee) => [$attendee->event?->start_datetime, $attendee->id])->values();
 
         return view('eventbrite.attendee_list',
             ['attendees' => $attendees]);

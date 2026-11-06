@@ -88,7 +88,7 @@ class ManagementController extends Controller
     public function meeting_list()
     {
 
-        $meetings = Meeting::all();
+        $meetings = Meeting::orderByDesc('datetime')->orderByDesc('id')->get();
 
         return view('manage.meeting_list',
             ['meetings' => $meetings]);

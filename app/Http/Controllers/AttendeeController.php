@@ -15,7 +15,7 @@ class AttendeeController extends Controller
 
     public function list()
     {
-        $attendees = Auth::user()->attendees;
+        $attendees = Auth::user()->attendees()->with('event')->get()->sortByDesc(fn ($attendee) => $attendee->event?->start_datetime)->values();
 
         $events_update = \Config::events_uploaded_timestamp();
         $attendees_update = \Config::attendees_uploaded_timestamp();
