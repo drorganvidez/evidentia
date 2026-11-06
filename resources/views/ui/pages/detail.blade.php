@@ -84,7 +84,7 @@
             <x-ui.deadline label="Subida de evidencias" variant="inline" verb="para corregirla" :closes-at="$closesAt" />
         </x-slot:meta>
         <x-slot:actions>
-            <x-ui.button variant="primary" icon="pencil" :href="$here . '#editar'">Corregir y volver a enviar</x-ui.button>
+            <x-ui.button variant="primary" icon="pen-line" :href="$here . '#editar'">Corregir y volver a enviar</x-ui.button>
             <x-ui.dialog id="remove-33" variant="alert" title="Eliminar la evidencia"
                 description="Se borrarán también sus pruebas. Esta acción no se puede deshacer." trigger="Eliminar"
                 trigger-icon="trash-2">
@@ -115,7 +115,7 @@
                     <x-ui.time :value="$now->copy()->subDays(2)" inline short />
                 </x-slot:meta>
                 <x-slot:actions>
-                    <x-ui.button variant="primary" icon="pencil" :href="$here . '#editar'">Corregir y volver a
+                    <x-ui.button variant="primary" icon="pen-line" :href="$here . '#editar'">Corregir y volver a
                         enviar</x-ui.button>
                 </x-slot:actions>
             </x-ui.alert>

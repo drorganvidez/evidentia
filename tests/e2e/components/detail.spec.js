@@ -38,6 +38,20 @@ test.describe('Detalle de una evidencia', () => {
         await ui.noOverflow();
     });
 
+    test('las acciones de edición llevan el icono pen-line del catálogo', async ({ page }) => {
+        await page.goto('/_ui/detail');
+
+        const edits = page.getByRole('link', { name: 'Corregir y volver a enviar' });
+
+        await expect(edits).toHaveCount(2);
+
+        for (const edit of await edits.all()) {
+            // pen-line draws the base line; pencil draws the ferrule instead
+            await expect(edit.locator('svg path[d="M13 21h8"]')).toHaveCount(1);
+            await expect(edit.locator('svg path[d="m15 5 4 4"]')).toHaveCount(0);
+        }
+    });
+
     test('la eliminación pide confirmación en un diálogo de alerta', async ({ page }) => {
         await page.goto('/_ui/detail');
 
