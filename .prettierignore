@@ -7,7 +7,7 @@
 # Published mail templates and their theme, inlined as written
 resources/views/vendor/
 
-# Copied legacy assets (AdminLTE, jQuery) and compiled output
+# Compiled output and the static files served as they are
 public/
 
 # Laravel runtime files
