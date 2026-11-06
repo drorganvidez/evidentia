@@ -128,6 +128,32 @@ class SecretaryActivityTest extends TestCase
         Storage::assertExists('/meeting_minutes/meeting_minutes_'.$minutes->id.'.pdf');
     }
 
+    public function test_new_minutes_link_their_own_meeting_request(): void
+    {
+        $request = $this->request();
+
+        $this->post(route('secretary.meeting.manage.minutes.create.step3_p'), ['meeting_request' => $request->id] + $this->minutesForm([User::factory()->create()->id]));
+
+        $meeting = Meeting::sole();
+        $this->assertSame($meeting->id, (int) $request->fresh()->meeting_id);
+        $this->assertSame($request->id, ActivityLog::sole()->details['meeting_request_id']);
+    }
+
+    public function test_new_minutes_never_link_the_request_of_another_secretary(): void
+    {
+        $other = Secretary::forceCreate(['user_id' => User::factory()->create()->id, 'committee_id' => $this->secretary->committee_id]);
+        $request = MeetingRequest::forceCreate([
+            'title' => 'Convocatoria ajena', 'datetime' => now()->format('Y-m-d').' 16:30:00',
+            'committee_id' => $this->secretary->committee_id, 'secretary_id' => $other->id,
+        ]);
+
+        $this->post(route('secretary.meeting.manage.minutes.create.step3_p'), ['meeting_request' => $request->id] + $this->minutesForm([User::factory()->create()->id]));
+
+        $this->assertSame(1, Meeting::count());
+        $this->assertNull($request->fresh()->meeting_id);
+        $this->assertNull(ActivityLog::sole()->details['meeting_request_id']);
+    }
+
     public function test_editing_minutes_records_who_was_added_and_who_was_removed(): void
     {
         [$ana, $pedro, $lucia] = User::factory()->count(3)->create();

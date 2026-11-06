@@ -583,6 +583,9 @@ class MeetingSecretaryController extends Controller
             $users_ids = array_values(array_unique(array_map('intval', $users_ids)));
             $meeting->users()->sync($users_ids);
 
+            // la convocatoria queda enlazada con su reunión: ya tiene acta
+            $meeting_request?->update(['meeting_id' => $meeting->id]);
+
             // Guardamos los puntos y los acuerdos tomados
             $meeting_minutes = MeetingMinutes::create([
                 'meeting_id' => $meeting->id,
