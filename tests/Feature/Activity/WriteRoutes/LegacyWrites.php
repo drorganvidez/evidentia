@@ -63,6 +63,21 @@ final class LegacyWrites
                 'expect' => ['proof.deleted', 'evidence.deleted'],
                 'acting_role' => 'STUDENT',
             ],
+            'coordinator.evidence.accept' => [
+                'role' => 'COORDINATOR',
+                'method' => 'POST',
+                'uri' => fn (array $ids) => route('coordinator.evidence.accept', ['id' => $ids['evidence']]),
+                'expect' => ['evidence.accepted'],
+                'acting_role' => 'COORDINATOR',
+            ],
+            'coordinator.evidence.reject' => [
+                'role' => 'COORDINATOR',
+                'method' => 'POST',
+                'uri' => fn (array $ids) => route('coordinator.evidence.reject'),
+                'data' => fn (array $ids) => ['_id' => $ids['evidence'], 'reasonrejection' => 'Falta el certificado de asistencia.'],
+                'expect' => ['evidence.rejected'],
+                'acting_role' => 'COORDINATOR',
+            ],
             'password.reset_p' => [
                 'role' => 'GUEST',
                 'method' => 'POST',
@@ -117,8 +132,6 @@ final class LegacyWrites
     public static function pending(): array
     {
         return [
-            'coordinator.evidence.accept' => 'A',
-            'coordinator.evidence.reject' => 'A',
             'secretary.meeting.manage.request.new' => 'A',
             'secretary.meeting.manage.request.save' => 'A',
             'secretary.meeting.manage.request.remove' => 'A',

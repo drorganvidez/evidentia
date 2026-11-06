@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityAction;
 use App\Http\Middleware\CheckRoles;
 use App\Models\Evidence;
-use App\Models\ReasonRejection;
+use App\Services\EvidenceReview;
+use App\Services\SelfReview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class EvidenceCoordinatorController extends Controller
 {
@@ -69,8 +70,9 @@ class EvidenceCoordinatorController extends Controller
     {
 
         $evidence = $this->reviewable($id);
-        $evidence->status = 'ACCEPTED';
-        $evidence->save();
+        $this->deny_own($evidence, ActivityAction::EvidenceAccepted);
+
+        app(EvidenceReview::class)->accept($evidence);
 
         return redirect()->route('coordinator.evidence.list.accepted')->with('success', 'Evidencia aceptada con éxito.');
     }
@@ -87,6 +89,14 @@ class EvidenceCoordinatorController extends Controller
         return $evidence;
     }
 
+    // nadie revisa su propia evidencia: el intento se corta y queda anotado
+    private function deny_own(Evidence $evidence, ActivityAction $attempted): void
+    {
+        if (SelfReview::violates(Auth::user(), $evidence)) {
+            SelfReview::deny($evidence, $attempted, $evidence->user, 'No puedes aceptar ni rechazar una evidencia tuya. El intento queda anotado.');
+        }
+    }
+
     public function reject(Request $request)
     {
 
@@ -96,16 +106,9 @@ class EvidenceCoordinatorController extends Controller
             return back()->with('error', 'Escribe el motivo del rechazo.');
         }
 
-        DB::transaction(function () use ($evidence, $request) {
-            $evidence->status = 'REJECTED';
-            $evidence->save();
+        $this->deny_own($evidence, ActivityAction::EvidenceRejected);
 
-            $reasonrejection = ReasonRejection::create([
-                'reason' => $request->input('reasonrejection'),
-                'evidence_id' => $evidence->id,
-            ]);
-            $reasonrejection->save();
-        });
+        app(EvidenceReview::class)->reject($evidence, $request->input('reasonrejection'));
 
         return redirect()->route('coordinator.evidence.list.rejected')->with('success', 'Evidencia rechazada con éxito.');
     }
