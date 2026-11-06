@@ -7,19 +7,19 @@ services:
         USER_ID: 1000
         GROUP_ID: 1000
     container_name: evidentia_app_container
-    user: "1000:1000"
+    user: '1000:1000'
     volumes:
       - ../:/var/www/html
       - ../storage:/var/www/html/storage
     ports:
-      - "${APP_PORT:-8000}:8000"
+      - '${APP_PORT:-8000}:8000'
     depends_on:
       - mysql
       - redis
       - mailhog
     env_file:
       - ../.env
-    entrypoint: ["sh", "/var/www/html/docker/entrypoint.dev.sh"]
+    entrypoint: ['sh', '/var/www/html/docker/entrypoint.dev.sh']
     networks:
       - evidentia_net
 
@@ -29,7 +29,7 @@ services:
     env_file:
       - ../.env
     ports:
-      - "${DB_FORWARD_PORT:-3306}:3306"
+      - '${DB_FORWARD_PORT:-3306}:3306'
     volumes:
       - db_data_dev:/var/lib/mysql
     networks:
@@ -39,7 +39,7 @@ services:
     image: redis:7
     container_name: evidentia_redis_container
     ports:
-      - "6379:6379"
+      - '6379:6379'
     networks:
       - evidentia_net
 
@@ -47,7 +47,7 @@ services:
     image: mailhog/mailhog
     container_name: evidentia_mailhog_container
     ports:
-      - "8025:8025"
+      - '8025:8025'
     networks:
       - evidentia_net
 

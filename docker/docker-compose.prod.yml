@@ -8,7 +8,7 @@ services:
       - ../storage:/var/www/html/storage
       - ../scripts:/var/www/html/scripts
     expose:
-      - "9000"
+      - '9000'
     depends_on:
       - mysql
       - redis
@@ -24,7 +24,7 @@ services:
     env_file:
       - ../.env
     ports:
-      - "${DB_FORWARD_PORT:-3307}:3306"
+      - '${DB_FORWARD_PORT:-3307}:3306'
     volumes:
       - db_data_prod:/var/lib/mysql
     networks:
@@ -58,7 +58,7 @@ services:
     container_name: evidentia_nginx_container
     restart: unless-stopped
     ports:
-      - "80:80"
+      - '80:80'
     depends_on:
       - app
     volumes:

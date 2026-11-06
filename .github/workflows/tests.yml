@@ -16,7 +16,6 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-
       # Step 1: Check out the repository code
       - uses: actions/checkout@v5
 
