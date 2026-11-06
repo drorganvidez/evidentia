@@ -30,7 +30,7 @@ test.describe('Evidencias y reuniones del curso', () => {
         const search = table.getByRole('searchbox', { name: 'Buscar evidencias' });
         await search.fill('nada parecido');
         await search.press('Enter');
-        await expect(page).toHaveURL(/estado=rechazadas&q=nada\+parecido|q=nada\+parecido.*estado=rechazadas/);
+        await expect(page).toHaveURL(/estado=rechazadas&q=nada\+parecido$/);
         await expect(table.getByText('Ninguna evidencia coincide con la búsqueda')).toBeVisible();
         await expect(search).toHaveValue('nada parecido');
     });
