@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Committee;
 use App\Models\Configuration;
 use App\Models\Evidence;
+use App\Models\File;
 use App\Models\Proof;
 use App\Models\Role;
 use App\Models\User;
@@ -79,6 +80,20 @@ class EvidenceProofUploadTest extends TestCase
         $this->assertSame('PENDING', $published->status);
         $this->assertSame(['certificado'], $published->proofs->map(fn ($proof) => $proof->file->name)->all());
         Storage::assertExists($published->proofs->first()->file->route);
+    }
+
+    public function test_a_proof_that_cannot_be_stored_goes_back_to_the_form_with_an_error(): void
+    {
+        $this->upload('certificado.pdf');
+        File::creating(fn () => throw new \RuntimeException('Disco lleno'));
+
+        $this->from(route('evidence.create'))
+            ->post(route('evidence.publish'), $this->form())
+            ->assertRedirect(route('evidence.create'))
+            ->assertSessionHas('error', 'No se pudo guardar una de las pruebas. Vuelve a intentarlo.')
+            ->assertSessionHasInput('title', 'Organización de mesas');
+
+        $this->assertSame(0, Proof::count());
     }
 
     public function test_the_import_uploads_its_spreadsheet_the_same_way(): void

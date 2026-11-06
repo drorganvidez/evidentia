@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\ProofNotStored;
 use App\Http\Middleware\CheckRoles;
 use App\Models\Committee;
 use App\Models\Evidence;
@@ -75,7 +76,11 @@ class EvidenceController extends Controller
 
         $evidence = $this->new_evidence($request, $status);
 
-        $this->save_files($request, $evidence);
+        try {
+            $this->save_files($request, $evidence);
+        } catch (ProofNotStored) {
+            return $this->proof_not_stored();
+        }
 
         return redirect()->route('evidence.list')->with('success', 'Evidencia creada con éxito.');
 
@@ -150,7 +155,9 @@ class EvidenceController extends Controller
                     'file_id' => $file_entity->id,
                 ]);
             } catch (\Exception $e) {
-                dd('Error al guardar Proof:', $e->getMessage());
+                report($e);
+
+                throw new ProofNotStored('No se pudo guardar la prueba '.$name, previous: $e);
             }
 
         }
@@ -158,6 +165,11 @@ class EvidenceController extends Controller
         // ya no necesitamos la carpeta temporal, la eliminamos
         Storage::deleteDirectory($tmp);
 
+    }
+
+    private function proof_not_stored()
+    {
+        return back()->withInput()->with('error', 'No se pudo guardar una de las pruebas. Vuelve a intentarlo.');
     }
 
     private function copy_files_into_temporary_folder($evidence)
@@ -248,7 +260,11 @@ class EvidenceController extends Controller
         $evidence_new->save();
 
         // copiamos ahora los archivos de la carpeta temporal a la nueva evidencia
-        $this->save_files($request, $evidence_new);
+        try {
+            $this->save_files($request, $evidence_new);
+        } catch (ProofNotStored) {
+            return $this->proof_not_stored();
+        }
 
         if ($status == 'DRAFT') {
             return redirect()->route('evidence.list')->with('success', 'Evidencia editada con éxito.');
