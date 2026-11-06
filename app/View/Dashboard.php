@@ -46,8 +46,12 @@ final class Dashboard
         ];
     }
 
-    /** The hours of the person by origin and their evidences by status. */
-    private function mine(User $user): array
+    /**
+     * The computed hours of a person and their share by origin, as the segments of x-ui.meter.
+     *
+     * @return array{total: float, segments: list<array{value: int, tone: string, label: string, text: string}>}
+     */
+    public function hours(User $user): array
     {
         $hours = [
             ['label' => 'Evidencias', 'tone' => 'accepted', 'hours' => (float) $user->evidences_accepted_hours()],
@@ -55,18 +59,25 @@ final class Dashboard
             ['label' => 'Eventos', 'tone' => 'pending', 'hours' => (float) $user->events_hours()],
             ['label' => 'Bonos', 'tone' => 'draft', 'hours' => (float) $user->bonus_hours()],
         ];
-        $total = array_sum(array_column($hours, 'hours'));
         $shares = $this->percentages(array_column($hours, 'hours'));
-        $latest = $user->evidences->where('last', true);
 
         return [
-            'total' => $total,
+            'total' => array_sum(array_column($hours, 'hours')),
             'segments' => array_map(fn (array $part, int $share): array => [
                 'value' => $share,
                 'tone' => $part['tone'],
                 'label' => $part['label'],
                 'text' => number_format($part['hours'], 2, ',', '.').' h',
             ], $hours, $shares),
+        ];
+    }
+
+    /** The hours of the person by origin and their evidences by status. */
+    private function mine(User $user): array
+    {
+        $latest = $user->evidences->where('last', true);
+
+        return $this->hours($user) + [
             'pending' => $latest->where('status', 'PENDING'),
             'rejected' => $latest->where('status', 'REJECTED'),
             'drafts' => $latest->where('status', 'DRAFT'),

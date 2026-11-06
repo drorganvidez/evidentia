@@ -1,174 +1,73 @@
-@extends('layouts.app')
+{{--
+    Profile of the signed-in person: the summary beside the three forms of the old tabs (personal data, the summary of
+    the work in the course, which the lecturer does not have, and the password). The forms share one error bag, so
+    each field shows its own error and no form prints a summary of the others.
+--}}
+@php
+    $user = Auth::user();
+    $participation = [
+        ['value' => 1, 'label' => 'Colaborativo'],
+        ['value' => 2, 'label' => 'Técnico-organizativo'],
+        ['value' => 3, 'label' => 'Técnico'],
+    ];
+@endphp
+<x-layout.app title="Mi perfil" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Mi perfil']]">
+    <x-ui.page-header title="Mi perfil" />
 
-@section('title', 'Mi perfil')
-@section('title-icon', 'nav-icon fas fa-user')
-
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item active">@yield('title')</li>
-@endsection
-
-@section('content')
-
-    <div class="row">
-
-        <div class="col-md-5">
-
-            <x-profile :user="Auth::user()" />
-
-        </div>
-
-        <div class="col-md-7">
-            <div class="card">
-                <div class="card-header p-2">
-                    <ul class="nav nav-pills">
-                        <li class="nav-item"><a class="nav-link active" href="#data" data-toggle="tab">Personal</a></li>
-
-                        @if (!Auth::user()->hasRole('LECTURE'))
-                            <li class="nav-item"><a class="nav-link" href="#biografia" data-toggle="tab">Resumen de trabajo
-                                    en jornadas</a></li>
-                        @endif
-
-                        <li class="nav-item"><a class="nav-link" href="#pass" data-toggle="tab">Cambiar contraseña</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="card-body">
-                    <div class="tab-content">
-
-                        <div class="active tab-pane" id="data">
-                            <form method="POST" enctype="multipart/form-data" action="{{ $route_upload_info }}">
-                                @csrf
-
-                                <div class="form-row">
-
-                                    <div class="col-lg-6">
-
-                                        <div class="form-row">
-
-                                            <x-input col="12" attr="username" :value="Auth::user()->username" disabled="true"
-                                                :edit="true" label="Uvus"
-                                                description="El Uvus no puede ser editado." />
-
-                                            <x-input col="6" attr="name" :value="Auth::user()->name" label="Nombre" />
-
-                                            <x-input col="6" attr="surname" :value="Auth::user()->surname" label="Apellidos" />
-
-                                            <x-input col="12" attr="email" :value="Auth::user()->email" label="Email" />
-
-                                        </div>
-
-                                    </div>
-
-                                    <div class="col-lg-6">
-
-                                        <div class="form-row">
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="form-row">
-                                    <div class="col-4">
-                                        <button type="submit" class="btn btn-primary btn-block"
-                                            data-dismiss="modal">Actualizar perfil</button>
-                                    </div>
-                                </div>
-
-
-
-                            </form>
-                        </div>
-
-                        @if (!Auth::user()->hasRole('LECTURE'))
-                            <div class="tab-pane" id="biografia">
-                                <form method="POST" enctype="multipart/form-data" action="{{ $route_upload_biography }}">
-                                    @csrf
-
-                                    <div class="form-row">
-                                        <div class="form-group col-md-4">
-                                            <label for="participation">Nivel de implicación</label>
-                                            <select id="participation"
-                                                class="selectpicker form-control @error('participation') is-invalid @enderror"
-                                                name="participation" value="{{ old('participation') }}" required autofocus>
-
-                                                <option
-                                                    {{ old('participation') == 1 || Auth::user()->participation == 'ORGANIZATION' ? 'selected' : 'NO' }}
-                                                    value="1">COLABORATIVO</option>
-                                                <option
-                                                    {{ old('participation') == 2 || Auth::user()->participation == 'INTERMEDIATE' ? 'selected' : 'NO' }}
-                                                    value="2">TÉCNICO-ORGANIZATIVO</option>
-                                                <option
-                                                    {{ old('participation') == 3 || Auth::user()->participation == 'ASSISTANCE' ? 'selected' : 'NO' }}
-                                                    value="3">TÉCNICO</option>
-
-                                            </select>
-
-                                            <small class="form-text text-muted">Selecciona el nivel de implicación en las
-                                                jornadas InnoSoft Days de este año.</small>
-
-                                            @error('participation')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="form-row">
-
-                                        <x-textarea col="12" attr="biography" :value="Auth::user()->biography ?? ''"
-                                            label="Resumen de trabajo en jornadas"
-                                            description="Recuerda completar tu información referente a tu trabajo en las Jornadas InnoSoft
-                                    para la evaluación de este año." />
-                                    </div>
-
-                                    <div class="form-row">
-                                        <div class="col-4">
-                                            <button type="submit" class="btn btn-primary btn-block"
-                                                data-dismiss="modal">Actualizar resumen</button>
-                                        </div>
-                                    </div>
-
-                                </form>
-                            </div>
-                        @endif
-                        <div class="tab-pane" id="pass">
-                            <form method="POST" enctype="multipart/form-data" action="{{ $route_upload_pass }}">
-                                @csrf
-
-                                <div class="form-row">
-                                    <x-input col="6" attr="current_password" type="password" label="Contraseña actual" />
-                                </div>
-
-                                <div class="form-row">
-                                    <x-input col="6" attr="password" type="password" label="Nueva contraseña" />
-                                </div>
-
-                                <div class="form-row">
-                                    <x-input col="6" attr="password_confirmation" type="password"
-                                        label="Repite la nueva contraseña" />
-                                </div>
-
-                                <div class="form-row">
-                                    <div class="col-4">
-                                        <button type="submit" class="btn btn-primary btn-block"
-                                            data-dismiss="modal">Actualizar contraseña</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-
+    <div class="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)] lg:gap-8">
+        <div class="grid grid-cols-[minmax(0,1fr)] content-start gap-6">
+            <x-ui.card title="Datos personales" :level="2" id="data-title">
+                <x-ui.form :action="$route_upload_info" id="data-form" :summary="false" busy-label="Guardando">
+                    <x-ui.field name="username" label="UVUS" :value="$user->username" disabled />
+                    <div class="grid items-start gap-5 md:grid-cols-2">
+                        <x-ui.field name="name" label="Nombre" :value="$user->name" autocomplete="given-name"
+                            required />
+                        <x-ui.field name="surname" label="Apellidos" :value="$user->surname" autocomplete="family-name"
+                            required />
                     </div>
+                    <x-ui.field name="email" label="Correo electrónico" type="email" :value="$user->email"
+                        autocomplete="email" required />
+                    <x-slot:actions>
+                        <x-ui.button type="submit" variant="primary" icon="save">Guardar los datos</x-ui.button>
+                    </x-slot:actions>
+                </x-ui.form>
+            </x-ui.card>
 
-                </div>
-            </div>
+            @unless ($user->hasRole('LECTURE'))
+                <x-ui.card title="Resumen del trabajo" :level="2" id="biography-title">
+                    <x-ui.form :action="$route_upload_biography" id="biography-form" :summary="false" busy-label="Guardando">
+                        <x-ui.segmented name="participation" legend="Nivel de implicación" :hide-legend="false"
+                            :options="$participation" :value="$user->participation" :error="$errors->first('participation') ?: null" />
+                        <x-ui.field name="biography" label="Resumen del trabajo en las jornadas" type="textarea"
+                            :rows="8" :maxlength="20000" :value="\App\View\PlainText::fromHtml($user->biography)" hint="Al menos 10 caracteres"
+                            required />
+                        <x-slot:actions>
+                            <x-ui.button type="submit" variant="primary" icon="save">Guardar el resumen</x-ui.button>
+                        </x-slot:actions>
+                    </x-ui.form>
+                </x-ui.card>
+            @endunless
 
+            <x-ui.card title="Contraseña" :level="2" id="password-title">
+                <x-ui.form :action="$route_upload_pass" id="password-form" :summary="false" busy-label="Guardando">
+                    <x-ui.field name="current_password" label="Contraseña actual" type="password"
+                        autocomplete="current-password" required />
+                    <div class="grid items-start gap-5 md:grid-cols-2">
+                        <x-ui.field name="password" label="Nueva contraseña" type="password" autocomplete="new-password"
+                            hint="Al menos 6 caracteres" required />
+                        <x-ui.field name="password_confirmation" label="Repite la contraseña" type="password"
+                            autocomplete="new-password" required />
+                    </div>
+                    <x-slot:actions>
+                        <x-ui.button type="submit" variant="primary" icon="key-round">Cambiar la
+                            contraseña</x-ui.button>
+                    </x-slot:actions>
+                </x-ui.form>
+            </x-ui.card>
         </div>
 
+        <aside aria-label="Resumen" class="grid grid-cols-[minmax(0,1fr)] content-start gap-6">
+            @include('profile.partials.summary', ['user' => $user, 'hours' => $hours, 'own' => true])
+        </aside>
     </div>
-
-
-@endsection
+</x-layout.app>

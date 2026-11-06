@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
 use App\Support\Changes;
+use App\View\Dashboard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +23,7 @@ class ProfileController extends Controller
         $this->middleware('auth');
     }
 
-    public function view()
+    public function view(Dashboard $dashboard)
     {
 
         $route_upload_info = route('profile.upload.info');
@@ -32,7 +33,8 @@ class ProfileController extends Controller
         return view('profile.view',
             ['route_upload_info' => $route_upload_info,
                 'route_upload_biography' => $route_upload_biography,
-                'route_upload_pass' => $route_upload_pass]);
+                'route_upload_pass' => $route_upload_pass,
+                'hours' => $dashboard->hours(Auth::user())]);
     }
 
     public function upload_info(Request $request)
@@ -120,16 +122,16 @@ class ProfileController extends Controller
 
     }
 
-    public function profiles_view($id)
+    public function profiles_view(Dashboard $dashboard, $id)
     {
 
         $user = User::find($id);
 
         return view('profile.generalview',
-            ['user' => $user]);
+            ['user' => $user, 'hours' => $dashboard->hours($user)]);
     }
 
-    public function evidences_view($id_user, $id_evidence)
+    public function evidences_view(Dashboard $dashboard, $id_user, $id_evidence)
     {
 
         $user = User::find($id_user);
@@ -142,6 +144,6 @@ class ProfileController extends Controller
         }
 
         return view('profile.profile_evidence_view',
-            ['user' => $user, 'evidence' => $evidence]);
+            ['user' => $user, 'evidence' => $evidence, 'hours' => $dashboard->hours($user)]);
     }
 }

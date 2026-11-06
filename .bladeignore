@@ -6,7 +6,6 @@ resources/views/email/**
 resources/views/layouts/**
 resources/views/meeting/**
 resources/views/message/**
-resources/views/profile/**
 resources/views/sign/**
 resources/views/updates/**
 resources/views/components/menus/**
