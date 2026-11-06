@@ -2,7 +2,7 @@
     Page footer: brand and version, the help links in a fixed order and the institution; compact for the public pages.
     <x-ui.footer :version-href="route('updates.list')" />
     <x-ui.footer compact />
-    Without a version the .version file the Dockerfile writes is read; :version="false" hides the pill and
+    Without a version evidentia_version() reads the .version file the Dockerfile writes; :version="false" hides the pill and
     :meta="false" the institution (Blade gives a prop its default when it receives null).
     A link is ['label' => 'Repositorio', 'href' => 'https://...', 'icon' => 'github', 'external' => true].
 --}}
@@ -30,8 +30,8 @@
         ['label' => 'Ayuda', 'href' => 'https://github.com/drorganvidez/evidentia#readme', 'icon' => 'circle-help'],
         ['label' => 'Sugerencias', 'href' => route('suggestionsmailbox'), 'icon' => 'message-square'],
     ];
-    $version ??= is_file(base_path('.version')) ? trim((string) file_get_contents(base_path('.version'))) : '';
-    $version = $version === false || $version === '' ? null : ltrim((string) $version, 'vV');
+    $version ??= evidentia_version();
+    $version = $version === false || $version === null || $version === '' ? null : ltrim((string) $version, 'vV');
     $versionTitle = $version !== null ? 'Ver las novedades de la versión ' . $version : null;
     $pill =
         'inline-flex min-h-6 items-center rounded-full bg-brand-soft px-2 font-mono text-2xs font-semibold text-brand-soft-ink no-underline';
