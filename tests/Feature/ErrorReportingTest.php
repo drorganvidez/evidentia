@@ -183,6 +183,13 @@ class ErrorReportingTest extends TestCase
         $this->get(route('lecture.errors', ['estado' => 'todos', 'page' => 9]))->assertOk()
             ->assertSee('De la 26 a la 30 de 30')
             ->assertSee('Fallo 30');
+
+        // ordered by how many times, the tabs and the search by code keep the order and the rows per page
+        $this->get(route('lecture.errors', ['estado' => 'todos', 'sort' => 'count', 'dir' => 'asc', 'per_page' => 50]))->assertOk()
+            ->assertSee('href="'.e(route('lecture.errors', ['estado' => 'abiertos', 'sort' => 'count', 'dir' => 'asc', 'per_page' => 50])).'"', false)
+            ->assertSee('<input type="hidden" name="per_page" value="50">', false)
+            ->assertSee('<input type="hidden" name="sort" value="count">', false)
+            ->assertSee('<input type="hidden" name="dir" value="asc">', false);
     }
 
     public function test_the_president_lists_resolves_and_reopens_them_under_their_own_routes(): void

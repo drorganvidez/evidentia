@@ -2,7 +2,8 @@
 @use('App\Support\ListPage')
 @use('App\Support\ListSort')
 @php
-    $order = Arr::only(ListPage::query(), [ListSort::KEY, ListSort::DIR]);
+    // The search by code keeps the order and the rows per page
+    $order = Arr::only(ListPage::query(), [ListPage::SIZE, ListSort::KEY, ListSort::DIR]);
     $base = route($prefix . '.errors');
     $tabs = collect(['abiertos' => 'Abiertos', 'resueltos' => 'Resueltos', 'todos' => 'Todos'])
         ->map(
