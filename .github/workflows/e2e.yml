@@ -14,6 +14,11 @@ on:
 permissions:
   contents: read
 
+# A newer push to the same branch or pull request cancels the run it makes useless
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   playwright:
     name: Playwright
