@@ -140,7 +140,7 @@ class PageAccessTest extends TestCase
 
         $this->ids = [
             'evidence' => $evidence->id, 'draft' => $draft->id, 'proof' => $proof->id, 'student' => $student->id,
-            'request' => $request->id, 'sheet' => $sheet->id, 'minutes' => $minutes->id, 'bonus' => $bonus->id,
+            'request' => $request->id, 'committee' => $committee->id, 'sheet' => $sheet->id, 'minutes' => $minutes->id, 'bonus' => $bonus->id,
             'list' => $list->id, 'attendee' => $attendee->id, 'manualEvent' => $manualEvent->id, 'errorReport' => $errorReport->id, 'token' => $token->token,
             'thread' => $thread->id,
         ];
@@ -222,6 +222,7 @@ class PageAccessTest extends TestCase
             'president.user.list' => [[], self::MANAGEMENT],
             'president.user.management' => [['id' => 'student'], self::MANAGEMENT],
             'president.committee.list' => [[], self::MANAGEMENT],
+            'president.committee.view' => [['id' => 'committee'], self::MANAGEMENT],
             'president.config' => [[], self::MANAGEMENT],
             'president.evidence.list' => [[], self::MANAGEMENT],
             'president.meeting.list' => [[], self::MANAGEMENT],
@@ -229,6 +230,7 @@ class PageAccessTest extends TestCase
             'lecture.user.list' => [[], self::MANAGEMENT],
             'lecture.user.management' => [['id' => 'student'], self::MANAGEMENT],
             'lecture.committee.list' => [[], self::MANAGEMENT],
+            'lecture.committee.view' => [['id' => 'committee'], self::MANAGEMENT],
             'lecture.config' => [[], self::MANAGEMENT],
             'lecture.evidence.list' => [[], self::MANAGEMENT],
             'lecture.meeting.list' => [[], self::MANAGEMENT],

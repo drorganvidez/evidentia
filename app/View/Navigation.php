@@ -133,7 +133,7 @@ final class Navigation
                 $item('Alumnos', "$p.user.list", 'user-cog', ["$p.user.management", 'profiles.view', 'profiles.view.evidence']),
                 $item('Evidencias', "$p.evidence.list", 'list-checks'),
                 $item('Reuniones', "$p.meeting.list", 'handshake'),
-                $item('Comités', "$p.committee.list", 'network'),
+                $item('Comités', "$p.committee.list", 'network', ["$p.committee.view"]),
             ];
             if ($has('LECTURE')) {
                 $items[] = $item('Aleatorizar', 'randomize.randomize', 'shuffle');

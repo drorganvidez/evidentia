@@ -5,6 +5,7 @@ use App\Http\Controllers\AttendeeController;
 use App\Http\Controllers\BlockController;
 use App\Http\Controllers\BonusSecretaryController;
 use App\Http\Controllers\CommitteeCoordinatorController;
+use App\Http\Controllers\CommitteeOverviewController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\DefaultListSecretaryController;
 use App\Http\Controllers\DownloadController;
@@ -243,6 +244,7 @@ Route::middleware('auth')->group(function () {
         Route::get('president/evidence/list', [ManagementController::class, 'evidence_list'])->name('president.evidence.list');
         Route::get('president/meeting/list', [ManagementController::class, 'meeting_list'])->name('president.meeting.list');
         Route::get('president/committee/list', [ManagementController::class, 'committee_list'])->name('president.committee.list');
+        Route::get('president/committee/{id}', [CommitteeOverviewController::class, 'show'])->whereNumber('id')->name('president.committee.view');
 
         Route::post('president/committee/management/save', [ManagementController::class, 'committee_save'])->name('president.committee.management.save');
         Route::post('president/committee/management/new', [ManagementController::class, 'committee_new'])->name('president.committee.management.new');
@@ -264,6 +266,7 @@ Route::middleware('auth')->group(function () {
         Route::post('lecture/config/save', [ConfigController::class, 'config_save'])->name('lecture.config.save');
 
         Route::get('lecture/committee/list', [ManagementController::class, 'committee_list'])->name('lecture.committee.list');
+        Route::get('lecture/committee/{id}', [CommitteeOverviewController::class, 'show'])->whereNumber('id')->name('lecture.committee.view');
         Route::post('lecture/committee/management/save', [ManagementController::class, 'committee_save'])->name('lecture.committee.management.save');
         Route::post('lecture/committee/management/new', [ManagementController::class, 'committee_new'])->name('lecture.committee.management.new');
 

@@ -57,11 +57,12 @@
         ['label' => 'Más antigua', 'key' => 'oldest'],
     ]">
         @foreach ($committees as $committee)
-            <x-ui.table.row :href="$routes['committees']">
+            @php($committeeHref = str_replace('__id__', (string) $committee['id'], $routes['committee']))
+            <x-ui.table.row :href="$committeeHref">
                 <x-ui.table.cell label="Comité" primary>
                     <span class="inline-flex items-center gap-2">
                         <span class="hue-{{ $hue($committee['id']) }} committee-dot" aria-hidden="true"></span>
-                        <a href="{{ $routes['committees'] }}">{{ $committee['name'] }}</a>
+                        <a href="{{ $committeeHref }}">{{ $committee['name'] }}</a>
                     </span>
                 </x-ui.table.cell>
                 <x-ui.table.cell label="Coordinación" meta>

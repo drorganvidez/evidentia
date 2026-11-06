@@ -54,6 +54,7 @@ final class ManagementDashboard
                 'users' => route("$prefix.user.list"),
                 'meetings' => route("$prefix.meeting.list"),
                 'committees' => route("$prefix.committee.list"),
+                'committee' => route("$prefix.committee.view", ['id' => '__id__']),
                 'export' => route("$prefix.export"),
                 // Not «errors»: views share a validation bag under that name
                 'serverErrors' => $prefix === 'lecture' ? route('lecture.errors') : null,

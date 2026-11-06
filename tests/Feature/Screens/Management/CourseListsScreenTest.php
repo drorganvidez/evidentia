@@ -39,7 +39,7 @@ class CourseListsScreenTest extends ScreenTestCase
             $this->screen($who, route($prefix.'.meeting.list'))
                 ->assertSee('Reunión de logística')
                 ->assertSee('Aula A3.10')
-                ->assertSee('href="'.route('download.minutes', ['id' => $minutes->id]).'"', false);
+                ->assertSee('href="'.route('activity.minutes', ['id' => $minutes->id]).'"', false);
         }
     }
 }

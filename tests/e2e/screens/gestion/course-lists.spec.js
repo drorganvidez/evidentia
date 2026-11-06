@@ -41,7 +41,7 @@ test.describe('Evidencias y reuniones del curso', () => {
         await expect(table.getByText('Reunión de logística')).toBeVisible();
         await expect(
             table.getByRole('link', { name: 'Acta de Reunión de logística' }),
-        ).toHaveAttribute('href', /\/download\/\d+$/);
+        ).toHaveAttribute('href', /\/activity\/minutes\/\d+$/);
         await ui.noOverflow();
     });
 

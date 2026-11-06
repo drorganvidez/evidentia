@@ -1,5 +1,11 @@
-{{-- Every meeting of the course, for the lecturer and the president, newest first, with the PDF of its minutes --}}
+{{--
+    Every meeting of the course, for the lecturer and the president, newest first, with its minutes; filters by
+    committee, dates and whether it has minutes.
+--}}
 @php
+    $prefix = Auth::user()->hasRole('LECTURE') ? 'lecture' : 'president';
+    $list = route($prefix . '.meeting.list');
+    $active = count(array_filter($filters));
     $columns = [
         ['label' => 'Reunión', 'key' => 'title'],
         ['label' => 'Comité', 'key' => 'committee'],
@@ -12,6 +18,18 @@
 @endphp
 <x-layout.app title="Reuniones" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Reuniones']]">
     <x-ui.page-header title="Reuniones" />
+
+    <x-ui.filter-bar :action="$list" label="Filtros de reuniones" :open="$active > 0" :active="$active" :reset-href="$list"
+        id="meeting-filters">
+        <x-ui.field name="comite" label="Comité" type="select" :options="[['value' => '', 'label' => 'Todos'], ...$committees]" :value="(string) ($filters['comite'] ?? '')" />
+        <x-ui.field name="desde" label="Desde" type="date" :value="$filters['desde']?->format('Y-m-d')" />
+        <x-ui.field name="hasta" label="Hasta" type="date" :value="$filters['hasta']?->format('Y-m-d')" />
+        <x-ui.field name="acta" label="Acta" type="select" :options="[
+            ['value' => '', 'label' => 'Todas'],
+            ['value' => 'con', 'label' => 'Con acta'],
+            ['value' => 'sin', 'label' => 'Sin acta'],
+        ]" :value="$filters['acta'] ?? ''" />
+    </x-ui.filter-bar>
 
     <x-ui.table caption="Reuniones del curso" :columns="$columns" :filterable="$rows->isNotEmpty()" count-label="reuniones"
         filter-placeholder="Filtrar reuniones">
@@ -28,16 +46,16 @@
                 </x-ui.table.cell>
                 <x-ui.table.cell label="Comité">
                     @if ($meeting->committee)
-                        <x-ui.committee-chip :committee="$meeting->committee" />
+                        <x-ui.committee-chip :committee="$meeting->committee" :href="route($prefix . '.committee.view', ['id' => $meeting->committee->id])" />
                     @endif
                 </x-ui.table.cell>
                 <x-ui.table.cell label="Fecha" meta><x-ui.time :value="$meeting->datetime" inline short /></x-ui.table.cell>
                 <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$meeting->hours" /></x-ui.table.cell>
-                <x-ui.table.cell label="Asistentes" numeric meta>{{ $meeting->users->count() }}</x-ui.table.cell>
+                <x-ui.table.cell label="Asistentes" numeric meta>{{ $meeting->users_count }}</x-ui.table.cell>
                 <x-ui.table.cell label="Acta" end>
                     @if ($meeting->meetingMinutes)
                         <x-ui.button icon="file-text" size="sm" variant="ghost" :aria-label="'Acta de ' . $meeting->title"
-                            :href="route('download.minutes', ['id' => $meeting->meetingMinutes->id])">Acta</x-ui.button>
+                            :href="route('activity.minutes', ['id' => $meeting->meetingMinutes->id])">Acta</x-ui.button>
                     @else
                         <span class="text-sm text-ink-muted">Sin acta</span>
                     @endif

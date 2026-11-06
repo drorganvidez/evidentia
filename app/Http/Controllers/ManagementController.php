@@ -15,6 +15,8 @@ use App\Models\User;
 use App\Services\Activity\SubjectInfo;
 use App\Support\Changes;
 use App\Support\StrongPassword;
+use App\View\CommitteeOverview;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -71,34 +73,82 @@ class ManagementController extends Controller
 
     public function evidence_list(Request $request)
     {
+        $committees = Committee::orderBy('name')->get(['id', 'name']);
+        $filters = [
+            'comite' => in_array((int) $request->query('comite'), $committees->pluck('id')->all(), true) ? (int) $request->query('comite') : null,
+            'desde' => $this->date_query($request, 'desde'),
+            'hasta' => $this->date_query($request, 'hasta'),
+        ];
 
-        $evidences = Evidence::evidencesNotDraft();
+        $evidences = Evidence::where('last', true)->where('status', '!=', 'DRAFT')
+            ->with(['user', 'committee', 'reasonRejection'])
+            ->when($filters['comite'], fn ($query, $id) => $query->where('committee_id', $id))
+            ->when($filters['desde'], fn ($query, $date) => $query->where('created_at', '>=', $date->copy()->startOfDay()))
+            ->when($filters['hasta'], fn ($query, $date) => $query->where('created_at', '<=', $date->copy()->endOfDay()))
+            ->orderByDesc('updated_at')->orderByDesc('id')->get();
 
-        // filtro por estado, en la URL
-        $states = ['pendientes' => 'PENDING', 'aceptadas' => 'ACCEPTED', 'rechazadas' => 'REJECTED'];
+        // filtro por estado, en la URL; «atrasadas» son las pendientes que esperan más de lo debido
+        $late = fn (Evidence $evidence): bool => $evidence->status === 'PENDING'
+            && $evidence->updated_at->lt(now()->subDays(CommitteeOverview::LATE_DAYS));
+        $states = ['pendientes' => 'PENDING', 'atrasadas' => 'PENDING', 'aceptadas' => 'ACCEPTED', 'rechazadas' => 'REJECTED'];
         $state = array_key_exists((string) $request->query('estado'), $states) ? $request->query('estado') : null;
-        $counts = $evidences->countBy('status');
+        $counts = $evidences->countBy('status')->put('LATE', $evidences->filter($late)->count());
         if ($state !== null) {
-            $evidences = $evidences->where('status', $states[$state])->values();
+            $evidences = $evidences->where('status', $states[$state])
+                ->when($state === 'atrasadas', fn ($list) => $list->filter($late))
+                ->values();
         }
 
-        return view('manage.evidence_list',
-            ['evidences' => $evidences, 'state' => $state, 'counts' => $counts]);
+        return view('manage.evidence_list', [
+            'evidences' => $evidences, 'state' => $state, 'counts' => $counts, 'filters' => $filters,
+            'committees' => $committees->map(fn (Committee $committee): array => ['value' => (string) $committee->id, 'label' => $committee->name])->all(),
+            'lateDays' => CommitteeOverview::LATE_DAYS,
+        ]);
     }
 
-    public function meeting_list()
+    /** A date of the query string in Y-m-d, or null when missing or malformed. */
+    private function date_query(Request $request, string $key): ?Carbon
     {
+        $value = $request->query($key);
+        if (! is_string($value) || preg_match('/^\d{4}-\d{2}-\d{2}$/', $value) !== 1) {
+            return null;
+        }
+        try {
+            return Carbon::createFromFormat('!Y-m-d', $value);
+        } catch (\Throwable) {
+            return null;
+        }
+    }
 
-        $meetings = Meeting::orderByDesc('datetime')->orderByDesc('id')->get();
+    public function meeting_list(Request $request)
+    {
+        $committees = Committee::orderBy('name')->get(['id', 'name']);
+        $filters = [
+            'comite' => in_array((int) $request->query('comite'), $committees->pluck('id')->all(), true) ? (int) $request->query('comite') : null,
+            'desde' => $this->date_query($request, 'desde'),
+            'hasta' => $this->date_query($request, 'hasta'),
+            'acta' => in_array($request->query('acta'), ['con', 'sin'], true) ? $request->query('acta') : null,
+        ];
 
-        return view('manage.meeting_list',
-            ['meetings' => $meetings]);
+        $meetings = Meeting::with(['committee', 'meetingMinutes'])->withCount('users')
+            ->when($filters['comite'], fn ($query, $id) => $query->where('committee_id', $id))
+            ->when($filters['desde'], fn ($query, $date) => $query->where('datetime', '>=', $date->copy()->startOfDay()))
+            ->when($filters['hasta'], fn ($query, $date) => $query->where('datetime', '<=', $date->copy()->endOfDay()))
+            ->when($filters['acta'] === 'con', fn ($query) => $query->has('meetingMinutes'))
+            ->when($filters['acta'] === 'sin', fn ($query) => $query->doesntHave('meetingMinutes'))
+            ->orderByDesc('datetime')->orderByDesc('id')->get();
+
+        return view('manage.meeting_list', [
+            'meetings' => $meetings, 'filters' => $filters,
+            'committees' => $committees->map(fn (Committee $committee): array => ['value' => (string) $committee->id, 'label' => $committee->name])->all(),
+        ]);
     }
 
     public function committee_list()
     {
 
         $committees = Committee::all();
+        $summaries = app(CommitteeOverview::class)->summaries()->keyBy(fn (array $summary): int => $summary['committee']->id);
 
         $route = null;
         $route_new = null;
@@ -114,7 +164,8 @@ class ManagementController extends Controller
         }
 
         return view('manage.committee_list',
-            ['committees' => $committees, 'route' => $route, 'route_new' => $route_new, 'route_remove' => $route_remove]);
+            ['committees' => $committees, 'summaries' => $summaries, 'prefix' => Auth::user()->hasRole('LECTURE') ? 'lecture' : 'president',
+                'route' => $route, 'route_new' => $route_new, 'route_remove' => $route_remove]);
     }
 
     public function committee_new(Request $request)
