@@ -4,6 +4,7 @@
     <x-ui.search :action="route('evidence.list')" :hide-on-phone="false" id="field-q-drawer" />   inside the drawer
     Two instances on a page need different ids; the value defaults to the current query string. Once the person
     turns the shortcuts off ($store.shortcuts) the key does nothing and the hint and aria-keyshortcuts go away.
+    Between md and xl the topbar is tight, so the field narrows there and leaves the breadcrumbs room.
 --}}
 @props([
     'action' => null,
@@ -26,7 +27,7 @@
     x-on:keydown.window="onKey" {{ $attributes->class(['hidden md:block' => $hideOnPhone]) }}>
     <label for="{{ $id }}" class="sr-only">{{ $label }}</label>
     <div
-        class="flex h-9 min-w-55 items-center gap-2 rounded-full border border-field-edge bg-field pr-2 pl-3 transition focus-within:border-aurora-500 focus-within:ring-4 focus-within:ring-aurora-500/18">
+        class="flex h-9 min-w-55 items-center gap-2 rounded-full border border-field-edge bg-field pr-2 pl-3 transition focus-within:border-aurora-500 focus-within:ring-4 focus-within:ring-aurora-500/18 md:max-xl:min-w-40">
         <x-lucide-search class="size-4.5 shrink-0 text-ink-muted" aria-hidden="true" />
         <input id="{{ $id }}" type="search" name="{{ $name }}" value="{{ $value }}"
             x-ref="input" aria-keyshortcuts="{{ $shortcut }}" x-bind:aria-keyshortcuts="keys"

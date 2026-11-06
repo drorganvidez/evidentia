@@ -335,6 +335,23 @@ for (const path of ['/_ui/shell', '/_ui/detail']) {
             }
         });
 
+        test('los enlaces de las migas se leen enteros a 768, 1024 y 1100 px', async ({ page }) => {
+            for (const width of [768, 1024, 1100]) {
+                await page.setViewportSize({ width, height: 900 });
+
+                const cut = await page
+                    .locator('nav[aria-label="Migas de pan"] a span')
+                    .evaluateAll((spans) =>
+                        spans
+                            .filter((span) => span.getClientRects().length > 0)
+                            .filter((span) => span.scrollWidth > span.clientWidth)
+                            .map((span) => span.textContent),
+                    );
+
+                expect(cut, `Migas recortadas a ${width} px`).toEqual([]);
+            }
+        });
+
         test('no desborda a 768, 1024 y 1100 px', async ({ page }) => {
             for (const width of [768, 1024, 1100]) {
                 await page.setViewportSize({ width, height: 900 });

@@ -17,6 +17,8 @@ class SearchTest extends ComponentTestCase
         $this->assertMatchesRegularExpression('#<input id="field-q" type="search" name="q" value=""\s+x-ref="input"\s+aria-keyshortcuts="/"\s+x-bind:aria-keyshortcuts="keys"\s+placeholder="Buscar evidencias"\s+autocomplete="off"\s+class="w-0 min-w-0 flex-1 bg-transparent text-control text-ink outline-none placeholder:text-ink-muted">#', $html);
         $this->assertSame(1, substr_count($html, ' aria-keyshortcuts='));
         $this->assertStringContainsString('focus-within:border-aurora-500 focus-within:ring-4 focus-within:ring-aurora-500/18', $html);
+        $this->assertStringContainsString('flex h-9 min-w-55 items-center', $html);
+        $this->assertStringContainsString('md:max-xl:min-w-40">', $html, 'Narrower where the topbar is tight');
         // The hint follows the shortcuts store: it goes away once the person turns them off
         $this->assertMatchesRegularExpression('/<kbd aria-hidden="true" x-show="enabled"\s+class="[^"]+">\/<\/kbd>/', $html);
         $this->assertSame(1, substr_count($html, '<svg'));
