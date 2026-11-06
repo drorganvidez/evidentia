@@ -232,8 +232,11 @@ class FieldTest extends ComponentTestCase
         $this->assertStringContainsString('autocomplete="current-password"', $html);
         $this->assertMatchesRegularExpression('/<button type="button"\s+x-on:click="toggle"\s+aria-pressed="false"/', $html);
         $this->assertStringContainsString('x-bind:aria-pressed="visible ? \'true\' : \'false\'"', $html);
+        // The name stays put: only aria-pressed tells the state
         $this->assertStringContainsString('aria-label="Mostrar la contraseña"', $html);
-        $this->assertStringContainsString('x-bind:aria-label="label"', $html);
+        $this->assertStringContainsString('title="Mostrar la contraseña"', $html);
+        $this->assertStringNotContainsString('x-bind:aria-label', $html);
+        $this->assertStringNotContainsString('x-bind:title', $html);
         $this->assertStringContainsString('x-show="!visible"', $html);
         $this->assertStringContainsString('x-show="visible"', $html);
         $this->assertSame(2, substr_count($html, '<svg'));

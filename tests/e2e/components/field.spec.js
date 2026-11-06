@@ -5,10 +5,11 @@ test.describe('Campos', () => {
         await page.goto('/_ui#ui-field');
     });
 
-    test('el ojo alterna el tipo, el estado y el nombre sin perder el foco', async ({ ui }) => {
+    test('el ojo alterna el tipo y el estado con el mismo nombre sin perder el foco', async ({
+        ui,
+    }) => {
         const section = ui.section('field');
         const input = section.locator('#field-secret');
-        // The button renames itself, so it is located from the control it belongs to
         const toggle = input.locator('xpath=..').getByRole('button');
 
         await expect(input).toHaveAttribute('type', 'password');
@@ -17,17 +18,18 @@ test.describe('Campos', () => {
 
         await toggle.click();
 
+        // A toggle button keeps its name: «Mostrar la contraseña, pulsado» means it is shown
         await expect(input).toHaveAttribute('type', 'text');
         await expect(toggle).toHaveAttribute('aria-pressed', 'true');
-        await expect(toggle).toHaveAttribute('aria-label', 'Ocultar la contraseña');
-        await expect(toggle).toHaveAttribute('title', 'Ocultar la contraseña');
+        await expect(toggle).toHaveAccessibleName('Mostrar la contraseña');
+        await expect(toggle).toHaveAttribute('title', 'Mostrar la contraseña');
         await expect(toggle).toBeFocused();
 
         await toggle.press('Enter');
 
         await expect(input).toHaveAttribute('type', 'password');
         await expect(toggle).toHaveAttribute('aria-pressed', 'false');
-        await expect(toggle).toHaveAttribute('aria-label', 'Mostrar la contraseña');
+        await expect(toggle).toHaveAccessibleName('Mostrar la contraseña');
         await expect(toggle).toBeFocused();
     });
 

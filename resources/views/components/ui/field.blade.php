@@ -192,9 +192,10 @@
             <span class="shrink-0 text-md text-ink-muted">{{ $suffix }}</span>
         @endif
         @if ($hasToggle)
+            {{-- A toggle button keeps its name and says its state with aria-pressed alone --}}
             <button type="button" x-on:click="toggle" aria-pressed="false"
                 x-bind:aria-pressed="visible ? 'true' : 'false'" aria-label="Mostrar la contraseña"
-                x-bind:aria-label="label" title="Mostrar la contraseña" x-bind:title="label"
+                title="Mostrar la contraseña"
                 class="-mr-1 inline-flex size-8 shrink-0 items-center justify-center rounded-full text-brand-ink transition hover:bg-brand-soft aria-pressed:bg-glass-2 aria-pressed:text-ink pointer-coarse:min-h-11 pointer-coarse:min-w-11">
                 <x-lucide-eye aria-hidden="true" class="size-4.5" x-show="!visible" />
                 <x-lucide-eye-off aria-hidden="true" class="size-4.5" x-show="visible" x-cloak />

@@ -2,7 +2,8 @@
  * Show / hide toggle of a password field (<x-ui.field type="password">).
  *
  * Blade: the field root carries x-data="passwordField", the input x-bind:type="type" and the button
- * x-on:click="toggle" x-bind:aria-pressed="visible ? 'true' : 'false'" x-bind:aria-label="label".
+ * x-on:click="toggle" x-bind:aria-pressed="visible ? 'true' : 'false'". The button keeps its name
+ * «Mostrar la contraseña»: a toggle button says its state with aria-pressed, not with a new name.
  */
 export default function passwordField() {
     return {
@@ -10,10 +11,6 @@ export default function passwordField() {
 
         get type() {
             return this.visible ? 'text' : 'password';
-        },
-
-        get label() {
-            return this.visible ? 'Ocultar la contraseña' : 'Mostrar la contraseña';
         },
 
         toggle() {
