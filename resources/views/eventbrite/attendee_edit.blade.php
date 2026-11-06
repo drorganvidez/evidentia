@@ -1,66 +1,34 @@
-@extends('layouts.app')
+{{-- An attendance recorded by hand or loaded from Eventbrite: change it or delete it --}}
+@php
+    $person = trim($attendee->user?->surname . ', ' . $attendee->user?->name, ', ');
+@endphp
+<x-layout.app title="Editar asistencia" :breadcrumbs="[
+    ['label' => 'Inicio', 'href' => route('home')],
+    ['label' => 'Asistencias', 'href' => route('registercoordinator.attendee.list')],
+    ['label' => 'Editar asistencia'],
+]">
+    <x-ui.page-header title="Editar asistencia">
+        <x-slot:actions>
+            <x-ui.dialog id="remove-attendee" variant="alert" title="Eliminar la asistencia" :description="'Se eliminará la asistencia de ' . $person . '. Esta acción no se puede deshacer.'"
+                trigger="Eliminar" trigger-icon="trash-2">
+                <x-slot:footer>
+                    <x-ui.button x-on:click="close" autofocus>Cancelar</x-ui.button>
+                    <form method="post" action="{{ route('attendee.destroy', $attendee->id) }}">
+                        @csrf
+                        @method('DELETE')
+                        <x-ui.button variant="danger" type="submit" icon="trash-2" block>Sí, eliminar</x-ui.button>
+                    </form>
+                </x-slot:footer>
+            </x-ui.dialog>
+        </x-slot:actions>
+    </x-ui.page-header>
 
-@section('title', 'Editar asistencia')
-
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item">
-        <a href="{{ route('registercoordinator.attendee.list') }}">Gestionar asistencias</a>
-    </li>
-    <li class="breadcrumb-item">@yield('title')</li>
-@endsection
-
-@section('content')
-
-    <div class="card">
-        <div class="card-body">
-
-            <form method="POST" action="{{ route('attendee.update', $attendee->id) }}">
-                @csrf
-
-                <div class="form-group">
-                    <label>Usuario</label>
-                    <select name="user_id" class="form-control">
-                        @foreach ($users as $user)
-                            <option value="{{ $user->id }}" @if ($attendee->user_id == $user->id) selected @endif>
-                                {{ $user->surname }} {{ $user->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="form-group mt-3">
-                    <label>Evento</label>
-                    <select name="event_id" class="form-control">
-                        @foreach ($events as $event)
-                            <option value="{{ $event->id }}" @if ($attendee->event_id == $event->id) selected @endif>
-                                {{ $event->name }}
-                                @if ($event->start_datetime)
-                                    · {{ \Carbon\Carbon::parse($event->start_datetime)->format('d/m/Y H:i') }}
-                                @endif
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="form-group mt-3">
-                    <label>Estado</label>
-                    <select name="status" class="form-control">
-                        <option value="Checked In" @selected($attendee->status == 'Checked In')>
-                            Asistido
-                        </option>
-
-                        <option value="Not Attending" @selected($attendee->status == 'Not Attending')>
-                            No asistido
-                        </option>
-                    </select>
-                </div>
-
-                <button class="btn btn-success mt-3">Guardar cambios</button>
-
-            </form>
-
-        </div>
-    </div>
-
-@endsection
+    <x-ui.card title="Datos de la asistencia" :level="2" class="max-w-2xl">
+        @include('eventbrite.partials.attendee-form', [
+            'action' => route('attendee.update', $attendee->id),
+            'attendee' => $attendee,
+            'event' => null,
+            'submit' => 'Guardar cambios',
+        ])
+    </x-ui.card>
+</x-layout.app>

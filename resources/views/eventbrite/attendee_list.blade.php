@@ -1,135 +1,74 @@
-@extends('layouts.app')
+{{-- Attendances of the course, from Eventbrite or recorded by hand, with their export --}}
+@php
+    $closesAt = \Config::attendee_timestamp();
+    $open = !\Carbon\Carbon::now()->gt($closesAt);
+    $text = fn($html) => trim(html_entity_decode(strip_tags(\Html::clean((string) $html)), ENT_QUOTES | ENT_HTML5));
+    $columns = [
+        ['label' => 'Estudiante', 'key' => 'user'],
+        ['label' => 'Evento', 'key' => 'event'],
+        ['label' => 'Fecha', 'key' => 'start_datetime'],
+        ['label' => 'Asistencia', 'key' => 'status'],
+        ['label' => 'Acciones', 'srOnly' => true],
+    ];
+@endphp
+<x-layout.app title="Asistencias" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Asistencias']]">
+    <x-ui.page-header title="Asistencias">
+        @if ($closesAt !== null)
+            <x-slot:meta>
+                <x-ui.deadline label="Registro de asistencias" variant="inline" verb="para registrar asistencias"
+                    :closes-at="$closesAt" />
+            </x-slot:meta>
+        @endif
+        <x-slot:actions>
+            <x-ui.button icon="download" :href="route('registercoordinator.attendee.export')">Exportar</x-ui.button>
+            @if ($open)
+                <x-ui.button variant="primary" icon="plus" :href="route('attendee.create')">Añadir
+                    asistencia</x-ui.button>
+            @endif
+        </x-slot:actions>
+    </x-ui.page-header>
 
-@section('title', 'Gestionar asistencias')
-
-@section('title-icon', 'fas fa-user-check')
-
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item active">@yield('title')</li>
-@endsection
-
-@section('info')
-    <x-slimreminder :datetime="\Config::attendee_timestamp()" />
-@endsection
-
-@section('content')
-
-    <div class="row">
-        <div class="col-lg-12">
-
-            <div class="row mb-3">
-                <div class="col-lg-6">
-
-                    <a href="{{ route('registercoordinator.attendee.export') }}" class="btn btn-info me-2">
-                        <i class="fas fa-file-export"></i>
-                        Exportar asistencias
-                    </a>
-
-                    @if (!\Carbon\Carbon::now()->gt(\Config::attendee_timestamp()))
-                        <a href="{{ route('attendee.create') }}" class="btn btn-danger">
-                            <i class="fas fa-plus"></i>
-                            Añadir asistencia
-                        </a>
+    <x-ui.table caption="Asistencias del curso" :columns="$columns" :filterable="$attendees->isNotEmpty()" count-label="asistencias"
+        filter-placeholder="Filtrar asistencias">
+        @if ($attendees->isEmpty())
+            <x-slot:empty>
+                <x-ui.empty icon="user-check" title="No hay asistencias" size="sm" :level="2" />
+            </x-slot:empty>
+        @endif
+        @foreach ($attendees as $attendee)
+            @php
+                $person = trim($attendee->user?->surname . ', ' . $attendee->user?->name, ', ');
+                $event = $text($attendee->event?->name) ?: 'Sin nombre';
+                $edit = $open ? route('attendee.edit', $attendee->id) : null;
+            @endphp
+            <x-ui.table.row :href="$edit" :search="$person . ' ' . $event">
+                <x-ui.table.cell label="Estudiante" primary>
+                    @if ($edit)
+                        <a href="{{ $edit }}">{{ $person }}</a>
+                    @else
+                        <span class="font-semibold tracking-tight">{{ $person }}</span>
                     @endif
-
-                </div>
-            </div>
-
-
-            <div class="card">
-
-                <div class="card-body">
-
-
-
-                    <table id="dataset" class="table table-hover table-responsive">
-                        <thead>
-                            <tr>
-                                <th scope="col">Alumna/o</th>
-                                <th scope="col">Evento</th>
-                                <th scope="col">Asistencia</th>
-                                <th scope="col">Opciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($attendees as $attendee)
-                                <tr scope="row">
-                                    <td>{{ $attendee->user->surname }}, {{ $attendee->user->name }}</td>
-                                    <td><a href="{{ $attendee->event->url }}" target="_blank">{!! \Html::clean($attendee->event->name) !!}</a>
-                                    </td>
-                                    <td><x-attendeestatus :attendee="$attendee" /></td>
-                                    <td>
-                                        @if (!\Carbon\Carbon::now()->gt(\Config::attendee_timestamp()))
-                                            <a href="{{ route('attendee.edit', $attendee->id) }}"
-                                                class="btn btn-sm btn-warning">
-                                                Editar
-                                            </a>
-
-                                            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
-                                                data-target="#deleteAttendeeModal" data-attendee-id="{{ $attendee->id }}">
-                                                Borrar
-                                            </button>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-
-    <div class="modal fade" id="deleteAttendeeModal" tabindex="-1" role="dialog" aria-labelledby="deleteAttendeeLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteAttendeeLabel">Eliminar asistencia</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="modal-body">
-                    ¿Seguro que quieres eliminar esta asistencia? Esta acción no se puede deshacer.
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                        Cancelar
-                    </button>
-
-                    <form id="deleteAttendeeForm" method="POST" action="">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">
-                            Sí, eliminar
-                        </button>
-                    </form>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            $('#deleteAttendeeModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget);
-                var attendeeId = button.data('attendee-id');
-
-                var url = '{{ route('attendee.destroy', ':id') }}';
-                url = url.replace(':id', attendeeId);
-
-                $('#deleteAttendeeForm').attr('action', url);
-            });
-        });
-    </script>
-
-@endsection
+                </x-ui.table.cell>
+                <x-ui.table.cell label="Evento">
+                    @if ($attendee->event?->url)
+                        <a href="{{ $attendee->event->url }}" target="_blank" rel="noopener noreferrer"
+                            class="font-medium text-brand-ink">{{ $event }}</a>
+                    @else
+                        {{ $event }}
+                    @endif
+                </x-ui.table.cell>
+                <x-ui.table.cell label="Fecha" meta hide>
+                    <x-ui.time :value="$attendee->event?->start_datetime" inline short />
+                </x-ui.table.cell>
+                <x-ui.table.cell label="Asistencia" end>
+                    <x-ui.attendee-status :status="$attendee->status" size="sm" />
+                </x-ui.table.cell>
+                <x-ui.table.cell actions>
+                    @if ($edit)
+                        <x-ui.button icon-only icon="pen-line" :label="'Editar la asistencia de ' . $person" :href="$edit" variant="ghost" />
+                    @endif
+                </x-ui.table.cell>
+            </x-ui.table.row>
+        @endforeach
+    </x-ui.table>
+</x-layout.app>

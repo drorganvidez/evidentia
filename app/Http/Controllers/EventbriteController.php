@@ -401,7 +401,7 @@ class EventbriteController extends Controller
     public function attendee_list()
     {
 
-        $attendees = Attendee::all();
+        $attendees = Attendee::with(['user', 'event'])->get();
 
         return view('eventbrite.attendee_list',
             ['attendees' => $attendees]);

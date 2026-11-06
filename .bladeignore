@@ -3,7 +3,6 @@ resources/views/attendee/**
 resources/views/bonus/**
 resources/views/defaultlist/**
 resources/views/email/**
-resources/views/eventbrite/**
 resources/views/importexport/**
 resources/views/integrity/**
 resources/views/layouts/**

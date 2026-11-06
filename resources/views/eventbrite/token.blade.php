@@ -1,72 +1,19 @@
-@extends('layouts.app')
+{{-- Token of the Eventbrite API that loads the events and their attendances --}}
+<x-layout.app title="Eventbrite" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Eventbrite']]">
+    <x-ui.page-header title="Eventbrite">
+        <x-slot:actions>
+            <x-ui.button variant="ghost" icon="external-link" href="https://www.eventbrite.com/platform/api-keys"
+                target="_blank" rel="noopener noreferrer">Obtener el token</x-ui.button>
+        </x-slot:actions>
+    </x-ui.page-header>
 
-@section('title', 'Ajustes de Eventbrite')
-
-@section('title-icon', 'fas fa-screwdriver')
-
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item active">@yield('title')</li>
-@endsection
-
-@section('content')
-
-    <div class="row">
-        <div class="col-lg-12">
-
-            <div class="card">
-
-                <div class="card-body">
-
-                    <form action="{{ $route }}" method="POST">
-                        @csrf
-
-                        <div class="row">
-
-                            <div class="col-lg-6">
-
-                                <i>Powered by</i>
-                                <br>
-                                <img src="{{ asset('dist/img/eventbrite.svg') }}" width="200px" />
-
-                                <br>
-                                <br>
-                                <p>
-                                    Es posible centralizar los eventos y las asistencias registradas en Eventbrite. Para
-                                    ello, debes obtener un token y así poder usar la API.
-                                </p>
-
-                                <p>
-                                    <a href="https://www.eventbrite.com/platform/api-keys" target="_blank">Obtener el
-                                        token.</a>
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                        <div class="form-row">
-
-                            <x-input col="6" attr="token" :value="$token" label="Token"
-                                description="Introduce el token proporcionado por Eventbrite" />
-
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-lg-6">
-                                <button type="submit" class="btn btn-primary">Validar y guardar token</button>
-                            </div>
-                        </div>
-
-                    </form>
-
-
-                </div>
-
-            </div>
-
-
-        </div>
-    </div>
-
-@endsection
+    <x-ui.card title="Token de la API" :level="2" class="max-w-2xl">
+        <x-ui.form :action="$route" id="token-form" :fields="['token' => 'Token']" busy-label="Validando">
+            <x-ui.field name="token" label="Token" :value="$token" required autocomplete="off" spellcheck="false"
+                icon="key-round" />
+            <x-slot:actions>
+                <x-ui.button type="submit" variant="primary" icon="shield-check">Validar y guardar</x-ui.button>
+            </x-slot:actions>
+        </x-ui.form>
+    </x-ui.card>
+</x-layout.app>
