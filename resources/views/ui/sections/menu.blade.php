@@ -22,7 +22,8 @@
         </div>
 
         <div class="grid gap-2" data-demo="user">
-            <span class="font-mono text-2xs text-ink-muted">trigger con avatar · Salir con method="post"</span>
+            <span class="font-mono text-2xs text-ink-muted">trigger con avatar · checked · Salir con
+                method="post"</span>
             <x-ui.menu label="Menú de usuario" id="demo-user">
                 <x-slot:trigger>
                     <button type="button" x-ref="button" aria-haspopup="menu" aria-controls="demo-user"
@@ -40,6 +41,9 @@
                 <x-ui.menu.item divider />
                 <x-ui.menu.item href="{{ $here }}" icon="user-round">Mi perfil</x-ui.menu.item>
                 <x-ui.menu.item href="{{ $here }}" icon="clock">Mis horas</x-ui.menu.item>
+                <x-ui.menu.item icon="keyboard" :checked="true"
+                    x-bind:aria-checked="$store.shortcuts.enabled ? 'true' : 'false'"
+                    x-on:click="$store.shortcuts.toggle()">Atajos de teclado</x-ui.menu.item>
                 <x-ui.menu.item divider />
                 <x-ui.menu.item icon="log-out" method="post" action="{{ $here }}">Salir</x-ui.menu.item>
             </x-ui.menu>

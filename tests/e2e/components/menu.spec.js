@@ -108,6 +108,45 @@ test.describe('Menús', () => {
         await expect(trigger).not.toBeFocused();
     });
 
+    test('una casilla del menú cambia con Espacio sin cerrarlo y con Intro lo cierra', async ({
+        page,
+    }) => {
+        const trigger = page.locator('button[aria-controls="demo-user"]');
+        const menu = page.locator('#demo-user');
+        // includeHidden: the state is read again once the menu has closed
+        const item = menu.getByRole('menuitemcheckbox', {
+            name: 'Atajos de teclado',
+            includeHidden: true,
+        });
+
+        await trigger.focus();
+        await page.keyboard.press('Enter');
+        await expect(item).toHaveAttribute('aria-checked', 'true');
+        await expect(menu.getByRole('menuitem', { name: 'Mi perfil' })).toBeFocused();
+
+        // The arrows reach it like any other item
+        await page.keyboard.press('ArrowDown');
+        await page.keyboard.press('ArrowDown');
+        await expect(item).toBeFocused();
+
+        await page.keyboard.press(' ');
+        await expect(item).toHaveAttribute('aria-checked', 'false');
+        await expect(menu).toBeVisible();
+        await expect(item).toBeFocused();
+        expect(await page.evaluate(() => localStorage.getItem('evidentia.shortcuts'))).toBe('off');
+
+        await page.keyboard.press('Enter');
+        await expect(item).toHaveAttribute('aria-checked', 'true');
+        await expect(menu).toBeHidden();
+        await expect(trigger).toBeFocused();
+
+        // A click flips it in place, so the pointer sees the new state
+        await trigger.click();
+        await item.click();
+        await expect(item).toHaveAttribute('aria-checked', 'false');
+        await expect(menu).toBeVisible();
+    });
+
     test('un clic en la cabecera del menú de usuario no lo cierra', async ({ page }) => {
         const trigger = page.locator('button[aria-controls="demo-user"]');
         const menu = page.locator('#demo-user');

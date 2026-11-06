@@ -11,13 +11,18 @@
  * waits for the next animation frame and would race the focus of the first item; in exchange the outside
  * click handler has to ignore the trigger itself, which already reads as "outside" once the list is shown.
  */
+const ITEMS = '[role="menuitem"], [role="menuitemcheckbox"]';
+
 export default function menu() {
     return {
         open: false,
 
-        /** Enabled menu items, in DOM order. */
+        /** Last key pressed inside the list: Space changes a checkbox item without closing it (APG). */
+        lastKey: null,
+
+        /** Enabled menu items, checkboxes included, in DOM order. */
         items() {
-            return Array.from(this.$refs.menu.querySelectorAll('[role="menuitem"]')).filter(
+            return Array.from(this.$refs.menu.querySelectorAll(ITEMS)).filter(
                 (item) => !item.disabled && item.getAttribute('aria-disabled') !== 'true',
             );
         },
@@ -74,6 +79,8 @@ export default function menu() {
             const items = this.items();
             const current = items.indexOf(document.activeElement);
 
+            this.lastKey = event.key;
+
             switch (event.key) {
                 case 'ArrowDown':
                     event.preventDefault();
@@ -123,11 +130,28 @@ export default function menu() {
             }
         },
 
-        /** Activating an item closes the menu; links and forms carry on with their own behaviour. */
+        /**
+         * Activating an item closes the menu; links and forms carry on with their own behaviour. A checkbox item
+         * stays open on Space and on a pointer click, so the change is seen in place, and closes on Enter.
+         */
         onItemClick(event) {
-            if (event.target.closest('[role="menuitem"]')) {
-                this.close(true);
+            const item = event.target.closest(ITEMS);
+            const key = this.lastKey;
+
+            this.lastKey = null;
+
+            if (!item) {
+                return;
             }
+
+            if (
+                item.getAttribute('role') === 'menuitemcheckbox' &&
+                (event.detail > 0 || key === ' ')
+            ) {
+                return;
+            }
+
+            this.close(true);
         },
 
         /** The trigger sits outside the list but inside the root: its own click must not close what it opened. */

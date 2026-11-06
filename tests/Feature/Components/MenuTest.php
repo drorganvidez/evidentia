@@ -96,6 +96,24 @@ class MenuTest extends ComponentTestCase
         $this->assertCspSafe($html);
     }
 
+    public function test_a_checked_item_is_a_menu_item_checkbox_with_a_switch(): void
+    {
+        $html = $this->render(<<<'BLADE'
+            <x-ui.menu label="Ajustes" id="m">
+                <x-ui.menu.item icon="keyboard" :checked="true" x-on:click="$store.shortcuts.toggle()">Atajos de teclado</x-ui.menu.item>
+                <x-ui.menu.item :checked="false">Avisos por correo</x-ui.menu.item>
+                <x-ui.menu.item>Exportar</x-ui.menu.item>
+            </x-ui.menu>
+            BLADE);
+
+        $this->assertMatchesRegularExpression('#<button type="button" role="menuitemcheckbox" aria-checked="true" tabindex="-1"\s+class="group [^"]*text-ink hover:bg-glass-2 focus:bg-glass-2" x-on:click="\$store.shortcuts.toggle\(\)">#', $html);
+        $this->assertMatchesRegularExpression('#<button type="button" role="menuitemcheckbox" aria-checked="false" tabindex="-1"\s+class="group [^"]*">\s*Avisos por correo#', $html);
+        $this->assertSame(1, substr_count($html, 'role="menuitem"'), 'Only the item without checked is a plain menu item');
+        $this->assertSame(2, substr_count($html, 'group-aria-checked:bg-aurora-500'), 'A switch drawn from aria-checked');
+        $this->assertSame(2, preg_match_all('/<span aria-hidden="true"\s+class="relative ml-auto /', $html), 'The switch is decorative and sits at the end');
+        $this->assertCspSafe($html);
+    }
+
     public function test_the_trigger_slot_replaces_the_button_and_the_popup_can_open_to_the_start(): void
     {
         $html = $this->render(<<<'BLADE'
