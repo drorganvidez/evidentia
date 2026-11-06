@@ -125,6 +125,52 @@ class Evidence extends Model
         return $this->findHeaderEvidenceRecursive($next);
     }
 
+    // primera versión de la cadena; todas las versiones comparten su historial
+    public function rootEvidence(): Evidence
+    {
+        return $this->ancestors()->last() ?? $this;
+    }
+
+    // última versión de la cadena, o la propia evidencia si la cadena está rota
+    public function headEvidence(): Evidence
+    {
+        $head = $this;
+        $seen = [$this->id => true];
+
+        while (! $head->last) {
+            $next = static::where('points_to', $head->id)->first();
+            if (! $next || isset($seen[$next->id])) {
+                return $this;
+            }
+            $seen[$next->id] = true;
+            $head = $next;
+        }
+
+        return $head;
+    }
+
+    // número de versión empezando por 1
+    public function versionNumber(): int
+    {
+        return $this->ancestors()->count() + 1;
+    }
+
+    // versiones anteriores, de la más cercana a la primera; a prueba de cadenas rotas o circulares
+    private function ancestors()
+    {
+        $ancestors = collect();
+        $current = $this;
+        $seen = [$this->id => true];
+
+        while ($current->points_to !== null && ($previous = static::find($current->points_to)) && ! isset($seen[$previous->id])) {
+            $seen[$previous->id] = true;
+            $ancestors->push($previous);
+            $current = $previous;
+        }
+
+        return $ancestors;
+    }
+
     public function getStatusLabelAttribute(): string
     {
         return match ($this->status) {

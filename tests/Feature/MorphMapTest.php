@@ -15,6 +15,7 @@ use App\Models\MeetingRequest;
 use App\Models\MessageThread;
 use App\Models\SignatureSheet;
 use App\Models\User;
+use App\Services\Activity\SubjectInfo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Tests\TestCase;
 
@@ -45,6 +46,13 @@ class MorphMapTest extends TestCase
         foreach (self::ALIASES as $alias => $class) {
             $this->assertSame($class, Relation::getMorphedModel($alias));
             $this->assertSame($alias, (new $class)->getMorphClass());
+        }
+    }
+
+    public function test_every_class_the_log_accepts_as_subject_has_an_alias(): void
+    {
+        foreach ([...SubjectInfo::supported(), User::class] as $class) {
+            $this->assertArrayHasKey((new $class)->getMorphClass(), Relation::morphMap(), $class);
         }
     }
 

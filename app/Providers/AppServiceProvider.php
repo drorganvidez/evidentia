@@ -15,6 +15,8 @@ use App\Models\MeetingRequest;
 use App\Models\MessageThread;
 use App\Models\SignatureSheet;
 use App\Models\User;
+use App\Services\Activity\ActivityRecorder;
+use App\Services\Deadlines;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
@@ -45,7 +47,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // one per request (and per job of a worker); the request id and the configuration hang from the request itself
+        $this->app->scoped(ActivityRecorder::class);
+        $this->app->scoped(Deadlines::class);
     }
 
     /**
