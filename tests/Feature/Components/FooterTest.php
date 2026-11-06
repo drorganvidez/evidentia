@@ -91,7 +91,7 @@ class FooterTest extends ComponentTestCase
     {
         $html = $this->render('<x-ui.footer compact version="4.0.0" />');
 
-        $this->assertStringContainsString('print-hidden flex flex-wrap items-center justify-center gap-x-4 gap-y-1 px-4 py-4 text-xs text-ink-muted', $html);
+        $this->assertStringContainsString('print-hidden flex flex-wrap items-center justify-center gap-x-4 gap-y-1 px-4 py-4 text-xs text-ink', $html);
         $this->assertStringNotContainsString('glass', $html);
         $this->assertStringNotContainsString('aria-label="Evidentia, inicio"', $html);
         $this->assertStringNotContainsString('<svg', $html);

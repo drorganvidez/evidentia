@@ -36,14 +36,14 @@
     $pill =
         'inline-flex min-h-6 items-center rounded-full bg-brand-soft px-2 font-mono text-2xs font-semibold text-brand-soft-ink no-underline';
     $link = $compact
-        ? 'inline-flex min-h-6 items-center gap-1.5 rounded-full px-2 text-ink-muted no-underline transition hover:text-ink pointer-coarse:min-h-11'
+        ? 'inline-flex min-h-6 items-center gap-1.5 rounded-full px-2 text-ink no-underline transition hover:text-brand-ink pointer-coarse:min-h-11'
         : 'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-medium text-ink-muted no-underline transition hover:bg-glass-2 hover:text-ink pointer-coarse:min-h-11';
 @endphp
 <footer
     {{ $attributes->class([
         'print-hidden',
         'glass mt-2 flex min-h-15 flex-wrap items-center gap-3 rounded-lg p-4 text-sm md:gap-6 md:px-5 md:py-3' => !$compact,
-        'flex flex-wrap items-center justify-center gap-x-4 gap-y-1 px-4 py-4 text-xs text-ink-muted' => $compact,
+        'flex flex-wrap items-center justify-center gap-x-4 gap-y-1 px-4 py-4 text-xs text-ink' => $compact,
     ]) }}>
     <span class="inline-flex items-center gap-2 font-semibold text-ink">
         @unless ($compact)

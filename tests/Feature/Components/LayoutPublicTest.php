@@ -22,7 +22,7 @@ class LayoutPublicTest extends ComponentTestCase
         $this->assertStringContainsString('fixed inset-x-3 top-3 z-40', $html, 'Notices hang from the top');
         $this->assertMatchesRegularExpression('/<main id="main" tabindex="-1" class="mx-auto grid min-h-dvh w-\[min\(35rem,100%-2rem\)\] content-start items-center gap-8 pt-22 pb-18 outline-none">/', $html);
         $this->assertStringContainsString('<h1>Entrar</h1>', $html);
-        $this->assertStringContainsString('print-hidden flex flex-wrap items-center justify-center gap-x-4 gap-y-1 px-4 py-4 text-xs text-ink-muted', $html, 'Compact footer');
+        $this->assertStringContainsString('print-hidden flex flex-wrap items-center justify-center gap-x-4 gap-y-1 px-4 py-4 text-xs text-ink', $html, 'Compact footer');
         $this->assertStringNotContainsString('lg:grid-cols-', $html);
         $this->assertStringNotContainsString('<div class="grid gap-6">', $html, 'No aside wrapper without the slot');
 
