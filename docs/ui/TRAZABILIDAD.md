@@ -12,7 +12,7 @@ Una fila por acción en una tabla `activity_log`, **solo de inserción** (sin ed
 | `id`, `created_at` | momento exacto (UTC en BD, mostrado en hora peninsular) |
 | `user_id` | quién actúa (nulo en intentos de acceso fallidos) |
 | `acting_role` | el rol con el que actuó: `STUDENT`, `COORDINATOR`, `SECRETARY`, `REGISTER_COORDINATOR`, `PRESIDENT`, `LECTURE` (se deduce de la ruta usada, no de los roles que tiene) |
-| `action` | verbo cerrado: `login`, `login_failed`, `logout`, `password_reset`, `evidence.created`, `evidence.published`, `evidence.edited`, `evidence.reedited`, `evidence.accepted`, `evidence.rejected`, `evidence.deleted`, `proof.uploaded`, `proof.deleted`, `request.created/edited/deleted`, `sheet.created/edited/deleted`, `signature.signed`, `minutes.created/edited/deleted`, `bonus.created/edited/deleted`, `defaultlist.*`, `user.created`, `user.roles_changed`, `user.blocked`, `user.unblocked`, `user.password_changed_by_manager`, `committee.*`, `config.changed`, `import.users`, `export.*`, `eventbrite.*`, `randomize.run` |
+| `action` | verbo cerrado: `login`, `login_failed`, `logout`, `password_reset`, `evidence.created`, `evidence.published`, `evidence.edited`, `evidence.reedited`, `evidence.accepted`, `evidence.rejected`, `evidence.deleted`, `proof.uploaded`, `proof.deleted`, `request.created/edited/deleted`, `sheet.created/edited/deleted`, `signature.signed`, `minutes.created/edited/deleted`, `bonus.created/edited/deleted`, `defaultlist.*`, `user.created`, `user.roles_changed`, `user.blocked`, `user.unblocked`, `user.password_changed_by_manager`, `committee.*`, `config.changed`, `import.users`, `export.*`, `eventbrite.*`, `randomize.run`, `evidence.moved` (cambio de comité), `message.sent`, `message.replied`, `message.resolved`, `notification.sent` |
 | `subject_type`, `subject_id` | sobre qué (evidencia, acta, usuario…), con su título copiado para que sobreviva al borrado |
 | `target_user_id` | a quién afecta cuando no coincide con el actor (el alumno cuya evidencia se rechaza, el usuario al que se cambian roles) |
 | `details` | JSON con lo relevante y sin datos sensibles: motivo del rechazo, horas antes/después, roles antes/después, versión de la evidencia, nombre del archivo |
@@ -41,7 +41,7 @@ Con el registro ya se ve la trampa; para cortarla de raíz: **nadie puede acepta
 
 ## Coste
 
-Una migración, un modelo, el helper, unas 40 llamadas en controladores y eventos, tres vistas y sus tests (incluido uno que recorre todas las rutas de escritura y comprueba que cada una deja anotación). Es una fase de trabajo aparte, sin riesgo para lo demás.
+Una migración, un modelo, el helper, unas 40 llamadas en controladores y eventos, tres vistas y sus tests (incluido uno que recorre todas las rutas de escritura y comprueba que cada una deja anotación). A eso se suman los mensajes (tabla de hilos y respuestas, dos bandejas, la migración de los dos buzones actuales) y los avisos (notificaciones de Laravel con sus plantillas de correo, las preferencias en el perfil, la campana y el planificador de recordatorios), cada uno con sus tests. Es una fase de trabajo aparte, sin riesgo para lo demás.
 
 ## Subsanación, dentro de plazo
 
@@ -66,3 +66,16 @@ Petición recogida el 6 de noviembre de 2026. Ante cualquier eventualidad, un al
 - El buzón de sugerencias pasa a ser un hilo más, dirigido al profesorado, en vez de un correo a una dirección fija.
 
 Entra también en la fase de trazabilidad. Reutiliza el aviso por correo que ya existe y sustituye las dos pantallas de buzón actuales.
+
+## Avisos
+
+Petición recogida el 6 de noviembre de 2026. Hay alumnos que no entran en un mes y descubren tarde que su evidencia fue rechazada; y el coordinador no sabe que le ha llegado algo hasta que entra. Cada persona, con el rol que sea, debe enterarse de lo verdaderamente importante sin tener que entrar.
+
+- Dos canales. Una bandeja de avisos dentro de la aplicación (campana con contador de no leídos en la cabecera) y el correo electrónico.
+- Dos niveles. Lo importante va siempre por los dos canales y no se puede apagar en el caso de rechazos y plazos; lo informativo va solo a la bandeja salvo que el usuario pida también correo en su perfil.
+- Importantes por defecto. Evidencia enviada a un comité (al coordinador y al secretario del comité), evidencia rechazada con el motivo y el tiempo que queda de plazo (al alumno), evidencia aceptada (al alumno), evidencia movida de comité (al alumno y al coordinador de destino), mensaje nuevo o respuesta (al destinatario), acta pendiente de firma (a los asistentes), convocatoria de reunión (a los convocados), rol concedido o retirado (al afectado).
+- Recordatorios automáticos de plazo. Al alumno con evidencias en borrador o rechazadas sin corregir, una semana y dos días antes del cierre de subida; al coordinador con evidencias pendientes, una semana y dos días antes del cierre de validación; al secretario con actas sin firmar antes del cierre de reuniones.
+- Resumen diario opcional para coordinadores y secretarios con muchos envíos, en lugar de un correo por evidencia.
+- Cada aviso enviado queda anotado en el registro de actividad (`notification.sent`) y enlaza con el objeto al que se refiere.
+
+Técnicamente son notificaciones de Laravel con los canales base de datos y correo, plantillas de correo con el mismo estilo que la aplicación, y una tarea programada para los recordatorios, lo que exige un servicio de planificador (y de cola, si los envíos pasan a cola) en el compose de producción, que hoy no existe. Entra en la fase de trazabilidad y mensajes, con tests de cada evento y de los recordatorios.
