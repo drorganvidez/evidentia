@@ -593,13 +593,34 @@
         }
     }
 
+    /*
+     * Paper is white whatever the theme: the light values of the tokens come back (this layer outranks the theme
+     * layer that holds the dark ones), so a dark page never prints pale text. The glass utilities turn plain below.
+     */
     @media print {
-        .glass,
-        .glass-2 {
-            background: white;
-            border-color: #c9ced8;
-            box-shadow: none;
-            backdrop-filter: none;
+        :root {
+            color-scheme: light;
+
+            --canvas: var(--color-white);
+            --ink: var(--color-slate-900);
+            --ink-muted: var(--color-slate-600);
+            --ink-faint: var(--color-slate-500);
+            --glass: var(--color-white);
+            --glass-2: var(--color-white);
+            --glass-edge: var(--color-slate-300);
+            --brand-ink: var(--color-aurora-700);
+            --brand-soft: var(--color-aurora-100);
+            --brand-soft-ink: var(--color-aurora-800);
+            --accepted-soft: var(--color-success-100);
+            --accepted-ink: var(--color-success-700);
+            --pending-soft: var(--color-warning-100);
+            --pending-ink: var(--color-warning-700);
+            --rejected-soft: var(--color-danger-100);
+            --rejected-ink: var(--color-danger-700);
+            --draft-soft: var(--color-slate-100);
+            --draft-ink: var(--color-slate-700);
+            --notice-soft: var(--color-info-100);
+            --notice-ink: var(--color-info-700);
         }
 
         .print-hidden {
@@ -612,18 +633,34 @@
  * 5. Custom utilities
  * ---------------------------------------------------------------------------------------- */
 
-/* Soft glass surface. Compose with a radius: <div class="glass rounded-xl"> */
+/*
+ * Soft glass surface. Compose with a radius: <div class="glass rounded-xl">. On paper it is plain white with a
+ * grey edge; the print rule lives inside the utility because a base rule loses to the utilities layer.
+ */
 @utility glass {
     background-color: var(--glass);
     backdrop-filter: blur(var(--blur-glass)) saturate(1.15);
     border: 1px solid var(--glass-edge);
     box-shadow: var(--shadow-glass);
+
+    @variant print {
+        background-color: var(--color-white);
+        border-color: var(--color-slate-300);
+        box-shadow: none;
+        backdrop-filter: none;
+    }
 }
 
 @utility glass-2 {
     background-color: var(--glass-2);
     border: 1px solid var(--glass-edge);
     box-shadow: inset 0 1px 0 var(--glass-hi);
+
+    @variant print {
+        background-color: var(--color-white);
+        border-color: var(--color-slate-300);
+        box-shadow: none;
+    }
 }
 
 /* Committee hue decided on the server: "hue-150 committee-dot". The twelve classes always exist. */
