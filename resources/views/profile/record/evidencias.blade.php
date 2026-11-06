@@ -25,7 +25,8 @@
                 @endif
             </x-ui.table.cell>
             <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$evidence->hours" /></x-ui.table.cell>
-            <x-ui.table.cell label="Versión" numeric meta>{{ $evidence->version }}</x-ui.table.cell>
+            <x-ui.table.cell numeric meta><span class="md:hidden">Versión
+                </span>{{ $evidence->version }}</x-ui.table.cell>
             <x-ui.table.cell label="Estado" end><x-ui.evidence-status :status="$evidence->status" :reason="$evidence->reasonRejection?->reason"
                     size="sm" /></x-ui.table.cell>
             <x-ui.table.cell label="Actualizada" meta><x-ui.time :value="$evidence->updated_at" inline short /></x-ui.table.cell>
