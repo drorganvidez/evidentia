@@ -15,6 +15,7 @@ const ALWAYS = [
     '.text-control',
     '.inset-shadow-hi',
     '.shadow-glow-sm',
+    '.prose-ui',
 ];
 
 test('la hoja de estilos servida contiene las utilidades generadas', async ({ page, request }) => {

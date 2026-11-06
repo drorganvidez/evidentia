@@ -11,6 +11,9 @@
 @import 'tailwindcss/preflight.css' layer(base);
 @import 'tailwindcss/utilities.css' layer(utilities) source(none);
 
+/* Component styles that cannot be utilities: the prose of purified HTML (its tags carry no classes). */
+@import './components/prose.css';
+
 /*
  * Where classes are scanned (paths relative to this file). Only the trees of the new UI: the
  * views still on AdminLTE would drag Bootstrap class names in. Add a directory here when it
