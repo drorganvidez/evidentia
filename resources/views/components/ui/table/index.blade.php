@@ -66,6 +66,7 @@
                 ? 'De la ' . $paginator->firstItem() . ' a la ' . $paginator->lastItem() . ' de ' . $paginator->total()
                 : null;
         $paginationLabel ??= 'Paginación de ' . $caption;
+        $count = $paginator->total() . ' ' . ($paginator->total() === 1 ? $countSingular ?? $countLabel : $countLabel);
     }
     $columns = collect($columns)
         ->map(fn($column) => $column instanceof Arrayable ? $column->toArray() : $column)
@@ -111,8 +112,7 @@
                             variant="ghost" size="sm" />
                     @endif
                 </form>
-                <span class="text-sm text-ink-muted tabular-nums">{{ $paginator->total() }}
-                    {{ $paginator->total() === 1 ? $countSingular ?? $countLabel : $countLabel }}</span>
+                <span class="text-sm text-ink-muted tabular-nums">{{ $count }}</span>
             @endif
             @if ($quickFilter)
                 <input type="search" x-model="query" x-on:input.debounce.150ms="filter" autocomplete="off"
