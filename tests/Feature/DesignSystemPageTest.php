@@ -48,6 +48,38 @@ class DesignSystemPageTest extends TestCase
         $this->assertUniqueIds($html);
     }
 
+    public function test_the_paginated_table_pages_and_searches_on_the_server(): void
+    {
+        $paged = function (string $html): string {
+            $start = strpos($html, 'id="paged-evidences"');
+
+            return substr($html, $start, strpos($html, '</section>', $start) - $start);
+        };
+
+        $first = $paged($this->get('/_ui')->assertOk()->getContent());
+
+        $this->assertSame(25, substr_count($first, ' data-href="'));
+        $this->assertStringContainsString('Hilo de difusión 128', $first);
+        $this->assertStringContainsString('De la 1 a la 25 de 128', $first);
+        $this->assertStringContainsString('<nav aria-label="Paginación de Evidencias en páginas"', $first);
+        $this->assertStringContainsString('href="'.url('/_ui').'?page=2#paged-evidences" rel="next"', $first);
+        $this->assertStringContainsString('action="'.url('/_ui').'#paged-evidences"', $first);
+
+        $last = $paged($this->get('/_ui?per_page=50&page=9')->assertOk()->getContent());
+
+        $this->assertSame(28, substr_count($last, ' data-href="'));
+        $this->assertStringContainsString('De la 101 a la 128 de 128', $last);
+
+        $found = $paged($this->get('/_ui?q=RUIZ+logistica')->assertOk()->getContent());
+
+        $this->assertStringContainsString('value="RUIZ logistica"', $found);
+        $this->assertStringNotContainsString('aria-label="Paginación de', $found);
+        $this->assertMatchesRegularExpression('/tabular-nums">\d+ evidencias?</', $found);
+        $this->assertStringContainsString('Quitar la búsqueda', $found);
+
+        $this->assertStringContainsString('Ninguna evidencia coincide con la búsqueda', $paged($this->get('/_ui?q=nada')->getContent()));
+    }
+
     public function test_the_table_of_contents_links_every_section_file_and_nothing_else(): void
     {
         $html = $this->get('/_ui')->assertOk()->getContent();

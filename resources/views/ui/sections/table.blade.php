@@ -1,4 +1,8 @@
-{{-- Tables: the evidence list with quick filter and active sort, a compact management list, the activity log with a flagged row and an empty one --}}
+{{--
+    Tables: the evidence list with quick filter and active sort, a list of 128 paginated and searched on the server, a
+    compact management list, the activity log with a flagged row and an empty one
+--}}
+@use('App\Support\ListPage')
 @use('Illuminate\Pagination\LengthAwarePaginator')
 @php
     $now = now();
@@ -189,6 +193,49 @@
         ['label' => 'Quién', 'key' => 'who'],
         ['label' => 'Objeto', 'key' => 'object', 'hide' => true],
     ];
+    // 128 evidences, newest first, searched and paginated on the server from the query string of the catalogue
+    $topics = [
+        'Montaje del photocall',
+        'Guion de la mesa redonda',
+        'Hilo de difusión',
+        'Acta de la reunión',
+        'Registro de asistentes',
+        'Cartelería de las salas',
+    ];
+    $students = [['Lucía', 'Pérez'], ['Juan', 'García'], ['Marta', 'Ruiz'], ['Pablo', 'Torres'], ['Elena', 'Moreno']];
+    $pagedCommittees = [[3, 'Programa'], [7, 'Logística'], [5, 'Comunicación']];
+    $plain = fn(string $text): string => Str::lower(Str::ascii($text));
+    $words = array_filter(explode(' ', $plain(ListPage::term(request()) ?? '')));
+    $pagedRows = collect(range(128, 1))
+        ->map(
+            fn(int $n): array => [
+                'id' => 1000 + $n,
+                'title' => $topics[$n % 6] . ' ' . $n,
+                'student' => $students[$n % 5],
+                'committee' => $pagedCommittees[$n % 3],
+                'hours' => [0.5, 1, 1.5, 2][$n % 4],
+                'status' => ['PENDING', 'ACCEPTED', 'REJECTED', 'ACCEPTED'][$n % 4],
+                'updated' => $now->copy()->subHours(129 - $n),
+            ],
+        )
+        ->filter(
+            fn(array $row): bool => collect($words)->every(
+                fn(string $word): bool => str_contains(
+                    $plain($row['title'] . ' ' . implode(' ', $row['student']) . ' ' . $row['committee'][1]),
+                    $word,
+                ),
+            ),
+        )
+        ->values();
+    $pagedHours = $pagedRows->sum('hours');
+    $pagedEvidences = ListPage::paginate($pagedRows, request())->fragment('paged-evidences');
+    $pagedColumns = [
+        ['label' => 'Evidencia', 'key' => 'title'],
+        ['label' => 'Estudiante', 'key' => 'student'],
+        ['label' => 'Comité', 'key' => 'committee', 'hide' => true],
+        ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
+        ['label' => 'Estado', 'key' => 'status'],
+    ];
 @endphp
 <section id="ui-table" class="glass grid grid-cols-[minmax(0,1fr)] gap-6 rounded-xl p-6 md:p-8"
     aria-labelledby="ui-table-title">
@@ -230,6 +277,45 @@
             <x-slot:footer>
                 <span>6 evidencias · <x-ui.hours :value="8.25" size="sm" class="text-ink" /> declaradas</span>
             </x-slot:footer>
+        </x-ui.table>
+    </div>
+
+    <div class="grid grid-cols-[minmax(0,1fr)] gap-3">
+        <h3 class="text-lg font-bold tracking-tight">Listado paginado con búsqueda en el servidor</h3>
+        <x-ui.table id="paged-evidences" caption="Evidencias en páginas" :columns="$pagedColumns" :paginator="$pagedEvidences"
+            filterable count-label="evidencias" count-singular="evidencia" filter-placeholder="Buscar evidencias">
+            @foreach ($pagedEvidences as $evidence)
+                @php
+                    [$name, $surname] = $evidence['student'];
+                    [$committeeId, $committeeName] = $evidence['committee'];
+                    $href = route('ui.index', ['evidence' => $evidence['id']]) . '#paged-evidences';
+                @endphp
+                <x-ui.table.row :href="$href">
+                    <x-ui.table.cell label="Evidencia" primary><a
+                            href="{{ $href }}">{{ $evidence['title'] }}</a></x-ui.table.cell>
+                    <x-ui.table.cell label="Estudiante"><x-ui.person :name="$name" :surname="$surname"
+                            size="sm" /></x-ui.table.cell>
+                    <x-ui.table.cell label="Comité" hide>
+                        <x-ui.committee-chip :name="$committeeName" :id="$committeeId" />
+                    </x-ui.table.cell>
+                    <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$evidence['hours']" /></x-ui.table.cell>
+                    <x-ui.table.cell label="Estado" end>
+                        <x-ui.evidence-status :status="$evidence['status']" size="sm" />
+                    </x-ui.table.cell>
+                </x-ui.table.row>
+            @endforeach
+            @if ($pagedEvidences->isEmpty())
+                <x-slot:empty>
+                    <x-ui.empty icon="list-checks" title="Ninguna evidencia coincide con la búsqueda" size="sm"
+                        :level="4" />
+                </x-slot:empty>
+            @else
+                <x-slot:footer>
+                    <span>{{ $pagedEvidences->total() }}
+                        {{ $pagedEvidences->total() === 1 ? 'evidencia' : 'evidencias' }} ·
+                        <x-ui.hours :value="$pagedHours" size="sm" class="text-ink" /></span>
+                </x-slot:footer>
+            @endif
         </x-ui.table>
     </div>
 
