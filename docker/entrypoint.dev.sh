@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "🛠️ [DEV] Entrypoint started..."
+echo "[DEV] Entrypoint started..."
 
 composer install
 
@@ -16,10 +16,10 @@ php artisan migrate
 USERS_COUNT=$(php artisan tinker --execute="echo \App\Models\User::count();" 2>/dev/null)
 
 if [ "$USERS_COUNT" -eq 0 ]; then
-    echo "🌱 Ejecutando seeders..."
+    echo "[DEV] Running the seeders..."
     php artisan db:seed --class=DevelopmentSeeder
 else
-    echo "✅ Seeder ya ejecutado anteriormente, saltando..."
+    echo "[DEV] Seeders already applied, skipping..."
 fi
 
 php artisan serve --host=0.0.0.0 --port=${APP_PORT:-8000}

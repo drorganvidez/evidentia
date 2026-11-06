@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "🚀 [PROD] Entrypoint started..."
+echo "[PROD] Entrypoint started..."
 
 # public/build is a volume shared with nginx: refresh it from the assets compiled in this image
 if [ -d /opt/evidentia/build ]; then
