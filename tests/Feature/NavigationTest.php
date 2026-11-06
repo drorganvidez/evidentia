@@ -116,7 +116,7 @@ class NavigationTest extends TestCase
 
         $labels = $this->labels($menu['nav']);
         $this->assertSame(1, collect($menu['nav'])->where('label', 'Gestión')->count());
-        $this->assertSame(['Configurar curso', 'Alumnos', 'Evidencias', 'Reuniones', 'Asistencias', 'Comités', 'Aleatorizar', 'Integridad', 'Importar', 'Exportar', 'Registro de actividad', 'Mensajes', 'Errores'], $labels['Gestión']);
+        $this->assertSame(['Configurar curso', 'Alumnos', 'Evidencias', 'Reuniones', 'Asistencias', 'Bonos', 'Comités', 'Aleatorizar', 'Integridad', 'Importar', 'Exportar', 'Registro de actividad', 'Mensajes', 'Errores'], $labels['Gestión']);
         $this->assertStringContainsString('/lecture/', collect($menu['nav'])->firstWhere('label', 'Gestión')['items'][0]['href']);
         $this->assertSame(['Inicio', 'Evidencias', 'Alumnos', 'Reuniones', 'Perfil'], array_column($menu['mobileNav'], 'label'));
 

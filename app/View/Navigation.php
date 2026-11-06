@@ -134,6 +134,7 @@ final class Navigation
                 $item('Evidencias', "$p.evidence.list", 'list-checks'),
                 $item('Reuniones', "$p.meeting.list", 'handshake'),
                 $item('Asistencias', "$p.attendee.list", 'user-check'),
+                $item('Bonos', "$p.bonus.list", 'puzzle'),
                 $item('Comités', "$p.committee.list", 'network', ["$p.committee.view"]),
             ];
             if ($has('LECTURE')) {

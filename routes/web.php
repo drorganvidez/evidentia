@@ -244,6 +244,7 @@ Route::middleware('auth')->group(function () {
         Route::get('president/evidence/list', [ManagementController::class, 'evidence_list'])->name('president.evidence.list');
         Route::get('president/meeting/list', [ManagementController::class, 'meeting_list'])->name('president.meeting.list');
         Route::get('president/attendee/list', [ManagementController::class, 'attendee_list'])->name('president.attendee.list');
+        Route::get('president/bonus/list', [ManagementController::class, 'bonus_list'])->name('president.bonus.list');
         Route::get('president/committee/list', [ManagementController::class, 'committee_list'])->name('president.committee.list');
         Route::get('president/committee/{id}', [CommitteeOverviewController::class, 'show'])->whereNumber('id')->name('president.committee.view');
 
@@ -291,6 +292,7 @@ Route::middleware('auth')->group(function () {
         Route::get('lecture/evidence/list', [ManagementController::class, 'evidence_list'])->name('lecture.evidence.list');
         Route::get('lecture/meeting/list', [ManagementController::class, 'meeting_list'])->name('lecture.meeting.list');
         Route::get('lecture/attendee/list', [ManagementController::class, 'attendee_list'])->name('lecture.attendee.list');
+        Route::get('lecture/bonus/list', [ManagementController::class, 'bonus_list'])->name('lecture.bonus.list');
 
         // Server errors, grouped and announced by App\Services\Errors\ErrorRecorder
         Route::get('lecture/errors', [ErrorReportController::class, 'index'])->name('lecture.errors');

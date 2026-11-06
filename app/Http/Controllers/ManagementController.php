@@ -8,6 +8,7 @@ use App\Facades\Activity;
 use App\Http\Middleware\CheckRoles;
 use App\Http\Services\UserService;
 use App\Models\Attendee;
+use App\Models\Bonus;
 use App\Models\Committee;
 use App\Models\Event;
 use App\Models\Evidence;
@@ -179,6 +180,13 @@ class ManagementController extends Controller
             'state' => $state,
             'counts' => $counts,
         ]);
+    }
+
+    public function bonus_list()
+    {
+        $bonus = Bonus::with(['committee', 'users'])->latest()->latest('id')->get();
+
+        return view('manage.bonus_list', ['bonus' => $bonus]);
     }
 
     public function committee_list()
