@@ -56,7 +56,7 @@ final class Dashboard
         $hours = [
             ['label' => 'Evidencias', 'tone' => 'accepted', 'hours' => (float) $user->evidences_accepted_hours()],
             ['label' => 'Reuniones', 'tone' => 'notice', 'hours' => (float) $user->meetings_hours()],
-            ['label' => 'Eventos', 'tone' => 'pending', 'hours' => (float) $user->events_hours()],
+            ['label' => 'Asistencia', 'tone' => 'pending', 'hours' => (float) $user->events_hours()],
             ['label' => 'Bonos', 'tone' => 'draft', 'hours' => (float) $user->bonus_hours()],
         ];
         $shares = $this->percentages(array_column($hours, 'hours'));

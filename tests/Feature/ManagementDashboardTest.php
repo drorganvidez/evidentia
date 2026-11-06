@@ -45,7 +45,7 @@ class ManagementDashboardTest extends TestCase
         $panel = $this->panel();
 
         $this->assertSame([2, 2, 1, 0, 0, 0], array_column($panel['distribution'], 'value'));
-        $this->assertSame(['Evidencias', 'Reuniones', 'Eventos', 'Bonos'], array_column($panel['origins'], 'label'));
+        $this->assertSame(['Evidencias', 'Reuniones', 'Asistencia', 'Bonos'], array_column($panel['origins'], 'label'));
         $this->assertSame(100, array_sum(array_column($panel['origins'], 'value')));
         $this->assertSame('3,00 h', $panel['origins'][3]['text']);
     }

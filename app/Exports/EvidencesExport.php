@@ -117,7 +117,7 @@ class EvidencesExport implements FromCollection, ShouldAutoSize, WithHeadings, W
             'Comité',
             'Evidencia aleatoria',
             'Horas de evidencia aleatoria',
-            'Eventos asistidos',
+            'Asistencias',
             'Horas de asistencia',
             'Reuniones asistidas',
             'Horas de reuniones',
@@ -129,7 +129,7 @@ class EvidencesExport implements FromCollection, ShouldAutoSize, WithHeadings, W
 
         // se descartan las columnas no seleccionadas
         if ($this->events_select != 'on') {
-            if (($key = array_search('Eventos asistidos', $cabeceras)) !== false) {
+            if (($key = array_search('Asistencias', $cabeceras)) !== false) {
                 unset($cabeceras[$key]);
             }
             if (($key = array_search('Horas de asistencia', $cabeceras)) !== false) {

@@ -3,7 +3,7 @@
     $blocks = [
         ['evidences', 'Evidencias'],
         ['meetings', 'Reuniones'],
-        ['events', 'Eventos'],
+        ['events', 'Asistencia'],
         ['bonus', 'Bonos de horas'],
     ];
 @endphp

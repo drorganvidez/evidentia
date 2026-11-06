@@ -130,7 +130,7 @@ final class ManagementDashboard
             $sources,
         );
         $total = array_sum($byOrigin);
-        $labels = ['evidences' => ['Evidencias', 'accepted'], 'meetings' => ['Reuniones', 'notice'], 'events' => ['Eventos', 'pending'], 'bonuses' => ['Bonos', 'draft']];
+        $labels = ['evidences' => ['Evidencias', 'accepted'], 'meetings' => ['Reuniones', 'notice'], 'events' => ['Asistencia', 'pending'], 'bonuses' => ['Bonos', 'draft']];
         $shares = $this->percentages(array_values($byOrigin));
 
         return [
