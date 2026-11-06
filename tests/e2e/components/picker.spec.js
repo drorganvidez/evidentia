@@ -1,5 +1,8 @@
 import { expect, test } from '../fixtures/ui.js';
 
+// The status region of the attendees picker, not the first one the section happens to have
+const status = (section) => section.locator('#attendees-form [x-data="picker"] > p[role="status"]');
+
 test.describe('Selector de personas', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto('/_ui#ui-picker');
@@ -52,7 +55,7 @@ test.describe('Selector de personas', () => {
         await expect(input).toHaveValue('');
         await expect(input).toBeFocused();
         expect(await selectedValues()).toHaveLength(4);
-        await expect(section.getByRole('status').first()).toContainText('4 personas seleccionadas');
+        await expect(status(section)).toContainText('4 personas seleccionadas');
 
         await input.press('Escape');
         await expect(listbox).toBeHidden();
@@ -101,9 +104,7 @@ test.describe('Selector de personas', () => {
 
         await expect(confirm).toBeHidden();
         await expect(chips).toHaveCount(12);
-        await expect(section.getByRole('status').first()).toHaveText(
-            'Lista cargada, 12 personas seleccionadas',
-        );
+        await expect(status(section)).toHaveText('Lista cargada, 12 personas seleccionadas');
     });
 
     test('el formulario envía exactamente los identificadores elegidos', async ({ page, ui }) => {
