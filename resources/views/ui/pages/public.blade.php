@@ -5,6 +5,8 @@
 --}}
 @php
     $here = route('ui.page', 'public');
+    // The forms post to the sink of the catalogue, which comes back here with a notice
+    $submit = route('ui.demo.submit');
     $home = route('ui.index');
     $now = now();
 @endphp
@@ -27,7 +29,7 @@
     </x-slot:aside>
 
     <x-ui.card title="Iniciar sesión" :level="2">
-        <x-ui.form :action="$here" busy-label="Entrando" id="access-form" :fields="['user' => 'Usuario', 'password' => 'Contraseña']">
+        <x-ui.form :action="$submit" busy-label="Entrando" id="access-form" :fields="['user' => 'Usuario', 'password' => 'Contraseña']">
             <x-ui.field name="user" label="Usuario" size="lg" icon="user-round" autocomplete="username"
                 required />
             <x-ui.field name="password" label="Contraseña" type="password" size="lg" icon="lock"
@@ -59,7 +61,7 @@
                         </x-ui.dl.item>
                         <x-ui.dl.item term="Lugar">Aula A2.11, ETSII</x-ui.dl.item>
                     </x-ui.dl>
-                    <x-ui.form :action="$here" id="sign-form" busy-label="Firmando" :fields="['uvus' => 'UVUS', 'name' => 'Nombre y apellidos']">
+                    <x-ui.form :action="$submit" id="sign-form" busy-label="Firmando" :fields="['uvus' => 'UVUS', 'name' => 'Nombre y apellidos']">
                         <x-ui.field name="uvus" label="UVUS" autocomplete="username" required />
                         <x-ui.field name="name" label="Nombre y apellidos" autocomplete="name" required />
                         <x-slot:actions>

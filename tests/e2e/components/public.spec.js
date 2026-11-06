@@ -65,6 +65,33 @@ test.describe('Página de acceso', () => {
         await expect(password).toHaveAttribute('type', 'password');
     });
 
+    for (const [form, fields] of Object.entries({
+        Entrar: { '#field-user': 'juan.perez', '#field-password': 'una contraseña' },
+        Firmar: { '#field-uvus': 'juaper', '#field-name': 'Juan Pérez García' },
+    })) {
+        test(`el formulario de «${form}» se envía y la página vuelve con el aviso`, async ({
+            page,
+        }) => {
+            await page.goto('/_ui/public');
+
+            for (const [selector, value] of Object.entries(fields)) {
+                await page.locator(selector).fill(value);
+            }
+
+            await page.getByRole('button', { name: form }).click();
+
+            await expect(page).toHaveURL(/\/_ui\/public$/);
+            await expect(
+                page
+                    .locator('[aria-label="Avisos"] [role="group"]')
+                    .filter({ hasText: 'Formulario recibido' }),
+            ).toBeVisible();
+            await expect(page.locator('[x-data="notices"] [role="status"]')).toHaveText(
+                'Formulario recibido',
+            );
+        });
+    }
+
     test('las cifras llegan a su valor', async ({ page }) => {
         await page.goto('/_ui/public');
 
