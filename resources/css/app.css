@@ -183,6 +183,17 @@
         --text-5xl: 2.125rem;
         --text-5xl--line-height: 1.1;
 
+        /* Headline of the access screen, the one exception to the scale */
+        --text-6xl: clamp(2.5rem, 5.2vw, 4rem);
+        --text-6xl--line-height: 1.02;
+        --text-6xl--letter-spacing: -0.045em;
+        --text-6xl--font-weight: 750;
+
+        /* Every form control: 16 px keeps iOS from zooming. Named control, not field,
+         * because text-field would resolve to --color-field. */
+        --text-control: 1rem;
+        --text-control--line-height: 1.5rem;
+
         /* Variable font: intermediate weights are real, not synthesised */
         --font-weight-light: 300;
         --font-weight-normal: 450;
@@ -223,6 +234,8 @@
             inset 0 1px 0 color-mix(in oklch, var(--color-white) 25%, transparent),
             0 18px 36px -12px var(--glow);
         --shadow-none: 0 0 #0000;
+        --shadow-glow-sm: 0 0 10px var(--glow);
+        --inset-shadow-hi: inset 0 1px 0 var(--glass-hi);
 
         /* Blur */
         --blur-glass: 10px;
@@ -239,6 +252,7 @@
         --animate-drift-3: drift-3 38s var(--ease-aurora) infinite alternate;
         --animate-pulse-orb: pulse-orb 2.2s var(--ease-aurora) infinite;
         --animate-spin: spin 1s linear infinite;
+        --animate-rise: rise 0.6s var(--ease-aurora) both;
 
         @keyframes drift-1 {
             to {
@@ -278,6 +292,13 @@
                 transform: rotate(360deg);
             }
         }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+        }
     }
 }
 
@@ -311,6 +332,9 @@
         --ink-faint: var(--color-slate-500);
         --rule: color-mix(in oklch, var(--color-slate-400) 28%, transparent);
         --field: color-mix(in oklch, var(--color-white) 75%, transparent);
+
+        /* Field border at 3:1 over field and glass (WCAG 1.4.11) */
+        --field-edge: var(--color-slate-500);
 
         /* Soft glass: surfaces stay about 92 % opaque with a light blur */
         --glass: color-mix(in oklch, var(--color-white) 92%, transparent);
@@ -351,6 +375,13 @@
         --notice-soft: var(--color-info-100);
         --notice-ink: var(--color-info-700);
 
+        /* Notice backgrounds over glass */
+        --accepted-glass: color-mix(in oklch, var(--accepted-soft) 70%, var(--glass));
+        --pending-glass: color-mix(in oklch, var(--pending-soft) 70%, var(--glass));
+        --rejected-glass: color-mix(in oklch, var(--rejected-soft) 70%, var(--glass));
+        --draft-glass: color-mix(in oklch, var(--draft-soft) 70%, var(--glass));
+        --notice-glass: color-mix(in oklch, var(--notice-soft) 70%, var(--glass));
+
         @variant dark {
             color-scheme: dark;
 
@@ -358,6 +389,7 @@
             --ink: var(--color-slate-100);
             --ink-muted: var(--color-slate-300);
             --ink-faint: var(--color-slate-400);
+            --field-edge: var(--color-slate-400);
             --rule: color-mix(in oklch, var(--color-slate-600) 35%, transparent);
             --field: color-mix(in oklch, var(--color-slate-900) 70%, transparent);
 
@@ -392,6 +424,14 @@
             --notice: var(--color-info-400);
             --notice-soft: var(--color-info-900);
             --notice-ink: var(--color-info-300);
+        }
+
+        /* More contrast when the system asks for it */
+        @media (prefers-contrast: more) {
+            --ink-muted: var(--ink);
+            --ink-faint: var(--ink-muted);
+            --field-edge: var(--color-slate-700);
+            --rule: color-mix(in oklch, var(--color-slate-500) 60%, transparent);
         }
     }
 }
@@ -437,7 +477,16 @@
     --color-notice: var(--notice);
     --color-notice-soft: var(--notice-soft);
     --color-notice-ink: var(--notice-ink);
+    --color-field-edge: var(--field-edge);
+    --color-accepted-glass: var(--accepted-glass);
+    --color-pending-glass: var(--pending-glass);
+    --color-rejected-glass: var(--rejected-glass);
+    --color-draft-glass: var(--draft-glass);
+    --color-notice-glass: var(--notice-glass);
 }
+
+/* aria-current with any value but false: menu, bottom bar, breadcrumbs, pagination, filters, steps */
+@custom-variant current (&:where([aria-current]:not([aria-current='false'])));
 
 /* ------------------------------------------------------------------------------------------
  * 4. Base styles
@@ -488,6 +537,72 @@
             transition-duration: 0.001ms !important;
         }
     }
+
+    html {
+        /* The sticky topbar and the bottom bar never cover the focused element (WCAG 2.4.11) */
+        scroll-padding-block: 5.5rem 6.5rem;
+
+        /* Height animation of <details> as a progressive enhancement */
+        interpolate-size: allow-keywords;
+    }
+
+    ::details-content {
+        height: 0;
+        overflow: clip;
+        transition:
+            height 180ms var(--ease-aurora),
+            content-visibility 180ms allow-discrete;
+    }
+
+    details[open]::details-content {
+        height: auto;
+    }
+
+    /* A native modal dialog locks the document scroll */
+    body:has(dialog:modal) {
+        overflow: hidden;
+    }
+
+    /* Without backdrop blur the glass is solid */
+    @supports not (backdrop-filter: blur(1px)) {
+        :root {
+            --glass: var(--color-white);
+            --glass-2: var(--color-white);
+
+            @variant dark {
+                --glass: var(--color-slate-900);
+                --glass-2: var(--color-slate-800);
+            }
+        }
+    }
+
+    /* Forced colours: visible borders and status dots kept (their text always comes along) */
+    @media (forced-colors: active) {
+        .glass,
+        .glass-2 {
+            border-color: CanvasText;
+        }
+
+        .orb-glow,
+        .committee-dot,
+        [role='progressbar'] > * {
+            forced-color-adjust: none;
+        }
+    }
+
+    @media print {
+        .glass,
+        .glass-2 {
+            background: white;
+            border-color: #c9ced8;
+            box-shadow: none;
+            backdrop-filter: none;
+        }
+
+        .print-hidden {
+            display: none !important;
+        }
+    }
 }
 
 /* ------------------------------------------------------------------------------------------
@@ -507,3 +622,58 @@
     border: 1px solid var(--glass-edge);
     box-shadow: inset 0 1px 0 var(--glass-hi);
 }
+
+/* Committee hue decided on the server: "hue-150 committee-dot". The twelve classes always exist. */
+@utility hue-* {
+    --hue: --value(integer);
+}
+
+@utility committee-dot {
+    background-color: oklch(70% 0.16 var(--hue));
+    box-shadow: 0 0 8px oklch(70% 0.16 var(--hue) / 70%);
+}
+
+@source inline('hue-{0,30,60,90,120,150,180,210,240,270,300,330}');
+
+/* Static halo of a status dot; reads the same --orb as pulse-orb */
+@utility orb-glow {
+    box-shadow:
+        0 0 0 3px color-mix(in oklch, var(--orb) 22%, transparent),
+        0 0 12px color-mix(in oklch, var(--orb) 75%, transparent);
+}
+
+/* Halo of the detail header. Composes with glass, which only sets background-color. */
+@utility halo-aurora {
+    background-image:
+        radial-gradient(
+            60% 120% at 0% 0%,
+            color-mix(in oklch, var(--color-aurora-400) 16%, transparent),
+            transparent 60%
+        ),
+        radial-gradient(
+            50% 100% at 100% 0%,
+            color-mix(in oklch, var(--color-cyan-400) 12%, transparent),
+            transparent 60%
+        );
+}
+
+/* Scrollable tabs and filters without a scrollbar */
+@utility no-scrollbar {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* Room for the mobile bottom bar, and its position, with the safe area */
+@utility pb-safe-nav {
+    padding-bottom: calc(5.25rem + env(safe-area-inset-bottom));
+}
+
+@utility bottom-safe {
+    bottom: calc(0.75rem + env(safe-area-inset-bottom));
+}
+
+/* Bar widths without style="": w-68/100 is 68 % (meter, bar-list, deadline) */
+@source inline('w-{0..100}/100');
