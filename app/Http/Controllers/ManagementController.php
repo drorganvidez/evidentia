@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\ActivityAction;
 use App\Enums\ActivityFlag;
 use App\Facades\Activity;
+use App\Http\Controllers\Concerns\PaginatesLists;
 use App\Http\Middleware\CheckRoles;
 use App\Http\Services\UserService;
 use App\Models\Attendee;
@@ -20,9 +21,11 @@ use App\Models\SignatureSheet;
 use App\Models\User;
 use App\Services\Activity\SubjectInfo;
 use App\Support\Changes;
+use App\Support\ListPage;
 use App\Support\StrongPassword;
 use App\View\CommitteeOverview;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -31,6 +34,8 @@ use Illuminate\Validation\Rule;
 
 class ManagementController extends Controller
 {
+    use PaginatesLists;
+
     private $user_service;
 
     public function __construct()
@@ -86,27 +91,36 @@ class ManagementController extends Controller
             'hasta' => $this->date_query($request, 'hasta'),
         ];
 
-        $evidences = Evidence::where('last', true)->where('status', '!=', 'DRAFT')
-            ->with(['user', 'committee', 'reasonRejection'])
-            ->when($filters['comite'], fn ($query, $id) => $query->where('committee_id', $id))
-            ->when($filters['desde'], fn ($query, $date) => $query->where('created_at', '>=', $date->copy()->startOfDay()))
-            ->when($filters['hasta'], fn ($query, $date) => $query->where('created_at', '<=', $date->copy()->endOfDay()))
-            ->orderByDesc('updated_at')->orderByDesc('id')->get();
+        // filtros y búsqueda, en la URL; las pestañas, sus recuentos y los totales se calculan sobre todo el resultado
+        $base = fn (): Builder => $this->searchList(
+            Evidence::where('last', true)->where('status', '!=', 'DRAFT')
+                ->when($filters['comite'], fn ($query, $id) => $query->where('committee_id', $id))
+                ->when($filters['desde'], fn ($query, $date) => $query->where('created_at', '>=', $date->copy()->startOfDay()))
+                ->when($filters['hasta'], fn ($query, $date) => $query->where('created_at', '<=', $date->copy()->endOfDay())),
+            $request,
+            ['title', 'user.name', 'user.surname', 'user.username', 'committee.name'],
+        );
 
-        // filtro por estado, en la URL; «atrasadas» son las pendientes que esperan más de lo debido
-        $late = fn (Evidence $evidence): bool => $evidence->status === 'PENDING'
-            && $evidence->updated_at->lt(now()->subDays(CommitteeOverview::LATE_DAYS));
+        // «atrasadas» son las pendientes que esperan más de lo debido
+        $lateSince = now()->subDays(CommitteeOverview::LATE_DAYS);
         $states = ['pendientes' => 'PENDING', 'atrasadas' => 'PENDING', 'aceptadas' => 'ACCEPTED', 'rechazadas' => 'REJECTED'];
         $state = array_key_exists((string) $request->query('estado'), $states) ? $request->query('estado') : null;
-        $counts = $evidences->countBy('status')->put('LATE', $evidences->filter($late)->count());
-        if ($state !== null) {
-            $evidences = $evidences->where('status', $states[$state])
-                ->when($state === 'atrasadas', fn ($list) => $list->filter($late))
-                ->values();
-        }
+        $counts = $base()->groupBy('status')->selectRaw('status, count(*) as total')->pluck('total', 'status')
+            ->map(fn ($total): int => (int) $total)
+            ->put('LATE', $base()->where('status', 'PENDING')->where('updated_at', '<', $lateSince)->count());
+
+        $filtered = $base()
+            ->when($state !== null, fn ($query) => $query->where('status', $states[$state]))
+            ->when($state === 'atrasadas', fn ($query) => $query->where('updated_at', '<', $lateSince));
+        $hours = (float) $filtered->clone()->sum('hours');
+        $evidences = $this->paginateList(
+            $filtered->with(['user', 'committee', 'reasonRejection'])->orderByDesc('updated_at')->orderByDesc('id'),
+            $request,
+        );
 
         return view('manage.evidence_list', [
-            'evidences' => $evidences, 'state' => $state, 'counts' => $counts, 'filters' => $filters,
+            'evidences' => $evidences, 'state' => $state, 'counts' => $counts, 'filters' => $filters, 'hours' => $hours,
+            'term' => ListPage::term($request),
             'committees' => $committees->map(fn (Committee $committee): array => ['value' => (string) $committee->id, 'label' => $committee->name])->all(),
             'lateDays' => CommitteeOverview::LATE_DAYS,
         ]);

@@ -26,10 +26,13 @@ test.describe('Evidencias y reuniones del curso', () => {
             table.getByRole('link', { name: 'Montaje del photocall', exact: true }),
         ).toHaveCount(0);
 
-        await page.getByRole('searchbox', { name: 'Filtrar evidencias' }).fill('nada parecido');
-        await expect(
-            table.getByRole('link', { name: 'Recogida de material', exact: true }),
-        ).toBeHidden();
+        // The search runs on the server and keeps the tab
+        const search = table.getByRole('searchbox', { name: 'Buscar evidencias' });
+        await search.fill('nada parecido');
+        await search.press('Enter');
+        await expect(page).toHaveURL(/estado=rechazadas&q=nada\+parecido|q=nada\+parecido.*estado=rechazadas/);
+        await expect(table.getByText('Ninguna evidencia coincide con la búsqueda')).toBeVisible();
+        await expect(search).toHaveValue('nada parecido');
     });
 
     test('el presidente ve las reuniones con su acta', async ({ page, ui }) => {
