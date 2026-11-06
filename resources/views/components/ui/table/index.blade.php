@@ -17,11 +17,11 @@
         <x-slot:empty><x-ui.empty title="No hay evidencias" size="sm" /></x-slot:empty>
     </x-ui.table>
     <x-ui.table caption="Evidencias del curso" :columns="$columns" :paginator="$evidences" filterable
-        filter-placeholder="Buscar evidencias" count-label="evidencias">...</x-ui.table>
+        filter-placeholder="Buscar evidencias" count-label="evidencias" count-singular="evidencia">...</x-ui.table>
     A column is ['label', 'key', 'align' => start|end, 'srOnly' => bool, 'hide' => bool, 'sort' => ['href', 'dir' => asc|desc|null], 'class'].
     columns takes an array or a collection; an Arrayable column is read through toArray(). The paginator is a
     LengthAwarePaginator (App\Support\ListPage::paginate); the search form resends every other key of its query
-    string and the size links go back to the first page.
+    string and the size links go back to the first page; its count says count-singular for a single row.
 --}}
 @use('App\Support\ListPage')
 @use('Illuminate\Contracts\Pagination\LengthAwarePaginator')
@@ -35,6 +35,7 @@
     'filterable' => false,
     'filterPlaceholder' => 'Filtrar',
     'countLabel' => 'filas',
+    'countSingular' => null,
     'id' => null,
     'paginator' => null,
     'paginationLabel' => null,
@@ -110,7 +111,8 @@
                             variant="ghost" size="sm" />
                     @endif
                 </form>
-                <span class="text-sm text-ink-muted tabular-nums">{{ $paginator->total() }} {{ $countLabel }}</span>
+                <span class="text-sm text-ink-muted tabular-nums">{{ $paginator->total() }}
+                    {{ $paginator->total() === 1 ? $countSingular ?? $countLabel : $countLabel }}</span>
             @endif
             @if ($quickFilter)
                 <input type="search" x-model="query" x-on:input.debounce.150ms="filter" autocomplete="off"

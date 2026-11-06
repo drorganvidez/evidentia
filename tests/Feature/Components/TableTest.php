@@ -171,7 +171,7 @@ class TableTest extends ComponentTestCase
         $this->assertMatchesRegularExpression('/<input type="search" name="q" value="montaje" maxlength="100"\s+autocomplete="off" enterkeyhint="search" placeholder="Buscar evidencias"\s+aria-label="Buscar evidencias"/', $html);
         $this->assertMatchesRegularExpression('/<button[^>]*type="submit"\s+aria-label="Buscar" title="Buscar"/', $html);
         $this->assertMatchesRegularExpression('/<a[^>]*href="\/lista\?estado=pendientes&amp;per_page=25"\s+aria-label="Quitar la búsqueda"/', $html);
-        $this->assertMatchesRegularExpression('/<span class="text-sm text-ink-muted tabular-nums">128 evidencias<\/span>/', $html);
+        $this->assertMatchesRegularExpression('/<span class="text-sm text-ink-muted tabular-nums">128\s+evidencias<\/span>/', $html);
         $this->assertStringNotContainsString('role="status"', $html);
         $this->assertUniqueIds($html);
         $this->assertCspSafe($html);
@@ -182,6 +182,10 @@ class TableTest extends ComponentTestCase
         $this->assertStringNotContainsString('Quitar la búsqueda', $plain);
 
         $this->assertStringNotContainsString('role="search"', $this->paged($this->paginator()), 'Only filterable tables search');
+
+        $one = $this->paged($this->paginator(1, 1, ['q' => 'montaje']), 'filterable count-label="evidencias" count-singular="evidencia"');
+
+        $this->assertMatchesRegularExpression('/tabular-nums">1\s+evidencia<\/span>/', $one);
     }
 
     public function test_the_search_stays_while_a_search_finds_nothing_and_goes_with_an_empty_list(): void
