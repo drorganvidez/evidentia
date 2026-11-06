@@ -19,7 +19,6 @@ resources/views/updates/**
 resources/views/components/menus/**
 resources/views/components/navbars/**
 resources/views/block.blade.php
-resources/views/home.blade.php
 resources/views/suggestionsmailbox.blade.php
 resources/views/components/attendeestatus.blade.php
 resources/views/components/buttonconfirm.blade.php

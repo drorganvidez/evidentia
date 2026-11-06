@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\View\Dashboard;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -21,8 +23,8 @@ class HomeController extends Controller
      *
      * @return Renderable
      */
-    public function index()
+    public function index(Dashboard $dashboard)
     {
-        return view('home');
+        return view('home', $dashboard->for(Auth::user()));
     }
 }

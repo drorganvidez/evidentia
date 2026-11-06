@@ -1,3 +1,4 @@
+import { PASSWORD } from '../../fixtures/auth.js';
 import { expect, test } from '../../fixtures/ui.js';
 
 /**
@@ -57,6 +58,16 @@ test.describe('Acceso', () => {
         await ui.noOverflow();
         await settle(page);
         expect(await ui.axe(AUDITED)).toEqual([]);
+    });
+
+    test('la estudiante entra y llega al inicio', async ({ page }) => {
+        await page.goto('/login');
+        await page.getByLabel('Correo electrónico').fill('estudiante@e2e.test');
+        await page.getByLabel('Contraseña', { exact: true }).fill(PASSWORD);
+        await page.getByRole('button', { name: 'Entrar' }).click();
+
+        await expect(page).toHaveURL(/\/$/);
+        await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     });
 });
 
