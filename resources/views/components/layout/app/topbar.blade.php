@@ -1,8 +1,9 @@
 {{--
     Topbar of the app layout: menu button (phone), breadcrumbs, search, bell, theme and the user menu.
     <x-layout.app.topbar :breadcrumbs="$breadcrumbs" :search="$search" :notifications="$notifications" :user="$user" />
-    The menu button dispatches ui-drawer, which the drawer dialog listens to on the window. The user menu also turns
-    the keyboard shortcuts on and off ($store.shortcuts), as the drawer does on the phone.
+    The menu button dispatches ui-drawer, which the drawer dialog listens to on the window, and mirrors its state in
+    aria-expanded (dialogTrigger.js). The user menu also turns the keyboard shortcuts on and off ($store.shortcuts),
+    as the drawer does on the phone.
 --}}
 @props(['breadcrumbs' => [], 'search' => null, 'notifications' => null, 'user' => null])
 @php
@@ -11,8 +12,9 @@
 @endphp
 <header
     class="glass sticky top-3 z-20 flex min-h-13 items-center gap-2 rounded-lg px-2 py-1 md:top-5 md:min-h-14 md:gap-3 md:rounded-full md:py-2 md:pr-2 md:pl-5 print-hidden">
-    <x-ui.button icon-only icon="menu" label="Abrir menú" variant="ghost" class="md:hidden" aria-controls="drawer"
-        aria-haspopup="dialog" x-data x-on:click="$dispatch('ui-drawer')" />
+    <x-ui.button icon-only icon="menu" label="Abrir menú" variant="ghost" class="md:hidden" x-data="dialogTrigger"
+        data-event="ui-drawer" aria-controls="drawer" aria-haspopup="dialog" aria-expanded="false"
+        x-bind:aria-expanded="open ? 'true' : 'false'" x-on:click="show" />
     <x-ui.breadcrumbs :items="$breadcrumbs" class="flex-1" />
     <div class="ml-auto flex shrink-0 items-center gap-1 md:gap-2">
         @if ($search !== null)

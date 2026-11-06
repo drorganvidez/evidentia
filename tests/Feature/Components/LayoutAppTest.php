@@ -100,6 +100,18 @@ class LayoutAppTest extends ComponentTestCase
         $this->assertDoesNotMatchRegularExpression('/<nav aria-label="[^"]*"\s+class="mt-2 border-t border-rule pt-4"/', $plain, 'No separator without a labelled group');
     }
 
+    public function test_the_menu_button_mirrors_the_state_of_the_drawer(): void
+    {
+        $html = $this->render_shell();
+
+        preg_match('/<button [^>]*aria-controls="drawer"[^>]*>/s', $html, $button);
+        $this->assertNotEmpty($button, 'The menu button of the topbar');
+        foreach (['x-data="dialogTrigger"', 'data-event="ui-drawer"', 'aria-haspopup="dialog"', 'aria-expanded="false"', 'x-bind:aria-expanded="open ? \'true\' : \'false\'"', 'x-on:click="show"', 'aria-label="Abrir menú"'] as $attribute) {
+            $this->assertStringContainsString($attribute, $button[0]);
+        }
+        $this->assertMatchesRegularExpression('/<div x-data="dialog"\s+x-on:ui-drawer.window="show"/', $html, 'The drawer listens to the event');
+    }
+
     public function test_the_last_breadcrumb_is_the_current_page(): void
     {
         $html = $this->render_shell();

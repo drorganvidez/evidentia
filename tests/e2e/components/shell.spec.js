@@ -96,10 +96,12 @@ test.describe('Shell en su propia página', () => {
             page.getByRole('navigation', { name: 'Navegación principal (móvil)' }),
         ).toBeVisible();
         await expect(page.locator('aside')).toBeHidden();
+        await expect(button).toHaveAttribute('aria-expanded', 'false');
 
         await button.click();
 
         await expect(drawer).toHaveAttribute('open', '');
+        await expect(button).toHaveAttribute('aria-expanded', 'true');
         expect(await page.evaluate(() => document.activeElement.closest('#drawer') !== null)).toBe(
             true,
         );
@@ -111,8 +113,16 @@ test.describe('Shell en su propia página', () => {
         await page.keyboard.press('Escape');
 
         await expect(drawer).not.toHaveAttribute('open', '');
+        await expect(button).toHaveAttribute('aria-expanded', 'false');
         await expect(button).toBeFocused();
         await noOverflowIn(page);
+
+        // The close button of the drawer resets it as well
+        await button.click();
+        await expect(button).toHaveAttribute('aria-expanded', 'true');
+        await drawer.getByRole('button', { name: 'Cerrar' }).click();
+        await expect(drawer).not.toHaveAttribute('open', '');
+        await expect(button).toHaveAttribute('aria-expanded', 'false');
     });
 
     test('el enlace para saltar lleva el foco a main y la barra «/» al buscador', async ({
