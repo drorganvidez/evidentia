@@ -7,7 +7,9 @@ use App\Enums\ActivityFlag;
 use App\Facades\Activity;
 use App\Http\Middleware\CheckRoles;
 use App\Http\Services\UserService;
+use App\Models\Attendee;
 use App\Models\Committee;
+use App\Models\Event;
 use App\Models\Evidence;
 use App\Models\Meeting;
 use App\Models\Role;
@@ -141,6 +143,41 @@ class ManagementController extends Controller
         return view('manage.meeting_list', [
             'meetings' => $meetings, 'filters' => $filters,
             'committees' => $committees->map(fn (Committee $committee): array => ['value' => (string) $committee->id, 'label' => $committee->name])->all(),
+        ]);
+    }
+
+    /** Filters of the attendances by state, over the literals Eventbrite stores */
+    private const ATTENDEE_STATES = [
+        'asistidas' => ['Checked In', 'Guests Attended'],
+        'pendientes' => ['Attending', 'Guests Attending'],
+        'no-asistidas' => ['Not Attending', 'Not Attending (Refunded/Canceled)'],
+    ];
+
+    public function attendee_list(Request $request)
+    {
+        // every event, hidden ones too, with its sign-ups and the attendances that count hours
+        $events = Event::withCount(['attendees', 'attendees as attended_count' => fn ($query) => $query->where('status', Attendee::ATTENDED)])
+            ->orderByDesc('start_datetime')->orderByDesc('id')->get();
+
+        // filtros por evento y estado, en la URL
+        $event = $events->firstWhere('id', (int) $request->query('evento'));
+        $state = array_key_exists((string) $request->query('estado'), self::ATTENDEE_STATES) ? $request->query('estado') : null;
+
+        $attendees = Attendee::with(['user', 'event'])
+            ->when($event, fn ($query) => $query->where('event_id', $event->id))
+            ->get();
+        $counts = collect(self::ATTENDEE_STATES)->map(fn (array $statuses) => $attendees->whereIn('status', $statuses)->count())
+            ->put('todas', $attendees->count());
+        if ($state !== null) {
+            $attendees = $attendees->whereIn('status', self::ATTENDEE_STATES[$state]);
+        }
+
+        return view('manage.attendee_list', [
+            'attendees' => $attendees->sortByDesc(fn ($attendee) => [$attendee->event?->start_datetime, $attendee->id])->values(),
+            'events' => $events,
+            'event' => $event,
+            'state' => $state,
+            'counts' => $counts,
         ]);
     }
 

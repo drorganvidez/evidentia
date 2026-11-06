@@ -133,6 +133,7 @@ final class Navigation
                 $item('Alumnos', "$p.user.list", 'user-cog', ["$p.user.management", 'profiles.view', 'profiles.view.evidence']),
                 $item('Evidencias', "$p.evidence.list", 'list-checks'),
                 $item('Reuniones', "$p.meeting.list", 'handshake'),
+                $item('Asistencias', "$p.attendee.list", 'user-check'),
                 $item('Comités', "$p.committee.list", 'network', ["$p.committee.view"]),
             ];
             if ($has('LECTURE')) {
