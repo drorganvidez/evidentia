@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -27,6 +28,8 @@ class ManagementActivityTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        // the notices these actions send are checked in tests/Feature/Notifications
+        Notification::fake();
         Configuration::forceCreate(['secret' => 'salt']);
         $this->lecture = User::factory()->create(['username' => 'profesor']);
         $this->lecture->roles()->attach($this->role('LECTURE'));

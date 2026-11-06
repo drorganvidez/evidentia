@@ -17,6 +17,7 @@ use App\Models\SignatureSheet;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use RuntimeException;
 use Tests\TestCase;
@@ -32,6 +33,8 @@ class SecretaryActivityTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        // the notices these actions send are checked in tests/Feature/Notifications
+        Notification::fake();
         Storage::fake();
         Configuration::forceCreate(['meetings_timestamp' => now()->addMonth()]);
         $this->user = User::factory()->create();
