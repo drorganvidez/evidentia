@@ -195,12 +195,12 @@
     ];
     // 128 evidences, newest first, searched and paginated on the server from the query string of the catalogue
     $topics = [
-        'Montaje del photocall',
-        'Guion de la mesa redonda',
-        'Hilo de difusión',
-        'Acta de la reunión',
-        'Registro de asistentes',
-        'Cartelería de las salas',
+        'Inventario del almacén',
+        'Turno de acreditaciones',
+        'Boletín semanal',
+        'Reserva de salas',
+        'Traducción de carteles',
+        'Visita guiada',
     ];
     $students = [['Lucía', 'Pérez'], ['Juan', 'García'], ['Marta', 'Ruiz'], ['Pablo', 'Torres'], ['Elena', 'Moreno']];
     $pagedCommittees = [[3, 'Programa'], [7, 'Logística'], [5, 'Comunicación']];

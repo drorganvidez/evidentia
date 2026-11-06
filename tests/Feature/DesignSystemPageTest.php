@@ -59,7 +59,7 @@ class DesignSystemPageTest extends TestCase
         $first = $paged($this->get('/_ui')->assertOk()->getContent());
 
         $this->assertSame(25, substr_count($first, ' data-href="'));
-        $this->assertStringContainsString('Hilo de difusión 128', $first);
+        $this->assertStringContainsString('Boletín semanal 128', $first);
         $this->assertStringContainsString('De la 1 a la 25 de 128', $first);
         $this->assertStringContainsString('<nav aria-label="Paginación de Evidencias en páginas"', $first);
         $this->assertStringContainsString('href="'.url('/_ui').'?page=2#paged-evidences" rel="next"', $first);
