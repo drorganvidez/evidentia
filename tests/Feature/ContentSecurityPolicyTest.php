@@ -217,6 +217,28 @@ class ContentSecurityPolicyTest extends TestCase
         $response->assertSee('nonce="'.$nonce.'"', false);
     }
 
+    public function test_the_catalogue_pages_print_nothing_the_policy_would_block(): void
+    {
+        // The stub of the base TestCase prints no Vite tags; the nonce still reaches the inline theme script and @fonts
+        $this->withoutVite();
+
+        foreach (['/_ui', '/_ui/shell', '/_ui/public', '/_ui/detail', '/_ui/pdf'] as $page) {
+            $response = $this->get($page)->assertOk();
+            $html = (string) $response->getContent();
+            $nonce = $this->nonceFromPolicy($this->enforcedPolicy($response));
+
+            $this->assertDoesNotMatchRegularExpression('/<script(?![^>]*\snonce=")/i', $html, $page.': script without nonce');
+            $this->assertDoesNotMatchRegularExpression('/<style(?![^>]*\snonce=")/i', $html, $page.': style element without nonce');
+            $this->assertDoesNotMatchRegularExpression('/\sstyle=/i', $html, $page.': style attribute');
+            $this->assertDoesNotMatchRegularExpression('/\son[a-z]+=/i', $html, $page.': inline event handler');
+
+            preg_match_all('/<(?:script|style)\b[^>]*\snonce="([^"]*)"/i', $html, $matches);
+
+            $this->assertNotEmpty($matches[1], $page.': inline elements with a nonce');
+            $this->assertSame([$nonce], array_values(array_unique($matches[1])), $page.': the nonce of the header');
+        }
+    }
+
     public function test_file_downloads_keep_working_and_carry_the_header(): void
     {
         config(['csp.mode' => 'enforce']);
