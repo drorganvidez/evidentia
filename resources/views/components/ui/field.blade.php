@@ -135,7 +135,7 @@
     $controlClasses = [
         'w-0 min-w-0 flex-1 border-0 bg-transparent text-control text-ink outline-none placeholder:text-ink-muted disabled:cursor-not-allowed disabled:text-ink-muted',
         // the control fills the height of its box, 44 px under a coarse pointer, so the whole box is the target
-        'self-stretch' => !$isTextarea,
+        'self-stretch pointer-coarse:min-h-11' => !$isTextarea && !$isSelect,
         'cursor-pointer appearance-none pr-8' => $isSelect,
         'resize-none field-sizing-content min-h-[calc(var(--rows)*1.5rem)] max-h-[50dvh]' => $isTextarea,
         $rowsClass => $isTextarea,
@@ -203,7 +203,7 @@
                 x-bind:placeholder="placeholderText" x-on:input="onInput" x-on:keydown="onKeydown"
                 x-on:pointerdown="onPointerDown" x-on:focus="onFocus" x-on:click="toggle" autocomplete="off"
                 autocapitalize="off" spellcheck="false"
-                class="w-0 min-w-0 flex-1 cursor-pointer truncate border-0 bg-transparent pr-8 text-control text-ink outline-none placeholder:text-ink-muted focus:cursor-text disabled:cursor-not-allowed disabled:text-ink-muted"
+                class="w-0 min-w-0 flex-1 cursor-pointer self-stretch truncate border-0 bg-transparent pr-8 text-control text-ink outline-none placeholder:text-ink-muted focus:cursor-text disabled:cursor-not-allowed disabled:text-ink-muted pointer-coarse:min-h-11"
                 @if ($placeholder !== null) placeholder="{{ $placeholder }}" @endif
                 @disabled($disabled) @if ($required) aria-required="true" @endif
                 @if ($error !== null) aria-invalid="true" @endif

@@ -16,7 +16,9 @@
     <p class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
         <span class="font-mono text-2xs text-ink-muted">x-layout.app · nav · mobileNav · deadline · user · notifications
             · search</span>
-        <a href="{{ route('ui.page', 'shell') }}" class="font-semibold text-brand-ink">Abrir el shell en su propia
+        <a href="{{ route('ui.page', 'shell') }}"
+            class="font-semibold text-brand-ink pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center">Abrir
+            el shell en su propia
             página</a>
     </p>
 

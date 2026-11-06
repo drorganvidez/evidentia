@@ -31,10 +31,10 @@ test.describe('Mi actividad', () => {
         await tabs.getByRole('link', { name: /Sobre mis cosas/ }).click();
         await expect(page).toHaveURL(/scope=about/);
         await expect(history.getByText('Evidencia rechazada').first()).toBeVisible();
-        await expect(history.getByRole('link', { name: 'Recogida de material' })).toHaveAttribute(
-            'href',
-            /\/activity\/evidence\/\d+$/,
-        );
+        // the rejection and the notice of it both point to the evidence
+        await expect(
+            history.getByRole('link', { name: 'Recogida de material' }).first(),
+        ).toHaveAttribute('href', /\/activity\/evidence\/\d+$/);
 
         await tabs.getByRole('link', { name: /Lo que he hecho/ }).click();
         await expect(history.getByText('Evidencia enviada').first()).toBeVisible();
