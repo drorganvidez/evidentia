@@ -1,90 +1,40 @@
-<style>
-    #body {
-        font-family: 'Helvetica'
-    }
-</style>
+{{-- PDF of a meeting call, rendered by dompdf when the call is created or saved --}}
+@php
+    $datetime = \Carbon\Carbon::parse($meeting_request->datetime);
+    $committee = $meeting_request->committee->name;
+    $secretary = trim($meeting_request->secretary->user->name . ' ' . $meeting_request->secretary->user->surname);
+    $type = [1 => 'Ordinaria', 2 => 'Extraordinaria'][(int) $meeting_request->type] ?? '';
+    $modality = [1 => 'Presencial', 2 => 'Telemática', 3 => 'Híbrida'][(int) $meeting_request->modality] ?? '';
+@endphp
+<x-pdf.document title="Convocatoria de reunión" :subtitle="$meeting_request->title" :committee="'Comité de ' . $committee" :footer-text="'Evidentia · Convocatoria del Comité de ' . $committee">
+    <p>Por medio del presente escrito, queda usted convocado a la reunión {{ Str::lower($type) }} con modalidad
+        {{ Str::lower($modality) }} del Comité de {{ $committee }}, en la que se tratarán los asuntos del orden del
+        día.
+    </p>
 
-<div style="margin: 50px 50px 0px 50px" id="body">
+    <x-pdf.section :number="1" title="Datos de la reunión">
+        <x-pdf.table key-value :rows="[
+            'Fecha' => $datetime->format('d/m/Y'),
+            'Hora' => $datetime->format('H:i'),
+            'Lugar' => $meeting_request->place,
+            'Tipo de reunión' => $type,
+            'Modalidad' => $modality,
+            'Convoca' => $secretary,
+            'Comité' => $committee,
+        ]" />
+    </x-pdf.section>
 
-    <div style="text-align: center">
+    <x-pdf.section :number="2" title="Orden del día">
+        <ol>
+            @foreach ($meeting_request->diary?->diaryPoints ?? [] as $point)
+                <li>{{ $point->point }}</li>
+            @endforeach
+        </ol>
+    </x-pdf.section>
 
-        <img src="dist/img/innosoft.png" width="100px" />
-
-        <h1 style="color: #1E2949">
-            JORNADAS INNOSOFT DAYS {{ \Carbon\Carbon::now()->format('Y') }}
-        </h1>
-
-        <h2 style="color: #79AED3">
-            CONVOCATORIA DE REUNIÓN
-        </h2>
-
-        <h3 style="color: #79AED3">
-            Comité de {{ $meeting_request->committee->name }}
-        </h3>
-
-        <h3>
-            "{{ $meeting_request->title }}"
-        </h3>
-
-        <p style="margin-top: 20px">
-
-            Por medio del presente escrito, queda usted convocado/a a la reunión<b>
-                @switch($meeting_request->type)
-                    @case('1')
-                        ordinaria
-                    @break
-
-                    @case('2')
-                        extraordinaria
-                    @break
-                @endswitch
-            </b> con modalidad<b>
-                @switch($meeting_request->modality)
-                    @case('1')
-                        presencial
-                    @break
-
-                    @case('2')
-                        telemática
-                    @break
-
-                    @case('3')
-                        híbrida
-                    @break
-                @endswitch
-            </b>del comité de <b>{{ $meeting_request->committee->name }}</b>, que se celebrará el día
-            <b>{{ \Carbon\Carbon::parse($meeting_request->datetime)->format('d/m/Y') }}</b>
-            a las <b>{{ \Carbon\Carbon::parse($meeting_request->datetime)->format('H:i') }}</b> en
-            <b>{{ $meeting_request->place }}</b>, en la que
-            se tratarán los asuntos que se expresan a continuación:
-        </p>
-
+    <div class="pdf-signature">
+        <p>Le saluda cordialmente</p>
+        <p class="pdf-signature__name">{{ $secretary }}</p>
+        <p class="pdf-muted">Secretaría del Comité de {{ $committee }}</p>
     </div>
-
-    <h3 style="margin-top: 50px; color: #79AED3">Orden del día</h3>
-
-    <ol>
-        @foreach ($meeting_request->diary->diaryPoints as $point)
-            <li>
-                {{ $point->point }}
-            </li>
-        @endforeach
-    </ol>
-
-    <div style="text-align: center">
-
-
-        <h4 style="margin-top: 50px">
-            Le saluda cordialmente
-        </h4>
-
-        <h3>
-            {{ $meeting_request->secretary->user->name }} {{ $meeting_request->secretary->user->surname }}
-        </h3>
-
-        <h4>
-            Secretaría de {{ $meeting_request->committee->name }}
-        </h4>
-    </div>
-
-</div>
+</x-pdf.document>
