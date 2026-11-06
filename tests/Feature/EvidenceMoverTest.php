@@ -16,6 +16,7 @@ use App\Services\Deadlines;
 use App\Services\EvidenceMover;
 use DomainException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use LogicException;
 use Tests\TestCase;
 
@@ -34,6 +35,8 @@ class EvidenceMoverTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        // the notices these actions send are checked in tests/Feature/Notifications
+        Notification::fake();
         Configuration::forceCreate([
             'id' => 1, 'upload_evidences_timestamp' => now()->addWeek(), 'validate_evidences_timestamp' => now()->addWeek(), 'secret' => 'salt',
         ]);

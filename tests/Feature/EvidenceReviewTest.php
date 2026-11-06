@@ -13,6 +13,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Services\EvidenceReview;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use RuntimeException;
 use Tests\TestCase;
 
@@ -29,6 +30,8 @@ class EvidenceReviewTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        // the notices these actions send are checked in tests/Feature/Notifications
+        Notification::fake();
         Configuration::forceCreate(['id' => 1, 'validate_evidences_timestamp' => now()->addWeek()]);
         $committee = Committee::create(['name' => 'Programa']);
         $this->student = User::factory()->create();

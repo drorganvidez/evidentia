@@ -13,6 +13,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 /**
@@ -29,6 +30,8 @@ class SelfReviewInControllersTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        // the notices these actions send are checked in tests/Feature/Notifications
+        Notification::fake();
         Configuration::forceCreate([
             'upload_evidences_timestamp' => now()->addWeek(),
             'validate_evidences_timestamp' => now()->addWeeks(2),
