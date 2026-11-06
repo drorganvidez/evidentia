@@ -4,6 +4,7 @@ namespace App\Notifications\Concerns;
 
 use App\Models\Evidence;
 use App\Models\User;
+use App\Services\ReviewQueue;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\Route;
 
@@ -75,6 +76,10 @@ trait FormatsNotices
     {
         if ($user->hasRole('COORDINATOR') && (int) $user->coordinator?->committee_id === (int) $evidence->committee_id) {
             return route('coordinator.evidence.view', ['id' => $evidence->getKey()]);
+        }
+
+        if ($user->hasRole('PRESIDENT') && app(ReviewQueue::class)->reviewsAsPresidency($user, $evidence)) {
+            return route('president.review.view', ['id' => $evidence->getKey()]);
         }
 
         if ($user->hasRole('PRESIDENT') || $user->hasRole('LECTURE')) {

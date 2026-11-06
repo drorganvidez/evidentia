@@ -4,7 +4,9 @@ namespace Tests\Feature\Notifications;
 
 use App\Enums\ActivityAction;
 use App\Facades\Activity;
+use App\Models\Committee;
 use App\Models\Configuration;
+use App\Models\Coordinator;
 use App\Models\Evidence;
 use App\Models\User;
 use App\Notifications\Events\EvidenceAccepted;
@@ -80,26 +82,86 @@ class EvidenceNotificationsTest extends NotificationTestCase
         });
     }
 
-    public function test_the_evidence_of_the_only_coordinator_also_reaches_the_management(): void
+    public function test_the_evidence_of_a_coordinator_goes_to_the_presidency(): void
     {
         Notification::fake();
+        $cocoordinator = $this->person('Inés', 'Castro Vidal', ['STUDENT', 'COORDINATOR']);
+        Coordinator::forceCreate(['user_id' => $cocoordinator->id, 'committee_id' => $this->logistics->id]);
+        $evidence = $this->evidence($this->coordinator, 'PENDING');
+
+        $this->publish($evidence, $this->coordinator);
+
+        Notification::assertNotSentTo($this->coordinator, EvidenceSubmitted::class);
+        // the other coordinator of the committee does not review it either
+        Notification::assertNotSentTo($cocoordinator, EvidenceSubmitted::class);
+        Notification::assertNotSentTo($this->lecturer, EvidenceSubmitted::class);
+        Notification::assertSentToTimes($this->secretary, EvidenceSubmitted::class, 1);
+        Notification::assertSentToTimes($this->president, EvidenceSubmitted::class, 1);
+        Notification::assertSentTo($this->president, EvidenceSubmitted::class, function (EvidenceSubmitted $notice) use ($evidence): bool {
+            $mail = $this->mailText($notice, $this->president);
+            $this->assertStringContainsString('La revisa la presidencia porque quien la envía coordina el comité.', $mail);
+            $this->assertStringNotContainsString('no tiene otro coordinador', $mail);
+            $this->assertSame(route('president.review.view', ['id' => $evidence->id]), $notice->url($this->president));
+
+            return true;
+        });
+    }
+
+    public function test_an_evidence_sent_to_the_committee_of_the_presidency_reaches_the_presidents(): void
+    {
+        Notification::fake();
+        $evidence = $this->evidence($this->student, 'PENDING', Committee::presidency());
+
+        $this->publish($evidence, $this->student);
+
+        Notification::assertSentToTimes($this->president, EvidenceSubmitted::class, 1);
+        foreach ([$this->coordinator, $this->secretary, $this->lecturer] as $nobody) {
+            Notification::assertNotSentTo($nobody, EvidenceSubmitted::class);
+        }
+        Notification::assertSentTo($this->president, EvidenceSubmitted::class, function (EvidenceSubmitted $notice): bool {
+            $this->assertSame('Evidencia recibida en Presidencia', $notice->title($this->president));
+            $this->assertStringNotContainsString('La revisa la presidencia', $this->mailText($notice, $this->president));
+
+            return true;
+        });
+    }
+
+    public function test_without_presidents_the_evidence_of_the_only_coordinator_reaches_the_lecturer(): void
+    {
+        Notification::fake();
+        $this->president->roles()->detach();
         $evidence = $this->evidence($this->coordinator, 'PENDING');
 
         $this->publish($evidence, $this->coordinator);
 
         Notification::assertNotSentTo($this->coordinator, EvidenceSubmitted::class);
         Notification::assertSentToTimes($this->secretary, EvidenceSubmitted::class, 1);
-        Notification::assertSentToTimes($this->president, EvidenceSubmitted::class, 1);
         Notification::assertSentToTimes($this->lecturer, EvidenceSubmitted::class, 1);
-        Notification::assertSentTo($this->president, EvidenceSubmitted::class, function (EvidenceSubmitted $notice) use ($evidence): bool {
-            $this->assertStringContainsString('Este comité no tiene otro coordinador que pueda revisarla.', $this->mailText($notice, $this->president));
+        Notification::assertSentTo($this->lecturer, EvidenceSubmitted::class, function (EvidenceSubmitted $notice) use ($evidence): bool {
+            $this->assertStringContainsString('No hay presidencia que pueda revisarla.', $this->mailText($notice, $this->lecturer));
             $this->assertSame(
                 $this->expectedLink('activity.evidence', ['id' => $evidence->id], 'profiles.view.evidence', ['id_user' => $this->coordinator->id, 'id_evidence' => $evidence->id]),
-                $notice->url($this->president),
+                $notice->url($this->lecturer),
             );
 
             return true;
         });
+    }
+
+    public function test_a_committee_without_coordinators_sends_its_evidences_to_the_management(): void
+    {
+        Notification::fake();
+        $evidence = $this->evidence($this->student, 'PENDING', $this->programme);
+        Coordinator::where('committee_id', $this->programme->id)->delete();
+
+        $this->publish($evidence, $this->student);
+
+        Notification::assertSentTo($this->president, EvidenceSubmitted::class, function (EvidenceSubmitted $notice): bool {
+            $this->assertStringContainsString('Este comité no tiene otro coordinador que pueda revisarla.', $this->mailText($notice, $this->president));
+
+            return true;
+        });
+        Notification::assertSentToTimes($this->lecturer, EvidenceSubmitted::class, 1);
     }
 
     public function test_an_evidence_that_needs_no_review_notifies_nobody(): void

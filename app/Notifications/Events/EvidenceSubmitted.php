@@ -13,11 +13,13 @@ use App\Notifications\Concerns\AboutEvidence;
 use App\Notifications\Digestible;
 use App\Notifications\Recipients;
 use App\Services\Deadlines;
+use App\Services\ReviewQueue;
 use Illuminate\Support\Collection;
 
 /**
- * An evidence sent for review, to the coordinators and secretaries of its committee. When no coordinator but the
- * author is left to review it, the management gets it too.
+ * An evidence sent for review, to whoever reviews it (App\Services\ReviewQueue: the coordinators of its committee or
+ * the presidency) and to the secretaries of its committee. When nobody but the author is left to review it, the
+ * management gets it too.
  */
 class EvidenceSubmitted extends BaseNotification implements Digestible
 {
@@ -56,8 +58,7 @@ class EvidenceSubmitted extends BaseNotification implements Digestible
             return collect();
         }
 
-        $author = (int) $evidence->user_id;
-        $reviewers = Recipients::coordinators((int) $evidence->committee_id, except: $author);
+        $reviewers = app(ReviewQueue::class)->reviewers($evidence);
         $people = $reviewers->concat(Recipients::secretaries((int) $evidence->committee_id));
 
         return ($reviewers->isEmpty() ? $people->concat(Recipients::managers()) : $people)
@@ -101,8 +102,9 @@ class EvidenceSubmitted extends BaseNotification implements Digestible
             $lines[] = 'El plazo de validación cierra el '.self::day($closesAt).' a las '.self::clock($closesAt).'.';
         }
 
-        if ($this->isBackup($notifiable)) {
-            $lines[] = 'Este comité no tiene otro coordinador que pueda revisarla.';
+        $note = $this->note($notifiable);
+        if ($note !== null) {
+            $lines[] = $note;
         }
 
         return $lines;
@@ -124,6 +126,27 @@ class EvidenceSubmitted extends BaseNotification implements Digestible
     private function hoursValue(): float
     {
         return (float) ($this->activity?->details['hours'] ?? $this->evidence()?->hours ?? 0);
+    }
+
+    /** Why the person gets it when they are not the coordination of the committee. */
+    private function note(User $notifiable): ?string
+    {
+        $evidence = $this->evidence();
+        if ($evidence === null) {
+            return null;
+        }
+
+        $queue = app(ReviewQueue::class);
+        $presidency = $queue->goesToPresidency($evidence);
+        if ($presidency && $notifiable->hasRole('PRESIDENT')) {
+            return $queue->isPresidency($evidence->committee_id) ? null : 'La revisa la presidencia porque quien la envía coordina el comité.';
+        }
+
+        if (! $this->isBackup($notifiable)) {
+            return null;
+        }
+
+        return $presidency ? 'No hay presidencia que pueda revisarla.' : 'Este comité no tiene otro coordinador que pueda revisarla.';
     }
 
     /** The management only gets it when the committee has nobody else to review it. */
