@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Config;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -70,6 +72,16 @@ class User extends Authenticatable
     public function signatureSheets()
     {
         return $this->belongsToMany(SignatureSheet::class)->withTimestamps()->orderByDesc('created_at');
+    }
+
+    public function notificationPreference(): HasOne
+    {
+        return $this->hasOne(NotificationPreference::class);
+    }
+
+    public function authoredThreads(): HasMany
+    {
+        return $this->hasMany(MessageThread::class, 'author_id');
     }
 
     public function evidence_rand()
