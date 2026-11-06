@@ -104,6 +104,24 @@ test.describe('Página del sistema de diseño', () => {
         expect(await scheme()).toBe('light');
     });
 
+    test('el anillo de foco no cambia la forma de lo que enfoca', async ({ page }) => {
+        await page.goto('/_ui');
+
+        await page.keyboard.press('Tab');
+        await expect(page.getByRole('link', { name: 'Saltar al contenido' })).toBeFocused();
+        await page.keyboard.press('Enter');
+
+        const main = page.locator('#main');
+
+        await expect(main).toBeFocused();
+        expect(
+            await main.evaluate((element) => ({
+                ring: element.matches(':focus-visible'),
+                radius: getComputedStyle(element).borderRadius,
+            })),
+        ).toEqual({ ring: true, radius: '0px' });
+    });
+
     test('no desborda a 320 px de ancho', async ({ page, ui }) => {
         await page.setViewportSize({ width: 320, height: 568 });
         await page.goto('/_ui');

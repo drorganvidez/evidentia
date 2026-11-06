@@ -524,6 +524,11 @@
     :focus-visible {
         outline: 2px solid var(--brand-hi);
         outline-offset: 3px;
+    }
+
+    /* The ring follows the radius of what it surrounds. Only text links get one: on a surface (main, a row, a
+     * scroll region) a radius set on focus would clip its background and change its shape. */
+    :where(a):focus-visible {
         border-radius: var(--radius-xs);
     }
 
