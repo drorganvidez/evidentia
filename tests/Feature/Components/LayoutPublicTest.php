@@ -15,7 +15,7 @@ class LayoutPublicTest extends ComponentTestCase
         $this->assertStringContainsString('>Saltar al formulario</a>', $html);
         $this->assertStringContainsString('[--blob-opacity:.8] dark:[--blob-opacity:.7]', $html, 'The aurora is intense by default');
         $this->assertMatchesRegularExpression('/<header class="absolute inset-x-0 top-0 flex items-center justify-between gap-4 p-4 md:px-6 md:py-5">/', $html);
-        $this->assertStringContainsString('size-12 rounded-md text-3xl', $html, 'Large brand');
+        $this->assertStringContainsString('class="size-12 shrink-0', $html, 'Large brand');
         $this->assertStringContainsString('aria-label="Evidentia, inicio"', $html);
         $this->assertSame(3, substr_count($html, 'type="radio" name="theme-public"'));
         $this->assertStringContainsString('x-data="notices"', $html);

@@ -9,7 +9,11 @@ class BrandTest extends ComponentTestCase
         $html = $this->render('<x-ui.brand />');
 
         $this->assertStringContainsString('<a href="'.url('/').'" aria-label="Evidentia, inicio"', $html);
-        $this->assertMatchesRegularExpression('/<span aria-hidden="true"\s+class="[^"]*before:content-\[\'e\'\]"><\/span>/', $html);
+        // the mark is the drawing of the favicon, with a gradient of its own
+        $this->assertMatchesRegularExpression('/<svg aria-hidden="true" focusable="false" viewBox="0 0 64 64"\s+class="size-10\.5 shrink-0 rounded-\[28%\] shadow-glow">/', $html);
+        $this->assertMatchesRegularExpression('/<linearGradient id="(brand-mark-\w{6})"[^>]*>.*fill="url\(#\1\)"/s', $html);
+        $this->assertStringContainsString('stop-color="#7d6af5"', $html);
+        $this->assertStringContainsString('stop-color="#4fc3e8"', $html);
         $this->assertStringContainsString('Evidentia</span>', $html);
         $this->assertStringNotContainsString('text-ink-muted', $html);
         $this->assertCspSafe($html);
@@ -39,13 +43,13 @@ class BrandTest extends ComponentTestCase
         $md = $this->render('<x-ui.brand />');
         $lg = $this->render('<x-ui.brand size="lg" />');
 
-        $this->assertStringContainsString('size-6.5 rounded-xs text-md', $sm);
+        $this->assertStringContainsString('class="size-6.5 shrink-0', $sm);
         $this->assertStringContainsString('text-sm block', $sm);
 
-        $this->assertStringContainsString('size-10.5 rounded-[0.8125rem] text-2xl', $md);
+        $this->assertStringContainsString('class="size-10.5 shrink-0', $md);
         $this->assertStringContainsString('text-xl block', $md);
 
-        $this->assertStringContainsString('size-12 rounded-md text-3xl', $lg);
+        $this->assertStringContainsString('class="size-12 shrink-0', $lg);
         $this->assertStringContainsString('text-2xl block', $lg);
     }
 
@@ -54,7 +58,7 @@ class BrandTest extends ComponentTestCase
         $html = $this->render('<x-ui.brand mark-only subtitle="Jornadas InnoSoft 2026" />');
 
         $this->assertStringContainsString('aria-label="Evidentia, inicio"', $html);
-        $this->assertStringContainsString('before:content-[\'e\']', $html);
+        $this->assertStringContainsString('<svg aria-hidden="true"', $html);
         $this->assertStringNotContainsString('Evidentia</span>', $html);
         $this->assertStringNotContainsString('Jornadas InnoSoft 2026', $html);
     }
