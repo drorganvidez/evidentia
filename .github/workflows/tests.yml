@@ -38,6 +38,12 @@ jobs:
       - name: Run tests
         run: vendor/bin/phpunit
 
+      # The scheduled commands load and keep their times (routes/console.php); the overlap locks live in the cache
+      - name: List the schedule
+        run: php artisan schedule:list
+        env:
+          CACHE_STORE: array
+
   frontend:
     name: Front end (lint + build)
     runs-on: ubuntu-24.04
