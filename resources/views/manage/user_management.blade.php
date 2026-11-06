@@ -1,207 +1,123 @@
-@extends('layouts.app')
+{{-- Management of one person: personal data, access, roles with their committee, a new password and their hours --}}
+@php
+    $prefix = Auth::user()->hasRole('PRESIDENT') ? 'president' : 'lecture';
+    $fullName = trim($user->surname . ', ' . $user->name, ', ');
+    $roleNames = [
+        'STUDENT' => 'Estudiante',
+        'COORDINATOR' => 'Coordinador',
+        'SECRETARY' => 'Secretario',
+        'REGISTER_COORDINATOR' => 'Coordinador de registro',
+        'PRESIDENT' => 'Presidente',
+        'LECTURE' => 'Profesor',
+    ];
+    $roleOptions = $roles
+        ->map(fn($role) => ['value' => (string) $role->id, 'label' => $roleNames[$role->rol] ?? $role->slug])
+        ->values()
+        ->all();
+    $withCommittee = $roles
+        ->whereIn('rol', ['COORDINATOR', 'SECRETARY'])
+        ->pluck('id')
+        ->map(fn($id) => "'" . $id . "'")
+        ->implode(', ');
+    $selectedRoles = old('roles', $user->roles->pluck('id')->map(fn($id) => (string) $id)->all());
+    $needsCommittee = $roles
+        ->whereIn('rol', ['COORDINATOR', 'SECRETARY'])
+        ->pluck('id')
+        ->map(fn($id) => (string) $id)
+        ->intersect((array) $selectedRoles)
+        ->isNotEmpty();
+    $committeeId = $user->hasRole('COORDINATOR')
+        ? $user->coordinator?->committee_id
+        : ($user->hasRole('SECRETARY')
+            ? $user->secretary?->committee_id
+            : null);
+    $access = session()->hasOldInput() ? old('pass') === 'on' : !$user->block;
+    $hours = [
+        ['En evidencias', $user->evidences_accepted_hours()],
+        ['En reuniones', $user->meetings_hours()],
+        ['En eventos', $user->events_hours()],
+        ['Bonificadas', $user->bonus_hours()],
+    ];
+@endphp
+<x-layout.app :title="'Gestionar a ' . $fullName" :breadcrumbs="[
+    ['label' => 'Inicio', 'href' => route('home')],
+    ['label' => 'Alumnos', 'href' => route($prefix . '.user.list')],
+    ['label' => $fullName],
+]">
+    <x-ui.page-header :title="$fullName">
+        <x-slot:eyebrow>
+            <span>Gestionar usuario</span>
+            @if ($user->block)
+                <x-ui.badge tone="rejected" size="sm">Bloqueado</x-ui.badge>
+            @endif
+        </x-slot:eyebrow>
+        <x-slot:actions>
+            <x-ui.button icon="eye" :href="route('profiles.view', ['id' => $user->id])">Ver perfil</x-ui.button>
+        </x-slot:actions>
+    </x-ui.page-header>
 
-@section('title', 'Gestionar: ' . $user->surname . ', ' . $user->name)
+    <div class="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)] lg:gap-8">
+        <x-ui.form :action="$route" id="user-form" :fields="[
+            'name' => 'Nombre',
+            'surname' => 'Apellidos',
+            'username' => 'UVUS',
+            'email' => 'Correo',
+            'roles' => 'Roles',
+            'committee' => 'Comité',
+            'password' => 'Nueva contraseña',
+        ]">
+            <input type="hidden" name="user_id" value="{{ $user->id }}">
 
-@section('title-icon', 'nav-icon fas fa-cogs')
+            <x-ui.card title="Datos personales" :level="2">
+                <div class="grid grid-cols-[minmax(0,1fr)] gap-4 md:grid-cols-2">
+                    <x-ui.field name="name" label="Nombre" :value="$user->name" required autocomplete="off" />
+                    <x-ui.field name="surname" label="Apellidos" :value="$user->surname" required autocomplete="off" />
+                    <x-ui.field name="username" label="UVUS" :value="$user->username" required autocomplete="off" />
+                    <x-ui.field name="email" label="Correo" type="email" :value="$user->email" required
+                        autocomplete="off" />
+                </div>
+            </x-ui.card>
 
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    @if (Auth::user()->hasRole('PRESIDENT'))
-        <li class="breadcrumb-item"><a href="{{ route('president.user.list') }}">Gestionar alumnos</a></li>
-    @else
-        <li class="breadcrumb-item"><a href="{{ route('lecture.user.list') }}">Gestionar alumnos</a></li>
-    @endif
-    <li class="breadcrumb-item active">@yield('title')</li>
-@endsection
-
-@section('content')
-
-    <form method="POST" action="{{ $route }}">
-        @csrf
-
-        <input type="hidden" name="user_id" value="{{ $user->id }}">
-
-        <div class="row">
-
-
-            <div class="col-lg-7">
-
-                <div class="card">
-
-                    <div class="card-body">
-
-
-
-                        <h3>Datos personales</h3>
-
-                        <div class="form-row">
-
-                            <x-input col="6" attr="username" :value="$user->username" label="Uvus" />
-
-                        </div>
-
-                        <div class="form-row">
-
-                            <x-input col="6" attr="name" :value="$user->name" label="Nombre" />
-
-                            <x-input col="6" attr="surname" :value="$user->surname" label="Apellidos" />
-
-                        </div>
-
-                        <div class="form-row">
-
-                            <x-input col="4" attr="email" :value="$user->email" label="Email" />
-
-                        </div>
-
-                        <hr>
-
-                        <h3>Configuración</h3>
-
-                        <div class="icheck-primary d-inline">
-                            <input type="checkbox" name="pass" id="pass"
-                                @if ($user->block == false) checked @endif>
-                            <label for="pass">
-                                Permitir acceso a la aplicación
-                            </label>
-                        </div>
-
-                        <br><br>
-
-                        <label>Roles</label>
-
-                        <div class="form-group">
-                            <select class="select2bs4" id="roles" name="roles[]"
-                                multiple="multiple @error('roles') is-invalid @enderror"
-                                data-placeholder="Elige el rol o los roles del usuario" style="width: 100%;">
-                                @foreach ($roles as $rol)
-                                    <option @if ($user->hasRole($rol->rol)) selected @endif value="{{ $rol->id }}">
-                                        {{ $rol->slug }}</option>
-                                @endforeach
-                            </select>
-                            @error('roles')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                        <div class="form-group" id="committee" style="display: none">
-                            <label>Selecciona el comité asociado</label>
-                            <select name="committee" class="form-control select2bs4" style="width: 100%;">
-                                @foreach ($committees as $committee)
-                                    <option @if ($committee->name == $user->associate_committee()) selected @endif value="{{ $committee->id }}">
-                                        {{ $committee->name }}</option>
-                                @endforeach
-                            </select>
-                            <small class="form-text text-muted">Los roles "COORDINADOR" o "SECRETARIO"
-                                exigen tener un comité asociado.</small>
-                            @error('committee')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-
-
-                        <hr>
-
-                        <h3>Cambio de contraseña</h3>
-
-                        <div class="form-row">
-                            <x-input col="6" attr="password" :required="false" type="password"
-                                label="Nueva contraseña" />
-                        </div>
-
-                        <div class="form-row">
-                            <x-input col="6" attr="password_confirmation" :required="false" type="password"
-                                label="Repite la nueva contraseña" />
-                        </div>
-
-
-                        <div class="form-row">
-                            <div class="col-lg-3 mt-1">
-                                <button type="submit" class="btn btn-primary btn-block">Actualizar usuario</button>
+            <x-ui.card title="Acceso y roles" :level="2">
+                <div class="grid grid-cols-[minmax(0,1fr)] gap-6">
+                    <x-ui.choice type="switch" name="pass" value="on" label="Permitir acceso a la aplicación"
+                        :checked="$access" />
+                    <x-ui.checkbox-group name="roles" legend="Roles" :options="$roleOptions" :selected="$selectedRoles"
+                        :columns="2">
+                        <x-slot:dependent>
+                            <div x-show="hasAny({{ $withCommittee }})"
+                                @unless ($needsCommittee) x-cloak @endunless class="glass-2 rounded-lg p-4">
+                                <x-ui.field name="committee" label="Comité" type="select" :value="$committeeId"
+                                    placeholder="Elige un comité" :options="$committees->pluck('name', 'id')->all()" />
                             </div>
-                        </div>
-
-
-
-                    </div>
-
+                        </x-slot:dependent>
+                    </x-ui.checkbox-group>
                 </div>
+            </x-ui.card>
 
-            </div>
-
-            <div class="col-lg-5">
-
-                <div class="row">
-
-
-
-
-                    <div class="col-lg-12">
-                        <x-profile :user="$user" />
-                    </div>
-
-
+            <x-ui.card title="Cambio de contraseña" :level="2">
+                <div class="grid grid-cols-[minmax(0,1fr)] gap-4 md:grid-cols-2">
+                    <x-ui.field name="password" label="Nueva contraseña" type="password" autocomplete="new-password" />
+                    <x-ui.field name="password_confirmation" label="Repite la nueva contraseña" type="password"
+                        autocomplete="new-password" />
                 </div>
+            </x-ui.card>
 
+            <x-slot:actions>
+                <x-ui.button type="submit" variant="primary" icon="save">Guardar cambios</x-ui.button>
+                <x-ui.button variant="ghost" :href="route($prefix . '.user.list')">Cancelar</x-ui.button>
+            </x-slot:actions>
+        </x-ui.form>
 
-
-            </div>
-
-
-
-
-        </div>
-
-    </form>
-
-@section('scripts')
-
-    <script>
-        var values = $("#roles").val();
-        for (var i = 0; i < values.length; i++) {
-
-            // si es coordinador
-            if (values[i] == "4") {
-                $("#committee").show();
-            }
-
-            // si es administrador
-            if (values[i] == "5") {
-                $("#committee").show();
-            }
-        }
-
-        $("#roles").change(function() {
-
-            var values = $(this).val();
-            var cont = 0;
-            for (var i = 0; i < values.length; i++) {
-
-                // si es coordinador
-                if (values[i] == "4") {
-                    $("#committee").show();
-                    cont++;
-                }
-
-                // si es administrador
-                if (values[i] == "5") {
-                    $("#committee").show();
-                    cont++;
-                }
-            }
-
-            if (cont == 0) {
-                $("#committee").hide();
-            }
-
-        });
-    </script>
-
-@endsection
-
-@endsection
+        <aside aria-label="Horas" class="grid grid-cols-[minmax(0,1fr)] content-start gap-6">
+            <x-ui.card title="Horas computadas" :level="2">
+                <p><x-ui.hours :value="$user->total_computed_hours()" size="xl" class="font-bold tracking-tighter" /></p>
+                <x-ui.dl class="mt-4">
+                    @foreach ($hours as [$term, $value])
+                        <x-ui.dl.item :term="$term"><x-ui.hours :value="$value" /></x-ui.dl.item>
+                    @endforeach
+                </x-ui.dl>
+            </x-ui.card>
+        </aside>
+    </div>
+</x-layout.app>
