@@ -1,0 +1,14 @@
+{
+    "name": "Evidentia",
+    "short_name": "Evidentia",
+    "lang": "es",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#f3f7fe",
+    "theme_color": "#624ad3",
+    "icons": [
+        { "src": "/img/brand/mark-180.png", "sizes": "180x180", "type": "image/png" },
+        { "src": "/img/brand/mark-512.png", "sizes": "512x512", "type": "image/png" },
+        { "src": "/img/brand/mark-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    ]
+}
