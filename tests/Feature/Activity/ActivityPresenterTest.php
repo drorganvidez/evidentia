@@ -8,6 +8,7 @@ use App\Models\Coordinator;
 use App\Models\Evidence;
 use App\Models\Meeting;
 use App\Models\MeetingMinutes;
+use App\Models\MessageThread;
 use App\Models\Role;
 use App\Models\Secretary;
 use App\Models\User;
@@ -174,5 +175,29 @@ class ActivityPresenterTest extends TestCase
         $this->assertNull($this->presenter->subjectUrl($about('user', $author->id), $coordinator));
         $this->assertNull($this->presenter->subjectUrl($about('bonus', 1), $lecturer));
         $this->assertNull($this->presenter->subjectUrl($this->entry('import.users'), $lecturer));
+    }
+
+    public function test_a_message_names_its_audience_and_links_its_thread_to_who_can_see_it(): void
+    {
+        if (! Route::has('messages.show')) {
+            Route::get('/_test/messages/{thread}', fn () => 'ok')->name('messages.show');
+            Route::getRoutes()->refreshNameLookups();
+        }
+        $committee = Committee::create(['name' => 'Logística']);
+        $author = $this->userWith('STUDENT');
+        $stranger = $this->userWith('STUDENT');
+        $lecturer = $this->userWith('LECTURE');
+        $thread = MessageThread::create([
+            'subject' => 'Duda', 'author_id' => $author->id, 'author_name' => 'Pérez, Juan', 'author_role' => 'STUDENT',
+            'recipient_role' => 'COORDINATOR', 'committee_id' => $committee->id, 'last_message_at' => now(),
+        ]);
+        $sent = $this->entry('message.sent', ['audience' => 'COORDINATOR:'.$committee->id], ['subject_type' => 'message_thread', 'subject_id' => $thread->id]);
+
+        $this->assertSame('Para Coordinación de Logística', $this->presenter->summary($sent));
+        $this->assertSame('Para Profesorado', $this->presenter->summary($this->entry('message.sent', ['audience' => 'LECTURE'])));
+        $this->assertSame('Para Delegación', $this->presenter->summary($this->entry('message.sent', ['audience' => 'Delegación'])));
+        $this->assertSame(route('messages.show', ['thread' => $thread->id]), $this->presenter->subjectUrl($sent, $author));
+        $this->assertSame(route('messages.show', ['thread' => $thread->id]), $this->presenter->subjectUrl($sent, $lecturer));
+        $this->assertNull($this->presenter->subjectUrl($sent, $stranger));
     }
 }

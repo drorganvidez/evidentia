@@ -9,12 +9,15 @@ use App\Models\ActivityLog;
 use App\Models\Evidence;
 use App\Models\MeetingMinutes;
 use App\Models\MeetingRequest;
+use App\Models\MessageThread;
 use App\Models\SignatureSheet;
 use App\Models\User;
+use App\Services\Messaging\Audience;
 use App\Support\Roles;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
+use InvalidArgumentException;
 use Throwable;
 
 /**
@@ -174,6 +177,9 @@ final class ActivityPresenter
                 ? $this->route('activity.request', ['id' => $requestId])
                 : null,
             'user' => $this->access->profileHref($viewer, (int) $entry->subject_id),
+            'message_thread' => MessageThread::whereKey($entry->subject_id)->visibleTo($viewer)->exists()
+                ? $this->route('messages.show', ['thread' => $entry->subject_id])
+                : null,
             default => null,
         };
     }
@@ -318,9 +324,14 @@ final class ActivityPresenter
         return in_array('mail', $channels, true) ? 'bandeja y correo' : 'bandeja';
     }
 
+    /** «Coordinación de Logística» from the key of an audience; the text itself if it is not a key. */
     private function audience(string $audience): string
     {
-        return $audience;
+        try {
+            return Audience::fromKey($audience)->label();
+        } catch (InvalidArgumentException) {
+            return $audience;
+        }
     }
 
     /** «Intento de evidencia aceptada» */
