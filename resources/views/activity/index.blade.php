@@ -12,7 +12,11 @@
     </x-ui.page-header>
 
     <x-ui.filter-bar :action="route('activity.index')" label="Filtros del registro" :open="$filters->active() > 0" :active="$filters->active()" :reset-href="route('activity.index')"
-        :download="$canExport ? ['href' => route('activity.export'), 'label' => 'Descargar CSV'] : null" :keep="Arr::only(\App\Support\ListPage::query(), [\App\Support\ListPage::SIZE, \App\Support\ListSort::KEY, \App\Support\ListSort::DIR])" id="activity-filters">
+        :download="$canExport ? ['href' => route('activity.export'), 'label' => 'Descargar CSV'] : null" :keep="Arr::only(\App\Support\ListPage::query(), [
+            \App\Support\ListPage::SIZE,
+            \App\Support\ListSort::KEY,
+            \App\Support\ListSort::DIR,
+        ])" id="activity-filters">
         <x-ui.field name="type" label="Tipo" type="select" :options="[['value' => '', 'label' => 'Todos'], ...$types]" :value="$filters->type ?? ''" />
         <x-ui.picker name="user" label="Persona" :options="$people" :selected="array_filter([$filters->user])" :max="1"
             placeholder="Buscar persona" />

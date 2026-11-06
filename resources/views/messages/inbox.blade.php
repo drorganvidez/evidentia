@@ -33,8 +33,7 @@
     </x-ui.page-header>
 
     <x-ui.filter-bar :action="$inbox" label="Filtros de la bandeja" :open="$active > 0" :active="$active"
-        :reset-href="ListPage::url(['to' => null, 'committee' => null, 'q' => null], $inbox)" :keep="ListPage::query(['to', 'committee', 'q'])"
-        id="inbox-filters">
+        :reset-href="ListPage::url(['to' => null, 'committee' => null, 'q' => null], $inbox)" :keep="ListPage::query(['to', 'committee', 'q'])" id="inbox-filters">
         <x-ui.field name="to" label="Dirigido a" type="select" :options="[['value' => '', 'label' => 'Mis bandejas'], ...$audiences]" :value="$to" />
         <x-ui.field name="committee" label="Comité" type="select" :options="[['value' => '', 'label' => 'Todos'], ...$committees]" :value="$committee ?? ''" />
         <x-ui.field name="q" label="Texto" type="search" icon="search" placeholder="Asunto o remitente"
