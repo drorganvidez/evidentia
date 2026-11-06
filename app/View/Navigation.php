@@ -7,6 +7,7 @@ use App\Models\ErrorReport;
 use App\Models\MessageThread;
 use App\Models\User;
 use App\Services\Deadlines;
+use App\Services\ReviewQueue;
 
 /**
  * Navigation of the signed-in person for x-layout.app: the groups of the sidebar by role, the bottom bar of the
@@ -15,7 +16,7 @@ use App\Services\Deadlines;
  */
 final class Navigation
 {
-    public function __construct(private Deadlines $deadlines) {}
+    public function __construct(private Deadlines $deadlines, private ReviewQueue $queue) {}
 
     private const SECRETARY_MEETINGS = [
         'secretary.meeting.manage.request.create', 'secretary.meeting.manage.request.list',
@@ -52,6 +53,13 @@ final class Navigation
             return $item('Mensajes', 'messages.inbox', 'messages-square', ['messages.show'], $unread > 0 ? ['count' => $unread, 'countLabel' => 'sin leer'] : []);
         };
         $inboxShown = false;
+        // The review queues of the person (App\Services\ReviewQueue), with their pending count
+        $queues = collect($this->queue->queuesOf($user))->keyBy('kind');
+        $pendingCount = function (string $kind) use ($queues): array {
+            $pending = $queues->has($kind) ? ReviewQueue::pending($queues->get($kind))->count() : 0;
+
+            return $pending > 0 ? ['count' => $pending, 'countLabel' => 'pendientes'] : [];
+        };
 
         $nav = [[
             'label' => null,
@@ -80,13 +88,12 @@ final class Navigation
 
         $committee = $user->coordinator?->committee;
         if ($has('COORDINATOR') && $committee !== null) {
-            $pending = $committee->evidencesPending()->where('user_id', '!=', $user->id)->count();
             $items = [
                 $item('Mi comité', 'coordinator.committee', 'users-round'),
                 $item('Revisar evidencias', 'coordinator.evidence.list.all', 'list-checks', [
                     'coordinator.evidence.list.pending', 'coordinator.evidence.list.accepted',
                     'coordinator.evidence.list.rejected', 'coordinator.evidence.view',
-                ], $pending > 0 ? ['count' => $pending, 'countLabel' => 'pendientes'] : []),
+                ], $pendingCount(ReviewQueue::COORDINATION)),
                 $inbox(),
             ];
             $inboxShown = true;
@@ -131,6 +138,15 @@ final class Navigation
             $items = [
                 $item('Configurar curso', "$p.config", 'settings'),
                 $item('Alumnos', "$p.user.list", 'user-cog', ["$p.user.management", 'profiles.view', 'profiles.view.evidence']),
+            ];
+            // The presidents review the queue of the presidency as coordinators of its committee
+            if ($has('PRESIDENT')) {
+                $items[] = $item('Revisar evidencias', 'president.review.all', 'stamp', [
+                    'president.review.pending', 'president.review.accepted', 'president.review.rejected', 'president.review.view',
+                ], $pendingCount(ReviewQueue::PRESIDENCY));
+            }
+            $items = [
+                ...$items,
                 $item('Evidencias', "$p.evidence.list", 'list-checks'),
                 $item('Reuniones', "$p.meeting.list", 'handshake', ["$p.meeting.request.list", "$p.meeting.signaturesheet.list", "$p.meeting.defaultlist.list"]),
                 $item('Asistencias', "$p.attendee.list", 'user-check'),
@@ -173,12 +189,12 @@ final class Navigation
             'SECRETARY' => ['home', 'secretary.meeting.manage', 'secretary.bonus.list', 'secretary.defaultlist.list'],
             'REGISTER_COORDINATOR' => ['home', 'registercoordinator.event.list', 'registercoordinator.attendee.list', 'evidence.list'],
             'LECTURE' => ['home', "$p.evidence.list", "$p.user.list", "$p.meeting.list"],
-            'PRESIDENT' => ['home', "$p.evidence.list", "$p.user.list", "$p.meeting.list"],
+            'PRESIDENT' => ['home', 'president.review.all', "$p.evidence.list", "$p.user.list"],
             'STUDENT' => ['home', 'evidence.list', 'meeting.list', 'attendee.list'],
         ];
         $short = [
             'home' => 'Inicio', 'evidence.list' => 'Evidencias', 'meeting.list' => 'Reuniones',
-            'attendee.list' => 'Asistencias', 'coordinator.evidence.list.all' => 'Revisar',
+            'attendee.list' => 'Asistencias', 'coordinator.evidence.list.all' => 'Revisar', 'president.review.all' => 'Revisar',
             'secretary.meeting.manage' => 'Reuniones', 'secretary.bonus.list' => 'Bonos',
             'secretary.defaultlist.list' => 'Listas', 'registercoordinator.event.list' => 'Eventos',
             'registercoordinator.attendee.list' => 'Asistencias', "$p.evidence.list" => 'Evidencias',
@@ -214,7 +230,7 @@ final class Navigation
         $section = match (true) {
             $route === null => null,
             str_starts_with($route, 'evidence.'), in_array($route, ['meeting.list', 'attendee.list'], true) => Deadline::UploadEvidences,
-            str_starts_with($route, 'coordinator.') => Deadline::ValidateEvidences,
+            str_starts_with($route, 'coordinator.'), str_starts_with($route, 'president.review.') => Deadline::ValidateEvidences,
             str_starts_with($route, 'secretary.bonus.') => Deadline::Bonus,
             str_starts_with($route, 'secretary.') => Deadline::Meetings,
             str_starts_with($route, 'registercoordinator.'), in_array($route, ['attendee.create', 'attendee.edit'], true) => Deadline::Attendees,

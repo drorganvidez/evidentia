@@ -116,7 +116,7 @@ class NavigationTest extends TestCase
 
         $labels = $this->labels($menu['nav']);
         $this->assertSame(1, collect($menu['nav'])->where('label', 'Gestión')->count());
-        $this->assertSame(['Configurar curso', 'Alumnos', 'Evidencias', 'Reuniones', 'Asistencias', 'Bonos', 'Comités', 'Aleatorizar', 'Integridad', 'Importar', 'Exportar', 'Registro de actividad', 'Mensajes', 'Errores'], $labels['Gestión']);
+        $this->assertSame(['Configurar curso', 'Alumnos', 'Revisar evidencias', 'Evidencias', 'Reuniones', 'Asistencias', 'Bonos', 'Comités', 'Aleatorizar', 'Integridad', 'Importar', 'Exportar', 'Registro de actividad', 'Mensajes', 'Errores'], $labels['Gestión']);
         $this->assertStringContainsString('/lecture/', collect($menu['nav'])->firstWhere('label', 'Gestión')['items'][0]['href']);
         $this->assertSame(['Inicio', 'Evidencias', 'Alumnos', 'Reuniones', 'Perfil'], array_column($menu['mobileNav'], 'label'));
 
@@ -132,6 +132,31 @@ class NavigationTest extends TestCase
         $this->assertNotContains('Importar', $this->labels($president['nav'])['Gestión']);
         $this->assertContains('Errores', $this->labels($president['nav'])['Gestión'], 'The president sees the server errors too');
         $this->assertStringContainsString('/president/errors', collect(collect($president['nav'])->firstWhere('label', 'Gestión')['items'])->firstWhere('label', 'Errores')['href']);
+    }
+
+    public function test_the_presidency_reviews_its_queue_with_the_pending_count(): void
+    {
+        $coordinator = $this->user('STUDENT', 'COORDINATOR');
+        Coordinator::forceCreate(['user_id' => $coordinator->id, 'committee_id' => $this->committee->id]);
+        $student = $this->user('STUDENT');
+        foreach ([[$coordinator, $this->committee], [$student, Committee::presidency()], [$student, $this->committee]] as [$author, $committee]) {
+            Evidence::create(['title' => 'Montaje', 'description' => 'x', 'hours' => 1, 'status' => 'PENDING', 'user_id' => $author->id, 'committee_id' => $committee->id]);
+        }
+
+        $menu = app(Navigation::class)->for($this->user('PRESIDENT'), 'president.review.view');
+
+        $review = collect(collect($menu['nav'])->firstWhere('label', 'Gestión')['items'])->firstWhere('label', 'Revisar evidencias');
+        $this->assertSame(route('president.review.all'), $review['href']);
+        $this->assertSame(2, $review['count'], 'What the coordinator sends to their committee and what goes to the committee of the presidency');
+        $this->assertSame('pendientes', $review['countLabel']);
+        $this->assertTrue($review['current']);
+        $this->assertSame(['Inicio', 'Revisar', 'Evidencias', 'Alumnos', 'Perfil'], array_column($menu['mobileNav'], 'label'));
+        $this->assertSame('Validación de evidencias', $menu['deadline']['label']);
+
+        // the coordinator does not count what they sent, nor does the lecturer get the queue of the presidency
+        $coordinatorMenu = app(Navigation::class)->for($coordinator, 'home');
+        $this->assertSame(1, collect($coordinatorMenu['nav'])->firstWhere('label', 'Comité')['items'][1]['count']);
+        $this->assertNotContains('Revisar evidencias', $this->labels(app(Navigation::class)->for($this->user('LECTURE'), 'home')['nav'])['Gestión']);
     }
 
     public function test_the_layout_composes_the_navigation_when_the_page_does_not_pass_it(): void
