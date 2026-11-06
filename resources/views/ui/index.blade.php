@@ -158,10 +158,11 @@
 
             <div x-data="theme" role="group" aria-label="Tema"
                 class="ml-auto inline-flex gap-0.5 rounded-full border border-glass-edge bg-field p-0.75">
-                @foreach (['light' => 'Claro', 'dark' => 'Oscuro', 'system' => 'Sistema'] as $mode => $label)
+                @foreach (['light' => ['sun', 'Claro'], 'dark' => ['moon', 'Oscuro'], 'system' => ['monitor', 'Sistema']] as $mode => [$icon, $label])
                     <button type="button" x-on:click="select('{{ $mode }}')"
                         x-bind:aria-pressed="is('{{ $mode }}') ? 'true' : 'false'"
-                        class="rounded-full px-3 py-1.5 text-sm font-semibold text-ink-muted transition aria-pressed:bg-glass-2 aria-pressed:text-ink aria-pressed:shadow-raised">
+                        class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold text-ink-muted transition aria-pressed:bg-glass-2 aria-pressed:text-ink aria-pressed:shadow-raised">
+                        <x-ui.icon :name="$icon" class="size-4" />
                         {{ $label }}
                     </button>
                 @endforeach
@@ -283,6 +284,17 @@
                         class="inline-flex items-center gap-2 rounded-full bg-notice-soft py-1.25 pr-3 pl-2 text-sm font-semibold text-notice-ink">
                         <span class="size-2.25 rounded-full bg-notice ring-3 ring-notice/20"></span>Aviso
                     </li>
+                </ul>
+            </section>
+
+            <section class="glass grid gap-6 rounded-xl p-6 md:p-8" aria-labelledby="ui-icons">
+                <h2 id="ui-icons" class="text-lg font-bold tracking-tight">Iconos</h2>
+                <ul class="flex flex-wrap gap-3">
+                    @foreach (['check', 'clock', 'x', 'file-text', 'upload', 'users', 'calendar', 'pen-line', 'search', 'bell', 'log-out', 'settings', 'chevron-right', 'arrow-left', 'triangle-alert', 'circle-help'] as $icon)
+                        <li class="glass-2 grid size-14 place-items-center rounded-md text-ink-muted">
+                            <x-ui.icon :name="$icon" :label="$icon" class="size-5" />
+                        </li>
+                    @endforeach
                 </ul>
             </section>
 
