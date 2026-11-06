@@ -9,7 +9,7 @@ import { announce } from '../alpine/announce';
  * phone control is <select data-table-sort x-on:change="choose"> with "2:asc" values (browser) or URLs (server).
  * A cell orders by its data-sort-value (x-ui.table.cell :sort-value), else by the first data-sort-value inside it
  * (hours, states, people), else by the datetime of its first <time>, else by its visible text. Dates and numbers
- * compare as such, texts without case or accents and with their numbers in order; empty cells always go last and
+ * compare as such, texts without case or accents and with their numbers in order; empty cells (or a lone dash) go last and
  * ties keep the order of the server. A column of dates starts with the newest. The rows only move, so the quick
  * filter of the toolbar keeps its matches. Its state lives in the closure: the select runs inside the scope of
  * the quick filter, where this.$root is the toolbar.
@@ -19,6 +19,8 @@ const ISO_DATE =
     /^\d{4}-\d{2}-\d{2}(?:[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)?$/;
 const NUMBER = /^-?\d+(?:\.\d+)?$/;
 const HIDDEN = '.sr-only, [aria-hidden="true"], [data-filter-ignore]';
+// The dash some cells print for a missing value counts as empty
+const EMPTY = new Set(['', '—', '–', '-']);
 
 function textOf(cell, skipHidden) {
     const walker = document.createTreeWalker(cell, NodeFilter.SHOW_TEXT);
@@ -47,7 +49,7 @@ export function sortValue(cell) {
         cell.querySelector('time[datetime]')?.getAttribute('datetime');
     const raw = (given ?? (textOf(cell, true) || textOf(cell, false))).trim();
 
-    if (raw === '') {
+    if (EMPTY.has(raw)) {
         return { value: null, date: false };
     }
 
