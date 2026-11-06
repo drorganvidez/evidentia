@@ -4,10 +4,24 @@ namespace App\Notifications\Reminders;
 
 use App\Enums\Deadline;
 use App\Models\User;
+use App\Services\ReviewQueue;
+use Carbon\CarbonImmutable;
 
-/** The validation deadline, to the coordinators whose committee has evidences of others waiting for review. */
+/**
+ * The validation deadline, to whoever has evidences waiting in their review queue (App\Services\ReviewQueue): the
+ * coordinators and the presidency.
+ */
 class ValidationDeadlineReminder extends DeadlineReminder
 {
+    /**
+     * @param  list<string>  $items
+     * @param  string  $kind  the queue the link opens, ReviewQueue::COORDINATION or ReviewQueue::PRESIDENCY
+     */
+    public function __construct(CarbonImmutable $closesAt, int $pending, array $items = [], ?string $committee = null, public string $kind = ReviewQueue::COORDINATION)
+    {
+        parent::__construct($closesAt, $pending, $items, $committee);
+    }
+
     public static function key(): string
     {
         return 'deadline.validate';
@@ -20,12 +34,17 @@ class ValidationDeadlineReminder extends DeadlineReminder
 
     public static function audience(): array
     {
-        return ['COORDINATOR'];
+        return ['COORDINATOR', 'PRESIDENT'];
     }
 
     public static function deadline(): Deadline
     {
         return Deadline::ValidateEvidences;
+    }
+
+    public function url(User $notifiable): string
+    {
+        return route(ReviewQueue::routes($this->kind)['pending']);
     }
 
     public function text(User $notifiable): ?string
@@ -37,7 +56,7 @@ class ValidationDeadlineReminder extends DeadlineReminder
     {
         return [
             $this->closing('validación'),
-            'El comité '.$this->committee.' tiene '.self::quantity($this->pending, 'evidencia pendiente de revisión.', 'evidencias pendientes de revisión.'),
+            'La cola de '.$this->committee.' tiene '.self::quantity($this->pending, 'evidencia pendiente de revisión.', 'evidencias pendientes de revisión.'),
         ];
     }
 

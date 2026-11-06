@@ -117,10 +117,11 @@ class RemindersTest extends NotificationTestCase
         Notification::assertNothingSent();
     }
 
-    public function test_the_validation_deadline_only_counts_the_evidences_of_others(): void
+    public function test_the_validation_deadline_counts_the_queue_of_each_reviewer(): void
     {
         $this->evidence($this->student, 'PENDING');
         $this->evidence($this->student, 'PENDING', title: 'Otra');
+        // the presidency reviews what a coordinator sends to their own committee
         $this->evidence($this->otherCoordinator, 'PENDING', $this->programme, 'Propia');
         $this->closing(validate: 2);
 
@@ -128,11 +129,18 @@ class RemindersTest extends NotificationTestCase
 
         Notification::assertSentToTimes($this->coordinator, ValidationDeadlineReminder::class, 1);
         Notification::assertNotSentTo($this->otherCoordinator, ValidationDeadlineReminder::class);
+        Notification::assertNotSentTo($this->lecturer, ValidationDeadlineReminder::class);
         Notification::assertSentTo($this->coordinator, ValidationDeadlineReminder::class, function (ValidationDeadlineReminder $notice): bool {
             $this->assertSame('Quedan 2 días para validar evidencias', $notice->title($this->coordinator));
             $this->assertSame('2 pendientes en Logística', $notice->text($this->coordinator));
             $this->assertSame(route('coordinator.evidence.list.pending'), $notice->url($this->coordinator));
-            $this->assertStringContainsString('El comité Logística tiene 2 evidencias pendientes de revisión.', $this->mailText($notice, $this->coordinator));
+            $this->assertStringContainsString('La cola de Logística tiene 2 evidencias pendientes de revisión.', $this->mailText($notice, $this->coordinator));
+
+            return true;
+        });
+        Notification::assertSentTo($this->president, ValidationDeadlineReminder::class, function (ValidationDeadlineReminder $notice): bool {
+            $this->assertSame('1 pendiente en Presidencia', $notice->text($this->president));
+            $this->assertSame(route('president.review.pending'), $notice->url($this->president));
 
             return true;
         });

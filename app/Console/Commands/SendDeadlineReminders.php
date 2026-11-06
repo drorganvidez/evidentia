@@ -14,6 +14,7 @@ use App\Notifications\Reminders\ValidationDeadlineReminder;
 use App\Services\Deadlines;
 use App\Services\Notifications\Notifier;
 use App\Services\Notifications\ReminderRegistry;
+use App\Services\ReviewQueue;
 use Carbon\CarbonImmutable;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
@@ -122,19 +123,25 @@ final class SendDeadlineReminders extends Command
             ->values();
     }
 
-    /** The coordinators whose committee has evidences of others waiting; their own never count. */
+    /** Whoever has evidences waiting in their review queues, the coordinators and the presidency (App\Services\ReviewQueue). */
     private function coordinators(CarbonImmutable $closesAt, string $class): Collection
     {
-        return User::query()
-            ->whereHas('roles', fn (Builder $roles) => $roles->where('rol', 'COORDINATOR'))
-            ->whereHas('coordinator')
-            ->with(['coordinator.committee', 'roles'])
-            ->get()
-            ->map(function (User $user) use ($closesAt, $class): ?array {
-                $committee = $user->coordinator->committee;
-                $pending = $committee?->evidencesPending()->where('user_id', '!=', $user->id)->count() ?? 0;
+        $queue = app(ReviewQueue::class);
 
-                return $pending === 0 ? null : [$user, new $class($closesAt, $pending, [], $committee->name)];
+        return $queue->reviewersWithQueue()
+            ->map(function (User $user) use ($queue, $closesAt): ?array {
+                $queues = collect($queue->queuesOf($user))
+                    ->map(fn (array $reviewQueue): array => $reviewQueue + ['count' => ReviewQueue::pending($reviewQueue)->count()])
+                    ->filter(fn (array $reviewQueue): bool => $reviewQueue['count'] > 0)
+                    ->values();
+
+                return $queues->isEmpty() ? null : [$user, new ValidationDeadlineReminder(
+                    $closesAt,
+                    (int) $queues->sum('count'),
+                    [],
+                    $queues->pluck('name')->join(', ', ' y '),
+                    $queues->first()['kind'],
+                )];
             })
             ->filter()
             ->values();
