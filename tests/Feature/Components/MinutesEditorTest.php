@@ -33,7 +33,7 @@ class MinutesEditorTest extends ComponentTestCase
         $this->assertStringContainsString('&lt;b&gt;', $html);
         $this->assertStringNotContainsString('<b>', $html);
         $this->assertStringContainsString('data-min="0"', $html);
-        $this->assertStringContainsString('data-id="field-points-json"', $html);
+        $this->assertMatchesRegularExpression('/data-id="field-points-json"\s+id="field-points-json"\s+tabindex="-1"\s+role="group"/', $html);
         $this->assertMatchesRegularExpression('/role="group"\s+aria-labelledby="field-points-json-label"/', $html);
         $this->assertStringContainsString('<p id="field-points-json-label" class="text-sm font-semibold">Puntos del acta</p>', $html);
         $this->assertStringContainsString('<p role="status" class="sr-only" x-text="announcement"></p>', $html);

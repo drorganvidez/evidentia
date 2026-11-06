@@ -43,6 +43,7 @@ class IconPickerTest extends ComponentTestCase
         }
 
         $this->assertStringContainsString('<fieldset x-data="iconPicker"', $html);
+        $this->assertMatchesRegularExpression('/<fieldset x-data="iconPicker" [^>]*\sid="field-icon"\s+tabindex="-1"/', $html);
         $this->assertStringContainsString('<legend class="text-sm font-semibold">Icono', $html);
         $this->assertStringContainsString('<span class="sr-only">euro, euro, dinero, finanzas</span>', $html);
         $this->assertStringContainsString('&quot;euro&quot;:&quot;euro, dinero, finanzas&quot;', $html);

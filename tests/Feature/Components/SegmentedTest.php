@@ -19,7 +19,8 @@ class SegmentedTest extends ComponentTestCase
     {
         $html = $this->render('<x-ui.segmented name="type" legend="Tipo de reunión" :options="$options" :value="1" class="mt-2" />', ['options' => $this->types()]);
 
-        $this->assertMatchesRegularExpression('/^<fieldset\s+class="grid gap-1.5 justify-items-start mt-2">/', trim($html));
+        // The fieldset is where a link of the error summary lands
+        $this->assertMatchesRegularExpression('/^<fieldset\s+id="field-type" tabindex="-1" class="grid gap-1.5 justify-items-start mt-2">/', trim($html));
         $this->assertStringContainsString('<legend class="sr-only">Tipo de reunión</legend>', $html);
         $this->assertStringContainsString('<div class="inline-flex max-w-full gap-0.5 overflow-x-auto rounded-full border border-glass-edge bg-field p-0.75 no-scrollbar">', $html);
         $this->assertSame(2, substr_count($html, 'type="radio" name="type"'));
@@ -79,7 +80,7 @@ class SegmentedTest extends ComponentTestCase
     {
         $html = $this->render('<x-ui.segmented name="type" legend="Tipo" :options="$options" error="Elige el tipo." />', ['options' => $this->types()]);
 
-        $this->assertMatchesRegularExpression('/^<fieldset\s+class="grid gap-1.5 justify-items-start" aria-describedby="field-type-error">/', trim($html));
+        $this->assertMatchesRegularExpression('/^<fieldset\s+id="field-type" tabindex="-1" class="grid gap-1.5 justify-items-start" aria-describedby="field-type-error">/', trim($html));
         $this->assertStringContainsString('<p id="field-type-error" class="text-sm font-medium text-rejected-ink">Elige el tipo.</p>', $html);
         $this->assertUniqueIds($html);
     }
@@ -88,7 +89,7 @@ class SegmentedTest extends ComponentTestCase
     {
         $block = $this->render('<x-ui.segmented name="status" legend="Estado" :options="$options" block :hide-legend="false" size="sm" />', ['options' => $this->types()]);
 
-        $this->assertMatchesRegularExpression('/<fieldset\s+class="grid gap-1.5 w-full"/', $block);
+        $this->assertMatchesRegularExpression('/<fieldset\s+id="field-status" tabindex="-1" class="grid gap-1.5 w-full"/', $block);
         $this->assertStringContainsString('<legend class="mb-1.5 text-sm font-semibold text-ink">Estado</legend>', $block);
         $this->assertStringContainsString('flex w-full [&>label]:flex-1 [&>label>span]:w-full [&>label>span]:justify-center', $block);
         $this->assertStringContainsString('min-h-6.5 px-2 text-2xs', $block);
@@ -145,6 +146,8 @@ class SegmentedTest extends ComponentTestCase
         $this->assertStringContainsString('&lt;u&gt;Uno&lt;/u&gt;', $html);
         $this->assertStringContainsString('&lt;i&gt;Error&lt;/i&gt;', $html);
         $this->assertStringContainsString('aria-describedby="meeting-type-error"', $html);
+        $this->assertMatchesRegularExpression('/^<fieldset\s+id="meeting-type" tabindex="-1"/', trim($html));
+        $this->assertStringContainsString('id="field-type-a" tabindex="-1"', $this->render('<x-ui.segmented name="type[a]" legend="Tipo" :options="$options" />', ['options' => $this->types()]));
         $this->assertStringContainsString('id="field-typea-x-y"', $html);
         $this->assertStringNotContainsString('<b>', $html);
     }

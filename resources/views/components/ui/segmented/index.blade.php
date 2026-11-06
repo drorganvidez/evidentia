@@ -21,11 +21,11 @@
 @php
     throw_if(blank($name), InvalidArgumentException::class, 'The segmented control needs a name.');
     throw_if(blank($legend), InvalidArgumentException::class, 'The segmented control needs a legend.');
-    $id ??= 'field-' . Str::slug($name);
+    $id ??= ui_field_id($name);
     $current = old($name, $value);
 @endphp
 <fieldset
-    {{ $attributes->merge(array_filter(['class' => Arr::toCssClasses(['grid gap-1.5', 'w-full' => $block, 'justify-items-start' => !$block]), 'aria-describedby' => $error !== null ? $id . '-error' : null])) }}>
+    {{ $attributes->merge(array_filter(['id' => $id, 'tabindex' => '-1', 'class' => Arr::toCssClasses(['grid gap-1.5', 'w-full' => $block, 'justify-items-start' => !$block]), 'aria-describedby' => $error !== null ? $id . '-error' : null])) }}>
     <legend @class([
         'sr-only' => $hideLegend,
         'mb-1.5 text-sm font-semibold text-ink' => !$hideLegend,

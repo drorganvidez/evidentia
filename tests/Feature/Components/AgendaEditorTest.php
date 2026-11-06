@@ -12,7 +12,7 @@ class AgendaEditorTest extends ComponentTestCase
 
         $json = '[&quot;Lectura del acta&quot;,&quot;Presupuesto &lt;b&gt;2026&lt;\/b&gt;&quot;]';
 
-        $this->assertStringContainsString('<fieldset x-data="agendaEditor" data-points="'.$json.'"', $html);
+        $this->assertMatchesRegularExpression('/<fieldset x-data="agendaEditor" data-points="'.preg_quote($json, '/').'" id="field-points-list"\s+tabindex="-1"/', $html);
         $this->assertMatchesRegularExpression('/<input type="hidden" name="points_list" value="'.preg_quote($json, '/').'"\s+x-bind:value="json">/', $html);
         $this->assertStringContainsString('data-max="50"', $html);
         $this->assertStringContainsString('<legend class="text-sm font-semibold">Orden del día</legend>', $html);
@@ -83,6 +83,7 @@ class AgendaEditorTest extends ComponentTestCase
         $hinted = $this->render('<x-ui.agenda-editor id="agenda-a" hint="Pista" />');
 
         $this->assertStringContainsString('aria-describedby="agenda-a-hint"', $hinted);
+        $this->assertStringContainsString(' id="agenda-a"', $hinted);
         $this->assertStringContainsString('for="agenda-a-draft"', $hinted);
         $this->assertStringNotContainsString('aria-invalid', $hinted);
     }

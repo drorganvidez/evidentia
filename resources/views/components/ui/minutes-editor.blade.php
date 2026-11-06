@@ -16,7 +16,7 @@
     'id' => null,
 ])
 @php
-    $id ??= 'field-' . Str::slug(str_replace(['[', ']', '_'], ' ', $name));
+    $id ??= ui_field_id($name);
     $toArray = fn($item): array => $item instanceof Illuminate\Contracts\Support\Arrayable
         ? $item->toArray()
         : (array) $item;
@@ -51,8 +51,8 @@
         'w-full rounded-sm border border-field-edge bg-field px-3 py-2 text-control text-ink placeholder:text-ink-faint pointer-coarse:min-h-11';
 @endphp
 <div x-data="minutesEditor" data-points="{{ json_encode($points, JSON_THROW_ON_ERROR) }}"
-    data-min="{{ max(0, (int) $minPoints) }}" data-id="{{ $id }}" role="group"
-    aria-labelledby="{{ $id }}-label"
+    data-min="{{ max(0, (int) $minPoints) }}" data-id="{{ $id }}" id="{{ $id }}" tabindex="-1"
+    role="group" aria-labelledby="{{ $id }}-label"
     {{ $attributes->class(['grid min-w-0 grid-cols-[minmax(0,1fr)] gap-4']) }}
     @if ($describedBy !== '') aria-describedby="{{ $describedBy }}" @endif>
     <p id="{{ $id }}-label" class="text-sm font-semibold">{{ $label }}</p>

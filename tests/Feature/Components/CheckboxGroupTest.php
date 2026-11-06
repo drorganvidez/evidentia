@@ -27,7 +27,7 @@ class CheckboxGroupTest extends ComponentTestCase
     {
         $html = $this->render('<x-ui.checkbox-group name="roles" legend="Roles" :options="'.self::ROLES.'" :selected="[\'STUDENT\']" />');
 
-        $this->assertStringContainsString('<fieldset x-data="checkboxGroup" data-name="roles[]"', $html);
+        $this->assertStringContainsString('<fieldset x-data="checkboxGroup" data-name="roles[]" id="field-roles" tabindex="-1"', $html);
         $this->assertStringContainsString('<legend class="text-sm font-semibold">Roles', $html);
         $this->assertSame(3, substr_count($html, ' name="roles[]"'));
         $this->assertSame(3, substr_count($html, 'x-on:change="sync"'));

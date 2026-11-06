@@ -50,7 +50,7 @@
         default => 'grid gap-2',
     };
 @endphp
-<fieldset x-data="checkboxGroup" data-name="{{ $inputName }}"
+<fieldset x-data="checkboxGroup" data-name="{{ $inputName }}" id="{{ $id }}" tabindex="-1"
     {{ $attributes->class(['grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3']) }}
     @if ($describedBy !== '') aria-describedby="{{ $describedBy }}" @endif>
     <legend class="text-sm font-semibold">{{ $legend }}

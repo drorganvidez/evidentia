@@ -16,7 +16,7 @@
     'id' => null,
 ])
 @php
-    $id ??= 'field-' . Str::slug(str_replace(['[', ']', '_'], ' ', $name));
+    $id ??= ui_field_id($name);
     $points = collect($points)
         ->map(function ($point): string {
             if (is_string($point) || is_numeric($point)) {
@@ -34,8 +34,9 @@
     $control =
         'rounded-sm border border-field-edge bg-field px-3 py-2 text-control text-ink placeholder:text-ink-faint pointer-coarse:min-h-11';
 @endphp
-<fieldset x-data="agendaEditor" data-points="{{ json_encode($points, JSON_THROW_ON_ERROR) }}"
-    data-max="{{ max(1, (int) $max) }}" {{ $attributes->class(['grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3']) }}
+<fieldset x-data="agendaEditor" data-points="{{ json_encode($points, JSON_THROW_ON_ERROR) }}" id="{{ $id }}"
+    tabindex="-1" data-max="{{ max(1, (int) $max) }}"
+    {{ $attributes->class(['grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3']) }}
     @if ($describedBy !== '') aria-describedby="{{ $describedBy }}" @endif
     @if ($error !== null) aria-invalid="true" @endif>
     <legend class="text-sm font-semibold">{{ $label }}</legend>

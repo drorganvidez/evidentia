@@ -6,7 +6,11 @@
         <x-slot:actions><x-ui.button type="submit" variant="primary">Guardar</x-ui.button></x-slot:actions>
     </x-ui.form>
     <x-ui.form method="get" :action="route('activity.export')" download busy-label="Preparando">...</x-ui.form>
-    focus-summary=false keeps the summary from taking the focus on load (a page that shows several forms at once).
+    <x-ui.form :action="route('profile.password')" id="password-form" bag="password" :fields="['password' => 'Contraseña']">
+    The summary reads the error bag named by bag and, with fields, lists only their errors, so every form of a page
+    shows its own. Each link goes to ui_field_id of the key without its last index (users.0 to field-users, items.0.title
+    to field-items-0-title). Several forms on a page need an id each; focus-summary=false keeps the summary from taking
+    the focus on load.
 --}}
 @props([
     'action' => '',
@@ -20,6 +24,7 @@
     'download' => false,
     'id' => null,
     'focusSummary' => true,
+    'bag' => 'default',
 ])
 @php
     throw_if(blank($action), InvalidArgumentException::class, 'The form component needs an action.');
@@ -35,15 +40,23 @@
     }
 
     // Never assume $errors: the components also render through Blade::render
-    $bag = $errors ?? null;
+    $viewErrors = $errors ?? null;
+    $messages =
+        $viewErrors instanceof \Illuminate\Support\ViewErrorBag
+            ? $viewErrors->getBag(filled($bag) ? (string) $bag : 'default')
+            : null;
     $items = [];
-    if ($summary && $bag instanceof \Illuminate\Support\ViewErrorBag && $bag->any()) {
-        foreach ($bag->getMessages() as $key => $messages) {
-            $base = preg_replace('/\.\d+/', '', $key);
+    if ($summary && $messages !== null) {
+        foreach ($messages->getMessages() as $key => $list) {
+            // Only the last index goes: users.0 belongs to users[] and items.0.title to items[0][title]
+            $base = preg_replace('/\.\d+$/', '', $key);
+            if ($labels !== [] && !isset($labels[$key]) && !isset($labels[$base])) {
+                continue;
+            }
             $items[] = [
                 'id' => ui_field_id(str_replace('.', '-', $base)),
                 'label' => $labels[$key] ?? ($labels[$base] ?? $key),
-                'message' => $messages[0] ?? '',
+                'message' => $list[0] ?? '',
             ];
         }
     }

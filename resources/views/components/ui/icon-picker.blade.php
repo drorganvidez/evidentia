@@ -146,7 +146,7 @@
     );
 @endphp
 <fieldset x-data="iconPicker" data-aliases="{{ json_encode($aliases, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE) }}"
-    {{ $attributes->class(['grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3']) }}
+    id="{{ $id }}" tabindex="-1" {{ $attributes->class(['grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3']) }}
     @if ($describedBy !== '') aria-describedby="{{ $describedBy }}" @endif>
     <legend class="text-sm font-semibold">{{ $label }}
         @if ($required)
