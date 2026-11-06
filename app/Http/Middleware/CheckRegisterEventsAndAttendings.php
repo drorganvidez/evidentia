@@ -2,7 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use Carbon\Carbon;
+use App\Enums\Deadline;
+use App\Services\Deadlines;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -16,13 +17,8 @@ class CheckRegisterEventsAndAttendings
      */
     public function handle($request, Closure $next)
     {
-
-        $now = Carbon::now();
-        $datetime = \Config::attendee_timestamp();
-
-        if ($now->gt($datetime)) {
-            abort(404);
-        }
+        // A deadline without date stays open (Carbon 3 no longer compares a date with null)
+        abort_unless(app(Deadlines::class)->isOpen(Deadline::Attendees), 404);
 
         return $next($request);
     }
