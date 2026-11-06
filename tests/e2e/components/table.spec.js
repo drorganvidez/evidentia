@@ -102,6 +102,7 @@ test.describe('Tablas', () => {
 
     test('seleccionar texto en la fila no navega', async ({ page, ui }) => {
         const hits = await stubDestination(page);
+        const navigations = await trackNavigations(page);
         const row = ui
             .section('table')
             .getByRole('row')
@@ -110,13 +111,22 @@ test.describe('Tablas', () => {
         const box = await text.boundingBox();
         const y = box.y + box.height / 2;
 
+        // Counts the clicks that reach the row after its own handler, which decides synchronously
+        await row.evaluate((el) => {
+            window.uiRowClicks = 0;
+            el.addEventListener('click', () => {
+                window.uiRowClicks += 1;
+            });
+        });
+
         await page.mouse.move(box.x + 2, y);
         await page.mouse.down();
         await page.mouse.move(box.x + Math.min(box.width - 2, 120), y, { steps: 8 });
         await page.mouse.up();
 
         expect(await page.evaluate(() => getSelection().toString().length)).toBeGreaterThan(0);
-        await page.waitForTimeout(250);
+        expect(await page.evaluate(() => window.uiRowClicks), 'El clic llega a la fila').toBe(1);
+        expect(await navigations(), 'La fila no inicia ninguna navegación').toEqual([]);
         expect(hits).toHaveLength(0);
         await expect(page).toHaveURL(/\/_ui#ui-table$/);
     });
