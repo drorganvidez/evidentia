@@ -1,7 +1,6 @@
 # Views still on the AdminLTE layout. Remove each line when the view moves to the new UI.
 resources/views/attendee/**
 resources/views/bonus/**
-resources/views/config/**
 resources/views/defaultlist/**
 resources/views/email/**
 resources/views/eventbrite/**
