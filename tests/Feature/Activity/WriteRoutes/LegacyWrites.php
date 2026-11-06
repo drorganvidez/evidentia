@@ -34,6 +34,37 @@ final class LegacyWrites
         ];
     }
 
+    /** A case of the secretary that posts the given data. */
+    private static function secretary(string $route, array $expect, array $data): array
+    {
+        return [
+            'role' => 'SECRETARY',
+            'method' => 'POST',
+            'uri' => fn (array $ids) => route($route),
+            'data' => fn (array $ids) => array_map(fn ($value) => $value instanceof \Closure ? $value($ids) : $value, $data),
+            'expect' => $expect,
+            'acting_role' => 'SECRETARY',
+        ];
+    }
+
+    private static function meetingRequest(): array
+    {
+        return [
+            'title' => 'Reunión de montaje', 'place' => 'Aula A3.10', 'date' => now()->addWeek()->format('Y-m-d'),
+            'time' => '18:00', 'type' => 1, 'modality' => 1, 'points_list' => json_encode(['Reparto de tareas', 'Turnos']),
+        ];
+    }
+
+    private static function minutes(): array
+    {
+        return [
+            'title' => 'Reunión de montaje', 'type' => 1, 'modality' => 1, 'hours' => 2, 'minutes' => 30,
+            'place' => 'Aula A3.10', 'date' => now()->format('Y-m-d'), 'time' => '16:30',
+            'users' => fn (array $ids) => [$ids['student']],
+            'points_json' => json_encode([['title' => 'Reparto', 'duration' => 10, 'description' => 'Equipos', 'agreements' => [['description' => 'Cada equipo nombra un responsable.']]]]),
+        ];
+    }
+
     /**
      * Routes that annotate, with a happy request that the sweep sends.
      *
@@ -78,6 +109,24 @@ final class LegacyWrites
                 'expect' => ['evidence.rejected'],
                 'acting_role' => 'COORDINATOR',
             ],
+            'secretary.meeting.manage.request.new' => self::secretary('secretary.meeting.manage.request.new', ['request.created', 'sheet.created'],
+                self::meetingRequest() + ['create_signature_sheet' => 'on']),
+            'secretary.meeting.manage.request.save' => self::secretary('secretary.meeting.manage.request.save', ['request.edited'],
+                ['_id' => fn (array $ids) => $ids['request']] + self::meetingRequest()),
+            'secretary.meeting.manage.request.remove' => self::secretary('secretary.meeting.manage.request.remove', ['request.deleted'],
+                ['_id' => fn (array $ids) => $ids['request']]),
+            'secretary.meeting.manage.signaturesheet.new' => self::secretary('secretary.meeting.manage.signaturesheet.new', ['sheet.created'],
+                ['title' => 'Hoja de firmas del montaje']),
+            'secretary.meeting.manage.signaturesheet.save' => self::secretary('secretary.meeting.manage.signaturesheet.save', ['sheet.edited'],
+                ['_id' => fn (array $ids) => $ids['sheet'], 'title' => 'Hoja de firmas corregida']),
+            'secretary.meeting.manage.signaturesheet.remove' => self::secretary('secretary.meeting.manage.signaturesheet.remove', ['sheet.deleted'],
+                ['_id' => fn (array $ids) => $ids['sheet']]),
+            'secretary.meeting.manage.minutes.create.step3_p' => self::secretary('secretary.meeting.manage.minutes.create.step3_p', ['minutes.created'],
+                ['meeting_request' => fn (array $ids) => $ids['request']] + self::minutes()),
+            'secretary.meeting.manage.minutes.save' => self::secretary('secretary.meeting.manage.minutes.save', ['minutes.edited'],
+                ['_id' => fn (array $ids) => $ids['minutes']] + self::minutes()),
+            'secretary.meeting.manage.minutes.remove' => self::secretary('secretary.meeting.manage.minutes.remove', ['minutes.deleted'],
+                ['_id' => fn (array $ids) => $ids['minutes']]),
             'password.reset_p' => [
                 'role' => 'GUEST',
                 'method' => 'POST',
@@ -132,15 +181,6 @@ final class LegacyWrites
     public static function pending(): array
     {
         return [
-            'secretary.meeting.manage.request.new' => 'A',
-            'secretary.meeting.manage.request.save' => 'A',
-            'secretary.meeting.manage.request.remove' => 'A',
-            'secretary.meeting.manage.signaturesheet.new' => 'A',
-            'secretary.meeting.manage.signaturesheet.save' => 'A',
-            'secretary.meeting.manage.signaturesheet.remove' => 'A',
-            'secretary.meeting.manage.minutes.create.step3_p' => 'A',
-            'secretary.meeting.manage.minutes.save' => 'A',
-            'secretary.meeting.manage.minutes.remove' => 'A',
             'secretary.bonus.new' => 'A',
             'secretary.bonus.save' => 'A',
             'secretary.bonus.remove' => 'A',
