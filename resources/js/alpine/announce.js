@@ -7,6 +7,14 @@ const CLEAR_AFTER = 5000;
 const regions = {};
 const timers = {};
 
+/**
+ * The same text twice in a row leaves a live region as it was, so nothing is read again: the repeated one
+ * takes a trailing no-break space, silent and invisible, that makes it a change.
+ */
+export function freshText(previous, text) {
+    return previous === text ? `${text}\u00A0` : text;
+}
+
 export function announce(store, text, kind = 'status') {
     if (store && typeof store.announce === 'function') {
         store.announce(text, kind);
@@ -23,7 +31,7 @@ export function announce(store, text, kind = 'status') {
         regions[kind] = region;
     }
 
-    regions[kind].textContent = text;
+    regions[kind].textContent = freshText(regions[kind].textContent, text);
     clearTimeout(timers[kind]);
     timers[kind] = setTimeout(() => {
         regions[kind].textContent = '';

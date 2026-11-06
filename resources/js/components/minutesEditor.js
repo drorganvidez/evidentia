@@ -1,4 +1,5 @@
 import { afterRender } from '../alpine/afterRender';
+import { freshText } from '../alpine/announce';
 
 /**
  * Minutes editor (<x-ui.minutes-editor>): points with title, description, duration and agreements, reordered with
@@ -313,12 +314,9 @@ export default function minutesEditor() {
             return i === this.points.length - 1;
         },
 
-        /** Clears the status region first so the same text is announced again. */
+        /** A repeated text changes too (freshText), so the status region reads it again. */
         announce(text) {
-            this.announcement = '';
-            this.$nextTick(() => {
-                this.announcement = text;
-            });
+            this.announcement = freshText(this.announcement, text);
         },
 
         /** Moves the focus once the DOM reflects the change and the shown elements are visible. */

@@ -167,6 +167,16 @@ test.describe('Orden del día', () => {
         await expect(small.locator('input[type="hidden"]')).toHaveValue(
             JSON.stringify(['Uno', 'Dos', 'Tres']),
         );
+
+        // The same message again still changes the region (a trailing no-break space), so it is read again
+        const text = () =>
+            small.locator('p[role="status"]').evaluate((region) => region.textContent);
+
+        await expect.poll(text).toBe('No caben más puntos, el máximo es 3');
+        await draft.press('Enter');
+        await expect.poll(text).toBe('No caben más puntos, el máximo es 3\u00A0');
+        await draft.press('Enter');
+        await expect.poll(text).toBe('No caben más puntos, el máximo es 3');
     });
 
     test('en móvil los controles miden al menos 44 px y nada desborda', async ({

@@ -1,4 +1,5 @@
 import { afterRender } from '../alpine/afterRender';
+import { freshText } from '../alpine/announce';
 
 /**
  * Agenda editor (<x-ui.agenda-editor>): the points of a meeting request as a list of inputs that are added,
@@ -226,12 +227,9 @@ export default function agendaEditor() {
             return index === this.points.length - 1;
         },
 
-        /** Clears the status region first so the same text is announced again. */
+        /** A repeated text changes too (freshText), so the status region reads it again. */
         announce(text) {
-            this.announcement = '';
-            this.$nextTick(() => {
-                this.announcement = text;
-            });
+            this.announcement = freshText(this.announcement, text);
         },
 
         /** Moves the focus once the DOM reflects the change and the shown elements are visible. */

@@ -77,6 +77,13 @@ test.describe('Editor de actas', () => {
         await expect(save).toHaveText('Guardar el acta');
         await expect(save).not.toHaveAttribute('aria-busy', 'true');
 
+        // A second try says it again: the repeated text changes the region with a no-break space
+        await save.click();
+        await expect
+            .poll(() => editor.locator('p[role="status"]').evaluate((region) => region.textContent))
+            .toBe('Revisa 1 punto\u00A0');
+        await expect(page).not.toHaveURL(/points_json=/);
+
         // Typing a title clears the error and the second submit goes through
         await title(third).fill('Cierre');
         await expect(title(third)).not.toHaveAttribute('aria-invalid', 'true');
