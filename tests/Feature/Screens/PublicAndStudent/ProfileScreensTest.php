@@ -30,6 +30,20 @@ class ProfileScreensTest extends ScreenTestCase
         $this->assertStringContainsString('action="'.route('profile.upload.pass').'"', $html);
     }
 
+    public function test_the_lecturer_computes_no_hours_and_the_president_does(): void
+    {
+        $html = $this->assertAppScreen($this->signedAs('profesor')->get(route('profile.view')));
+
+        $this->assertStringContainsString('David Romero Organvídez', $html);
+        $this->assertStringNotContainsString('Horas computadas', $html);
+        $this->assertStringNotContainsString('Resumen del trabajo', $html);
+
+        $html = $this->assertAppScreen($this->signedAs('presidente')->get(route('profile.view')));
+
+        $this->assertStringContainsString('Horas computadas', $html);
+        $this->assertStringContainsString('Resumen del trabajo', $html);
+    }
+
     public function test_the_biography_reaches_the_textarea_as_text_and_the_summary_as_paragraphs(): void
     {
         $student = $this->person('estudiante');
