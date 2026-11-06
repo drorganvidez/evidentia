@@ -118,7 +118,10 @@ test.describe('Alumnos', () => {
         await expect(
             page.getByRole('region', { name: 'Avisos' }).getByText('Usuario creado con éxito'),
         ).toBeVisible();
-        await page.getByRole('searchbox', { name: 'Filtrar usuarios' }).fill(uvus);
+        const search = page.getByRole('searchbox', { name: 'Buscar usuarios' });
+        await search.fill(uvus);
+        await search.press('Enter');
+        await expect(page).toHaveURL(new RegExp(`q=${uvus}$`));
         await expect(
             page.getByRole('link', { name: 'Prueba Playwright, Ana', exact: true }).first(),
         ).toBeVisible();
