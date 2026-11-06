@@ -23,6 +23,35 @@ services:
     networks:
       - evidentia_net
 
+  # Runs the scheduled commands (routes/console.php) every minute. It waits for app to install vendor in the bind
+  # mount and for the database; the migrations and the seeders stay in the entrypoint of app.
+  scheduler:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+      args:
+        USER_ID: 1000
+        GROUP_ID: 1000
+    container_name: evidentia_scheduler_container
+    user: '1000:1000'
+    volumes:
+      - ../:/var/www/html
+      - ../storage:/var/www/html/storage
+    depends_on:
+      - app
+      - mysql
+      - redis
+    env_file:
+      - ../.env
+    entrypoint:
+      [
+        'sh',
+        '-c',
+        'until [ -f vendor/autoload.php ]; do sleep 2; done; exec sh scripts/wait-for-db.sh php artisan schedule:work',
+      ]
+    networks:
+      - evidentia_net
+
   vite:
     # Vite dev server with HMR. It shares the bind mount with `app`: the plugin
     # writes public/hot with http://localhost:5173 and Laravel reads it.

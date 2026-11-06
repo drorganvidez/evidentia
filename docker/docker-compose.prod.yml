@@ -19,6 +19,26 @@ services:
     networks:
       - evidentia_net
 
+  # Runs the scheduled commands (routes/console.php) every minute with the same image. It skips the entrypoint of
+  # app: the migrations, the caches and the copy of the assets are done there only. wait-for-db.sh ends in exec "$@".
+  scheduler:
+    image: drorganvidez/evidentia:latest
+    container_name: evidentia_scheduler_container
+    restart: unless-stopped
+    entrypoint: ['sh', 'scripts/wait-for-db.sh', 'php', 'artisan', 'schedule:work']
+    volumes:
+      - ../.env:/var/www/html/.env
+      - ../storage:/var/www/html/storage
+      - ../scripts:/var/www/html/scripts
+    depends_on:
+      - app
+      - mysql
+      - redis
+    env_file:
+      - ../.env
+    networks:
+      - evidentia_net
+
   mysql:
     image: mysql:8
     container_name: evidentia_mysql_container
@@ -78,7 +98,7 @@ services:
       - DOCKER_API_VERSION=1.44
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --cleanup --interval 120 evidentia_app_container
+    command: --cleanup --interval 120 evidentia_app_container evidentia_scheduler_container
     restart: unless-stopped
     networks:
       - evidentia_net
