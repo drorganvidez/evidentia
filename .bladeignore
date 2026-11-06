@@ -3,13 +3,10 @@ resources/views/attendee/**
 resources/views/bonus/**
 resources/views/defaultlist/**
 resources/views/email/**
-resources/views/importexport/**
-resources/views/integrity/**
 resources/views/layouts/**
 resources/views/meeting/**
 resources/views/message/**
 resources/views/profile/**
-resources/views/randomize/**
 resources/views/sign/**
 resources/views/updates/**
 resources/views/components/menus/**

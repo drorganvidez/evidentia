@@ -16,8 +16,9 @@ class RandomizeController extends Controller
     {
 
         $route = route('randomize.save');
+        $selected = Evidence::where('rand', true)->count();
 
-        return view('randomize.randomize', ['route' => $route]);
+        return view('randomize.randomize', ['route' => $route, 'selected' => $selected]);
     }
 
     public function randomize_save()

@@ -1,59 +1,22 @@
-@extends('layouts.app')
-
-@section('title', 'Aleatorizar evidencias')
-
-@section('title-icon', 'fas fa-random')
-
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item active">@yield('title')</li>
-@endsection
-
-@section('content')
-
-    <div class="row">
-        <div class="col-lg-12">
-
-            <div class="card">
-
-                <div class="card-body">
-
-                    <form action="{{ $route }}" method="POST">
+{{-- Random pick of one accepted evidence per student, for the final assessment; it can run again --}}
+<x-layout.app title="Aleatorizar evidencias" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Aleatorizar evidencias']]">
+    <x-ui.page-header title="Aleatorizar evidencias">
+        <x-slot:actions>
+            <x-ui.dialog id="randomize" variant="alert" title="Aleatorizar evidencias"
+                description="Se elegirá al azar una evidencia aceptada de cada alumno y se sustituirá la elección anterior."
+                trigger="Aleatorizar" trigger-variant="primary" trigger-icon="shuffle">
+                <x-slot:footer>
+                    <x-ui.button x-on:click="close" autofocus>Cancelar</x-ui.button>
+                    <form method="post" action="{{ $route }}">
                         @csrf
-
-                        <div class="row">
-
-                            <div class="col-lg-6">
-
-                                <p>
-                                    Esta herramienta selecciona al azar una evidencia aceptada de cada alumno
-                                    para su posterior evaluación.
-                                </p>
-
-                                <p>
-                                    Es posible ejecutar varias veces esta opción. La evidencia seleccionada de cada
-                                    alumno cada vez podría cambiar.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-lg-6 col-sm-6 col-12">
-                                <button type="submit" class="btn btn-primary btn-block">Aleatorizar evidencias</button>
-                            </div>
-                        </div>
-
+                        <x-ui.button variant="primary" type="submit" icon="shuffle" block>Sí, aleatorizar</x-ui.button>
                     </form>
+                </x-slot:footer>
+            </x-ui.dialog>
+        </x-slot:actions>
+    </x-ui.page-header>
 
-
-                </div>
-
-            </div>
-
-
-        </div>
+    <div class="grid grid-cols-[minmax(0,1fr)] gap-4 md:grid-cols-2">
+        <x-ui.stat label="Evidencias elegidas" :value="(string) $selected" foot="una por alumno" :tone="$selected > 0 ? 'accepted' : null" />
     </div>
-
-@endsection
+</x-layout.app>
