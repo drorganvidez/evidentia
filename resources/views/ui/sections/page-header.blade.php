@@ -33,7 +33,7 @@
                     <x-ui.badge variant="chip" :hue="30">Logística</x-ui.badge>
                 </x-slot:eyebrow>
                 <x-slot:actions>
-                    <x-ui.button size="lg" icon="pencil" href="{{ route('ui.index') }}#ui-page-header" block
+                    <x-ui.button size="lg" icon="pen-line" href="{{ route('ui.index') }}#ui-page-header" block
                         class="md:w-auto">Editar</x-ui.button>
                     <x-ui.button variant="primary" size="lg" icon="send"
                         href="{{ route('ui.index') }}#ui-page-header" block class="md:w-auto">Enviar a

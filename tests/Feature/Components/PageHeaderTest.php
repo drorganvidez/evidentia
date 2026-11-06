@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Components;
 
+use Illuminate\Support\Facades\File;
 use Illuminate\View\ViewException;
 use InvalidArgumentException;
 
@@ -80,5 +81,14 @@ class PageHeaderTest extends ComponentTestCase
         $this->assertLessThan($title, $eyebrow, 'The eyebrow goes above the title');
         $this->assertLessThan($meta, $title, 'The meta line goes below the title');
         $this->assertLessThan($actions, $meta, 'The actions come after the h1 in the DOM');
+    }
+
+    public function test_the_catalogue_demo_edits_with_the_pen_line_icon_of_the_icon_map(): void
+    {
+        $source = File::get(resource_path('views/ui/sections/page-header.blade.php'));
+
+        // Anexo B: fa-pencil-alt and fa-edit become pen-line
+        $this->assertStringContainsString('icon="pen-line"', $source);
+        $this->assertStringNotContainsString('icon="pencil"', $source);
     }
 }
