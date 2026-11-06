@@ -25,10 +25,11 @@ return [
     // and writes every violation to the log.
     'report' => (bool) env('CSP_REPORT', false),
 
-    // Log channel for the violations (null = default channel).
-    'log_channel' => env('CSP_LOG_CHANNEL'),
+    // Log channel for the violations. The 'csp' channel (config/logging.php) writes
+    // storage/logs/csp.log at its own level, out of reach of LOG_LEVEL.
+    'log_channel' => env('CSP_LOG_CHANNEL', 'csp'),
 
-    // upgrade-insecure-requests only makes sense behind TLS, so production only.
-    'upgrade_insecure_requests' => (bool) env('CSP_UPGRADE_INSECURE_REQUESTS', env('APP_ENV') === 'production'),
+    // upgrade-insecure-requests is sent only on requests that arrived over https.
+    'upgrade_insecure_requests' => (bool) env('CSP_UPGRADE_INSECURE_REQUESTS', true),
 
 ];

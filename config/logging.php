@@ -73,6 +73,16 @@ return [
             'replace_placeholders' => true,
         ],
 
+        // Content-Security-Policy violation reports (POST /csp-report). Its own file and its own
+        // level, so LOG_LEVEL=warning in production does not swallow them.
+        'csp' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/csp.log'),
+            'level' => 'debug',
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
+
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),

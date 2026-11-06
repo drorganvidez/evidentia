@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -17,12 +16,10 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap any application services.
+     * The https scheme behind the reverse proxies comes from the trusted proxies (bootstrap/app.php).
      */
     public function boot(): void
     {
-
-        if (request()->header('X-Forwarded-Proto') === 'https') {
-            URL::forceScheme('https');
-        }
+        //
     }
 }

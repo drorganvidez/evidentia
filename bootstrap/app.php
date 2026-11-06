@@ -6,6 +6,7 @@ use App\Http\Middleware\ContentSecurityPolicy;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -21,10 +22,20 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->web(append: [
-            CheckBlock::class,
-            ContentSecurityPolicy::class,
-        ]);
+        // The app only ever sits behind nginx (container) and the university's reverse proxy:
+        // the client IP and the scheme come from the X-Forwarded-* headers they set.
+        $middleware->trustProxies(
+            at: '*',
+            headers: Request::HEADER_X_FORWARDED_FOR
+                | Request::HEADER_X_FORWARDED_HOST
+                | Request::HEADER_X_FORWARDED_PORT
+                | Request::HEADER_X_FORWARDED_PROTO,
+        );
+
+        $middleware->web(append: [CheckBlock::class]);
+
+        // Global, so error pages and redirects carry the policy too.
+        $middleware->append(ContentSecurityPolicy::class);
 
         // 'csp:enforce' / 'csp:report-only' per route or group while the views migrate.
         $middleware->alias([

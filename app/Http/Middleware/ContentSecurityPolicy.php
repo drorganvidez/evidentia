@@ -15,11 +15,13 @@ use Symfony\Component\HttpFoundation\Response;
  * - A fresh nonce per request through Vite::useCspNonce(): @vite and @fonts add it to every
  *   <script>, <link rel="stylesheet">, <link rel="modulepreload"> and <style> they print.
  * - No 'unsafe-inline' and no 'unsafe-eval'. Alpine runs from @alpinejs/csp for that reason.
+ * - Registered globally, so error pages and redirects carry the policy too.
  * - While the Vite dev server is running (public/hot exists) its origin is allowed over http
  *   and ws so modules and HMR work. Production never has a hot file.
  * - Optional route parameter: 'csp:enforce' or 'csp:report-only'. Without it the mode comes
  *   from config('csp.mode'). A policy already set by an inner layer (a route group with
- *   'csp:enforce' inside the report-only web group) is respected.
+ *   'csp:enforce' inside the report-only default) is respected.
+ * - X-Frame-Options DENY always, because frame-ancestors does nothing in report-only mode.
  */
 final class ContentSecurityPolicy
 {
@@ -56,7 +58,8 @@ final class ContentSecurityPolicy
 
         // headers->set() exists on every Symfony response, including the StreamedResponse of
         // Storage::download() and the BinaryFileResponse of Excel::download(); withHeaders() does not.
-        $response->headers->set($header, $this->policy());
+        $response->headers->set($header, $this->policy($request));
+        $response->headers->set('X-Frame-Options', 'DENY');
 
         if ($this->reportingEnabled()) {
             $response->headers->set(
@@ -71,7 +74,7 @@ final class ContentSecurityPolicy
     /**
      * Build the policy string from the nonce issued for this request.
      */
-    public function policy(): string
+    public function policy(Request $request): string
     {
         $nonce = sprintf("'nonce-%s'", Vite::cspNonce());
 
@@ -81,6 +84,7 @@ final class ContentSecurityPolicy
             'default-src' => ["'self'"],
             'script-src' => ["'self'", $nonce, ...$devHttp],
             'style-src' => ["'self'", $nonce, ...$devHttp],
+            // data: images are still needed by the AdminLTE stylesheet of the views not yet migrated
             'img-src' => ["'self'", 'data:', ...$devHttp],
             'font-src' => ["'self'", ...$devHttp],
             'connect-src' => ["'self'", ...$devHttp, ...$devWs],
@@ -97,7 +101,8 @@ final class ContentSecurityPolicy
             $directives['report-to'] = [self::REPORTING_ENDPOINT];
         }
 
-        if (config('csp.upgrade_insecure_requests')) {
+        // Only meaningful behind TLS; the scheme is known thanks to the trusted proxies.
+        if (config('csp.upgrade_insecure_requests') && $request->isSecure()) {
             $directives['upgrade-insecure-requests'] = [];
         }
 

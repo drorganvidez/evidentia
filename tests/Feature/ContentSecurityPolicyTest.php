@@ -147,16 +147,57 @@ class ContentSecurityPolicyTest extends TestCase
         $this->assertNotSame($first, $second);
     }
 
-    public function test_upgrade_insecure_requests_is_only_added_when_configured(): void
+    public function test_upgrade_insecure_requests_is_only_added_over_https_and_when_configured(): void
     {
         $this->useBuiltManifest();
+        config(['csp.mode' => 'enforce', 'csp.upgrade_insecure_requests' => true]);
+
+        $this->assertStringNotContainsString('upgrade-insecure-requests', $this->enforcedPolicy($this->get('http://localhost/_csp/page')));
+        $this->assertStringContainsString('upgrade-insecure-requests', $this->enforcedPolicy($this->get('https://localhost/_csp/page')));
+
+        config(['csp.upgrade_insecure_requests' => false]);
+
+        $this->assertStringNotContainsString('upgrade-insecure-requests', $this->enforcedPolicy($this->get('https://localhost/_csp/page')));
+    }
+
+    public function test_error_pages_and_redirects_carry_the_policy_too(): void
+    {
+        $this->useBuiltManifest();
+
+        $this->get('/_csp/no-such-page')->assertNotFound()
+            ->assertHeader('Content-Security-Policy-Report-Only')
+            ->assertHeader('X-Frame-Options', 'DENY');
+
+        $this->get('/')->assertRedirect()
+            ->assertHeader('Content-Security-Policy-Report-Only')
+            ->assertHeader('X-Frame-Options', 'DENY');
+    }
+
+    public function test_framing_is_denied_whatever_the_mode(): void
+    {
+        $this->useBuiltManifest();
+
+        $this->get('/_csp/page')->assertOk()->assertHeader('X-Frame-Options', 'DENY');
+
         config(['csp.mode' => 'enforce']);
 
-        $this->assertStringNotContainsString('upgrade-insecure-requests', $this->enforcedPolicy($this->get('/_csp/page')));
+        $this->get('/_csp/page')->assertOk()->assertHeader('X-Frame-Options', 'DENY');
+    }
 
-        config(['csp.upgrade_insecure_requests' => true]);
+    public function test_report_endpoint_is_closed_unless_reports_are_requested(): void
+    {
+        config(['csp.report' => false]);
 
-        $this->assertStringContainsString('upgrade-insecure-requests', $this->enforcedPolicy($this->get('/_csp/page')));
+        $this->call('POST', '/csp-report', [], [], [], ['CONTENT_TYPE' => 'application/csp-report'], '{"csp-report":{}}')
+            ->assertNotFound();
+    }
+
+    public function test_violations_go_to_their_own_log_channel_by_default(): void
+    {
+        $this->assertSame('csp', config('csp.log_channel'));
+        $this->assertSame('daily', config('logging.channels.csp.driver'));
+        $this->assertSame('debug', config('logging.channels.csp.level'));
+        $this->assertStringEndsWith('logs/csp.log', config('logging.channels.csp.path'));
     }
 
     public function test_route_level_enforce_wins_over_global_report_only(): void
@@ -254,6 +295,8 @@ class ContentSecurityPolicyTest extends TestCase
 
     public function test_report_endpoint_rejects_garbage(): void
     {
+        config(['csp.report' => true]);
+
         $this->call('POST', '/csp-report', [], [], [], ['CONTENT_TYPE' => 'application/reports+json'], 'not json')
             ->assertStatus(400);
 
@@ -288,6 +331,7 @@ class ContentSecurityPolicyTest extends TestCase
         $path = $this->tmp.'/csp.log';
 
         config([
+            'csp.report' => true,
             'logging.channels.csp_test' => ['driver' => 'single', 'path' => $path, 'level' => 'debug'],
             'csp.log_channel' => 'csp_test',
         ]);

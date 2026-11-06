@@ -24,6 +24,8 @@ final class CspReportController extends Controller
 
     public function __invoke(Request $request): Response
     {
+        abort_unless(config('csp.report'), Response::HTTP_NOT_FOUND);
+
         $raw = $request->getContent();
 
         if (strlen($raw) > self::MAX_BODY_BYTES) {
