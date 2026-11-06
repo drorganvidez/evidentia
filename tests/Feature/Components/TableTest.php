@@ -202,7 +202,6 @@ class TableTest extends ComponentTestCase
         $cell = fn (string $props): string => $this->render('<x-ui.table.cell '.$props.'>x</x-ui.table.cell>');
 
         $this->assertStringContainsString('<td role="cell" class="h-(--row-h) px-5 py-4 align-middle in-data-cards:block in-data-cards:h-auto in-data-cards:p-0 md:table-cell md:h-(--row-h) md:px-5 md:py-4 md:align-middle">x</td>', $cell(''));
-        $this->assertStringContainsString('data-label="Horas"', $cell('label="Horas"'));
         $this->assertStringContainsString('text-right font-mono tabular-nums in-data-cards:text-left md:text-right', $cell('numeric'));
         $this->assertStringContainsString('in-data-cards:col-span-2 [&amp;_a]:font-semibold [&amp;_a]:tracking-tight [&amp;_a]:text-ink [&amp;_a:hover]:text-brand-ink', $cell('primary'));
         $this->assertStringContainsString('text-sm text-ink-muted', $cell('meta'));
@@ -212,7 +211,19 @@ class TableTest extends ComponentTestCase
         $this->assertStringContainsString('in-data-cards:max-md:hidden', $cell('actions'));
         $this->assertStringContainsString('w-[1%] whitespace-nowrap', $cell('actions'));
         $this->assertStringNotContainsString('in-data-cards:max-md:hidden', $cell('meta'));
-        $this->assertStringNotContainsString('data-label', $cell(''));
+    }
+
+    public function test_the_label_names_the_column_to_assistive_technology_only_in_the_cards(): void
+    {
+        $cell = fn (string $props): string => $this->render('<x-ui.table.cell '.$props.'>1,75 h</x-ui.table.cell>');
+
+        // The thead is display: none on the phone, so the card cell carries its column name, hidden on screen
+        $this->assertMatchesRegularExpression('/<td role="cell" class="[^"]*">\s*<span class="sr-only hidden in-data-cards:max-md:inline">Horas: <\/span>\s*1,75 h<\/td>/', $cell('label="Horas" numeric'));
+        $this->assertStringNotContainsString('data-label', $cell('label="Horas"'), 'Nothing reads a data-label');
+        $this->assertStringNotContainsString('sr-only', $cell(''));
+        $this->assertStringNotContainsString('sr-only', $cell('label="Evidencia" primary'), 'The title needs no column name');
+        $this->assertStringNotContainsString('sr-only', $cell('label="Abrir" actions'), 'The actions are hidden on the phone');
+        $this->assertStringContainsString('<span class="sr-only hidden in-data-cards:max-md:inline">EV &lt;1&gt;: </span>', $this->render('<x-ui.table.cell :label="$label" header>x</x-ui.table.cell>', ['label' => 'EV <1>']));
     }
 
     public function test_a_header_cell_is_a_row_header(): void

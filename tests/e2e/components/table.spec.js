@@ -243,6 +243,27 @@ test.describe('Tablas', () => {
         await ui.noOverflow();
     });
 
+    test('en las tarjetas cada celda nombra su columna a los lectores de pantalla', async ({
+        ui,
+        isMobile,
+    }) => {
+        const table = ui.section('table').locator('section[aria-label="Mis evidencias"]');
+
+        // The thead is hidden on the phone; from md the column header names the cell instead
+        await expect(
+            table.getByRole('cell', { name: isMobile ? 'Horas: 1,75 h' : '1,75 h', exact: true }),
+        ).toBeVisible();
+
+        const label = table.getByText('Horas:', { exact: true }).first();
+
+        if (isMobile) {
+            // Read by screen readers but never painted
+            expect((await label.boundingBox()).width).toBeLessThanOrEqual(1);
+        } else {
+            await expect(label).toBeHidden();
+        }
+    });
+
     test('la sección cumple WCAG 2.2 AA', async ({ ui }) => {
         expect(await ui.axe('#ui-table')).toEqual([]);
     });
