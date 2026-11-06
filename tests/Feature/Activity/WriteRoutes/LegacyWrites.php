@@ -2,11 +2,13 @@
 
 namespace Tests\Feature\Activity\WriteRoutes;
 
+use App\Models\Event;
 use App\Models\Evidence;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Tests\Feature\Activity\AuthenticationActivityTest;
+use Tests\Feature\Activity\EventbriteSyncActivityTest;
 use Tests\TestCase;
 
 /**
@@ -139,6 +141,51 @@ final class LegacyWrites
                 ['_id' => fn (array $ids) => $ids['list'], 'name' => 'Equipo de sonido', 'users' => fn (array $ids) => [$ids['student']]]),
             'secretary.defaultlist.remove' => self::secretary('secretary.defaultlist.remove', ['defaultlist.deleted'],
                 ['_id' => fn (array $ids) => $ids['list']]),
+            'attendee.store' => [
+                'role' => 'REGISTER_COORDINATOR',
+                'method' => 'POST',
+                'uri' => fn (array $ids) => route('attendee.store'),
+                'data' => fn (array $ids) => ['event_id' => $ids['manualEvent'], 'user_id' => $ids['student'], 'status' => 'Checked In'],
+                'expect' => ['attendee.created'],
+                'acting_role' => 'REGISTER_COORDINATOR',
+            ],
+            'attendee.update' => [
+                'role' => 'REGISTER_COORDINATOR',
+                'method' => 'POST',
+                'uri' => fn (array $ids) => route('attendee.update', ['id' => $ids['attendee']]),
+                'data' => fn (array $ids) => ['event_id' => $ids['event'], 'user_id' => $ids['student'], 'status' => 'Attending'],
+                'expect' => ['attendee.edited'],
+                'acting_role' => 'REGISTER_COORDINATOR',
+            ],
+            'attendee.destroy' => [
+                'role' => 'REGISTER_COORDINATOR',
+                'method' => 'DELETE',
+                'uri' => fn (array $ids) => route('attendee.destroy', ['id' => $ids['attendee']]),
+                'expect' => ['attendee.deleted'],
+                'acting_role' => 'REGISTER_COORDINATOR',
+            ],
+            'registercoordinator.event.hide' => [
+                'role' => 'REGISTER_COORDINATOR',
+                'method' => 'POST',
+                'uri' => fn (array $ids) => route('registercoordinator.event.hide', ['id' => $ids['event']]),
+                'expect' => ['event.hidden'],
+                'acting_role' => 'REGISTER_COORDINATOR',
+            ],
+            'registercoordinator.event.unhide' => [
+                'role' => 'REGISTER_COORDINATOR',
+                'method' => 'POST',
+                'setup' => fn (TestCase $test, array $ids) => Event::whereKey($ids['event'])->update(['hidden' => true]),
+                'uri' => fn (array $ids) => route('registercoordinator.event.unhide', ['id' => $ids['event']]),
+                'expect' => ['event.unhidden'],
+                'acting_role' => 'REGISTER_COORDINATOR',
+            ],
+            'registercoordinator.attendee.export' => [
+                'role' => 'REGISTER_COORDINATOR',
+                'method' => 'GET',
+                'uri' => fn (array $ids) => route('registercoordinator.attendee.export'),
+                'expect' => ['export.attendees'],
+                'acting_role' => 'REGISTER_COORDINATOR',
+            ],
             'password.reset_p' => [
                 'role' => 'GUEST',
                 'method' => 'POST',
@@ -186,6 +233,9 @@ final class LegacyWrites
         return [
             'POST login' => AuthenticationActivityTest::class,
             'logout' => AuthenticationActivityTest::class,
+            'registercoordinator.token.save' => EventbriteSyncActivityTest::class,
+            'registercoordinator.event.load' => EventbriteSyncActivityTest::class,
+            'registercoordinator.attendee.load' => EventbriteSyncActivityTest::class,
         ];
     }
 
@@ -193,15 +243,6 @@ final class LegacyWrites
     public static function pending(): array
     {
         return [
-            'attendee.store' => 'A',
-            'attendee.update' => 'A',
-            'attendee.destroy' => 'A',
-            'registercoordinator.event.hide' => 'A',
-            'registercoordinator.event.unhide' => 'A',
-            'registercoordinator.attendee.export' => 'A',
-            'registercoordinator.token.save' => 'A',
-            'registercoordinator.event.load' => 'A',
-            'registercoordinator.attendee.load' => 'A',
             'registercoordinator.event.store' => 'F',
             'registercoordinator.event.update' => 'F',
             'registercoordinator.event.destroy' => 'F',

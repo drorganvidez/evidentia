@@ -2,21 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityAction;
+use App\Enums\ActivityFlag;
 use App\Exports\AttendeesExport;
+use App\Facades\Activity;
 use App\Http\Middleware\CheckRoles;
 use App\Models\Attendee;
 use App\Models\Configuration;
 use App\Models\Event;
 use App\Models\User;
+use App\Services\Activity\SubjectInfo;
+use App\Services\SelfReview;
+use App\Support\Changes;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class EventbriteController extends Controller
 {
+    private const OWN_ATTENDANCE = 'No puedes registrar ni editar tu propia asistencia. El intento queda anotado.';
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -60,9 +69,14 @@ class EventbriteController extends Controller
             return back()->withInput()->with('error', 'Ups, parece que hay un problema con el token. Comprueba que es válido.');
         }
 
-        $configuration = Configuration::find(1);
-        $configuration->eventbrite_token = $token;
-        $configuration->save();
+        DB::transaction(function () use ($token) {
+            $configuration = Configuration::find(1);
+            $configuration->eventbrite_token = $token;
+            $configuration->save();
+
+            // el token nunca se anota
+            Activity::record(ActivityAction::EventbriteTokenSaved, $configuration, subjectTitle: 'Token de Eventbrite');
+        });
 
         return redirect()->route('registercoordinator.token')->with('success', 'Token validado y guardado con éxito.');
     }
@@ -83,6 +97,8 @@ class EventbriteController extends Controller
 
             $organizations = json_decode($response->getBody())->organizations ?? [];
             $organizations = (array) $organizations;
+            $created = 0;
+            $updated = 0;
 
             foreach ($organizations as $organization) {
 
@@ -134,6 +150,7 @@ class EventbriteController extends Controller
                     ];
 
                     if ($saved_event) {
+                        $updated++;
                         $saved_event->update($data_event);
 
                         // Calcular horas
@@ -143,6 +160,7 @@ class EventbriteController extends Controller
                         $saved_event->save();
 
                     } else {
+                        $created++;
                         $new_event = Event::create(array_merge($data_event, [
                             'id_eventbrite' => $event->id,
                         ]));
@@ -160,6 +178,9 @@ class EventbriteController extends Controller
             $config = Configuration::find(1);
             $config->events_uploaded_timestamp = Carbon::now();
             $config->save();
+
+            // sin transacción: el bucle llama a Eventbrite
+            Activity::record(ActivityAction::EventbriteEventsSynced, $config, details: ['created' => $created, 'updated' => $updated]);
 
             return redirect()
                 ->route('registercoordinator.event.list')
@@ -213,6 +234,9 @@ class EventbriteController extends Controller
 
             // Para evitar duplicados de user_id
             $syncedUserIds = [];
+            $created = 0;
+            $updated = 0;
+            $unmatched = 0;
 
             do {
                 // Llamada a Eventbrite
@@ -237,6 +261,8 @@ class EventbriteController extends Controller
                     $user = $this->find_attendee_user($first_name, $last_name, $email);
 
                     if (! $user) {
+                        $unmatched++;
+
                         continue; // Ignorar usuarios sin correspondencia en tu sistema
                     }
 
@@ -250,11 +276,13 @@ class EventbriteController extends Controller
                     if ($record) {
                         // Actualizar solo si cambia algo
                         if ($record->status !== $status) {
+                            $updated++;
                             $record->status = $status;
                             $record->save();
                         }
                     } else {
                         // Crear nuevo registro
+                        $created++;
                         Attendee::create([
                             'event_id' => $event->id,   // <-- AHORA CORRECTO
                             'user_id' => $user->id,
@@ -271,6 +299,16 @@ class EventbriteController extends Controller
             $config = Configuration::find(1);
             $config->attendees_uploaded_timestamp = Carbon::now();
             $config->save();
+
+            // sin transacción: el bucle llama a Eventbrite; el coordinador de registro puede estar entre los emparejados
+            $syncedUserIds = array_values(array_unique(array_map('intval', $syncedUserIds)));
+            Activity::record(
+                ActivityAction::EventbriteAttendeesSynced,
+                $event,
+                details: ['created' => $created, 'updated' => $updated, 'unmatched' => $unmatched]
+                    + (in_array((int) Auth::id(), $syncedUserIds, true) ? ['self_included' => true] : []),
+                targets: $syncedUserIds,
+            );
 
             return redirect()
                 ->route('registercoordinator.attendee.list')
@@ -300,8 +338,12 @@ class EventbriteController extends Controller
             return back()->with('error', 'Evento no encontrado.');
         }
 
-        $event->hidden = true;
-        $event->save();
+        DB::transaction(function () use ($event) {
+            $event->hidden = true;
+            $event->save();
+
+            Activity::record(ActivityAction::EventHidden, $event);
+        });
 
         return back()->with('success', 'Evento ocultado correctamente.');
     }
@@ -316,8 +358,12 @@ class EventbriteController extends Controller
             return back()->with('error', 'Evento no encontrado.');
         }
 
-        $event->hidden = false;
-        $event->save();
+        DB::transaction(function () use ($event) {
+            $event->hidden = false;
+            $event->save();
+
+            Activity::record(ActivityAction::EventUnhidden, $event);
+        });
 
         return back()->with('success', 'Evento visible nuevamente.');
     }
@@ -398,6 +444,16 @@ class EventbriteController extends Controller
         $event->save();
     }
 
+    // evento, persona y estado de una asistencia, tal como se anotan
+    private function attendee_snapshot(Attendee $attendee): array
+    {
+        return [
+            'event_id' => (int) $attendee->event_id,
+            'user_id' => (int) $attendee->user_id,
+            'status' => $attendee->status,
+        ];
+    }
+
     public function attendee_list()
     {
 
@@ -414,6 +470,8 @@ class EventbriteController extends Controller
             if (ob_get_level()) {
                 ob_end_clean();
             }
+
+            Activity::record(ActivityAction::ExportAttendees, details: ['rows' => Attendee::count()]);
 
             return Excel::download(new AttendeesExport, 'asistencias'.\Illuminate\Support\Carbon::now().'.xlsx');
         } catch (\Exception $e) {
@@ -433,12 +491,18 @@ class EventbriteController extends Controller
     public function attendee_update(Request $request, $id)
     {
         $attendee = Attendee::findOrFail($id);
+        $before = $this->attendee_snapshot($attendee);
 
         $request->validate([
             'event_id' => 'required|exists:events,id',
             'user_id' => 'required|exists:users,id',
             'status' => 'required|string|max:255',
         ]);
+
+        // nadie registra ni edita su propia asistencia, ni pidiéndola ni sobre la que ya tiene
+        if (SelfReview::violates(Auth::user(), (int) $request->user_id) || SelfReview::violates(Auth::user(), $attendee)) {
+            SelfReview::deny($attendee, ActivityAction::AttendeeEdited, Auth::user(), self::OWN_ATTENDANCE);
+        }
 
         // Comprobar si ya existe otra asistencia con esa tupla usuario-evento
         $exists = Attendee::where('event_id', $request->event_id)
@@ -452,7 +516,16 @@ class EventbriteController extends Controller
                 ->with('error', 'Ya existe una asistencia para ese usuario y ese evento.');
         }
 
-        $attendee->update($request->only('event_id', 'user_id', 'status'));
+        DB::transaction(function () use ($request, $attendee, $before) {
+            $attendee->update($request->only('event_id', 'user_id', 'status'));
+
+            Activity::record(
+                ActivityAction::AttendeeEdited,
+                $attendee,
+                $attendee->user()->first(),
+                details: Changes::between($before, $this->attendee_snapshot($attendee)),
+            );
+        });
 
         return redirect()->route('registercoordinator.attendee.list')
             ->with('success', 'Asistencia actualizada con éxito.');
@@ -474,6 +547,11 @@ class EventbriteController extends Controller
             'status' => 'required|string|max:255',
         ]);
 
+        // nadie registra su propia asistencia
+        if (SelfReview::violates(Auth::user(), (int) $request->user_id)) {
+            SelfReview::deny(new Attendee($request->only(['event_id', 'user_id', 'status'])), ActivityAction::AttendeeCreated, Auth::user(), self::OWN_ATTENDANCE);
+        }
+
         // Comprobar si ya existe una asistencia con esa tupla usuario-evento
         $exists = Attendee::where('event_id', $request->event_id)
             ->where('user_id', $request->user_id)
@@ -485,7 +563,11 @@ class EventbriteController extends Controller
                 ->with('error', 'Ya existe una asistencia para ese usuario y ese evento.');
         }
 
-        Attendee::create($request->only('event_id', 'user_id', 'status'));
+        DB::transaction(function () use ($request) {
+            $attendee = Attendee::create($request->only('event_id', 'user_id', 'status'));
+
+            Activity::record(ActivityAction::AttendeeCreated, $attendee, $attendee->user, details: ['status' => $attendee->status]);
+        });
 
         return redirect()->route('registercoordinator.attendee.list')
             ->with('success', 'Asistencia creada con éxito.');
@@ -494,7 +576,22 @@ class EventbriteController extends Controller
     public function attendee_destroy($id)
     {
         $attendee = Attendee::findOrFail($id);
-        $attendee->delete();
+        $title = SubjectInfo::title($attendee);
+        $person = $attendee->user;
+
+        DB::transaction(function () use ($attendee, $title, $person) {
+            $attendee->delete();
+
+            // borrar la asistencia propia no se bloquea, pero queda señalado
+            Activity::record(
+                ActivityAction::AttendeeDeleted,
+                $attendee,
+                $person,
+                details: ['status' => $attendee->status],
+                flags: (int) $attendee->user_id === (int) Auth::id() ? [ActivityFlag::RoleOverlap] : [],
+                subjectTitle: $title,
+            );
+        });
 
         return redirect()
             ->route('registercoordinator.attendee.list')

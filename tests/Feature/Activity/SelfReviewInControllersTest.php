@@ -3,9 +3,11 @@
 namespace Tests\Feature\Activity;
 
 use App\Models\ActivityLog;
+use App\Models\Attendee;
 use App\Models\Committee;
 use App\Models\Configuration;
 use App\Models\Coordinator;
+use App\Models\Event;
 use App\Models\Evidence;
 use App\Models\Role;
 use App\Models\User;
@@ -92,6 +94,86 @@ class SelfReviewInControllersTest extends TestCase
         $this->assertSame('Falta el certificado de asistencia.', $log->details['reason']);
         $this->assertSame($evidence->reasonRejection->id, $log->details['reason_rejection_id']);
         $this->assertFalse($log->flagged);
+    }
+
+    public function test_a_register_coordinator_cannot_register_their_own_attendance(): void
+    {
+        [$coordinator, $event] = $this->registerCoordinator();
+        $before = $this->snapshot();
+
+        $this->actingAs($coordinator)
+            ->from(route('attendee.create'))
+            ->post(route('attendee.store'), ['event_id' => $event->id, 'user_id' => $coordinator->id, 'status' => 'Checked In'])
+            ->assertRedirect(route('attendee.create'))
+            ->assertSessionHas('error', 'No puedes registrar ni editar tu propia asistencia. El intento queda anotado.');
+
+        $this->assertSame(0, Attendee::count());
+        $this->assertSame($before, $this->snapshot());
+        $log = ActivityLog::sole();
+        $this->assertSame('self_review.blocked', $log->action);
+        $this->assertSame('REGISTER_COORDINATOR', $log->acting_role);
+        $this->assertSame('attendee', $log->subject_type);
+        $this->assertNull($log->subject_id);
+        $this->assertSame($coordinator->id, $log->target_user_id);
+        $this->assertSame(['attempted' => 'attendee.created'], $log->details);
+        $this->assertSame(['self_review'], $log->flags);
+    }
+
+    public function test_a_register_coordinator_cannot_move_an_attendance_to_themselves(): void
+    {
+        [$coordinator, $event] = $this->registerCoordinator();
+        $attendee = Attendee::forceCreate(['event_id' => $event->id, 'user_id' => User::factory()->create()->id, 'status' => 'Attending']);
+        $before = $this->snapshot();
+
+        $this->actingAs($coordinator)
+            ->post(route('attendee.update', ['id' => $attendee->id]), ['event_id' => $event->id, 'user_id' => $coordinator->id, 'status' => 'Checked In'])
+            ->assertSessionHas('error', 'No puedes registrar ni editar tu propia asistencia. El intento queda anotado.');
+
+        $this->assertSame($before, $this->snapshot());
+        $this->assertSame(['attempted' => 'attendee.edited'], ActivityLog::sole()->details);
+    }
+
+    public function test_a_register_coordinator_cannot_edit_the_attendance_they_already_have(): void
+    {
+        [$coordinator, $event] = $this->registerCoordinator();
+        $attendee = Attendee::forceCreate(['event_id' => $event->id, 'user_id' => $coordinator->id, 'status' => 'Attending']);
+        $someoneElse = User::factory()->create();
+        $before = $this->snapshot();
+
+        $this->actingAs($coordinator)
+            ->post(route('attendee.update', ['id' => $attendee->id]), ['event_id' => $event->id, 'user_id' => $someoneElse->id, 'status' => 'Checked In'])
+            ->assertSessionHas('error', 'No puedes registrar ni editar tu propia asistencia. El intento queda anotado.');
+
+        $this->assertSame($before, $this->snapshot());
+        $log = ActivityLog::sole();
+        $this->assertSame('self_review.blocked', $log->action);
+        $this->assertSame($attendee->id, $log->subject_id);
+        $this->assertSame(['attempted' => 'attendee.edited'], $log->details);
+    }
+
+    public function test_removing_an_own_attendance_is_not_blocked_but_flagged(): void
+    {
+        [$coordinator, $event] = $this->registerCoordinator();
+        $attendee = Attendee::forceCreate(['event_id' => $event->id, 'user_id' => $coordinator->id, 'status' => 'Attending']);
+
+        $this->actingAs($coordinator)->delete(route('attendee.destroy', ['id' => $attendee->id]))
+            ->assertRedirect(route('registercoordinator.attendee.list'));
+
+        $this->assertNull($attendee->fresh());
+        $log = ActivityLog::sole();
+        $this->assertSame('attendee.deleted', $log->action);
+        $this->assertSame('Charla IA · '.$coordinator->surname.', '.$coordinator->name, $log->subject_title);
+        $this->assertSame($coordinator->id, $log->target_user_id);
+        $this->assertSame(['role_overlap'], $log->flags);
+    }
+
+    /** @return array{0: User, 1: Event} */
+    private function registerCoordinator(): array
+    {
+        $coordinator = User::factory()->create();
+        $coordinator->roles()->attach(Role::forceCreate(['rol' => 'REGISTER_COORDINATOR', 'slug' => 'register_coordinator']));
+
+        return [$coordinator, Event::forceCreate(['name' => 'Charla IA', 'id_eventbrite' => '111', 'hours' => 2])];
     }
 
     private function ownEvidence(): Evidence
