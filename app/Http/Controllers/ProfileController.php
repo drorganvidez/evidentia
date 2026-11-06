@@ -11,6 +11,7 @@ use App\Rules\MinCharacters;
 use App\Support\Changes;
 use App\Support\StrongPassword;
 use App\View\Dashboard;
+use App\View\StudentRecord;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -117,13 +118,12 @@ class ProfileController extends Controller
 
     }
 
-    public function profiles_view(Dashboard $dashboard, $id)
+    /** The whole record of a person for the management, one section at a time (?tab=) */
+    public function profiles_view(Request $request, StudentRecord $record, $id)
     {
+        $user = User::findOrFail($id);
 
-        $user = User::find($id);
-
-        return view('profile.generalview',
-            ['user' => $user, 'hours' => $dashboard->hours($user)]);
+        return view('profile.generalview', $record->for($user, $request->user(), $request->query('tab'), $request->query('ambito')));
     }
 
     public function evidences_view(Dashboard $dashboard, $id_user, $id_evidence)
