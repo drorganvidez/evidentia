@@ -194,6 +194,7 @@ Route::middleware('auth')->group(function () {
         CheckProofDownload::class,
     ])->group(function () {
         Route::get('proof/download/{id}', [ProofController::class, 'download'])->name('proof.download');
+        Route::get('proof/view/{id}', [ProofController::class, 'view'])->name('proof.view');
     });
 
     // REGISTER COORDINATOR

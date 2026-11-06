@@ -16,6 +16,23 @@ class File extends Model
         'stamp',
     ];
 
+    /** Types the browser shows by itself, by extension; SVG stays out, since it can carry scripts. */
+    public const PREVIEWABLE = [
+        'pdf' => 'application/pdf',
+        'png' => 'image/png',
+        'jpg' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'gif' => 'image/gif',
+        'webp' => 'image/webp',
+        'avif' => 'image/avif',
+    ];
+
+    /** Mime type the browser previews the file with, or null when it can only be downloaded. */
+    public function previewMime(): ?string
+    {
+        return self::PREVIEWABLE[strtolower((string) $this->type)] ?? null;
+    }
+
     /**
      * Get the size of the file in human-readable format.
      */

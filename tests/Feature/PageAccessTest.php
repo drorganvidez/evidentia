@@ -177,6 +177,7 @@ class PageAccessTest extends TestCase
             'evidence.view' => [['id' => 'evidence'], ['STUDENT']],
             'evidence.edit' => [['id' => 'draft'], ['STUDENT']],
             'proof.download' => [['id' => 'proof'], ['STUDENT', 'COORDINATOR', 'PRESIDENT', 'LECTURE']],
+            'proof.view' => [['id' => 'proof'], ['STUDENT', 'COORDINATOR', 'PRESIDENT', 'LECTURE']],
             'upload.load' => [['file_name' => 'missing.pdf'], []],
             'upload.remove' => [['file_name' => 'missing.pdf'], self::EVERYONE],
             'xls.upload.remove' => [['file_name' => 'missing.xls'], self::EVERYONE],
