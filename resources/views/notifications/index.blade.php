@@ -23,7 +23,7 @@
 
     <x-ui.tabs label="Filtrar avisos" :items="$tabs" />
 
-    <x-ui.card title="Avisos" :level="2" padding="sm" id="inbox-title">
+    <x-ui.card title="Bandeja" :level="2" padding="sm" id="inbox-title">
         <x-slot:extra>
             <span class="inline-flex items-center gap-2 text-sm text-ink-muted">Sin leer <x-ui.badge
                     variant="count">{{ $unread }}</x-ui.badge></span>
