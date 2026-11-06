@@ -1,204 +1,130 @@
-@extends('layouts.app')
-
-@section('title', 'Gestionar alumnos')
-
-@section('title-icon', 'nav-icon fas fa-users-cog')
-
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item active">@yield('title')</li>
-@endsection
-
-@section('content')
-
-    <div class="row">
-
-        <div class="col-lg-12">
-
-            <div class="card">
-
-                <div class="card-body">
-
-                    <div class="row" style="margin-bottom: 20px">
-                        <div class="col-lg-12">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default">Acciones</button>
-                                <button type="button" class="btn btn-default dropdown-toggle dropdown-icon"
-                                    data-toggle="dropdown" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-                                <div class="dropdown-menu" role="menu" style="">
-
-                                    @if (\Illuminate\Support\Facades\Auth::user()->hasRole('LECTURE'))
-                                        <a class="dropdown-item" href="{{ route('lecture.import') }}">Importación masiva de
-                                            usuarios</a>
-
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#" data-toggle="modal"
-                                            data-target="#borrar_todo">
-                                            Borrar todos los usuarios
-                                        </a>
-                                    @endif
-
-                                    @if (\Illuminate\Support\Facades\Auth::user()->hasRole('PRESIDENT'))
-                                        <a class="dropdown-item" href="#">Coming soon...</a>
-                                    @endif
-                                </div>
-                            </div>
-                            <br>
-                        </div>
+{{-- People of the course for the lecturer and the president: filters, sortable table, new user and mass actions --}}
+@php
+    $isPresident = Auth::user()->hasRole('PRESIDENT');
+    $prefix = $isPresident ? 'president' : 'lecture';
+    $list = route($prefix . '.user.list');
+    $roleNames = [
+        'STUDENT' => 'Estudiante',
+        'COORDINATOR' => 'Coordinador',
+        'SECRETARY' => 'Secretario',
+        'REGISTER_COORDINATOR' => 'Coordinador de registro',
+        'PRESIDENT' => 'Presidente',
+        'LECTURE' => 'Profesor',
+    ];
+    $active = count(array_filter($filters));
+    $query = array_filter($filters);
+    $sortLink = fn(string $key) => [
+        'href' =>
+            $list .
+            '?' .
+            http_build_query($query + ['sort' => $key, 'dir' => $sort === $key && $dir === 'asc' ? 'desc' : 'asc']),
+        'dir' => $sort === $key ? $dir : null,
+    ];
+    $columns = [
+        ['label' => 'Apellidos y nombre', 'key' => 'surname', 'sort' => $sortLink('surname')],
+        ['label' => 'UVUS', 'key' => 'username', 'sort' => $sortLink('username')],
+        ['label' => 'DNI', 'key' => 'dni'],
+        ['label' => 'Roles', 'key' => 'roles'],
+        ['label' => 'Acciones', 'srOnly' => true],
+    ];
+    $people = $users->reject(fn($user) => $user->id == Auth::id());
+    $roleOptions = [
+        ['value' => '', 'label' => 'Todos'],
+        ...$roles->map(fn($role) => ['value' => $role->rol, 'label' => $roleNames[$role->rol] ?? $role->slug])->all(),
+    ];
+    $newUserFields = ['name' => 'Nombre', 'surname' => 'Apellidos', 'email' => 'Correo', 'username' => 'UVUS'];
+@endphp
+<x-layout.app title="Alumnos" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Alumnos']]">
+    <x-ui.page-header title="Alumnos">
+        <x-slot:actions>
+            @if (Auth::user()->hasRole('LECTURE'))
+                <x-ui.button icon="import" :href="route('lecture.import')">Importar</x-ui.button>
+                <x-ui.dialog id="delete-all-users" variant="alert" title="Borrar todos los usuarios"
+                    description="Se borrarán todos los usuarios salvo el tuyo, con sus evidencias, mensajes, avisos, asistencias y las reuniones que registraron. Esta acción no se puede deshacer."
+                    trigger="Borrar todos" trigger-icon="trash-2">
+                    <x-slot:footer>
+                        <x-ui.button x-on:click="close" autofocus>Cancelar</x-ui.button>
+                        <form method="post" action="{{ route('management.user.delete.all') }}">
+                            @csrf
+                            <x-ui.button variant="danger" type="submit" icon="trash-2" block>Sí, borrar
+                                todos</x-ui.button>
+                        </form>
+                    </x-slot:footer>
+                </x-ui.dialog>
+            @endif
+            <x-ui.dialog id="new-user" title="Nuevo usuario" trigger="Nuevo usuario" trigger-variant="primary"
+                trigger-icon="user-plus" :open-on-load="$errors->hasAny(array_keys($newUserFields))">
+                <x-ui.form :action="route('management.user.new')" id="new-user-form" :fields="$newUserFields" busy-label="Añadiendo">
+                    <div class="grid grid-cols-[minmax(0,1fr)] gap-4 md:grid-cols-2">
+                        <x-ui.field name="name" label="Nombre" required autocomplete="off" />
+                        <x-ui.field name="surname" label="Apellidos" required autocomplete="off" />
+                        <x-ui.field name="email" label="Correo" type="email" required autocomplete="off" />
+                        <x-ui.field name="username" label="UVUS" required autocomplete="off" />
                     </div>
+                    <x-slot:actions>
+                        <x-ui.button type="submit" variant="primary" icon="user-plus">Añadir usuario</x-ui.button>
+                    </x-slot:actions>
+                </x-ui.form>
+            </x-ui.dialog>
+        </x-slot:actions>
+    </x-ui.page-header>
 
-                    <table id="dataset" class="table table-hover table-responsive">
-                        <thead>
-                            <tr>
-                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">DNI</th>
-                                <th>Apellidos</th>
-                                <th>Nombre</th>
-                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">UVUS</th>
-                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Roles</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
+    <x-ui.filter-bar :action="$list" :open="$active > 0" :active="$active" :reset-href="$list">
+        <x-ui.field name="rol" label="Rol" type="select" :value="$filters['rol']" :options="$roleOptions" />
+        <x-ui.field name="estado" label="Estado" type="select" :value="$filters['estado']" :options="[
+            ['value' => '', 'label' => 'Todos'],
+            ['value' => 'activos', 'label' => 'Activos'],
+            ['value' => 'bloqueados', 'label' => 'Bloqueados'],
+        ]" />
+        @if ($sort !== 'surname' || $dir !== 'asc')
+            <input type="hidden" name="sort" value="{{ $sort }}">
+            <input type="hidden" name="dir" value="{{ $dir }}">
+        @endif
+    </x-ui.filter-bar>
 
-                            @foreach ($users as $user)
-                                @if ($user->id != Auth::id())
-                                    @if ($user->block)
-                                        <tr class="bg-danger">
-                                        @else
-                                        <tr>
-                                    @endif
-
-                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ $user->dni }}</td>
-                                    <td><a href="{{ route('profiles.view', ['id' => $user->id]) }}">{{ $user->surname }}</a>
-                                    </td>
-                                    <td><a href="{{ route('profiles.view', ['id' => $user->id]) }}">{{ $user->name }}</a>
-                                    </td>
-                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ $user->username }}</td>
-                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                        <x-roles :user="$user" />
-                                    </td>
-                                    <td>
-                                        @if (Auth::user()->hasRole('PRESIDENT'))
-                                            <a class="btn btn-primary btn-sm"
-                                                href="{{ route('president.user.management', ['id' => $user->id]) }}">
-                                                <i class="nav-icon nav-icon fas fa-users-cog"></i>
-                                            </a>
-                                        @else
-                                            <a class="btn btn-primary btn-sm"
-                                                href="{{ route('lecture.user.management', ['id' => $user->id]) }}">
-                                                <i class="nav-icon nav-icon fas fa-users-cog"></i>
-                                            </a>
-                                        @endif
-                                    </td>
-                                    </tr>
-                                @endif
-                            @endforeach
-
-                        </tbody>
-                    </table>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-lg-6 col-12">
-
-            <div class="card">
-
-                <div class="card-body">
-
-                    <h4>Añadir nuevo usuario</h4>
-
-                    <form method="POST" enctype="multipart/form-data" action="{{ route('management.user.new') }}">
-                        @csrf
-
-                        <div class="form-row">
-                            <x-input col="6" attr="name" label="Nombre" />
-                            <x-input col="6" attr="surname" label="Apellidos" />
-                        </div>
-
-                        <div class="form-row">
-                            <x-input col="6" attr="email" label="Email" />
-                        </div>
-
-                        <div class="form-row">
-                            <x-input col="6" attr="username" label="UVUS"
-                                description="El UVUS será el nombre de usuario" />
-                            <x-input col="6" attr="password" disabled="true" :edit="true" label="Password"
-                                description="La contraseña por defecto es aleatoria y debe ser restablecida" />
-                        </div>
-                        <div class="form-row">
-
-                            <div class="col-lg-12">
-                                <button type="submit" class="btn btn-primary btn-block" data-dismiss="modal">
-                                    <i class="fas fa-user-plus"></i>
-                                    Añadir usuario</button>
-                            </div>
-
-                        </div>
-
-
-
-                    </form>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="modal fade" id="borrar_todo">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content" style="overflow: visible">
-
-                <div class="modal-header">
-                    <h4 class="modal-title text-wrap">Borrar todos los usuarios</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-
-                <form action="{{ route('management.user.delete.all') }}" method="POST">
-                    @csrf
-                    <div class="modal-body text-wrap">
-                        <h2>Aviso</h2>
-                        <p>
-                            Esta acción está pensada al principio del uso de este software, cuando se
-                            acaban de importar todos los usuarios mediante un archivo XLS y/o se están haciendo pruebas.
-                            Esta función es <b>muy destructiva.</b>
-                        </p>
-
-                        <p>Se borrarán:</p>
-
-                        <ul>
-                            <li>Todos los usuarios excepto el tuyo</li>
-                            <li>Todas las evidencias asociadas</li>
-                            <li>Todos los mensajes y notificaciones asociadas</li>
-                            <li>Todas las asistencias</li>
-                            <li>Todas las reuniones registradas por los secretarios</li>
-                        </ul>
-
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fas fa-trash"></i> &nbsp;Lo comprendo, eliminar todos los usuarios
-                        </button>
-                    </div>
-                </form>
-
-
-
-
-            </div>
-        </div>
-    </div>
-
-@endsection
+    <x-ui.table caption="Usuarios" :columns="$columns" :filterable="$people->isNotEmpty()" count-label="usuarios"
+        filter-placeholder="Filtrar usuarios">
+        @if ($people->isEmpty())
+            <x-slot:empty>
+                <x-ui.empty icon="users" title="No hay usuarios" size="sm" :level="2" />
+            </x-slot:empty>
+        @endif
+        @foreach ($people as $user)
+            @php
+                $href = route('profiles.view', ['id' => $user->id]);
+                $fullName = trim($user->surname . ', ' . $user->name, ', ');
+            @endphp
+            <x-ui.table.row :href="$href" :flag="$user->block ? 'Bloqueado' : null" :search="implode(' ', [$user->surname, $user->name, $user->username, $user->dni, $user->email])">
+                <x-ui.table.cell label="Apellidos y nombre" primary>
+                    <a href="{{ $href }}">{{ $fullName }}</a>
+                    <span class="mt-0.5 block text-sm text-ink-muted">{{ $user->email }}</span>
+                </x-ui.table.cell>
+                <x-ui.table.cell label="UVUS" meta><span
+                        class="font-mono">{{ $user->username }}</span></x-ui.table.cell>
+                <x-ui.table.cell label="DNI" meta hide><span
+                        class="font-mono">{{ $user->dni }}</span></x-ui.table.cell>
+                <x-ui.table.cell label="Roles" full>
+                    <span class="flex flex-wrap items-center gap-1.5">
+                        @if ($user->block)
+                            <x-ui.badge tone="rejected" size="sm">Bloqueado</x-ui.badge>
+                        @endif
+                        @foreach ($user->roles as $role)
+                            @php
+                                $committee = match ($role->rol) {
+                                    'COORDINATOR' => $user->coordinator?->committee?->name,
+                                    'SECRETARY' => $user->secretary?->committee?->name,
+                                    default => null,
+                                };
+                            @endphp
+                            <x-ui.badge variant="chip"
+                                size="sm">{{ $roleNames[$role->rol] ?? $role->slug }}{{ $committee ? ' de ' . $committee : '' }}</x-ui.badge>
+                        @endforeach
+                    </span>
+                </x-ui.table.cell>
+                <x-ui.table.cell end class="w-[1%] whitespace-nowrap">
+                    <x-ui.button icon-only icon="user-cog" :label="'Gestionar ' . $fullName" :href="route($prefix . '.user.management', ['id' => $user->id])" variant="ghost" />
+                </x-ui.table.cell>
+            </x-ui.table.row>
+        @endforeach
+    </x-ui.table>
+</x-layout.app>

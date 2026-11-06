@@ -26,7 +26,7 @@ class ManagementController extends Controller
         $this->user_service = new UserService;
     }
 
-    public function user_list()
+    public function user_list(Request $request)
     {
 
         $users = User::all();
@@ -43,8 +43,24 @@ class ManagementController extends Controller
             $filtered_users = $users;
         }
 
+        // filtros y orden del listado, en la URL
+        $roles = Auth::user()->hasRole('PRESIDENT') ? Role::where('rol', '!=', 'LECTURE')->get() : Role::all();
+        $filters = [
+            'rol' => $roles->contains('rol', $request->query('rol')) ? $request->query('rol') : null,
+            'estado' => in_array($request->query('estado'), ['activos', 'bloqueados'], true) ? $request->query('estado') : null,
+        ];
+        $sort = in_array($request->query('sort'), ['surname', 'name', 'username'], true) ? $request->query('sort') : 'surname';
+        $dir = $request->query('dir') === 'desc' ? 'desc' : 'asc';
+
+        $filtered_users = $filtered_users
+            ->when($filters['rol'], fn ($list, $rol) => $list->filter(fn ($user) => $user->hasRole($rol)))
+            ->when($filters['estado'] === 'activos', fn ($list) => $list->reject(fn ($user) => $user->block))
+            ->when($filters['estado'] === 'bloqueados', fn ($list) => $list->filter(fn ($user) => $user->block))
+            ->sortBy(fn ($user) => mb_strtolower((string) $user->{$sort}), SORT_NATURAL, $dir === 'desc')
+            ->values();
+
         return view('manage.user_list',
-            ['users' => $filtered_users]);
+            ['users' => $filtered_users, 'roles' => $roles, 'filters' => $filters, 'sort' => $sort, 'dir' => $dir]);
     }
 
     public function evidence_list()
