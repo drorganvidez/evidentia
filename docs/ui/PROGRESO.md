@@ -24,16 +24,35 @@ Hecha (commits `b6aa479..5bc7b89`).
 
 ## Fase 3. Biblioteca de componentes
 
-Hecha la implementación (pendiente la revisión adversaria de cierre). Plan diseñado con tres inventarios (vistas actuales, mockups, buenas prácticas), tres propuestas, dos jueces y una síntesis; implementado en seis lotes (fundamentos y primitivas; shell, navegación y avisos; datos y listados; formularios; detalle, editores e impresión; integración), los cuatro intermedios en paralelo sobre ramas propias e integrados en `main` con sus commits atómicos.
+Hecha. Plan diseñado con tres inventarios (vistas actuales, mockups, buenas prácticas), tres propuestas, dos jueces y una síntesis; implementado en seis lotes (fundamentos y primitivas; shell, navegación y avisos; datos y listados; formularios; detalle, editores e impresión; integración), los cuatro intermedios en paralelo sobre ramas propias e integrados en `main` con sus commits atómicos.
 
 - 57 componentes Blade en `resources/views/components/ui`, `layout` y `pdf`, documentados en `COMPONENTS.md` y expuestos en `/_ui` (49 secciones) con cuatro páginas compuestas, `/_ui/shell`, `/_ui/public`, `/_ui/detail` y `/_ui/pdf`.
 - Dos layouts, `x-layout.app` (barra lateral, raíl en tableta, topbar, cajón y barra inferior en el teléfono, avisos, pie con versión) y `x-layout.public` (acceso, firma, bloqueo y errores con la entrada ligera `public.js`). El propio catálogo se renderiza con el shell.
 - Comportamiento en módulos Alpine (build CSP) descubiertos por nombre de fichero, con una sonda que verifica la gramática permitida; sin estilos en línea ni manejadores en atributos en ninguna vista nueva.
 - Tests de render por componente (PHPUnit, 642 tests en total con los de la aplicación), `CspSafeViewsTest`, `DesignSystemPageTest` (catálogo, páginas, ids únicos) y Playwright en escritorio y móvil con la fixture que falla ante cualquier error de consola, axe (WCAG 2.2 AA) en claro y oscuro sobre todo el catálogo y las páginas, y specs de interacción (diálogos, menús, avisos, plazos, tablas, formularios, subida, selector de personas e iconos, editores, acceso y detalle).
 
-## Fases siguientes
+## Trazabilidad, mensajes, avisos y subsanación
 
-- Trazabilidad, mensajes, avisos y subsanación (lógica de negocio con tests).
-- Fase 4, migración de todas las vistas al nuevo diseño, cada una con su prueba de extremo a extremo en escritorio y móvil.
-- Fase 5, calidad (Lighthouse, accesibilidad, barrido completo).
+Hecha. Registro de actividad con verbos cerrados (`App\Enums\ActivityAction`) y un barrido que exige que toda ruta de escritura registre algo; historiales de evidencias, actas y convocatorias; mensajes a los responsables desde cada evidencia, reunión y asistencia; avisos en la bandeja y por correo con niveles y preferencias, recordatorios de plazo y resumen diario (`routes/console.php`); movimiento de evidencias entre comités; registro de errores 500.
+
+## Fase 4. Migración de las pantallas
+
+Hecha. Todas las pantallas usan la interfaz nueva, cada una con su test PHP y su spec de Playwright en escritorio y móvil con axe en claro y oscuro. La navegación por rol la compone `App\View\Navigation`; la gestión tiene su panel de control (`App\View\ManagementDashboard`) y una ficha por comité (`App\View\CommitteeOverview`).
+
+## v4.0.0 «Aurora»
+
+Publicada el 6 de noviembre de 2026 (etiqueta `v4.0.0`) y en producción.
+
+## v4.0.1
+
+En curso.
+
+- Fuera la interfaz anterior. El layout de AdminLTE, sus menús, navbars y componentes ya no están en `resources/views`, y AdminLTE, sus plugins y los estilos, scripts e imágenes antiguos ya no están en `public/`. `ViewsCompileTest` compila todas las vistas para que ninguna apunte a un componente borrado.
+- Un aviso sin leer se anuncia «Evidencia rechazada, sin leer», sin el espacio que dejaba antes de la coma.
+- `COMPONENTS.md` recoge el bag y el resumen de errores del formulario, la regla de `old()` en las casillas, los valores de los campos, el desplegable con buscador, `x-ui.password-rules`, los avisos con enlace y su cola, los atajos, la barra de progreso de página y las utilidades propias.
+
+## Pendiente
+
+- Política de seguridad de contenidos en `enforce` por defecto, ahora que no queda ninguna vista del layout antiguo (hoy `CSP_MODE` vale `report-only` salvo en las rutas con `csp:enforce`).
+- Fase 5, calidad (Lighthouse y barrido completo).
 - Detalles finales, entre ellos una ilustración propia para la pantalla de acceso.
