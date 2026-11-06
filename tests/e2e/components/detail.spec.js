@@ -94,8 +94,16 @@ test.describe('Detalle de una evidencia', () => {
             const aside = page.getByRole('complementary', { name: 'Datos e historial' });
             const proofs = page.getByRole('region', { name: 'Pruebas', exact: true });
 
-            expect((await aside.boundingBox()).x, 'El lateral va a la derecha').toBeGreaterThan(
+            const asideBox = await aside.boundingBox();
+
+            expect(asideBox.x, 'El lateral va a la derecha').toBeGreaterThan(
                 (await proofs.boundingBox()).x,
+            );
+            // The aside keeps a floor of 18rem, so the pairs of the card stay side by side
+            expect(asideBox.width, 'Anchura del lateral').toBeGreaterThanOrEqual(288);
+            await expect(card.locator('dl > div').first()).toHaveCSS(
+                'grid-template-columns',
+                /^\d+(\.\d+)?px \d+(\.\d+)?px$/,
             );
 
             const outside = await card.evaluate((section) => {

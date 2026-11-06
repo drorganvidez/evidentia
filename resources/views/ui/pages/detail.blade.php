@@ -103,7 +103,7 @@
         <x-ui.timeline.item state="upcoming" title="Aceptada" hint="Pendiente de corregir" />
     </x-ui.timeline>
 
-    <div class="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:gap-8">
+    <div class="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)] lg:gap-8">
         <div class="grid grid-cols-[minmax(0,1fr)] content-start gap-6">
             <x-ui.alert tone="rejected" title="Tu coordinador necesita más pruebas" :quote="$reason">
                 <x-slot:meta>
