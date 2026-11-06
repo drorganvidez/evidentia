@@ -283,11 +283,11 @@ class EventbriteController extends Controller
     }
 
     /**
-     * Hide an event so it doesn't appear.
+     * Hide an event so it doesn't appear. Identified by its local id, so it works for hand-made events too.
      */
-    public function hide($id_eventbrite)
+    public function hide($id)
     {
-        $event = Event::where('id_eventbrite', $id_eventbrite)->first();
+        $event = Event::find($id);
         if (! $event) {
             return back()->with('error', 'Evento no encontrado.');
         }
@@ -301,9 +301,9 @@ class EventbriteController extends Controller
     /**
      * Unhide an event so it appears again.
      */
-    public function unhide($id_eventbrite)
+    public function unhide($id)
     {
-        $event = Event::where('id_eventbrite', $id_eventbrite)->first();
+        $event = Event::find($id);
         if (! $event) {
             return back()->with('error', 'Evento no encontrado.');
         }
