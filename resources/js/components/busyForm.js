@@ -1,6 +1,7 @@
 /**
  * Busy state of <x-ui.form>: blocks the double submit, relabels the pressed submit button and frees
  * itself when the page comes back from the history cache or, for downloads, after a few seconds.
+ * A submit that another listener cancels (a validation of its own) leaves the form free.
  *
  * Blade: <form x-data="busyForm" data-busy-label="Guardando" x-on:submit="submit"
  * x-bind:aria-busy="busy ? 'true' : 'false'"> with data-download when the response is a file.
@@ -43,6 +44,11 @@ export default function busyForm() {
                 return;
             }
 
+            // Another listener (the minutes editor, the upload zone) has already cancelled the submit
+            if (event.defaultPrevented) {
+                return;
+            }
+
             const form = event.target;
 
             if (!form.checkValidity()) {
@@ -70,7 +76,14 @@ export default function busyForm() {
             });
 
             // Disabled once the browser has read the submitter, so a named button still reaches the server.
+            // By then every listener has run: if one of them cancelled the submit, the form is free again.
             setTimeout(() => {
+                if (event.defaultPrevented) {
+                    this.reset();
+
+                    return;
+                }
+
                 buttons.forEach((button) => {
                     button.disabled = true;
                 });

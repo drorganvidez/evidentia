@@ -79,6 +79,37 @@ test.describe('Formularios', () => {
         expect(requests).toBe(1);
     });
 
+    test('un envío que cancela otro manejador deja el formulario libre', async ({ page, ui }) => {
+        const form = ui.section('form').locator('#search-form');
+        const button = form.getByRole('button', { name: 'Buscar' });
+        let requests = 0;
+
+        await page.route(
+            (url) => url.pathname === '/_ui' && url.searchParams.has('search_q'),
+            async (route) => {
+                requests += 1;
+                await route.fulfill({ status: 204 });
+            },
+        );
+
+        // A validation of the page, registered after busyForm, cancels the first submit
+        await form.evaluate((element) => {
+            element.addEventListener('submit', (event) => event.preventDefault(), { once: true });
+        });
+
+        await button.click();
+
+        await expect(form).toHaveAttribute('aria-busy', 'false');
+        await expect(button).toBeEnabled();
+        await expect(button).toHaveText('Buscar');
+        await expect(button).not.toHaveAttribute('aria-busy', 'true');
+        expect(requests).toBe(0);
+
+        await button.click();
+
+        await expect.poll(() => requests).toBe(1);
+    });
+
     test('la sección cumple WCAG 2.2 AA', async ({ ui }) => {
         expect(await ui.axe('#ui-form')).toEqual([]);
     });

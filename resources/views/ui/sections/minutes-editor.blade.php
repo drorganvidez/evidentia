@@ -25,16 +25,15 @@
     aria-labelledby="ui-minutes-editor-title">
     <h2 id="ui-minutes-editor-title" class="text-2xl font-bold tracking-tight">Editor de actas</h2>
 
-    <form method="get" action="{{ route('ui.index') }}#ui-minutes-editor" class="grid grid-cols-[minmax(0,1fr)] gap-4"
-        data-demo="minutes">
+    <x-ui.form method="get" :action="route('ui.index') . '#ui-minutes-editor'" :summary="false" id="minutes-form" data-demo="minutes">
         <x-ui.minutes-editor :points="$points" hint="El título de cada punto es obligatorio.">
             <div class="grid grid-cols-[minmax(0,1fr)] gap-1 border-t border-rule pt-3">
                 <span class="text-xs font-semibold text-ink-muted">Valor del campo oculto</span>
                 <output class="font-mono text-xs break-all text-ink-muted" x-text="json"></output>
             </div>
         </x-ui.minutes-editor>
-        <div class="flex flex-wrap gap-3">
+        <x-slot:actions>
             <x-ui.button type="submit" variant="primary" icon="check">Guardar el acta</x-ui.button>
-        </div>
-    </form>
+        </x-slot:actions>
+    </x-ui.form>
 </section>

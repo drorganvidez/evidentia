@@ -86,8 +86,10 @@ export default function minutesEditor() {
             form = root.closest('form');
 
             if (form) {
+                // Capture phase: on the form itself it runs before the x-on:submit of busyForm, which then
+                // sees the submit already cancelled and does not mark the form busy
                 onSubmit = (event) => this.validate(event);
-                form.addEventListener('submit', onSubmit);
+                form.addEventListener('submit', onSubmit, true);
             }
         },
 
@@ -95,7 +97,7 @@ export default function minutesEditor() {
             clearTimeout(this.confirmTimer);
 
             if (form && onSubmit) {
-                form.removeEventListener('submit', onSubmit);
+                form.removeEventListener('submit', onSubmit, true);
             }
         },
 

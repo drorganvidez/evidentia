@@ -57,8 +57,9 @@ test.describe('Editor de actas', () => {
         page,
     }) => {
         const third = points.nth(2);
+        const save = form.getByRole('button', { name: 'Guardar el acta' });
 
-        await form.getByRole('button', { name: 'Guardar el acta' }).click();
+        await save.click();
 
         await expect(page).not.toHaveURL(/points_json=/);
         await expect(title(third)).toBeFocused();
@@ -68,12 +69,18 @@ test.describe('Editor de actas', () => {
         await expect(editor.locator('p[role="status"]')).toHaveText('Revisa 1 punto');
         await expect(title(points.nth(0))).not.toHaveAttribute('aria-invalid', 'true');
 
-        // Typing a title clears the error and the form goes through
+        // The editor cancels the submit before the busy state of x-ui.form: nothing stays locked
+        await expect(form).toHaveAttribute('aria-busy', 'false');
+        await expect(save).toBeEnabled();
+        await expect(save).toHaveText('Guardar el acta');
+        await expect(save).not.toHaveAttribute('aria-busy', 'true');
+
+        // Typing a title clears the error and the second submit goes through
         await title(third).fill('Cierre');
         await expect(title(third)).not.toHaveAttribute('aria-invalid', 'true');
         await expect(third.getByRole('alert')).toHaveCount(0);
 
-        await form.getByRole('button', { name: 'Guardar el acta' }).click();
+        await save.click();
         await expect(page).toHaveURL(/points_json=/);
     });
 
