@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Support\ListPage;
 use App\Support\ListSort;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -159,6 +160,7 @@ class ListSortTest extends TestCase
 
         $this->assertSame($expected, $sort->apply(Evidence::query())->pluck('title')->all());
         $this->assertSame($expected, $sort->apply(Evidence::all())->pluck('title')->all());
+        $this->assertInstanceOf(Collection::class, $sort->apply(Evidence::all()), 'A collection of models stays one');
     }
 
     public function test_a_count_of_a_relation_orders_a_query_and_a_collection(): void

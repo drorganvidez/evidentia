@@ -280,7 +280,7 @@ final class ListSort
             return 0;
         });
 
-        return collect(array_column($keyed, 'row'))->values();
+        return $rows::make(array_column($keyed, 'row'));
     }
 
     private function valueOf(mixed $row, mixed $term): mixed
