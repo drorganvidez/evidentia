@@ -212,6 +212,93 @@ test.describe('Subida de archivos', () => {
         expect(unexpected, 'Errores en la consola del navegador').toEqual([]);
     });
 
+    test('solo cuenta como subido el id que el servidor devuelve en texto plano', async ({
+        page,
+        ui,
+    }) => {
+        const zone = ui.section('upload').locator('[x-data="upload"]').first();
+        const row = zone.getByRole('listitem').last();
+        const hidden = zone.locator('input[type="hidden"][name="uploaded[]"]');
+        // A 200 that is not the id: the page of a proxy and an empty body
+        const answers = [
+            { status: 200, contentType: 'text/html', body: '<!doctype html><title>Portal</title>' },
+            { status: 200, contentType: 'text/plain', body: '  ' },
+        ];
+
+        await page.route('**/_ui/demo/upload', async (route) => {
+            if (route.request().method() !== 'POST') {
+                await route.continue();
+
+                return;
+            }
+
+            await route.fulfill(answers.shift());
+        });
+
+        await zone.locator('input[type="file"]').setInputFiles([pdf('portal.pdf')]);
+
+        await expect(row).toContainText('No se ha podido subir');
+        await expect(zone.getByRole('alert')).toHaveText('portal.pdf: no se ha podido subir');
+        await expect(hidden).toHaveCount(0);
+
+        await zone.getByRole('button', { name: 'Reintentar portal.pdf' }).click();
+
+        await expect.poll(() => answers.length).toBe(0);
+        await expect(row).toContainText('No se ha podido subir');
+        await expect(zone.getByRole('alert')).toHaveText('portal.pdf: no se ha podido subir');
+        await expect(hidden).toHaveCount(0);
+    });
+
+    test('el motivo corto de un 400 llega a la fila y a la alerta', async ({ page, ui }) => {
+        const unexpected = expectingStatus(page, 400);
+        const zone = ui.section('upload').locator('[x-data="upload"]').first();
+        const row = zone.getByRole('listitem').last();
+
+        await page.route('**/_ui/demo/upload', async (route) => {
+            if (route.request().method() !== 'POST') {
+                await route.continue();
+
+                return;
+            }
+
+            // What the upload controller answers to an invalid file
+            await route.fulfill({
+                status: 400,
+                contentType: 'text/html; charset=UTF-8',
+                body: 'Archivo inválido',
+            });
+        });
+
+        await zone.locator('input[type="file"]').setInputFiles([pdf('roto.pdf')]);
+
+        await expect(row).toContainText('Archivo inválido');
+        await expect(zone.getByRole('alert')).toHaveText('roto.pdf: archivo inválido');
+        await expect(zone.getByRole('button', { name: 'Reintentar roto.pdf' })).toBeVisible();
+        expect(unexpected, 'Errores en la consola del navegador').toEqual([]);
+    });
+
+    test('una subida que deja de avanzar se da por perdida', async ({ page, ui }) => {
+        await page.clock.install();
+        await page.goto('/_ui#ui-upload');
+
+        const zone = ui.section('upload').locator('[x-data="upload"]').first();
+        const row = zone.getByRole('listitem').last();
+
+        // The endpoint never answers
+        await page.route('**/_ui/demo/upload', () => {});
+        await zone.locator('input[type="file"]').setInputFiles([pdf('lento.pdf')]);
+
+        await expect(row).toContainText('Subiendo');
+        await expect(zone).toHaveAttribute('aria-busy', 'true');
+
+        await page.clock.runFor(61_000);
+
+        await expect(row).toContainText('La subida se ha detenido');
+        await expect(zone.getByRole('alert')).toHaveText('lento.pdf: la subida se ha detenido');
+        await expect(zone.getByRole('button', { name: 'Reintentar lento.pdf' })).toBeVisible();
+        await expect(zone).toHaveAttribute('aria-busy', 'false');
+    });
+
     test('la zona de un solo archivo rechaza el segundo', async ({ ui }) => {
         const zone = ui.section('upload').locator('[x-data="upload"]').nth(1);
         const input = zone.locator('input[type="file"]');

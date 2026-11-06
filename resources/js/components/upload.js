@@ -9,9 +9,15 @@
  * A file only gets its hidden input once the server has answered, so the surrounding form waits while a
  * file is queued or uploading: its submit is cancelled (before the busy state of x-ui.form) and the zone
  * says why, without moving the focus.
+ *
+ * The server answers with the id as plain text; any other answer (an HTML page from a proxy, an empty body)
+ * is a failure, a short text of a 4xx is shown as the reason and an upload that stops moving for a minute
+ * is given up.
  */
 const UNITS = ['B', 'kB', 'MB', 'GB'];
 const WAIT = 'Espera a que termine la subida';
+const STALL_AFTER = 60000;
+const STALLED = 'La subida se ha detenido';
 const STATUS = {
     initial: 'Ya en el servidor',
     queued: 'En cola',
@@ -38,6 +44,21 @@ function formatSize(bytes) {
     }).format(value);
 
     return `${formatted} ${UNITS[unit]}`;
+}
+
+/** The id the server gives back: only a plain text answer, never a page that happens to return 200. */
+function serverId(xhr) {
+    const type = (xhr.getResponseHeader('Content-Type') ?? '').toLowerCase();
+    const id = (xhr.responseText ?? '').trim();
+
+    return type.startsWith('text/plain') && id !== '' ? id : null;
+}
+
+/** A short plain reason from the server (the 400 of the upload endpoint), never the markup of a page. */
+function serverReason(xhr) {
+    const text = (xhr.responseText ?? '').trim();
+
+    return text !== '' && text.length <= 200 && !text.includes('<') ? text : null;
 }
 
 function csrfToken() {
@@ -266,20 +287,41 @@ export default function upload() {
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.setRequestHeader('Accept', 'text/plain');
 
+            // Re-armed on every sign of life: a slow upload goes on, one that stops moving is given up
+            let watchdog = null;
+            const watch = () => {
+                clearTimeout(watchdog);
+                watchdog = setTimeout(() => {
+                    xhr.abort();
+                    this.fail(file, STALLED);
+                    describe(file);
+                    this.settle();
+                }, STALL_AFTER);
+            };
+
             xhr.upload.onprogress = (event) => {
+                watch();
+
                 if (event.lengthComputable) {
                     file.progress = Math.round((event.loaded / event.total) * 100);
                     describe(file);
                 }
             };
 
+            xhr.onprogress = watch;
+
             xhr.onload = () => {
+                clearTimeout(watchdog);
                 requests.delete(key);
 
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    file.serverId = xhr.responseText.trim();
+                const id = xhr.status >= 200 && xhr.status < 300 ? serverId(xhr) : null;
+
+                if (id !== null) {
+                    file.serverId = id;
                     file.progress = 100;
                     file.status = 'done';
+                } else if (xhr.status >= 400 && xhr.status < 500) {
+                    this.fail(file, serverReason(xhr) ?? STATUS.error);
                 } else {
                     this.fail(file);
                 }
@@ -289,23 +331,28 @@ export default function upload() {
             };
 
             xhr.onerror = () => {
+                clearTimeout(watchdog);
                 requests.delete(key);
                 this.fail(file);
                 describe(file);
                 this.settle();
             };
 
-            xhr.onabort = () => requests.delete(key);
+            xhr.onabort = () => {
+                clearTimeout(watchdog);
+                requests.delete(key);
+            };
 
             requests.set(key, xhr);
             xhr.send(data);
+            watch();
         },
 
         /** The row says what happened and the alert of the zone, next to it, announces it once. */
-        fail(file) {
+        fail(file, reason = STATUS.error) {
             file.status = 'error';
-            file.error = STATUS.error;
-            this.problem = `${file.name}: no se ha podido subir`;
+            file.error = reason;
+            this.problem = `${file.name}: ${reason.charAt(0).toLocaleLowerCase('es')}${reason.slice(1)}`;
         },
 
         retry(key) {
