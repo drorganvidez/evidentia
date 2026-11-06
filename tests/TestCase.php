@@ -7,6 +7,14 @@ use Illuminate\Support\Facades\DB;
 
 abstract class TestCase extends BaseTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // CI does not compile the assets, so @vite must not look for the manifest in tests.
+        $this->withoutVite();
+    }
+
     /**
      * Hash of every row in every table, to assert that a request left the database untouched.
      */

@@ -382,3 +382,14 @@ Route::prefix('password')->group(function () {
     Route::get('/update/{token}', [PasswordResetController::class, 'update'])->name('password.custom_update');
     Route::post('/update_p/{token}', [PasswordResetController::class, 'update_p'])->name('password.update_p');
 });
+
+/**
+ *  DESIGN SYSTEM
+ *  Developer page with the tokens and components of the new UI. Only in local and testing;
+ *  it already runs under the strict CSP.
+ */
+Route::middleware('csp:enforce')->get('/_ui', function () {
+    abort_unless(app()->environment('local', 'testing'), 404);
+
+    return view('ui.index');
+})->name('ui.index');
