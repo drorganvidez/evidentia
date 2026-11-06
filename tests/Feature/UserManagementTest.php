@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Committee;
+use App\Models\Configuration;
 use App\Models\Coordinator;
 use App\Models\DefaultList;
 use App\Models\Meeting;
@@ -25,6 +26,8 @@ class UserManagementTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        // The screens of the new layout read the deadlines of the course
+        Configuration::forceCreate([]);
         $this->lecture = User::factory()->create();
         $this->lecture->roles()->attach($this->role('LECTURE'));
         $this->committee = Committee::create(['name' => 'Logística']);
