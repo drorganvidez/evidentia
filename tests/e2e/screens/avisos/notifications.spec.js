@@ -32,13 +32,16 @@ test.describe('Avisos', () => {
         expect(await unread(page)).toBeGreaterThan(0);
 
         const list = page.getByRole('list', { name: 'Lista de avisos' });
+        // the seeds of the activity and of the notices each leave notices about the same evidences
         await expect(
             // the list leaves a space before the hidden comma
-            list.getByRole('link', { name: /^Evidencia rechazada\s?, sin leer$/ }),
+            list.getByRole('link', { name: /^Evidencia rechazada\s?, sin leer$/ }).first(),
         ).toBeVisible();
-        await expect(list.getByText('Recogida de material · Faltan las fotos')).toBeVisible();
         await expect(
-            list.getByRole('link', { name: 'Evidencia aceptada', exact: true }),
+            list.getByText('Recogida de material · Faltan las fotos').first(),
+        ).toBeVisible();
+        await expect(
+            list.getByRole('link', { name: 'Evidencia aceptada', exact: true }).first(),
         ).toBeVisible();
         await expect(page.getByRole('link', { name: 'Preferencias', exact: true })).toBeVisible();
         await audit(page, ui);
@@ -67,11 +70,11 @@ test.describe('Avisos', () => {
             await page.goto('/notifications');
             const before = await unread(page);
 
-            const fresh = page.getByRole('link', { name: /, sin leer$/ }).first();
-            const link =
-                (await fresh.count()) > 0
-                    ? fresh
-                    : page.getByRole('link', { name: /^Evidencia recibida/ }).first();
+            // an evidence notice: the messages notify the coordinator too and lead elsewhere
+            const link = page.getByRole('link', { name: /^Evidencia recibida/ }).first();
+            const fresh = /sin leer$/.test(
+                (await link.getAttribute('aria-label')) ?? (await link.innerText()),
+            );
             const response = await page.request.get((await link.getAttribute('href')) ?? '', {
                 maxRedirects: 0,
             });
@@ -82,7 +85,7 @@ test.describe('Avisos', () => {
             );
 
             await page.reload();
-            expect(await unread(page)).toBe(before > 0 ? before - 1 : 0);
+            expect(await unread(page)).toBe(fresh ? before - 1 : before);
         });
 
         test('la secretaria marca todo como leído', async ({ page }) => {
