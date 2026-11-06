@@ -2,13 +2,24 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Contracts\Foundation\MaintenanceMode;
+use Illuminate\Foundation\CacheBasedMaintenanceMode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Feature\Components\ComponentTestCase;
 
-/** During php artisan down every page answers 503 with the maintenance page of the new layout. */
+/**
+ * During php artisan down every page answers 503 with the maintenance page of the new layout. The mode lives in an array
+ * store of this process: the file of storage/framework would put the other processes of the parallel suite down too.
+ */
 class MaintenancePageTest extends ComponentTestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->app->instance(MaintenanceMode::class, new CacheBasedMaintenanceMode($this->app['cache'], 'array', 'illuminate:foundation:down'));
+    }
 
     protected function tearDown(): void
     {
