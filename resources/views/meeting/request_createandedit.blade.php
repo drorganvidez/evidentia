@@ -1,322 +1,81 @@
-@extends('layouts.app')
-
-@isset($edit)
-    @section('title', 'Editar convocatoria: ' . $meeting_request->title)
-@else
-@section('title', 'Crear convocatoria')
-@endisset
-
-@section('title-icon', 'fas fa-child')
-
-@section('breadcrumb')
-<li class="breadcrumb-item"><a href="/">Home</a></li>
-<li class="breadcrumb-item"><a href="{{ route('secretary.meeting.manage') }}">Gestionar reuniones</a></li>
-
-@isset($edit)
-    <li class="breadcrumb-item"><a href="{{ route('secretary.meeting.manage.request.list') }}">Mis convocatorias</a></li>
-@endisset
-
-<li class="breadcrumb-item active">@yield('title')</li>
-@endsection
-
-@section('content')
-
-<div class="row">
-
-    <x-menumeeting />
-
-    <div class="col-md-8">
-
-        <div class="card">
-
-            <div class="card-body">
-
-                @php
-
-                    $verb = isset($edit) ? 'save' : 'new';
-
-                @endphp
-
-                <form method="POST" action="{{ route('secretary.meeting.manage.request.' . $verb) }}"
-                    id="request_form">
-                    @csrf
-
-                    <input type="hidden" name="points_list" id="points_list" />
-
-                    <x-id :id="$meeting_request->id ?? ''" :edit="$edit ?? ''" />
-
-                    <div class="form-row">
-
-                        <x-input col="6" attr="title" :value="$meeting_request->title ?? ''" label="Título"
-                            description="Escribe un título para tu reunión." />
-
-
-                        <div class="form-group col-md-3">
-                            <label for="date">Día programado</label>
-                            <input id="date" type="date"
-                                class="form-control @error('date') is-invalid @enderror" name="date"
-                                @if (old('date')) value="{{ old('date') }}"
-                                       @else
-                                       @isset($edit)
-                                       value="{{ \Carbon\Carbon::parse($meeting_request->datetime)->format('Y-m-d') }}"
-                                       @endisset @endif
-                                required autofocus>
-                            <small class="form-text text-muted">Indica el día de la reunión.
-                            </small>
-
-                            @error('date')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                        <div class="form-group col-md-3">
-                            <label for="time">Hora programada</label>
-                            <input id="time" type="time"
-                                class="form-control @error('time') is-invalid @enderror" name="time"
-                                @if (old('time')) value="{{ old('time') }}"
-                                       @else
-                                       @isset($edit)
-                                       value="{{ \Carbon\Carbon::parse($meeting_request->datetime)->format('H:i') }}"
-                                       @endisset @endif
-                                required autofocus>
-                            <small class="form-text text-muted">Indica la hora de la reunión.
-                            </small>
-
-                            @error('time')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                    </div>
-
-                    <div class="form-row">
-
-                        <x-input col="6" attr="place" :value="$meeting_request->place ?? ''" label="Lugar"
-                            description="Indica el lugar de la reunión." />
-
-                        <div class="form-group col-md-3">
-                            <label for="type">Tipo</label>
-                            <select id="type" class="selectpicker form-control @error('type') is-invalid @enderror"
-                                name="type" value="{{ old('type') }}" required autofocus>
-                                @foreach ([1 => 'ORDINARIA', 2 => 'EXTRAORDINARIA'] as $value => $label)
-                                    <option value="{{ $value }}" @selected(old('type', $meeting_request->type ?? null) == $value)>{{ $label }}</option>
-                                @endforeach
-                            </select>
-
-                            <small class="form-text text-muted">Elige el tipo de reunión.</small>
-
-                            @error('type')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="form-group col-md-3">
-                            <label for="modality">Modalidad</label>
-                            <select id="modality"
-                                class="selectpicker form-control @error('modality') is-invalid @enderror"
-                                name="modality" value="{{ old('modality') }}" required autofocus>
-                                @foreach ([1 => 'PRESENCIAL', 2 => 'TELEMÁTICA', 3 => 'HÍBRIDA'] as $value => $label)
-                                    <option value="{{ $value }}" @selected(old('modality', $meeting_request->modality ?? null) == $value)>{{ $label }}</option>
-                                @endforeach
-                            </select>
-
-                            <small class="form-text text-muted">Elige la modalidad de reunión.</small>
-
-                            @error('type')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                    </div>
-
-                    <div class="form-row">
-
-                        <div class="form-group col-lg-6">
-
-                            <div class="icheck-primary d-inline">
-                                <input type="checkbox" name="create_signature_sheet" id="create_signature_sheet"
-                                    checked>
-                                <label for="create_signature_sheet">
-                                    Crear una hoja de firmas y asociarla
-                                </label>
-                                <small class="form-text text-muted">Asocia de forma automática una nueva hoja de firmas
-                                    para que los alumnos puedan
-                                    hacer constancia de su asistencia.</small>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="form-row">
-
-
-                        <div class="col-lg-6">
-
-                            <label for="title">Orden del día</label>
-
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="add_point">
-                                <span class="input-group-append">
-                                    <button id="button_add_point" type="button" class="btn btn-primary">Añadir</button>
-                                </span>
-                            </div>
-
-                            <small class="form-text text-muted">Añade un punto del día. Puedes modificar el orden de los
-                                puntos cuanto desees.</small>
-
-                            <br>
-
-                            <ul class="todo-list ui-sortable" data-widget="todo-list" id="points">
-
-                                @php
-
-                                    // este trozo de código es una vergüenza, pero es lo más rápido
-                                    if (session('points')) {
-                                        $points = session('points');
-                                    }
-
-                                @endphp
-
-                                @isset($points)
-                                    @foreach ($points as $point)
-                                        @php($random_id = \Random::getRandomIdentifier())
-
-                                        <li class="rounded" style="" id="{{ $random_id }}">
-
-                                            <span class="handle ui-sortable-handle">
-                                                <i class="fas fa-ellipsis-v"></i>
-                                                <i class="fas fa-ellipsis-v"></i>
-                                            </span>
-
-                                            <span class="text point_title">{{ $point }}</span>
-
-                                            <div class="tools">
-                                                <i class="fas fa-trash" onclick="remove({{ $random_id }})"></i>
-                                            </div>
-
-                                        </li>
-                                    @endforeach
-                                @endisset
-
-                            </ul>
-
-                            <br>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="col-lg-4 mt-1">
-                            <button type="submit" class="btn btn-primary btn-block">
-
-                                <i class="fas fa-child"></i>
-
-                                @isset($edit)
-
-                                    Guardar
-                                @else
-                                    Crear
-
-                                    @endif
-
-                                    convocatoria</button>
-                            </div>
-                        </div>
-
-
-                    </form>
-                </div>
-
+{{-- Create or edit a meeting call: its data, the agenda (points_list) and, when created, its signature sheet --}}
+@php
+    $editing = isset($edit);
+    $title = $editing ? $meeting_request->title : 'Nueva convocatoria';
+    $datetime = $editing && $meeting_request->datetime ? \Carbon\Carbon::parse($meeting_request->datetime) : null;
+    $types = [['value' => 1, 'label' => 'Ordinaria'], ['value' => 2, 'label' => 'Extraordinaria']];
+    $modalities = [
+        ['value' => 1, 'label' => 'Presencial'],
+        ['value' => 2, 'label' => 'Telemática'],
+        ['value' => 3, 'label' => 'Híbrida'],
+    ];
+    $breadcrumbs = [
+        ['label' => 'Inicio', 'href' => route('home')],
+        ['label' => 'Reuniones', 'href' => route('secretary.meeting.manage')],
+        ['label' => 'Convocatorias', 'href' => route('secretary.meeting.manage.request.list')],
+        ['label' => $editing ? 'Editar' : 'Nueva'],
+    ];
+    // The sheet is created by default; after a validation error the form keeps what was sent
+    $createSheet = session()->hasOldInput() ? old('create_signature_sheet') === 'on' : true;
+@endphp
+<x-layout.app :title="$editing ? 'Editar convocatoria' : 'Nueva convocatoria'" :breadcrumbs="$breadcrumbs">
+    <x-ui.page-header :title="$title">
+        @if ($editing)
+            <x-slot:actions>
+                <x-ui.button icon="file-text" :href="route('secretary.meeting.manage.request.download', ['id' => $meeting_request->id])">Descargar
+                    PDF</x-ui.button>
+                @include('meeting.partials.remove-request', [
+                    'meeting_request' => $meeting_request,
+                    'dialogId' => 'remove-request',
+                ])
+            </x-slot:actions>
+        @endif
+    </x-ui.page-header>
+
+    @include('meeting.partials.tabs')
+
+    <x-ui.card>
+        <x-ui.form :action="route('secretary.meeting.manage.request.' . ($editing ? 'save' : 'new'))" id="request-form" :fields="[
+            'title' => 'Título',
+            'date' => 'Fecha',
+            'time' => 'Hora',
+            'place' => 'Lugar',
+            'type' => 'Tipo',
+            'modality' => 'Modalidad',
+            'points_list' => 'Orden del día',
+        ]">
+            @if ($editing)
+                <input type="hidden" name="_id" value="{{ $meeting_request->id }}">
+            @endif
+
+            <x-ui.field name="title" label="Título" :value="$meeting_request->title ?? null" required />
+
+            <div class="grid grid-cols-[minmax(0,1fr)] gap-5 md:grid-cols-2">
+                <x-ui.field name="date" label="Fecha" type="date" :value="$datetime?->format('Y-m-d')" required />
+                <x-ui.field name="time" label="Hora" type="time" :value="$datetime?->format('H:i')" required />
             </div>
 
+            <x-ui.field name="place" label="Lugar" :value="$meeting_request->place ?? null" required />
 
-        </div>
-    </div>
+            <div class="flex flex-wrap gap-x-8 gap-y-4">
+                <x-ui.segmented name="type" legend="Tipo" :hide-legend="false" :options="$types" :value="$meeting_request->type ?? 1"
+                    :error="$errors->first('type') ?: null" />
+                <x-ui.segmented name="modality" legend="Modalidad" :hide-legend="false" :options="$modalities"
+                    :value="$meeting_request->modality ?? 1" :error="$errors->first('modality') ?: null" />
+            </div>
 
-@section('scripts')
+            <x-ui.agenda-editor :points="session('points', $points ?? [])" />
 
-    <script id="point_template" type="text/x-handlebars-template">
+            @unless ($editing)
+                <x-ui.choice type="switch" name="create_signature_sheet" value="on" label="Crear su hoja de firmas"
+                    :checked="$createSheet" />
+            @endunless
 
-            <li class="rounded" style="" id="@{{id}}">
-
-                <span class="handle ui-sortable-handle">
-                  <i class="fas fa-ellipsis-v"></i>
-                  <i class="fas fa-ellipsis-v"></i>
-                </span>
-
-                <span class="text point_title">@{{title}}</span>
-
-                <div class="tools">
-                    <i class="fas fa-trash" onclick="remove(@{{id}})"></i>
-                </div>
-            </li>
-
-        </script>
-
-    <script>
-        $(document).ready(function() {
-
-            var form = $("#request_form");
-
-            form.submit(function(event) {
-
-                // añadimos los puntos al envío
-                var points = [];
-                $(".point_title").each(function() {
-                    points.push($(this).html())
-                    $("#points_list").val(JSON.stringify(points));
-                });
-
-                return true;
-            });
-
-            $("#add_point").keypress(function(e) {
-
-                var code = (e.keyCode ? e.keyCode : e.which);
-
-                if (code == 13) {
-                    e.preventDefault();
-
-                    let point = $("#add_point").val();
-                    point = point.trim();
-                    if (point !== "") {
-                        add_point();
-                    }
-                    return false;
-                }
-            });
-
-        });
-
-        function add_point() {
-            var source = document.getElementById("point_template").innerHTML;
-            var template = Handlebars.compile(source);
-            var context = {
-                title: $("#add_point").val(),
-                id: make_id(16)
-            };
-            var html = template(context);
-            $("#points").append(html);
-            $("#add_point").val("");
-        }
-
-        $("#button_add_point").click(function() {
-            add_point();
-        })
-
-        function remove(id) {
-            $("#" + id).remove();
-        }
-    </script>
-
-@endsection
-
-
-@endsection
+            <x-slot:actions>
+                <x-ui.button type="submit" variant="primary"
+                    icon="send">{{ $editing ? 'Guardar convocatoria' : 'Crear convocatoria' }}</x-ui.button>
+                <x-ui.button variant="ghost" :href="route('secretary.meeting.manage.request.list')">Cancelar</x-ui.button>
+            </x-slot:actions>
+        </x-ui.form>
+    </x-ui.card>
+</x-layout.app>

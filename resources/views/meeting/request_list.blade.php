@@ -1,118 +1,77 @@
-@extends('layouts.app')
+{{-- Meeting calls of the secretary: each row opens its edition, which also downloads and removes it --}}
+@php
+    $columns = [
+        ['label' => 'Convocatoria', 'key' => 'title'],
+        ['label' => 'Programada', 'key' => 'datetime'],
+        ['label' => 'Hoja de firmas', 'key' => 'sheet', 'hide' => true],
+        ['label' => 'Modificada', 'key' => 'updated_at', 'hide' => true],
+        ['label' => 'Acciones', 'srOnly' => true],
+    ];
+    $requests = $meeting_requests->sortByDesc('datetime');
+@endphp
+<x-layout.app title="Convocatorias" :breadcrumbs="[
+    ['label' => 'Inicio', 'href' => route('home')],
+    ['label' => 'Reuniones', 'href' => route('secretary.meeting.manage')],
+    ['label' => 'Convocatorias'],
+]">
+    <x-ui.page-header title="Convocatorias">
+        <x-slot:actions>
+            <x-ui.button variant="primary" icon="plus" :href="route('secretary.meeting.manage.request.create')">Nueva
+                convocatoria</x-ui.button>
+        </x-slot:actions>
+    </x-ui.page-header>
 
-@section('title', 'Mis convocatorias')
+    @include('meeting.partials.tabs')
 
-@section('title-icon', 'fas fa-list')
-
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('secretary.meeting.manage') }}">Gestionar reuniones</a></li>
-    <li class="breadcrumb-item active">@yield('title')</li>
-@endsection
-
-@section('content')
-
-    <div class="row">
-
-        <x-menumeeting />
-
-        <div class="col-lg-8">
-
-            <div class="card">
-
-                <div class="card-body">
-
-                    <table id="dataset" class="table table-hover table-responsive">
-                        <thead>
-
-                            <tr>
-                                <th scope="col">Título</th>
-                                <th scope="col">Última modificación</th>
-                                <th scope="col">Programada para</th>
-                                <th scope="col">PDF</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            @foreach ($meeting_requests as $meeting_request)
-                                <tr scope="row">
-                                    <td>
-                                        {{ $meeting_request->title }}
-                                    </td>
-                                    <td>
-                                        {{ \Carbon\Carbon::parse($meeting_request->updated_at)->diffForHumans() }}
-                                    </td>
-                                    <td>
-                                        {{ \Carbon\Carbon::parse($meeting_request->datetime)->format('d/m/Y') }}
-                                        a las
-                                        {{ \Carbon\Carbon::parse($meeting_request->datetime)->format('H:i') }}
-                                        ({{ \Carbon\Carbon::parse($meeting_request->datetime)->diffForHumans() }})
-                                    </td>
-
-                                    <td>
-                                        <a class="btn btn-primary btn-sm"
-                                            href="{{ route('secretary.meeting.manage.request.download', ['id' => $meeting_request->id]) }}"><i
-                                                class="fas fa-file-pdf"></i></a>
-
-                                        <a class="btn btn-info btn-sm"
-                                            href="{{ route('secretary.meeting.manage.request.edit', ['id' => $meeting_request->id]) }}"><i
-                                                class="fas fa-edit"></i></a>
-
-                                        <a class="btn btn-danger btn-sm" href="#" data-toggle="modal"
-                                            data-target="#modal-confirm-REMOVE-{{ $meeting_request->id }}">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-
-                </div>
-
-            </div>
-
-
-        </div>
-    </div>
-
-    @foreach ($meeting_requests as $meeting_request)
-        <div class="modal fade" id="modal-confirm-REMOVE-{{ $meeting_request->id }}">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content" style="overflow: visible">
-                    <div class="modal-header">
-                        <h4 class="modal-title text-wrap">¿Seguro?</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body text-wrap">
-                        <p>Si hay alguna hoja de firmas asociada, no se verá afectada, solo se desparejará.</p>
-                        <p>Ningún acta se verá afectada.</p>
-                        <p>¿Deseas continuar?</p>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-
-                        <form id="buttonconfirm-form-{{ $meeting_request->id }}"
-                            action="{{ route('secretary.meeting.manage.request.remove') }}" method="post">
-                            @csrf
-
-                            <input type="hidden" name="_id" value="{{ $meeting_request->id }}" />
-
-                        </form>
-
-                        <button type="buton"
-                            onclick="event.preventDefault(); document.getElementById('buttonconfirm-form-{{ $meeting_request->id }}').submit();"
-                            class="btn btn-danger" data-dismiss="modal">
-                            <i class="fas fa-trash"></i> &nbsp;Sí, eliminar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endforeach
-
-
-@endsection
+    <x-ui.table caption="Convocatorias" :columns="$columns" :filterable="$requests->isNotEmpty()" count-label="convocatorias"
+        filter-placeholder="Filtrar convocatorias">
+        @forelse ($requests as $meeting_request)
+            @php
+                $edit = route('secretary.meeting.manage.request.edit', ['id' => $meeting_request->id]);
+            @endphp
+            <x-ui.table.row :href="$edit">
+                <x-ui.table.cell label="Convocatoria" primary>
+                    <a href="{{ $edit }}">{{ $meeting_request->title }}</a>
+                    <span class="mt-0.5 block text-sm text-ink-muted">{{ $meeting_request->place }}</span>
+                </x-ui.table.cell>
+                <x-ui.table.cell label="Programada" meta>
+                    <x-ui.time :value="$meeting_request->datetime" inline short />
+                </x-ui.table.cell>
+                <x-ui.table.cell label="Hoja de firmas" hide>
+                    @if ($meeting_request->signatureSheet)
+                        <x-ui.badge tone="accepted" size="sm">Con hoja</x-ui.badge>
+                    @else
+                        <x-ui.badge tone="draft" size="sm">Sin hoja</x-ui.badge>
+                    @endif
+                </x-ui.table.cell>
+                <x-ui.table.cell label="Modificada" meta hide>
+                    <x-ui.time :value="$meeting_request->updated_at" inline short />
+                </x-ui.table.cell>
+                <x-ui.table.cell actions>
+                    <span class="flex justify-end gap-0.5">
+                        <x-ui.button icon-only icon="file-text" variant="ghost" size="sm" :label="'Descargar el PDF de ' . $meeting_request->title"
+                            :href="route('secretary.meeting.manage.request.download', [
+                                'id' => $meeting_request->id,
+                            ])" />
+                        <x-ui.button icon-only icon="pen-line" variant="ghost" size="sm" :label="'Editar ' . $meeting_request->title"
+                            :href="$edit" />
+                        @include('meeting.partials.remove-request', [
+                            'meeting_request' => $meeting_request,
+                            'dialogId' => 'remove-request-' . $meeting_request->id,
+                            'iconOnly' => true,
+                        ])
+                    </span>
+                </x-ui.table.cell>
+            </x-ui.table.row>
+        @empty
+            <x-slot:empty>
+                <x-ui.empty icon="calendar" title="Sin convocatorias" size="sm" :level="2">
+                    <x-slot:actions>
+                        <x-ui.button variant="primary" icon="plus" :href="route('secretary.meeting.manage.request.create')">Nueva
+                            convocatoria</x-ui.button>
+                    </x-slot:actions>
+                </x-ui.empty>
+            </x-slot:empty>
+        @endforelse
+    </x-ui.table>
+</x-layout.app>
