@@ -24,6 +24,8 @@ export default defineConfig({
     // Playwright considers the server ready on 2xx, 3xx, 400, 401, 402 or 403.
     webServer: {
         command: 'php artisan serve --host=127.0.0.1 --port=8000',
+        // Several PHP processes, so a slow page does not hold the requests of the next test
+        env: { PHP_CLI_SERVER_WORKERS: '4' },
         url: baseURL,
         reuseExistingServer: !process.env.CI,
         timeout: 120 * 1000,
