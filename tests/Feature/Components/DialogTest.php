@@ -121,7 +121,7 @@ class DialogTest extends ComponentTestCase
 
         $this->assertStringContainsString('m-auto w-[calc(100%-2rem)] max-h-[calc(100dvh-2rem)] rounded-xl starting:open:translate-y-2 max-w-lg', $modal);
         $this->assertStringContainsString('max-md:mt-auto max-md:mb-0 max-md:max-h-[90dvh] max-md:w-full max-md:max-w-none max-md:rounded-b-none max-md:before:mx-auto', $modal);
-        $this->assertStringContainsString('glass content-start overflow-y-auto p-0 text-ink transition transition-discrete backdrop:bg-slate-950/40 backdrop:backdrop-blur-glass open:grid starting:open:opacity-0', $modal);
+        $this->assertStringContainsString('glass content-start overflow-y-auto scrollbar-subtle p-0 text-ink transition transition-discrete backdrop:bg-slate-950/40 backdrop:backdrop-blur-glass open:grid starting:open:opacity-0', $modal);
         $this->assertStringNotContainsString('w-72', $modal);
 
         $this->assertStringContainsString('max-w-sm', $this->render('<x-ui.dialog id="x" title="x" size="sm" />'));

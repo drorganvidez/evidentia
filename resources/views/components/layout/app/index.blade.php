@@ -88,7 +88,7 @@
     <div
         class="mx-auto grid min-h-dvh max-w-shell grid-cols-1 gap-3 p-3 md:grid-cols-[5rem_minmax(0,1fr)] md:gap-6 md:p-5 lg:grid-cols-[17rem_minmax(0,1fr)]">
         <aside aria-label="Barra lateral"
-            class="glass sticky top-5 z-10 hidden h-[calc(100dvh-2.5rem)] flex-col gap-8 overflow-y-auto rounded-xl px-2 py-6 md:flex lg:px-5 print-hidden">
+            class="glass sticky top-5 z-10 hidden h-[calc(100dvh-2.5rem)] flex-col gap-8 overflow-y-auto scrollbar-subtle rounded-xl px-2 py-6 md:flex lg:px-5 print-hidden">
             <x-layout.app.sidebar :nav="$nav" :deadline="$deadline" :subtitle="$subtitle" />
         </aside>
 
