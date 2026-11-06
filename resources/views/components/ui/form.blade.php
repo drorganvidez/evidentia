@@ -6,6 +6,7 @@
         <x-slot:actions><x-ui.button type="submit" variant="primary">Guardar</x-ui.button></x-slot:actions>
     </x-ui.form>
     <x-ui.form method="get" :action="route('activity.export')" download busy-label="Preparando">...</x-ui.form>
+    focus-summary=false keeps the summary from taking the focus on load (a page that shows several forms at once).
 --}}
 @props([
     'action' => '',
@@ -18,6 +19,7 @@
     'busyLabel' => 'Guardando',
     'download' => false,
     'id' => null,
+    'focusSummary' => true,
 ])
 @php
     throw_if(blank($action), InvalidArgumentException::class, 'The form component needs an action.');
@@ -59,7 +61,8 @@
         @method($spoofed)
     @endif
     @if ($items !== [])
-        <div role="group" aria-labelledby="{{ $summaryId }}" tabindex="-1" autofocus
+        <div role="group" aria-labelledby="{{ $summaryId }}" tabindex="-1"
+            @if ($focusSummary) autofocus @endif
             class="rounded-lg border border-rejected/30 bg-rejected-glass p-4 text-rejected-ink">
             <p id="{{ $summaryId }}" class="font-bold">{{ $summaryTitle }}</p>
             <ul class="mt-2 grid gap-1 text-md">

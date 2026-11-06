@@ -78,7 +78,7 @@ class FormTest extends ComponentTestCase
             <x-ui.form action="/evidence" :fields="['title' => 'Título', 'users[]' => 'Asistentes']">x</x-ui.form>
             BLADE);
 
-        $this->assertStringContainsString('<div role="group" aria-labelledby="form-errors-title" tabindex="-1" autofocus', $html);
+        $this->assertMatchesRegularExpression('/<div role="group" aria-labelledby="form-errors-title" tabindex="-1"\s+autofocus/', $html);
         $this->assertStringContainsString('<p id="form-errors-title" class="font-bold">Revisa el formulario</p>', $html);
         $this->assertMatchesRegularExpression('/<a href="#field-title" class="underline underline-offset-2">Título ·\s+El título es obligatorio<\/a>/', $html);
         $this->assertMatchesRegularExpression('/<a href="#field-hours" class="[^"]+">hours ·\s+Indica las horas<\/a>/', $html);
@@ -87,6 +87,17 @@ class FormTest extends ComponentTestCase
         $this->assertSame(1, substr_count($html, 'autofocus'));
         $this->assertUniqueIds($html);
         $this->assertCspSafe($html);
+    }
+
+    public function test_the_summary_can_leave_the_focus_alone(): void
+    {
+        $this->withViewErrors(['title' => 'El título es obligatorio']);
+
+        $html = $this->render('<x-ui.form action="/x" :focus-summary="false">x</x-ui.form>');
+
+        $this->assertStringContainsString('<div role="group" aria-labelledby="form-errors-title" tabindex="-1"', $html);
+        $this->assertStringContainsString('href="#field-title"', $html);
+        $this->assertNoAutofocus($html);
     }
 
     public function test_the_summary_can_be_renamed_and_turned_off(): void

@@ -18,7 +18,8 @@
     <div class="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-2">
         <div class="glass-2 grid grid-cols-[minmax(0,1fr)] gap-4 rounded-lg p-5">
             <h3 class="text-lg font-bold tracking-tight">Resumen de errores</h3>
-            <x-ui.form :action="route('ui.index')" files id="evidence-form" :fields="['title' => 'Título', 'description' => 'Descripción']">
+            {{-- Without the autofocus of the summary: the catalogue would open scrolled to this section --}}
+            <x-ui.form :action="route('ui.index')" files id="evidence-form" :fields="['title' => 'Título', 'description' => 'Descripción']" :focus-summary="false">
                 <x-ui.field name="title" label="Título" required value="" hint="Mínimo 5 caracteres" />
                 <fieldset class="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-1.5">
                     <legend class="text-sm font-semibold">Duración</legend>
