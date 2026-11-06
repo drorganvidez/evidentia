@@ -25,7 +25,7 @@ class DesignSystemPageTest extends TestCase
         $response->assertSee('<script nonce="'.$m[1].'">', false);
         $response->assertSee("var KEY = 'evidentia.theme';", false);
         $response->assertSee('<title>Sistema de diseño', false);
-        $response->assertSee('x-data="theme"', false);
+        $response->assertSee("\$store.theme.select('dark')", false);
     }
 
     public function test_it_is_not_published_outside_local_and_testing(): void

@@ -1,2 +1,3 @@
-// Name -> factory. The exported name is exactly what Blade writes in x-data="theme".
-export { default as theme } from './theme';
+// Name -> factory, registered with Alpine.data(). The exported name is exactly what Blade
+// writes in x-data="name". Components arrive with the component library.
+export {};

@@ -173,11 +173,11 @@
             </a>
             <h1 class="sr-only font-medium text-ink-muted sm:not-sr-only">Sistema de diseño</h1>
 
-            <div x-data="theme" role="group" aria-label="Tema"
+            <div x-data role="group" aria-label="Tema"
                 class="ml-auto inline-flex gap-0.5 rounded-full border border-glass-edge bg-field p-0.75">
                 @foreach (['light' => ['sun', 'Claro'], 'dark' => ['moon', 'Oscuro'], 'system' => ['monitor', 'Sistema']] as $mode => [$icon, $label])
-                    <button type="button" x-on:click="select('{{ $mode }}')"
-                        x-bind:aria-pressed="is('{{ $mode }}') ? 'true' : 'false'"
+                    <button type="button" x-on:click="$store.theme.select('{{ $mode }}')"
+                        x-bind:aria-pressed="$store.theme.is('{{ $mode }}') ? 'true' : 'false'"
                         class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold text-ink-muted transition aria-pressed:bg-glass-2 aria-pressed:text-ink aria-pressed:shadow-raised">
                         <x-ui.icon :name="$icon" class="size-4" />
                         <span class="sr-only sm:not-sr-only">{{ $label }}</span>
