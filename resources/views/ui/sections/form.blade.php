@@ -14,6 +14,7 @@
     <div class="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-2">
         <div class="glass-2 grid grid-cols-[minmax(0,1fr)] content-start gap-4 rounded-lg p-5">
             <h3 class="text-lg font-bold tracking-tight">Resumen de errores</h3>
+            <span class="font-mono text-2xs text-ink-muted">bag · fields · focus-summary="false"</span>
             {{-- Without the autofocus of the summary: the catalogue would open scrolled to this section --}}
             <x-ui.form :action="route('ui.demo.submit')" files id="evidence-form" :bag="$demoErrors" :fields="['title' => 'Título', 'description' => 'Descripción']" :focus-summary="false">
                 <x-ui.field name="title" label="Título" required value="" hint="Mínimo 5 caracteres"
@@ -66,10 +67,10 @@
 
         <div class="glass-2 grid grid-cols-[minmax(0,1fr)] content-start gap-4 rounded-lg p-5">
             <h3 class="text-lg font-bold tracking-tight">Descarga con estado ocupado</h3>
+            <span class="font-mono text-2xs text-ink-muted">download · libera el botón a los 8 s</span>
             <x-ui.form method="get" :action="route('ui.index')" :summary="false" download busy-label="Preparando"
                 id="export-form">
                 <input type="hidden" name="export" value="csv">
-                <p class="text-sm text-ink-muted">El botón queda ocupado y se libera a los ocho segundos.</p>
                 <x-slot:actions>
                     <x-ui.button type="submit" variant="primary" icon="download">Descargar CSV</x-ui.button>
                 </x-slot:actions>
