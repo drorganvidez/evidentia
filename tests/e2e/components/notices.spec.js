@@ -16,6 +16,12 @@ test.describe('Avisos', () => {
         await page.clock.pauseAt(start + 60_000);
     });
 
+    // Runs the zero-delay timers left behind (Alpine throws the errors of a handler from one) before the console
+    // guard of the fixture has its say
+    test.afterEach(async ({ page }) => {
+        await page.clock.runFor(1);
+    });
+
     test('un aviso de éxito se muestra, se anuncia en la región de estado y se cierra a los 8 s', async ({
         page,
         ui,

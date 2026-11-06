@@ -2,9 +2,15 @@ import AxeBuilder from '@axe-core/playwright';
 import { test as base, expect } from '@playwright/test';
 
 /**
+ * Warnings that are errors in disguise. Alpine reports a broken expression with console.warn and only throws
+ * it later from a timer, which never runs under a paused fake clock; its other warnings never throw at all.
+ */
+const ALPINE_WARNINGS = ['Alpine Expression Error', 'Alpine Warning', 'CSP Parser Error'];
+
+/**
  * Shared fixtures of the UI tests.
  *
- * - `page` fails the test when the browser logs an error, a page error or a CSP message.
+ * - `page` fails the test when the browser logs an error, a page error, a CSP message or an Alpine warning.
  * - `ui.axe()` audits the page (or a selector) against WCAG 2.2 AA and returns the violations.
  * - `ui.setTheme('dark')` stores the choice and reloads; `ui.noOverflow()` checks the reflow.
  */
@@ -13,8 +19,15 @@ export const test = base.extend({
         const errors = [];
 
         page.on('console', (message) => {
-            if (message.type() === 'error' || message.text().includes('Content Security Policy')) {
-                errors.push(message.text());
+            const text = message.text();
+
+            if (
+                message.type() === 'error' ||
+                text.includes('Content Security Policy') ||
+                (message.type() === 'warning' &&
+                    ALPINE_WARNINGS.some((prefix) => text.startsWith(prefix)))
+            ) {
+                errors.push(text);
             }
         });
         page.on('pageerror', (error) => errors.push(error.message));

@@ -15,6 +15,12 @@ test.describe('Plazos', () => {
         await page.clock.pauseAt(start + 60_000);
     });
 
+    // Runs the zero-delay timers left behind (Alpine throws the errors of a handler from one) before the console
+    // guard of the fixture has its say
+    test.afterEach(async ({ page }) => {
+        await page.clock.runFor(1);
+    });
+
     test('el servidor pinta el texto y el tono de cada estado', async ({ ui }) => {
         const section = ui.section('deadline');
 
