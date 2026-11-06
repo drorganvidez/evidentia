@@ -9,7 +9,15 @@ final class ActivityWrites
 {
     public static function writes(): array
     {
-        return [];
+        return [
+            'activity.export' => [
+                'role' => 'LECTURE',
+                'method' => 'GET',
+                'uri' => fn (array $ids) => route('activity.export'),
+                'expect' => ['export.activity'],
+                'acting_role' => 'LECTURE',
+            ],
+        ];
     }
 
     /** @return array<string, string> */
@@ -28,7 +36,6 @@ final class ActivityWrites
     public static function pending(): array
     {
         return [
-            'activity.export' => 'P',
             'evidence.move' => 'P',
             'coordinator.evidence.move' => 'P',
             'management.evidence.move' => 'P',

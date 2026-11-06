@@ -239,10 +239,10 @@ class PageAccessTest extends TestCase
             'profiles.view.evidence' => [['id_user' => 'student', 'id_evidence' => 'evidence'], self::MANAGEMENT],
 
             // Activity log and histories (routes/activity.php)
-            'activity.index' => [[], []],
+            'activity.index' => [[], ['COORDINATOR', 'SECRETARY', ...self::MANAGEMENT]],
             'activity.export' => [[], self::MANAGEMENT],
             'activity.mine' => [[], self::EVERYONE],
-            'activity.evidence' => [['id' => 'evidence'], []],
+            'activity.evidence' => [['id' => 'evidence'], ['STUDENT', 'COORDINATOR', 'SECRETARY', ...self::MANAGEMENT]],
             'activity.minutes' => [['id' => 'minutes'], self::EVERYONE],
             'activity.request' => [['id' => 'request'], self::EVERYONE],
 
