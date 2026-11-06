@@ -1,4 +1,4 @@
-{{-- Events of the course, from Eventbrite or created by hand, with their attendances and visibility --}}
+{{-- Events of the course, from Eventbrite or created by hand, newest first and in pages, with their attendances and visibility --}}
 @php
     $closesAt = \Config::attendee_timestamp();
     $open = !\Carbon\Carbon::now()->gt($closesAt);
@@ -11,7 +11,6 @@
         ['label' => 'Estado', 'key' => 'status'],
         ['label' => 'Acciones', 'srOnly' => true],
     ];
-    $rows = $events->sortByDesc('start_datetime')->values();
 @endphp
 <x-layout.app title="Eventos" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Eventos']]">
     <x-ui.page-header title="Eventos">
@@ -31,19 +30,19 @@
         @endif
     </x-ui.page-header>
 
-    <x-ui.table caption="Eventos del curso" :columns="$columns" :filterable="$rows->isNotEmpty()" count-label="eventos"
-        filter-placeholder="Filtrar eventos">
-        @if ($rows->isEmpty())
+    <x-ui.table caption="Eventos del curso" :columns="$columns" :paginator="$events" filterable count-label="eventos"
+        count-singular="evento" filter-placeholder="Buscar eventos">
+        @if ($events->isEmpty())
             <x-slot:empty>
-                <x-ui.empty icon="calendar" title="No hay eventos" size="sm" :level="2" />
+                <x-ui.empty icon="calendar" :title="$term !== null ? 'Ningún evento coincide con la búsqueda' : 'No hay eventos'" size="sm" :level="2" />
             </x-slot:empty>
         @endif
-        @foreach ($rows as $event)
+        @foreach ($events as $event)
             @php
                 $name = $text($event->name) ?: 'Sin nombre';
                 $manual = $event->id_eventbrite === null;
             @endphp
-            <x-ui.table.row :search="$name">
+            <x-ui.table.row>
                 <x-ui.table.cell label="Evento" primary>
                     @if ($event->url)
                         <a href="{{ $event->url }}" target="_blank" rel="noopener noreferrer">{{ $name }}</a>

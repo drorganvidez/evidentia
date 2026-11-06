@@ -1,4 +1,4 @@
-{{-- Attendances of the course, from Eventbrite or recorded by hand, with their export --}}
+{{-- Attendances of the course, from Eventbrite or recorded by hand, newest event first and in pages, with their export --}}
 @php
     $closesAt = \Config::attendee_timestamp();
     $open = !\Carbon\Carbon::now()->gt($closesAt);
@@ -28,11 +28,11 @@
         </x-slot:actions>
     </x-ui.page-header>
 
-    <x-ui.table caption="Asistencias del curso" :columns="$columns" :filterable="$attendees->isNotEmpty()" count-label="asistencias"
-        filter-placeholder="Filtrar asistencias">
+    <x-ui.table caption="Asistencias del curso" :columns="$columns" :paginator="$attendees" filterable count-label="asistencias"
+        count-singular="asistencia" filter-placeholder="Buscar asistencias">
         @if ($attendees->isEmpty())
             <x-slot:empty>
-                <x-ui.empty icon="user-check" title="No hay asistencias" size="sm" :level="2" />
+                <x-ui.empty icon="user-check" :title="$term !== null ? 'Ninguna asistencia coincide con la búsqueda' : 'No hay asistencias'" size="sm" :level="2" />
             </x-slot:empty>
         @endif
         @foreach ($attendees as $attendee)
@@ -41,7 +41,7 @@
                 $event = $text($attendee->event?->name) ?: 'Sin nombre';
                 $edit = $open ? route('attendee.edit', $attendee->id) : null;
             @endphp
-            <x-ui.table.row :href="$edit" :search="$person . ' ' . $event">
+            <x-ui.table.row :href="$edit">
                 <x-ui.table.cell label="Estudiante" primary>
                     @if ($edit)
                         <a href="{{ $edit }}">{{ $person }}</a>

@@ -44,7 +44,8 @@ test.describe('Eventos y asistencias', () => {
         await expect(
             attendances.getByRole('link', { name: 'Pérez Romero, Lucía', exact: true }),
         ).toBeVisible();
-        await page.getByRole('searchbox', { name: 'Filtrar asistencias' }).fill('torres');
+        await page.getByRole('searchbox', { name: 'Buscar asistencias' }).fill('torres');
+        await page.getByRole('searchbox', { name: 'Buscar asistencias' }).press('Enter');
         await expect(
             attendances.getByRole('link', { name: 'Pérez Romero, Lucía', exact: true }),
         ).toBeHidden();
@@ -96,7 +97,8 @@ test.describe('Eventos y asistencias', () => {
         await page.getByRole('button', { name: 'Crear asistencia' }).click();
         await expect(notices.getByText('Asistencia creada con éxito.')).toBeVisible();
 
-        await page.getByRole('searchbox', { name: 'Filtrar asistencias' }).fill(name);
+        await page.getByRole('searchbox', { name: 'Buscar asistencias' }).fill(name);
+        await page.getByRole('searchbox', { name: 'Buscar asistencias' }).press('Enter');
         await page
             .getByRole('region', { name: 'Asistencias del curso' })
             .getByRole('link', { name: 'García López, Juan', exact: true })
@@ -120,7 +122,8 @@ test.describe('Eventos y asistencias', () => {
         ).toBeVisible();
 
         await page.goto('/attendees');
-        await page.getByRole('searchbox', { name: 'Filtrar asistencias' }).fill(name);
+        await page.getByRole('searchbox', { name: 'Buscar asistencias' }).fill(name);
+        await page.getByRole('searchbox', { name: 'Buscar asistencias' }).press('Enter');
         await page
             .getByRole('region', { name: 'Asistencias del curso' })
             .getByRole('link', { name: 'García López, Juan', exact: true })
