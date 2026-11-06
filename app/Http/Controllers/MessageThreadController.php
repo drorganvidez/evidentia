@@ -15,6 +15,7 @@ use App\Support\Roles;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 /**
  * Inbox of the people in charge, the threads each person wrote, the form of a new message and the thread itself.
@@ -107,6 +108,10 @@ class MessageThreadController extends Controller
             default => '',
         };
         $suggestion = $about === null && $preselected === 'LECTURE';
+        // A nudge from the management arrives with its subject and its text already written
+        $asked = fn (string $key, int $max): ?string => is_string($request->query($key)) && trim($request->query($key)) !== ''
+            ? Str::limit(trim($request->query($key)), $max, '')
+            : null;
         $title = $suggestion ? 'Sugerencias al profesorado' : 'Nuevo mensaje';
         $aboutUrl = $about === null ? null : $this->aboutUrl($about);
 
@@ -119,11 +124,12 @@ class MessageThreadController extends Controller
             'aboutUrl' => $aboutUrl,
             'recipients' => $recipients,
             'preselected' => $preselected,
-            'subjectDefault' => match (true) {
+            'subjectDefault' => $asked('subject', 255) ?? match (true) {
                 $about !== null => 'Sobre «'.SubjectInfo::title($about).'»',
                 $suggestion => 'Sugerencia',
                 default => null,
             },
+            'bodyDefault' => $asked('body', 2000),
             'backHref' => $aboutUrl ?? route('messages.mine'),
         ]);
     }

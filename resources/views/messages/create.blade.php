@@ -26,7 +26,7 @@
                     hint="El profesorado puede leer e intervenir en cualquier hilo." />
                 <x-ui.field name="subject" label="Asunto" :value="$subjectDefault" required :maxlength="255" />
                 <x-ui.field name="body" label="Mensaje" type="textarea" :rows="8" :maxlength="20000"
-                    required hint="Tu nombre y tu rol acompañan al mensaje." />
+                    :value="$bodyDefault ?? null" required hint="Tu nombre y tu rol acompañan al mensaje." />
                 <x-slot:actions>
                     <x-ui.button type="submit" variant="primary" icon="send">Enviar</x-ui.button>
                     <x-ui.button variant="ghost" :href="$backHref">Cancelar</x-ui.button>
