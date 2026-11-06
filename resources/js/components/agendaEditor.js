@@ -11,8 +11,6 @@ import { afterRender } from '../alpine/afterRender';
  * The root element is kept from init(): in the CSP build $root and $refs are resolved from the element whose
  * handler is running, and that element may already be out of the document when a row has just been removed.
  */
-const CONFIRM_FOR = 4000;
-
 let counter = 0;
 
 function makePoint(text) {
@@ -29,7 +27,6 @@ export default function agendaEditor() {
         draft: '',
         announcement: '',
         max: 50,
-        confirmTimer: null,
 
         init() {
             root = this.$root;
@@ -38,10 +35,6 @@ export default function agendaEditor() {
 
             this.points = raw.filter((text) => typeof text === 'string').map(makePoint);
             this.max = Number.parseInt(root.dataset.max ?? '', 10) || 50;
-        },
-
-        destroy() {
-            clearTimeout(this.confirmTimer);
         },
 
         /** Value of the hidden input: the trimmed, non-empty texts in their order. */
@@ -94,7 +87,10 @@ export default function agendaEditor() {
             return true;
         },
 
-        /** Two steps: the first click shows «Confirmar» for four seconds, the second one removes the point. */
+        /**
+         * Two steps: the first click turns «Quitar» into «Confirmar», the second one removes the point. The
+         * confirmation waits as long as needed (no time limit): Escape or leaving the button takes it back.
+         */
         remove(index) {
             const point = this.points[index];
 
@@ -107,15 +103,12 @@ export default function agendaEditor() {
                     other.confirming = false;
                 });
                 point.confirming = true;
-                clearTimeout(this.confirmTimer);
-                this.confirmTimer = setTimeout(() => this.cancel(point), CONFIRM_FOR);
                 this.announce(`Pulsa Confirmar para quitar el punto ${index + 1}`);
                 this.focusLater(() => this.focusAction('confirm', index));
 
                 return;
             }
 
-            clearTimeout(this.confirmTimer);
             this.points.splice(index, 1);
             this.announce(`Punto ${index + 1} quitado, quedan ${this.points.length}`);
             this.focusLater(() => {
@@ -125,18 +118,17 @@ export default function agendaEditor() {
             });
         },
 
-        cancel(point) {
-            const index = this.points.indexOf(point);
+        /** Escape on «Confirmar» brings «Quitar» back with the focus; leaving it brings it back where it was. */
+        cancelRemove(index, refocus) {
+            const point = this.points[index];
 
-            if (index === -1 || !point.confirming) {
+            if (!point || !point.confirming) {
                 return;
             }
 
-            const hadFocus = this.action('confirm', index) === document.activeElement;
-
             point.confirming = false;
 
-            if (hadFocus) {
+            if (refocus) {
                 this.focusLater(() => this.focusAction('remove', index));
             }
         },

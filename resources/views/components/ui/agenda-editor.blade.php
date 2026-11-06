@@ -64,7 +64,8 @@
                         data-action="remove" x-show="!point.confirming" x-on:click="remove(index)"
                         x-bind:aria-label="actionLabel('remove', index)" x-bind:title="actionLabel('remove', index)" />
                     <x-ui.button variant="danger" size="sm" data-action="confirm" x-show="point.confirming"
-                        x-on:click="remove(index)" x-bind:aria-label="actionLabel('confirm', index)"
+                        x-on:click="remove(index)" x-on:keydown.escape.prevent="cancelRemove(index, true)"
+                        x-on:blur="cancelRemove(index, false)" x-bind:aria-label="actionLabel('confirm', index)"
                         x-bind:title="actionLabel('confirm', index)">Confirmar</x-ui.button>
                 </span>
             </li>

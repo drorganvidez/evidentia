@@ -120,7 +120,7 @@ test.describe('Editor de actas', () => {
         await expect(title(points.nth(0))).toHaveValue('Presupuesto del photocall');
     });
 
-    test('quitar un punto pide confirmación y gestiona el foco', async () => {
+    test('quitar un punto pide confirmación y gestiona el foco', async ({ page }) => {
         const remove = editor.getByRole('button', { name: 'Quitar el punto 3 de 3' });
         const confirm = editor.getByRole('button', { name: 'Confirmar que quitas el punto 3' });
 
@@ -130,6 +130,19 @@ test.describe('Editor de actas', () => {
         await expect(confirm).toBeFocused();
         await expect(remove).toBeHidden();
 
+        // The confirmation lasts until Escape (focus back on «Quitar») or until the focus leaves it
+        await page.keyboard.press('Escape');
+        await expect(remove).toBeFocused();
+        await expect(confirm).toBeHidden();
+
+        await remove.click();
+        await expect(confirm).toBeFocused();
+        await page.keyboard.press('Shift+Tab');
+        await expect(confirm).toBeHidden();
+        await expect(remove).toBeVisible();
+        await expect(points).toHaveCount(3);
+
+        await remove.click();
         await confirm.click();
 
         await expect(points).toHaveCount(2);
@@ -141,6 +154,21 @@ test.describe('Editor de actas', () => {
 
         await expect(points).toHaveCount(1);
         await expect(editor.getByRole('button', { name: 'Quitar el punto 1 de 1' })).toBeFocused();
+    });
+
+    test('la confirmación de quitar un punto no caduca con el tiempo', async ({ page }) => {
+        await page.clock.install();
+        await page.goto('/_ui#ui-minutes-editor');
+
+        const confirm = editor.getByRole('button', { name: 'Confirmar que quitas el punto 1' });
+
+        await editor.getByRole('button', { name: 'Quitar el punto 1 de 3' }).click();
+        await expect(confirm).toBeFocused();
+
+        await page.clock.runFor(30_000);
+
+        await expect(confirm).toBeVisible();
+        await expect(confirm).toBeFocused();
     });
 
     test('en móvil los controles miden al menos 44 px y nada desborda', async ({

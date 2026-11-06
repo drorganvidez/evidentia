@@ -77,6 +77,8 @@ class MinutesEditorTest extends ComponentTestCase
         $this->assertStringContainsString('x-on:click="movePoint(i, 1)" x-bind:disabled="isLast(i)"', $html);
         $this->assertStringContainsString('x-show="!point.confirming" x-on:click="removePoint(i)"', $html);
         $this->assertStringContainsString('data-action="confirm" x-show="point.confirming"', $html);
+        $this->assertStringContainsString('x-on:keydown.escape.prevent="cancelRemove(i, true)"', $html);
+        $this->assertStringContainsString('x-on:blur="cancelRemove(i, false)"', $html);
         $this->assertStringContainsString('Título', $html);
         $this->assertStringContainsString('Descripción', $html);
         $this->assertStringContainsString('Duración (min)', $html);

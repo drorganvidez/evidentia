@@ -87,7 +87,9 @@ test.describe('Orden del día', () => {
         await expect(point(1)).toBeFocused();
     });
 
-    test('quitar pide confirmación, vuelve atrás a los cuatro segundos y gestiona el foco', async () => {
+    test('quitar pide confirmación, que dura hasta Escape, salir del botón o confirmar', async ({
+        page,
+    }) => {
         const rows = editor.getByRole('listitem');
         const remove = editor.getByRole('button', { name: 'Quitar el punto 2 de 3' });
         const confirm = editor.getByRole('button', { name: 'Confirmar que quitas el punto 2' });
@@ -102,10 +104,19 @@ test.describe('Orden del día', () => {
             'Pulsa Confirmar para quitar el punto 2',
         );
 
-        // Without a second click the button comes back and recovers the focus
-        await expect(remove).toBeVisible({ timeout: 6000 });
+        // Escape brings «Quitar» back with the focus
+        await page.keyboard.press('Escape');
+        await expect(remove).toBeVisible();
         await expect(remove).toBeFocused();
         await expect(confirm).toBeHidden();
+
+        // Leaving the button brings it back too, without pulling the focus
+        await remove.click();
+        await expect(confirm).toBeFocused();
+        await page.keyboard.press('Tab');
+        await expect(confirm).toBeHidden();
+        await expect(remove).toBeVisible();
+        await expect(remove).not.toBeFocused();
         await expect(hidden).toHaveValue(JSON.stringify(INITIAL));
 
         await remove.click();
@@ -122,6 +133,22 @@ test.describe('Orden del día', () => {
         await expect(rows).toHaveCount(1);
         await expect(editor.getByRole('textbox', { name: 'Nuevo punto' })).toBeFocused();
         await expect(hidden).toHaveValue(JSON.stringify([INITIAL[0]]));
+    });
+
+    test('la confirmación de quitar no caduca con el tiempo', async ({ page }) => {
+        await page.clock.install();
+        await page.goto('/_ui#ui-agenda-editor');
+
+        const confirm = editor.getByRole('button', { name: 'Confirmar que quitas el punto 2' });
+
+        await editor.getByRole('button', { name: 'Quitar el punto 2 de 3' }).click();
+        await expect(confirm).toBeFocused();
+
+        // WCAG 2.2.1: no time limit, the person decides
+        await page.clock.runFor(30_000);
+
+        await expect(confirm).toBeVisible();
+        await expect(confirm).toBeFocused();
     });
 
     test('el máximo de puntos se respeta y se anuncia', async ({ ui }) => {

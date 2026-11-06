@@ -13,7 +13,6 @@ import { afterRender } from '../alpine/afterRender';
  * The root element is kept from init(): in the CSP build $root is resolved from the element whose handler is
  * running, and that element may already be out of the document when a point has just been removed.
  */
-const CONFIRM_FOR = 4000;
 const TITLE_REQUIRED = 'El título es obligatorio';
 
 let counter = 0;
@@ -69,7 +68,6 @@ export default function minutesEditor() {
         announcement: '',
         minPoints: 0,
         baseId: 'field-points-json',
-        confirmTimer: null,
 
         init() {
             root = this.$root;
@@ -87,8 +85,6 @@ export default function minutesEditor() {
         },
 
         destroy() {
-            clearTimeout(this.confirmTimer);
-
             if (form && onSubmit) {
                 form.removeEventListener('submit', onSubmit, true);
             }
@@ -121,7 +117,10 @@ export default function minutesEditor() {
             this.focusLater(() => this.focusField(i, 'title'));
         },
 
-        /** Two steps: the first click shows «Confirmar» for four seconds, the second one removes the point. */
+        /**
+         * Two steps: the first click turns «Quitar» into «Confirmar», the second one removes the point. The
+         * confirmation waits as long as needed (no time limit): Escape or leaving the button takes it back.
+         */
         removePoint(i) {
             const point = this.points[i];
 
@@ -134,15 +133,12 @@ export default function minutesEditor() {
                     other.confirming = false;
                 });
                 point.confirming = true;
-                clearTimeout(this.confirmTimer);
-                this.confirmTimer = setTimeout(() => this.cancel(point), CONFIRM_FOR);
                 this.announce(`Pulsa Confirmar para quitar el punto ${i + 1}`);
                 this.focusLater(() => this.focusAction('confirm', i));
 
                 return;
             }
 
-            clearTimeout(this.confirmTimer);
             this.points.splice(i, 1);
             this.announce(`Punto ${i + 1} quitado, quedan ${this.points.length}`);
             this.focusLater(() => {
@@ -152,18 +148,17 @@ export default function minutesEditor() {
             });
         },
 
-        cancel(point) {
-            const i = this.points.indexOf(point);
+        /** Escape on «Confirmar» brings «Quitar» back with the focus; leaving it brings it back where it was. */
+        cancelRemove(i, refocus) {
+            const point = this.points[i];
 
-            if (i === -1 || !point.confirming) {
+            if (!point || !point.confirming) {
                 return;
             }
 
-            const hadFocus = this.action('confirm', i) === document.activeElement;
-
             point.confirming = false;
 
-            if (hadFocus) {
+            if (refocus) {
                 this.focusLater(() => this.focusAction('remove', i));
             }
         },
