@@ -23,6 +23,10 @@ test.describe('Diálogos', () => {
         ).toBe(true);
         await expect(dialog.getByRole('heading', { name: 'Rechazar la evidencia' })).toBeVisible();
         expect(await ui.axe('#demo-reject')).toEqual([]);
+        // The backdrop dims and blurs the page behind (the blur class exists in the built CSS)
+        expect(
+            await dialog.evaluate((el) => getComputedStyle(el, '::backdrop').backdropFilter),
+        ).toContain('blur(');
 
         await page.keyboard.press('Escape');
 
