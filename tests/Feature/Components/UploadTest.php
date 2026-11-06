@@ -27,6 +27,7 @@ class UploadTest extends ComponentTestCase
         $this->assertStringContainsString('x-on:change="onPick"', $html);
         $this->assertStringContainsString('x-on:drop.prevent="onDrop"', $html);
         $this->assertStringContainsString('x-bind:data-state="dragging ? \'dragging\' : \'idle\'"', $html);
+        $this->assertStringContainsString('x-bind:aria-busy="uploading ? \'true\' : \'false\'"', $html);
         $this->assertStringContainsString('<strong>Arrastra aquí el documento</strong> o pulsa para elegirlo', $html);
         $this->assertStringContainsString('<span id="field-uploaded-hint" class="text-md text-ink-muted">PDF, imágenes o ZIP · hasta 50 MB por archivo</span>', $html);
         $this->assertMatchesRegularExpression('/<input [^>]*aria-describedby="field-uploaded-hint"/', $html);

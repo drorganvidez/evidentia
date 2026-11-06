@@ -5,8 +5,13 @@
  * Blade: the root carries x-data="upload", data-config (urls, accept, limits) and data-files (the files
  * already on the server); the <input type="file"> has x-ref="input" and x-on:change="onPick". The CSRF
  * token comes from <meta name="csrf-token">. Every access to the DOM, fetch and XMLHttpRequest lives here.
+ *
+ * A file only gets its hidden input once the server has answered, so the surrounding form waits while a
+ * file is queued or uploading: its submit is cancelled (before the busy state of x-ui.form) and the zone
+ * says why, without moving the focus.
  */
 const UNITS = ['B', 'kB', 'MB', 'GB'];
+const WAIT = 'Espera a que termine la subida';
 const STATUS = {
     initial: 'Ya en el servidor',
     queued: 'En cola',
@@ -76,6 +81,8 @@ export default function upload() {
     const requests = new Map();
     let counter = 0;
     let dragDepth = 0;
+    let form = null;
+    let onSubmit = null;
 
     return {
         files: [],
@@ -98,6 +105,39 @@ export default function upload() {
                     status: 'initial',
                 }),
             );
+
+            form = this.$root.closest('form');
+
+            if (form) {
+                // Capture phase: on the form itself it runs before the x-on:submit of busyForm
+                onSubmit = (event) => this.holdSubmit(event);
+                form.addEventListener('submit', onSubmit, true);
+            }
+        },
+
+        /** Files still on their way: queued or uploading. */
+        get uploading() {
+            return this.files.some(
+                (file) => file.status === 'queued' || file.status === 'uploading',
+            );
+        },
+
+        /** The form would leave without the files that have no hidden input yet, so it waits for them. */
+        holdSubmit(event) {
+            if (!this.uploading) {
+                return;
+            }
+
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            this.problem = WAIT;
+        },
+
+        /** Once nothing is on its way, the request to wait has done its job. */
+        settle() {
+            if (!this.uploading && this.problem === WAIT) {
+                this.problem = '';
+            }
         },
 
         entry({ name, size, serverId = null, status }) {
@@ -258,12 +298,14 @@ export default function upload() {
                 }
 
                 describe(file);
+                this.settle();
             };
 
             xhr.onerror = () => {
                 requests.delete(key);
                 this.fail(file);
                 describe(file);
+                this.settle();
             };
 
             xhr.onabort = () => requests.delete(key);
@@ -346,6 +388,10 @@ export default function upload() {
             requests.forEach((xhr) => xhr.abort());
             requests.clear();
             raw.clear();
+
+            if (form && onSubmit) {
+                form.removeEventListener('submit', onSubmit, true);
+            }
         },
     };
 }

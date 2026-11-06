@@ -158,6 +158,61 @@ test.describe('Subida de archivos', () => {
         await expect(rows).toHaveCount(1);
     });
 
+    test('el formulario espera a que termine la subida y después envía el oculto', async ({
+        page,
+        ui,
+    }) => {
+        const form = ui.section('form').locator('#evidence-form');
+        const zone = form.locator('[x-data="upload"]');
+        const row = zone.getByRole('listitem').last();
+        const save = form.locator('button[type="submit"]');
+        const submits = [];
+        let release;
+        const held = new Promise((resolve) => {
+            release = resolve;
+        });
+
+        await page.route('**/_ui/demo/upload', async (route) => {
+            if (route.request().method() !== 'POST') {
+                await route.continue();
+
+                return;
+            }
+
+            await held;
+            await route.fulfill({ status: 200, contentType: 'text/plain', body: 'demo-retenido' });
+        });
+        await page.route('**/_ui/demo/submit', async (route) => {
+            submits.push(route.request().postData() ?? '');
+            await route.fulfill({ status: 204 });
+        });
+
+        await zone.locator('input[type="file"]').setInputFiles([pdf('informe.pdf')]);
+        await expect(row).toContainText('Subiendo');
+        await expect(zone).toHaveAttribute('aria-busy', 'true');
+
+        await save.click();
+
+        // The submit waits: no request, a message in the zone and the form still free
+        await expect(zone.getByRole('alert')).toHaveText('Espera a que termine la subida');
+        await expect(form).toHaveAttribute('aria-busy', 'false');
+        await expect(save).toBeEnabled();
+        await expect(save).toBeFocused();
+        expect(submits).toHaveLength(0);
+
+        release();
+
+        await expect(row).toContainText('Subido');
+        await expect(zone).toHaveAttribute('aria-busy', 'false');
+        await expect(zone.getByRole('alert')).toBeHidden();
+
+        await save.click();
+
+        await expect.poll(() => submits.length).toBe(1);
+        expect(submits[0]).toContain('name="evidence_files[]"');
+        expect(submits[0]).toContain('demo-retenido');
+    });
+
     test('la sección cumple WCAG 2.2 AA', async ({ ui }) => {
         expect(await ui.axe('#ui-upload')).toEqual([]);
     });

@@ -7,7 +7,8 @@
         label="Arrastra aquí la hoja de cálculo o pulsa para elegirla" hint="Excel (.xls o .xlsx)" />
     files accepts plain names or {name, size, id}; the label is bold up to its first " o ". The remove url keeps the
     placeholder NAME for the file name. hint="" drops the hint and max-total="0" lifts the total limit. Without JS
-    the chosen files travel in the file input under the same name.
+    the chosen files travel in the file input under the same name. Inside a form the submit waits, and says so,
+    while a file is still uploading.
 --}}
 @props([
     'name' => 'uploaded[]',
@@ -72,9 +73,9 @@
 @endphp
 <div x-data="upload" data-config="{{ json_encode($config, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE) }}"
     data-files="{{ json_encode($normalized, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE) }}"
-    x-bind:data-state="dragging ? 'dragging' : 'idle'" x-on:dragenter.prevent="onDragEnter"
-    x-on:dragover.prevent="onDragOver" x-on:dragleave="onDragLeave" x-on:drop.prevent="onDrop"
-    {{ $attributes->class(['group grid grid-cols-[minmax(0,1fr)] gap-3']) }}>
+    x-bind:data-state="dragging ? 'dragging' : 'idle'" x-bind:aria-busy="uploading ? 'true' : 'false'"
+    x-on:dragenter.prevent="onDragEnter" x-on:dragover.prevent="onDragOver" x-on:dragleave="onDragLeave"
+    x-on:drop.prevent="onDrop" {{ $attributes->class(['group grid grid-cols-[minmax(0,1fr)] gap-3']) }}>
     <label for="{{ $id }}"
         class="relative grid min-h-32 cursor-pointer content-center justify-items-center gap-2 rounded-lg border-[1.5px] border-dashed border-aurora-500/45 bg-aurora-500/6 px-4 py-6 text-center transition focus-within:ring-4 focus-within:ring-aurora-500/12 hover:bg-aurora-500/10 group-data-[state=dragging]:bg-aurora-500/10 group-data-[state=dragging]:ring-4 group-data-[state=dragging]:ring-aurora-500/12">
         <span aria-hidden="true" class="grid size-12 place-items-center rounded-md bg-brand-soft text-brand-soft-ink">
