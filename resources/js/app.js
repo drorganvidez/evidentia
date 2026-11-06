@@ -1,5 +1,5 @@
 import { bootAlpine } from './alpine/boot';
-import * as components from './components';
-import theme from './stores/theme';
+import components from './components';
+import stores from './stores';
 
-bootAlpine({ components, stores: { theme } });
+bootAlpine({ components, stores });
