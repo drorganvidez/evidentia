@@ -51,7 +51,7 @@ test.describe('Mensajes', () => {
         await page.goto('/messages?to=all&state=all');
 
         const table = page.getByRole('table', { name: 'Mensajes recibidos' });
-        await expect(page.getByLabel('Dirigido a')).toHaveValue('all');
+        await expect(page.locator('select[name="to"]')).toHaveValue('all');
         await table
             .getByRole('link', { name: 'Cambio de turno en el registro', exact: true })
             .click();

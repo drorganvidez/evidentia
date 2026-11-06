@@ -1,5 +1,5 @@
 import { signIn } from '../../fixtures/auth.js';
-import { expect, test } from '../../fixtures/ui.js';
+import { choose, expect, test } from '../../fixtures/ui.js';
 
 // Every attendance of the course and the events with their attendees, read only, for the president and the lecturer
 test.describe('Asistencias de la gestión', () => {
@@ -26,11 +26,10 @@ test.describe('Asistencias de la gestión', () => {
         await tabs.getByRole('link', { name: /Todas/ }).click();
 
         await page.getByText('Filtros de las asistencias').click();
-        const select = page.getByLabel('Evento', { exact: true });
-        const git = await select
-            .locator('option', { hasText: 'Taller de Git' })
-            .getAttribute('value');
-        await select.selectOption(git);
+        const git = await page
+            .locator('select[name="evento"] option', { hasText: 'Taller de Git' })
+            .textContent();
+        await choose(page.getByRole('combobox', { name: 'Evento', exact: true }), git.trim());
         await page.getByRole('button', { name: 'Aplicar' }).click();
         await expect(page).toHaveURL(/evento=\d+/);
         await expect(lucia).toBeVisible();
@@ -53,7 +52,7 @@ test.describe('Asistencias de la gestión', () => {
         await expect(events.getByText('3,00 h')).toBeVisible();
         await events.getByRole('link', { name: 'Taller de Git', exact: true }).click();
         await expect(page).toHaveURL(/\/lecture\/attendee\/list\?evento=\d+$/);
-        await expect(page.getByLabel('Evento', { exact: true })).toHaveValue(/\d+/);
+        await expect(page.locator('select[name="evento"]')).toHaveValue(/\d+/);
         await ui.noOverflow();
     });
 
