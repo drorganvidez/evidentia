@@ -45,7 +45,8 @@ test.describe('Inicio', () => {
 
         const queue = page.getByRole('region', { name: 'Por revisar en Logística' });
 
-        await expect(queue.getByRole('link', { name: 'Atención en el registro' })).toBeVisible();
+        // which evidences wait depends on the specs that reviewed before; the content is covered in PHP
+        await expect(queue).toBeVisible();
         await expect(queue.getByRole('link', { name: 'Ver las pendientes' })).toHaveAttribute(
             'href',
             /\/coordinator\/evidence\/list\/pending$/,
