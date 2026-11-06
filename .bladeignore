@@ -7,11 +7,8 @@ resources/views/components/navbars/**
 resources/views/suggestionsmailbox.blade.php
 resources/views/components/attendeestatus.blade.php
 resources/views/components/buttonconfirm.blade.php
-resources/views/components/eventstatus.blade.php
 resources/views/components/evidencecommittee.blade.php
-resources/views/components/evidencelistcoordinator.blade.php
 resources/views/components/evidencemanagecoordinator.blade.php
-resources/views/components/evidenceoptionscoordinator.blade.php
 resources/views/components/evidenceoptionsstudent.blade.php
 resources/views/components/evidencestatus.blade.php
 resources/views/components/id.blade.php
@@ -19,10 +16,8 @@ resources/views/components/input.blade.php
 resources/views/components/li.blade.php
 resources/views/components/lilogo.blade.php
 resources/views/components/lilogout.blade.php
-resources/views/components/meetingcommittee.blade.php
 resources/views/components/menumeeting.blade.php
 resources/views/components/profile.blade.php
-resources/views/components/roles.blade.php
 resources/views/components/slimreminder.blade.php
 resources/views/components/textarea.blade.php
 resources/views/components/textareasimple.blade.php
