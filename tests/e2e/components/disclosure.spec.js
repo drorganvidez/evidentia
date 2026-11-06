@@ -68,6 +68,21 @@ test.describe('Desplegables', () => {
         }
     });
 
+    test('el pequeño sin nivel abre su contenido, que no habla del componente', async ({ ui }) => {
+        const small = ui
+            .section('disclosure')
+            .locator('details')
+            .filter({ hasText: 'Detalles técnicos' });
+
+        await small.locator('summary').click();
+
+        await expect(small).toHaveAttribute('open', '');
+        await expect(
+            small.getByText('PDF de 2,4 MB subido el 12/10/2026 a las 17:40.'),
+        ).toBeVisible();
+        await expect(small).not.toContainText('Tamaño pequeño');
+    });
+
     test('la apertura se anima salvo con movimiento reducido', async ({ page, ui }) => {
         const details = ui.section('disclosure').locator('details').first();
         const longest = async () =>

@@ -43,6 +43,7 @@
 
         <div class="grid grid-cols-[minmax(0,1fr)] content-start gap-3">
             <h3 class="text-lg font-bold tracking-tight">Abierto, liso y pequeño</h3>
+            <span class="font-mono text-2xs text-ink-muted">open · extra · plain · sm sin level</span>
             <x-ui.disclosure title="Ver ediciones anteriores" icon="history" open :level="4">
                 <x-slot:extra>
                     <span class="text-sm text-ink-muted">{{ count($editions) }} ediciones</span>
@@ -57,7 +58,7 @@
                 <p class="text-sm text-ink-muted">Cada evidencia aceptada suma sus horas al total de la edición.</p>
             </x-ui.disclosure>
             <x-ui.disclosure title="Detalles técnicos" size="sm" icon="file-text">
-                <p class="text-sm text-ink-muted">Tamaño pequeño con el título como texto, sin nivel de encabezado.</p>
+                <p class="text-sm text-ink-muted">PDF de 2,4 MB subido el 12/10/2026 a las 17:40.</p>
             </x-ui.disclosure>
         </div>
     </div>
