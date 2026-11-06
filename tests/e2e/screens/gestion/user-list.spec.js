@@ -1,7 +1,7 @@
 import { signIn } from '../../fixtures/auth.js';
 import { choose, expect, test } from '../../fixtures/ui.js';
 
-// The people of the course: filters and order in the URL, the quick filter, a new user and the mass actions
+// The people of the course: filters, order and search in the URL, a new user and the mass actions
 test.describe('Alumnos', () => {
     test('el profesor filtra por rol y ordena por apellidos', async ({ page, ui }) => {
         await signIn(page, 'profesor');
@@ -37,19 +37,26 @@ test.describe('Alumnos', () => {
         }
     });
 
-    test('filtra las filas en el navegador', async ({ page }) => {
+    test('busca en el servidor y conserva el orden', async ({ page }) => {
         await signIn(page, 'profesor');
-        await page.goto('/lecture/user/list');
+        await page.goto('/lecture/user/list?sort=surname&dir=desc');
 
-        await page.getByRole('searchbox', { name: 'Filtrar usuarios' }).fill('navarro');
         const table = page.getByRole('region', { name: 'Usuarios' });
+        const search = table.getByRole('searchbox', { name: 'Buscar usuarios' });
+        await search.fill('navarro');
+        await search.press('Enter');
+        await expect(page).toHaveURL(/sort=surname&dir=desc&q=navarro/);
         await expect(
             table.getByRole('link', { name: 'Navarro Ruiz, Carlos', exact: true }),
         ).toBeVisible();
         await expect(
             table.getByRole('link', { name: 'Pérez Romero, Lucía', exact: true }),
-        ).toBeHidden();
-        await expect(page.getByText('1 de ')).toBeVisible();
+        ).toHaveCount(0);
+        await expect(table.getByText('1 usuario', { exact: true })).toBeVisible();
+
+        await table.getByRole('link', { name: 'Quitar la búsqueda' }).click();
+        await expect(page).toHaveURL(/\/lecture\/user\/list\?sort=surname&dir=desc$/);
+        await expect(search).toHaveValue('');
     });
 
     test('pasa axe en claro y oscuro', async ({ page, ui }) => {

@@ -47,22 +47,7 @@ class ManagementController extends Controller
 
     public function user_list(Request $request)
     {
-
-        $users = User::all();
-
-        // el presidente no puede editar los usuarios de tipo profesor
-        $filtered_users = collect();
-        if (Auth::user()->hasRole('PRESIDENT')) {
-            $users->each(function ($item, $key) use ($filtered_users) {
-                if (! $item->hasRole('LECTURE')) {
-                    $filtered_users->push($item);
-                }
-            });
-        } else {
-            $filtered_users = $users;
-        }
-
-        // filtros y orden del listado, en la URL
+        // filtros, búsqueda y orden del listado, en la URL
         $roles = Auth::user()->hasRole('PRESIDENT') ? Role::where('rol', '!=', 'LECTURE')->get() : Role::all();
         $filters = [
             'rol' => $roles->contains('rol', $request->query('rol')) ? $request->query('rol') : null,
@@ -71,15 +56,20 @@ class ManagementController extends Controller
         $sort = in_array($request->query('sort'), ['surname', 'name', 'username'], true) ? $request->query('sort') : 'surname';
         $dir = $request->query('dir') === 'desc' ? 'desc' : 'asc';
 
-        $filtered_users = $filtered_users
-            ->when($filters['rol'], fn ($list, $rol) => $list->filter(fn ($user) => $user->hasRole($rol)))
-            ->when($filters['estado'] === 'activos', fn ($list) => $list->reject(fn ($user) => $user->block))
-            ->when($filters['estado'] === 'bloqueados', fn ($list) => $list->filter(fn ($user) => $user->block))
-            ->sortBy(fn ($user) => mb_strtolower((string) $user->{$sort}), SORT_NATURAL, $dir === 'desc')
-            ->values();
+        $users = $this->searchList(User::query()->whereKeyNot(Auth::id()), $request, ['name', 'surname', 'username', 'email'])
+            // el presidente no puede editar los usuarios de tipo profesor
+            ->when(Auth::user()->hasRole('PRESIDENT'), fn ($query) => $query->whereDoesntHave('roles', fn ($roles) => $roles->where('rol', 'LECTURE')))
+            ->when($filters['rol'], fn ($query, $rol) => $query->whereHas('roles', fn ($roles) => $roles->where('rol', $rol)))
+            ->when($filters['estado'] === 'activos', fn ($query) => $query->where(fn ($query) => $query->whereNull('block')->orWhere('block', false)))
+            ->when($filters['estado'] === 'bloqueados', fn ($query) => $query->where('block', true))
+            ->with(['roles', 'coordinator.committee', 'secretary.committee'])
+            ->orderByRaw('lower('.$sort.') '.$dir)
+            ->orderBy('id');
 
-        return view('manage.user_list',
-            ['users' => $filtered_users, 'roles' => $roles, 'filters' => $filters, 'sort' => $sort, 'dir' => $dir]);
+        return view('manage.user_list', [
+            'users' => $this->paginateList($users, $request), 'roles' => $roles, 'filters' => $filters, 'sort' => $sort, 'dir' => $dir,
+            'term' => ListPage::term($request),
+        ]);
     }
 
     public function evidence_list(Request $request)
