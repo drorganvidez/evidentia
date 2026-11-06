@@ -1,0 +1,70 @@
+# ----------------------------------------------------------------------------
+# E2E Workflow
+# Serves the app with PHP and SQLite, compiles the assets and runs the
+# Playwright tests in Chromium (desktop and mobile).
+# ----------------------------------------------------------------------------
+
+name: E2E
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  playwright:
+    name: Playwright
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: gd, zip, exif, mbstring, pdo_sqlite
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install npm dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Prepare the application
+        run: |
+          cp .env.ci .env
+          php artisan key:generate --force
+          touch database/database.sqlite
+          php artisan migrate --force --seed --seeder=DevelopmentSeeder
+
+      # Playwright advises against caching the browsers: restoring takes as long as downloading
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      # playwright.config.js starts `php artisan serve` through its webServer option
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14

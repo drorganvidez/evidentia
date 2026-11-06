@@ -16,6 +16,8 @@
 /public/build
 /public/hot
 /public/storage
+/playwright-report
+/test-results
 /storage/*.key
 /storage/pail
 /vendor

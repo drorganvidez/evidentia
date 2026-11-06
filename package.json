@@ -26,11 +26,13 @@
         "lint:css": "stylelint \"resources/css/**/*.css\"",
         "lint:blade": "blade-formatter --check-formatted \"resources/views/**/*.blade.php\"",
         "format": "prettier --write . && stylelint \"resources/css/**/*.css\" --fix && blade-formatter --write \"resources/views/**/*.blade.php\"",
-        "format:check": "prettier --check ."
+        "format:check": "prettier --check .",
+        "test:e2e": "playwright test"
     },
     "devDependencies": {
         "@alpinejs/csp": "^3.17.5",
         "@eslint/js": "^10.0.1",
+        "@playwright/test": "^1.65.0",
         "@tailwindcss/vite": "^4.3.4",
         "blade-formatter": "^1.44.6",
         "concurrently": "^10.0.6",
