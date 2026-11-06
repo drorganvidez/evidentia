@@ -4,12 +4,12 @@
     <h2 id="ui-count-chip-title" class="text-2xl font-bold tracking-tight">Cifras</h2>
 
     <div class="grid gap-3">
-        <span class="font-mono text-2xs text-ink-muted">delay 0 · 80 · 160 ms</span>
+        <span class="font-mono text-2xs text-ink-muted">countUp · decimals · tone · rise=false en el catálogo</span>
         <ul class="flex flex-wrap items-center gap-3">
-            <li><x-ui.count-chip :value="1204" unit="h acreditadas" tone="accepted" /></li>
-            <li><x-ui.count-chip :value="312" unit="evidencias aceptadas" :delay="80" /></li>
+            <li><x-ui.count-chip :value="1204" unit="h acreditadas" tone="accepted" :rise="false" /></li>
+            <li><x-ui.count-chip :value="312" unit="evidencias aceptadas" :rise="false" /></li>
             <li><x-ui.count-chip :value="10.5" :decimals="1" unit="h por estudiante" tone="notice"
-                    :delay="160" /></li>
+                    :rise="false" /></li>
         </ul>
     </div>
 </section>

@@ -11,7 +11,7 @@ class CountChipTest extends ComponentTestCase
     {
         $html = $this->render('<x-ui.count-chip :value="1204" unit="h acreditadas" class="ml-2" />');
 
-        $this->assertMatchesRegularExpression('/^<span role="img" aria-label="1.204 h acreditadas"\s+class="glass inline-flex items-center gap-3 rounded-full py-2.5 pr-4 pl-3 text-md font-medium text-ink animate-rise motion-reduce:animate-none max-md:py-2 max-md:pr-3 max-md:pl-2.5 max-md:text-sm ml-2">/', trim($html));
+        $this->assertMatchesRegularExpression('/^<span role="img" aria-label="1.204 h acreditadas"\s+class="glass inline-flex items-center gap-3 rounded-full py-2.5 pr-4 pl-3 text-md font-medium text-ink max-md:py-2 max-md:pr-3 max-md:pl-2.5 max-md:text-sm animate-rise motion-reduce:animate-none ml-2">/', trim($html));
         $this->assertStringContainsString('[--orb:var(--brand)]', $html, 'The dot takes the brand tone by default');
         $this->assertStringContainsString('size-2.5', $html);
         $this->assertMatchesRegularExpression('/<span x-data="countUp" data-count="1204" data-decimals="0"\s+data-duration="1200" class="font-mono text-lg font-semibold tracking-tight tabular-nums"\s+x-text="shown">1.204<\/span>/', $html);
@@ -33,6 +33,11 @@ class CountChipTest extends ComponentTestCase
 
         $this->assertStringContainsString('[animation-delay:160ms]', $this->render('<x-ui.count-chip :value="1" unit="x" :delay="160" />'));
         $this->assertStringNotContainsString('animation-delay', $this->render('<x-ui.count-chip :value="1" unit="x" :delay="50" />'), 'Only the literal delays exist');
+
+        $still = $this->render('<x-ui.count-chip :value="1" unit="x" :delay="80" :rise="false" />');
+
+        $this->assertStringNotContainsString('animate-rise', $still);
+        $this->assertStringNotContainsString('animation-delay', $still);
         $this->assertStringContainsString('aria-label="1.234.567,89 x"', $this->render('<x-ui.count-chip :value="1234567.891" :decimals="2" unit="x" />'));
     }
 
