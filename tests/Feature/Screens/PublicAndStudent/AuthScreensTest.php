@@ -58,6 +58,7 @@ class AuthScreensTest extends ScreenTestCase
         $this->assertStringContainsString('action="'.route('password.reset_p').'"', $html);
         $this->assertStringContainsString('name="email"', $html);
         $this->assertSame(1, substr_count($html, 'aria-hidden="true" data-scene="sides"'), 'The pieces of the platform in the margins');
+        $this->assertStringContainsString('pointer-coarse:min-h-11">', $html, 'The way back grows to 44 px');
     }
 
     public function test_the_new_password_keeps_the_token_in_the_action(): void

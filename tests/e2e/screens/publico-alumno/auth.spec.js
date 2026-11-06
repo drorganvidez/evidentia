@@ -22,6 +22,24 @@ async function settle(page) {
     );
 }
 
+/** Runs in the page: every visible target under 44 × 44 px, with its name and size. */
+function smallTargets() {
+    return Array.from(
+        document.querySelectorAll('a[href], button, input:not([type="hidden"]), select, textarea'),
+    )
+        .filter((el) => el.checkVisibility({ checkVisibilityCSS: true, visibilityProperty: true }))
+        .filter((el) => getComputedStyle(el).pointerEvents !== 'none')
+        .map((el) => ({ el, box: el.getBoundingClientRect() }))
+        .filter(({ box }) => box.width > 1 && box.height > 1)
+        .filter(({ box }) => box.width < 43.5 || box.height < 43.5)
+        .map(({ el, box }) => {
+            const name =
+                el.getAttribute('aria-label') || el.labels?.[0]?.textContent || el.textContent;
+
+            return `«${name.replace(/\s+/g, ' ').trim()}» ${Math.round(box.width)} × ${Math.round(box.height)}`;
+        });
+}
+
 test.describe('Acceso', () => {
     test('enseña el lema, las cifras y el formulario, accesible en claro y oscuro', async ({
         page,
@@ -136,6 +154,22 @@ test.describe('Acceso', () => {
             }
         });
     }
+
+    test('con puntero grueso cada objetivo del acceso mide al menos 44 × 44 px', async ({
+        page,
+        isMobile,
+    }) => {
+        test.skip(!isMobile, 'El objetivo de 44 px se exige con puntero grueso');
+
+        for (const path of ['/login', '/password/reset']) {
+            await page.goto(path);
+            expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(true);
+
+            const found = await page.evaluate(smallTargets);
+
+            expect(found, `${path}\n${found.join('\n')}`).toEqual([]);
+        }
+    });
 
     test('la estudiante entra y llega al inicio', async ({ page }) => {
         await page.goto('/login');

@@ -52,10 +52,12 @@
         </x-ui.form>
         <x-slot:footer>
             <p class="flex flex-wrap justify-between gap-x-4 gap-y-2 text-sm">
-                <a href="{{ route('password.custom_reset') }}" class="font-semibold text-brand-ink">Es mi primer
-                    acceso</a>
-                <a href="https://t.me/evidentia_sat" class="font-semibold text-brand-ink" rel="noopener">Asistencia
-                    técnica en Telegram</a>
+                <a href="{{ route('password.custom_reset') }}"
+                    class="font-semibold text-brand-ink pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center">Es
+                    mi primer acceso</a>
+                <a href="https://t.me/evidentia_sat"
+                    class="font-semibold text-brand-ink pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center"
+                    rel="noopener">Asistencia técnica en Telegram</a>
             </p>
         </x-slot:footer>
     </x-ui.card>

@@ -11,7 +11,7 @@
         </x-ui.form>
         <x-slot:footer>
             <a href="{{ route('login') }}"
-                class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-ink">
+                class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-ink pointer-coarse:min-h-11">
                 <x-lucide-arrow-left class="size-4" aria-hidden="true" />Volver al acceso</a>
         </x-slot:footer>
     </x-ui.card>
