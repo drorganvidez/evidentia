@@ -43,8 +43,19 @@ test.describe('Historial de una evidencia', () => {
         await trigger.click();
         const dialog = page.getByRole('dialog', { name: 'Cambiar de comité' });
         await expect(dialog).toBeVisible();
-        await expect(dialog.getByRole('combobox', { name: 'Comité de destino' })).toBeVisible();
+        const target = dialog.getByRole('combobox', { name: 'Comité de destino' });
+        await expect(target).toBeVisible();
         expect(await ui.axe()).toEqual([]);
+
+        // The list opens over the dialog; the first Escape closes the list and the second the dialog
+        await target.click();
+        const list = dialog.getByRole('listbox', { name: 'Comité de destino' });
+        await expect(list).toBeVisible();
+        expect(await ui.axe()).toEqual([]);
+        await page.keyboard.press('Escape');
+        await expect(list).toBeHidden();
+        await expect(dialog).toBeVisible();
+        await expect(target).toBeFocused();
         await page.keyboard.press('Escape');
         await expect(dialog).toBeHidden();
         await expect(trigger).toBeFocused();
