@@ -47,4 +47,14 @@ class ScheduleTest extends TestCase
         $this->assertTrue($event->withoutOverlapping);
         $this->assertTrue($event->onOneServer);
     }
+
+    public function test_the_review_queues_are_summarised_on_monday_and_insisted_on_thursday(): void
+    {
+        $event = $this->event('notifications:review-queue');
+
+        $this->assertNotNull($event);
+        $this->assertSame('30 8 * * 1,4', $event->expression);
+        $this->assertTrue($event->withoutOverlapping);
+        $this->assertTrue($event->onOneServer);
+    }
 }

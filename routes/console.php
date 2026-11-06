@@ -12,3 +12,5 @@ Artisan::command('inspire', function () {
 Schedule::command('activity:prune')->dailyAt('04:00')->withoutOverlapping()->onOneServer();
 Schedule::command('notifications:remind')->dailyAt('08:00')->withoutOverlapping()->onOneServer();
 Schedule::command('notifications:digest')->dailyAt('18:00')->withoutOverlapping()->onOneServer();
+// Monday the summary of the review queues, Thursday the insistence on what has waited more than a week
+Schedule::command('notifications:review-queue')->days([1, 4])->at('08:30')->withoutOverlapping()->onOneServer();
