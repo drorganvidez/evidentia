@@ -167,21 +167,32 @@ class ManagementController extends Controller
         $events = Event::withCount(['attendees', 'attendees as attended_count' => fn ($query) => $query->where('status', Attendee::ATTENDED)])
             ->orderByDesc('start_datetime')->orderByDesc('id')->get();
 
-        // filtros por evento y estado, en la URL
+        // filtros por evento y estado y búsqueda, en la URL; los recuentos y las horas cuentan todo el resultado
         $event = $events->firstWhere('id', (int) $request->query('evento'));
         $state = array_key_exists((string) $request->query('estado'), self::ATTENDEE_STATES) ? $request->query('estado') : null;
+        $base = fn (): Builder => $this->searchList(
+            Attendee::query()->when($event, fn ($query) => $query->where('attendees.event_id', $event->id)),
+            $request,
+            ['user.name', 'user.surname', 'user.username', 'event.name'],
+        );
+        $byStatus = $base()->groupBy('attendees.status')->selectRaw('attendees.status, count(*) as total')->pluck('total', 'status');
+        $counts = collect(self::ATTENDEE_STATES)->map(fn (array $statuses): int => (int) $byStatus->only($statuses)->sum())
+            ->put('todas', (int) $byStatus->sum());
 
-        $attendees = Attendee::with(['user', 'event'])
-            ->when($event, fn ($query) => $query->where('event_id', $event->id))
-            ->get();
-        $counts = collect(self::ATTENDEE_STATES)->map(fn (array $statuses) => $attendees->whereIn('status', $statuses)->count())
-            ->put('todas', $attendees->count());
-        if ($state !== null) {
-            $attendees = $attendees->whereIn('status', self::ATTENDEE_STATES[$state]);
-        }
+        $filtered = $base()->when($state !== null, fn ($query) => $query->whereIn('attendees.status', self::ATTENDEE_STATES[$state]));
+        $hours = (float) $filtered->clone()->where('attendees.status', Attendee::ATTENDED)
+            ->sum(DB::raw('(select hours from events where events.id = attendees.event_id)'));
+        $attendees = $this->paginateList(
+            $filtered->with(['user', 'event'])
+                ->orderByDesc(Event::select('start_datetime')->whereColumn('events.id', 'attendees.event_id'))
+                ->orderByDesc('attendees.id'),
+            $request,
+        );
 
         return view('manage.attendee_list', [
-            'attendees' => $attendees->sortByDesc(fn ($attendee) => [$attendee->event?->start_datetime, $attendee->id])->values(),
+            'attendees' => $attendees,
+            'hours' => $hours,
+            'term' => ListPage::term($request),
             'events' => $events,
             'event' => $event,
             'state' => $state,

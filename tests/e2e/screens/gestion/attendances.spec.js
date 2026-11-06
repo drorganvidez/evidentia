@@ -34,8 +34,12 @@ test.describe('Asistencias de la gestión', () => {
         await expect(page).toHaveURL(/evento=\d+/);
         await expect(lucia).toBeVisible();
 
-        await page.getByRole('searchbox', { name: 'Filtrar asistencias' }).fill('torres');
-        await expect(lucia).toBeHidden();
+        // The search runs on the server and keeps the event
+        const search = table.getByRole('searchbox', { name: 'Buscar asistencias' });
+        await search.fill('torres');
+        await search.press('Enter');
+        await expect(page).toHaveURL(/evento=\d+&q=torres/);
+        await expect(lucia).toHaveCount(0);
         await expect(
             table.getByRole('link', { name: 'Torres Gómez, Pablo', exact: true }),
         ).toBeVisible();

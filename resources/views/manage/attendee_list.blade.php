@@ -1,23 +1,20 @@
 {{--
-    Every attendance of the course for the lecturer and the president, newest event first, filtered by event and state,
-    with the hours each one counts, and the events with their attendees. Read only.
+    Every attendance of the course for the lecturer and the president, newest event first and in pages, filtered by
+    event and state and searched on the server, with the hours each one counts, and the events with their attendees.
+    Read only.
 --}}
+@use('App\Support\ListPage')
 @php
     $prefix = Auth::user()->hasRole('LECTURE') ? 'lecture' : 'president';
     $list = route($prefix . '.attendee.list');
     $text = fn($html) => trim(html_entity_decode(strip_tags(\Html::clean((string) $html)), ENT_QUOTES | ENT_HTML5));
     $eventName = fn($event) => $text($event?->name) ?: 'Sin nombre';
     $date = fn($value) => filled($value) ? \Carbon\Carbon::parse($value)->format('d/m/Y') : null;
-    $eventQuery = $event ? ['evento' => $event->id] : [];
-    // Built here: blade-formatter cannot parse a query string inside an attribute expression
+    // Every tab keeps the event, the search and the rows per page, back on the first page
     $tabItems = array_map(
         fn(array $tab): array => [
             'label' => $tab[0],
-            'href' =>
-                $list .
-                (($query = http_build_query($eventQuery + array_filter(['estado' => $tab[1]]))) !== ''
-                    ? '?' . $query
-                    : ''),
+            'href' => ListPage::url(['estado' => $tab[1]], $list),
             'count' => $counts->get($tab[1] ?? 'todas', 0),
             'current' => $state === $tab[1],
         ],
@@ -34,7 +31,8 @@
             )
             ->all(),
     ];
-    $empty = match ($state) {
+    $empty = match ($term !== null ? 'busqueda' : $state) {
+        'busqueda' => 'Ninguna asistencia coincide con la búsqueda',
         'asistidas' => 'No hay asistencias registradas',
         'pendientes' => 'No hay asistencias pendientes',
         'no-asistidas' => 'No hay ausencias',
@@ -60,15 +58,12 @@
     <x-ui.page-header title="Asistencias" />
 
     <x-ui.filter-bar :action="$list" label="Filtros de las asistencias" :open="$event !== null" :active="$event ? 1 : 0"
-        :reset-href="$list" id="attendee-filters">
-        @if ($state)
-            <input type="hidden" name="estado" value="{{ $state }}">
-        @endif
+        :reset-href="ListPage::url(['evento' => null], $list)" :keep="ListPage::query(['evento'])" id="attendee-filters">
         <x-ui.field name="evento" label="Evento" type="select" :options="$eventOptions" :value="$event?->id ?? ''" />
     </x-ui.filter-bar>
 
-    <x-ui.table id="attendances" caption="Asistencias del curso" :columns="$columns" :filterable="$attendees->isNotEmpty()"
-        count-label="asistencias" filter-placeholder="Filtrar asistencias">
+    <x-ui.table id="attendances" caption="Asistencias del curso" :columns="$columns" :paginator="$attendees" filterable
+        count-label="asistencias" count-singular="asistencia" filter-placeholder="Buscar asistencias">
         <x-slot:toolbar>
             <x-ui.tabs label="Filtrar asistencias por estado" :items="$tabItems" />
         </x-slot:toolbar>
@@ -82,7 +77,7 @@
                 $person = $attendee->user;
                 $name = $eventName($attendee->event);
             @endphp
-            <x-ui.table.row :search="implode(' ', [$person?->surname, $person?->name, $person?->username, $name])">
+            <x-ui.table.row>
                 <x-ui.table.cell label="Persona" primary>
                     <x-ui.person :name="$person->name" :surname="$person->surname" size="sm" reverse :href="route('profiles.view', ['id' => $person->id])" />
                 </x-ui.table.cell>
@@ -106,8 +101,8 @@
         @endforeach
         @if ($attendees->isNotEmpty())
             <x-slot:footer>
-                <span>{{ $attendees->count() }} {{ $attendees->count() === 1 ? 'asistencia' : 'asistencias' }} ·
-                    <x-ui.hours :value="$attendees->sum(fn($attendee) => $attendee->computedHours())" size="sm" class="text-ink" /></span>
+                <span>{{ $attendees->total() }} {{ $attendees->total() === 1 ? 'asistencia' : 'asistencias' }} ·
+                    <x-ui.hours :value="$hours" size="sm" class="text-ink" /></span>
             </x-slot:footer>
         @endif
     </x-ui.table>
