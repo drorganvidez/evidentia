@@ -115,4 +115,16 @@ class CardTest extends ComponentTestCase
         $this->assertStringContainsString('id="card-bpruebasb"', $html);
         $this->assertStringNotContainsString('<b>', $html);
     }
+
+    public function test_the_catalogue_annotates_every_card_demo_outside_its_content(): void
+    {
+        $html = view('ui.sections.card')->render();
+
+        // Like the rest of the catalogue: a mono note over each demo, real content inside the card
+        $this->assertSame(7, substr_count($html, '<span class="font-mono text-2xs text-ink-muted">'));
+        $this->assertSame(7, preg_match_all('/<div class="grid content-start gap-2[^"]*" data-demo="[a-z]+">\s*<span class="font-mono text-2xs text-ink-muted">/', $html));
+        $this->assertStringNotContainsString('Tarjeta compacta', $html);
+        $this->assertStringNotContainsString('Cabecera propia', $html);
+        $this->assertUniqueIds($html);
+    }
 }
