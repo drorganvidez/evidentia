@@ -1,4 +1,5 @@
 import { afterRender } from '../alpine/afterRender';
+import { normalize } from '../alpine/normalize';
 
 /**
  * Combobox with a listbox and chips over a native <select> (<x-ui.picker>). The select stays the source of
@@ -8,14 +9,6 @@ import { afterRender } from '../alpine/afterRender';
  * Blade: root x-data="picker" with data-presets, data-max and data-max-visible; x-ref="native" on the select,
  * x-ref="input" on the combobox, x-ref="cancel" on the button that cancels a preset.
  */
-function normalize(text) {
-    return text
-        .normalize('NFD')
-        .replace(/\p{Diacritic}/gu, '')
-        .toLowerCase()
-        .trim();
-}
-
 function people(count) {
     return `${count} ${count === 1 ? 'persona' : 'personas'}`;
 }
