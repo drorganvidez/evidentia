@@ -43,6 +43,10 @@ class DialogTest extends ComponentTestCase
 
         $this->assertStringContainsString('role="alertdialog"', $html);
         $this->assertStringContainsString('aria-describedby="remove-33-desc"', $html);
+        // No light dismiss on a destructive confirmation: Escape (the native close request) still works
+        $this->assertStringNotContainsString('closedby=', $html);
+        $this->assertStringNotContainsString('onBackdropClick', $html);
+        $this->assertMatchesRegularExpression('/x-ref="dialog"\s+x-on:close="onClose"\s+class="/', $html);
         $this->assertStringContainsString('aria-label="Eliminar" title="Eliminar"', $html);
         $this->assertStringContainsString('text-rejected-ink', $html, 'The alert trigger is the danger variant');
         $this->assertStringNotContainsString('aria-label="Cerrar"', $html);

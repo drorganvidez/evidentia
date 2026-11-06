@@ -13,6 +13,7 @@
     </x-ui.dialog>
     A trigger slot replaces the button; it must carry x-on:click="show", aria-haspopup="dialog" and aria-controls.
     Below md the modal and the alert are a bottom sheet (sheet); open-on-load reopens it after a validation error.
+    The alert closes with Cancelar or Escape, never with a click on the backdrop.
 --}}
 @use('Illuminate\View\ComponentSlot')
 @props([
@@ -61,10 +62,12 @@
             aria-controls="{{ $id }}" aria-expanded="false" x-bind:aria-expanded="open ? 'true' : 'false'"
             x-on:click="show">{{ $triggerText }}</x-ui.button>
     @endif
+    {{-- An alert confirms a destructive action: no light dismiss on the backdrop, Escape still closes it --}}
     <dialog id="{{ $id }}" @if ($isAlert) role="alertdialog" @endif
         aria-labelledby="{{ $id }}-title"
         @if ($description !== null) aria-describedby="{{ $id }}-desc" @endif x-ref="dialog"
-        x-on:close="onClose" x-on:click="onBackdropClick" closedby="any" @class($dialogClasses)>
+        x-on:close="onClose" @unless ($isAlert) x-on:click="onBackdropClick" closedby="any" @endunless
+        @class($dialogClasses)>
         <div @class([
             'flex items-start justify-between gap-4',
             $isDrawer ? 'px-4 pt-4' : 'p-6 pb-0',

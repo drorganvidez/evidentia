@@ -3,7 +3,8 @@
  * return of the focus for free; this module only keeps the trigger's aria-expanded in sync.
  *
  * Blade: <div x-data="dialog" [data-open]> with the trigger on x-on:click="show" and the dialog on
- * x-ref="dialog" x-on:close="onClose" x-on:click="onBackdropClick". data-open reopens it on load.
+ * x-ref="dialog" x-on:close="onClose" x-on:click="onBackdropClick". data-open reopens it on load. The alert
+ * variant leaves out the backdrop click and closedby: a destructive confirmation has no light dismiss.
  */
 export default function dialog() {
     return {

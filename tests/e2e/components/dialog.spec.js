@@ -64,6 +64,24 @@ test.describe('Diálogos', () => {
         await expect(page).toHaveURL(/#ui-dialog$/);
     });
 
+    test('la alerta no se cierra al pulsar el fondo, pero sí con Escape', async ({ page }) => {
+        const trigger = page.locator('button[aria-controls="demo-remove"]');
+        const dialog = page.locator('#demo-remove');
+
+        await trigger.click();
+        await expect(dialog).toHaveAttribute('open', '');
+
+        // The top left corner is always backdrop: the sheet sits at the bottom and the modal in the middle
+        await page.mouse.click(4, 4);
+        await expect(dialog).toHaveAttribute('open', '');
+        await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+        await page.keyboard.press('Escape');
+        await expect(dialog).not.toHaveAttribute('open', '');
+        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+        await expect(trigger).toBeFocused();
+    });
+
     test('«Sí, eliminar» envía un POST con su token y vuelve con el aviso', async ({ page }) => {
         await page.locator('button[aria-controls="demo-remove"]').click();
 
