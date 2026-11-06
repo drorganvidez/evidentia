@@ -4,6 +4,9 @@
 *.blade.php
 *.php
 
+# Published mail templates and their theme, inlined as written
+resources/views/vendor/
+
 # Copied legacy assets (AdminLTE, jQuery) and compiled output
 public/
 

@@ -20,3 +20,6 @@ resources/views/components/menumeeting.blade.php
 resources/views/components/slimreminder.blade.php
 resources/views/components/textarea.blade.php
 resources/views/components/textareasimple.blade.php
+# Mail templates in Markdown, which blade-formatter would break
+resources/views/vendor/**
+resources/views/mail/**

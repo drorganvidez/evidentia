@@ -101,6 +101,23 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Markdown Mail Settings
+    |--------------------------------------------------------------------------
+    |
+    | The mails of Evidentia use the theme and the components published in
+    | resources/views/vendor/mail, in Spanish and without remote resources.
+    |
+    */
+
+    'markdown' => [
+        'theme' => 'evidentia',
+        'paths' => [
+            resource_path('views/vendor/mail'),
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Global "From" Address
     |--------------------------------------------------------------------------
     |
