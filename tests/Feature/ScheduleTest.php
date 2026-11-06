@@ -27,4 +27,14 @@ class ScheduleTest extends TestCase
         $this->assertTrue($event->onOneServer);
         $this->assertSame('Europe/Madrid', (string) ($event->timezone ?? config('app.timezone')));
     }
+
+    public function test_the_deadline_reminders_go_out_every_morning(): void
+    {
+        $event = $this->event('notifications:remind');
+
+        $this->assertNotNull($event);
+        $this->assertSame('0 8 * * *', $event->expression);
+        $this->assertTrue($event->withoutOverlapping);
+        $this->assertTrue($event->onOneServer);
+    }
 }
