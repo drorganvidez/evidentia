@@ -163,6 +163,71 @@ test.describe('Shell en su propia página', () => {
         await expect(field).toBeFocused();
     });
 
+    test('el menú de usuario apaga los atajos y el ajuste sigue tras recargar', async ({
+        page,
+    }, testInfo) => {
+        test.skip(
+            testInfo.project.name !== 'chromium',
+            'El menú de usuario vive en la topbar ancha',
+        );
+
+        const trigger = page.getByRole('button', { name: 'Menú de Juan Pérez' });
+        const item = page.locator('#user-menu').getByRole('menuitemcheckbox', {
+            name: 'Atajos de teclado',
+            includeHidden: true,
+        });
+
+        await trigger.click();
+        await expect(item).toHaveAttribute('aria-checked', 'true');
+        await item.click();
+        await expect(item).toHaveAttribute('aria-checked', 'false');
+        await page.keyboard.press('Escape');
+
+        await page.locator('#main').focus();
+        await page.keyboard.press('/');
+        await expect(page.locator('#field-q-topbar')).not.toBeFocused();
+
+        await page.reload();
+
+        await expect(item).toHaveAttribute('aria-checked', 'false');
+        await expect(page.locator('header kbd')).toBeHidden();
+        await page.locator('#main').focus();
+        await page.keyboard.press('/');
+        await expect(page.locator('#field-q-topbar')).not.toBeFocused();
+
+        // Back on from the same item
+        await trigger.click();
+        await item.click();
+        await expect(item).toHaveAttribute('aria-checked', 'true');
+        await page.keyboard.press('Escape');
+        await page.locator('#main').focus();
+        await page.keyboard.press('/');
+        await expect(page.locator('#field-q-topbar')).toBeFocused();
+    });
+
+    test('el cajón apaga los atajos con un conmutador que sigue tras recargar', async ({
+        page,
+    }, testInfo) => {
+        test.skip(testInfo.project.name !== 'mobile', 'El cajón es cosa del teléfono');
+
+        const drawer = page.locator('#drawer');
+        const toggle = drawer.getByRole('switch', { name: 'Atajos de teclado' });
+
+        await page.getByRole('button', { name: 'Abrir menú' }).click();
+        await expect(toggle).toBeChecked();
+        await expect(drawer.locator('kbd')).toBeVisible();
+
+        await toggle.click();
+
+        await expect(toggle).not.toBeChecked();
+        await expect(drawer.locator('kbd')).toBeHidden();
+        expect(await page.evaluate(() => localStorage.getItem('evidentia.shortcuts'))).toBe('off');
+
+        await page.reload();
+        await page.getByRole('button', { name: 'Abrir menú' }).click();
+        await expect(toggle).not.toBeChecked();
+    });
+
     test('el menú de usuario abre desde el avatar con el nombre y Salir', async ({
         page,
     }, testInfo) => {

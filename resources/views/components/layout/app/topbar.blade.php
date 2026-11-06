@@ -1,7 +1,8 @@
 {{--
     Topbar of the app layout: menu button (phone), breadcrumbs, search, bell, theme and the user menu.
     <x-layout.app.topbar :breadcrumbs="$breadcrumbs" :search="$search" :notifications="$notifications" :user="$user" />
-    The menu button dispatches ui-drawer, which the drawer dialog listens to on the window.
+    The menu button dispatches ui-drawer, which the drawer dialog listens to on the window. The user menu also turns
+    the keyboard shortcuts on and off ($store.shortcuts), as the drawer does on the phone.
 --}}
 @props(['breadcrumbs' => [], 'search' => null, 'notifications' => null, 'user' => null])
 @php
@@ -41,6 +42,9 @@
                     </li>
                     <x-ui.menu.item divider />
                     <x-ui.menu.item :href="$user['profileHref'] ?? url('/')" icon="user-round">Mi perfil</x-ui.menu.item>
+                    <x-ui.menu.item icon="keyboard" :checked="true"
+                        x-bind:aria-checked="$store.shortcuts.enabled ? 'true' : 'false'"
+                        x-on:click="$store.shortcuts.toggle()">Atajos de teclado</x-ui.menu.item>
                     <x-ui.menu.item divider />
                     <x-ui.menu.item icon="log-out" method="post" :action="$user['logoutAction'] ?? url('/logout')">Salir</x-ui.menu.item>
                 </x-ui.menu>

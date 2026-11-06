@@ -172,6 +172,36 @@ class LayoutAppTest extends ComponentTestCase
         $this->assertStringNotContainsString('drawer-account-title', $anonymous);
     }
 
+    public function test_the_user_menu_and_the_drawer_can_turn_the_keyboard_shortcuts_off(): void
+    {
+        $html = $this->render_shell(':user="$user"', [
+            'user' => ['name' => 'Juan', 'surname' => 'Pérez', 'roles' => [], 'profileHref' => '/cuenta', 'logoutAction' => '/salir'],
+        ]);
+
+        preg_match('/<ul id="user-menu".*?<\/ul>/s', $html, $menu);
+        $this->assertNotEmpty($menu);
+        preg_match('/<button type="button" role="menuitemcheckbox"[^>]*>/s', $menu[0], $item);
+        $this->assertNotEmpty($item, 'A checkbox item in the user menu');
+        $this->assertStringContainsString('aria-checked="true"', $item[0]);
+        $this->assertStringContainsString('x-bind:aria-checked="$store.shortcuts.enabled ? \'true\' : \'false\'"', $item[0]);
+        $this->assertStringContainsString('x-on:click="$store.shortcuts.toggle()"', $item[0]);
+        $this->assertMatchesRegularExpression('/Atajos de teclado\s*<span aria-hidden="true"/', $menu[0]);
+
+        preg_match('/<dialog id="drawer".*?<\/dialog>/s', $html, $drawer);
+        $this->assertNotEmpty($drawer);
+        preg_match('/<input id="field-shortcuts-drawer"[^>]*>/s', $drawer[0], $switch);
+        $this->assertNotEmpty($switch, 'A switch in the drawer');
+        $this->assertStringContainsString('role="switch"', $switch[0]);
+        $this->assertStringContainsString('x-bind:checked="$store.shortcuts.enabled"', $switch[0]);
+        $this->assertStringContainsString('x-on:change="$store.shortcuts.toggle()"', $switch[0]);
+        $this->assertMatchesRegularExpression('/\schecked(\s|>)/', $switch[0], 'On until the store says otherwise');
+        $this->assertStringContainsString('>Atajos de teclado</span>', $drawer[0]);
+        $this->assertUniqueIds($html);
+        $this->assertCspSafe($html);
+
+        $this->assertStringContainsString('id="field-shortcuts-drawer"', $this->render_shell(), 'The drawer offers it without a user too');
+    }
+
     public function test_the_signed_in_person_fills_the_user_when_none_is_given(): void
     {
         $account = User::factory()->create(['name' => 'Lucía', 'surname' => 'García']);

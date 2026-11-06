@@ -1,6 +1,7 @@
 {{--
-    Drawer of the phone: the sidebar in full, the search, the theme with its labels and the account as a flat list,
-    inside a dialog that opens on the ui-drawer window event sent by the menu button of the topbar.
+    Drawer of the phone: the sidebar in full, the search, the theme with its labels, the switch of the keyboard
+    shortcuts ($store.shortcuts) and the account as a flat list, inside a dialog that opens on the ui-drawer window
+    event sent by the menu button of the topbar.
     <x-layout.app.drawer :nav="$nav" :deadline="$deadline" :subtitle="$subtitle" :user="$user" :search="$search" />
 --}}
 @props(['nav' => [], 'deadline' => null, 'subtitle' => null, 'user' => null, 'search' => null])
@@ -27,6 +28,10 @@
                 <x-ui.theme-switch name="theme-drawer" labels block />
             </div>
         </section>
+        <div class="border-t border-rule px-1 pt-3">
+            <x-ui.choice type="switch" name="shortcuts-drawer" label="Atajos de teclado" :checked="true"
+                x-bind:checked="$store.shortcuts.enabled" x-on:change="$store.shortcuts.toggle()" />
+        </div>
         @if ($user !== null)
             <section aria-labelledby="drawer-account-title" class="grid gap-2 border-t border-rule pt-4">
                 <h3 id="drawer-account-title" class="px-3 text-2xs font-bold tracking-widest text-ink-muted uppercase">
