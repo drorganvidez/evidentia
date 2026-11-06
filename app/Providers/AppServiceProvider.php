@@ -18,6 +18,7 @@ use App\Models\User;
 use App\Services\Activity\ActivityRecorder;
 use App\Services\Deadlines;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Mail\Markdown;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -59,5 +60,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Relation::morphMap(self::MORPH_MAP);
+
+        // a title written by someone can never turn into a link inside a mail
+        Markdown::withSecuredEncoding();
     }
 }
