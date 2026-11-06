@@ -23,19 +23,33 @@ class HoursTest extends ComponentTestCase
         $this->assertCspSafe($html);
     }
 
-    public function test_the_raw_value_goes_to_the_title_only_when_the_rounding_hides_decimals(): void
+    public function test_the_exact_value_is_read_out_and_shown_on_hover_when_the_rounding_hides_decimals(): void
     {
-        $rounded = $this->render('<x-ui.hours :value="1.755" />');
+        $rounded = $this->render('<x-ui.hours :value="1.755" class="ml-2" />');
 
-        $this->assertStringContainsString('title="1.755"', $rounded);
-        $this->assertStringContainsString('>1,76 h</span>', $rounded);
-
-        $exact = $this->render('<x-ui.hours :value="1.75" />');
-        $this->assertStringNotContainsString('title=', $exact);
+        // Screen readers get the exact figure as text; the rounded one is only painted, with the exact one on hover
+        $this->assertMatchesRegularExpression('/<span\s+class="font-mono tabular-nums whitespace-nowrap text-md ml-2">\s*<span aria-hidden="true" title="1,755 h">1,76 h<\/span>\s*<span class="sr-only">1,755 h<\/span>\s*<\/span>/', $rounded);
+        $this->assertSame(1, substr_count($rounded, 'title='));
+        $this->assertCspSafe($rounded);
 
         $string = $this->render('<x-ui.hours value="0.333" />');
-        $this->assertStringContainsString('title="0.333"', $string);
-        $this->assertStringContainsString('>0,33 h</span>', $string);
+
+        $this->assertStringContainsString('<span aria-hidden="true" title="0,333 h">0,33 h</span>', $string);
+        $this->assertStringContainsString('<span class="sr-only">0,333 h</span>', $string);
+
+        // At most four decimals of the exact value, with the Spanish separators
+        $long = $this->render('<x-ui.hours :value="1234.833333" />');
+
+        $this->assertStringContainsString('title="1.234,8333 h">1.234,83 h</span>', $long);
+        $this->assertStringContainsString('<span class="sr-only">1.234,8333 h</span>', $long);
+
+        foreach (['1.75', '4', '1.75000001', '2.5'] as $exact) {
+            $html = $this->render('<x-ui.hours :value="'.$exact.'" />');
+
+            $this->assertStringNotContainsString('title=', $html, $exact);
+            $this->assertStringNotContainsString('sr-only', $html, $exact);
+            $this->assertStringNotContainsString('aria-hidden', $html, $exact);
+        }
     }
 
     public function test_a_missing_value_prints_the_null_text(): void

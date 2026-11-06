@@ -70,7 +70,7 @@
             <dd><x-ui.hours :value="1204.5" /></dd>
         </div>
         <div class="glass-2 grid gap-1 rounded-md p-4">
-            <dt class="font-mono text-2xs text-ink-muted">1.755 · title con el valor crudo</dt>
+            <dt class="font-mono text-2xs text-ink-muted">1.755 · exacto en sr-only y en title</dt>
             <dd><x-ui.hours :value="1.755" /></dd>
         </div>
         <div class="glass-2 grid gap-1 rounded-md p-4">
