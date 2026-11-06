@@ -34,14 +34,14 @@
         'atrasadas' => 'No hay evidencias atrasadas',
         default => 'No hay evidencias',
     };
-    $columns = [
+    $columns = $sort->columns([
         ['label' => 'Evidencia', 'key' => 'title'],
         ['label' => 'Autor', 'key' => 'author'],
         ['label' => 'Comité', 'key' => 'committee'],
         ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
         ['label' => 'Creada', 'key' => 'created_at'],
         ['label' => 'Estado', 'key' => 'status'],
-    ];
+    ]);
 @endphp
 <x-layout.app title="Evidencias" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Evidencias']]">
     <x-ui.page-header title="Evidencias" />

@@ -22,6 +22,7 @@ use App\Models\User;
 use App\Services\Activity\SubjectInfo;
 use App\Support\Changes;
 use App\Support\ListPage;
+use App\Support\ListSort;
 use App\Support\StrongPassword;
 use App\View\CommitteeOverview;
 use Carbon\Carbon;
@@ -81,6 +82,17 @@ class ManagementController extends Controller
             'hasta' => $this->date_query($request, 'hasta'),
         ];
 
+        // orden en la URL; por defecto, la última modificación primero
+        $sort = ListSort::from($request, [
+            'title' => 'title',
+            'author' => ['user.surname', 'user.name'],
+            'committee' => 'committee.name',
+            'hours' => 'hours',
+            'created_at' => ListSort::desc('created_at'),
+            'status' => ListSort::rank('status', ['PENDING', 'ACCEPTED', 'REJECTED']),
+            'updated' => ListSort::desc('updated_at'),
+        ], 'updated');
+
         // filtros y búsqueda, en la URL; las pestañas, sus recuentos y los totales se calculan sobre todo el resultado
         $base = fn (): Builder => $this->searchList(
             Evidence::where('last', true)->where('status', '!=', 'DRAFT')
@@ -104,13 +116,13 @@ class ManagementController extends Controller
             ->when($state === 'atrasadas', fn ($query) => $query->where('updated_at', '<', $lateSince));
         $hours = (float) $filtered->clone()->sum('hours');
         $evidences = $this->paginateList(
-            $filtered->with(['user', 'committee', 'reasonRejection'])->orderByDesc('updated_at')->orderByDesc('id'),
+            $sort->apply($filtered->with(['user', 'committee', 'reasonRejection'])),
             $request,
         );
 
         return view('manage.evidence_list', [
             'evidences' => $evidences, 'state' => $state, 'counts' => $counts, 'filters' => $filters, 'hours' => $hours,
-            'term' => ListPage::term($request),
+            'term' => ListPage::term($request), 'sort' => $sort,
             'committees' => $committees->map(fn (Committee $committee): array => ['value' => (string) $committee->id, 'label' => $committee->name])->all(),
             'lateDays' => CommitteeOverview::LATE_DAYS,
         ]);
