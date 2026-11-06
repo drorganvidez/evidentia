@@ -7,6 +7,8 @@ use App\Models\Evidence;
 use App\Models\MeetingRequest;
 use App\Models\Message;
 use App\Models\MessageThread;
+use App\Services\Messaging\Audience;
+use App\Services\Messaging\Messaging;
 use Tests\Feature\Screens\Management\ScreenTestCase;
 
 /** The inbox, «Mis mensajes», the form of a new message and the thread, by role. */
@@ -71,6 +73,32 @@ class MessagesPagesTest extends ScreenTestCase
         $this->screen('presidente', route('messages.mine'))
             ->assertSee('Todavía no has escrito ningún mensaje')
             ->assertSee(route('messages.create'), false);
+    }
+
+    public function test_the_threads_come_in_pages_that_keep_the_filters(): void
+    {
+        $student = $this->person('estudiante');
+        $this->actingAs($student);
+        foreach (range(1, 30) as $index) {
+            app(Messaging::class)->open($student, new Audience('LECTURE'), sprintf('Consulta %02d', $index), 'Una consulta más para el profesorado.', null);
+        }
+
+        $mine = $this->screen('estudiante', route('messages.mine'))
+            ->assertSee('<nav aria-label="Paginación de mis mensajes"', false)
+            ->assertSee('De la 1 a la 25 de 31')
+            ->assertSee('aria-label="Filas por página"', false)
+            ->getContent();
+        $this->assertStringContainsString('href="'.route('messages.mine', ['page' => 2]).'" rel="next"', $mine);
+
+        $this->screen('estudiante', route('messages.mine', ['state' => 'open', 'page' => 9]))
+            ->assertSee('De la 26 a la 31 de 31')
+            ->assertSee('Duda sobre el photocall');
+
+        $inbox = $this->screen('profesor', route('messages.inbox', ['q' => 'consulta', 'per_page' => 25]))
+            ->assertSee('<nav aria-label="Paginación de los mensajes"', false)
+            ->assertSee('De la 1 a la 25 de 30')
+            ->getContent();
+        $this->assertStringContainsString('href="'.e(route('messages.inbox', ['q' => 'consulta', 'per_page' => 25, 'page' => 2])).'" rel="next"', $inbox);
     }
 
     public function test_a_new_message_about_an_evidence_suggests_its_coordination(): void

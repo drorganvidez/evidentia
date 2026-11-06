@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\PaginatesLists;
 use App\Http\Requests\ReplyMessageRequest;
 use App\Http\Requests\StoreMessageRequest;
 use App\Models\ActivityLog;
@@ -22,6 +23,8 @@ use Illuminate\Support\Str;
  */
 class MessageThreadController extends Controller
 {
+    use PaginatesLists;
+
     private const STATES = ['open', 'resolved', 'all'];
 
     public function __construct(private Messaging $messaging) {}
@@ -50,13 +53,11 @@ class MessageThreadController extends Controller
             ->when($committee !== null, fn (Builder $query) => $query->where('committee_id', $committee))
             ->when($q !== '', fn (Builder $query) => $query->search($q));
 
-        $threads = $base()
+        $threads = $this->paginateList($base()
             ->when($state !== 'all', fn (Builder $query) => $query->where('state', $state))
             ->with(['author', 'lastMessage', 'committee'])
             ->latest('last_message_at')
-            ->latest('id')
-            ->paginate(25)
-            ->withQueryString();
+            ->latest('id'), $request);
 
         return view('messages.inbox', [
             'me' => $me,
@@ -83,13 +84,11 @@ class MessageThreadController extends Controller
         return view('messages.mine', [
             'me' => $me,
             'state' => $state,
-            'threads' => $base()
+            'threads' => $this->paginateList($base()
                 ->when($state !== 'all', fn (Builder $query) => $query->where('state', $state))
                 ->with(['lastMessage', 'committee'])
                 ->latest('last_message_at')
-                ->latest('id')
-                ->paginate(25)
-                ->withQueryString(),
+                ->latest('id'), $request),
             'counts' => ['open' => $base()->open()->count(), 'resolved' => $base()->resolved()->count(), 'all' => $base()->count()],
             'unread' => MessageThread::unreadMineCount($me),
         ]);

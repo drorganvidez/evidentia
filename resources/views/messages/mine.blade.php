@@ -28,14 +28,15 @@
         </x-slot:actions>
     </x-ui.page-header>
 
-    <x-ui.table caption="Mensajes que has escrito" density="compact" :columns="[
-        ['label' => 'Asunto', 'key' => 'subject'],
-        ['label' => 'Para', 'key' => 'audience', 'hide' => true],
-        ['label' => 'Sobre', 'key' => 'about', 'hide' => true],
-        ['label' => 'Estado', 'key' => 'state'],
-        ['label' => 'Última respuesta', 'key' => 'last'],
-        ['label' => 'Abrir', 'srOnly' => true],
-    ]">
+    <x-ui.table caption="Mensajes que has escrito" density="compact" :paginator="$threads"
+        pagination-label="Paginación de mis mensajes" :columns="[
+            ['label' => 'Asunto', 'key' => 'subject'],
+            ['label' => 'Para', 'key' => 'audience', 'hide' => true],
+            ['label' => 'Sobre', 'key' => 'about', 'hide' => true],
+            ['label' => 'Estado', 'key' => 'state'],
+            ['label' => 'Última respuesta', 'key' => 'last'],
+            ['label' => 'Abrir', 'srOnly' => true],
+        ]">
         <x-slot:toolbar>
             <x-ui.tabs label="Filtrar por estado" :items="$tabs" />
         </x-slot:toolbar>
@@ -53,11 +54,6 @@
                     </x-slot:actions>
                 </x-ui.empty>
             </x-slot:empty>
-        @endif
-        @if ($threads->hasPages())
-            <x-slot:footer>
-                <x-ui.pagination :paginator="$threads" label="Paginación de mis mensajes" />
-            </x-slot:footer>
         @endif
     </x-ui.table>
 </x-layout.app>
