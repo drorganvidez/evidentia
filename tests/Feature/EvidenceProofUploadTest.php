@@ -93,6 +93,7 @@ class EvidenceProofUploadTest extends TestCase
             ->assertSessionHas('error', 'No se pudo guardar una de las pruebas. Vuelve a intentarlo.')
             ->assertSessionHasInput('title', 'Organización de mesas');
 
+        $this->assertSame(0, Evidence::count());
         $this->assertSame(0, Proof::count());
     }
 

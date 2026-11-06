@@ -13,6 +13,7 @@ use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class EvidenceController extends Controller
@@ -74,13 +75,18 @@ class EvidenceController extends Controller
     private function new($request, $status)
     {
 
-        $evidence = $this->new_evidence($request, $status);
-
         try {
-            $this->save_files($request, $evidence);
+            DB::transaction(function () use ($request, $status) {
+                $evidence = $this->new_evidence($request, $status);
+
+                $this->save_files($request, $evidence);
+            });
         } catch (ProofNotStored) {
             return $this->proof_not_stored();
         }
+
+        // ya no necesitamos la carpeta temporal, la eliminamos
+        Storage::deleteDirectory($this->temporary_folder($request));
 
         return redirect()->route('evidence.list')->with('success', 'Evidencia creada con éxito.');
 
@@ -122,10 +128,7 @@ class EvidenceController extends Controller
     {
         $user = Auth::user();
 
-        $token = $request->session()->token();
-        $tmp = 'tmp/'.$user->username.'/'.$token.'/';
-
-        foreach (Storage::files($tmp) as $filename) {
+        foreach (Storage::files($this->temporary_folder($request)) as $filename) {
 
             $name = pathinfo($filename, PATHINFO_FILENAME);
             $type = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
@@ -162,9 +165,12 @@ class EvidenceController extends Controller
 
         }
 
-        // ya no necesitamos la carpeta temporal, la eliminamos
-        Storage::deleteDirectory($tmp);
+    }
 
+    // carpeta de las pruebas subidas en esta sesión
+    private function temporary_folder($request): string
+    {
+        return 'tmp/'.Auth::user()->username.'/'.$request->session()->token().'/';
     }
 
     private function proof_not_stored()
@@ -247,24 +253,29 @@ class EvidenceController extends Controller
         // evidencia desde la que hemos decidido partir
         $evidence_previous = Evidence::find($request->_id);
 
-        // creamos la nueva evidencia a partir de la seleccionada para editar
-        $evidence_new = $this->new_evidence($request, $status);
-
-        // evidencia cabecera en el flujo de ediciones (la última)
-        $evidence_header = $evidence_previous->findHeaderEvidence();
-        $evidence_header->last = false;
-        $evidence_header->save();
-
-        // apuntamos al final del flujo de ediciones
-        $evidence_new->points_to = $evidence_header->id;
-        $evidence_new->save();
-
-        // copiamos ahora los archivos de la carpeta temporal a la nueva evidencia
         try {
-            $this->save_files($request, $evidence_new);
+            DB::transaction(function () use ($request, $status, $evidence_previous) {
+                // creamos la nueva evidencia a partir de la seleccionada para editar
+                $evidence_new = $this->new_evidence($request, $status);
+
+                // evidencia cabecera en el flujo de ediciones (la última)
+                $evidence_header = $evidence_previous->findHeaderEvidence();
+                $evidence_header->last = false;
+                $evidence_header->save();
+
+                // apuntamos al final del flujo de ediciones
+                $evidence_new->points_to = $evidence_header->id;
+                $evidence_new->save();
+
+                // copiamos ahora los archivos de la carpeta temporal a la nueva evidencia
+                $this->save_files($request, $evidence_new);
+            });
         } catch (ProofNotStored) {
             return $this->proof_not_stored();
         }
+
+        // ya no necesitamos la carpeta temporal, la eliminamos
+        Storage::deleteDirectory($this->temporary_folder($request));
 
         if ($status == 'DRAFT') {
             return redirect()->route('evidence.list')->with('success', 'Evidencia editada con éxito.');
@@ -283,13 +294,17 @@ class EvidenceController extends Controller
         $id = $request->_id;
         $evidence = Evidence::find($id);
 
-        // eliminamos recursivamente la evidencia y todas las versiones anteriores, incluyendo archivos
-        $this->delete_evidence($evidence);
+        // eliminamos recursivamente la evidencia y todas las versiones anteriores, y después sus archivos
+        $folders = DB::transaction(fn () => $this->delete_evidence($evidence));
+        foreach ($folders as $folder) {
+            Storage::deleteDirectory($folder);
+        }
 
         return redirect()->route('evidence.list')->with('success', 'Evidencia borrada con éxito.');
     }
 
-    private function delete_evidence($evidence)
+    // borra las filas de la versión y de las anteriores; devuelve las carpetas que se borran tras el commit
+    private function delete_evidence($evidence): array
     {
 
         $user = Auth::user();
@@ -299,12 +314,14 @@ class EvidenceController extends Controller
 
         // eliminamos los archivos almacenados
         $this->delete_files($evidence);
-        Storage::deleteDirectory('proofs/'.$user->username.'/evidence_'.$evidence->id.'');
+        $folders = ['proofs/'.$user->username.'/evidence_'.$evidence->id];
         $evidence->delete();
 
         if ($evidence_previous != null) {
-            $this->delete_evidence($evidence_previous);
+            $folders = [...$folders, ...$this->delete_evidence($evidence_previous)];
         }
+
+        return $folders;
     }
 
     private function delete_files($evidence)

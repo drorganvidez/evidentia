@@ -147,20 +147,22 @@ class ManagementController extends Controller
             return redirect()->route($returned_route)->with('error', 'Dos comités no pueden llamarse igual.');
         }
 
-        foreach (Committee::all() as $committee) {
+        DB::transaction(function () use ($request) {
+            foreach (Committee::all() as $committee) {
 
-            $new_icon = $request->input('icon_'.$committee->id);
-            $new_name = $request->input('name_'.$committee->id);
+                $new_icon = $request->input('icon_'.$committee->id);
+                $new_name = $request->input('name_'.$committee->id);
 
-            if ($new_name != '') {
+                if ($new_name != '') {
 
-                $saved_committee = Committee::find($committee->id);
-                $saved_committee->icon = $new_icon;
-                $saved_committee->name = $new_name;
+                    $saved_committee = Committee::find($committee->id);
+                    $saved_committee->icon = $new_icon;
+                    $saved_committee->name = $new_name;
 
-                $saved_committee->save();
+                    $saved_committee->save();
+                }
             }
-        }
+        });
 
         return redirect()->route($returned_route)->with('success', 'Comités guardados con éxito.');
     }
@@ -239,35 +241,37 @@ class ManagementController extends Controller
 
         $committee_id = $request->input('committee');
 
-        // guardar bloqueo
-        $user->block = $request->input('pass') == 'on' ? false : true;
+        DB::transaction(function () use ($request, $user, $roles_id, $committee_id) {
+            // guardar bloqueo
+            $user->block = $request->input('pass') == 'on' ? false : true;
 
-        // asignar nuevos roles
-        $user->roles()->sync($roles_id);
-        $user->load('roles');
+            // asignar nuevos roles
+            $user->roles()->sync($roles_id);
+            $user->load('roles');
 
-        // asignar coordinador o secretario, conservando su fila (actas, convocatorias, listas...)
-        foreach (['coordinators' => 'COORDINATOR', 'secretaries' => 'SECRETARY'] as $table => $role) {
-            if ($user->hasRole($role)) {
-                DB::table($table)->updateOrInsert(['user_id' => $user->id], ['committee_id' => $committee_id]);
-            } else {
-                DB::table($table)->where('user_id', $user->id)->delete();
+            // asignar coordinador o secretario, conservando su fila (actas, convocatorias, listas...)
+            foreach (['coordinators' => 'COORDINATOR', 'secretaries' => 'SECRETARY'] as $table => $role) {
+                if ($user->hasRole($role)) {
+                    DB::table($table)->updateOrInsert(['user_id' => $user->id], ['committee_id' => $committee_id]);
+                } else {
+                    DB::table($table)->where('user_id', $user->id)->delete();
+                }
             }
-        }
 
-        $user->username = $request->input('username');
-        $user->name = $request->input('name');
-        $user->surname = $request->input('surname');
-        $user->email = $request->input('email');
-        $user->clean_name = \StringUtilites::clean(trim($request->input('name')));
-        $user->clean_surname = \StringUtilites::clean(trim($request->input('surname')));
+            $user->username = $request->input('username');
+            $user->name = $request->input('name');
+            $user->surname = $request->input('surname');
+            $user->email = $request->input('email');
+            $user->clean_name = \StringUtilites::clean(trim($request->input('name')));
+            $user->clean_surname = \StringUtilites::clean(trim($request->input('surname')));
 
-        // cambio de contraseña (si se indica)
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->input('password'));
-        }
+            // cambio de contraseña (si se indica)
+            if ($request->filled('password')) {
+                $user->password = Hash::make($request->input('password'));
+            }
 
-        $user->save();
+            $user->save();
+        });
 
         // redirección según el rol del que ejecuta la acción
         if (Auth::user()->hasRole('PRESIDENT')) {
@@ -297,18 +301,20 @@ class ManagementController extends Controller
             'username' => 'required|max:255|unique:users',
         ]);
 
-        $user = User::create([
-            'name' => $request->input('name'),
-            'surname' => $request->input('surname'),
-            'email' => $request->input('email'),
-            'username' => $request->input('username'),
-            'password' => Hash::make(\Random::getRandomIdentifier(16)),
-            'clean_name' => \StringUtilites::clean(trim($request->input('name'))),
-            'clean_surname' => \StringUtilites::clean(trim($request->input('surname'))),
-        ]);
+        DB::transaction(function () use ($request) {
+            $user = User::create([
+                'name' => $request->input('name'),
+                'surname' => $request->input('surname'),
+                'email' => $request->input('email'),
+                'username' => $request->input('username'),
+                'password' => Hash::make(\Random::getRandomIdentifier(16)),
+                'clean_name' => \StringUtilites::clean(trim($request->input('name'))),
+                'clean_surname' => \StringUtilites::clean(trim($request->input('surname'))),
+            ]);
 
-        $student_role = Role::where('rol', 'STUDENT')->get();
-        $user->roles()->attach($student_role);
+            $student_role = Role::where('rol', 'STUDENT')->get();
+            $user->roles()->attach($student_role);
+        });
 
         $list = Auth::user()->hasRole('PRESIDENT') ? 'president.user.list' : 'lecture.user.list';
 

@@ -18,6 +18,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -78,45 +79,47 @@ class MeetingSecretaryController extends Controller
             ]);
         }
 
-        $meeting_request = MeetingRequest::create([
-            'title' => $request_http->input('title'),
-            'place' => $request_http->input('place'),
-            'datetime' => $request_http->input('date').' '.$request_http->input('time'),
-            'type' => $request_http->input('type'),
-            'modality' => $request_http->input('modality'),
-            'committee_id' => Auth::user()->secretary->committee->id,
-            'secretary_id' => Auth::user()->secretary->id,
-        ]);
-
-        $diary = Diary::create([
-            'meeting_request_id' => $meeting_request->id,
-        ]);
-
-        foreach (json_decode($request_http->input('points_list'), 1) as $key => $value) {
-
-            DiaryPoint::create([
-                'diary_id' => $diary->id,
-                'point' => $value,
+        $meeting_request = DB::transaction(function () use ($request_http) {
+            $meeting_request = MeetingRequest::create([
+                'title' => $request_http->input('title'),
+                'place' => $request_http->input('place'),
+                'datetime' => $request_http->input('date').' '.$request_http->input('time'),
+                'type' => $request_http->input('type'),
+                'modality' => $request_http->input('modality'),
+                'committee_id' => Auth::user()->secretary->committee->id,
+                'secretary_id' => Auth::user()->secretary->id,
             ]);
 
-        }
+            $diary = Diary::create([
+                'meeting_request_id' => $meeting_request->id,
+            ]);
+
+            foreach (json_decode($request_http->input('points_list'), 1) as $key => $value) {
+
+                DiaryPoint::create([
+                    'diary_id' => $diary->id,
+                    'point' => $value,
+                ]);
+
+            }
+
+            // creamos una hoja de firmas (si el usuario lo ha querido así)
+            if ($request_http->input('create_signature_sheet') == 'on') {
+                SignatureSheet::create([
+                    'title' => 'Hoja de firmas de '.$request_http->input('title'),
+                    'random_identifier' => $this->generate_random_identifier_for_signature(4),
+                    'meeting_request_id' => $meeting_request->id,
+                    'secretary_id' => Auth::user()->secretary->id,
+                ]);
+            }
+
+            return $meeting_request;
+        });
 
         // Genera PDF de la convocatoria
         $pdf = Pdf::loadView('meeting.request_template', ['meeting_request' => $meeting_request]);
         $content = $pdf->download()->getOriginalContent();
         Storage::put('/meeting_requests/meeting_request_'.$meeting_request->id.'.pdf', $content);
-
-        // return dd($request_http->all());
-
-        // creamos una hoja de firmas (si el usuario lo ha querido así)
-        if ($request_http->input('create_signature_sheet') == 'on') {
-            SignatureSheet::create([
-                'title' => 'Hoja de firmas de '.$request_http->input('title'),
-                'random_identifier' => $this->generate_random_identifier_for_signature(4),
-                'meeting_request_id' => $meeting_request->id,
-                'secretary_id' => Auth::user()->secretary->id,
-            ]);
-        }
 
         return redirect()->route('secretary.meeting.manage.request.list')->with('success', 'Convocatoria de reunión creada con éxito.');
     }
@@ -175,31 +178,33 @@ class MeetingSecretaryController extends Controller
 
         $meeting_request = MeetingRequest::findOrFail($request_http->input('_id'));
 
-        $meeting_request->title = $request_http->input('title');
-        $meeting_request->place = $request_http->input('place');
-        $meeting_request->datetime = $request_http->input('date').' '.$request_http->input('time');
-        $meeting_request->modality = $request_http->input('modality');
-        $meeting_request->type = $request_http->input('type');
+        DB::transaction(function () use ($request_http, $meeting_request) {
+            $meeting_request->title = $request_http->input('title');
+            $meeting_request->place = $request_http->input('place');
+            $meeting_request->datetime = $request_http->input('date').' '.$request_http->input('time');
+            $meeting_request->modality = $request_http->input('modality');
+            $meeting_request->type = $request_http->input('type');
 
-        $meeting_request->save();
+            $meeting_request->save();
 
-        // borramos los puntos del día anteriores
-        $old_diary = $meeting_request->diary;
-        $old_diary?->delete();
+            // borramos los puntos del día anteriores
+            $old_diary = $meeting_request->diary;
+            $old_diary?->delete();
 
-        // añadimos los nuevos puntos
-        $diary = Diary::create([
-            'meeting_request_id' => $meeting_request->id,
-        ]);
-
-        foreach (json_decode($request_http->input('points_list'), 1) as $key => $value) {
-
-            $diary->diaryPoints()->create([
-                'diary_id' => $diary->id,
-                'point' => $value,
+            // añadimos los nuevos puntos
+            $diary = Diary::create([
+                'meeting_request_id' => $meeting_request->id,
             ]);
 
-        }
+            foreach (json_decode($request_http->input('points_list'), 1) as $key => $value) {
+
+                $diary->diaryPoints()->create([
+                    'diary_id' => $diary->id,
+                    'point' => $value,
+                ]);
+
+            }
+        });
 
         /*
          *  Por alguna extraña razón de Laravel, no es capaz de remapear el objeto meeting_request, pese a que
@@ -240,18 +245,20 @@ class MeetingSecretaryController extends Controller
     {
         $meeting_request = MeetingRequest::findOrFail($request->input('_id'));
 
-        // borramos el pdf del acta antigua
+        DB::transaction(function () use ($meeting_request) {
+            // desemparejamos signature sheet (si la hubiera)
+            $signature_sheet = $meeting_request->signatureSheet;
+            if ($signature_sheet != null) {
+                $signature_sheet->meeting_request_id = null;
+                $signature_sheet->save();
+            }
+
+            // eliminamos la entidad en sí
+            $meeting_request->delete();
+        });
+
+        // borramos el pdf de la convocatoria
         Storage::delete('/meeting_requests/meeting_request_'.$meeting_request->id.'.pdf');
-
-        // desemparejamos signature sheet (si la hubiera)
-        $signature_sheet = $meeting_request->signatureSheet;
-        if ($signature_sheet != null) {
-            $signature_sheet->meeting_request_id = null;
-            $signature_sheet->save();
-        }
-
-        // eliminamos la entidad en sí
-        $meeting_request->delete();
 
         return redirect()->route('secretary.meeting.manage.request.list')->with('success', 'Convocatoria eliminada con éxito.');
     }
@@ -359,19 +366,21 @@ class MeetingSecretaryController extends Controller
             'title' => 'required|min:5|max:255',
         ]);
 
-        // actualizamos el título
-        $signature_sheet->title = $request->input('title');
-        $signature_sheet->save();
+        DB::transaction(function () use ($request, $signature_sheet) {
+            // actualizamos el título
+            $signature_sheet->title = $request->input('title');
+            $signature_sheet->save();
 
-        // actualizamos la convocatoria asociada
-        $meeting_request = Auth::user()->secretary->meetingRequests()->find($request->input('meeting_request_id'));
+            // actualizamos la convocatoria asociada
+            $meeting_request = Auth::user()->secretary->meetingRequests()->find($request->input('meeting_request_id'));
 
-        if ($meeting_request != null) {
-            if ($meeting_request->signatureSheet == null) {
-                $signature_sheet->meeting_request_id = $meeting_request->id;
-                $signature_sheet->save();
+            if ($meeting_request != null) {
+                if ($meeting_request->signatureSheet == null) {
+                    $signature_sheet->meeting_request_id = $meeting_request->id;
+                    $signature_sheet->save();
+                }
             }
-        }
+        });
 
         return redirect()->route('secretary.meeting.manage.signaturesheet.list')->with('success', 'Hoja de firmas actualizada con éxito.');
 
@@ -510,66 +519,70 @@ class MeetingSecretaryController extends Controller
             ]);
         }
 
-        $meeting = Meeting::create([
-            'title' => $request->input('title'),
-            'hours' => $request->input('hours') + floor(($minutes * 100) / 60) / 100,
-            'type' => $request->input('type'),
-            'modality' => $request->input('modality'),
-            'place' => $request->input('place'),
-            'datetime' => $request->input('date').' '.$request->input('time'),
-        ]);
-
-        $meeting->committee()->associate(Auth::user()->secretary->committee);
-
-        $meeting->save();
-
-        // Asociamos los usuarios a la reunión junto al secretario, sin repetidos
-        $users_ids = $request->input('users', []);
-        $users_ids[] = Auth::user()->secretary->user_id;
-        $meeting->users()->sync(array_unique(array_map('intval', $users_ids)));
-
-        // Guardamos los puntos y los acuerdos tomados
-        $meeting_minutes = MeetingMinutes::create([
-            'meeting_id' => $meeting->id,
-            'secretary_id' => Auth::user()->secretary->id,
-        ]);
-
-        $points = json_decode($request->input('points_json'), true);
-        $points = collect($points);
-
-        foreach ($points as $point) {
-            $new_point = Point::create([
-                'meeting_minutes_id' => $meeting_minutes->id,
-                'title' => $point['title'],
-                'duration' => $point['duration'] == '' ? 0 : $point['duration'],
-                'description' => $point['description'],
+        $meeting_minutes = DB::transaction(function () use ($request, $minutes) {
+            $meeting = Meeting::create([
+                'title' => $request->input('title'),
+                'hours' => $request->input('hours') + floor(($minutes * 100) / 60) / 100,
+                'type' => $request->input('type'),
+                'modality' => $request->input('modality'),
+                'place' => $request->input('place'),
+                'datetime' => $request->input('date').' '.$request->input('time'),
             ]);
 
-            foreach ($point['agreements'] as $agreement) {
+            $meeting->committee()->associate(Auth::user()->secretary->committee);
 
-                $new_agreement = Agreement::create([
-                    'point_id' => $new_point->id,
-                    'description' => $agreement['description'],
-                    'identificator' => 'tmp', // valor provisional hasta conocer el id del acuerdo
+            $meeting->save();
+
+            // Asociamos los usuarios a la reunión junto al secretario, sin repetidos
+            $users_ids = $request->input('users', []);
+            $users_ids[] = Auth::user()->secretary->user_id;
+            $meeting->users()->sync(array_unique(array_map('intval', $users_ids)));
+
+            // Guardamos los puntos y los acuerdos tomados
+            $meeting_minutes = MeetingMinutes::create([
+                'meeting_id' => $meeting->id,
+                'secretary_id' => Auth::user()->secretary->id,
+            ]);
+
+            $points = json_decode($request->input('points_json'), true);
+            $points = collect($points);
+
+            foreach ($points as $point) {
+                $new_point = Point::create([
+                    'meeting_minutes_id' => $meeting_minutes->id,
+                    'title' => $point['title'],
+                    'duration' => $point['duration'] == '' ? 0 : $point['duration'],
+                    'description' => $point['description'],
                 ]);
 
-                // generamos el identificador único para este acuerdo
-                $identificator = 'ISD';
-                $identificator .= '-';
-                $identificator .= Carbon::now()->format('Y-m-d');
-                $identificator .= '-';
-                $identificator .= Auth::user()->secretary->committee->id;
-                $identificator .= '-';
-                $identificator .= $meeting->id;
-                $identificator .= '-';
-                $identificator .= $new_point->id;
-                $identificator .= '-';
-                $identificator .= $new_agreement->id;
+                foreach ($point['agreements'] as $agreement) {
 
-                $new_agreement->identificator = $identificator;
-                $new_agreement->save();
+                    $new_agreement = Agreement::create([
+                        'point_id' => $new_point->id,
+                        'description' => $agreement['description'],
+                        'identificator' => 'tmp', // valor provisional hasta conocer el id del acuerdo
+                    ]);
+
+                    // generamos el identificador único para este acuerdo
+                    $identificator = 'ISD';
+                    $identificator .= '-';
+                    $identificator .= Carbon::now()->format('Y-m-d');
+                    $identificator .= '-';
+                    $identificator .= Auth::user()->secretary->committee->id;
+                    $identificator .= '-';
+                    $identificator .= $meeting->id;
+                    $identificator .= '-';
+                    $identificator .= $new_point->id;
+                    $identificator .= '-';
+                    $identificator .= $new_agreement->id;
+
+                    $new_agreement->identificator = $identificator;
+                    $new_agreement->save();
+                }
             }
-        }
+
+            return $meeting_minutes;
+        });
 
         // Genera PDF del acta
         $pdf = Pdf::loadView('meeting.minutes_template', ['meeting_minutes' => $meeting_minutes]);
@@ -652,62 +665,65 @@ class MeetingSecretaryController extends Controller
 
         // modificamos la info básica de la reunión del acta comprobada por MeetingMinutesMine
         $meeting_minutes = MeetingMinutes::findOrFail($request->input('_id'));
-        $meeting = $meeting_minutes->meeting;
-        $meeting->title = $request->input('title');
-        $meeting->hours = $request->input('hours') + floor(($minutes * 100) / 60) / 100;
-        $meeting->type = $request->input('type');
-        $meeting->modality = $request->input('modality');
-        $meeting->place = $request->input('place');
-        $meeting->datetime = $request->input('date').' '.$request->input('time');
-        $meeting->save();
 
-        // Sustituimos los usuarios de la reunión junto al secretario, sin repetidos
-        $users_ids = $request->input('users', []);
-        $users_ids[] = Auth::user()->secretary->user_id;
-        $meeting->users()->sync(array_unique(array_map('intval', $users_ids)));
+        DB::transaction(function () use ($request, $minutes, $meeting_minutes) {
+            $meeting = $meeting_minutes->meeting;
+            $meeting->title = $request->input('title');
+            $meeting->hours = $request->input('hours') + floor(($minutes * 100) / 60) / 100;
+            $meeting->type = $request->input('type');
+            $meeting->modality = $request->input('modality');
+            $meeting->place = $request->input('place');
+            $meeting->datetime = $request->input('date').' '.$request->input('time');
+            $meeting->save();
 
-        // los acuerdos que no cambian conservan su identificador
-        $previous_identificators = [];
+            // Sustituimos los usuarios de la reunión junto al secretario, sin repetidos
+            $users_ids = $request->input('users', []);
+            $users_ids[] = Auth::user()->secretary->user_id;
+            $meeting->users()->sync(array_unique(array_map('intval', $users_ids)));
 
-        // sustituimos los puntos y acuerdos previos; el acta se conserva para que no cambien sus enlaces
-        foreach ($meeting_minutes->points as $point) {
-            foreach ($point->agreements as $agreement) {
-                $previous_identificators[$point->title."\n".$agreement->description] = $agreement->identificator;
-                $agreement->delete();
+            // los acuerdos que no cambian conservan su identificador
+            $previous_identificators = [];
+
+            // sustituimos los puntos y acuerdos previos; el acta se conserva para que no cambien sus enlaces
+            foreach ($meeting_minutes->points as $point) {
+                foreach ($point->agreements as $agreement) {
+                    $previous_identificators[$point->title."\n".$agreement->description] = $agreement->identificator;
+                    $agreement->delete();
+                }
+                $point->delete();
             }
-            $point->delete();
-        }
 
-        $points = json_decode($request->input('points_json'), true);
-        $points = collect($points);
+            $points = json_decode($request->input('points_json'), true);
+            $points = collect($points);
 
-        foreach ($points as $point) {
-            $new_point = Point::create([
-                'meeting_minutes_id' => $meeting_minutes->id,
-                'title' => $point['title'],
-                'duration' => $point['duration'] == '' ? 0 : $point['duration'],
-                'description' => $point['description'],
-            ]);
-
-            foreach ($point['agreements'] as $agreement) {
-                $new_agreement = Agreement::create([
-                    'point_id' => $new_point->id,
-                    'description' => $agreement['description'],
-                    'identificator' => 'tmp', // valor provisional, luego lo actualizas bien
+            foreach ($points as $point) {
+                $new_point = Point::create([
+                    'meeting_minutes_id' => $meeting_minutes->id,
+                    'title' => $point['title'],
+                    'duration' => $point['duration'] == '' ? 0 : $point['duration'],
+                    'description' => $point['description'],
                 ]);
 
-                // ahora generas el identificador definitivo
-                $identificator = $previous_identificators[$point['title']."\n".$agreement['description']] ?? 'ISD'
-                    .'-'.Carbon::now()->format('Y-m-d')
-                    .'-'.Auth::user()->secretary->committee->id
-                    .'-'.$meeting->id
-                    .'-'.$new_point->id
-                    .'-'.$new_agreement->id;
+                foreach ($point['agreements'] as $agreement) {
+                    $new_agreement = Agreement::create([
+                        'point_id' => $new_point->id,
+                        'description' => $agreement['description'],
+                        'identificator' => 'tmp', // valor provisional, luego lo actualizas bien
+                    ]);
 
-                $new_agreement->identificator = $identificator;
-                $new_agreement->save();
+                    // ahora generas el identificador definitivo
+                    $identificator = $previous_identificators[$point['title']."\n".$agreement['description']] ?? 'ISD'
+                        .'-'.Carbon::now()->format('Y-m-d')
+                        .'-'.Auth::user()->secretary->committee->id
+                        .'-'.$meeting->id
+                        .'-'.$new_point->id
+                        .'-'.$new_agreement->id;
+
+                    $new_agreement->identificator = $identificator;
+                    $new_agreement->save();
+                }
             }
-        }
+        });
 
         // Generamos de nuevo el PDF con los puntos recién guardados
         $meeting_minutes->refresh();
@@ -722,11 +738,13 @@ class MeetingSecretaryController extends Controller
     {
         $meeting_minutes = MeetingMinutes::findOrFail($request->input('_id'));
 
+        DB::transaction(function () use ($meeting_minutes) {
+            $meeting_minutes->meeting->delete();
+            $meeting_minutes->delete();
+        });
+
         // borramos el pdf del acta antigua
         Storage::delete('/meeting_minutes/meeting_minutes_'.$meeting_minutes->id.'.pdf');
-
-        $meeting_minutes->meeting->delete();
-        $meeting_minutes->delete();
 
         return redirect()->route('secretary.meeting.manage.minutes.list')->with('success', 'Acta de reunión eliminada con éxito.');
 

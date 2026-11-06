@@ -7,6 +7,7 @@ use App\Models\Bonus;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class BonusSecretaryController extends Controller
 {
@@ -45,18 +46,20 @@ class BonusSecretaryController extends Controller
             'users.*' => 'integer|exists:users,id',
         ]);
 
-        $bonus = Bonus::create([
-            'reason' => $request->input('reason'),
-            'hours' => $request->input('hours'),
-        ]);
+        DB::transaction(function () use ($request) {
+            $bonus = Bonus::create([
+                'reason' => $request->input('reason'),
+                'hours' => $request->input('hours'),
+            ]);
 
-        $bonus->committee()->associate(Auth::user()->secretary->committee);
+            $bonus->committee()->associate(Auth::user()->secretary->committee);
 
-        $bonus->save();
+            $bonus->save();
 
-        // Asociamos los usuarios al bono, sin repetidos
-        $users_ids = $request->input('users', []);
-        $bonus->users()->sync(array_unique(array_map('intval', $users_ids)));
+            // Asociamos los usuarios al bono, sin repetidos
+            $users_ids = $request->input('users', []);
+            $bonus->users()->sync(array_unique(array_map('intval', $users_ids)));
+        });
 
         return redirect()->route('secretary.bonus.list')->with('success', 'Bono de horas creado con éxito.');
 
@@ -83,14 +86,17 @@ class BonusSecretaryController extends Controller
         ]);
 
         $bonus = Bonus::find($request->_id);
-        $bonus->reason = $request->input('reason');
-        $bonus->hours = $request->input('hours');
 
-        $bonus->save();
+        DB::transaction(function () use ($request, $bonus) {
+            $bonus->reason = $request->input('reason');
+            $bonus->hours = $request->input('hours');
 
-        // Sustituimos los usuarios del bono, sin repetidos
-        $users_ids = $request->input('users', []);
-        $bonus->users()->sync(array_unique(array_map('intval', $users_ids)));
+            $bonus->save();
+
+            // Sustituimos los usuarios del bono, sin repetidos
+            $users_ids = $request->input('users', []);
+            $bonus->users()->sync(array_unique(array_map('intval', $users_ids)));
+        });
 
         return redirect()->route('secretary.bonus.list')->with('success', 'Bono editado con éxito.');
 

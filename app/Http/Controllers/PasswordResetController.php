@@ -7,6 +7,7 @@ use App\Models\Token;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -37,23 +38,27 @@ class PasswordResetController extends Controller
 
         if ($user != null) {
 
-            // medida de seguridad: si se genera un nuevo token, todos los anteriores se invalidan
-            $tokens = Token::where('user_id', $user->id)->get();
-            foreach ($tokens as $t) {
-                $t->used = true;
-                $t->save();
-            }
+            $token = DB::transaction(function () use ($user) {
+                // medida de seguridad: si se genera un nuevo token, todos los anteriores se invalidan
+                $tokens = Token::where('user_id', $user->id)->get();
+                foreach ($tokens as $t) {
+                    $t->used = true;
+                    $t->save();
+                }
 
-            $token_str = Str::random(255);
+                $token_str = Str::random(255);
 
-            $token = Token::create([
-                'token' => $token_str,
-                'used' => 0,
-                'valid_until_timestamp' => Carbon::now()->addHours(24),
-                'user_id' => $user->id,
-            ]);
+                $token = Token::create([
+                    'token' => $token_str,
+                    'used' => 0,
+                    'valid_until_timestamp' => Carbon::now()->addHours(24),
+                    'user_id' => $user->id,
+                ]);
 
-            $token->save();
+                $token->save();
+
+                return $token;
+            });
 
             try {
                 Mail::to($user)->send(new PasswordReset($token, $user));
@@ -97,14 +102,16 @@ class PasswordResetController extends Controller
 
         if ($token_entity != null && $token_entity->isValid()) {
 
-            // cambio de contraseña
-            $user = User::find($token_entity->user_id);
-            $user->password = Hash::make($request->input('password'));
-            $user->save();
+            DB::transaction(function () use ($request, $token_entity) {
+                // cambio de contraseña
+                $user = User::find($token_entity->user_id);
+                $user->password = Hash::make($request->input('password'));
+                $user->save();
 
-            // el token deja de ser válido
-            $token_entity->used = true;
-            $token_entity->save();
+                // el token deja de ser válido
+                $token_entity->used = true;
+                $token_entity->save();
+            });
 
             return redirect()->route('login')->with('success', 'Contraseña cambiada con éxito. Ahora puedes iniciar sesión.');
         } else {

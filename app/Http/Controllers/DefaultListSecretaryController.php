@@ -7,6 +7,7 @@ use App\Models\DefaultList;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DefaultListSecretaryController extends Controller
 {
@@ -47,19 +48,21 @@ class DefaultListSecretaryController extends Controller
 
         $secretary = Auth::user()->secretary;
 
-        $defaultlist = DefaultList::create([
-            'name' => $request->input('name'),
-            'secretary_id' => $secretary->id,
-        ]);
+        DB::transaction(function () use ($request, $users_ids, $secretary) {
+            $defaultlist = DefaultList::create([
+                'name' => $request->input('name'),
+                'secretary_id' => $secretary->id,
+            ]);
 
-        $defaultlist->save();
+            $defaultlist->save();
 
-        foreach ($users_ids as $user_id) {
+            foreach ($users_ids as $user_id) {
 
-            $user = User::find($user_id);
-            $defaultlist->users()->attach($user);
+                $user = User::find($user_id);
+                $defaultlist->users()->attach($user);
 
-        }
+            }
+        });
 
         return redirect()->route('secretary.defaultlist.list')->with('success', 'Lista creada con éxito.');
 
@@ -89,19 +92,21 @@ class DefaultListSecretaryController extends Controller
         $users_ids = $request->input('users', []);
         $defaultlist = DefaultList::find($request->_id);
 
-        $defaultlist->name = $request->input('name');
-        $defaultlist->save();
+        DB::transaction(function () use ($request, $users_ids, $defaultlist) {
+            $defaultlist->name = $request->input('name');
+            $defaultlist->save();
 
-        // eliminamos usuarios antiguos
-        foreach ($defaultlist->users as $user) {
-            $defaultlist->users()->detach($user);
-        }
+            // eliminamos usuarios antiguos
+            foreach ($defaultlist->users as $user) {
+                $defaultlist->users()->detach($user);
+            }
 
-        // agregamos los usuarios nuevos
-        foreach ($users_ids as $user_id) {
-            $user = User::find($user_id);
-            $defaultlist->users()->attach($user);
-        }
+            // agregamos los usuarios nuevos
+            foreach ($users_ids as $user_id) {
+                $user = User::find($user_id);
+                $defaultlist->users()->attach($user);
+            }
+        });
 
         return redirect()->route('secretary.defaultlist.list')->with('success', 'Lista editada con éxito.');
 

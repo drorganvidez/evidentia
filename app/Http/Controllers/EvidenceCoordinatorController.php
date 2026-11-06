@@ -7,6 +7,7 @@ use App\Models\Evidence;
 use App\Models\ReasonRejection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class EvidenceCoordinatorController extends Controller
 {
@@ -95,14 +96,16 @@ class EvidenceCoordinatorController extends Controller
             return back()->with('error', 'Escribe el motivo del rechazo.');
         }
 
-        $evidence->status = 'REJECTED';
-        $evidence->save();
+        DB::transaction(function () use ($evidence, $request) {
+            $evidence->status = 'REJECTED';
+            $evidence->save();
 
-        $reasonrejection = ReasonRejection::create([
-            'reason' => $request->input('reasonrejection'),
-            'evidence_id' => $evidence->id,
-        ]);
-        $reasonrejection->save();
+            $reasonrejection = ReasonRejection::create([
+                'reason' => $request->input('reasonrejection'),
+                'evidence_id' => $evidence->id,
+            ]);
+            $reasonrejection->save();
+        });
 
         return redirect()->route('coordinator.evidence.list.rejected')->with('success', 'Evidencia rechazada con éxito.');
     }
