@@ -2,15 +2,38 @@
 
 namespace Tests\Feature\Activity\WriteRoutes;
 
+use App\Models\Evidence;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Tests\Feature\Activity\AuthenticationActivityTest;
+use Tests\TestCase;
 
 /**
  * Write routes of the screens that existed before the activity log. Each route is in exactly one of the four lists.
  */
 final class LegacyWrites
 {
+    /** Form of an evidence of the fixtures, with the proof uploaded to the temporary folder of the session. */
+    private static function evidence(string $verb, string $uri, ?string $id = null, array $expect = []): array
+    {
+        return [
+            'role' => 'STUDENT',
+            'method' => 'POST',
+            'setup' => function (TestCase $test, array $ids): void {
+                $test->withSession(['_token' => 'barrido']);
+                Storage::put('tmp/'.User::find($ids['student'])->username.'/barrido/certificado.pdf', '%PDF-1.4');
+            },
+            'uri' => fn (array $ids) => route($uri),
+            'data' => fn (array $ids) => [
+                'title' => 'Montaje del escenario', 'hours' => 2, 'minutes' => 30, 'committee' => $ids['logistica'],
+                'description' => 'Monté el escenario del congreso con el equipo.',
+            ] + ($id === null ? [] : ['_id' => $ids[$id]]),
+            'expect' => [...$expect, $verb],
+            'acting_role' => 'STUDENT',
+        ];
+    }
+
     /**
      * Routes that annotate, with a happy request that the sweep sends.
      *
@@ -19,6 +42,27 @@ final class LegacyWrites
     public static function writes(): array
     {
         return [
+            'evidence.draft' => self::evidence('evidence.created', 'evidence.draft', expect: ['proof.uploaded']),
+            'evidence.publish' => self::evidence('evidence.published', 'evidence.publish', expect: ['proof.uploaded']),
+            'evidence.draft.edit' => self::evidence('evidence.edited', 'evidence.draft.edit', 'draft'),
+            'evidence.publish.edit' => self::evidence('evidence.published', 'evidence.publish.edit', 'draft'),
+            'evidence.reedit' => [
+                'role' => 'STUDENT',
+                'method' => 'POST',
+                'setup' => fn (TestCase $test, array $ids) => Evidence::whereKey($ids['evidence'])->update(['status' => 'REJECTED']),
+                'uri' => fn (array $ids) => route('evidence.reedit'),
+                'data' => fn (array $ids) => ['_id' => $ids['evidence']],
+                'expect' => ['evidence.reedited'],
+                'acting_role' => 'STUDENT',
+            ],
+            'evidence.remove' => [
+                'role' => 'STUDENT',
+                'method' => 'POST',
+                'uri' => fn (array $ids) => route('evidence.remove'),
+                'data' => fn (array $ids) => ['_id' => $ids['evidence']],
+                'expect' => ['proof.deleted', 'evidence.deleted'],
+                'acting_role' => 'STUDENT',
+            ],
             'password.reset_p' => [
                 'role' => 'GUEST',
                 'method' => 'POST',
@@ -73,12 +117,6 @@ final class LegacyWrites
     public static function pending(): array
     {
         return [
-            'evidence.draft' => 'A',
-            'evidence.publish' => 'A',
-            'evidence.draft.edit' => 'A',
-            'evidence.publish.edit' => 'A',
-            'evidence.reedit' => 'A',
-            'evidence.remove' => 'A',
             'coordinator.evidence.accept' => 'A',
             'coordinator.evidence.reject' => 'A',
             'secretary.meeting.manage.request.new' => 'A',

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityAction;
+use App\Enums\ActivityFlag;
 use App\Exceptions\ProofNotStored;
+use App\Facades\Activity;
 use App\Http\Middleware\CheckRoles;
 use App\Models\Committee;
 use App\Models\Evidence;
@@ -11,6 +14,7 @@ use App\Models\Proof;
 use App\Rules\CheckHoursAndMinutes;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
+use App\Support\Changes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -79,7 +83,17 @@ class EvidenceController extends Controller
             DB::transaction(function () use ($request, $status) {
                 $evidence = $this->new_evidence($request, $status);
 
-                $this->save_files($request, $evidence);
+                $files = $this->save_files($request, $evidence);
+
+                Activity::record(
+                    $status === 'DRAFT' ? ActivityAction::EvidenceCreated : ActivityAction::EvidencePublished,
+                    $evidence,
+                    details: [
+                        'status' => $status, 'hours' => (float) $evidence->hours, 'committee_id' => (int) $evidence->committee_id,
+                        'files' => $files, 'version' => 1,
+                    ] + $this->automatic($status),
+                    flags: $this->overlap($status),
+                );
             });
         } catch (ProofNotStored) {
             return $this->proof_not_stored();
@@ -124,9 +138,11 @@ class EvidenceController extends Controller
         return $evidence;
     }
 
-    private function save_files($request, $evidence)
+    // mueve las pruebas subidas a la evidencia y devuelve sus nombres
+    private function save_files($request, $evidence): array
     {
         $user = Auth::user();
+        $files = [];
 
         foreach (Storage::files($this->temporary_folder($request)) as $filename) {
 
@@ -163,8 +179,34 @@ class EvidenceController extends Controller
                 throw new ProofNotStored('No se pudo guardar la prueba '.$name, previous: $e);
             }
 
+            Activity::record(ActivityAction::ProofUploaded, $evidence, details: ['file' => $name.'.'.$type, 'size' => $size]);
+            $files[] = $name.'.'.$type;
+
         }
 
+        return $files;
+    }
+
+    // el presidente no tiene quien revise sus evidencias: se aceptan al enviarlas y queda señalado
+    private function automatic(string $status): array
+    {
+        return $status === 'ACCEPTED' ? ['automatic' => true] : [];
+    }
+
+    private function overlap(string $status): array
+    {
+        return $status === 'ACCEPTED' ? [ActivityFlag::RoleOverlap] : [];
+    }
+
+    // título, horas y comité de una versión, para comparar antes y después
+    private function snapshot(Evidence $evidence): array
+    {
+        return [
+            'title' => $evidence->title,
+            'hours' => (float) $evidence->hours,
+            'committee_id' => (int) $evidence->committee_id,
+            'committee_name' => $evidence->committee?->name,
+        ];
     }
 
     // carpeta de las pruebas subidas en esta sesión
@@ -252,9 +294,10 @@ class EvidenceController extends Controller
 
         // evidencia desde la que hemos decidido partir
         $evidence_previous = Evidence::find($request->_id);
+        $before = $this->snapshot($evidence_previous);
 
         try {
-            DB::transaction(function () use ($request, $status, $evidence_previous) {
+            DB::transaction(function () use ($request, $status, $evidence_previous, $before) {
                 // creamos la nueva evidencia a partir de la seleccionada para editar
                 $evidence_new = $this->new_evidence($request, $status);
 
@@ -268,7 +311,17 @@ class EvidenceController extends Controller
                 $evidence_new->save();
 
                 // copiamos ahora los archivos de la carpeta temporal a la nueva evidencia
-                $this->save_files($request, $evidence_new);
+                $files = $this->save_files($request, $evidence_new);
+
+                Activity::record(
+                    $status === 'DRAFT' ? ActivityAction::EvidenceEdited : ActivityAction::EvidencePublished,
+                    $evidence_new,
+                    details: [
+                        'status' => $status, 'previous_id' => $evidence_previous->id, 'version' => $evidence_new->versionNumber(),
+                        'hours' => (float) $evidence_new->hours, 'files' => $files,
+                    ] + Changes::between($before, $this->snapshot($evidence_new)) + $this->automatic($status),
+                    flags: $this->overlap($status),
+                );
             });
         } catch (ProofNotStored) {
             return $this->proof_not_stored();
@@ -295,7 +348,12 @@ class EvidenceController extends Controller
         $evidence = Evidence::find($id);
 
         // eliminamos recursivamente la evidencia y todas las versiones anteriores, y después sus archivos
-        $folders = DB::transaction(fn () => $this->delete_evidence($evidence));
+        $folders = DB::transaction(function () use ($evidence) {
+            // se anota antes de borrar: después ya no se encuentra la primera versión que agrupa el historial
+            $this->record_removal($evidence);
+
+            return $this->delete_evidence($evidence);
+        });
         foreach ($folders as $folder) {
             Storage::deleteDirectory($folder);
         }
@@ -324,6 +382,27 @@ class EvidenceController extends Controller
         return $folders;
     }
 
+    private function record_removal(Evidence $evidence): void
+    {
+        $versions = collect([$evidence])->concat($evidence->previousEvidences())->unique('id');
+        $files = [];
+
+        foreach ($versions as $version) {
+            foreach ($version->proofs as $proof) {
+                $file = $proof->file->name.'.'.$proof->file->type;
+                Activity::record(ActivityAction::ProofDeleted, $version, details: ['file' => $file]);
+                $files[] = $file;
+            }
+        }
+
+        Activity::record(
+            ActivityAction::EvidenceDeleted,
+            $evidence,
+            details: ['versions' => $versions->count(), 'files' => $files, 'hours' => (float) $evidence->hours],
+            subjectTitle: $evidence->title,
+        );
+    }
+
     private function delete_files($evidence)
     {
         foreach ($evidence->proofs as $proof) {
@@ -344,9 +423,13 @@ class EvidenceController extends Controller
             abort(404);
         }
 
-        $evidence->status = 'DRAFT';
+        DB::transaction(function () use ($evidence) {
+            $evidence->status = 'DRAFT';
 
-        $evidence->save();
+            $evidence->save();
+
+            Activity::record(ActivityAction::EvidenceReedited, $evidence, details: ['before' => 'REJECTED', 'after' => 'DRAFT']);
+        });
 
         return redirect()->route('evidence.list')->with('success', 'Evidencia reasignada como borrador con éxito.');
     }

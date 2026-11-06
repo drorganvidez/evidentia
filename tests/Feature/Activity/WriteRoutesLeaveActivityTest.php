@@ -80,7 +80,7 @@ final class WriteRoutesLeaveActivityTest extends TestCase
             $this->markTestSkipped('Ninguna ruta de escritura instrumentada todavía');
         }
 
-        ($case['setup'] ?? fn () => null)($this);
+        ($case['setup'] ?? fn () => null)($this, $this->ids);
         $actor = $case['role'] === 'GUEST' ? null : ($this->users[$case['role']] ?? $this->extra[$case['role']]);
         $actor ? $this->actingAs($actor) : auth()->logout();
 
