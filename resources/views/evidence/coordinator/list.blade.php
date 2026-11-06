@@ -4,12 +4,21 @@
     $route = Route::currentRouteName();
     $closesAt = \Config::validate_evidences_timestamp();
     $open = !\Carbon\Carbon::now()->gt($closesAt);
-    $tabs = [
+    $tabs = collect([
         ['Todas', 'coordinator.evidence.list.all', $committee->evidencesNotDraft()->count()],
         ['Pendientes', 'coordinator.evidence.list.pending', $committee->evidencesPending()->count()],
         ['Aceptadas', 'coordinator.evidence.list.accepted', $committee->evidencesAccepted()->count()],
         ['Rechazadas', 'coordinator.evidence.list.rejected', $committee->evidencesRejected()->count()],
-    ];
+    ])
+        ->map(
+            fn($tab) => [
+                'label' => $tab[0],
+                'href' => route($tab[1]),
+                'count' => $tab[2],
+                'current' => $route === $tab[1],
+            ],
+        )
+        ->all();
     $empty = match ($type ?? 'all') {
         'pending' => 'No hay evidencias pendientes',
         'accepted' => 'No hay evidencias aceptadas',
@@ -40,16 +49,7 @@
     <x-ui.table :caption="'Evidencias de ' . $committee->name" :columns="$columns" :filterable="$evidences->isNotEmpty()" count-label="evidencias"
         filter-placeholder="Filtrar evidencias">
         <x-slot:toolbar>
-            <x-ui.tabs label="Filtrar evidencias por estado" :items="collect($tabs)
-                ->map(
-                    fn($tab) => [
-                        'label' => $tab[0],
-                        'href' => route($tab[1]),
-                        'count' => $tab[2],
-                        'current' => $route === $tab[1],
-                    ],
-                )
-                ->all()" />
+            <x-ui.tabs label="Filtrar evidencias por estado" :items="$tabs" />
         </x-slot:toolbar>
         @if ($evidences->isEmpty())
             <x-slot:empty>
