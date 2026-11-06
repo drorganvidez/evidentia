@@ -55,6 +55,9 @@ enum ActivityAction: string
     case AttendeeCreated = 'attendee.created';
     case AttendeeEdited = 'attendee.edited';
     case AttendeeDeleted = 'attendee.deleted';
+    case EventCreated = 'event.created';
+    case EventEdited = 'event.edited';
+    case EventDeleted = 'event.deleted';
     case EventHidden = 'event.hidden';
     case EventUnhidden = 'event.unhidden';
     case EventbriteTokenSaved = 'eventbrite.token_saved';
@@ -152,6 +155,9 @@ enum ActivityAction: string
         'attendee.created' => ['Asistencia registrada', 'accepted', 'attendance', Deadline::Attendees],
         'attendee.edited' => ['Asistencia editada', 'draft', 'attendance', Deadline::Attendees],
         'attendee.deleted' => ['Asistencia eliminada', 'rejected', 'attendance', Deadline::Attendees],
+        'event.created' => ['Evento creado a mano', 'accepted', 'attendance', Deadline::Attendees],
+        'event.edited' => ['Evento editado', 'draft', 'attendance', Deadline::Attendees],
+        'event.deleted' => ['Evento eliminado', 'rejected', 'attendance', Deadline::Attendees],
         'event.hidden' => ['Evento ocultado', 'draft', 'attendance', Deadline::Attendees],
         'event.unhidden' => ['Evento visible', 'draft', 'attendance', Deadline::Attendees],
         'eventbrite.token_saved' => ['Token de Eventbrite guardado', 'notice', 'attendance', Deadline::Attendees],

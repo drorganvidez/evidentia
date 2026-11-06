@@ -378,7 +378,7 @@ class EventbriteController extends Controller
     public function event_store(Request $request)
     {
         $event = new Event;
-        $this->fill_manual_event($event, $request);
+        $this->fill_manual_event($event, $request, ActivityAction::EventCreated);
 
         return redirect()->route('registercoordinator.event.list')
             ->with('success', 'Evento creado con éxito.');
@@ -391,7 +391,7 @@ class EventbriteController extends Controller
 
     public function event_update(Request $request, $id)
     {
-        $this->fill_manual_event($this->manual_event($id), $request);
+        $this->fill_manual_event($this->manual_event($id), $request, ActivityAction::EventEdited);
 
         return redirect()->route('registercoordinator.event.list')
             ->with('success', 'Evento actualizado con éxito.');
@@ -406,7 +406,11 @@ class EventbriteController extends Controller
                 ->with('error', 'No se puede borrar un evento con asistencias. Borra antes sus asistencias.');
         }
 
-        $event->delete();
+        // Recorded before the delete, inside the same transaction, while the event still has its name
+        DB::transaction(function () use ($event) {
+            Activity::record(ActivityAction::EventDeleted, $event, details: ['name' => $event->name]);
+            $event->delete();
+        });
 
         return redirect()->route('registercoordinator.event.list')
             ->with('success', 'Evento borrado con éxito.');
@@ -418,7 +422,7 @@ class EventbriteController extends Controller
         return Event::whereNull('id_eventbrite')->findOrFail($id);
     }
 
-    private function fill_manual_event(Event $event, Request $request): void
+    private function fill_manual_event(Event $event, Request $request, ActivityAction $action): void
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
@@ -431,6 +435,8 @@ class EventbriteController extends Controller
         $start = Carbon::parse($data['start_datetime']);
         $end = Carbon::parse($data['end_datetime']);
 
+        $before = $event->exists ? $event->only(['name', 'start_datetime', 'end_datetime', 'hours', 'capacity']) : [];
+
         $event->fill([
             'name' => $data['name'],
             'description' => $data['description'] ?? null,
@@ -441,7 +447,14 @@ class EventbriteController extends Controller
             'hours' => $end->diffInMinutes($start, true) / 60,
             'status' => $end->isPast() ? 'completed' : 'live',
         ]);
-        $event->save();
+
+        DB::transaction(function () use ($event, $action, $before) {
+            $event->save();
+            $after = $event->only(['name', 'start_datetime', 'end_datetime', 'hours', 'capacity']);
+            Activity::record($action, $event, details: $before === []
+                ? ['name' => $event->name, 'hours' => $event->hours]
+                : Changes::between(array_map('strval', $before), array_map('strval', $after)));
+        });
     }
 
     // evento, persona y estado de una asistencia, tal como se anotan
