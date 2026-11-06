@@ -1,82 +1,46 @@
-@extends('layouts.app')
+{{-- Create or edit a default list: its name and its people --}}
+@php
+    $editing = isset($edit);
+    $people = $users
+        ->map(
+            fn($user) => [
+                'value' => $user->id,
+                'label' => trim($user->surname) . ', ' . trim($user->name),
+                'hint' => $user->username,
+            ],
+        )
+        ->values()
+        ->all();
+@endphp
+<x-layout.app :title="$editing ? 'Editar lista' : 'Nueva lista'" :breadcrumbs="[
+    ['label' => 'Inicio', 'href' => route('home')],
+    ['label' => 'Listas', 'href' => route('secretary.defaultlist.list')],
+    ['label' => $editing ? 'Editar' : 'Nueva'],
+]">
+    <x-ui.page-header :title="$editing ? $defaultlist->name : 'Nueva lista'">
+        @if ($editing)
+            <x-slot:actions>
+                @include('defaultlist.partials.remove', [
+                    'defaultlist' => $defaultlist,
+                    'dialogId' => 'remove-list',
+                ])
+            </x-slot:actions>
+        @endif
+    </x-ui.page-header>
 
-@isset($edit)
-    @section('title', 'Editar lista: ' . $defaultlist->name)
-@else
-@section('title', 'Crear nueva lista')
-@endisset
+    <x-ui.card>
+        <x-ui.form :action="$route" id="defaultlist-form" :fields="['name' => 'Nombre', 'users' => 'Personas']">
+            @if ($editing)
+                <input type="hidden" name="_id" value="{{ $defaultlist->id }}">
+            @endif
 
-@section('title-icon', 'fas fa-stream')
+            <x-ui.field name="name" label="Nombre" :value="$defaultlist->name ?? null" required />
+            <x-ui.picker name="users[]" label="Personas" :options="$people" :selected="$editing ? $defaultlist->users->modelKeys() : []" />
 
-@section('breadcrumb')
-<li class="breadcrumb-item"><a href="/">Home</a></li>
-<li class="breadcrumb-item"><a href="{{ route('secretary.defaultlist.list', []) }}">Gestionar listas</a></li>
-<li class="breadcrumb-item active">@yield('title')</li>
-@endsection
-
-@section('content')
-
-<div class="row">
-    <div class="col-lg-12">
-
-        <div class="card">
-
-            <div class="card-body">
-                <form method="POST" enctype="multipart/form-data" action="{{ $route }}">
-                    @csrf
-
-                    <x-id :id="$defaultlist->id ?? ''" :edit="$edit ?? ''" />
-
-                    <div class="form-row">
-
-                        <x-input col="6" attr="name" :value="$defaultlist->name ?? ''" label="Título"
-                            description="Escribe un título para tu lista." />
-
-                    </div>
-
-                    <div class="form-row">
-
-                        <div class="form-group col-md-12">
-                            <label>Seleccionar alumnos</label>
-                            <small class="form-text text-muted">Selecciona las alumnas y alumnos que deseas que formen
-                                parte de la lista.</small>
-                            <select id="users" name="users[]" class="duallistbox"
-                                multiple="multiple @error('users') is-invalid @enderror">
-                                @foreach ($users as $user)
-                                    <option
-                                        @isset($defaultlist)
-                                            @if ($defaultlist->users->contains($user))
-                                                selected
-                                            @endif
-                                            @endisset
-                                        {{ $user->id == old('user') ? 'selected' : '' }} value="{{ $user->id }}">
-                                        {{ $user->surname }}, {{ $user->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('users')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-3 mt-1">
-                            <button type="submit" class="btn btn-primary btn-block">Guardar lista</button>
-                        </div>
-                    </div>
-
-
-                </form>
-            </div>
-
-        </div>
-
-
-    </div>
-</div>
-
-@endsection
+            <x-slot:actions>
+                <x-ui.button type="submit" variant="primary" icon="users">Guardar lista</x-ui.button>
+                <x-ui.button variant="ghost" :href="route('secretary.defaultlist.list')">Cancelar</x-ui.button>
+            </x-slot:actions>
+        </x-ui.form>
+    </x-ui.card>
+</x-layout.app>

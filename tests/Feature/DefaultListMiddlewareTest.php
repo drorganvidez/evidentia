@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Committee;
+use App\Models\Configuration;
 use App\Models\DefaultList;
 use App\Models\Role;
 use App\Models\Secretary;
@@ -13,6 +14,13 @@ use Tests\TestCase;
 class DefaultListMiddlewareTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // The navigation of the new layout reads the deadlines of the course
+        Configuration::forceCreate(['meetings_timestamp' => now()->addMonth()]);
+    }
 
     public function test_a_secretary_can_edit_an_existing_list(): void
     {
