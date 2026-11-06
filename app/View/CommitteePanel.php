@@ -9,6 +9,7 @@ use App\Models\Evidence;
 use App\Models\MeetingMinutes;
 use App\Models\MeetingRequest;
 use App\Models\User;
+use App\Services\ReviewQueue;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -16,8 +17,9 @@ use Illuminate\Support\Facades\DB;
 /**
  * Workspace of a committee for its coordinator: the review queue, the people who take part in it (evidences sent to
  * it, its meetings and its bonuses) with the hours each one gets from it, how those hours spread, the submissions
- * week by week, its meetings and the latest annotations of the activity log about it. The coordinator's own
- * evidences count like anybody else's, but the queue leaves them out because somebody else reviews them.
+ * week by week, its meetings and the latest annotations of the activity log about it. The evidences of its
+ * coordinators count like anybody else's, but the queue leaves them out because the presidency reviews them
+ * (App\Services\ReviewQueue); the figures say how many wait there.
  */
 final class CommitteePanel
 {
@@ -27,11 +29,13 @@ final class CommitteePanel
 
     private const STATES = ['PENDING', 'ACCEPTED', 'REJECTED'];
 
+    public function __construct(private ReviewQueue $queue) {}
+
     /** @return array<string, mixed> */
     public function for(Committee $committee, User $viewer): array
     {
         $members = $this->members($committee);
-        $queue = $committee->evidences()->where('last', true)->where('status', 'PENDING')->where('user_id', '!=', $viewer->id);
+        $queue = $this->queue->forCommittee($committee)->where('status', 'PENDING')->where('user_id', '!=', $viewer->id);
         $oldest = (clone $queue)->min('updated_at');
         $accepted = $committee->evidences()->where('last', true)->where('status', 'ACCEPTED');
 
@@ -44,6 +48,7 @@ final class CommitteePanel
             'kpis' => [
                 'pending' => $queue->count(),
                 'pendingDays' => $oldest === null ? null : (int) Carbon::parse($oldest)->diffInDays(now()),
+                'delegated' => $this->queue->delegatedFrom($committee)->where('status', 'PENDING')->count(),
                 'acceptedHours' => (float) (clone $accepted)->sum('hours'),
                 'accepted' => $accepted->count(),
                 'hours' => (float) $members->sum('hours'),

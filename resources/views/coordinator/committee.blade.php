@@ -34,11 +34,12 @@
 
     {{-- The four figures of the committee --}}
     <div class="grid grid-cols-[minmax(0,1fr)] gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <x-ui.stat label="Pendientes" :value="$kpis['pending']" :foot="$kpis['pendingDays'] === null
+        <x-ui.stat label="Pendientes" :value="$kpis['pending']" :foot="($kpis['pendingDays'] === null
             ? 'cola vacía'
             : ($kpis['pendingDays'] === 0
                 ? 'la más antigua es de hoy'
-                : 'la más antigua espera ' . $plural($kpis['pendingDays'], 'día', 'días'))" tone="pending" :href="route('coordinator.evidence.list.pending')" />
+                : 'la más antigua espera ' . $plural($kpis['pendingDays'], 'día', 'días'))) .
+            ($kpis['delegated'] > 0 ? ' · ' . $kpis['delegated'] . ' en presidencia' : '')" tone="pending" :href="route('coordinator.evidence.list.pending')" />
         <x-ui.stat label="Horas aceptadas" :value="$hours($kpis['acceptedHours'])" unit="h" :foot="$plural($kpis['accepted'], 'evidencia aceptada', 'evidencias aceptadas') .
             ' · ' .
             $hours($kpis['hours']) .

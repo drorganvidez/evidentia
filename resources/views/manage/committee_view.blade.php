@@ -84,10 +84,16 @@
                 </span>
             </x-slot:extra>
         @endif
-        @if ($team === [])
+        @if ($team === [] && $presidents->isEmpty())
             <x-ui.empty icon="users-round" title="Sin coordinación ni secretaría" size="sm" :level="3" />
         @else
             <ul class="grid gap-4 md:grid-cols-2" aria-label="{{ 'Equipo de ' . $committee->name }}">
+                @foreach ($presidents as $president)
+                    <li class="grid gap-2 rounded-lg border border-rule px-4 py-3">
+                        <x-ui.person :name="$president->name" :surname="$president->surname" role="Presidencia" size="sm"
+                            :href="route('profiles.view', ['id' => $president->id])" />
+                    </li>
+                @endforeach
                 @foreach ($team as $person)
                     <li class="grid gap-2 rounded-lg border border-rule px-4 py-3">
                         <x-ui.person :name="$person['user']->name" :surname="$person['user']->surname" :role="$roleNames[$person['role']]" size="sm"
@@ -124,11 +130,12 @@
     </x-ui.card>
 
     <div class="grid grid-cols-[minmax(0,1fr)] gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <x-ui.stat label="Pendientes" :value="$kpis['pending']" :foot="$kpis['pendingDays'] === null
+        <x-ui.stat label="Pendientes" :value="$kpis['pending']" :foot="($kpis['pendingDays'] === null
             ? 'cola vacía'
             : ($kpis['pendingDays'] === 0
                 ? 'la más antigua es de hoy'
-                : 'la más antigua espera ' . $plural($kpis['pendingDays'], 'día', 'días'))" tone="pending" :href="$evidenceList(['estado' => 'pendientes'])" />
+                : 'la más antigua espera ' . $plural($kpis['pendingDays'], 'día', 'días'))) .
+            ($kpis['delegated'] > 0 ? ' · ' . $kpis['delegated'] . ' en presidencia' : '')" tone="pending" :href="$evidenceList(['estado' => 'pendientes'])" />
         <x-ui.stat label="Horas acreditadas" :value="$number($origins['total'])" unit="h" :foot="$plural($kpis['accepted'], 'evidencia aceptada', 'evidencias aceptadas')" tone="accepted"
             href="#origins" />
         <x-ui.stat label="Rechazadas sin corregir" :value="$kpis['rejected']" foot="a la espera de una versión nueva"

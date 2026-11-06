@@ -10,6 +10,7 @@ use App\Models\Meeting;
 use App\Models\MeetingRequest;
 use App\Models\MessageThread;
 use App\Models\User;
+use App\Services\ReviewQueue;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +24,7 @@ use Illuminate\Support\Facades\DB;
 final class CommitteeOverview
 {
     /** Days an evidence may wait in the queue before it is late */
-    public const LATE_DAYS = 7;
+    public const LATE_DAYS = ReviewQueue::LATE_DAYS;
 
     /** Days without a meeting before the committee looks quiet */
     public const QUIET_DAYS = 21;
@@ -31,7 +32,10 @@ final class CommitteeOverview
     /** Days a thread to the committee may wait for an answer */
     public const UNANSWERED_DAYS = 3;
 
-    public function __construct(private CommitteePanel $panel) {}
+    /** @var Collection<int, User>|null */
+    private ?Collection $presidents = null;
+
+    public function __construct(private CommitteePanel $panel, private ReviewQueue $queue) {}
 
     /** @return array<string, mixed> */
     public function for(Committee $committee, User $viewer): array
@@ -40,6 +44,7 @@ final class CommitteeOverview
         $team = $this->team($committee, $data['coordinators'], $data['secretaries']);
 
         return $data + [
+            'presidents' => $this->presidentsOf($committee),
             'team' => $team,
             'origins' => $this->origins($committee),
             'evidences' => Evidence::where('committee_id', $committee->id)->where('last', true)
@@ -67,19 +72,23 @@ final class CommitteeOverview
         $lastActivity = ActivityLog::whereNotNull('committee_id')->groupBy('committee_id')
             ->selectRaw('committee_id, max(created_at) as at')->pluck('at', 'committee_id');
 
+        // the queue of its coordination; what its coordinators send waits in the presidency (App\Services\ReviewQueue)
+        $queued = fn ($query) => $this->queue->coordination($query->where('last', true)->where('status', 'PENDING'));
+
         return Committee::with(['coordinators.user', 'secretaries.user'])
             ->withCount([
-                'evidences as pending_count' => fn ($query) => $query->where('last', true)->where('status', 'PENDING'),
+                'evidences as pending_count' => $queued,
                 'evidences as sent_count' => fn ($query) => $query->where('last', true)->whereIn('status', ['PENDING', 'ACCEPTED', 'REJECTED']),
                 'meetings',
             ])
             ->withSum(['evidences as accepted_hours' => fn ($query) => $query->where('last', true)->where('status', 'ACCEPTED')], 'hours')
-            ->withMin(['evidences as oldest_pending' => fn ($query) => $query->where('last', true)->where('status', 'PENDING')], 'updated_at')
+            ->withMin(['evidences as oldest_pending' => $queued], 'updated_at')
             ->orderBy('name')->get()
             ->map(fn (Committee $committee): array => [
                 'committee' => $committee,
                 'coordinators' => $committee->coordinators->pluck('user')->filter()->values(),
                 'secretaries' => $committee->secretaries->pluck('user')->filter()->values(),
+                'presidents' => $this->presidentsOf($committee),
                 'pending' => (int) $committee->pending_count,
                 'pendingDays' => $committee->oldest_pending === null ? null : (int) Carbon::parse($committee->oldest_pending)->diffInDays(now()),
                 'sent' => (int) $committee->sent_count,
@@ -100,8 +109,11 @@ final class CommitteeOverview
     public function signals(Committee $committee): array
     {
         $committee->loadMissing(['coordinators.user', 'secretaries.user']);
+        $presidency = $this->queue->isPresidency($committee);
         $coordinated = $committee->coordinators->pluck('user')->filter()->isNotEmpty();
         $secretaried = $committee->secretaries->pluck('user')->filter()->isNotEmpty();
+        // the presidents review the committee of the presidency as its coordinators
+        $reviewed = $coordinated || $this->presidentsOf($committee)->isNotEmpty();
         $nudge = fn (string $role, string $subject, string $body, array $about = []): ?array => ($role === 'COORDINATOR' ? $coordinated : $secretaried)
             ? [
                 'label' => $role === 'COORDINATOR' ? 'Escribir a la coordinación' : 'Escribir a la secretaría',
@@ -111,7 +123,7 @@ final class CommitteeOverview
             : null;
         $signals = [];
 
-        if (! $coordinated) {
+        if (! $reviewed) {
             $signals[] = ['key' => 'no-coordinator', 'tone' => 'rejected', 'title' => 'Sin coordinación',
                 'detail' => 'Nadie revisa las evidencias de '.$committee->name, 'action' => $this->assign()];
         }
@@ -120,16 +132,31 @@ final class CommitteeOverview
                 'detail' => 'Nadie convoca ni levanta las actas de '.$committee->name, 'action' => $this->assign()];
         }
 
-        $late = Evidence::where('committee_id', $committee->id)->where('last', true)->where('status', 'PENDING')
-            ->where('updated_at', '<', now()->subDays(self::LATE_DAYS));
+        // the queue of the coordination; in the committee of the presidency, everything the presidents review there
+        $late = ($presidency ? $this->queue->forPresidency()->where('committee_id', $committee->id) : $this->queue->forCommittee($committee))
+            ->where('status', 'PENDING')->where('updated_at', '<', now()->subDays(self::LATE_DAYS));
         $lateCount = (clone $late)->count();
         if ($lateCount > 0) {
             $days = (int) Carbon::parse((clone $late)->min('updated_at'))->diffInDays(now());
             $signals[] = ['key' => 'late-evidences', 'tone' => 'rejected',
                 'title' => self::plural($lateCount, 'evidencia espera', 'evidencias esperan').' más de '.self::LATE_DAYS.' días',
                 'detail' => 'La más antigua lleva '.self::plural($days, 'día', 'días').' en la cola',
-                'action' => $nudge('COORDINATOR', 'Evidencias pendientes de revisar en '.$committee->name,
+                'action' => $presidency && ! $coordinated ? $this->presidencyQueue() : $nudge('COORDINATOR', 'Evidencias pendientes de revisar en '.$committee->name,
                     'Hay '.self::plural($lateCount, 'evidencia', 'evidencias').' de '.$committee->name.' esperando revisión desde hace más de '.self::LATE_DAYS.' días. ¿Puedes revisarlas cuanto antes?')];
+        }
+
+        // what its coordinators sent, waiting in the queue of the presidency
+        if (! $presidency) {
+            $delegated = $this->queue->delegatedFrom($committee)->where('status', 'PENDING')
+                ->where('updated_at', '<', now()->subDays(self::LATE_DAYS));
+            $delegatedCount = (clone $delegated)->count();
+            if ($delegatedCount > 0) {
+                $days = (int) Carbon::parse((clone $delegated)->min('updated_at'))->diffInDays(now());
+                $signals[] = ['key' => 'late-presidency', 'tone' => 'rejected',
+                    'title' => self::plural($delegatedCount, 'evidencia de la coordinación espera', 'evidencias de la coordinación esperan').' más de '.self::LATE_DAYS.' días',
+                    'detail' => 'La más antigua lleva '.self::plural($days, 'día', 'días').' en la cola de presidencia',
+                    'action' => $this->presidencyQueue()];
+            }
         }
 
         $unminuted = MeetingRequest::where('committee_id', $committee->id)->whereNull('meeting_id')
@@ -231,6 +258,22 @@ final class CommitteeOverview
                 'text' => number_format($origin[1], 2, ',', '.').' h',
             ], [['Evidencias', $evidences, 'accepted'], ['Reuniones', $meetings, 'notice'], ['Bonos', $bonuses, 'draft']]),
         ];
+    }
+
+    /** The presidents, who coordinate the committee of the presidency; nobody for any other committee. */
+    private function presidentsOf(Committee $committee): Collection
+    {
+        if (! $this->queue->isPresidency($committee)) {
+            return collect();
+        }
+
+        return $this->presidents ??= $this->queue->presidents();
+    }
+
+    /** The queue of the presidency, where the president and the lecturer review. */
+    private function presidencyQueue(): array
+    {
+        return ['label' => 'Ver la cola de presidencia', 'href' => route('president.review.pending'), 'icon' => 'stamp'];
     }
 
     /** Threads addressed to the coordination or the secretary of the committee. */

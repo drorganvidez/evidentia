@@ -42,7 +42,8 @@
             @php
                 $summary = $summaries->get($committee->id);
                 $view = route($prefix . '.committee.view', ['id' => $committee->id]);
-                $people = $summary['coordinators']
+                $people = $summary['presidents']
+                    ->merge($summary['coordinators'])
                     ->map(fn($user) => trim($user->name . ' ' . $user->surname))
                     ->merge($summary['secretaries']->map(fn($user) => trim($user->name . ' ' . $user->surname)));
                 $worst = collect($summary['signals'])
@@ -56,11 +57,17 @@
                 </x-ui.table.cell>
                 <x-ui.table.cell label="Equipo" hide>
                     <span class="grid gap-0.5 text-sm">
+                        @foreach ($summary['presidents'] as $user)
+                            <span>{{ trim($user->name . ' ' . $user->surname) }} <span class="text-ink-muted">·
+                                    presidencia</span></span>
+                        @endforeach
                         @forelse ($summary['coordinators'] as $user)
                             <span>{{ trim($user->name . ' ' . $user->surname) }} <span class="text-ink-muted">·
                                     coordinación</span></span>
                         @empty
-                            <span class="text-rejected-ink">Sin coordinación</span>
+                            @if ($summary['presidents']->isEmpty())
+                                <span class="text-rejected-ink">Sin coordinación</span>
+                            @endif
                         @endforelse
                         @forelse ($summary['secretaries'] as $user)
                             <span>{{ trim($user->name . ' ' . $user->surname) }} <span class="text-ink-muted">·
