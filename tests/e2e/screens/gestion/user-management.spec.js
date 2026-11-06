@@ -13,7 +13,7 @@ test.describe('Gestión de un usuario', () => {
     test('el comité aparece solo con coordinador o secretario', async ({ page, ui }) => {
         await openCompanero(page);
 
-        const committee = page.getByLabel('Comité');
+        const committee = page.getByRole('combobox', { name: 'Comité', exact: true });
         await expect(committee).toBeHidden();
         await page.getByRole('checkbox', { name: 'Secretario' }).check();
         await expect(committee).toBeVisible();
@@ -44,7 +44,7 @@ test.describe('Gestión de un usuario', () => {
         await expect(page.getByText('Revisa el formulario')).toBeVisible();
         await expect(page.getByText('Comité no válido.').first()).toBeVisible();
         await expect(page.getByRole('checkbox', { name: 'Secretario' })).toBeChecked();
-        await expect(page.getByLabel('Comité')).toBeVisible();
+        await expect(page.getByRole('combobox', { name: 'Comité', exact: true })).toBeVisible();
 
         await page.getByRole('checkbox', { name: 'Secretario' }).uncheck();
         await page.getByRole('button', { name: 'Guardar cambios' }).click();

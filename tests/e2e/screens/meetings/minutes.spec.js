@@ -1,10 +1,11 @@
 import { signIn } from '../../fixtures/auth.js';
-import { expect, test } from '../../fixtures/ui.js';
+import { choose, expect, test } from '../../fixtures/ui.js';
 import {
     alpineReady,
     auditThemes,
     confirmRemoval,
     expectNotice,
+    loadFirstPreset,
     mutatesData,
     pickerReady,
     unique,
@@ -27,7 +28,10 @@ test.describe('Actas', () => {
         await expect(steps).toBeVisible();
         await auditThemes(page, ui);
 
-        await page.getByLabel('Convocatoria').selectOption({ label: 'Convocatoria de logística' });
+        await choose(
+            page.getByRole('combobox', { name: 'Convocatoria', exact: true }),
+            'Convocatoria de logística',
+        );
         await page.getByRole('button', { name: 'Siguiente' }).click();
         await expect(page.getByText('Hoja de firmas de logística')).toBeVisible();
         await auditThemes(page, ui);
@@ -76,9 +80,7 @@ test.describe('Actas', () => {
             await page.getByLabel('Minutos').fill('30');
 
             await pickerReady(page);
-            await page.getByLabel('Lista predeterminada').selectOption({ index: 1 });
-            await page.getByRole('button', { name: 'Cargar' }).click();
-            await page.getByRole('button', { name: 'Sustituir' }).click();
+            await loadFirstPreset(page);
             await expect(
                 page.getByRole('list', { name: 'Seleccionados' }).getByRole('listitem'),
             ).toHaveCount(2);

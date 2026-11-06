@@ -1,5 +1,5 @@
 import { signIn } from '../../fixtures/auth.js';
-import { expect, test } from '../../fixtures/ui.js';
+import { choose, expect, test } from '../../fixtures/ui.js';
 
 // The register coordinator: the token of Eventbrite, the events (also the ones created by hand) and the attendances
 test.describe('Eventos y asistencias', () => {
@@ -88,12 +88,11 @@ test.describe('Eventos y asistencias', () => {
         await expect(
             page.getByRole('heading', { level: 1, name: 'Añadir asistencia' }),
         ).toBeVisible();
-        await expect(
-            page.getByLabel('Evento', { exact: true }).locator('option:checked'),
-        ).toContainText(name);
-        await page
-            .getByLabel('Estudiante', { exact: true })
-            .selectOption({ label: 'García López, Juan' });
+        await expect(page.locator('select[name="event_id"] option:checked')).toContainText(name);
+        await choose(
+            page.getByRole('combobox', { name: 'Estudiante', exact: true }),
+            'García López, Juan',
+        );
         await page.getByRole('button', { name: 'Crear asistencia' }).click();
         await expect(notices.getByText('Asistencia creada con éxito.')).toBeVisible();
 
@@ -102,7 +101,10 @@ test.describe('Eventos y asistencias', () => {
             .getByRole('region', { name: 'Asistencias del curso' })
             .getByRole('link', { name: 'García López, Juan', exact: true })
             .click();
-        await page.getByLabel('Asistencia', { exact: true }).selectOption('Not Attending');
+        await choose(
+            page.getByRole('combobox', { name: 'Asistencia', exact: true }),
+            'No asistido',
+        );
         await page.getByRole('button', { name: 'Guardar cambios' }).click();
         await expect(notices.getByText('Asistencia actualizada con éxito.')).toBeVisible();
 

@@ -1,5 +1,5 @@
 import { signIn } from '../../fixtures/auth.js';
-import { expect } from '../../fixtures/ui.js';
+import { choose, expect } from '../../fixtures/ui.js';
 
 /** Waits until the page stops moving: loaded, with its fonts swapped in. */
 async function settled(page) {
@@ -47,7 +47,7 @@ export async function publishEvidence(page, title) {
     await page.getByLabel('Título').fill(title);
     await page.getByLabel('Horas').fill('1');
     await page.getByLabel('Minutos').fill('0');
-    await page.getByLabel('Comité').selectOption({ label: 'Logística' });
+    await choose(page.getByRole('combobox', { name: 'Comité', exact: true }), 'Logística');
     await page.getByLabel('Descripción').fill('Montaje y desmontaje del escenario principal.');
     await page.getByLabel('Arrastra aquí las pruebas o pulsa para elegirlas').setInputFiles({
         name: 'fotos.pdf',

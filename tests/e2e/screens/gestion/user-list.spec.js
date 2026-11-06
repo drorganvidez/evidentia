@@ -1,5 +1,5 @@
 import { signIn } from '../../fixtures/auth.js';
-import { expect, test } from '../../fixtures/ui.js';
+import { choose, expect, test } from '../../fixtures/ui.js';
 
 // The people of the course: filters and order in the URL, the quick filter, a new user and the mass actions
 test.describe('Alumnos', () => {
@@ -15,7 +15,7 @@ test.describe('Alumnos', () => {
         await ui.noOverflow();
 
         await page.getByText('Filtros').click();
-        await page.getByLabel('Rol').selectOption('COORDINATOR');
+        await choose(page.getByRole('combobox', { name: 'Rol', exact: true }), 'Coordinador');
         await page.getByRole('button', { name: 'Aplicar' }).click();
         await expect(page).toHaveURL(/rol=COORDINATOR/);
         await expect(

@@ -1,5 +1,5 @@
 import { signIn } from '../../fixtures/auth.js';
-import { expect, test } from '../../fixtures/ui.js';
+import { choose, expect, test } from '../../fixtures/ui.js';
 import { audit, evidenceId, notices, publishEvidence, switchTo, unique } from './helpers.js';
 
 // The history of an evidence and the corrections made from it: change of committee, move by the coordinator and
@@ -43,7 +43,7 @@ test.describe('Historial de una evidencia', () => {
         await trigger.click();
         const dialog = page.getByRole('dialog', { name: 'Cambiar de comité' });
         await expect(dialog).toBeVisible();
-        await expect(dialog.getByLabel('Comité de destino')).toBeVisible();
+        await expect(dialog.getByRole('combobox', { name: 'Comité de destino' })).toBeVisible();
         expect(await ui.axe()).toEqual([]);
         await page.keyboard.press('Escape');
         await expect(dialog).toBeHidden();
@@ -99,7 +99,10 @@ test.describe('Historial de una evidencia', () => {
 
             await page.getByRole('button', { name: 'Cambiar de comité' }).click();
             let dialog = page.getByRole('dialog', { name: 'Cambiar de comité' });
-            await dialog.getByLabel('Comité de destino').selectOption({ label: 'Comunicación' });
+            await choose(
+                dialog.getByRole('combobox', { name: 'Comité de destino' }),
+                'Comunicación',
+            );
             await dialog.getByRole('button', { name: 'Mover' }).click();
             await expect(page).toHaveURL(new RegExp(`/activity/evidence/${id}$`));
             await expect(
@@ -112,7 +115,7 @@ test.describe('Historial de una evidencia', () => {
             // back to Logística, where its coordinator sends it to Comunicación again
             await page.getByRole('button', { name: 'Cambiar de comité' }).click();
             dialog = page.getByRole('dialog', { name: 'Cambiar de comité' });
-            await dialog.getByLabel('Comité de destino').selectOption({ label: 'Logística' });
+            await choose(dialog.getByRole('combobox', { name: 'Comité de destino' }), 'Logística');
             await dialog.getByRole('button', { name: 'Mover' }).click();
             await expect(
                 notices(page).getByText('Evidencia movida al comité Logística.'),
@@ -123,7 +126,10 @@ test.describe('Historial de una evidencia', () => {
             await page.getByRole('link', { name: `Mover a otro comité ${title}` }).click();
             dialog = page.getByRole('dialog', { name: 'Mover a otro comité' });
             await expect(dialog).toBeVisible();
-            await dialog.getByLabel('Comité de destino').selectOption({ label: 'Comunicación' });
+            await choose(
+                dialog.getByRole('combobox', { name: 'Comité de destino' }),
+                'Comunicación',
+            );
             await dialog.getByRole('button', { name: 'Mover' }).click();
             await expect(page).toHaveURL(/\/coordinator\/evidence\/list\/pending$/);
             await expect(

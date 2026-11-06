@@ -1,5 +1,5 @@
 import { signIn } from '../../fixtures/auth.js';
-import { expect, test } from '../../fixtures/ui.js';
+import { choose, expect, test } from '../../fixtures/ui.js';
 
 async function audit(page, ui) {
     await ui.noOverflow();
@@ -68,7 +68,7 @@ test.describe('Evidencias de la estudiante', () => {
         await expect(page.getByRole('heading', { level: 1 })).toHaveText('Nueva evidencia');
         await expect(page.getByLabel('Título')).toBeVisible();
         await expect(page.getByRole('group', { name: 'Duración' })).toBeVisible();
-        await expect(page.getByLabel('Comité')).toBeVisible();
+        await expect(page.getByRole('combobox', { name: 'Comité', exact: true })).toBeVisible();
         await audit(page, ui);
     });
 });
@@ -88,7 +88,7 @@ test.describe('Una evidencia de principio a fin', () => {
         await page.getByLabel('Título').fill(title);
         await page.getByLabel('Horas').fill('1');
         await page.getByLabel('Minutos').fill('30');
-        await page.getByLabel('Comité').selectOption({ label: 'Logística' });
+        await choose(page.getByRole('combobox', { name: 'Comité', exact: true }), 'Logística');
         await page.getByLabel('Descripción').fill('Preguntas y tiempos para las tres ponentes.');
         await page.getByLabel('Arrastra aquí las pruebas o pulsa para elegirlas').setInputFiles({
             name: 'guion.pdf',

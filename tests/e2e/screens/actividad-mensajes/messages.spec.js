@@ -1,5 +1,5 @@
 import { signIn } from '../../fixtures/auth.js';
-import { expect, test } from '../../fixtures/ui.js';
+import { choose, expect, test } from '../../fixtures/ui.js';
 import { audit, evidenceId, notices, switchTo, unique } from './helpers.js';
 
 // The inbox of the people in charge, «Mis mensajes», the form of a new message and the thread
@@ -42,7 +42,7 @@ test.describe('Mensajes', () => {
         await expect(
             table.getByRole('link', { name: 'Cambio de turno en el registro', exact: true }),
         ).toBeVisible();
-        await expect(page.getByLabel('Dirigido a')).toHaveValue('all');
+        await expect(page.locator('select[name="to"]')).toHaveValue('all');
         await audit(page, ui);
     });
 
@@ -102,7 +102,7 @@ test.describe('Mensajes', () => {
         await expect(page.getByRole('link', { name: /Sobre/ })).toContainText(
             'Recogida de material',
         );
-        await expect(page.getByLabel('Destinatario').locator('option:checked')).toHaveText(
+        await expect(page.getByRole('combobox', { name: 'Destinatario' })).toHaveValue(
             'Coordinación de Logística',
         );
         await audit(page, ui);
@@ -122,7 +122,7 @@ test.describe('Mensajes', () => {
         await expect(
             page.getByRole('heading', { level: 1, name: 'Sugerencias al profesorado' }),
         ).toBeVisible();
-        await expect(page.getByLabel('Destinatario').locator('option:checked')).toHaveText(
+        await expect(page.getByRole('combobox', { name: 'Destinatario' })).toHaveValue(
             'Profesorado',
         );
     });
@@ -158,9 +158,10 @@ test.describe('Mensajes', () => {
 
             await signIn(page, 'estudiante');
             await page.goto('/messages/create');
-            await page
-                .getByLabel('Destinatario')
-                .selectOption({ label: 'Coordinación de Logística' });
+            await choose(
+                page.getByRole('combobox', { name: 'Destinatario' }),
+                'Coordinación de Logística',
+            );
             await page.getByLabel('Asunto').fill(subject);
             await page
                 .getByLabel('Mensaje', { exact: true })
