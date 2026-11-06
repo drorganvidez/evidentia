@@ -46,6 +46,9 @@ class ManagementController extends Controller
         $this->user_service = new UserService;
     }
 
+    /** Roles from the highest to the lowest, the order of the column of roles */
+    private const ROLE_ORDER = ['LECTURE', 'PRESIDENT', 'COORDINATOR', 'REGISTER_COORDINATOR', 'SECRETARY', 'STUDENT'];
+
     public function user_list(Request $request)
     {
         // filtros, búsqueda y orden del listado, en la URL
@@ -54,8 +57,23 @@ class ManagementController extends Controller
             'rol' => $roles->contains('rol', $request->query('rol')) ? $request->query('rol') : null,
             'estado' => in_array($request->query('estado'), ['activos', 'bloqueados'], true) ? $request->query('estado') : null,
         ];
-        $sort = in_array($request->query('sort'), ['surname', 'name', 'username'], true) ? $request->query('sort') : 'surname';
-        $dir = $request->query('dir') === 'desc' ? 'desc' : 'asc';
+        // los nombres sin distinguir mayúsculas; los roles, del más alto al más bajo
+        $lower = fn (string $column) => fn (Builder $query, string $dir) => $query->orderByRaw('lower('.$query->getQuery()->getGrammar()->wrap($query->qualifyColumn($column)).') '.$dir);
+        $sort = ListSort::from($request, [
+            'surname' => [$lower('surname'), $lower('name')],
+            'username' => $lower('username'),
+            'dni' => 'dni',
+            'roles' => [ListSort::using(
+                fn (Builder $query, string $dir) => $query->orderBy(DB::table('role_user')
+                    ->join('roles', 'roles.id', '=', 'role_user.role_id')
+                    ->whereColumn('role_user.user_id', 'users.id')
+                    ->selectRaw('min(case roles.rol '.implode(' ', array_fill(0, count(self::ROLE_ORDER), 'when ? then ?')).' else ? end)', [
+                        ...collect(self::ROLE_ORDER)->flatMap(fn (string $rol, int $rank): array => [$rol, $rank])->all(),
+                        count(self::ROLE_ORDER),
+                    ]), $dir),
+                fn (User $user) => $user->roles->map(fn (Role $role) => array_search($role->rol, self::ROLE_ORDER, true))->min(),
+            ), $lower('surname'), $lower('name')],
+        ], 'surname', 'asc');
 
         $users = $this->searchList(User::query()->whereKeyNot(Auth::id()), $request, ['name', 'surname', 'username', 'email'])
             // el presidente no puede editar los usuarios de tipo profesor
@@ -63,12 +81,10 @@ class ManagementController extends Controller
             ->when($filters['rol'], fn ($query, $rol) => $query->whereHas('roles', fn ($roles) => $roles->where('rol', $rol)))
             ->when($filters['estado'] === 'activos', fn ($query) => $query->where(fn ($query) => $query->whereNull('block')->orWhere('block', false)))
             ->when($filters['estado'] === 'bloqueados', fn ($query) => $query->where('block', true))
-            ->with(['roles', 'coordinator.committee', 'secretary.committee'])
-            ->orderByRaw('lower('.$sort.') '.$dir)
-            ->orderBy('id');
+            ->with(['roles', 'coordinator.committee', 'secretary.committee']);
 
         return view('manage.user_list', [
-            'users' => $this->paginateList($users, $request), 'roles' => $roles, 'filters' => $filters, 'sort' => $sort, 'dir' => $dir,
+            'users' => $this->paginateList($sort->apply($users), $request), 'roles' => $roles, 'filters' => $filters, 'sort' => $sort,
             'term' => ListPage::term($request),
         ]);
     }

@@ -16,18 +16,13 @@
         'LECTURE' => 'Profesor',
     ];
     $active = count(array_filter($filters));
-    // The order keeps the filters, the search and the rows per page, back on the first page
-    $sortLink = fn(string $key) => [
-        'href' => ListPage::url(['sort' => $key, 'dir' => $sort === $key && $dir === 'asc' ? 'desc' : 'asc'], $list),
-        'dir' => $sort === $key ? $dir : null,
-    ];
-    $columns = [
-        ['label' => 'Apellidos y nombre', 'key' => 'surname', 'sort' => $sortLink('surname')],
-        ['label' => 'UVUS', 'key' => 'username', 'sort' => $sortLink('username')],
+    $columns = $sort->columns([
+        ['label' => 'Apellidos y nombre', 'key' => 'surname'],
+        ['label' => 'UVUS', 'key' => 'username'],
         ['label' => 'DNI', 'key' => 'dni'],
         ['label' => 'Roles', 'key' => 'roles'],
         ['label' => 'Acciones', 'srOnly' => true],
-    ];
+    ]);
     $roleOptions = [
         ['value' => '', 'label' => 'Todos'],
         ...$roles->map(fn($role) => ['value' => $role->rol, 'label' => $roleNames[$role->rol] ?? $role->slug])->all(),
