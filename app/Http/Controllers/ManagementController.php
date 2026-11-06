@@ -10,10 +10,13 @@ use App\Http\Services\UserService;
 use App\Models\Attendee;
 use App\Models\Bonus;
 use App\Models\Committee;
+use App\Models\DefaultList;
 use App\Models\Event;
 use App\Models\Evidence;
 use App\Models\Meeting;
+use App\Models\MeetingRequest;
 use App\Models\Role;
+use App\Models\SignatureSheet;
 use App\Models\User;
 use App\Services\Activity\SubjectInfo;
 use App\Support\Changes;
@@ -180,6 +183,30 @@ class ManagementController extends Controller
             'state' => $state,
             'counts' => $counts,
         ]);
+    }
+
+    public function request_list()
+    {
+        $meeting_requests = MeetingRequest::with(['committee', 'secretary.user', 'signatureSheet'])
+            ->orderByDesc('datetime')->orderByDesc('id')->get();
+
+        return view('manage.request_list', ['meeting_requests' => $meeting_requests]);
+    }
+
+    public function signaturesheet_list()
+    {
+        $signature_sheets = SignatureSheet::with(['secretary.committee', 'secretary.user', 'meetingRequest', 'users'])
+            ->latest()->latest('id')->get();
+
+        return view('manage.signaturesheet_list', ['signature_sheets' => $signature_sheets]);
+    }
+
+    public function defaultlist_list()
+    {
+        $default_lists = DefaultList::with(['secretary.committee', 'secretary.user', 'users'])
+            ->latest()->latest('id')->get();
+
+        return view('manage.defaultlist_list', ['default_lists' => $default_lists]);
     }
 
     public function bonus_list()

@@ -132,7 +132,7 @@ final class Navigation
                 $item('Configurar curso', "$p.config", 'settings'),
                 $item('Alumnos', "$p.user.list", 'user-cog', ["$p.user.management", 'profiles.view', 'profiles.view.evidence']),
                 $item('Evidencias', "$p.evidence.list", 'list-checks'),
-                $item('Reuniones', "$p.meeting.list", 'handshake'),
+                $item('Reuniones', "$p.meeting.list", 'handshake', ["$p.meeting.request.list", "$p.meeting.signaturesheet.list", "$p.meeting.defaultlist.list"]),
                 $item('Asistencias', "$p.attendee.list", 'user-check'),
                 $item('Bonos', "$p.bonus.list", 'puzzle'),
                 $item('Comités', "$p.committee.list", 'network', ["$p.committee.view"]),

@@ -19,6 +19,8 @@
 <x-layout.app title="Reuniones" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Reuniones']]">
     <x-ui.page-header title="Reuniones" />
 
+    @include('manage.partials.meeting-tabs')
+
     <x-ui.filter-bar :action="$list" label="Filtros de reuniones" :open="$active > 0" :active="$active" :reset-href="$list"
         id="meeting-filters">
         <x-ui.field name="comite" label="Comité" type="select" :options="[['value' => '', 'label' => 'Todos'], ...$committees]" :value="(string) ($filters['comite'] ?? '')" />

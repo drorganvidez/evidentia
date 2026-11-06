@@ -124,6 +124,10 @@ class NavigationTest extends TestCase
         $this->assertArrayNotHasKey('Mis cosas', $this->labels($lecturer['nav']), 'A lecturer on their own has no evidences');
         $this->assertNull($lecturer['deadline']);
 
+        $sheets = app(Navigation::class)->for($this->user('PRESIDENT'), 'president.meeting.signaturesheet.list');
+        $meetings = collect(collect($sheets['nav'])->firstWhere('label', 'Gestión')['items'])->firstWhere('label', 'Reuniones');
+        $this->assertTrue($meetings['current'], 'The sections of the meetings keep Reuniones current');
+
         $president = app(Navigation::class)->for($this->user('PRESIDENT'), 'home');
         $this->assertNotContains('Importar', $this->labels($president['nav'])['Gestión']);
         $this->assertContains('Errores', $this->labels($president['nav'])['Gestión'], 'The president sees the server errors too');

@@ -245,6 +245,9 @@ Route::middleware('auth')->group(function () {
         Route::get('president/meeting/list', [ManagementController::class, 'meeting_list'])->name('president.meeting.list');
         Route::get('president/attendee/list', [ManagementController::class, 'attendee_list'])->name('president.attendee.list');
         Route::get('president/bonus/list', [ManagementController::class, 'bonus_list'])->name('president.bonus.list');
+        Route::get('president/meeting/request/list', [ManagementController::class, 'request_list'])->name('president.meeting.request.list');
+        Route::get('president/meeting/signaturesheet/list', [ManagementController::class, 'signaturesheet_list'])->name('president.meeting.signaturesheet.list');
+        Route::get('president/meeting/defaultlist/list', [ManagementController::class, 'defaultlist_list'])->name('president.meeting.defaultlist.list');
         Route::get('president/committee/list', [ManagementController::class, 'committee_list'])->name('president.committee.list');
         Route::get('president/committee/{id}', [CommitteeOverviewController::class, 'show'])->whereNumber('id')->name('president.committee.view');
 
@@ -293,6 +296,9 @@ Route::middleware('auth')->group(function () {
         Route::get('lecture/meeting/list', [ManagementController::class, 'meeting_list'])->name('lecture.meeting.list');
         Route::get('lecture/attendee/list', [ManagementController::class, 'attendee_list'])->name('lecture.attendee.list');
         Route::get('lecture/bonus/list', [ManagementController::class, 'bonus_list'])->name('lecture.bonus.list');
+        Route::get('lecture/meeting/request/list', [ManagementController::class, 'request_list'])->name('lecture.meeting.request.list');
+        Route::get('lecture/meeting/signaturesheet/list', [ManagementController::class, 'signaturesheet_list'])->name('lecture.meeting.signaturesheet.list');
+        Route::get('lecture/meeting/defaultlist/list', [ManagementController::class, 'defaultlist_list'])->name('lecture.meeting.defaultlist.list');
 
         // Server errors, grouped and announced by App\Services\Errors\ErrorRecorder
         Route::get('lecture/errors', [ErrorReportController::class, 'index'])->name('lecture.errors');
