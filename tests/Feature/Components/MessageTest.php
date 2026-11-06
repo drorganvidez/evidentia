@@ -36,7 +36,7 @@ class MessageTest extends ComponentTestCase
         $this->assertStringContainsString('<article aria-label="Mensaje de Lucía Pérez"', $html);
         $this->assertMatchesRegularExpression('/<article aria-label="Mensaje de Lucía Pérez"\s+class="glass-2 grid gap-3 rounded-lg p-4 text-md mt-2">/', $html);
         $this->assertStringContainsString('<header class="flex flex-wrap items-center justify-between gap-2">', $html);
-        $this->assertMatchesRegularExpression('/<a href="\/usuarios\/4"\s+class="text-sm font-semibold text-ink transition hover:text-brand-ink">Lucía Pérez<\/a>/', $html);
+        $this->assertMatchesRegularExpression('/<a href="\/usuarios\/4"\s+class="text-sm font-semibold text-ink transition hover:text-brand-ink pointer-coarse:flex pointer-coarse:min-h-11 pointer-coarse:min-w-11 pointer-coarse:items-center">Lucía Pérez<\/a>/', $html);
         $this->assertStringContainsString('<span class="text-xs text-ink-muted">como estudiante</span>', $html);
         $this->assertStringContainsString('size-6', $html, 'The small avatar');
         $this->assertStringContainsString('datetime="2026-11-05T16:40:00+01:00"', $html);

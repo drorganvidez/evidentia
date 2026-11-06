@@ -1,5 +1,6 @@
 {{--
-    Ordered list of bars, already sorted by the server: a label (a link with href), a figure and a bar relative to max.
+    Ordered list of bars, already sorted by the server: a label (a link with href, 44 px tall under a coarse pointer),
+    a figure and a bar relative to max.
     <x-ui.bar-list label="Evidencias pendientes por comité" :items="[
         ['label' => 'Logística', 'value' => 12, 'href' => '/comites/7', 'hue' => 30],
         ['label' => 'Programa', 'value' => 9, 'hue' => 270],
@@ -39,7 +40,7 @@
         <li class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1.5 text-md">
             @if ($href !== null)
                 <a href="{{ $href }}"
-                    class="flex min-w-0 items-center gap-2 font-medium text-ink no-underline transition hover:text-brand-ink">
+                    class="flex min-w-0 items-center gap-2 font-medium text-ink no-underline transition hover:text-brand-ink pointer-coarse:min-h-11">
                     @if ($hue !== null || $tone !== null)
                         <x-ui.dot :hue="$hue" :tone="$tone ?? 'draft'" />
                     @endif

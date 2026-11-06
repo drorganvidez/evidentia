@@ -3,6 +3,7 @@
     icon is a valid icon name. The Font Awesome markup still stored in committees.icon is never printed.
     <x-ui.committee-chip :committee="$evidence->committee" />
     <x-ui.committee-chip name="Logística" :id="7" icon="truck" href="/comites/7" size="md" />
+    With href the chip is a link that grows to 44 px under a coarse pointer.
 --}}
 @use('App\Models\Committee')
 @use('BladeUI\Icons\Exceptions\SvgNotFound')
@@ -46,7 +47,7 @@
 @endphp
 @if ($href !== null)
     <a href="{{ $href }}"
-        {{ $attributes->class([...$classes, 'no-underline transition hover:text-brand-ink']) }}>
+        {{ $attributes->class([...$classes, 'no-underline transition hover:text-brand-ink pointer-coarse:min-h-11 pointer-coarse:min-w-11 pointer-coarse:justify-center']) }}>
         @if ($lucide !== null)
             <x-ui.icon :name="$lucide" :class="$iconClass" />
         @else

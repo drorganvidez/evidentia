@@ -49,6 +49,8 @@ class BarListTest extends ComponentTestCase
         $html = $this->list();
 
         $this->assertSame(1, substr_count($html, '<a href="/comites/7"'));
+        $this->assertMatchesRegularExpression('/<a href="\/comites\/7"\s+class="flex min-w-0 items-center gap-2 font-medium text-ink no-underline transition hover:text-brand-ink pointer-coarse:min-h-11">/', $html);
+        $this->assertSame(1, substr_count($html, 'pointer-coarse:min-h-11'), 'Only the linked label grows to 44 px');
         $this->assertStringContainsString('committee-dot hue-30', $html);
         $this->assertStringContainsString('committee-dot hue-270', $html);
         $this->assertSame(2, substr_count($html, 'committee-dot'));

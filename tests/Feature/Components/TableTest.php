@@ -203,7 +203,8 @@ class TableTest extends ComponentTestCase
 
         $this->assertStringContainsString('<td role="cell" class="h-(--row-h) px-5 py-4 align-middle in-data-cards:block in-data-cards:h-auto in-data-cards:p-0 md:table-cell md:h-(--row-h) md:px-5 md:py-4 md:align-middle">x</td>', $cell(''));
         $this->assertStringContainsString('text-right font-mono tabular-nums in-data-cards:text-left md:text-right', $cell('numeric'));
-        $this->assertStringContainsString('in-data-cards:col-span-2 [&amp;_a]:font-semibold [&amp;_a]:tracking-tight [&amp;_a]:text-ink [&amp;_a:hover]:text-brand-ink', $cell('primary'));
+        $this->assertStringContainsString('in-data-cards:col-span-2 [&amp;_a]:font-semibold [&amp;_a]:tracking-tight [&amp;_a]:text-ink [&amp;_a:hover]:text-brand-ink pointer-coarse:[&amp;_a]:inline-flex pointer-coarse:[&amp;_a]:min-h-11 pointer-coarse:[&amp;_a]:items-center', $cell('primary'));
+        $this->assertStringNotContainsString('pointer-coarse', $cell('meta'));
         $this->assertStringContainsString('text-sm text-ink-muted', $cell('meta'));
         $this->assertStringContainsString('in-data-cards:justify-self-end', $cell('end'));
         $this->assertStringContainsString('in-data-cards:max-md:hidden', $cell('hide'));

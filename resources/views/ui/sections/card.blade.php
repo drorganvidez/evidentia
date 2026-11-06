@@ -35,7 +35,9 @@
                 <p class="text-ink-muted">Firmada por la secretaría el 21 de octubre.</p>
                 <x-slot:footer class="flex flex-wrap items-center justify-between gap-3 text-sm">
                     <x-ui.time :value="now()->subDays(16)" inline short />
-                    <a href="{{ route('ui.index') }}#ui-card" class="font-semibold text-brand-ink">Ver el acta</a>
+                    <a href="{{ route('ui.index') }}#ui-card"
+                        class="font-semibold text-brand-ink pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center">Ver
+                        el acta</a>
                 </x-slot:footer>
             </x-ui.card>
         </div>

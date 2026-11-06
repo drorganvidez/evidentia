@@ -22,7 +22,8 @@ class PersonTest extends ComponentTestCase
     {
         $html = $this->render('<x-ui.person name="Juan" surname="Pérez" href="/usuarios/4" />');
 
-        $this->assertMatchesRegularExpression('#<a href="/usuarios/4"\s+class="text-md font-semibold text-ink transition hover:text-brand-ink">Juan Pérez</a>#', $html);
+        $this->assertMatchesRegularExpression('#<a href="/usuarios/4"\s+class="text-md font-semibold text-ink transition hover:text-brand-ink pointer-coarse:flex pointer-coarse:min-h-11 pointer-coarse:min-w-11 pointer-coarse:items-center">Juan Pérez</a>#', $html);
+        $this->assertStringNotContainsString('pointer-coarse', $this->render('<x-ui.person name="Juan" surname="Pérez" />'));
         $this->assertLessThan(strpos($html, '<a '), strpos($html, '>JP</span>'), 'The avatar stays outside the link');
     }
 

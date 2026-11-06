@@ -72,7 +72,7 @@ class TimelineTest extends ComponentTestCase
     {
         $html = $this->steps();
 
-        $this->assertMatchesRegularExpression('/<a href="\/evidencias\/33\/enviada"\s+class="text-inherit no-underline hover:text-brand-ink">Enviada<\/a>/', $html);
+        $this->assertMatchesRegularExpression('/<a href="\/evidencias\/33\/enviada"\s+class="text-inherit no-underline hover:text-brand-ink pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:min-w-11 pointer-coarse:items-center">Enviada<\/a>/', $html);
         $this->assertSame(1, substr_count($html, '<a '));
         $this->assertStringContainsString('<span class="text-xs text-ink-muted">Pendiente de corregir</span>', $html);
         $this->assertMatchesRegularExpression('/<time\s+class="font-mono tabular-nums text-xs text-ink-muted" datetime="2026-11-04T09:15:00\+01:00">04\/11 09:15<\/time>/', $html);

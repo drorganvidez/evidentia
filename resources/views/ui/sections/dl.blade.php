@@ -36,7 +36,8 @@
                 <x-ui.dl.item term="Secretaría"><x-ui.person name="Marta" surname="Ruiz"
                         size="sm" /></x-ui.dl.item>
                 <x-ui.dl.item term="Enlace" mono>
-                    <a href="{{ $link }}" class="break-all text-brand-ink">evidentia.us.es/sign/4821</a>
+                    <a href="{{ $link }}"
+                        class="break-all text-brand-ink pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center">evidentia.us.es/sign/4821</a>
                 </x-ui.dl.item>
             </x-ui.dl>
         </x-ui.card>

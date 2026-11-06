@@ -77,9 +77,10 @@ class CommitteeChipTest extends ComponentTestCase
     {
         $html = $this->render('<x-ui.committee-chip name="Logística" :id="7" href="/comites/7" />');
 
-        $this->assertMatchesRegularExpression('/^<a href="\/comites\/7"\s+class="inline-flex items-center rounded-full glass-2 font-medium text-ink gap-1.75 py-1 pr-2.5 pl-2 text-sm no-underline transition hover:text-brand-ink">/', trim($html));
+        $this->assertMatchesRegularExpression('/^<a href="\/comites\/7"\s+class="inline-flex items-center rounded-full glass-2 font-medium text-ink gap-1.75 py-1 pr-2.5 pl-2 text-sm no-underline transition hover:text-brand-ink pointer-coarse:min-h-11 pointer-coarse:min-w-11 pointer-coarse:justify-center">/', trim($html));
         $this->assertStringEndsWith('</a>', trim($html));
         $this->assertStringContainsString('committee-dot hue-30', $html);
+        $this->assertStringNotContainsString('pointer-coarse', $this->render('<x-ui.committee-chip name="Logística" :id="7" />'), 'Only the link grows to 44 px');
     }
 
     public function test_the_md_size_grows_the_pill_the_dot_and_the_icon(): void

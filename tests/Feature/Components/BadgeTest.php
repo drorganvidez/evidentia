@@ -80,7 +80,7 @@ class BadgeTest extends ComponentTestCase
         $this->assertStringNotContainsString('font-mono', $plain);
 
         $count = $this->render('<x-ui.badge variant="count">12</x-ui.badge>');
-        $this->assertStringContainsString('bg-rule px-1.75 py-px font-mono text-2xs font-semibold tabular-nums text-ink', $count);
+        $this->assertStringContainsString('inline-flex items-center rounded-full bg-rule px-1.75 py-px font-mono text-2xs font-semibold tabular-nums text-ink', $count);
         $this->assertStringNotContainsString('text-ink-muted', $count, 'ink-muted over rule stays under AA in the light theme');
         $this->assertStringContainsString('>12</span>', preg_replace('/\s+/', '', $count));
     }
@@ -110,13 +110,18 @@ class BadgeTest extends ComponentTestCase
     {
         $html = $this->render('<x-ui.badge tone="rejected" href="/evidencias/3">Rechazada</x-ui.badge>');
 
-        $this->assertStringStartsWith('<a href="/evidencias/3" class="', trim($html));
+        $this->assertMatchesRegularExpression('/^<a href="\/evidencias\/3"\s+class="/', trim($html));
         $this->assertStringEndsWith('</a>', trim($html));
         $this->assertStringContainsString('hover:text-ink', $html);
         $this->assertStringContainsString('bg-rejected-soft text-rejected-ink', $html);
         $this->assertStringNotContainsString('<span class="inline-flex', $html);
         $this->assertStringNotContainsString('<a', $this->render('<x-ui.badge>x</x-ui.badge>'));
         $this->assertCspSafe($html);
+
+        // 44 px under a coarse pointer (§1.4); a badge that is not a link keeps its size everywhere
+        $this->assertStringContainsString('pointer-coarse:min-h-11 pointer-coarse:min-w-11 pointer-coarse:justify-center', $html);
+        $this->assertStringContainsString('pointer-coarse:min-h-11', $this->render('<x-ui.badge variant="chip" mono href="/e/34">EV-0034</x-ui.badge>'));
+        $this->assertStringNotContainsString('pointer-coarse', $this->render('<x-ui.badge tone="rejected">Rechazada</x-ui.badge>'));
     }
 
     public function test_the_slot_is_escaped_by_the_caller_and_consumer_classes_are_kept(): void

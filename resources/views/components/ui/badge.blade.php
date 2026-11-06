@@ -4,6 +4,7 @@
     <x-ui.badge variant="chip" mono>EV-0033</x-ui.badge>
     <x-ui.badge variant="chip" :hue="150">Logística</x-ui.badge>
     <x-ui.badge variant="count">12</x-ui.badge>
+    With href the badge is a link that grows to 44 px under a coarse pointer.
 --}}
 @props([
     'variant' => 'status',
@@ -29,7 +30,7 @@
             $leading ? 'py-1 pr-2.5 pl-2' : 'px-2.5 py-1',
         ],
         'count' => [
-            'inline-flex rounded-full bg-rule px-1.75 py-px font-mono text-2xs font-semibold tabular-nums text-ink',
+            'inline-flex items-center rounded-full bg-rule px-1.75 py-px font-mono text-2xs font-semibold tabular-nums text-ink',
         ],
         default => [
             'inline-flex items-center gap-2 whitespace-nowrap rounded-full font-semibold',
@@ -52,7 +53,8 @@
     $classes['font-mono tabular-nums'] = $mono;
 @endphp
 @if ($href !== null)
-    <a href="{{ $href }}" {{ $attributes->class([...$classes, 'transition hover:text-ink']) }}>
+    <a href="{{ $href }}"
+        {{ $attributes->class([...$classes, 'transition hover:text-ink pointer-coarse:min-h-11 pointer-coarse:min-w-11 pointer-coarse:justify-center']) }}>
         @if ($showDot)
             <x-ui.dot :tone="$dotTone" :hue="$hue" :pulse="$pulse" :size="$dotSize" />
         @endif

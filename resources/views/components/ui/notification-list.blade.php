@@ -1,5 +1,6 @@
 {{--
-    Notices of the user, the unread ones highlighted: a dot by tone, the title (a link with href), a text and the time.
+    Notices of the user, the unread ones highlighted: a dot by tone, the title (a link with href, 44 px tall under a
+    coarse pointer), a text and the time.
     The unread state is also a hidden text, so the colour never stands alone.
     <x-ui.notification-list :items="[
         ['title' => 'Evidencia rechazada', 'text' => 'Montaje del photocall', 'at' => $at, 'href' => '/evidencias/33', 'unread' => true, 'tone' => 'rejected'],
@@ -27,7 +28,7 @@
                 <div class="min-w-0">
                     @if ($href !== null)
                         <a href="{{ $href }}"
-                            class="font-semibold text-ink no-underline transition hover:text-brand-ink">
+                            class="font-semibold text-ink no-underline transition hover:text-brand-ink pointer-coarse:flex pointer-coarse:min-h-11 pointer-coarse:items-center">
                             {{ $item['title'] ?? '' }}
                             @if ($unread)
                                 <span class="sr-only">, sin leer</span>

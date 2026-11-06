@@ -1,7 +1,8 @@
 {{--
     One step (parent variant steps) or one event (parent variant log) of x-ui.timeline. In steps the node and the
     connector follow state, and every state adds a hidden text so the colour never stands alone; error is the
-    current step with an incident. In log the dot takes tone and the slot continues the title.
+    current step with an incident; with href the title of a step is a link, 44 px tall under a coarse pointer. In log
+    the dot takes tone and the slot continues the title.
     <x-ui.timeline.item state="done" title="Datos de la reunión" href="..." hint="Completado" />
     <x-ui.timeline.item state="error" title="Rechazada" :at="$at" />
     <x-ui.timeline.item tone="rejected" title="Rechazada" :at="$at">por <a href="...">Carlos Navarro</a></x-ui.timeline.item>
@@ -45,7 +46,7 @@
         <span class="font-semibold {{ $colour }}">
             @if ($href !== null)
                 <a href="{{ $href }}"
-                    class="text-inherit no-underline hover:text-brand-ink">{{ $title }}</a>
+                    class="text-inherit no-underline hover:text-brand-ink pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:min-w-11 pointer-coarse:items-center">{{ $title }}</a>
             @else
                 {{ $title }}
             @endif

@@ -1,5 +1,5 @@
 {{--
-    Avatar, name and an optional role line; the name becomes a link with href.
+    Avatar, name and an optional role line; the name becomes a link with href, 44 px tall under a coarse pointer.
     <x-ui.person name="Juan" surname="Pérez" role="como coordinador de Programa" href="/usuarios/4" />
     <x-ui.person name="Lucía" surname="Pérez" size="sm" reverse />
 --}}
@@ -25,7 +25,7 @@
     <span class="grid leading-tight">
         @if ($href !== null)
             <a href="{{ $href }}"
-                class="{{ $nameClasses }} transition hover:text-brand-ink">{{ $fullName }}</a>
+                class="{{ $nameClasses }} transition hover:text-brand-ink pointer-coarse:flex pointer-coarse:min-h-11 pointer-coarse:min-w-11 pointer-coarse:items-center">{{ $fullName }}</a>
         @else
             <span class="{{ $nameClasses }}">{{ $fullName }}</span>
         @endif

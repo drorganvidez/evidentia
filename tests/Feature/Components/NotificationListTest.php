@@ -44,7 +44,8 @@ class NotificationListTest extends ComponentTestCase
         $this->assertSame(3, preg_match_all('/<li class="glass-2 grid grid-cols-\[auto_minmax\(0,1fr\)\] gap-3 rounded-lg px-4 py-3 text-md data-\[unread\]:bg-brand-soft\/40"/', $html));
         $this->assertSame(2, preg_match_all('/<li [^>]*\s+data-unread\s*>/', $html));
         $this->assertSame(2, substr_count($html, '<span class="sr-only">, sin leer</span>'));
-        $this->assertMatchesRegularExpression('/<a href="\/evidencias\/33"\s+class="font-semibold text-ink no-underline transition hover:text-brand-ink">\s*Evidencia rechazada\s*<span class="sr-only">, sin leer<\/span>\s*<\/a>/', $html);
+        $this->assertMatchesRegularExpression('/<a href="\/evidencias\/33"\s+class="font-semibold text-ink no-underline transition hover:text-brand-ink pointer-coarse:flex pointer-coarse:min-h-11 pointer-coarse:items-center">\s*Evidencia rechazada\s*<span class="sr-only">, sin leer<\/span>\s*<\/a>/', $html);
+        $this->assertSame(2, substr_count($html, 'pointer-coarse:min-h-11'), 'Only the linked titles grow to 44 px');
         $this->assertMatchesRegularExpression('/<a href="\/evidencias\/31"\s+class="[^"]*">\s*Evidencia aceptada\s*<\/a>/', $html);
         $this->assertStringContainsString('</ol>', $html);
         $this->assertUniqueIds($html);
