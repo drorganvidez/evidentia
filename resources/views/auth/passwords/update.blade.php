@@ -1,45 +1,15 @@
-@extends('home.main')
-
-@section('title', 'Actualizar contraseña')
-
-@section('content')
-
-    <div class="card shadow-lg">
-
-        <div class="card-body">
-            <form action="{{ route('password.update_p', ['token' => $token]) }}" method="post">
-                @csrf
-
-                <div class="input-group mb-3">
-                    <input name="password" required type="password" class="form-control" placeholder="Nueva contraseña"
-                        autocomplete="password">
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                            <span class="fas fa-lock"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="input-group mb-3">
-                    <input name="password_confirmation" required type="password" class="form-control"
-                        placeholder="Repita nueva contraseña" autocomplete="password">
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                            <span class="fas fa-lock"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="col-lg-12">
-                        <button type="submit" class="btn btn-primary btn-block">Actualizar contraseña</button>
-                    </div>
-                </div>
-
-            </form>
-        </div>
-
-
-    </div>
-
-@endsection
+{{-- The new password of the link received by email; the token travels in the action, as the route expects --}}
+<x-layout.public title="Nueva contraseña">
+    <x-ui.card title="Nueva contraseña" :level="1">
+        <x-ui.form :action="route('password.update_p', ['token' => $token])" id="update-form" busy-label="Guardando" :fields="['password' => 'Nueva contraseña', 'password_confirmation' => 'Repite la contraseña']">
+            <x-ui.field name="password" label="Nueva contraseña" type="password" size="lg" icon="lock"
+                autocomplete="new-password" hint="Al menos 6 caracteres" required />
+            <x-ui.field name="password_confirmation" label="Repite la contraseña" type="password" size="lg"
+                icon="lock" autocomplete="new-password" required />
+            <x-slot:actions>
+                <x-ui.button type="submit" variant="primary" size="lg" icon="key-round" block>Guardar la
+                    contraseña</x-ui.button>
+            </x-slot:actions>
+        </x-ui.form>
+    </x-ui.card>
+</x-layout.public>

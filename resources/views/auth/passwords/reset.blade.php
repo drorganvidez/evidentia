@@ -1,39 +1,18 @@
-@extends('home.main')
-
-@section('title', 'Restablecer contraseña')
-
-@section('content')
-
-    <div class="card shadow-lg">
-
-        <div class="card-body">
-
-            <form action="{{ route('password.reset_p') }}" method="post">
-                @csrf
-
-                <div class="input-group mb-3">
-                    <input name="email" required type="email" class="form-control" placeholder="Email"
-                        autocomplete="username" autofocus>
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                            <span class="fas fa-envelope"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-
-                    <div class="col-sm-12 col-lg-12">
-                        <button type="submit" class="btn btn-primary btn-block">Restablecer contraseña</button>
-
-                    </div>
-
-                </div>
-
-            </form>
-
-        </div>
-
-    </div>
-
-@endsection
+{{-- Asks for the email that receives the link to set a new password: also the first access of a new account --}}
+<x-layout.public title="Restablecer la contraseña">
+    <x-ui.card title="Restablecer la contraseña" :level="1">
+        <x-ui.form :action="route('password.reset_p')" id="reset-form" busy-label="Enviando" :fields="['email' => 'Correo electrónico']">
+            <x-ui.field name="email" label="Correo electrónico" type="email" size="lg" icon="mail"
+                autocomplete="username" required />
+            <x-slot:actions>
+                <x-ui.button type="submit" variant="primary" size="lg" icon="send" block>Enviar el
+                    enlace</x-ui.button>
+            </x-slot:actions>
+        </x-ui.form>
+        <x-slot:footer>
+            <a href="{{ route('login') }}"
+                class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-ink">
+                <x-lucide-arrow-left class="size-4" aria-hidden="true" />Volver al acceso</a>
+        </x-slot:footer>
+    </x-ui.card>
+</x-layout.public>
