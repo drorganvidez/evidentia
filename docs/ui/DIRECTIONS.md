@@ -13,7 +13,7 @@
 - **Modo claro, oscuro y "sistema"**, solo con variables; el usuario elige arriba a la derecha.
 - **Pie de página** en una sola fila: marca y versión (leída del fichero `.version` que ya genera el Dockerfile; al pulsarla se abren las novedades), repositorio, licencia, ayuda y buzón, y la Universidad a la derecha.
 - **Vista "Registro de actividad"** para profesorado y presidencia (ver `TRAZABILIDAD.md`), y una vista nueva **"Mis horas"** con el desglose de lo que computa.
-- **Accesibilidad**: contraste AA verificado por cálculo en todos los pares texto/fondo de cada escala, foco visible, *skip link*, `aria-current`, tablas con `caption`, `prefers-reduced-motion`.
+- **Accesibilidad**: contraste AA verificado por cálculo en todos los pares texto/fondo que se usan como texto (`ink` e `ink-muted` sobre canvas, cristal y cristal-2 en claro y oscuro; `brand-ink`; blanco sobre `brand` y `brand-lo`; cada `*-ink` sobre su `*-soft`). `ink-faint` y `brand-hi` no llegan a 4,5:1 y se reservan para usos no textuales (reglas, marcadores, anillos de foco, halos). Foco visible, *skip link*, `aria-current`, tablas con `caption`, `prefers-reduced-motion`, sin desbordes a 320 px.
 
 ## Dirección A — «Aurora» (recomendada)
 

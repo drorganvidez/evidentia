@@ -8,7 +8,6 @@
     <title>{{ $title ? $title . ' · ' . config('app.name') : config('app.name') }}</title>
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3f7fe">
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#151922">
-    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="32x32">
     <link rel="icon" href="{{ asset('favicon-32x32.png') }}" type="image/png" sizes="32x32">
     <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
     {{-- The Vite client reads this meta to put the nonce on the styles it injects during development --}}
@@ -23,6 +22,9 @@
 </head>
 
 <body {{ $attributes->merge(['class' => 'min-h-dvh bg-canvas font-sans text-ink antialiased']) }}>
+    <a href="#contenido"
+        class="sr-only z-50 rounded-full bg-brand px-4 py-2 font-semibold text-on-brand focus:not-sr-only focus:fixed focus:top-4 focus:left-4">Saltar
+        al contenido</a>
     {{ $slot }}
 </body>
 

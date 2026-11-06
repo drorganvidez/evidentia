@@ -113,7 +113,6 @@
         ['glass-2', 'bg-glass-2 text-ink'],
         ['field', 'bg-field text-ink'],
         ['brand', 'bg-brand text-on-brand'],
-        ['brand-hi', 'bg-brand-hi text-on-brand'],
         ['brand-lo', 'bg-brand-lo text-on-brand'],
         ['brand-soft', 'bg-brand-soft text-brand-soft-ink'],
         ['accepted-soft', 'bg-accepted-soft text-accepted-ink'],
@@ -143,18 +142,36 @@
         ['rounded-xl', 'xl'],
         ['rounded-full', 'full'],
     ];
+    $icons = [
+        'check',
+        'clock',
+        'x',
+        'file-text',
+        'upload',
+        'users',
+        'calendar',
+        'pen-line',
+        'search',
+        'bell',
+        'log-out',
+        'settings',
+        'chevron-right',
+        'arrow-left',
+        'triangle-alert',
+        'circle-help',
+    ];
 @endphp
 <x-layout.base title="Sistema de diseño">
     <x-ui.aurora />
 
-    <div class="mx-auto grid max-w-7xl gap-8 p-4 md:p-8">
-        <header class="glass flex flex-wrap items-center gap-4 rounded-full py-2 pr-2 pl-5">
+    <div class="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] gap-8 p-4 md:p-8">
+        <header class="glass flex min-w-0 flex-wrap items-center gap-4 rounded-full py-2 pr-2 pl-5">
             <a href="{{ url('/_ui') }}" class="flex items-center gap-3 text-ink no-underline">
-                <span
+                <span aria-hidden="true"
                     class="grid size-9 place-items-center rounded-[0.8rem] bg-linear-135 from-aurora-500 to-cyan-400 text-lg font-extrabold tracking-tightest text-white shadow-glow">E</span>
                 <span class="font-bold tracking-tight">Evidentia</span>
-                <span class="hidden font-medium text-ink-muted sm:inline">Sistema de diseño</span>
             </a>
+            <h1 class="sr-only font-medium text-ink-muted sm:not-sr-only">Sistema de diseño</h1>
 
             <div x-data="theme" role="group" aria-label="Tema"
                 class="ml-auto inline-flex gap-0.5 rounded-full border border-glass-edge bg-field p-0.75">
@@ -163,25 +180,25 @@
                         x-bind:aria-pressed="is('{{ $mode }}') ? 'true' : 'false'"
                         class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold text-ink-muted transition aria-pressed:bg-glass-2 aria-pressed:text-ink aria-pressed:shadow-raised">
                         <x-ui.icon :name="$icon" class="size-4" />
-                        {{ $label }}
+                        <span class="sr-only sm:not-sr-only">{{ $label }}</span>
                     </button>
                 @endforeach
             </div>
         </header>
 
-        <main class="grid gap-8">
+        <main id="contenido" class="grid gap-8">
             <section class="glass grid gap-6 rounded-xl p-6 md:p-8" aria-labelledby="ui-color">
                 <h2 id="ui-color" class="text-lg font-bold tracking-tight">Color</h2>
                 <div class="grid gap-4">
                     @foreach ($families as $family => $classes)
                         <div class="grid gap-2">
-                            <span class="font-mono text-xs text-ink-faint">{{ $family }}</span>
+                            <span class="font-mono text-xs text-ink-muted">{{ $family }}</span>
                             <ul class="grid grid-cols-6 gap-1.5 sm:grid-cols-11">
                                 @foreach ($classes as $i => $class)
                                     <li class="grid gap-1">
-                                        <span class="{{ $class }} h-9 rounded-sm"></span>
+                                        <span class="{{ $class }} h-9 rounded-sm ring-1 ring-rule"></span>
                                         <span
-                                            class="font-mono text-2xs text-ink-faint tabular">{{ $steps[$i] }}</span>
+                                            class="font-mono text-2xs text-ink-muted tabular-nums">{{ $steps[$i] }}</span>
                                     </li>
                                 @endforeach
                             </ul>
@@ -202,9 +219,9 @@
                 <p class="flex flex-wrap gap-x-6 gap-y-2">
                     <span class="text-ink">ink</span>
                     <span class="text-ink-muted">ink-muted</span>
-                    <span class="text-ink-faint">ink-faint</span>
                     <span class="text-brand-ink">brand-ink</span>
-                    <a href="#ui-semantic" class="text-brand-ink underline-offset-3 hover:underline">enlace</a>
+                    <a href="#ui-semantic"
+                        class="text-brand-ink underline decoration-brand-ink/40 underline-offset-3 hover:decoration-brand-ink">enlace</a>
                 </p>
             </section>
 
@@ -216,13 +233,13 @@
                             class="grid items-baseline gap-1 border-b border-rule pb-4 last:border-0 last:pb-0 md:grid-cols-[minmax(0,1fr)_8rem] md:gap-6">
                             <span class="{{ $class }}">{{ $sample }}</span>
                             <span
-                                class="font-mono text-xs text-ink-faint tabular md:text-right">{{ $token }}</span>
+                                class="font-mono text-xs text-ink-muted tabular-nums md:text-right">{{ $token }}</span>
                         </li>
                     @endforeach
                     <li class="grid items-baseline gap-1 md:grid-cols-[minmax(0,1fr)_8rem] md:gap-6">
-                        <span class="font-mono text-xl font-semibold tracking-tight tabular">12,5 h · 0123456789 · 20.00
-                            h</span>
-                        <span class="font-mono text-xs text-ink-faint tabular md:text-right">mono · 650</span>
+                        <span class="font-mono text-xl font-semibold tracking-tight tabular-nums">12,5 h · 0123456789 ·
+                            20,00 h</span>
+                        <span class="font-mono text-xs text-ink-muted tabular-nums md:text-right">mono · 650</span>
                     </li>
                 </ul>
             </section>
@@ -235,7 +252,7 @@
                             <li class="grid gap-2 text-center">
                                 <span
                                     class="{{ $class }} block size-16 border border-glass-edge bg-brand-soft"></span>
-                                <span class="font-mono text-xs text-ink-faint">{{ $name }}</span>
+                                <span class="font-mono text-xs text-ink-muted">{{ $name }}</span>
                             </li>
                         @endforeach
                     </ul>
@@ -245,16 +262,16 @@
                     <h2 id="ui-glass" class="text-lg font-bold tracking-tight">Cristal</h2>
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div class="glass grid h-32 content-end rounded-lg p-4">
-                            <span class="font-mono text-xs text-ink-faint">glass</span>
+                            <span class="font-mono text-xs text-ink-muted">glass</span>
                         </div>
                         <div class="glass-2 grid h-32 content-end rounded-lg p-4">
-                            <span class="font-mono text-xs text-ink-faint">glass-2</span>
+                            <span class="font-mono text-xs text-ink-muted">glass-2</span>
                         </div>
                         <div class="grid h-32 content-end rounded-lg bg-brand p-4 text-on-brand shadow-glow">
                             <span class="font-mono text-xs">shadow-glow</span>
                         </div>
                         <div class="grid h-32 content-end rounded-lg bg-glass-2 p-4 shadow-raised">
-                            <span class="font-mono text-xs text-ink-faint">shadow-raised</span>
+                            <span class="font-mono text-xs text-ink-muted">shadow-raised</span>
                         </div>
                     </div>
                 </section>
@@ -290,9 +307,10 @@
             <section class="glass grid gap-6 rounded-xl p-6 md:p-8" aria-labelledby="ui-icons">
                 <h2 id="ui-icons" class="text-lg font-bold tracking-tight">Iconos</h2>
                 <ul class="flex flex-wrap gap-3">
-                    @foreach (['check', 'clock', 'x', 'file-text', 'upload', 'users', 'calendar', 'pen-line', 'search', 'bell', 'log-out', 'settings', 'chevron-right', 'arrow-left', 'triangle-alert', 'circle-help'] as $icon)
-                        <li class="glass-2 grid size-14 place-items-center rounded-md text-ink-muted">
-                            <x-ui.icon :name="$icon" :label="$icon" class="size-5" />
+                    @foreach ($icons as $icon)
+                        <li class="glass-2 grid w-24 justify-items-center gap-2 rounded-md p-3 text-ink-muted">
+                            <x-ui.icon :name="$icon" class="size-5" />
+                            <span class="font-mono text-2xs">{{ $icon }}</span>
                         </li>
                     @endforeach
                 </ul>
@@ -302,7 +320,7 @@
                 <h2 id="ui-buttons" class="text-lg font-bold tracking-tight">Botones</h2>
                 <div class="flex flex-wrap items-center gap-3">
                     <button type="button"
-                        class="inline-flex h-10.5 items-center gap-2 rounded-full bg-brand px-5 text-md font-semibold text-on-brand shadow-glow transition hover:-translate-y-px hover:bg-brand-hi hover:shadow-glow-lg active:translate-y-px">Subir
+                        class="inline-flex h-10.5 items-center gap-2 rounded-full bg-brand px-5 text-md font-semibold text-on-brand shadow-glow transition hover:-translate-y-px hover:bg-brand-lo hover:shadow-glow-lg active:translate-y-px">Subir
                         evidencia</button>
                     <button type="button"
                         class="glass-2 inline-flex h-10.5 items-center gap-2 rounded-full px-5 text-md font-semibold text-ink transition hover:bg-glass-hi">Guardar
@@ -317,7 +335,7 @@
 
         <footer class="glass flex flex-wrap items-center gap-x-6 gap-y-2 rounded-lg px-5 py-3 text-sm">
             <span class="inline-flex items-center gap-2 font-semibold">
-                <span
+                <span aria-hidden="true"
                     class="grid size-6 place-items-center rounded-lg bg-linear-135 from-aurora-500 to-cyan-400 text-sm font-extrabold text-white">E</span>
                 Evidentia
             </span>

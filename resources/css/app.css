@@ -296,6 +296,8 @@
     :root {
         color-scheme: light;
 
+        /* Text. ink and ink-muted pass AA (4.5:1) on canvas, glass and glass-2 in both themes;
+         * ink-faint does not and is only for non-text uses (placeholders, rules, disabled). */
         --canvas: var(--color-slate-50);
         --ink: var(--color-slate-900);
         --ink-muted: var(--color-slate-600);
@@ -310,6 +312,8 @@
         --glass-hi: color-mix(in oklch, white 95%, transparent);
         --shadow-ink: color-mix(in oklch, var(--color-aurora-900) 18%, transparent);
 
+        /* brand carries white text (6.1:1); brand-lo is the hover (8.2:1); brand-hi is for
+         * focus rings, halos and gradients only, white on it stays under AA (4:1). */
         --brand: var(--color-aurora-600);
         --brand-hi: var(--color-aurora-500);
         --brand-lo: var(--color-aurora-700);
@@ -345,8 +349,8 @@
 
             --canvas: var(--color-slate-950);
             --ink: var(--color-slate-100);
-            --ink-muted: var(--color-slate-400);
-            --ink-faint: var(--color-slate-500);
+            --ink-muted: var(--color-slate-300);
+            --ink-faint: var(--color-slate-400);
             --rule: color-mix(in oklch, var(--color-slate-600) 35%, transparent);
             --field: color-mix(in oklch, var(--color-slate-900) 70%, transparent);
 
