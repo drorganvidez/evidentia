@@ -77,7 +77,7 @@ test.describe('Perfil de un estudiante para la gestión', () => {
 
         await page
             .getByRole('table', { name: 'Evidencias enviadas' })
-            .getByRole('link', { name: 'Cartelería del vestíbulo' })
+            .getByRole('link', { name: 'Cartelería del vestíbulo', exact: true })
             .click();
         await expect(page.getByRole('heading', { level: 1 })).toHaveText(
             'Cartelería del vestíbulo',
