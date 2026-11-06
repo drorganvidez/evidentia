@@ -4,6 +4,8 @@
     <x-ui.picker name="users[]" label="Asistentes" :options="$people" :selected="$chosen" :presets="$lists" />
     <x-ui.picker name="student" label="Alumno" :options="$students" :max="1" placeholder="Buscar al alumno" />
     options is a list of {value, label, hint}; presets a list of {label, values}. max 1 keeps one choice in the box, no chips.
+    selected rules the first load only: once a failed validation brings the input back, old() decides and a missing key
+    means nobody chosen; inside a GET x-ui.form old() is never read.
 --}}
 @props([
     'name' => '',
@@ -18,6 +20,7 @@
     'maxVisible' => 50,
     'id' => null,
 ])
+@aware(['method' => null])
 @php
     throw_if(blank($name), InvalidArgumentException::class, 'The picker component needs a name.');
     throw_if(blank($label), InvalidArgumentException::class, 'The picker component needs a label.');
@@ -34,9 +37,9 @@
         $error = $bag->first($errorKey) ?: ($bag->first($errorKey . '.*') ?: null);
     }
 
-    $old = old($errorKey);
-    if ($old !== null) {
-        $selected = (array) $old;
+    // After a failed validation the input that came back decides: with nobody chosen the key is not even sent
+    if (strtolower((string) $method) !== 'get' && request()->hasSession() && request()->session()->hasOldInput()) {
+        $selected = old($errorKey, []);
     }
     $selected = array_map('strval', array_values((array) $selected));
 

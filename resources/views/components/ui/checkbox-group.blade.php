@@ -5,8 +5,10 @@
             <div x-show="hasAny('COORDINATOR', 'SECRETARY')" x-cloak>...select of the committee...</div>
         </x-slot:dependent>
     </x-ui.checkbox-group>
-    options is a list of {value, label, hint}; the inputs are named name[]. The server decides the initial state of
-    the dependent block, so it works without JS: add x-cloak only when it renders hidden.
+    options is a list of {value, label, hint}; the inputs are named name[]. selected rules the first load only: once a
+    failed validation brings the input back, old() decides and a missing key means nothing ticked; inside a GET
+    x-ui.form old() is never read. The server decides the initial state of the dependent block, so it works without
+    JS: add x-cloak only when it renders hidden.
 --}}
 @props([
     'name' => '',
@@ -19,6 +21,7 @@
     'required' => false,
     'id' => null,
 ])
+@aware(['method' => null])
 @php
     throw_if(blank($name), InvalidArgumentException::class, 'The checkbox group needs a name.');
     throw_if(blank($legend), InvalidArgumentException::class, 'The checkbox group needs a legend.');
@@ -35,9 +38,9 @@
         $error = $bag->first($errorKey) ?: ($bag->first($errorKey . '.*') ?: null);
     }
 
-    $old = old($errorKey);
-    if (is_array($old)) {
-        $selected = $old;
+    // After a failed validation the input that came back decides: with nothing ticked the key is not even sent
+    if (strtolower((string) $method) !== 'get' && request()->hasSession() && request()->session()->hasOldInput()) {
+        $selected = old($errorKey, []);
     }
     $selected = array_map('strval', array_values((array) $selected));
 

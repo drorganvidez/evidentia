@@ -65,6 +65,26 @@ class CheckboxGroupTest extends ComponentTestCase
         $this->assertDoesNotMatchRegularExpression('/<input id="field-roles-student"[^>]*\schecked[\s>]/', $html);
     }
 
+    public function test_old_input_without_the_key_empties_what_the_prop_selects(): void
+    {
+        // Every box was unticked: the key does not travel, only the rest of the form came back
+        $this->withOldInput(['_token' => 'x', 'name' => 'Juan']);
+
+        $html = $this->render('<x-ui.checkbox-group name="roles" legend="Roles" :options="'.self::ROLES.'" :selected="[\'STUDENT\', \'SECRETARY\']" />');
+
+        $this->assertDoesNotMatchRegularExpression('/\schecked[\s>]/', $html);
+    }
+
+    public function test_inside_a_get_form_the_prop_decides_even_with_old_input(): void
+    {
+        $this->withOldInput(['_token' => 'x', 'roles' => ['SECRETARY']]);
+
+        $html = $this->render('<x-ui.form action="/users" method="get"><x-ui.checkbox-group name="roles" legend="Roles" :options="'.self::ROLES.'" :selected="[\'STUDENT\']" /></x-ui.form>');
+
+        $this->assertMatchesRegularExpression('/<input id="field-roles-student"[^>]*\schecked[\s>]/', $html);
+        $this->assertDoesNotMatchRegularExpression('/<input id="field-roles-secretary"[^>]*\schecked[\s>]/', $html);
+    }
+
     public function test_hint_error_and_required_describe_the_group(): void
     {
         $html = $this->render('<x-ui.checkbox-group name="roles" legend="Roles" :options="'.self::ROLES.'" hint="Elige uno o varios" error="Elige al menos un rol" required />');

@@ -77,7 +77,41 @@ class ChoiceTest extends ComponentTestCase
         $this->assertDoesNotMatchRegularExpression('/\schecked[\s>]/', $this->render('<x-ui.choice name="roles[]" value="SECRETARY" label="Secretario" />'));
         $this->assertMatchesRegularExpression('/\schecked[\s>]/', $this->render('<x-ui.choice type="radio" name="participation" value="online" label="En línea" />'));
         $this->assertDoesNotMatchRegularExpression('/\schecked[\s>]/', $this->render('<x-ui.choice type="radio" name="participation" value="onsite" label="Presencial" />'));
-        $this->assertDoesNotMatchRegularExpression('/\schecked[\s>]/', $this->render('<x-ui.choice name="remember" label="Recordarme" :checked="false" />'), 'An explicit prop wins over old()');
+        $this->assertMatchesRegularExpression('/\schecked[\s>]/', $this->render('<x-ui.choice name="remember" label="Recordarme" :checked="false" />'), 'The input that came back wins over the prop');
+    }
+
+    public function test_without_old_input_the_prop_decides(): void
+    {
+        $this->assertMatchesRegularExpression('/\schecked[\s>]/', $this->render('<x-ui.choice type="switch" name="allow_access" label="Permitir acceso" :checked="true" />'));
+        $this->assertDoesNotMatchRegularExpression('/\schecked[\s>]/', $this->render('<x-ui.choice type="switch" name="allow_access" label="Permitir acceso" :checked="false" />'));
+    }
+
+    public function test_old_input_without_the_key_unticks_what_the_prop_ticks(): void
+    {
+        // The switch was turned off: an unticked box does not travel, only the rest of the form came back
+        $this->withOldInput(['_token' => 'x', 'email' => 'no-es-un-correo']);
+
+        $this->assertDoesNotMatchRegularExpression('/\schecked[\s>]/', $this->render('<x-ui.choice type="switch" name="allow_access" label="Permitir acceso" :checked="true" />'));
+        $this->assertDoesNotMatchRegularExpression('/\schecked[\s>]/', $this->render('<x-ui.form action="/users/3" method="put"><x-ui.choice type="switch" name="allow_access" label="Permitir acceso" :checked="true" /></x-ui.form>'));
+    }
+
+    public function test_old_input_with_the_key_ticks_what_the_prop_leaves_unticked(): void
+    {
+        $this->withOldInput(['allow_access' => '1']);
+
+        $this->assertMatchesRegularExpression('/\schecked[\s>]/', $this->render('<x-ui.choice type="switch" name="allow_access" label="Permitir acceso" :checked="false" />'));
+    }
+
+    public function test_inside_a_get_form_the_prop_decides_even_with_old_input(): void
+    {
+        // A filter form keeps what the query gave it when another form of the page comes back with errors
+        $this->withOldInput(['_token' => 'x', 'remember' => '1']);
+
+        $ticked = $this->render('<x-ui.form action="/activity" method="get"><x-ui.choice type="radio" name="role" value="" label="Todos" :checked="true" /></x-ui.form>');
+        $plain = $this->render('<x-ui.form action="/activity" method="get"><x-ui.choice name="remember" label="Recordarme" /></x-ui.form>');
+
+        $this->assertMatchesRegularExpression('/\schecked[\s>]/', $ticked);
+        $this->assertDoesNotMatchRegularExpression('/\schecked[\s>]/', $plain);
     }
 
     public function test_an_array_name_gets_the_value_in_its_id(): void

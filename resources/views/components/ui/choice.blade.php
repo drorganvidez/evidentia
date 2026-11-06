@@ -2,9 +2,11 @@
     Checkbox, radio or switch inside its label: one big target, an optional hint and an error. CSS only (peer), no Alpine.
     <x-ui.choice name="remember" label="Recordarme" hint="Durante 30 días en este dispositivo" />
     <x-ui.choice type="radio" name="participation" value="online" label="En línea" />
-    <x-ui.choice type="switch" name="allow_access" label="Permitir acceso a la aplicación" :checked="true" />
-    checked null reads old(): a radio compares it with value and a checkbox named name[] accepts arrays. The consumer
-    class goes to the root; every other attribute (x-on:change, data-*) lands on the input, which covers the whole label.
+    <x-ui.choice type="switch" name="allow_access" label="Permitir acceso a la aplicación" :checked="$user->allow_access" />
+    checked rules the first load only. Once a failed validation brings the input back, old() decides and a missing key
+    means unticked (a radio compares it with value, a checkbox named name[] accepts arrays); inside a GET x-ui.form old()
+    is never read. The consumer class goes to the root; every other attribute (x-on:change, data-*) lands on the input,
+    which covers the whole label.
 --}}
 @props([
     'type' => 'checkbox',
@@ -17,6 +19,7 @@
     'disabled' => false,
     'id' => null,
 ])
+@aware(['method' => null])
 @php
     throw_if(blank($name), InvalidArgumentException::class, 'The choice component needs a name.');
     throw_if(blank($label), InvalidArgumentException::class, 'The choice component needs a label.');
@@ -35,7 +38,10 @@
         $error = $bag->first($errorKey) ?: ($bag->first($errorKey . '.*') ?: null);
     }
 
-    if ($checked === null) {
+    // After a failed validation the input that came back decides, absent keys included: an unticked box is not sent
+    $refilled =
+        strtolower((string) $method) !== 'get' && request()->hasSession() && request()->session()->hasOldInput();
+    if ($refilled) {
         $old = old($errorKey);
         $checked = is_array($old)
             ? in_array($value, array_map('strval', $old), true)

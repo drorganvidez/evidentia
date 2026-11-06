@@ -64,6 +64,26 @@ class PickerTest extends ComponentTestCase
         $this->assertDoesNotMatchRegularExpression('/<option value="2"[^>]*selected/', $html);
     }
 
+    public function test_old_input_without_the_key_empties_what_the_prop_selects(): void
+    {
+        // Nobody was left: the key does not travel, only the rest of the form came back
+        $this->withOldInput(['_token' => 'x', 'title' => 'Reunión 3']);
+
+        $html = $this->render('<x-ui.picker name="users[]" label="Asistentes" :options="'.self::PEOPLE.'" :selected="[1, 2]" />');
+
+        $this->assertDoesNotMatchRegularExpression('/<option value="\d"[^>]*selected/', $html);
+    }
+
+    public function test_inside_a_get_form_the_prop_decides_even_with_old_input(): void
+    {
+        $this->withOldInput(['_token' => 'x', 'actor' => '3']);
+
+        $html = $this->render('<x-ui.form action="/activity" method="get"><x-ui.picker name="actor" label="Persona" :options="'.self::PEOPLE.'" :max="1" :selected="2" /></x-ui.form>');
+
+        $this->assertMatchesRegularExpression('/<option value="2"\s+selected/', $html);
+        $this->assertDoesNotMatchRegularExpression('/<option value="3"[^>]*selected/', $html);
+    }
+
     public function test_presets_travel_escaped_and_get_their_own_controls(): void
     {
         $html = $this->render('<x-ui.picker name="users[]" label="Asistentes" :options="'.self::PEOPLE.'" :presets="$presets" />', [
