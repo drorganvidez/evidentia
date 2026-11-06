@@ -51,9 +51,9 @@ Con la demo levantada (ver `README.md`), abre `http://localhost:8000/_ui`. La ta
 | `x-ui.search` | `ui/search.blade.php` | `shortcut` + `$store.shortcuts` | Formulario GET de búsqueda con atajo de teclado (`/`) que se puede apagar; oculto en el teléfono salvo en el cajón. |
 | `x-ui.count-chip` | `ui/count-chip.blade.php` | `countUp` | Cifra de la página de acceso que cuenta desde cero, con punto de tono y unidad. |
 | `x-ui.scene` | `ui/scene.blade.php` | — | Escena decorativa de las páginas públicas con piezas de la plataforma (una evidencia aceptada, las horas por origen, una reunión con su acta, un bono y chips de comités) y datos inventados, oculta con `aria-hidden`; sigue su propio ancho y por debajo de 34 rem (el teléfono, la tableta horizontal) deja solo la evidencia. `variant="sides"` deja piezas sin texto en los márgenes desde `lg`. |
-| `x-ui.table`, `x-ui.table.row`, `x-ui.table.cell` | `ui/table/` | `tableFilter`, `scrollRegion`, `rowLink` | Tabla de datos con orden y paginación en la URL, filtro rápido en el navegador, filas enlazadas y tarjetas en el teléfono. |
+| `x-ui.table`, `x-ui.table.row`, `x-ui.table.cell` | `ui/table/` | `tableFilter`, `scrollRegion`, `rowLink` | Tabla de datos con orden en la URL, filas enlazadas y tarjetas en el teléfono; sin paginador, filtro rápido en el navegador; con `paginator`, búsqueda `q` en el servidor, páginas y filas por página en el pie. |
 | `x-ui.tabs` | `ui/tabs.blade.php` | — | Filtros o pestañas por URL; el servidor filtra y el enlace actual lleva `aria-current`. |
-| `x-ui.pagination` | `ui/pagination.blade.php` | — | Enlaces de un paginador de Laravel con ventana alrededor de la página actual; compacta en el teléfono. |
+| `x-ui.pagination` | `ui/pagination.blade.php` | — | Enlaces de un paginador de Laravel con ventana alrededor de la página actual, la primera y la última siempre; en el teléfono, primera, anterior, «Página 7 de 13», siguiente y última. |
 | `x-ui.stat` | `ui/stat.blade.php` | — | Tarjeta de cifra del panel con etiqueta, valor, unidad y pie; enlace con `href`. |
 | `x-ui.bar-list` | `ui/bar-list.blade.php` | — | Lista de barras ya ordenada por el servidor, relativa a `max`. |
 | `x-ui.dl`, `x-ui.dl.item` | `ui/dl/` | — | Pares término y valor como lista de definiciones real. |
@@ -73,7 +73,7 @@ Con la demo levantada (ver `README.md`), abre `http://localhost:8000/_ui`. La ta
 | `x-ui.upload` | `ui/upload.blade.php` | `upload` | Zona de subida sobre un `<input type="file">` real, lista de archivos con progreso y hidden por archivo subido. |
 | `x-ui.picker` | `ui/picker.blade.php` | `picker` | Selector de personas, combobox con listbox y chips sobre un `<select multiple>` nativo, con listas predeterminadas. |
 | `x-ui.icon-picker` | `ui/icon-picker.blade.php` | `iconPicker` | Un radio por icono Lucide de la lista curada, con vista previa y búsqueda por nombre y alias. |
-| `x-ui.filter-bar` | `ui/filter-bar.blade.php` | — | Barra de filtros plegable (`<details>`) que cuenta los filtros activos, con un formulario GET y descarga. |
+| `x-ui.filter-bar` | `ui/filter-bar.blade.php` | — | Barra de filtros plegable (`<details>`) que cuenta los filtros activos, con un formulario GET, descarga y `keep` para reenviar el resto de la query string. |
 | `x-ui.alert` | `ui/alert.blade.php` | — | Mensaje con tono, icono, título, cita, autoría y acciones; `role` `note`, `status` o `alert`; `dismissible`. |
 | `x-ui.disclosure` | `ui/disclosure.blade.php` | — | `details` y `summary` nativos con título, icono, `extra` y acordeón exclusivo (`name`). |
 | `x-ui.rich-text` | `ui/rich-text.blade.php` | — | HTML purificado con los estilos de prosa (`resources/css/components/prose.css`); el consumidor pasa `Html::clean()`. |
@@ -107,6 +107,31 @@ Los módulos sin componente propio son `resources/js/components/pageProgress.js`
 ## Utilidades propias
 
 `glass` y `glass-2` (cristal), `hue-*` y `committee-dot` (tono de comité decidido en el servidor), `orb-glow` (halo de un punto de estado), `halo-aurora` (halo de la cabecera de detalle), `no-scrollbar` (pestañas y filtros desplazables sin barra), `scrollbar-subtle` (barra fina con los colores de la interfaz que solo aparece con el puntero o el foco dentro, en la barra lateral y en los diálogos), `pb-safe-nav` y `bottom-safe` (hueco y posición de la barra inferior del teléfono con el área segura). Están en `resources/css/app.css`.
+
+## Listados paginados en el servidor
+
+Los listados que crecen se paginan en el servidor con `App\Support\ListPage`, que los controladores usan a través del trait `App\Http\Controllers\Concerns\PaginatesLists`.
+
+- `searchList($query, $request, $columns)` aplica el parámetro `q` (recortado a 100 caracteres) sobre las columnas que elige cada pantalla: cada palabra tiene que aparecer en alguna columna, y una columna con puntos va por sus relaciones (`user.surname`, `users.name`, `committee.name`). `%` y `_` son texto, nunca comodines.
+- `paginateList($rows, $request, $default = 25)` pagina una consulta, una relación o una colección ya ordenadas. El tamaño sale de `per_page` cuando es 25, 50 o 100; los enlaces conservan toda la query string (pestañas, filtros, orden, búsqueda y tamaño) y una página que no existe muestra la última.
+- Los recuentos de las pestañas, los totales del pie (filas, horas) y los resúmenes se calculan sobre la consulta filtrada y buscada antes de paginarla (`$query->clone()->sum('hours')`), nunca sobre la página.
+- En las vistas, `ListPage::url(['estado' => 'pendientes'], $list)` construye el enlace de una pestaña o de un orden con el resto de la query string y de vuelta en la primera página (un valor `null` quita su clave), y `ListPage::query(['comite', 'desde'])` da lo que la barra de filtros reenvía con `keep`, sin sus propios campos.
+
+```php
+$query = $this->searchList(Evidence::where('last', true), $request, ['title', 'user.name', 'user.surname']);
+$hours = (float) $query->clone()->sum('hours');
+$evidences = $this->paginateList($query->latest()->latest('id'), $request);
+```
+
+```blade
+<x-ui.table caption="Evidencias del curso" :columns="$columns" :paginator="$evidences" filterable
+    count-label="evidencias" count-singular="evidencia" filter-placeholder="Buscar evidencias">
+    ...
+    <x-slot:footer><span>{{ $evidences->total() }} evidencias · <x-ui.hours :value="$hours" size="sm" /></span></x-slot:footer>
+</x-ui.table>
+```
+
+Con `paginator` la tabla cambia el filtro rápido por un formulario GET con `role="search"` que reenvía el resto de la query string, un botón para buscar, un enlace para quitar la búsqueda y el número de filas de todo el resultado (`count-singular` para una). El pie imprime lo que traiga su ranura (los totales) y, si hay más de una página o más de 25 filas, las filas por página y `x-ui.pagination` con «De la 26 a la 50 de 128» (`pagination-label` la nombra; por defecto «Paginación de» y el `caption`). El fragmento del paginador (`->fragment('evidencias')`) vuelve a la tabla desde los enlaces y la búsqueda. Se usa en las evidencias de gestión, del coordinador y del alumno, los alumnos, las asistencias de gestión y del coordinador de registro, los eventos, las reuniones de gestión, los bonos, los mensajes, el registro de actividad y los errores; la demostración del catálogo es «Listado paginado con búsqueda en el servidor», en la sección de tablas.
 
 ## Layouts
 
