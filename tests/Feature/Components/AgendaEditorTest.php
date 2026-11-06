@@ -51,9 +51,9 @@ class AgendaEditorTest extends ComponentTestCase
         $this->assertStringContainsString('x-show="!point.confirming" x-on:click="remove(index)"', $html);
         $this->assertStringContainsString('data-action="confirm"', $html);
         $this->assertStringContainsString('x-show="point.confirming"', $html);
-        // No time limit on the confirmation: Escape or leaving the button takes it back
+        // No time limit on the confirmation: Escape or leaving the button for another control takes it back
         $this->assertStringContainsString('x-on:keydown.escape.prevent="cancelRemove(index, true)"', $html);
-        $this->assertStringContainsString('x-on:blur="cancelRemove(index, false)"', $html);
+        $this->assertStringContainsString('x-on:blur="leaveConfirm($event, index)"', $html);
         $this->assertStringContainsString('Confirmar', $html);
         $this->assertStringContainsString('x-model="point.text"', $html);
         $this->assertStringContainsString('data-field="draft"', $html);

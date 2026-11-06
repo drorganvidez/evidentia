@@ -6,6 +6,37 @@ const INITIAL = [
     'Calendario de montaje',
 ];
 
+/**
+ * WebKit on macOS and iOS does not focus a clicked button: the mousedown hands the focus to the closest ancestor
+ * that takes it (the editor, with tabindex -1), without scrolling, or to nothing, and only then the click arrives.
+ * Chromium focuses the button, so this capture listener reproduces the WebKit rule for the rest of the test.
+ */
+const emulateSafariButtonFocus = (page) =>
+    page.evaluate(() => {
+        document.addEventListener(
+            'mousedown',
+            (event) => {
+                const button =
+                    event.target instanceof Element ? event.target.closest('button') : null;
+
+                if (!button) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                const holder = button.parentElement?.closest('[tabindex]');
+
+                if (holder) {
+                    holder.focus({ preventScroll: true });
+                } else {
+                    document.activeElement?.blur();
+                }
+            },
+            true,
+        );
+    });
+
 test.describe('Orden del día', () => {
     let editor;
     let hidden;
@@ -133,6 +164,30 @@ test.describe('Orden del día', () => {
         await expect(rows).toHaveCount(1);
         await expect(editor.getByRole('textbox', { name: 'Nuevo punto' })).toBeFocused();
         await expect(hidden).toHaveValue(JSON.stringify([INITIAL[0]]));
+    });
+
+    test('confirmar quita el punto aunque el clic no enfoque el botón, como en Safari', async ({
+        page,
+    }) => {
+        await emulateSafariButtonFocus(page);
+
+        const rows = editor.getByRole('listitem');
+
+        await editor.getByRole('button', { name: 'Quitar el punto 2 de 3' }).click();
+        await editor.getByRole('button', { name: 'Confirmar que quitas el punto 2' }).click();
+
+        await expect(rows).toHaveCount(2);
+        await expect(hidden).toHaveValue(JSON.stringify([INITIAL[0], INITIAL[2]]));
+        await expect(editor.getByRole('button', { name: /^Confirmar/ })).toHaveCount(0);
+
+        // Clicking another control, which does take the focus, still takes the confirmation back
+        await editor.getByRole('button', { name: 'Quitar el punto 1 de 2' }).click();
+        await expect(
+            editor.getByRole('button', { name: 'Confirmar que quitas el punto 1' }),
+        ).toBeFocused();
+        await point(2).click();
+        await expect(editor.getByRole('button', { name: /^Confirmar/ })).toHaveCount(0);
+        await expect(rows).toHaveCount(2);
     });
 
     test('la confirmación de quitar no caduca con el tiempo', async ({ page }) => {

@@ -76,7 +76,7 @@
                         x-bind:aria-label="actionLabel('remove', i)" x-bind:title="actionLabel('remove', i)" />
                     <x-ui.button variant="danger" size="sm" data-action="confirm" x-show="point.confirming"
                         x-on:click="removePoint(i)" x-on:keydown.escape.prevent="cancelRemove(i, true)"
-                        x-on:blur="cancelRemove(i, false)" x-bind:aria-label="actionLabel('confirm', i)"
+                        x-on:blur="leaveConfirm($event, i)" x-bind:aria-label="actionLabel('confirm', i)"
                         x-bind:title="actionLabel('confirm', i)">Confirmar</x-ui.button>
                 </span>
             </div>

@@ -149,6 +149,21 @@ export default function minutesEditor() {
             });
         },
 
+        /**
+         * Leaving «Confirmar» for another control brings «Quitar» back. Safari, and Firefox on macOS, do not focus
+         * a clicked button: the mousedown hands the focus to the editor (or to nothing) before the click arrives,
+         * so a blur towards an ancestor or towards nothing is not a decision and keeps the confirmation.
+         */
+        leaveConfirm(event, i) {
+            const next = event.relatedTarget;
+
+            if (!(next instanceof Element) || next.contains(event.target)) {
+                return;
+            }
+
+            this.cancelRemove(i, false);
+        },
+
         /** Escape on «Confirmar» brings «Quitar» back with the focus; leaving it brings it back where it was. */
         cancelRemove(i, refocus) {
             const point = this.points[i];

@@ -1,5 +1,36 @@
 import { expect, test } from '../fixtures/ui.js';
 
+/**
+ * WebKit on macOS and iOS does not focus a clicked button: the mousedown hands the focus to the closest ancestor
+ * that takes it (the editor, with tabindex -1), without scrolling, or to nothing, and only then the click arrives.
+ * Chromium focuses the button, so this capture listener reproduces the WebKit rule for the rest of the test.
+ */
+const emulateSafariButtonFocus = (page) =>
+    page.evaluate(() => {
+        document.addEventListener(
+            'mousedown',
+            (event) => {
+                const button =
+                    event.target instanceof Element ? event.target.closest('button') : null;
+
+                if (!button) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                const holder = button.parentElement?.closest('[tabindex]');
+
+                if (holder) {
+                    holder.focus({ preventScroll: true });
+                } else {
+                    document.activeElement?.blur();
+                }
+            },
+            true,
+        );
+    });
+
 test.describe('Editor de actas', () => {
     let form;
     let editor;
@@ -161,6 +192,19 @@ test.describe('Editor de actas', () => {
 
         await expect(points).toHaveCount(1);
         await expect(editor.getByRole('button', { name: 'Quitar el punto 1 de 1' })).toBeFocused();
+    });
+
+    test('confirmar quita el punto aunque el clic no enfoque el botón, como en Safari', async ({
+        page,
+    }) => {
+        await emulateSafariButtonFocus(page);
+
+        await editor.getByRole('button', { name: 'Quitar el punto 3 de 3' }).click();
+        await editor.getByRole('button', { name: 'Confirmar que quitas el punto 3' }).click();
+
+        await expect(points).toHaveCount(2);
+        await expect.poll(async () => (await value()).map((point) => point.id)).toEqual([41, 42]);
+        await expect(editor.getByRole('button', { name: /^Confirmar/ })).toHaveCount(0);
     });
 
     test('la confirmación de quitar un punto no caduca con el tiempo', async ({ page }) => {
