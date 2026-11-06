@@ -93,7 +93,8 @@
         </aside>
 
         {{-- minmax(0, 1fr): a long breadcrumb never widens the column past the window --}}
-        <div class="grid min-w-0 grid-cols-[minmax(0,1fr)] content-start gap-3 md:gap-6">
+        {{-- At least as tall as the sidebar from md: a short page keeps the footer level with its bottom edge --}}
+        <div class="grid min-w-0 grid-cols-[minmax(0,1fr)] grid-rows-[auto_1fr_auto] gap-3 md:min-h-[calc(100dvh-2.5rem)] md:gap-6">
             <x-layout.app.topbar :breadcrumbs="$breadcrumbs" :search="$search" :notifications="$notifications" :user="$user" />
             <x-ui.notices :messages="$flash" />
             <main id="main" tabindex="-1"
