@@ -16,7 +16,7 @@
     <h2 id="ui-form-title" class="text-2xl font-bold tracking-tight">Formularios</h2>
 
     <div class="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-2">
-        <div class="glass-2 grid grid-cols-[minmax(0,1fr)] gap-4 rounded-lg p-5">
+        <div class="glass-2 grid grid-cols-[minmax(0,1fr)] content-start gap-4 rounded-lg p-5">
             <h3 class="text-lg font-bold tracking-tight">Resumen de errores</h3>
             {{-- Without the autofocus of the summary: the catalogue would open scrolled to this section --}}
             <x-ui.form :action="route('ui.index')" files id="evidence-form" :fields="['title' => 'Título', 'description' => 'Descripción']" :focus-summary="false">
@@ -46,7 +46,7 @@
             View::share('errors', $previousErrors ?? new Illuminate\Support\ViewErrorBag());
         @endphp
 
-        <div class="glass-2 grid grid-cols-[minmax(0,1fr)] gap-4 rounded-lg p-5">
+        <div class="glass-2 grid grid-cols-[minmax(0,1fr)] content-start gap-4 rounded-lg p-5">
             <h3 class="text-lg font-bold tracking-tight">Acceso</h3>
             <x-ui.form :action="route('ui.index')" busy-label="Entrando" id="access-form">
                 <x-ui.field name="login_user" label="Usuario" size="lg" icon="user-round" autocomplete="username"
@@ -59,7 +59,7 @@
             </x-ui.form>
         </div>
 
-        <div class="glass-2 grid grid-cols-[minmax(0,1fr)] gap-4 rounded-lg p-5">
+        <div class="glass-2 grid grid-cols-[minmax(0,1fr)] content-start gap-4 rounded-lg p-5">
             <h3 class="text-lg font-bold tracking-tight">Búsqueda</h3>
             <x-ui.form method="get" :action="route('ui.index')" :summary="false" busy-label="Buscando" id="search-form">
                 <x-ui.field name="search_q" label="Buscar" type="search" icon="search" placeholder="Nombre o título"
@@ -70,7 +70,7 @@
             </x-ui.form>
         </div>
 
-        <div class="glass-2 grid grid-cols-[minmax(0,1fr)] gap-4 rounded-lg p-5">
+        <div class="glass-2 grid grid-cols-[minmax(0,1fr)] content-start gap-4 rounded-lg p-5">
             <h3 class="text-lg font-bold tracking-tight">Descarga con estado ocupado</h3>
             <x-ui.form method="get" :action="route('ui.index')" :summary="false" download busy-label="Preparando"
                 id="export-form">
