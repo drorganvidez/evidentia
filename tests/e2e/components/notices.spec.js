@@ -225,4 +225,85 @@ test.describe('Avisos', () => {
         await expect(page.locator(STATUS)).toHaveText('Evidencia guardada');
         await ui.noOverflow();
     });
+
+    test('un aviso con enlace no se cierra solo y lleva a su destino', async ({ page, ui }) => {
+        await ui.section('notices').getByRole('button', { name: 'Aviso con enlace' }).click();
+
+        const notice = page.locator(NOTICE).filter({ hasText: 'Evidencia enviada a Logística' });
+        const link = notice.getByRole('link', { name: 'Ver la evidencia' });
+
+        await expect(link).toHaveAttribute('href', /\/_ui\/detail$/);
+        await expect(notice.locator('[x-show="item.timed"]')).toBeHidden();
+
+        await page.clock.fastForward(60_000);
+        await expect(notice).toBeVisible();
+    });
+
+    test('la barra de tiempo acompaña a los avisos que se cierran solos y se detiene con el puntero', async ({
+        page,
+        ui,
+    }) => {
+        await ui.section('notices').getByRole('button', { name: 'Aviso de éxito' }).click();
+
+        const notice = page.locator(NOTICE).filter({ hasText: 'Evidencia guardada' });
+        const bar = notice.locator('[x-show="item.timed"]');
+
+        await expect(bar).toBeVisible();
+        expect(await bar.evaluate((element) => getComputedStyle(element).animationName)).toBe(
+            'countdown',
+        );
+
+        await notice.hover();
+        await expect(bar).toHaveAttribute('data-paused', 'true');
+        await page.mouse.move(0, 0);
+        await expect(bar).not.toHaveAttribute('data-paused', 'true');
+
+        await ui.section('notices').getByRole('button', { name: 'Aviso de error' }).click();
+        await expect(
+            page
+                .locator(NOTICE)
+                .filter({ hasText: 'No se ha podido guardar' })
+                .locator('[x-show="item.timed"]'),
+        ).toBeHidden();
+    });
+
+    test('como mucho se ven tres avisos y el resto espera su turno', async ({ page }) => {
+        await page.evaluate(() => {
+            ['Uno', 'Dos', 'Tres', 'Cuatro', 'Cinco'].forEach((text) =>
+                window.Alpine.store('notices').push({ tone: 'pending', text }),
+            );
+        });
+
+        const notices = page.locator(NOTICE);
+
+        await expect(notices).toHaveCount(3);
+        await expect(notices.nth(0)).toContainText('Uno');
+        await expect(notices.nth(2)).toContainText('Tres');
+
+        await notices.nth(0).getByRole('button', { name: 'Cerrar aviso' }).click();
+
+        await expect(notices).toHaveCount(3);
+        await expect(notices.nth(2)).toContainText('Cuatro');
+        await expect(page.locator(ALERT)).toHaveText('Cuatro');
+    });
+
+    test('solo se enlaza dentro de la aplicación', async ({ page }) => {
+        await page.evaluate(() => {
+            window.Alpine.store('notices').push({
+                tone: 'notice',
+                text: 'Externo',
+                href: 'https://example.com/x',
+                action: 'Ir',
+            });
+            window.Alpine.store('notices').push({
+                tone: 'notice',
+                text: 'Script',
+                href: 'javascript:alert(1)',
+                action: 'Ir',
+            });
+        });
+
+        await expect(page.locator(NOTICE).filter({ hasText: 'Externo' })).toBeVisible();
+        await expect(page.locator(NOTICE).getByRole('link')).toHaveCount(0);
+    });
 });

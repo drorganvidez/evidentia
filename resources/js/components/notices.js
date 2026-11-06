@@ -40,17 +40,17 @@ export default function notices() {
             root?.removeEventListener('focusin', remember);
         },
 
-        /** x-on:ui-notice.window: $dispatch('ui-notice', { tone, text, timeout }) from any component */
+        /** x-on:ui-notice.window: $dispatch('ui-notice', { tone, text, timeout, href, action }) from any component */
         receive(event) {
             this.add(event.detail ?? {});
         },
 
-        add({ tone, text, timeout } = {}) {
+        add({ tone, text, timeout, href, action } = {}) {
             if (typeof text !== 'string' || text.trim() === '') {
                 return;
             }
 
-            this.$store.notices.push({ tone, text, timeout });
+            this.$store.notices.push({ tone, text, timeout, href, action });
         },
 
         dismiss(id) {

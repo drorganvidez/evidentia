@@ -4,9 +4,9 @@
     <h2 id="ui-notices-title" class="text-2xl font-bold tracking-tight">Avisos</h2>
 
     <div class="grid gap-3">
-        <span class="font-mono text-2xs text-ink-muted">$dispatch('ui-notice', { tone, text }) · accepted y notice se
-            cierran a los
-            8 s · rejected y pending permanecen</span>
+        <span class="font-mono text-2xs text-ink-muted">$dispatch('ui-notice', { tone, text, href, action }) · accepted
+            y notice se cierran a los 8 s con barra de tiempo · rejected, pending y los que llevan enlace permanecen ·
+            tres a la vez, el resto en cola</span>
         <div x-data class="flex flex-wrap items-center gap-3">
             <x-ui.button icon="circle-check"
                 x-on:click="$dispatch('ui-notice', { tone: 'accepted', text: 'Evidencia guardada' })">Aviso de
@@ -20,6 +20,9 @@
             <x-ui.button icon="info"
                 x-on:click="$dispatch('ui-notice', { tone: 'notice', text: 'Hay una nueva versión de Evidentia' })">Aviso
                 informativo</x-ui.button>
+            <x-ui.button icon="link"
+                x-on:click="$dispatch('ui-notice', { tone: 'accepted', text: 'Evidencia enviada a Logística', href: '/_ui/detail', action: 'Ver la evidencia' })">Aviso
+                con enlace</x-ui.button>
             <x-ui.button variant="ghost" icon="megaphone"
                 x-on:click="$store.notices.announce('Anuncio de prueba')">Anunciar en la región de estado</x-ui.button>
         </div>

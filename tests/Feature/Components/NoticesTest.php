@@ -17,7 +17,12 @@ class NoticesTest extends ComponentTestCase
         $this->assertMatchesRegularExpression("/<div role=\"group\" x-bind:data-tone=\"item.tone\" x-on:mouseenter=\"pause\\(item.id, 'pointer'\\)\"\\s+x-on:mouseleave=\"resume\\(item.id, 'pointer'\\)\" x-on:focusin=\"pause\\(item.id, 'focus'\\)\"\\s+x-on:focusout=\"resume\\(item.id, 'focus'\\)\"/", $html);
         $this->assertStringContainsString('animate-rise motion-reduce:animate-none', $html);
         $this->assertStringContainsString('data-[tone=rejected]:bg-rejected-glass', $html);
-        $this->assertStringContainsString('<p class="min-w-0 flex-1 pt-0.5" x-text="item.text"></p>', $html);
+        $this->assertStringContainsString('<p x-text="item.text"></p>', $html);
+        $this->assertMatchesRegularExpression('/<a x-show="item.href" x-bind:href="item.href" x-text="item.action"/', $html);
+        // The time left of a timed notice: decorative, held with the countdown, absent with reduced motion
+        $this->assertMatchesRegularExpression('/<span x-show="item.timed" aria-hidden="true" x-bind:data-paused="item.paused \? \'true\' : null"/', $html);
+        $this->assertStringContainsString('animate-countdown', $html);
+        $this->assertStringContainsString('data-[paused=true]:[animation-play-state:paused] motion-reduce:hidden', $html);
         $this->assertStringContainsString('aria-label="Cerrar aviso" title="Cerrar aviso"', $html);
         $this->assertStringContainsString('x-on:click="dismiss(item.id)"', $html);
         $this->assertSame(4, substr_count($html, 'x-show="item.tone ==='), 'One icon per tone');
@@ -69,5 +74,24 @@ class NoticesTest extends ComponentTestCase
 
         $this->assertStringContainsString('class="fixed inset-x-3 top-3 z-40 grid gap-3 md:inset-x-auto md:top-5 md:left-1/2 md:w-96 md:-translate-x-1/2"', $html);
         $this->assertStringNotContainsString('bottom-5', $html);
+    }
+
+    public function test_a_controller_adds_a_link_to_the_first_flash_message(): void
+    {
+        $this->withSession(['success' => 'Evidencia enviada', 'notice_link' => ['href' => '/evidence/view/7', 'action' => 'Ver la evidencia']]);
+
+        $html = $this->render('<x-ui.notices />');
+
+        $expected = e(json_encode([['tone' => 'accepted', 'text' => 'Evidencia enviada', 'href' => '/evidence/view/7', 'action' => 'Ver la evidencia']]));
+        $this->assertStringContainsString('data-messages="'.$expected.'"', $html);
+    }
+
+    public function test_a_link_without_a_message_or_without_an_address_is_ignored(): void
+    {
+        $this->withSession(['notice_link' => ['href' => '/evidence/view/7']]);
+        $this->assertStringContainsString('data-messages="[]"', $this->render('<x-ui.notices />'));
+
+        $this->withSession(['success' => 'Guardada', 'notice_link' => ['action' => 'Ver']]);
+        $this->assertStringContainsString('data-messages="'.e(json_encode([['tone' => 'accepted', 'text' => 'Guardada']])).'"', $this->render('<x-ui.notices />'));
     }
 }
