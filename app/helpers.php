@@ -4,6 +4,7 @@ use App\Models\Configuration;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 /*
  *  SELLO DE UN ARCHIVO Y DE UNA EVIDENCIA
@@ -247,4 +248,16 @@ if (! function_exists('evidentia_version')) {
 
         return file_exists($path) ? trim(file_get_contents($path)) : null;
     }
+}
+
+/** Deterministic id for a form control: users[] -> field-users, points_json -> field-points-json, a[b] -> field-a-b. */
+function ui_field_id(string $name): string
+{
+    return 'field-'.Str::slug(str_replace(['[', ']', '_'], ['-', '', '-'], $name));
+}
+
+/** Key of the validation error bag for a control name: users[] -> users, a[b] -> a.b. */
+function ui_error_key(string $name): string
+{
+    return trim(str_replace(['[]', '[', ']'], ['', '.', ''], $name), '.');
 }

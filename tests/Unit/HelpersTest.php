@@ -32,4 +32,24 @@ class HelpersTest extends TestCase
         $this->assertEquals(0, \Time::complex_shape_minutes(2));
         $this->assertNull(\Time::complex_shape_hours('dos'));
     }
+
+    public function test_field_ids_are_deterministic_and_safe_for_html(): void
+    {
+        $this->assertSame('field-users', ui_field_id('users[]'));
+        $this->assertSame('field-points-json', ui_field_id('points_json'));
+        $this->assertSame('field-a-b', ui_field_id('a[b]'));
+        $this->assertSame('field-roles-0', ui_field_id('roles[0]'));
+        $this->assertSame('field-title', ui_field_id('title'));
+        $this->assertSame('field-correo-electronico', ui_field_id('Correo electrónico'));
+        $this->assertSame(ui_field_id('users[]'), ui_field_id('users[]'));
+    }
+
+    public function test_error_keys_follow_the_dot_notation_of_the_validator(): void
+    {
+        $this->assertSame('users', ui_error_key('users[]'));
+        $this->assertSame('a.b', ui_error_key('a[b]'));
+        $this->assertSame('a.b', ui_error_key('a[b][]'));
+        $this->assertSame('roles.0', ui_error_key('roles[0]'));
+        $this->assertSame('title', ui_error_key('title'));
+    }
 }
