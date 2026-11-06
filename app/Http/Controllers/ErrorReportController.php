@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Concerns\PaginatesLists;
 use App\Models\ErrorOccurrence;
 use App\Models\ErrorReport;
+use App\Support\ListSort;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,18 +24,24 @@ class ErrorReportController extends Controller
             : 'abiertos';
         $code = strtoupper(trim((string) $request->query('codigo', '')));
 
-        $reports = $this->paginateList(ErrorReport::query()
+        // the last seen first by default; the open ones before the resolved ones
+        $sort = ListSort::from($request, [
+            'error' => 'exception',
+            'count' => 'occurrences',
+            'last' => ListSort::desc('last_seen_at'),
+            'state' => fn ($query, string $dir) => $query->orderByRaw('case when resolved_at is null then 0 else 1 end '.$dir),
+        ], 'last');
+        $reports = $this->paginateList($sort->apply(ErrorReport::query()
             ->when($state === 'abiertos', fn ($query) => $query->open())
             ->when($state === 'resueltos', fn ($query) => $query->resolved())
             ->when($code !== '', fn ($query) => $query->whereIn(
                 'id',
                 ErrorOccurrence::where('reference', 'like', strtolower($code).'%')->select('error_report_id'),
-            ))
-            ->orderByDesc('last_seen_at')
-            ->orderByDesc('id'), $request);
+            ))), $request);
 
         return view('system.errors.index', [
             'reports' => $reports,
+            'sort' => $sort,
             'state' => $state,
             'code' => $code,
             'prefix' => $this->prefix(),

@@ -1,11 +1,14 @@
 {{-- Server errors for the lecturers and the president: open, resolved or all, newest first, searchable by the code of the error page --}}
+@use('App\Support\ListPage')
+@use('App\Support\ListSort')
 @php
+    $order = Arr::only(ListPage::query(), [ListSort::KEY, ListSort::DIR]);
     $base = route($prefix . '.errors');
     $tabs = collect(['abiertos' => 'Abiertos', 'resueltos' => 'Resueltos', 'todos' => 'Todos'])
         ->map(
             fn(string $label, string $key) => [
                 'label' => $label,
-                'href' => $base . '?estado=' . $key,
+                'href' => ListPage::url(['estado' => $key, 'codigo' => null], $base),
                 'count' => $counts[$key],
                 'current' => $state === $key,
             ],
@@ -16,18 +19,21 @@
 <x-layout.app title="Errores" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Errores']]">
     <x-ui.page-header title="Errores" />
 
-    <x-ui.table caption="Errores del servidor" :paginator="$reports" pagination-label="Páginas de errores" :columns="[
+    <x-ui.table caption="Errores del servidor" :paginator="$reports" pagination-label="Páginas de errores" :columns="$sort->columns([
         ['label' => 'Error', 'key' => 'error'],
         ['label' => 'Veces', 'key' => 'count', 'align' => 'end'],
         ['label' => 'Última vez', 'key' => 'last'],
         ['label' => 'Estado', 'key' => 'state'],
-    ]">
+    ])">
         <x-slot:toolbar>
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <x-ui.tabs label="Filtrar por estado" :items="$tabs" />
                 <x-ui.form method="get" :action="$base" :summary="false" busy-label="Buscando" id="error-code-form"
                     class="w-full md:w-72">
                     <input type="hidden" name="estado" value="todos">
+                    @foreach (ListPage::fields($order) as $name => $value)
+                        <input type="hidden" name="{{ $name }}" value="{{ $value }}">
+                    @endforeach
                     <x-ui.field name="codigo" label="Código de la página de error" type="search" :value="$code"
                         placeholder="Código de la página de error" hide-label icon="search" autocomplete="off" />
                 </x-ui.form>
