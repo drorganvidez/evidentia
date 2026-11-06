@@ -11,7 +11,7 @@ class SceneTest extends ComponentTestCase
     {
         $html = $this->render('<x-ui.scene class="lg:mt-2" />');
 
-        $this->assertMatchesRegularExpression('/^<div aria-hidden="true" data-scene="hero"\s+class="relative grid select-none [^"]*print-hidden[^"]* lg:mt-2">/', trim($html));
+        $this->assertMatchesRegularExpression('/^<div aria-hidden="true" data-scene="hero" class="@container select-none print-hidden lg:mt-2">/', trim($html));
         $this->assertSame(1, substr_count($html, 'aria-hidden="true" data-scene'), 'One hidden root');
 
         // An evidence with its status, committee and hours
@@ -41,13 +41,14 @@ class SceneTest extends ComponentTestCase
             $this->assertMatchesRegularExpression('/committee-dot hue-\d+[^>]*><\/span>\s*'.$committee.'/', $html);
         }
 
-        // Only the evidence stays on the phone, over two blank cards; the rest shows from md
-        $this->assertSame(2, substr_count($html, 'rounded-lg glass-2 opacity-'), 'The deck of the phone');
-        $this->assertSame(2, preg_match_all('/ md:hidden/', $html));
-        $this->assertSame(2, substr_count($html, 'max-md:hidden'), 'The meeting and the right column hide on the phone');
+        // The scene follows its own width: narrow, only the evidence over two blank cards; from 34rem, the collage
+        $this->assertStringContainsString('@min-[34rem]:grid-cols-[minmax(0,1.08fr)_minmax(0,1fr)]', $html);
+        $this->assertSame(2, substr_count($html, 'rounded-lg glass-2 opacity-'), 'The deck');
+        $this->assertSame(2, substr_count($html, '@min-[34rem]:hidden'));
+        $this->assertSame(2, substr_count($html, '@max-[34rem]:hidden'), 'The meeting and the right column hide when narrow');
 
-        // The cards float only without the reduced motion preference
-        $this->assertSame(4, substr_count($html, 'md:motion-safe:animate-float'));
+        // The cards float only in the collage and without the reduced motion preference
+        $this->assertSame(4, substr_count($html, '@min-[34rem]:motion-safe:animate-float'));
         $this->assertDoesNotMatchRegularExpression('/(?<!motion-safe:)animate-float/', $html);
 
         $this->assertNothingInteractive($html);
