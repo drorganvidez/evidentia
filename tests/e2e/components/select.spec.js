@@ -91,6 +91,16 @@ test.describe('Desplegables', () => {
         await expect(province).toBeFocused();
         await expect(native).toHaveValue('Cádiz');
         expect(await changes()).toBe('1');
+
+        // A letter typed over the chosen label starts a new search
+        await province.press('m');
+        await expect(province).toHaveValue('m');
+        await expect(list).toBeVisible();
+        await expect(options.first()).toHaveText('Almería');
+        await expect(list.getByRole('option', { name: 'Málaga', exact: true })).toBeVisible();
+        await province.press('Tab');
+        await expect(list).toBeHidden();
+        await expect(province).toHaveValue('Cádiz');
     });
 
     test('sin resultados lo dice, Intro no elige y Escape devuelve la etiqueta', async ({ ui }) => {
@@ -103,6 +113,11 @@ test.describe('Desplegables', () => {
 
         await expect(list.getByRole('option')).toHaveCount(0);
         await expect(list.locator('xpath=..').getByText('Sin resultados')).toBeVisible();
+
+        // A click inside a search under way moves the caret and leaves the list open
+        await province.click();
+        await expect(list.locator('xpath=..')).toBeVisible();
+        await expect(province).toHaveValue('xyz');
 
         await province.press('Enter');
         await expect(province).toHaveAttribute('aria-expanded', 'true');

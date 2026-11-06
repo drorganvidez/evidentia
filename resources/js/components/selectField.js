@@ -131,17 +131,26 @@ export default function selectField() {
 
         /** From the keyboard the label comes selected, so the first key pressed starts a new search. */
         onFocus() {
-            if (!this.pointing) {
+            const fromPointer = this.pointing;
+
+            this.pointing = false;
+
+            if (!fromPointer) {
                 this.$refs.entry.select();
             }
         },
 
-        /** A click or a tap opens the list with the box emptied for a search, or closes it. */
+        /**
+         * A click or a tap opens the list with the box emptied for a search; another one closes it, unless a
+         * search is under way and the click only moves the caret.
+         */
         toggle() {
             this.pointing = false;
 
             if (this.open) {
-                this.dismiss();
+                if (this.query === '') {
+                    this.dismiss();
+                }
 
                 return;
             }
@@ -249,7 +258,7 @@ export default function selectField() {
                 option.active = true;
 
                 if (scroll) {
-                    // The list may have just opened: x-show shows it on the next frame
+                    // The options of a new search are rendered on the next tick and laid out on the next frame
                     this.$nextTick(() => afterRender(() => this.reveal(option.id)));
                 }
             }
@@ -381,6 +390,17 @@ export default function selectField() {
                     this.dismiss();
                     break;
                 default:
+                    // A letter typed over the chosen label starts a new search instead of adding to it
+                    if (
+                        event.key.length === 1 &&
+                        !event.ctrlKey &&
+                        !event.metaKey &&
+                        !event.altKey &&
+                        this.query !== '' &&
+                        this.query === (this.current()?.label ?? '')
+                    ) {
+                        this.$refs.entry.select();
+                    }
                     break;
             }
         },
@@ -390,6 +410,7 @@ export default function selectField() {
                 return;
             }
 
+            this.pointing = false;
             this.hide();
             this.restore();
         },
