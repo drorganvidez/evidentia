@@ -1,9 +1,6 @@
 # Views still on the AdminLTE layout. Remove each line when the view moves to the new UI.
 resources/views/email/**
-resources/views/layouts/**
 resources/views/message/**
-resources/views/components/menus/**
-resources/views/components/navbars/**
 resources/views/suggestionsmailbox.blade.php
 resources/views/components/attendeestatus.blade.php
 resources/views/components/buttonconfirm.blade.php
@@ -13,9 +10,6 @@ resources/views/components/evidenceoptionsstudent.blade.php
 resources/views/components/evidencestatus.blade.php
 resources/views/components/id.blade.php
 resources/views/components/input.blade.php
-resources/views/components/li.blade.php
-resources/views/components/lilogo.blade.php
-resources/views/components/lilogout.blade.php
 resources/views/components/menumeeting.blade.php
 resources/views/components/slimreminder.blade.php
 resources/views/components/textarea.blade.php
