@@ -32,19 +32,21 @@ class HomeScreenTest extends ScreenTestCase
         $this->assertStringContainsString(route('coordinator.evidence.list.pending'), $html);
     }
 
-    public function test_the_president_and_the_lecturer_see_the_figures_and_the_attention_queue_of_the_course(): void
+    public function test_the_president_and_the_lecturer_get_the_control_panel_of_the_course(): void
     {
         foreach (['presidente' => 'president', 'profesor' => 'lecture'] as $who => $prefix) {
             $html = $this->assertAppScreen($this->signedAs($who)->get(route('home')));
 
-            $this->assertStringContainsString('Evidencias del curso', $html);
-            $this->assertStringContainsString('Requiere atención', $html);
-            $this->assertStringContainsString('Evidencias pendientes de revisión', $html);
-            $this->assertStringContainsString('Comités sin coordinador', $html);
-            $this->assertStringContainsString('Actividad reciente', $html);
+            foreach (['Panel del curso', 'Horas acreditadas', 'Participación', 'Por revisar', 'Aceptación',
+                'Horas por estudiante', 'Origen de las horas', 'Sin coordinación', 'Actividad reciente',
+                'Envíos por semana', 'Señales del registro', 'Accesos', 'Cola de revisión', 'Montaje del photocall'] as $text) {
+                $this->assertStringContainsString($text, $html, "$who sees $text");
+            }
             $this->assertStringContainsString(route("$prefix.evidence.list"), $html);
-            $this->assertStringContainsString(route("$prefix.committee.list"), $html);
-            $this->assertStringNotContainsString('Mis últimas evidencias', $html);
+            $this->assertStringContainsString(route("$prefix.export"), $html);
+            $this->assertStringNotContainsString('Mis últimas evidencias', $html, 'Nothing of the page of a participant');
+            $this->assertStringNotContainsString('Horas computadas', $html);
+            $this->assertSame($prefix === 'lecture', str_contains($html, 'Errores del servidor'), 'Only the lecturer sees the server errors');
         }
     }
 

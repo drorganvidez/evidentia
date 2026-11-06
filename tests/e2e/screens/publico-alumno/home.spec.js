@@ -57,26 +57,27 @@ test.describe('Inicio', () => {
         ['presidente', 'Elena', 'president'],
         ['profesor', 'David', 'lecture'],
     ]) {
-        test(`${who} ve las cifras del curso y lo que requiere atención`, async ({ page, ui }) => {
+        test(`${who} tiene el panel del curso con cifras y trazabilidad`, async ({ page, ui }) => {
             await signIn(page, who);
             await page.goto('/');
 
-            await expect(page.getByRole('heading', { level: 1 })).toHaveText(`Hola, ${name}`);
-
-            const attention = page.getByRole('region', { name: 'Requiere atención' });
-
+            await expect(page.getByRole('heading', { level: 1 })).toHaveText('Panel del curso');
+            await expect(page.getByText(`Hola, ${name}`)).toBeVisible();
+            await expect(page.getByRole('link', { name: /Por revisar/ })).toHaveAttribute(
+                'href',
+                new RegExp(`/${prefix}/evidence/list$`),
+            );
             await expect(
-                attention.getByRole('link', { name: 'Evidencias pendientes de revisión' }),
-            ).toHaveAttribute('href', new RegExp(`/${prefix}/evidence/list$`));
-            await expect(
-                attention.getByRole('link', { name: 'Comités sin coordinador' }),
+                page.getByRole('list', { name: 'Estudiantes por tramo de horas acreditadas' }),
             ).toBeVisible();
+            await expect(page.getByRole('table', { name: 'Comités' })).toContainText('Logística');
             await expect(
-                page.getByRole('list', { name: 'Evidencias enviadas por comité' }),
+                page.getByRole('list', { name: 'Evidencias enviadas en las últimas ocho semanas' }),
             ).toBeVisible();
-            await expect(
-                page.getByRole('list', { name: 'Últimas evidencias enviadas o revisadas' }),
-            ).toBeVisible();
+            await expect(page.getByRole('region', { name: 'Señales del registro' })).toBeVisible();
+            await expect(page.getByRole('region', { name: 'Errores del servidor' })).toHaveCount(
+                prefix === 'lecture' ? 1 : 0,
+            );
             await audit(page, ui);
         });
     }
