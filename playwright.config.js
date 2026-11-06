@@ -7,8 +7,9 @@ export default defineConfig({
     fullyParallel: true,
     forbidOnly: !!process.env.CI,
     retries: process.env.CI ? 2 : 0,
-    // SQLite on disk and a single PHP server do not take parallel workers well in CI
-    workers: process.env.CI ? 1 : undefined,
+    // One PHP server and a heavy catalogue page: with several workers a navigation can wait behind
+    // the axe audit of another browser and time out. PW_WORKERS raises it on a roomy machine.
+    workers: process.env.CI ? 1 : Number(process.env.PW_WORKERS ?? 1),
     reporter: process.env.CI ? [['html', { open: 'never' }], ['github']] : 'list',
     use: {
         baseURL,
