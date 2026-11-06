@@ -16,7 +16,7 @@
 <x-layout.app title="Errores" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Errores']]">
     <x-ui.page-header title="Errores" />
 
-    <x-ui.table caption="Errores del servidor" :columns="[
+    <x-ui.table caption="Errores del servidor" :paginator="$reports" pagination-label="Páginas de errores" :columns="[
         ['label' => 'Error', 'key' => 'error'],
         ['label' => 'Veces', 'key' => 'count', 'align' => 'end'],
         ['label' => 'Última vez', 'key' => 'last'],
@@ -54,11 +54,6 @@
             <x-slot:empty>
                 <x-ui.empty icon="circle-check" :title="$code !== '' ? 'Ningún error con ese código' : 'Sin errores'" size="sm" />
             </x-slot:empty>
-        @endif
-        @if ($reports->hasPages())
-            <x-slot:footer>
-                <x-ui.pagination :paginator="$reports" label="Páginas de errores" />
-            </x-slot:footer>
         @endif
     </x-ui.table>
 </x-layout.app>

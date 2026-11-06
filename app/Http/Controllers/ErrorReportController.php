@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\PaginatesLists;
 use App\Models\ErrorOccurrence;
 use App\Models\ErrorReport;
 use Illuminate\Http\Request;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Auth;
  */
 class ErrorReportController extends Controller
 {
+    use PaginatesLists;
+
     public function index(Request $request)
     {
         $state = in_array($request->query('estado'), ['abiertos', 'resueltos', 'todos'], true)
@@ -20,7 +23,7 @@ class ErrorReportController extends Controller
             : 'abiertos';
         $code = strtoupper(trim((string) $request->query('codigo', '')));
 
-        $reports = ErrorReport::query()
+        $reports = $this->paginateList(ErrorReport::query()
             ->when($state === 'abiertos', fn ($query) => $query->open())
             ->when($state === 'resueltos', fn ($query) => $query->resolved())
             ->when($code !== '', fn ($query) => $query->whereIn(
@@ -28,8 +31,7 @@ class ErrorReportController extends Controller
                 ErrorOccurrence::where('reference', 'like', strtolower($code).'%')->select('error_report_id'),
             ))
             ->orderByDesc('last_seen_at')
-            ->paginate(25)
-            ->withQueryString();
+            ->orderByDesc('id'), $request);
 
         return view('system.errors.index', [
             'reports' => $reports,

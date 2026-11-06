@@ -164,6 +164,27 @@ class ErrorReportingTest extends TestCase
         $this->assertNull($report->fresh()->resolved_at);
     }
 
+    public function test_the_errors_come_in_pages_that_keep_the_state(): void
+    {
+        foreach (range(1, 30) as $index) {
+            ErrorReport::create([
+                'fingerprint' => sha1('fallo '.$index), 'exception' => RuntimeException::class, 'message' => sprintf('Fallo %02d', $index),
+                'occurrences' => 1, 'first_seen_at' => now(), 'last_seen_at' => now()->subMinutes($index),
+            ]);
+        }
+
+        $this->actingAs($this->lecturer);
+        $this->get(route('lecture.errors', ['estado' => 'todos']))->assertOk()
+            ->assertSee('<nav aria-label="Páginas de errores"', false)
+            ->assertSee('De la 1 a la 25 de 30')
+            ->assertSee('Fallo 01')
+            ->assertDontSee('Fallo 26')
+            ->assertSee('href="'.e(route('lecture.errors', ['estado' => 'todos', 'page' => 2])).'" rel="next"', false);
+        $this->get(route('lecture.errors', ['estado' => 'todos', 'page' => 9]))->assertOk()
+            ->assertSee('De la 26 a la 30 de 30')
+            ->assertSee('Fallo 30');
+    }
+
     public function test_the_president_lists_resolves_and_reopens_them_under_their_own_routes(): void
     {
         Notification::fake();
