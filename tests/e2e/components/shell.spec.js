@@ -133,6 +133,36 @@ test.describe('Shell en su propia página', () => {
         await expect(page.locator('#field-q-topbar')).toHaveValue('acta/');
     });
 
+    test('con los atajos apagados «/» no mueve el foco y la pista desaparece', async ({
+        page,
+    }, testInfo) => {
+        test.skip(testInfo.project.name !== 'chromium', 'Teclado del escritorio');
+
+        const field = page.locator('#field-q-topbar');
+        const hint = page.locator('header kbd');
+
+        await expect(field).toHaveAttribute('aria-keyshortcuts', '/');
+        await expect(hint).toBeVisible();
+
+        await page.evaluate(() => localStorage.setItem('evidentia.shortcuts', 'off'));
+        await page.reload();
+
+        await expect(field).not.toHaveAttribute('aria-keyshortcuts');
+        await expect(hint).toBeHidden();
+
+        await page.locator('#main').focus();
+        await page.keyboard.press('/');
+        await expect(field).not.toBeFocused();
+        await expect(page.locator('#main')).toBeFocused();
+
+        await page.evaluate(() => localStorage.setItem('evidentia.shortcuts', 'on'));
+        await page.reload();
+
+        await page.locator('#main').focus();
+        await page.keyboard.press('/');
+        await expect(field).toBeFocused();
+    });
+
     test('el menú de usuario abre desde el avatar con el nombre y Salir', async ({
         page,
     }, testInfo) => {

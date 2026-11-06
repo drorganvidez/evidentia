@@ -1,13 +1,33 @@
 /**
- * Keyboard shortcut of <x-ui.search>: the key held in data-key focuses the field, unless the person is
- * typing somewhere else or the field is not rendered (the topbar form is hidden on the phone).
+ * Keyboard shortcut of <x-ui.search>: the key held in data-key focuses the field, unless the person turned the
+ * shortcuts off ($store.shortcuts), is typing somewhere else or the field is not rendered (the topbar form is
+ * hidden on the phone).
  *
- * Blade: <form x-data="shortcut" data-key="/" x-on:keydown.window="onKey"> with the field on x-ref="input".
+ * Blade: <form x-data="shortcut" data-key="/" x-on:keydown.window="onKey"> with the field on x-ref="input"
+ * x-bind:aria-keyshortcuts="keys" and the hint on x-show="enabled".
  */
 export default function shortcut() {
     return {
+        /** Without the store (a page that does not register it) the shortcut stays on. */
+        get enabled() {
+            const store = this.$store.shortcuts;
+
+            return store === undefined || store.enabled;
+        },
+
+        /** aria-keyshortcuts of the field: the key while the shortcut works, nothing once it is off. */
+        get keys() {
+            return this.enabled ? this.$root.dataset.key : null;
+        },
+
         onKey(event) {
-            if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) {
+            if (
+                !this.enabled ||
+                event.defaultPrevented ||
+                event.altKey ||
+                event.ctrlKey ||
+                event.metaKey
+            ) {
                 return;
             }
 

@@ -14,10 +14,11 @@ class SearchTest extends ComponentTestCase
         $this->assertMatchesRegularExpression('#^<form role="search" method="get" action="/evidencias" x-data="shortcut" data-key="/"\s+x-on:keydown.window="onKey"\s+class="hidden md:block ml-auto">#', trim($html));
         $this->assertStringContainsString('<label for="field-q" class="sr-only">Buscar</label>', $html);
         // The field announces the shortcut: the form never takes the focus
-        $this->assertMatchesRegularExpression('#<input id="field-q" type="search" name="q" value=""\s+x-ref="input"\s+aria-keyshortcuts="/"\s+placeholder="Buscar evidencias"\s+autocomplete="off"\s+class="w-0 min-w-0 flex-1 bg-transparent text-control text-ink outline-none placeholder:text-ink-muted">#', $html);
-        $this->assertSame(1, substr_count($html, 'aria-keyshortcuts='));
+        $this->assertMatchesRegularExpression('#<input id="field-q" type="search" name="q" value=""\s+x-ref="input"\s+aria-keyshortcuts="/"\s+x-bind:aria-keyshortcuts="keys"\s+placeholder="Buscar evidencias"\s+autocomplete="off"\s+class="w-0 min-w-0 flex-1 bg-transparent text-control text-ink outline-none placeholder:text-ink-muted">#', $html);
+        $this->assertSame(1, substr_count($html, ' aria-keyshortcuts='));
         $this->assertStringContainsString('focus-within:border-aurora-500 focus-within:ring-4 focus-within:ring-aurora-500/18', $html);
-        $this->assertMatchesRegularExpression('/<kbd aria-hidden="true"\s+class="[^"]+">\/<\/kbd>/', $html);
+        // The hint follows the shortcuts store: it goes away once the person turns them off
+        $this->assertMatchesRegularExpression('/<kbd aria-hidden="true" x-show="enabled"\s+class="[^"]+">\/<\/kbd>/', $html);
         $this->assertSame(1, substr_count($html, '<svg'));
         $this->assertStringNotContainsString('placeholder:text-ink-faint', $html, 'The placeholder keeps AA contrast');
         $this->assertStringEndsWith('</form>', trim($html));
