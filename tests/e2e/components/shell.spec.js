@@ -1,0 +1,184 @@
+import { expect, test } from '../fixtures/ui.js';
+
+/** No horizontal overflow inside a document (the page or a frame). */
+async function noOverflowIn(root) {
+    const widths = await root.locator('html').evaluate((el) => ({
+        scroll: el.scrollWidth,
+        client: el.clientWidth,
+    }));
+
+    expect(widths.scroll, 'Desborde horizontal').toBeLessThanOrEqual(widths.client);
+}
+
+/** A frame receives its document when it scrolls into view: bring one there and return its locator. */
+async function shellFrame(page, width) {
+    const iframe = page.locator(`iframe[data-demo="shell-${width}"]`);
+
+    await iframe.scrollIntoViewIfNeeded();
+
+    return page.frameLocator(`iframe[data-demo="shell-${width}"]`);
+}
+
+test.describe('Shell en la sección layout', () => {
+    test.beforeEach(async ({ page }) => {
+        await page.goto('/_ui#ui-layout');
+    });
+
+    test('a 1280 px muestra el sidebar completo y oculta la barra inferior', async ({ page }) => {
+        const frame = await shellFrame(page, 1280);
+
+        await expect(frame.getByRole('heading', { level: 1, name: 'Hola, Juan' })).toBeVisible();
+        await expect(frame.locator('aside')).toBeVisible();
+        await expect(
+            frame.locator('aside').getByRole('link', { name: 'Mis evidencias' }),
+        ).toBeVisible();
+        await expect(frame.locator('aside').getByText('Gestión')).toBeVisible();
+        await expect(frame.locator('aside [x-data="deadline"]')).toBeVisible();
+        await expect(
+            frame.getByRole('navigation', { name: 'Navegación principal (móvil)' }),
+        ).toBeHidden();
+        await expect(frame.getByRole('button', { name: 'Abrir menú' })).toBeHidden();
+        await expect(frame.getByRole('search')).toBeVisible();
+
+        const aside = await frame.locator('aside').boundingBox();
+        expect(Math.round(aside.width)).toBe(272);
+        await noOverflowIn(frame);
+    });
+
+    test('a 768 px el sidebar se compacta en un raíl de 80 px', async ({ page }) => {
+        const frame = await shellFrame(page, 768);
+
+        await expect(frame.locator('aside')).toBeVisible();
+
+        const aside = await frame.locator('aside').boundingBox();
+        expect(Math.round(aside.width)).toBe(80);
+
+        await expect(frame.locator('aside [x-data="deadline"]')).toBeHidden();
+        await expect(
+            frame.getByRole('navigation', { name: 'Navegación principal (móvil)' }),
+        ).toBeHidden();
+        await expect(frame.getByRole('button', { name: 'Abrir menú' })).toBeHidden();
+        // The deadline comes back inline under the title
+        await expect(frame.locator('main [x-data="deadline"]')).toBeVisible();
+        await noOverflowIn(frame);
+    });
+
+    test('a 400 px oculta el sidebar y muestra la barra inferior y el botón de menú', async ({
+        page,
+    }) => {
+        const frame = await shellFrame(page, 400);
+
+        await expect(frame.locator('aside')).toBeHidden();
+        await expect(
+            frame.getByRole('navigation', { name: 'Navegación principal (móvil)' }),
+        ).toBeVisible();
+        await expect(frame.getByRole('button', { name: 'Abrir menú' })).toBeVisible();
+        await expect(frame.getByRole('search')).toBeHidden();
+        await expect(frame.getByRole('link', { name: 'Avisos, 3 sin leer' })).toBeVisible();
+        await noOverflowIn(frame);
+    });
+});
+
+test.describe('Shell en su propia página', () => {
+    test.beforeEach(async ({ page }) => {
+        await page.goto('/_ui/shell');
+    });
+
+    test('el botón de menú abre el cajón, el foco queda dentro y Escape lo devuelve', async ({
+        page,
+    }, testInfo) => {
+        test.skip(testInfo.project.name !== 'mobile', 'El cajón es cosa del teléfono');
+
+        const button = page.getByRole('button', { name: 'Abrir menú' });
+        const drawer = page.locator('#drawer');
+
+        await expect(
+            page.getByRole('navigation', { name: 'Navegación principal (móvil)' }),
+        ).toBeVisible();
+        await expect(page.locator('aside')).toBeHidden();
+
+        await button.click();
+
+        await expect(drawer).toHaveAttribute('open', '');
+        expect(await page.evaluate(() => document.activeElement.closest('#drawer') !== null)).toBe(
+            true,
+        );
+        await expect(drawer.getByRole('link', { name: 'Mis evidencias' })).toBeVisible();
+        await expect(drawer.getByRole('radio', { name: 'Oscuro' })).toBeVisible();
+        await expect(drawer.getByRole('button', { name: 'Salir' })).toBeVisible();
+        await expect(drawer.locator('[x-data="deadline"]')).toBeVisible();
+
+        await page.keyboard.press('Escape');
+
+        await expect(drawer).not.toHaveAttribute('open', '');
+        await expect(button).toBeFocused();
+        await noOverflowIn(page);
+    });
+
+    test('el enlace para saltar lleva el foco a main y la barra «/» al buscador', async ({
+        page,
+    }, testInfo) => {
+        test.skip(testInfo.project.name !== 'chromium', 'Teclado del escritorio');
+
+        await page.keyboard.press('Tab');
+        await expect(page.getByRole('link', { name: 'Saltar al contenido' })).toBeFocused();
+        await page.keyboard.press('Enter');
+        await expect(page.locator('#main')).toBeFocused();
+
+        await page.keyboard.press('/');
+        await expect(page.locator('#field-q-topbar')).toBeFocused();
+
+        // Inside a field the key is typed, not captured
+        await page.keyboard.type('acta/');
+        await expect(page.locator('#field-q-topbar')).toHaveValue('acta/');
+    });
+
+    test('el menú de usuario abre desde el avatar con el nombre y Salir', async ({
+        page,
+    }, testInfo) => {
+        test.skip(
+            testInfo.project.name !== 'chromium',
+            'El menú de usuario vive en la topbar ancha',
+        );
+
+        await page.getByRole('button', { name: 'Menú de Juan Pérez' }).click();
+
+        const menu = page.locator('#user-menu');
+
+        await expect(menu).toBeVisible();
+        await expect(menu.getByText('Estudiante · Coordinador · Presidente')).toBeVisible();
+        await expect(menu.getByRole('menuitem', { name: 'Salir' })).toBeVisible();
+
+        await page.keyboard.press('Escape');
+        await expect(menu).toBeHidden();
+    });
+
+    test('cumple WCAG 2.2 AA en claro y en oscuro sin desbordar', async ({ page, ui }) => {
+        expect(await ui.axe()).toEqual([]);
+        await noOverflowIn(page);
+
+        await ui.setTheme('dark');
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+        expect(await ui.axe()).toEqual([]);
+        await noOverflowIn(page);
+    });
+
+    test('en una ventana de 768 y de 400 px no desborda', async ({ page }, testInfo) => {
+        test.skip(
+            testInfo.project.name !== 'chromium',
+            'Los tramos se fuerzan con el tamaño de la ventana',
+        );
+
+        await page.setViewportSize({ width: 768, height: 1024 });
+        await expect(page.locator('aside')).toBeVisible();
+        expect(Math.round((await page.locator('aside').boundingBox()).width)).toBe(80);
+        await noOverflowIn(page);
+
+        await page.setViewportSize({ width: 400, height: 800 });
+        await expect(page.locator('aside')).toBeHidden();
+        await expect(
+            page.getByRole('navigation', { name: 'Navegación principal (móvil)' }),
+        ).toBeVisible();
+        await noOverflowIn(page);
+    });
+});
