@@ -39,17 +39,27 @@ class CoordinatorReviewScreenTest extends ScreenTestCase
             ->assertSee('name="_id" value="'.$pending->id.'"', false);
     }
 
-    public function test_the_coordinator_cannot_review_their_own_evidence(): void
+    public function test_the_evidences_of_the_coordinators_wait_in_the_presidency_not_in_the_queue(): void
     {
         $own = Evidence::create([
-            'title' => 'Inventario del almacén', 'description' => '<p>Inventario.</p>', 'hours' => 1, 'status' => 'PENDING',
+            'title' => 'Recuento de sillas', 'description' => '<p>Recuento.</p>', 'hours' => 1, 'status' => 'PENDING',
             'user_id' => $this->person('coordinador')->id, 'committee_id' => Evidence::first()->committee_id,
         ]);
 
-        $this->screen('coordinador', route('coordinator.evidence.list.pending'))
-            ->assertSee('Inventario del almacén')
-            ->assertDontSee('action="'.route('coordinator.evidence.accept', ['id' => $own->id]).'"', false)
-            ->assertDontSee('name="_id" value="'.$own->id.'"', false);
+        foreach (['all', 'pending'] as $tab) {
+            $this->screen('coordinador', route('coordinator.evidence.list.'.$tab))
+                ->assertSee('Montaje del photocall')
+                ->assertDontSee('Recuento de sillas')
+                // the one of Inés, the second coordinator of Logística
+                ->assertDontSee('Inventario del almacén')
+                ->assertDontSee('name="_id" value="'.$own->id.'"', false);
+        }
+    }
+
+    public function test_the_tabs_count_the_queue(): void
+    {
+        $this->screen('coordinador', route('coordinator.evidence.list.all'))
+            ->assertSeeInOrder(['Todas', '4', 'Pendientes', '2', 'Aceptadas', '1', 'Rechazadas', '1']);
     }
 
     public function test_the_actions_disappear_once_the_validation_closes(): void

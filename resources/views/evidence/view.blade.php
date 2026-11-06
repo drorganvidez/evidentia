@@ -1,13 +1,23 @@
 {{--
-    Detail of an evidence for its author (evidence.view) and for the coordinator of its committee
-    (coordinator.evidence.view): the steps, the latest reason of a rejection, the description, the proofs, the data and
-    the history. The coordinator who wrote it reads it as its author: nobody accepts or rejects their own evidence.
+    Detail of an evidence for its author (evidence.view), for the coordinator of its committee
+    (coordinator.evidence.view) and for the presidency (president.review.view): the steps, the latest reason of a
+    rejection, the description, the proofs, the data and the history. App\Services\ReviewQueue says who reviews it; the
+    coordinator who wrote it reads it as its author, and the presidency reviews it.
 --}}
 @php
     $user = Auth::user();
-    $coordinated = $user->hasRole('COORDINATOR') ? $user->coordinator?->committee : null;
-    $reviewer =
-        $coordinated !== null && $evidence->committee_id === $coordinated->id && $evidence->user_id !== $user->id;
+    $queue = app(\App\Services\ReviewQueue::class);
+    $kind = match (true) {
+        request()->routeIs('president.review.*') => \App\Services\ReviewQueue::PRESIDENCY,
+        request()->routeIs('coordinator.*') => \App\Services\ReviewQueue::COORDINATION,
+        default => null,
+    };
+    $reviewer = match ($kind) {
+        \App\Services\ReviewQueue::PRESIDENCY => $queue->reviewsAsPresidency($user, $evidence),
+        \App\Services\ReviewQueue::COORDINATION => $queue->reviewsAsCoordinator($user, $evidence),
+        default => false,
+    };
+    $reviewRoutes = $kind === null ? null : \App\Services\ReviewQueue::routes($kind);
     $author = !$reviewer && $evidence->user_id === $user->id;
     $validationOpen = !now()->gt(\Config::validate_evidences_timestamp() ?? now());
     $uploadClosesAt = \Config::upload_evidences_timestamp();
@@ -49,17 +59,21 @@
         ->map(fn(array $event, int $index) => $event + ['order' => $index])
         ->sortByDesc(fn(array $event) => sprintf('%012d-%05d', $event['at']?->getTimestamp() ?? 0, $event['order']))
         ->values();
-    $list = $reviewer
-        ? ['label' => 'Revisar evidencias', 'href' => route('coordinator.evidence.list.all')]
-        : ['label' => 'Mis evidencias', 'href' => route('evidence.list')];
+    $list =
+        $reviewRoutes !== null && !$author
+            ? ['label' => 'Revisar evidencias', 'href' => route($reviewRoutes['all'])]
+            : ['label' => 'Mis evidencias', 'href' => route('evidence.list')];
     $sent = $evidence->status !== 'DRAFT';
     $reviewed = in_array($evidence->status, ['ACCEPTED', 'REJECTED'], true);
     // The history, the messages and the change of committee live in the activity pages
     $activityAccess = app(\App\Services\Activity\ActivityAccess::class);
     $historyHref = route('activity.evidence', ['id' => $evidence->id]);
-    $canMove = $author
-        ? $activityAccess->canMoveAsStudent($user, $evidence)
-        : $reviewer && $activityAccess->canMoveAsCoordinator($user, $evidence);
+    $canMove = match (true) {
+        $author => $activityAccess->canMoveAsStudent($user, $evidence),
+        !$reviewer => false,
+        $kind === \App\Services\ReviewQueue::PRESIDENCY => $activityAccess->canMoveAsManager($user, $evidence),
+        default => $activityAccess->canMoveAsCoordinator($user, $evidence),
+    };
 @endphp
 <x-layout.app :title="$evidence->title" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], $list, ['label' => $evidence->title]]">
     <x-ui.page-header :title="$evidence->title">
@@ -78,7 +92,7 @@
                 @include('evidence.partials.actions', ['evidence' => $evidence])
             @elseif ($reviewer && $validationOpen && $evidence->status !== 'DRAFT')
                 @if ($evidence->status !== 'ACCEPTED')
-                    <form method="post" action="{{ route('coordinator.evidence.accept', ['id' => $evidence->id]) }}">
+                    <form method="post" action="{{ route($reviewRoutes['accept'], ['id' => $evidence->id]) }}">
                         @csrf
                         <x-ui.button variant="primary" type="submit" icon="circle-check" block>Aceptar</x-ui.button>
                     </form>
@@ -86,7 +100,7 @@
                 @if ($evidence->status !== 'REJECTED')
                     <x-ui.dialog id="reject" title="Rechazar la evidencia" trigger="Rechazar" trigger-icon="circle-x"
                         trigger-variant="danger">
-                        <x-ui.form :action="route('coordinator.evidence.reject')" id="reject-form" busy-label="Rechazando" :fields="['reasonrejection' => 'Motivo del rechazo']"
+                        <x-ui.form :action="route($reviewRoutes['reject'])" id="reject-form" busy-label="Rechazando" :fields="['reasonrejection' => 'Motivo del rechazo']"
                             :focus-summary="false">
                             <input type="hidden" name="_id" value="{{ $evidence->id }}">
                             <x-ui.field name="reasonrejection" label="Motivo del rechazo" type="textarea"

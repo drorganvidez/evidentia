@@ -2,121 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\ActivityAction;
-use App\Http\Controllers\Concerns\PaginatesLists;
 use App\Http\Middleware\CheckRoles;
+use App\Models\Committee;
 use App\Models\Evidence;
-use App\Services\EvidenceReview;
-use App\Services\SelfReview;
-use App\Support\ListPage;
+use App\Models\User;
+use App\Services\ReviewQueue;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class EvidenceCoordinatorController extends Controller
+/**
+ * The queue of the coordination of a committee: what is sent to it, except what one of its coordinators wrote, which
+ * goes to the presidency.
+ */
+class EvidenceCoordinatorController extends ReviewQueueController
 {
-    use PaginatesLists;
-
-    public function __construct()
+    public function __construct(ReviewQueue $queue)
     {
+        parent::__construct($queue);
         $this->middleware('auth');
         $this->middleware(CheckRoles::class.':COORDINATOR');
     }
 
-    /****************************************************************************
-     * MANAGE EVIDENCES
-     ****************************************************************************/
-
-    public function all(Request $request)
+    protected function kind(): string
     {
-        return $this->list($request, 'all');
+        return ReviewQueue::COORDINATION;
     }
 
-    public function pending(Request $request)
+    protected function evidences(User $user): Builder
     {
-        return $this->list($request, 'pending');
+        abort_if($user->coordinator?->committee === null, 404);
+
+        return $this->queue->forCommittee($user->coordinator->committee_id)->where('user_id', '!=', $user->id);
     }
 
-    public function accepted(Request $request)
+    protected function committee(User $user): ?Committee
     {
-        return $this->list($request, 'accepted');
+        return $user->coordinator->committee;
     }
 
-    public function rejected(Request $request)
+    protected function reviews(User $user, Evidence $evidence): bool
     {
-        return $this->list($request, 'rejected');
-    }
-
-    /** One tab of the evidences of the committee, in pages, with the counts and the hours of the whole search. */
-    private function list(Request $request, string $type)
-    {
-        $committee = Auth::user()->coordinator->committee;
-        $base = fn (): Builder => $this->searchList(
-            $committee->evidences()->getQuery()->where('last', true)->where('status', '!=', 'DRAFT'),
-            $request,
-            ['title', 'user.name', 'user.surname', 'user.username'],
-        );
-        $statuses = ['pending' => 'PENDING', 'accepted' => 'ACCEPTED', 'rejected' => 'REJECTED'];
-        $byStatus = $base()->groupBy('status')->selectRaw('status, count(*) as total')->pluck('total', 'status');
-        $counts = ['all' => (int) $byStatus->sum()] + array_map(fn (string $status): int => (int) $byStatus->get($status, 0), $statuses);
-
-        $filtered = $base()->when($type !== 'all', fn ($query) => $query->where('status', $statuses[$type]));
-        $hours = (float) $filtered->clone()->sum('hours');
-        $evidences = $this->paginateList(
-            $filtered->with(['user', 'reasonRejection'])->orderByDesc('updated_at')->latest()->latest('id'),
-            $request,
-        );
-
-        return view('evidence.coordinator.list', [
-            'evidences' => $evidences, 'type' => $type, 'counts' => $counts, 'hours' => $hours, 'committee' => $committee,
-            'term' => ListPage::term($request),
-        ]);
-    }
-
-    public function accept($id)
-    {
-
-        $evidence = $this->reviewable($id);
-        $this->deny_own($evidence, ActivityAction::EvidenceAccepted);
-
-        app(EvidenceReview::class)->accept($evidence);
-
-        return redirect()->route('coordinator.evidence.list.accepted')->with('success', 'Evidencia aceptada con éxito.');
-    }
-
-    // solo se revisa la última versión de una evidencia; las anteriores las ha sustituido el alumno
-    private function reviewable($id): Evidence
-    {
-        $evidence = Evidence::findOrFail($id);
-
-        if (! $evidence->last) {
-            abort(404);
-        }
-
-        return $evidence;
-    }
-
-    // nadie revisa su propia evidencia: el intento se corta y queda anotado
-    private function deny_own(Evidence $evidence, ActivityAction $attempted): void
-    {
-        if (SelfReview::violates(Auth::user(), $evidence)) {
-            SelfReview::deny($evidence, $attempted, $evidence->user, 'No puedes aceptar ni rechazar una evidencia tuya. El intento queda anotado.');
-        }
-    }
-
-    public function reject(Request $request)
-    {
-
-        $evidence = $this->reviewable($request->_id);
-
-        if (blank($request->input('reasonrejection'))) {
-            return back()->with('error', 'Escribe el motivo del rechazo.');
-        }
-
-        $this->deny_own($evidence, ActivityAction::EvidenceRejected);
-
-        app(EvidenceReview::class)->reject($evidence, $request->input('reasonrejection'));
-
-        return redirect()->route('coordinator.evidence.list.rejected')->with('success', 'Evidencia rechazada con éxito.');
+        return $this->queue->reviewsAsCoordinator($user, $evidence);
     }
 }

@@ -8,6 +8,7 @@ use App\Models\MeetingMinutes;
 use App\Models\MeetingRequest;
 use App\Models\User;
 use App\Services\Deadlines;
+use App\Services\ReviewQueue;
 use App\Support\Roles;
 use Illuminate\Support\Facades\Route;
 
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Route;
  */
 final class ActivityAccess
 {
-    public function __construct(private Deadlines $deadlines) {}
+    public function __construct(private Deadlines $deadlines, private ReviewQueue $queue) {}
 
     public function isManager(User $user): bool
     {
@@ -89,12 +90,11 @@ final class ActivityAccess
             && $this->deadlines->isOpen(Deadline::UploadEvidences);
     }
 
+    /** Only an evidence the coordinator reviews (App\Services\ReviewQueue), while it waits and validation is open. */
     public function canMoveAsCoordinator(User $user, Evidence $evidence): bool
     {
-        return $this->isCoordinatorOf($user, $evidence->committee_id)
-            && $evidence->last
-            && $evidence->status === 'PENDING'
-            && ! $this->isAuthor($user, $evidence)
+        return $evidence->status === 'PENDING'
+            && $this->queue->reviewsAsCoordinator($user, $evidence)
             && $this->deadlines->isOpen(Deadline::ValidateEvidences);
     }
 
@@ -115,6 +115,7 @@ final class ActivityAccess
             $this->isAuthor($viewer, $head) => route('evidence.view', ['id' => $head->id]),
             $head->status === 'DRAFT' => null,
             $this->isCoordinatorOf($viewer, $head->committee_id) => route('coordinator.evidence.view', ['id' => $head->id]),
+            $viewer->hasRole('PRESIDENT') && $head->last && $this->queue->goesToPresidency($head) => route('president.review.view', ['id' => $head->id]),
             $this->isManager($viewer) => route('profiles.view.evidence', ['id_user' => $head->user_id, 'id_evidence' => $head->id]),
             default => null,
         };

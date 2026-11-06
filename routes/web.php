@@ -22,6 +22,7 @@ use App\Http\Controllers\ManagementController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\MeetingSecretaryController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\PresidencyReviewController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProofController;
 use App\Http\Controllers\RandomizeController;
@@ -262,6 +263,20 @@ Route::middleware('auth')->group(function () {
 
         Route::get('president/export', [ImportExportController::class, 'export'])->name('president.export');
         Route::post('president/export/save', [ImportExportController::class, 'export_save'])->name('president.export.save');
+
+        // The review queue of the presidency, decided by App\Services\ReviewQueue
+        Route::controller(PresidencyReviewController::class)->prefix('president/review')->name('president.review.')->group(function () {
+            Route::get('all', 'all')->name('all');
+            Route::get('pending', 'pending')->name('pending');
+            Route::get('accepted', 'accepted')->name('accepted');
+            Route::get('rejected', 'rejected')->name('rejected');
+            Route::get('view/{id}', 'view')->whereNumber('id')->name('view');
+
+            Route::middleware([CheckValidateEvidences::class])->group(function () {
+                Route::post('accept/{id}', 'accept')->whereNumber('id')->name('accept');
+                Route::post('reject', 'reject')->name('reject');
+            });
+        });
 
         // Server errors, grouped and announced by App\Services\Errors\ErrorRecorder
         Route::get('president/errors', [ErrorReportController::class, 'index'])->name('president.errors');

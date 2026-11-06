@@ -89,6 +89,11 @@ class PageAccessTest extends TestCase
             'title' => 'Montaje', 'description' => '<p>Montaje del escenario.</p>', 'hours' => 1,
             'status' => 'DRAFT', 'user_id' => $student->id, 'committee_id' => $committee->id,
         ]);
+        // the presidency reviews what a coordinator sends to their own committee
+        $delegated = Evidence::create([
+            'title' => 'Inventario', 'description' => '<p>Inventario del almacén.</p>', 'hours' => 1,
+            'status' => 'PENDING', 'user_id' => $this->users['COORDINATOR']->id, 'committee_id' => $committee->id,
+        ]);
         Storage::put('proofs/certificado.pdf', '%PDF-1.4');
         $file = \Stamp::compute_file(File::create(['name' => 'certificado', 'type' => 'pdf', 'route' => 'proofs/certificado.pdf', 'size' => 8]));
         $file->save();
@@ -139,7 +144,7 @@ class PageAccessTest extends TestCase
         Message::create(['message_thread_id' => $thread->id, 'user_id' => $student->id, 'user_name' => $student->name, 'role' => 'STUDENT', 'body' => '¿Cuento el montaje?']);
 
         $this->ids = [
-            'evidence' => $evidence->id, 'draft' => $draft->id, 'proof' => $proof->id, 'student' => $student->id,
+            'evidence' => $evidence->id, 'draft' => $draft->id, 'delegated' => $delegated->id, 'proof' => $proof->id, 'student' => $student->id,
             'request' => $request->id, 'committee' => $committee->id, 'sheet' => $sheet->id, 'minutes' => $minutes->id, 'bonus' => $bonus->id,
             'list' => $list->id, 'attendee' => $attendee->id, 'manualEvent' => $manualEvent->id, 'errorReport' => $errorReport->id, 'token' => $token->token,
             'thread' => $thread->id,
@@ -220,6 +225,13 @@ class PageAccessTest extends TestCase
             'president.errors.show' => [['id' => 'errorReport'], self::MANAGEMENT],
             'registercoordinator.event.create' => [[], ['REGISTER_COORDINATOR']],
             'registercoordinator.event.edit' => [['id' => 'manualEvent'], ['REGISTER_COORDINATOR']],
+
+            // the queue of the presidency (App\Services\ReviewQueue); the lecturer may review it too
+            'president.review.all' => [[], self::MANAGEMENT],
+            'president.review.pending' => [[], self::MANAGEMENT],
+            'president.review.accepted' => [[], self::MANAGEMENT],
+            'president.review.rejected' => [[], self::MANAGEMENT],
+            'president.review.view' => [['id' => 'delegated'], self::MANAGEMENT],
 
             'president.user.list' => [[], self::MANAGEMENT],
             'president.user.management' => [['id' => 'student'], self::MANAGEMENT],

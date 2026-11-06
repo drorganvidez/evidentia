@@ -1,15 +1,20 @@
-{{-- Review of the evidences of the coordinator's committee, with one tab per state, a search and pages --}}
+{{--
+    A review queue with one tab per state, a search and pages (App\Http\Controllers\ReviewQueueController): the
+    coordination of a committee or the presidency, whose rows come from every committee.
+--}}
 @use('App\Support\ListPage')
 @php
+    $presidency = $kind === \App\Services\ReviewQueue::PRESIDENCY;
+    $name = $committee?->name ?? 'Presidencia';
     $route = Route::currentRouteName();
     $closesAt = \Config::validate_evidences_timestamp();
     $open = !\Carbon\Carbon::now()->gt($closesAt);
     // Every tab keeps the search and the rows per page, back on the first page
     $tabs = collect([
-        ['Todas', 'coordinator.evidence.list.all', $counts['all']],
-        ['Pendientes', 'coordinator.evidence.list.pending', $counts['pending']],
-        ['Aceptadas', 'coordinator.evidence.list.accepted', $counts['accepted']],
-        ['Rechazadas', 'coordinator.evidence.list.rejected', $counts['rejected']],
+        ['Todas', $routes['all'], $counts['all']],
+        ['Pendientes', $routes['pending'], $counts['pending']],
+        ['Aceptadas', $routes['accepted'], $counts['accepted']],
+        ['Rechazadas', $routes['rejected'], $counts['rejected']],
     ])
         ->map(
             fn($tab) => [
@@ -27,19 +32,24 @@
         'rejected' => 'No hay evidencias rechazadas',
         default => 'No hay evidencias',
     };
-    $columns = [
-        ['label' => 'Evidencia', 'key' => 'title'],
-        ['label' => 'Estudiante', 'key' => 'student'],
-        ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
-        ['label' => 'Recibida', 'key' => 'created_at'],
-        ['label' => 'Estado', 'key' => 'status'],
-        ['label' => 'Acciones', 'srOnly' => true],
-    ];
+    $columns = array_values(
+        array_filter([
+            ['label' => 'Evidencia', 'key' => 'title'],
+            ['label' => 'Estudiante', 'key' => 'student'],
+            $presidency ? ['label' => 'Comité', 'key' => 'committee'] : null,
+            ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
+            ['label' => 'Recibida', 'key' => 'created_at'],
+            ['label' => 'Estado', 'key' => 'status'],
+            ['label' => 'Acciones', 'srOnly' => true],
+        ]),
+    );
 @endphp
-<x-layout.app :title="'Revisar evidencias de ' . $committee->name" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Revisar evidencias']]">
+<x-layout.app :title="'Revisar evidencias de ' . $name" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Revisar evidencias']]">
     <x-ui.page-header title="Revisar evidencias">
         <x-slot:eyebrow>
-            <x-ui.committee-chip :committee="$committee" />
+            @if ($committee !== null)
+                <x-ui.committee-chip :committee="$committee" />
+            @endif
         </x-slot:eyebrow>
         @if ($closesAt !== null)
             <x-slot:meta>
@@ -47,12 +57,13 @@
             </x-slot:meta>
         @endif
         <x-slot:actions>
-            <x-ui.button icon="activity" :href="route('activity.index')">Actividad del comité</x-ui.button>
+            <x-ui.button icon="activity"
+                :href="route('activity.index')">{{ $presidency ? 'Registro de actividad' : 'Actividad del comité' }}</x-ui.button>
             <x-ui.button icon="inbox" :href="route('messages.inbox')">Mensajes</x-ui.button>
         </x-slot:actions>
     </x-ui.page-header>
 
-    <x-ui.table :caption="'Evidencias de ' . $committee->name" :columns="$columns" :paginator="$evidences" filterable count-label="evidencias"
+    <x-ui.table :caption="'Evidencias de ' . $name" :columns="$columns" :paginator="$evidences" filterable count-label="evidencias"
         count-singular="evidencia" filter-placeholder="Buscar evidencias">
         <x-slot:toolbar>
             <x-ui.tabs label="Filtrar evidencias por estado" :items="$tabs" />
@@ -64,8 +75,8 @@
         @endif
         @foreach ($evidences as $evidence)
             @php
-                $href = route('coordinator.evidence.view', ['id' => $evidence->id]);
-                // A coordinator never reviews their own evidence
+                $href = route($routes['view'], ['id' => $evidence->id]);
+                // The queue never holds the evidences of the person (App\Services\ReviewQueue)
                 $reviewable = $open && $evidence->user_id != Auth::id();
             @endphp
             <x-ui.table.row :href="$href">
@@ -75,6 +86,13 @@
                 <x-ui.table.cell label="Estudiante">
                     <x-ui.person :name="$evidence->user->name" :surname="$evidence->user->surname" size="sm" reverse />
                 </x-ui.table.cell>
+                @if ($presidency)
+                    <x-ui.table.cell label="Comité" meta>
+                        @if ($evidence->committee)
+                            <x-ui.committee-chip :committee="$evidence->committee" />
+                        @endif
+                    </x-ui.table.cell>
+                @endif
                 <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$evidence->hours" /></x-ui.table.cell>
                 <x-ui.table.cell label="Recibida" meta hide><x-ui.time :value="$evidence->created_at" inline
                         short /></x-ui.table.cell>
@@ -84,8 +102,7 @@
                 <x-ui.table.cell actions>
                     <div class="flex items-center justify-end gap-1">
                         @if ($reviewable && $evidence->status != 'ACCEPTED')
-                            <form method="post"
-                                action="{{ route('coordinator.evidence.accept', ['id' => $evidence->id]) }}">
+                            <form method="post" action="{{ route($routes['accept'], ['id' => $evidence->id]) }}">
                                 @csrf
                                 <x-ui.button type="submit" icon-only icon="circle-check" :label="'Aceptar ' . $evidence->title"
                                     variant="ghost" />
@@ -95,7 +112,7 @@
                             <x-ui.dialog :id="'reject-' . $evidence->id" title="Rechazar la evidencia" :description="$evidence->title"
                                 :trigger="'Rechazar ' . $evidence->title" trigger-variant="ghost" trigger-icon="circle-x" trigger-icon-only>
                                 <form id="reject-form-{{ $evidence->id }}" method="post"
-                                    action="{{ route('coordinator.evidence.reject') }}">
+                                    action="{{ route($routes['reject']) }}">
                                     @csrf
                                     <input type="hidden" name="_id" value="{{ $evidence->id }}">
                                     <x-ui.field name="reasonrejection" :id="'reasonrejection-' . $evidence->id" label="Motivo del rechazo"
