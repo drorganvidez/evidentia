@@ -1,3 +1,28 @@
+# syntax=docker/dockerfile:1
+
+# ---------------------------------------------------------------------------
+# Stage 1: front-end assets. Node (active LTS 26) only lives here and never
+# reaches the final image.
+# ---------------------------------------------------------------------------
+FROM node:26-alpine AS assets
+
+WORKDIR /app
+
+# Lockfile first so the npm ci layer is cached while dependencies do not change
+COPY package.json package-lock.json .npmrc ./
+RUN npm ci --no-audit --no-fund
+
+# Everything Vite and Tailwind read: the config, the sources and the PHP that
+# emits classes (resources/css/app.css declares app/ as a Tailwind source)
+COPY vite.config.js ./
+COPY resources ./resources
+COPY app ./app
+
+RUN npm run build
+
+# ---------------------------------------------------------------------------
+# Stage 2: PHP-FPM image. No nodejs, no npm.
+# ---------------------------------------------------------------------------
 FROM php:8.4-fpm
 
 ARG USER_ID=1000
@@ -5,7 +30,7 @@ ARG GROUP_ID=1000
 
 RUN apt-get update && apt-get install -y \
     zip unzip git curl libpng-dev libonig-dev libxml2-dev libzip-dev libjpeg-dev libfreetype6-dev \
-    nodejs npm default-mysql-client \
+    default-mysql-client \
     && docker-php-ext-install pdo_mysql mbstring zip exif pcntl gd \
     && pecl install redis && docker-php-ext-enable redis \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -23,14 +48,16 @@ RUN groupadd -g ${GROUP_ID} laravelgroup && \
 USER laraveluser
 WORKDIR /var/www/html
 
-
 COPY --chown=laraveluser:laravelgroup . .
 RUN rm -rf docker
 RUN mkdir -p bootstrap/cache && chown -R laraveluser:laravelgroup bootstrap/cache
 
 RUN composer install --no-dev --optimize-autoloader
 
-RUN npm install && npm run build
+# Compiled assets. public/build is what PHP reads; the copy under /opt is the
+# pristine version the entrypoint syncs into the volume shared with nginx.
+COPY --from=assets --chown=laraveluser:laravelgroup /app/public/build ./public/build
+COPY --from=assets --chown=laraveluser:laravelgroup /app/public/build /opt/evidentia/build
 
 COPY --chown=laraveluser:laravelgroup docker/entrypoint.prod.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh

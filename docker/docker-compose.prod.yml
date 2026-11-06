@@ -7,6 +7,8 @@ services:
       - ../.env:/var/www/html/.env
       - ../storage:/var/www/html/storage
       - ../scripts:/var/www/html/scripts
+      # Compiled assets, shared with nginx. The entrypoint refreshes it from the image on every start.
+      - public_build:/var/www/html/public/build
     expose:
       - '9000'
     depends_on:
@@ -63,6 +65,7 @@ services:
       - app
     volumes:
       - ../:/var/www/html
+      - public_build:/var/www/html/public/build:ro
       - ./nginx/conf.d:/etc/nginx/conf.d
     networks:
       - evidentia_net
@@ -82,6 +85,7 @@ services:
 
 volumes:
   db_data_prod:
+  public_build:
 
 networks:
   evidentia_net:
