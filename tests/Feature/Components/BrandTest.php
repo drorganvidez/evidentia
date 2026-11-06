@@ -29,7 +29,7 @@ class BrandTest extends ComponentTestCase
         $html = $this->render('<x-ui.brand subtitle="Jornadas <b>InnoSoft</b> 2026" />');
 
         $this->assertStringContainsString('aria-label="Evidentia, Jornadas &lt;b&gt;InnoSoft&lt;/b&gt; 2026, inicio"', $html);
-        $this->assertStringContainsString('text-ink-muted">Jornadas &lt;b&gt;InnoSoft&lt;/b&gt; 2026</span>', $html);
+        $this->assertStringContainsString('text-ink">Jornadas &lt;b&gt;InnoSoft&lt;/b&gt; 2026</span>', $html);
         $this->assertStringNotContainsString('<b>', $html);
     }
 

@@ -3,6 +3,7 @@
     counts as visible text); the link is named after the visible text plus «inicio» (WCAG 2.5.3), or after label.
     <x-ui.brand subtitle="Jornadas InnoSoft 2026" />
     <x-ui.brand size="sm" mark-only class="hidden md:max-lg:grid" />
+    The subtitle uses ink, not ink-muted: the public header sits on the bare canvas, where the aurora drifts under it.
 --}}
 @props([
     'href' => url('/'),
@@ -27,7 +28,7 @@
         <span>
             <span class="{{ $name }} block leading-tight font-bold tracking-tighter">Evidentia</span>
             @if ($subtitle !== null)
-                <span class="block text-xs font-medium text-ink-muted">{{ $subtitle }}</span>
+                <span class="block text-xs font-medium text-ink">{{ $subtitle }}</span>
             @endif
         </span>
     @endunless
