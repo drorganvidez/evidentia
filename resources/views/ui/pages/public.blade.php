@@ -65,7 +65,8 @@
                         <x-ui.field name="uvus" label="UVUS" autocomplete="username" required />
                         <x-ui.field name="name" label="Nombre y apellidos" autocomplete="name" required />
                         <x-slot:actions>
-                            <x-ui.button type="submit" variant="primary" icon="signature" block>Firmar</x-ui.button>
+                            <x-ui.button type="submit" variant="primary" icon="file-signature"
+                                block>Firmar</x-ui.button>
                         </x-slot:actions>
                     </x-ui.form>
                 </div>

@@ -12,7 +12,7 @@
                 <x-ui.time :value="now()->subHours(6)" inline short />
             </x-slot:meta>
             <x-slot:actions>
-                <x-ui.button variant="primary" icon="pencil">Corregir y volver a enviar</x-ui.button>
+                <x-ui.button variant="primary" icon="pen-line">Corregir y volver a enviar</x-ui.button>
                 <x-ui.button variant="ghost" icon="message-square">Responder</x-ui.button>
             </x-slot:actions>
         </x-ui.alert>

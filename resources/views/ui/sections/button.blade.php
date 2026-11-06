@@ -38,7 +38,7 @@
             @endforeach
             <x-ui.button icon-only variant="primary" icon="plus" label="Nueva evidencia" />
             <x-ui.button icon-only variant="danger" icon="trash-2" label="Eliminar la evidencia" />
-            <x-ui.button icon-only variant="ghost" icon="pencil" label="Editar" />
+            <x-ui.button icon-only variant="ghost" icon="pen-line" label="Editar" />
         </div>
         <div class="flex flex-wrap items-center gap-3">
             <span class="w-20 font-mono text-xs text-ink-muted">href</span>
@@ -85,7 +85,7 @@
             <div class="group glass-2 flex items-center gap-1 rounded-full p-1">
                 <x-ui.button icon-only variant="ghost" size="sm" icon="eye" label="Abrir Montaje del photocall"
                     dim />
-                <x-ui.button icon-only variant="ghost" size="sm" icon="pencil"
+                <x-ui.button icon-only variant="ghost" size="sm" icon="pen-line"
                     label="Editar Montaje del photocall" dim />
                 <x-ui.button icon-only variant="danger" size="sm" icon="trash-2"
                     label="Eliminar Montaje del photocall" dim />
