@@ -77,7 +77,7 @@
                 <x-ui.table.cell>
                     @if ($minutes)
                         <a href="{{ route('activity.minutes', ['id' => $minutes]) }}"
-                            class="text-sm font-semibold text-brand-ink pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center">Acta<span
+                            class="text-sm font-semibold text-brand-ink pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:min-w-11 pointer-coarse:items-center">Acta<span
                                 class="sr-only"> de {{ $request->title }}</span></a>
                     @endif
                 </x-ui.table.cell>

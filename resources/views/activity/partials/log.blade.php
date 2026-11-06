@@ -23,7 +23,7 @@
                     <span class="block">
                         @if ($url = $presenter->subjectUrl($entry, $viewer))
                             <a href="{{ $url }}"
-                                class="font-medium text-brand-ink pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center">{{ $entry->subject_title }}</a>
+                                class="font-medium text-brand-ink pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:min-w-11 pointer-coarse:items-center">{{ $entry->subject_title }}</a>
                         @else
                             {{ $entry->subject_title }}
                         @endif
