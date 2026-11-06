@@ -2,6 +2,9 @@
 
 namespace Tests\Feature\Screens\Management;
 
+use App\Models\Role;
+use App\Models\User;
+
 class UserListScreenTest extends ScreenTestCase
 {
     public function test_the_lecturer_sees_everybody_but_themselves_with_the_mass_actions(): void
@@ -45,6 +48,24 @@ class UserListScreenTest extends ScreenTestCase
 
         $this->screen('profesor', route('lecture.user.list'))
             ->assertSeeInOrder(['García López, Juan', 'Pérez Romero, Lucía', 'Torres Gómez, Pablo']);
+    }
+
+    public function test_the_server_orders_the_names_without_case_and_the_roles_from_the_highest(): void
+    {
+        User::factory()->create(['name' => 'ana', 'surname' => 'de la Fuente', 'username' => 'anafue'])
+            ->roles()->attach(Role::where('rol', 'STUDENT')->sole());
+
+        $this->screen('profesor', route('lecture.user.list'))
+            ->assertSeeInOrder(['Castro Vidal, Inés', 'de la Fuente, ana', 'García López, Juan']);
+
+        // president, coordinators, register, secretary and students; the names on a tie
+        $this->screen('profesor', route('lecture.user.list', ['sort' => 'roles', 'dir' => 'asc']))
+            ->assertSeeInOrder([
+                'Moreno Jiménez, Elena', 'Castro Vidal, Inés', 'Navarro Ruiz, Carlos', 'Torres Gómez, Pablo', 'Ruiz Díaz, Marta',
+                'de la Fuente, ana', 'García López, Juan', 'Pérez Romero, Lucía',
+            ]);
+        $this->screen('profesor', route('lecture.user.list', ['sort' => 'roles', 'dir' => 'desc']))
+            ->assertSeeInOrder(['Pérez Romero, Lucía', 'García López, Juan', 'Ruiz Díaz, Marta', 'Navarro Ruiz, Carlos', 'Moreno Jiménez, Elena']);
     }
 
     public function test_a_failed_new_user_reopens_its_dialog(): void
