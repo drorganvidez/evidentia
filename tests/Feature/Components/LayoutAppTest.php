@@ -63,7 +63,7 @@ class LayoutAppTest extends ComponentTestCase
         $this->assertSame(1, substr_count($html, '<h1'));
         $this->assertSame(1, substr_count($html, '<main '));
         $this->assertStringContainsString('md:grid-cols-[5rem_minmax(0,1fr)] md:gap-6 md:p-5 lg:grid-cols-[17rem_minmax(0,1fr)]', $html);
-        $this->assertStringContainsString('<div class="grid min-w-0 grid-cols-[minmax(0,1fr)] grid-rows-[auto_1fr_auto] gap-3 md:min-h-[calc(100dvh-2.5rem)] md:gap-6">', $html, 'The topbar never widens the column and a short page keeps the footer at the bottom');
+        $this->assertMatchesRegularExpression('/<div\s+class="grid min-w-0 grid-cols-\[minmax\(0,1fr\)\] grid-rows-\[auto_1fr_auto\] gap-3 md:min-h-\[calc\(100dvh-2\.5rem\)\] md:gap-6">/', $html, 'The topbar never widens the column and a short page keeps the footer at the bottom');
         $this->assertUniqueIds($html);
         $this->assertNoAutofocus($html);
         $this->assertCspSafe($html);

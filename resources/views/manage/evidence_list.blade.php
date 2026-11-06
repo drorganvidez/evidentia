@@ -8,6 +8,16 @@
         ['Aceptadas', 'aceptadas', $counts->get('ACCEPTED', 0)],
         ['Rechazadas', 'rechazadas', $counts->get('REJECTED', 0)],
     ];
+    // Built here: blade-formatter cannot parse a query string inside an attribute expression
+    $tabItems = array_map(
+        fn(array $tab): array => [
+            'label' => $tab[0],
+            'href' => $tab[1] === null ? $list : $list . '?' . http_build_query(['estado' => $tab[1]]),
+            'count' => $tab[2],
+            'current' => $state === $tab[1],
+        ],
+        $tabs,
+    );
     $empty = match ($state) {
         'pendientes' => 'No hay evidencias pendientes',
         'aceptadas' => 'No hay evidencias aceptadas',
@@ -26,19 +36,10 @@
 <x-layout.app title="Evidencias" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Evidencias']]">
     <x-ui.page-header title="Evidencias" />
 
-    <x-ui.table caption="Evidencias del curso" :columns="$columns" :filterable="$evidences->isNotEmpty()"
-        count-label="evidencias" filter-placeholder="Filtrar evidencias">
+    <x-ui.table caption="Evidencias del curso" :columns="$columns" :filterable="$evidences->isNotEmpty()" count-label="evidencias"
+        filter-placeholder="Filtrar evidencias">
         <x-slot:toolbar>
-            <x-ui.tabs label="Filtrar evidencias por estado" :items="collect($tabs)
-                ->map(
-                    fn($tab) => [
-                        'label' => $tab[0],
-                        'href' => $tab[1] === null ? $list : $list . '?estado=' . $tab[1],
-                        'count' => $tab[2],
-                        'current' => $state === $tab[1],
-                    ],
-                )
-                ->all()" />
+            <x-ui.tabs label="Filtrar evidencias por estado" :items="$tabItems" />
         </x-slot:toolbar>
         @if ($evidences->isEmpty())
             <x-slot:empty>
@@ -63,8 +64,7 @@
                     <a href="{{ $href }}">{{ $evidence->title }}</a>
                 </x-ui.table.cell>
                 <x-ui.table.cell label="Autor">
-                    <x-ui.person :name="$evidence->user->name" :surname="$evidence->user->surname" size="sm" reverse
-                        :href="route('profiles.view', ['id' => $evidence->user->id])" />
+                    <x-ui.person :name="$evidence->user->name" :surname="$evidence->user->surname" size="sm" reverse :href="route('profiles.view', ['id' => $evidence->user->id])" />
                 </x-ui.table.cell>
                 <x-ui.table.cell label="Comité" hide>
                     @if ($evidence->committee)
