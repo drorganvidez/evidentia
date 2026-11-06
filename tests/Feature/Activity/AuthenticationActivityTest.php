@@ -110,14 +110,64 @@ class AuthenticationActivityTest extends TestCase
         $this->assertSame(0, ActivityLog::count());
     }
 
-    public function test_the_public_signature_records_neither_its_sign_in_nor_its_sign_out(): void
+    public function test_the_public_signature_records_only_the_signature(): void
     {
-        $this->sheet();
+        $sheet = $this->sheet();
 
         $this->post(route('sign_p'), ['signature_sheet' => '7391', 'email' => 'ana@us.es', 'password' => 'secret123'])
             ->assertRedirect(route('sign.finish'));
 
-        $this->assertSame(0, ActivityLog::whereIn('action', ['login', 'logout'])->count());
+        $log = ActivityLog::sole();
+        $this->assertSame('signature.signed', $log->action);
+        $this->assertSame($this->student->id, $log->user_id);
+        $this->assertSame($this->student->id, $log->target_user_id);
+        $this->assertNull($log->acting_role);
+        $this->assertSame($sheet->id, $log->subject_id);
+        $this->assertSame(['meeting_request_id' => null], $log->details);
+        $this->assertGuest();
+    }
+
+    public function test_signing_twice_is_recorded_once(): void
+    {
+        $this->sheet();
+
+        $this->post(route('sign_p'), ['signature_sheet' => '7391', 'email' => 'ana@us.es', 'password' => 'secret123']);
+        $this->post(route('sign_p'), ['signature_sheet' => '7391', 'email' => 'ana@us.es', 'password' => 'secret123']);
+
+        $this->assertSame(1, ActivityLog::count());
+    }
+
+    public function test_the_limit_of_the_public_signature_is_recorded_as_a_lockout(): void
+    {
+        $this->sheet();
+
+        foreach (range(1, 6) as $attempt) {
+            $this->post(route('sign_p'), ['signature_sheet' => '7391', 'email' => 'ana@us.es', 'password' => "wrong-$attempt"]);
+        }
+
+        $this->assertSame(6, ActivityLog::where('action', 'login_failed')->count());
+        $lockout = ActivityLog::latest('id')->first();
+        $this->assertSame(['context' => 'sign', 'lockout' => true], $lockout->details);
+        $this->assertSame($this->student->id, $lockout->target_user_id);
+    }
+
+    public function test_a_secretary_signing_their_own_sheet_is_recorded_as_blocked(): void
+    {
+        $sheet = $this->sheet();
+        $secretary = $sheet->secretary->user;
+        $secretary->update(['password' => Hash::make('secret123')]);
+
+        $this->post(route('sign_p'), ['signature_sheet' => '7391', 'email' => $secretary->email, 'password' => 'secret123'])
+            ->assertRedirect(route('sign.finish'))
+            ->assertSessionHas('sign_message', 'Eres el secretario de esta reunión, no es necesario que firmes en tu propia hoja de firmas.');
+
+        $this->assertFalse($sheet->users()->whereKey($secretary->id)->exists());
+        $log = ActivityLog::sole();
+        $this->assertSame('self_review.blocked', $log->action);
+        $this->assertSame($secretary->id, $log->user_id);
+        $this->assertSame(['attempted' => 'signature.signed'], $log->details);
+        $this->assertSame(['self_review'], $log->flags);
+        $this->assertGuest();
     }
 
     public function test_wrong_credentials_on_the_public_signature_are_recorded_in_its_context(): void

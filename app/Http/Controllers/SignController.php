@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityAction;
+use App\Enums\ActivityFlag;
+use App\Facades\Activity;
 use App\Models\SignatureSheet;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 
@@ -33,6 +38,12 @@ class SignController extends Controller
         // como en el login: 5 intentos por minuto para cada email y dirección
         $throttle_key = 'sign|'.Str::lower((string) $request->input('email')).'|'.$request->ip();
         if (RateLimiter::tooManyAttempts($throttle_key, 5)) {
+            Activity::system(
+                ActivityAction::LoginFailed,
+                target: User::where('email', (string) $request->input('email'))->first(),
+                details: ['context' => 'sign', 'lockout' => true],
+            );
+
             return back()->withInput()->with('error', 'Demasiados intentos. Vuelve a intentarlo en '.RateLimiter::availableIn($throttle_key).' segundos.');
         }
 
@@ -42,6 +53,16 @@ class SignController extends Controller
             // compruebo que el usuario no es un secretario e intenta firmar en su propia hoja
             if (Auth::user()->secretary != null) {
                 if (Auth::user()->secretary->id == $signature_sheet->secretary_id) {
+                    // ya estaba bloqueado; ahora además queda anotado
+                    Activity::record(
+                        ActivityAction::SelfReviewBlocked,
+                        $signature_sheet,
+                        Auth::user(),
+                        details: ['attempted' => ActivityAction::SignatureSigned->value],
+                        flags: [ActivityFlag::SelfReview],
+                        deadline: false,
+                    );
+
                     Auth::logout();
                     $sign_message = 'Eres el secretario de esta reunión, no es necesario que firmes en tu propia hoja de firmas.';
 
@@ -53,7 +74,11 @@ class SignController extends Controller
             if (! Auth::user()->signatureSheets->contains($signature_sheet->id)) {
 
                 // firma
-                Auth::user()->signatureSheets()->attach($signature_sheet->id);
+                DB::transaction(function () use ($signature_sheet) {
+                    Auth::user()->signatureSheets()->attach($signature_sheet->id);
+
+                    Activity::record(ActivityAction::SignatureSigned, $signature_sheet, Auth::user(), details: ['meeting_request_id' => $signature_sheet->meeting_request_id]);
+                });
 
                 Auth::logout();
 

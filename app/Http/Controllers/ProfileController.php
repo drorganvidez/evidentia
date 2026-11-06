@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityAction;
+use App\Facades\Activity;
 use App\Models\Evidence;
 use App\Models\User;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
+use App\Support\Changes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -42,14 +46,20 @@ class ProfileController extends Controller
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
         ]);
 
-        $user->name = $request->input('name');
-        $user->surname = $request->input('surname');
-        $user->email = $request->input('email');
+        $before = $user->only(['name', 'surname', 'email']);
 
-        $user->clean_name = \StringUtilites::clean($request->input('name'));
-        $user->clean_surname = \StringUtilites::clean($request->input('surname'));
+        DB::transaction(function () use ($request, $user, $before) {
+            $user->name = $request->input('name');
+            $user->surname = $request->input('surname');
+            $user->email = $request->input('email');
 
-        $user->save();
+            $user->clean_name = \StringUtilites::clean($request->input('name'));
+            $user->clean_surname = \StringUtilites::clean($request->input('surname'));
+
+            $user->save();
+
+            Activity::record(ActivityAction::ProfileEdited, $user, details: Changes::between($before, $user->only(['name', 'surname', 'email'])));
+        });
 
         return redirect()->route('profile.view')->with('success', 'Datos personales editados con éxito.');
 
@@ -65,10 +75,24 @@ class ProfileController extends Controller
             'participation' => 'required|numeric|min:1|max:3',
         ]);
 
-        $user->biography = $request->input('biography');
-        $user->participation = $request->input('participation');
+        $before = ['biography' => $user->biography, 'participation' => $user->participation];
 
-        $user->save();
+        DB::transaction(function () use ($request, $user, $before) {
+            $user->biography = $request->input('biography');
+            $user->participation = $request->input('participation');
+
+            $user->save();
+
+            // de la biografía solo su longitud, nunca el texto
+            $participation = Changes::between(['participation' => (int) $before['participation']], ['participation' => (int) $user->participation]);
+            Activity::record(ActivityAction::ProfileEdited, $user, details: [
+                'fields' => array_keys(array_filter([
+                    'biography' => $before['biography'] !== $user->biography,
+                    'participation' => $participation !== [],
+                ])),
+                'length' => mb_strlen(strip_tags((string) $user->biography)),
+            ] + $participation);
+        });
 
         return redirect()->route('profile.view')->with('success', 'Biografía editada con éxito.');
 
@@ -84,9 +108,13 @@ class ProfileController extends Controller
             'password' => 'required|confirmed|min:6',
         ]);
 
-        $user->password = Hash::make($request->input('password'));
+        DB::transaction(function () use ($request, $user) {
+            $user->password = Hash::make($request->input('password'));
 
-        $user->save();
+            $user->save();
+
+            Activity::record(ActivityAction::UserPasswordChanged, $user);
+        });
 
         return redirect()->route('profile.view')->with('success', 'Contraseña cambiada con éxito.');
 

@@ -265,6 +265,30 @@ final class LegacyWrites
                 'expect' => ['export.attendees'],
                 'acting_role' => 'REGISTER_COORDINATOR',
             ],
+            'profile.upload.info' => [
+                'role' => 'STUDENT',
+                'method' => 'POST',
+                'uri' => fn (array $ids) => route('profile.upload.info'),
+                'data' => fn (array $ids) => ['name' => 'Lucía', 'surname' => 'Pérez', 'email' => 'lucia@alum.us.es'],
+                'expect' => ['profile.edited'],
+                'acting_role' => null,
+            ],
+            'profile.upload.biography' => [
+                'role' => 'STUDENT',
+                'method' => 'POST',
+                'uri' => fn (array $ids) => route('profile.upload.biography'),
+                'data' => fn (array $ids) => ['biography' => '<p>Estudiante de cuarto curso.</p>', 'participation' => 2],
+                'expect' => ['profile.edited'],
+                'acting_role' => null,
+            ],
+            'profile.upload.pass' => [
+                'role' => 'STUDENT',
+                'method' => 'POST',
+                'uri' => fn (array $ids) => route('profile.upload.pass'),
+                'data' => fn (array $ids) => ['current_password' => 'password', 'password' => 'nueva-clave', 'password_confirmation' => 'nueva-clave'],
+                'expect' => ['user.password_changed'],
+                'acting_role' => null,
+            ],
             'password.reset_p' => [
                 'role' => 'GUEST',
                 'method' => 'POST',
@@ -312,6 +336,7 @@ final class LegacyWrites
         return [
             'POST login' => AuthenticationActivityTest::class,
             'logout' => AuthenticationActivityTest::class,
+            'sign_p' => AuthenticationActivityTest::class,
             'registercoordinator.token.save' => EventbriteSyncActivityTest::class,
             'registercoordinator.event.load' => EventbriteSyncActivityTest::class,
             'registercoordinator.attendee.load' => EventbriteSyncActivityTest::class,
@@ -325,10 +350,6 @@ final class LegacyWrites
             'registercoordinator.event.store' => 'F',
             'registercoordinator.event.update' => 'F',
             'registercoordinator.event.destroy' => 'F',
-            'profile.upload.info' => 'A',
-            'profile.upload.biography' => 'A',
-            'profile.upload.pass' => 'A',
-            'sign_p' => 'A',
         ];
     }
 }
