@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\ActivityAction;
+use App\Enums\ActivityFlag;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -59,5 +61,20 @@ class ActivityLog extends Model
     public function targets(): HasMany
     {
         return $this->hasMany(ActivityLogTarget::class);
+    }
+
+    /** The verb as an enum; null for a verb retired after it was written (the log keeps five courses). */
+    public function actionEnum(): ?ActivityAction
+    {
+        return ActivityAction::tryFrom((string) $this->action);
+    }
+
+    /** @return list<ActivityFlag> */
+    public function flagList(): array
+    {
+        return array_values(array_filter(array_map(
+            fn ($flag): ?ActivityFlag => is_string($flag) ? ActivityFlag::tryFrom($flag) : null,
+            $this->flags ?? [],
+        )));
     }
 }
