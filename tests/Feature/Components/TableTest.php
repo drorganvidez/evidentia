@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Components;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Fluent;
 use Illuminate\View\ViewException;
 use InvalidArgumentException;
@@ -17,6 +19,20 @@ class TableTest extends ComponentTestCase
             ['label' => 'Abrir', 'srOnly' => true],
         ]
         PHP;
+
+    /** Page 2 of 128 rows in pages of 25, with the query string a list keeps in its links. */
+    private function paginator(int $total = 128, int $page = 2, array $query = ['estado' => 'pendientes', 'q' => 'montaje', 'per_page' => '25']): LengthAwarePaginator
+    {
+        return (new LengthAwarePaginator(range(1, min(25, $total)), $total, 25, $page, ['path' => '/lista', 'pageName' => 'page']))->appends($query);
+    }
+
+    private function paged(LengthAwarePaginator $paginator, string $props = '', string $body = ''): string
+    {
+        return $this->render(
+            '<x-ui.table caption="Evidencias del curso" :columns="[[\'label\' => \'Evidencia\']]" :paginator="$paginator" '.$props.'>'.$body.'</x-ui.table>',
+            ['paginator' => $paginator],
+        );
+    }
 
     private function table(string $props = '', string $body = ''): string
     {
@@ -140,11 +156,99 @@ class TableTest extends ComponentTestCase
         $this->assertStringNotContainsString('x-data="tableFilter"', $plain);
     }
 
+    public function test_with_a_paginator_the_quick_filter_becomes_a_search_on_the_server(): void
+    {
+        $html = $this->paged($this->paginator(), 'filterable count-label="evidencias" filter-placeholder="Buscar evidencias"', '<x-slot:toolbar><span>Pestañas</span></x-slot:toolbar>');
+
+        $this->assertStringNotContainsString('tableFilter', $html);
+        $this->assertStringNotContainsString('x-model="query"', $html);
+        $this->assertStringContainsString('<span>Pestañas</span>', $html);
+        $this->assertMatchesRegularExpression('/<form role="search" method="get" action="\/lista" aria-label="Buscar evidencias"\s+class="flex min-w-0 flex-1 items-center gap-1\.5 md:ml-auto md:max-w-80">/', $html);
+        // every other key of the query string goes with the search, the page does not
+        $this->assertStringContainsString('<input type="hidden" name="estado" value="pendientes">', $html);
+        $this->assertStringContainsString('<input type="hidden" name="per_page" value="25">', $html);
+        $this->assertStringNotContainsString('name="page"', $html);
+        $this->assertMatchesRegularExpression('/<input type="search" name="q" value="montaje" maxlength="100"\s+autocomplete="off" enterkeyhint="search" placeholder="Buscar evidencias"\s+aria-label="Buscar evidencias"/', $html);
+        $this->assertMatchesRegularExpression('/<button[^>]*type="submit"\s+aria-label="Buscar" title="Buscar"/', $html);
+        $this->assertMatchesRegularExpression('/<a[^>]*href="\/lista\?estado=pendientes&amp;per_page=25"\s+aria-label="Quitar la búsqueda"/', $html);
+        $this->assertMatchesRegularExpression('/<span class="text-sm text-ink-muted tabular-nums">128 evidencias<\/span>/', $html);
+        $this->assertStringNotContainsString('role="status"', $html);
+        $this->assertUniqueIds($html);
+        $this->assertCspSafe($html);
+
+        $plain = $this->paged($this->paginator(query: ['estado' => 'pendientes']), 'filterable');
+
+        $this->assertMatchesRegularExpression('/<input type="search" name="q" value=""/', $plain);
+        $this->assertStringNotContainsString('Quitar la búsqueda', $plain);
+
+        $this->assertStringNotContainsString('role="search"', $this->paged($this->paginator()), 'Only filterable tables search');
+    }
+
+    public function test_the_search_stays_while_a_search_finds_nothing_and_goes_with_an_empty_list(): void
+    {
+        $this->assertStringContainsString('role="search"', $this->paged($this->paginator(0, 1, ['q' => 'nada']), 'filterable'));
+        $this->assertStringNotContainsString('role="search"', $this->paged($this->paginator(0, 1, []), 'filterable'));
+    }
+
+    public function test_with_a_paginator_the_footer_prints_the_pages_and_the_rows_per_page(): void
+    {
+        $html = $this->paged($this->paginator(), '', '<x-slot:footer><span>128 evidencias · 230 h</span></x-slot:footer>');
+
+        $this->assertMatchesRegularExpression('/<span>128 evidencias · 230 h<\/span>\s*<div class="flex flex-wrap items-center gap-x-5 gap-y-2 md:ml-auto">/', $html, 'The totals first, then the pages');
+        $this->assertStringContainsString('<nav aria-label="Paginación de Evidencias del curso"', $html);
+        $this->assertStringContainsString('<span class="text-sm text-ink-muted max-md:hidden">De la 26 a la 50 de 128</span>', $html);
+        $this->assertStringContainsString('<a href="/lista?estado=pendientes&amp;q=montaje&amp;per_page=25&amp;page=3" rel="next"', $html);
+        $this->assertStringContainsString('<div role="group" aria-label="Filas por página" class="flex items-center gap-1">', $html);
+        $this->assertMatchesRegularExpression('/<a href="\/lista\?estado=pendientes&amp;q=montaje&amp;per_page=25"\s+aria-current="true"\s+class="[^"]*pointer-coarse:size-11">25<\/a>/', $html);
+        $this->assertMatchesRegularExpression('/<a href="\/lista\?estado=pendientes&amp;q=montaje&amp;per_page=50"\s+class="[^"]*">50<\/a>/', $html);
+        $this->assertMatchesRegularExpression('/<a href="\/lista\?estado=pendientes&amp;q=montaje&amp;per_page=100"\s+class="[^"]*">100<\/a>/', $html);
+        $this->assertSame(1, substr_count($html, 'aria-current="true"'));
+        $this->assertUniqueIds($html);
+        $this->assertCspSafe($html);
+
+        $named = $this->paged($this->paginator(), 'pagination-label="Páginas de evidencias"');
+
+        $this->assertStringContainsString('<nav aria-label="Páginas de evidencias"', $named);
+        $this->assertMatchesRegularExpression('/<div\s+class="flex flex-col items-start gap-2 border-t/', $named, 'The pages print without a footer slot');
+    }
+
+    public function test_a_single_page_keeps_the_sizes_only_when_a_smaller_one_would_paginate(): void
+    {
+        $few = $this->paged($this->paginator(20, 1, []));
+
+        $this->assertStringNotContainsString('border-t border-rule px-5', $few);
+        $this->assertStringNotContainsString('Filas por página', $few);
+
+        $wide = $this->paged((new LengthAwarePaginator(range(1, 60), 60, 100, 1, ['path' => '/lista']))->appends(['per_page' => '100']));
+
+        $this->assertStringContainsString('aria-label="Filas por página"', $wide);
+        $this->assertMatchesRegularExpression('/href="\/lista\?per_page=100"\s+aria-current="true"/', $wide);
+        $this->assertStringNotContainsString('<nav aria-label="Paginación', $wide);
+        $this->assertStringContainsString('De la 1 a la 60 de 60', $wide);
+    }
+
+    public function test_the_paginator_must_know_its_total(): void
+    {
+        try {
+            $this->render('<x-ui.table caption="Lista" :paginator="$paginator" />', ['paginator' => new Paginator(range(1, 5), 5)]);
+        } catch (ViewException $exception) {
+            while ($exception->getPrevious() !== null) {
+                $exception = $exception->getPrevious();
+            }
+
+            $this->assertInstanceOf(InvalidArgumentException::class, $exception);
+
+            return;
+        }
+
+        $this->fail('A table paginated without a total was rendered');
+    }
+
     public function test_the_footer_and_the_empty_state_are_optional(): void
     {
         $html = $this->table('', '<x-slot:footer class="text-ink">6 evidencias</x-slot:footer><x-slot:empty>Nada</x-slot:empty>');
 
-        $this->assertMatchesRegularExpression('/<div\s+class="flex flex-col items-start gap-2 border-t border-rule px-5 py-4 text-sm text-ink-muted md:flex-row md:items-center md:justify-between text-ink">\s*6 evidencias<\/div>/', $html);
+        $this->assertMatchesRegularExpression('/<div\s+class="flex flex-col items-start gap-2 border-t border-rule px-5 py-4 text-sm text-ink-muted md:flex-row md:items-center md:justify-between text-ink">\s*6 evidencias\s*<\/div>/', $html);
         $this->assertMatchesRegularExpression('/<td role="cell" colspan="5"\s+class="p-0 block md:table-cell">\s*Nada<\/td>/', $html);
 
         $bare = $this->table();
