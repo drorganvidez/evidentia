@@ -3,6 +3,7 @@
 namespace Tests\Feature\Components;
 
 use Html;
+use Illuminate\Support\HtmlString;
 
 class RichTextTest extends ComponentTestCase
 {
@@ -34,12 +35,12 @@ class RichTextTest extends ComponentTestCase
         $this->assertStringContainsString('<div class="prose-ui text-base mt-4" data-test="bio">', $html);
     }
 
-    public function test_the_purifier_output_it_is_meant_for_carries_nothing_the_policy_blocks(): void
+    public function test_it_purifies_the_stored_html_itself_so_a_view_cannot_print_it_raw(): void
     {
         $dirty = '<h2 onclick="steal()">Título</h2><p>Hola<script>alert(1)</script> <a href="javascript:alert(1)">enlace</a></p>'
-            .'<img src="'.self::PNG.'" alt="Lona"><table><tr><td>1</td></tr></table>';
+            .'<img src="'.self::PNG.'" alt="Lona"><table><tr><td>1</td></tr></table><iframe src="https://example.com"></iframe>';
 
-        $html = $this->render('<x-ui.rich-text :html="Html::clean($dirty)" />', ['dirty' => $dirty]);
+        $html = $this->render('<x-ui.rich-text :html="$dirty" />', ['dirty' => $dirty]);
 
         $this->assertStringContainsString('<h2>Título</h2>', $html);
         $this->assertStringContainsString('<img src="'.self::PNG.'" alt="Lona"', $html);
@@ -47,7 +48,26 @@ class RichTextTest extends ComponentTestCase
         $this->assertStringNotContainsString('<script', $html);
         $this->assertStringNotContainsString('javascript:', $html);
         $this->assertStringNotContainsString('onclick', $html);
+        $this->assertStringNotContainsString('<iframe', $html);
         $this->assertCspSafe($html);
-        $this->assertSame('', Html::clean(null), 'A missing text renders nothing');
+
+        $twice = $this->render('<x-ui.rich-text :html="Html::clean($dirty)" />', ['dirty' => $dirty]);
+
+        $this->assertSame($html, $twice, 'Purifying the output of Html::clean again changes nothing');
+    }
+
+    public function test_a_trusted_htmlable_is_printed_as_it_comes(): void
+    {
+        $html = $this->render('<x-ui.rich-text :html="$trusted" />', [
+            'trusted' => new HtmlString('<p data-source="seeder">Texto <mark>propio</mark></p>'),
+        ]);
+
+        $this->assertStringContainsString('<p data-source="seeder">Texto <mark>propio</mark></p>', $html);
+    }
+
+    public function test_a_missing_text_renders_an_empty_prose_block(): void
+    {
+        $this->assertMatchesRegularExpression('/^<div class="prose-ui text-base">\s*<\/div>$/', trim($this->render('<x-ui.rich-text :html="null" />')));
+        $this->assertSame('', Html::clean(null));
     }
 }

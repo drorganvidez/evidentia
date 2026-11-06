@@ -1,5 +1,6 @@
 {{--
-    Rich text: every tag the purifier keeps, run through Html::clean as the views will, plus the clamped and small forms.
+    Rich text: every tag the purifier keeps, passed raw as the views will (the component purifies it), plus the clamped
+    and small forms.
     The inline style attributes the purifier allows are left out on purpose: the strict policy blocks them and the
     Playwright fixture fails on any policy message. The prose styles arrive with the import of prose.css (lote 6).
 --}}
@@ -30,15 +31,15 @@
 
     <div class="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <x-ui.card title="Descripción purificada" :level="3">
-            <x-ui.rich-text :html="Html::clean($sample)" />
+            <x-ui.rich-text :html="$sample" />
         </x-ui.card>
 
         <div class="grid grid-cols-[minmax(0,1fr)] content-start gap-4">
             <x-ui.card title="Recortado a tres líneas" :level="3">
-                <x-ui.rich-text :html="Html::clean($bio)" :clamp="3" />
+                <x-ui.rich-text :html="$bio" :clamp="3" />
             </x-ui.card>
             <x-ui.card title="Tamaño pequeño" :level="3">
-                <x-ui.rich-text :html="Html::clean($bio)" size="sm" />
+                <x-ui.rich-text :html="$bio" size="sm" />
             </x-ui.card>
         </div>
     </div>
