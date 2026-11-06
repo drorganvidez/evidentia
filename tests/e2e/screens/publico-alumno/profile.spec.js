@@ -18,7 +18,7 @@ test.describe('Mi perfil', () => {
         await expect(page.getByRole('heading', { level: 1 })).toHaveText('Mi perfil');
         await expect(page.getByRole('heading', { name: 'Lucía Pérez Romero' })).toBeVisible();
         await expect(page.getByLabel('Correo electrónico')).toHaveValue('estudiante@e2e.test');
-        await expect(page.getByRole('group', { name: 'Nivel de implicación' })).toBeVisible();
+        await expect(page.getByRole('group', { name: 'Nivel de implicación' })).toHaveCount(0);
         await expect(page.getByLabel('Contraseña actual')).toBeVisible();
         await audit(page, ui);
     });
@@ -39,7 +39,6 @@ test.describe('Mi perfil', () => {
             await signIn(page, 'secretario');
             await page.goto('/profile');
 
-            await page.getByText('Técnico-organizativo', { exact: true }).click();
             await page
                 .getByLabel('Resumen del trabajo en las jornadas')
                 .fill('Convoqué las reuniones de logística.\n\nRedacté sus actas.');
@@ -50,7 +49,6 @@ test.describe('Mi perfil', () => {
             const summary = page.getByRole('region', { name: 'Marta Ruiz Díaz' });
 
             await expect(summary.getByText('Redacté sus actas.')).toBeVisible();
-            await expect(summary.getByText('Técnico-organizativo')).toBeVisible();
         });
 
         test('un correo ya usado se marca en su campo', async ({ page }) => {

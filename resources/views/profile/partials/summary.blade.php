@@ -44,10 +44,6 @@
             <div class="grid gap-2 border-t border-rule pt-4">
                 <p class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
                     <span class="text-sm font-semibold text-ink-muted">Resumen del trabajo</span>
-                    @if ($user->participation_label)
-                        <x-ui.badge variant="chip" size="sm"
-                            :hue="270">{{ $user->participation_label }}</x-ui.badge>
-                    @endif
                 </p>
                 @if (filled($user->biography))
                     <x-ui.rich-text :html="\App\View\PlainText::toHtml($user->biography)" size="sm" />

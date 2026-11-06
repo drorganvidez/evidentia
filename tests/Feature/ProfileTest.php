@@ -48,13 +48,14 @@ class ProfileTest extends TestCase
 
     public function test_users_write_their_biography(): void
     {
-        $this->post(route('profile.upload.biography'), ['biography' => '<p>He colaborado en logística.</p>', 'participation' => 2])
+        $this->post(route('profile.upload.biography'), ['biography' => '<p>He colaborado en logística.</p>'])
             ->assertRedirect(route('profile.view'));
-        $this->post(route('profile.upload.biography'), ['biography' => '<p>He colaborado en logística.</p>', 'participation' => 7])
-            ->assertSessionHasErrors('participation');
+        $this->post(route('profile.upload.biography'), ['biography' => 'Corto'])
+            ->assertSessionHasErrors('biography');
 
         $this->assertSame('<p>He colaborado en logística.</p>', $this->user->fresh()->biography);
-        $this->assertEquals(2, $this->user->fresh()->participation);
+        // The participation level no longer exists: the profile neither asks nor shows it
+        $this->get(route('profile.view'))->assertOk()->assertDontSee('Nivel de implicación')->assertDontSee('Técnico-organizativo');
     }
 
     public function test_changing_the_password_needs_the_current_one(): void

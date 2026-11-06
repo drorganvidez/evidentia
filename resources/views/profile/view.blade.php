@@ -5,11 +5,6 @@
 --}}
 @php
     $user = Auth::user();
-    $participation = [
-        ['value' => 1, 'label' => 'Colaborativo'],
-        ['value' => 2, 'label' => 'Técnico-organizativo'],
-        ['value' => 3, 'label' => 'Técnico'],
-    ];
 @endphp
 <x-layout.app title="Mi perfil" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Mi perfil']]">
     <x-ui.page-header title="Mi perfil" />
@@ -36,8 +31,6 @@
             @unless ($user->hasRole('LECTURE'))
                 <x-ui.card title="Resumen del trabajo" :level="2" id="biography-title">
                     <x-ui.form :action="$route_upload_biography" id="biography-form" :summary="false" busy-label="Guardando">
-                        <x-ui.segmented name="participation" legend="Nivel de implicación" :hide-legend="false"
-                            :options="$participation" :value="$user->participation" :error="$errors->first('participation') ?: null" />
                         <x-ui.field name="biography" label="Resumen del trabajo en las jornadas" type="textarea"
                             :rows="8" :maxlength="20000" :value="\App\View\PlainText::fromHtml($user->biography)" hint="Al menos 10 caracteres"
                             required />

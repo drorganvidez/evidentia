@@ -14,7 +14,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'surname', 'name', 'username', 'password', 'email', 'block', 'biography', 'clean_name', 'clean_surname', 'participation',
+        'surname', 'name', 'username', 'password', 'email', 'block', 'biography', 'clean_name', 'clean_surname',
     ];
 
     protected $hidden = [
@@ -245,15 +245,5 @@ class User extends Authenticatable
         }
 
         return $names->implode(' | ');
-    }
-
-    public function getParticipationLabelAttribute(): ?string
-    {
-        return match ($this->participation) {
-            1 => 'Colaborativo',
-            2 => 'Técnico-organizativo',
-            3 => 'Técnico',
-            default => null,
-        };
     }
 }

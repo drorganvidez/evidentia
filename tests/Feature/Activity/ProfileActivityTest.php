@@ -20,7 +20,7 @@ class ProfileActivityTest extends TestCase
         parent::setUp();
         $this->student = User::factory()->create([
             'name' => 'Ana', 'surname' => 'García', 'email' => 'ana@alum.us.es', 'password' => Hash::make('secret123'),
-            'biography' => '<p>Primer curso.</p>', 'participation' => 1,
+            'biography' => '<p>Primer curso.</p>',
         ]);
         $this->student->roles()->attach(Role::forceCreate(['rol' => 'STUDENT', 'slug' => 'student']));
         $this->actingAs($this->student);
@@ -40,13 +40,12 @@ class ProfileActivityTest extends TestCase
 
     public function test_the_biography_records_its_length_and_never_its_text(): void
     {
-        $this->post(route('profile.upload.biography'), ['biography' => '<p>Cuarto curso de informática.</p>', 'participation' => 3])
+        $this->post(route('profile.upload.biography'), ['biography' => '<p>Cuarto curso de informática.</p>'])
             ->assertRedirect(route('profile.view'));
 
         $log = ActivityLog::sole();
         $this->assertSame([
-            'fields' => ['biography', 'participation'], 'length' => mb_strlen('Cuarto curso de informática.'),
-            'before' => ['participation' => 1], 'after' => ['participation' => 3],
+            'fields' => ['biography'], 'length' => mb_strlen('Cuarto curso de informática.'),
         ], $log->details);
         $this->assertStringNotContainsString('Cuarto curso', json_encode($log->getAttributes()));
     }

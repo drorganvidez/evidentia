@@ -17,7 +17,6 @@ resources/views/components/li.blade.php
 resources/views/components/lilogo.blade.php
 resources/views/components/lilogout.blade.php
 resources/views/components/menumeeting.blade.php
-resources/views/components/profile.blade.php
 resources/views/components/slimreminder.blade.php
 resources/views/components/textarea.blade.php
 resources/views/components/textareasimple.blade.php

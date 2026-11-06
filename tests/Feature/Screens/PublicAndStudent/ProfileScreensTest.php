@@ -16,7 +16,7 @@ class ProfileScreensTest extends ScreenTestCase
         foreach (['profile.upload.info', 'profile.upload.biography', 'profile.upload.pass'] as $route) {
             $this->assertStringContainsString('action="'.route($route).'"', $html);
         }
-        foreach (['name', 'surname', 'email', 'participation', 'biography', 'current_password', 'password', 'password_confirmation'] as $name) {
+        foreach (['name', 'surname', 'email', 'biography', 'current_password', 'password', 'password_confirmation'] as $name) {
             $this->assertStringContainsString('name="'.$name.'"', $html);
         }
         $this->assertNoAutofocus($html);
@@ -33,14 +33,13 @@ class ProfileScreensTest extends ScreenTestCase
     public function test_the_biography_reaches_the_textarea_as_text_and_the_summary_as_paragraphs(): void
     {
         $student = $this->person('estudiante');
-        $student->update(['biography' => '<p>Montaje del <b>photocall</b>.</p><p>Registro.</p>', 'participation' => 2]);
+        $student->update(['biography' => '<p>Montaje del <b>photocall</b>.</p><p>Registro.</p>']);
 
         $html = $this->assertAppScreen($this->signedAs('estudiante')->get(route('profile.view')));
 
         $this->assertStringContainsString("Montaje del photocall.\n\nRegistro.</textarea>", $html);
         $this->assertStringContainsString('<p>Montaje del <b>photocall</b>.</p><p>Registro.</p>', $html);
-        $this->assertStringContainsString('Técnico-organizativo', $html);
-        $this->assertMatchesRegularExpression('/value="2" id="field-participation-2"\s+class="peer sr-only" checked/', $html);
+        $this->assertStringNotContainsString('Nivel de implicación', $html, 'The participation level no longer exists');
     }
 
     public function test_the_management_reads_the_profile_and_the_evidences_of_a_student(): void

@@ -74,26 +74,20 @@ class ProfileController extends Controller
 
         $request->validate([
             'biography' => ['required', new MinCharacters(10), new MaxCharacters(20000)],
-            'participation' => 'required|numeric|min:1|max:3',
         ]);
 
-        $before = ['biography' => $user->biography, 'participation' => $user->participation];
+        $before = $user->biography;
 
         DB::transaction(function () use ($request, $user, $before) {
             $user->biography = $request->input('biography');
-            $user->participation = $request->input('participation');
 
             $user->save();
 
             // de la biografía solo su longitud, nunca el texto
-            $participation = Changes::between(['participation' => (int) $before['participation']], ['participation' => (int) $user->participation]);
             Activity::record(ActivityAction::ProfileEdited, $user, details: [
-                'fields' => array_keys(array_filter([
-                    'biography' => $before['biography'] !== $user->biography,
-                    'participation' => $participation !== [],
-                ])),
+                'fields' => $before !== $user->biography ? ['biography'] : [],
                 'length' => mb_strlen(strip_tags((string) $user->biography)),
-            ] + $participation);
+            ]);
         });
 
         return redirect()->route('profile.view')->with('success', 'Biografía editada con éxito.');
