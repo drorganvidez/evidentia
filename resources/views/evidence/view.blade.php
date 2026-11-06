@@ -31,6 +31,7 @@
             'name' => $proof->file->name . '.' . $proof->file->type,
             'size' => $proof->file->size,
             'href' => route('proof.download', ['id' => $proof->id]),
+            'preview' => $proof->file->previewMime() !== null ? route('proof.view', ['id' => $proof->id]) : null,
             'type' => $proof->file->type,
         ],
     );

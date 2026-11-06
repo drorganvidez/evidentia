@@ -1,8 +1,10 @@
 {{--
-    Attached files: an icon by type, the name, a readable size and a download button; an empty state without files.
+    Attached files: an icon by type, the name, a readable size, a button that opens it in a new tab when the browser
+    shows it (preview) and a download button; an empty state without files.
     <x-ui.file-list :files="[['name' => 'informe-final.pdf', 'size' => 1258291, 'href' => '/files/1', 'type' => 'application/pdf']]" />
     <x-ui.file-list :files="$proofs" label="Pruebas de la evidencia" empty-text="No hay pruebas adjuntas" />
-    A file is ['name', 'size' => bytes or null, 'href' => null, 'type' => mime type or extension, or null]. The
+    A file is ['name', 'size' => bytes or null, 'href' => null, 'preview' => url or null, 'type' => mime type or
+    extension, or null]. The
     controller builds them, for instance $proofs = $evidence->proofs->map(fn ($proof) => ['name' => $proof->file->name,
     'size' => $proof->file->size, 'href' => route('proof.download', $proof->id), 'type' => $proof->file->type]).
     files takes an array or a collection; an Arrayable item (a model) is read through toArray().
@@ -12,6 +14,7 @@
     'files' => [],
     'emptyText' => 'No hay pruebas adjuntas',
     'downloadLabel' => 'Descargar',
+    'previewLabel' => 'Ver',
     'label' => 'Archivos adjuntos',
 ])
 @php
@@ -61,6 +64,7 @@
                 $name = (string) ($file['name'] ?? '');
                 $size = $human($file['size'] ?? null);
                 $href = $file['href'] ?? null;
+                $preview = $file['preview'] ?? null;
             @endphp
             <li class="glass-2 flex min-w-0 items-center gap-3 rounded-lg px-4 py-3 text-md">
                 <x-ui.icon :name="$iconFor($name, $file['type'] ?? null)" class="size-5 text-ink-muted" />
@@ -68,6 +72,10 @@
                 @if ($size !== null)
                     <span
                         class="font-mono text-sm whitespace-nowrap text-ink-muted tabular-nums">{{ $size }}</span>
+                @endif
+                @if ($preview !== null)
+                    <x-ui.button icon-only icon="eye" :label="$previewLabel . ' ' . $name" :href="$preview" variant="ghost"
+                        size="sm" target="_blank" rel="noopener" />
                 @endif
                 @if ($href !== null)
                     <x-ui.button icon-only icon="download" :label="$downloadLabel . ' ' . $name" :href="$href" variant="ghost"
