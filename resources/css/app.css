@@ -753,7 +753,6 @@
 @utility scrollbar-subtle {
     scrollbar-width: thin;
     scrollbar-color: transparent transparent;
-    scrollbar-gutter: stable;
 
     &:hover,
     &:focus-within {
