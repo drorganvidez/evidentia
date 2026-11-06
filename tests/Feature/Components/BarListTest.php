@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Components;
 
+use Illuminate\Support\Fluent;
 use Illuminate\View\ViewException;
 use InvalidArgumentException;
 
@@ -96,5 +97,26 @@ class BarListTest extends ComponentTestCase
         $html = $this->render('<x-ui.bar-list label="Nada" :items="[]" />');
 
         $this->assertMatchesRegularExpression('/<ol aria-label="Nada" class="grid gap-3">\s*<\/ol>/', $html);
+    }
+
+    public function test_it_takes_collections_of_arrays_or_other_arrayables(): void
+    {
+        $html = $this->render('<x-ui.bar-list label="Por comité" :items="$items" />', [
+            'items' => collect([
+                7 => ['label' => 'Logística', 'value' => 12, 'href' => '/comites/7', 'hue' => 30],
+                3 => new Fluent(['label' => 'Programa', 'value' => 6, 'hue' => 270]),
+            ]),
+        ]);
+
+        $this->assertSame(2, substr_count($html, '<li class="grid'));
+        $this->assertStringContainsString('<a href="/comites/7"', $html);
+        $this->assertStringContainsString('bg-brand w-100/100', $html);
+        $this->assertStringContainsString('bg-brand w-50/100', $html);
+        $this->assertStringContainsString('committee-dot hue-270', $html);
+        $this->assertStringContainsString('<span class="truncate">Programa</span>', $html);
+
+        $empty = $this->render('<x-ui.bar-list label="Nada" :items="$items" />', ['items' => collect()]);
+
+        $this->assertMatchesRegularExpression('/<ol aria-label="Nada" class="grid gap-3">\s*<\/ol>/', $empty);
     }
 }

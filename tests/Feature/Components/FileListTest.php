@@ -2,6 +2,10 @@
 
 namespace Tests\Feature\Components;
 
+use App\Models\File;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Support\Fluent;
+
 class FileListTest extends ComponentTestCase
 {
     private const IMAGE = '<rect width="18" height="18" x="3" y="3" rx="2" ry="2"';
@@ -94,6 +98,36 @@ class FileListTest extends ComponentTestCase
         $custom = $this->render('<x-ui.file-list :files="[]" empty-text="Sin archivos" />');
 
         $this->assertStringContainsString('Sin archivos', $custom);
+    }
+
+    public function test_it_takes_collections_of_arrays_models_or_other_arrayables(): void
+    {
+        $html = $this->render('<x-ui.file-list :files="$files" />', [
+            'files' => collect([
+                4 => ['name' => 'informe-final.pdf', 'size' => 1258291, 'href' => '/files/1', 'type' => 'application/pdf'],
+                9 => new Fluent(['name' => 'acta.pdf', 'size' => 2048, 'href' => '/files/2', 'type' => 'application/pdf']),
+            ]),
+        ]);
+
+        $this->assertSame(2, substr_count($html, '<li class="glass-2 flex'));
+        $this->assertStringContainsString('aria-label="Descargar informe-final.pdf"', $html);
+        $this->assertStringContainsString('aria-label="Descargar acta.pdf"', $html);
+        $this->assertStringContainsString('>2 KB</span>', $html);
+
+        $models = $this->render('<x-ui.file-list :files="$files" />', [
+            'files' => new EloquentCollection([new File(['name' => 'foto.png', 'size' => 655360, 'type' => 'image/png'])]),
+        ]);
+
+        $this->assertStringContainsString('title="foto.png"', $models);
+        $this->assertStringContainsString('>640 KB</span>', $models);
+        $this->assertStringContainsString(self::IMAGE, $models);
+
+        foreach ([collect(), new EloquentCollection] as $empty) {
+            $none = $this->render('<x-ui.file-list :files="$files" />', ['files' => $empty]);
+
+            $this->assertStringContainsString(self::PAPERCLIP, $none);
+            $this->assertStringNotContainsString('<ul', $none);
+        }
     }
 
     public function test_the_labels_and_the_names_are_escaped(): void

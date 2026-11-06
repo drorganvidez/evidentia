@@ -1,9 +1,13 @@
 {{--
     Attached files: an icon by type, the name, a readable size and a download button; an empty state without files.
     <x-ui.file-list :files="[['name' => 'informe-final.pdf', 'size' => 1258291, 'href' => '/files/1', 'type' => 'application/pdf']]" />
-    <x-ui.file-list :files="$evidence->files" label="Pruebas de la evidencia" empty-text="No hay pruebas adjuntas" />
-    A file is ['name', 'size' => bytes or null, 'href' => null, 'type' => mime type or extension, or null].
+    <x-ui.file-list :files="$proofs" label="Pruebas de la evidencia" empty-text="No hay pruebas adjuntas" />
+    A file is ['name', 'size' => bytes or null, 'href' => null, 'type' => mime type or extension, or null]. The
+    controller builds them, for instance $proofs = $evidence->proofs->map(fn ($proof) => ['name' => $proof->file->name,
+    'size' => $proof->file->size, 'href' => route('proof.download', $proof->id), 'type' => $proof->file->type]).
+    files takes an array or a collection; an Arrayable item (a model) is read through toArray().
 --}}
+@use('Illuminate\Contracts\Support\Arrayable')
 @props([
     'files' => [],
     'emptyText' => 'No hay pruebas adjuntas',
@@ -11,7 +15,7 @@
     'label' => 'Archivos adjuntos',
 ])
 @php
-    $files = array_values($files);
+    $files = collect($files)->map(fn($file) => $file instanceof Arrayable ? $file->toArray() : $file)->values()->all();
     $human = function (int|float|string|null $bytes): ?string {
         if ($bytes === null || $bytes === '') {
             return null;

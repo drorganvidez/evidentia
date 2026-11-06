@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Components;
 
+use Illuminate\Support\Fluent;
+
 class MeterTest extends ComponentTestCase
 {
     public function test_a_bar_segment_takes_its_width_and_colour_from_classes(): void
@@ -122,6 +124,29 @@ class MeterTest extends ComponentTestCase
         $this->assertStringContainsString('>4,00 h</span>', $html);
         $this->assertStringContainsString('>24 %</span>', $html);
         $this->assertCspSafe($html);
+    }
+
+    public function test_it_takes_collections_of_arrays_or_other_arrayables(): void
+    {
+        $segments = collect([
+            3 => ['value' => 48, 'tone' => 'accepted', 'label' => 'Aceptadas'],
+            8 => new Fluent(['value' => 36, 'tone' => 'pending', 'label' => 'Pendientes']),
+        ]);
+
+        $bar = $this->render('<x-ui.meter :segments="$segments" legend />', ['segments' => $segments]);
+
+        $this->assertStringContainsString('w-48/100 bg-accepted', $bar);
+        $this->assertStringContainsString('w-36/100 bg-pending', $bar);
+        $this->assertStringContainsString('Pendientes', $bar);
+        $this->assertStringContainsString('>36 %</span>', $bar);
+
+        $ring = $this->render('<x-ui.meter shape="ring" :segments="$segments" />', ['segments' => $segments]);
+
+        $this->assertMatchesRegularExpression('/stroke-dasharray="36 64"\s+stroke-dashoffset="-48"/', $ring);
+
+        $empty = $this->render('<x-ui.meter :segments="$segments" />', ['segments' => collect()]);
+
+        $this->assertMatchesRegularExpression('/<div aria-hidden="true" class="flex gap-1 overflow-hidden rounded-full h-3 bg-rule">\s*<\/div>/', $empty);
     }
 
     public function test_sizes_and_track_map_to_literal_classes(): void

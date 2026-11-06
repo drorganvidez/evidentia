@@ -4,8 +4,10 @@
     <x-ui.meter :segments="$byType" legend label="Horas computadas: 4,00 en evidencias, 2,50 en reuniones" />
     <x-ui.meter shape="ring" :segments="$byStatus" value="48 %" label="48 % de las horas declaradas aceptadas" />
     A segment is ['value' => 0..100, 'tone' => accepted|pending|rejected|draft|notice|brand, 'label' => null, 'text' => null];
-    the legend prints the label with its text, or the percentage when there is no text.
+    the legend prints the label with its text, or the percentage when there is no text. segments takes an array or a
+    collection; an Arrayable segment is read through toArray().
 --}}
+@use('Illuminate\Contracts\Support\Arrayable')
 @props([
     'segments' => [],
     'shape' => 'bar',
@@ -17,7 +19,10 @@
     'legend' => false,
 ])
 @php
-    $segments = array_values($segments);
+    $segments = collect($segments)
+        ->map(fn($segment) => $segment instanceof Arrayable ? $segment->toArray() : $segment)
+        ->values()
+        ->all();
     // Every value is clamped to 0..100 and the whole is scaled down when the sum exceeds 100; the
     // rounding remainder goes to the largest fractions so the integer widths add up exactly.
     $raw = array_map(fn(array $segment): float => max(0.0, min(100.0, (float) ($segment['value'] ?? 0))), $segments);

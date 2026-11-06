@@ -3,6 +3,7 @@
 namespace Tests\Feature\Components;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Fluent;
 
 class NotificationListTest extends ComponentTestCase
 {
@@ -84,6 +85,27 @@ class NotificationListTest extends ComponentTestCase
         $this->assertMatchesRegularExpression('/<h3 class="text-base font-bold">\s*No tienes avisos\s*<\/h3>/', $html);
         $this->assertStringNotContainsString('<ol', $html);
         $this->assertStringContainsString('Bandeja vacía', $this->render('<x-ui.notification-list :items="[]" empty-text="Bandeja vacía" />'));
+    }
+
+    public function test_it_takes_collections_of_arrays_or_other_arrayables(): void
+    {
+        $html = $this->render('<x-ui.notification-list :items="$items" />', [
+            'items' => collect([
+                5 => ['title' => 'Evidencia rechazada', 'href' => '/evidencias/33', 'unread' => true, 'tone' => 'rejected'],
+                2 => new Fluent(['title' => 'Reunión convocada', 'text' => 'Programa', 'at' => '2026-11-05 16:40:00']),
+            ]),
+        ]);
+
+        $this->assertSame(2, substr_count($html, '<li class="glass-2'));
+        $this->assertStringContainsString('<a href="/evidencias/33"', $html);
+        $this->assertMatchesRegularExpression('/<span class="font-semibold text-ink">\s*Reunión convocada\s*<\/span>/', $html);
+        $this->assertStringContainsString('<p class="text-sm text-ink-muted">Programa</p>', $html);
+        $this->assertStringContainsString('hace 6 horas', $html);
+
+        $empty = $this->render('<x-ui.notification-list :items="$items" />', ['items' => collect()]);
+
+        $this->assertStringContainsString(self::BELL, $empty);
+        $this->assertStringNotContainsString('<ol', $empty);
     }
 
     public function test_the_texts_are_escaped(): void

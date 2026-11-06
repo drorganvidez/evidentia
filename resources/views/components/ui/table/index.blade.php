@@ -15,7 +15,9 @@
         <x-slot:empty><x-ui.empty title="No hay evidencias" size="sm" /></x-slot:empty>
     </x-ui.table>
     A column is ['label', 'key', 'align' => start|end, 'srOnly' => bool, 'hide' => bool, 'sort' => ['href', 'dir' => asc|desc|null], 'class'].
+    columns takes an array or a collection; an Arrayable column is read through toArray().
 --}}
+@use('Illuminate\Contracts\Support\Arrayable')
 @props([
     'caption' => null,
     'showCaption' => false,
@@ -29,7 +31,10 @@
 ])
 @php
     throw_if(blank($caption), InvalidArgumentException::class, 'The table component needs a caption.');
-    $columns = array_values($columns);
+    $columns = collect($columns)
+        ->map(fn($column) => $column instanceof Arrayable ? $column->toArray() : $column)
+        ->values()
+        ->all();
     $rowHeight = match ($density) {
         'compact' => '[--row-h:3.5rem]',
         default => '[--row-h:4.25rem]',

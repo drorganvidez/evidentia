@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Components;
 
+use Illuminate\Support\Fluent;
 use Illuminate\View\ViewException;
 use InvalidArgumentException;
 
@@ -82,6 +83,25 @@ class TableTest extends ComponentTestCase
         $this->assertStringContainsString('aria-sort="ascending"', $ascending);
         $this->assertStringContainsString('title="Ordenar de forma descendente"', $ascending);
         $this->assertStringContainsString('d="M12 19V5"', $ascending);
+    }
+
+    public function test_the_columns_may_be_a_collection_of_arrays_or_other_arrayables(): void
+    {
+        $html = $this->render('<x-ui.table caption="Mis evidencias" :columns="$columns" />', [
+            'columns' => collect([
+                3 => ['label' => 'Evidencia', 'sort' => ['href' => '?sort=title', 'dir' => 'asc']],
+                8 => new Fluent(['label' => 'Horas', 'align' => 'end']),
+            ]),
+        ]);
+
+        $this->assertSame(2, substr_count($html, '<th role="columnheader" scope="col"'));
+        $this->assertStringContainsString('aria-sort="ascending"', $html);
+        $this->assertMatchesRegularExpression('/<th role="columnheader" scope="col" class="[^"]*text-right"\s*>\s*Horas/', $html);
+
+        $empty = $this->render('<x-ui.table caption="Mis evidencias" :columns="$columns"><x-slot:empty>Nada</x-slot:empty></x-ui.table>', ['columns' => collect()]);
+
+        $this->assertStringNotContainsString('<thead', $empty);
+        $this->assertMatchesRegularExpression('/<td role="cell" colspan="1"/', $empty);
     }
 
     public function test_the_density_sets_the_row_height_variable(): void

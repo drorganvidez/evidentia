@@ -5,8 +5,13 @@
         ['title' => 'Evidencia rechazada', 'text' => 'Montaje del photocall', 'at' => $at, 'href' => '/evidencias/33', 'unread' => true, 'tone' => 'rejected'],
     ]" />
     <x-ui.notification-list :items="[]" empty-text="No tienes avisos" />
+    items takes an array or a collection; an Arrayable item is read through toArray().
 --}}
+@use('Illuminate\Contracts\Support\Arrayable')
 @props(['items' => [], 'label' => 'Avisos', 'emptyText' => 'No tienes avisos'])
+@php
+    $items = collect($items)->map(fn($item) => $item instanceof Arrayable ? $item->toArray() : $item)->values()->all();
+@endphp
 @if ($items === [])
     <x-ui.empty icon="bell" :title="$emptyText" size="sm" :level="3" {{ $attributes }} />
 @else

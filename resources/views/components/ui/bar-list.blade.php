@@ -6,12 +6,14 @@
     ]" />
     <x-ui.bar-list label="Horas por tipo" :items="$byType" value-format="hours" :max="20" />
     An item is ['label', 'value', 'text' => null, 'href' => null, 'tone' => null, 'hue' => null]; the bar is
-    decorative and takes the tone colour, the dot the hue of the committee.
+    decorative and takes the tone colour, the dot the hue of the committee. items takes an array or a collection; an
+    Arrayable item is read through toArray().
 --}}
+@use('Illuminate\Contracts\Support\Arrayable')
 @props(['items' => [], 'max' => null, 'label' => null, 'valueFormat' => 'int'])
 @php
     throw_if(blank($label), InvalidArgumentException::class, 'The bar-list component needs a label.');
-    $items = array_values($items);
+    $items = collect($items)->map(fn($item) => $item instanceof Arrayable ? $item->toArray() : $item)->values()->all();
     $values = array_map(fn(array $item): float => max(0.0, (float) ($item['value'] ?? 0)), $items);
     $max = $max !== null ? max(0.0, (float) $max) : ($values === [] ? 0.0 : max($values));
     $format = fn(float $value): string => $valueFormat === 'hours'
