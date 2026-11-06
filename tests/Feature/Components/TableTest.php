@@ -219,12 +219,12 @@ class TableTest extends ComponentTestCase
         $cell = fn (string $props): string => $this->render('<x-ui.table.cell '.$props.'>1,75 h</x-ui.table.cell>');
 
         // The thead is display: none on the phone, so the card cell carries its column name, hidden on screen
-        $this->assertMatchesRegularExpression('/<td role="cell" class="[^"]*">\s*<span class="sr-only hidden in-data-cards:max-md:inline">Horas: <\/span>\s*1,75 h<\/td>/', $cell('label="Horas" numeric'));
+        $this->assertMatchesRegularExpression('/<td role="cell" class="[^"]*">\s*<span class="sr-only hidden in-data-cards:max-md:inline" data-filter-ignore>Horas: <\/span>\s*1,75 h<\/td>/', $cell('label="Horas" numeric'));
         $this->assertStringNotContainsString('data-label', $cell('label="Horas"'), 'Nothing reads a data-label');
         $this->assertStringNotContainsString('sr-only', $cell(''));
         $this->assertStringNotContainsString('sr-only', $cell('label="Evidencia" primary'), 'The title needs no column name');
         $this->assertStringNotContainsString('sr-only', $cell('label="Abrir" actions'), 'The actions are hidden on the phone');
-        $this->assertStringContainsString('<span class="sr-only hidden in-data-cards:max-md:inline">EV &lt;1&gt;: </span>', $this->render('<x-ui.table.cell :label="$label" header>x</x-ui.table.cell>', ['label' => 'EV <1>']));
+        $this->assertStringContainsString('<span class="sr-only hidden in-data-cards:max-md:inline" data-filter-ignore>EV &lt;1&gt;: </span>', $this->render('<x-ui.table.cell :label="$label" header>x</x-ui.table.cell>', ['label' => 'EV <1>']));
     }
 
     public function test_a_header_cell_is_a_row_header(): void

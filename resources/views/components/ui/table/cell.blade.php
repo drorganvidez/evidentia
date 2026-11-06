@@ -1,9 +1,9 @@
 {{--
-    Cell of x-ui.table.row. label names the column in the phone cards, where the thead is hidden, as a text only
-    assistive technology reads (not in the title cell); primary is the title cell, whose links reach 44 px under a
-    coarse pointer, meta the secondary text, numeric
-    the figures, end pushes the content to the right of the card, hide and actions disappear on the phone (hide only
-    what the detail behind the row link shows again), header prints a th scope="row".
+    Cell of x-ui.table.row. label names the column in the phone cards, where the thead is hidden, with a text that
+    only assistive technology reads and the quick filter skips (never in the title or action cells); primary is the
+    title cell, whose links reach 44 px under a coarse pointer; meta is the secondary text, numeric the figures; end
+    pushes the content to the right of the card; hide and actions disappear on the phone (hide only what the detail
+    behind the row link shows again); header prints a th scope="row".
     <x-ui.table.cell label="Evidencia" primary><a href="...">{{ $title }}</a></x-ui.table.cell>
     <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="1.75" /></x-ui.table.cell>
     <x-ui.table.cell actions><x-ui.button icon-only icon="eye" label="Abrir" href="..." dim /></x-ui.table.cell>
@@ -43,5 +43,5 @@
     $columnName = filled($label) && !$primary && !$actions ? $label : null;
 @endphp
 {!! '<' . $tag . ' ' . $attrs . '>' !!}@if ($columnName !== null)
-    <span class="sr-only hidden in-data-cards:max-md:inline">{{ $columnName }}: </span>
+    <span class="sr-only hidden in-data-cards:max-md:inline" data-filter-ignore>{{ $columnName }}: </span>
 @endif{{ $slot }}{!! '</' . $tag . '>' !!}

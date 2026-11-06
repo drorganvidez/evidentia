@@ -5,11 +5,25 @@
  * <input type="search" x-model="query" x-on:input.debounce.150ms="filter"> and a
  * <span role="status" x-text="summary"> that announces the count.
  * Only for tables whose whole collection is in the DOM (never together with pagination). Each row is
- * matched on its data-search when the view gives one, otherwise on its text; accents and case are ignored.
+ * matched on its data-search when the view gives one, otherwise on its text without the helpers marked
+ * data-filter-ignore (the column names of the phone cards); accents and case are ignored.
  * The count follows the query last applied to the rows, not the one still waiting for the debounce.
  */
 function normalize(text) {
     return text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/\s+/g, ' ').trim();
+}
+
+function textOf(row) {
+    const walker = document.createTreeWalker(row, NodeFilter.SHOW_TEXT);
+    const parts = [];
+
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        if (!node.parentElement?.closest('[data-filter-ignore]')) {
+            parts.push(node.textContent);
+        }
+    }
+
+    return parts.join(' ');
 }
 
 export default function tableFilter() {
@@ -26,7 +40,7 @@ export default function tableFilter() {
 
             this.rows = Array.from(rows, (row) => ({
                 row,
-                text: normalize(row.dataset.search ?? row.textContent ?? ''),
+                text: normalize(row.dataset.search ?? textOf(row)),
             }));
             this.total = this.rows.length;
             this.visible = this.total;

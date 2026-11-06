@@ -154,6 +154,11 @@ test.describe('Tablas', () => {
         await expect(visibleRows).toHaveCount(3);
         await expect(status).toHaveText('3 de 6 evidencias');
 
+        // The column names that the phone cards give to screen readers are not content of the rows
+        await filter.fill('estado');
+        await expect(visibleRows).toHaveCount(0);
+        await expect(status).toHaveText('0 de 6 evidencias');
+
         await filter.fill('');
         await expect(visibleRows).toHaveCount(6);
         await expect(status).toHaveText('6 evidencias');
