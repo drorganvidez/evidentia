@@ -11,7 +11,8 @@
 @endphp
 <x-layout.public title="Acceso" wide :subtitle="'Jornadas InnoSoft ' . $edition">
     <x-slot:aside class="content-center lg:pr-8">
-        <x-ui.badge variant="chip" icon="calendar" :hue="270">Edición {{ $edition }}</x-ui.badge>
+        <x-ui.badge variant="chip" icon="calendar" :hue="270" class="justify-self-start">Edición
+            {{ $edition }}</x-ui.badge>
         <h1
             class="max-w-[14ch] text-[clamp(2rem,9vw,2.625rem)] leading-none font-extrabold tracking-tightest text-ink lg:text-6xl">
             Lo que haces en las jornadas,
