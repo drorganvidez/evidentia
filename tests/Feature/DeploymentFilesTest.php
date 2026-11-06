@@ -51,4 +51,14 @@ class DeploymentFilesTest extends TestCase
     {
         $this->assertStringContainsString('php artisan event:cache', file_get_contents(base_path('docker/entrypoint.prod.sh')));
     }
+
+    public function test_the_env_examples_run_the_queue_synchronously_and_name_the_address(): void
+    {
+        foreach (['.env.example.dev' => 'http://localhost:8000', '.env.example.prod' => 'https://evidentia.us.es'] as $file => $url) {
+            $env = file_get_contents(base_path($file));
+
+            $this->assertMatchesRegularExpression('/^QUEUE_CONNECTION=sync$/m', $env, $file);
+            $this->assertMatchesRegularExpression('/^APP_URL='.preg_quote($url, '/').'$/m', $env, $file);
+        }
+    }
 }
