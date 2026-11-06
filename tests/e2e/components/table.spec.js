@@ -159,6 +159,40 @@ test.describe('Tablas', () => {
         await expect(status).toHaveText('6 evidencias');
     });
 
+    test('mientras el filtro espera, el recuento sigue diciendo lo que muestran las filas', async ({
+        page,
+        ui,
+    }) => {
+        // The page clock is paused after the load, so the 150 ms debounce only runs when the test moves it
+        const start = Date.now();
+
+        await page.clock.install({ time: start });
+        await page.goto('/_ui#ui-table');
+        await page.clock.pauseAt(start + 60_000);
+
+        const table = ui.section('table').locator('section[aria-label="Mis evidencias"]');
+        const visibleRows = table.locator('tbody tr').filter({ visible: true });
+        const status = table.getByRole('status');
+        const filter = table.getByRole('searchbox', { name: 'Filtrar evidencias' });
+
+        await filter.fill('photocall');
+        await expect(visibleRows).toHaveCount(6);
+        await expect(status).toHaveText('6 evidencias');
+
+        await page.clock.runFor(200);
+        await expect(visibleRows).toHaveCount(1);
+        await expect(status).toHaveText('1 de 6 evidencias');
+
+        await filter.fill('');
+        await expect(visibleRows).toHaveCount(1);
+        await expect(status).toHaveText('1 de 6 evidencias');
+
+        await page.clock.runFor(200);
+        await expect(visibleRows).toHaveCount(6);
+        await expect(status).toHaveText('6 evidencias');
+        await page.clock.resume();
+    });
+
     test('la región desplazable solo es enfocable cuando desborda', async ({
         page,
         ui,

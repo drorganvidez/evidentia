@@ -6,6 +6,7 @@
  * <span role="status" x-text="summary"> that announces the count.
  * Only for tables whose whole collection is in the DOM (never together with pagination). Each row is
  * matched on its data-search when the view gives one, otherwise on its text; accents and case are ignored.
+ * The count follows the query last applied to the rows, not the one still waiting for the debounce.
  */
 function normalize(text) {
     return text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/\s+/g, ' ').trim();
@@ -14,6 +15,7 @@ function normalize(text) {
 export default function tableFilter() {
     return {
         query: '',
+        applied: '',
         visible: 0,
         total: 0,
         rows: [],
@@ -34,7 +36,7 @@ export default function tableFilter() {
         get summary() {
             const label = this.$root.dataset.countLabel ?? 'filas';
 
-            if (normalize(this.query) === '') {
+            if (this.applied === '') {
                 return `${this.total} ${label}`;
             }
 
@@ -55,6 +57,7 @@ export default function tableFilter() {
                 }
             });
 
+            this.applied = needle;
             this.visible = visible;
         },
 
