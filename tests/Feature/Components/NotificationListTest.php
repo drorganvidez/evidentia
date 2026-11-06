@@ -43,8 +43,9 @@ class NotificationListTest extends ComponentTestCase
         $this->assertStringContainsString('<ol aria-label="Avisos" class="grid gap-2 mt-4">', $html);
         $this->assertSame(3, preg_match_all('/<li class="glass-2 grid grid-cols-\[auto_minmax\(0,1fr\)\] gap-3 rounded-lg px-4 py-3 text-md data-\[unread\]:bg-brand-soft\/40"/', $html));
         $this->assertSame(2, preg_match_all('/<li [^>]*\s+data-unread\s*>/', $html));
-        $this->assertSame(2, substr_count($html, '<span class="sr-only">, sin leer</span>'));
-        $this->assertMatchesRegularExpression('/<a href="\/evidencias\/33"\s+class="font-semibold text-ink no-underline transition hover:text-brand-ink pointer-coarse:flex pointer-coarse:min-h-11 pointer-coarse:items-center">\s*Evidencia rechazada\s*<span class="sr-only">, sin leer<\/span>\s*<\/a>/', $html);
+        $this->assertSame(2, substr_count($html, ', sin leer</span>'));
+        $this->assertStringNotContainsString(' , sin leer', $html);
+        $this->assertMatchesRegularExpression('/<a href="\/evidencias\/33"\s+class="font-semibold text-ink no-underline transition hover:text-brand-ink pointer-coarse:flex pointer-coarse:min-h-11 pointer-coarse:items-center">\s*<span aria-hidden="true">Evidencia rechazada<\/span>\s*<span class="sr-only">Evidencia rechazada, sin leer<\/span>\s*<\/a>/', $html, 'One hidden text names the unread title');
         $this->assertSame(2, substr_count($html, 'pointer-coarse:min-h-11'), 'Only the linked titles grow to 44 px');
         $this->assertMatchesRegularExpression('/<a href="\/evidencias\/31"\s+class="[^"]*">\s*Evidencia aceptada\s*<\/a>/', $html);
         $this->assertStringContainsString('</ol>', $html);
@@ -57,7 +58,7 @@ class NotificationListTest extends ComponentTestCase
         $html = $this->list();
 
         $this->assertSame(2, substr_count($html, '<a href='));
-        $this->assertMatchesRegularExpression('/<span class="font-semibold text-ink">\s*Plazo de evidencias\s*<span class="sr-only">, sin leer<\/span>\s*<\/span>/', $html);
+        $this->assertMatchesRegularExpression('/<span class="font-semibold text-ink">\s*<span aria-hidden="true">Plazo de evidencias<\/span>\s*<span class="sr-only">Plazo de evidencias, sin leer<\/span>\s*<\/span>/', $html);
         $this->assertSame(2, substr_count($html, '<p class="text-sm text-ink-muted">'));
         $this->assertStringContainsString('<p class="text-sm text-ink-muted">Montaje del photocall</p>', $html);
         $this->assertSame(3, substr_count($html, '<time'));
@@ -120,6 +121,7 @@ class NotificationListTest extends ComponentTestCase
 
         $this->assertStringContainsString('aria-label="&lt;u&gt;Avisos&lt;/u&gt;"', $html);
         $this->assertStringContainsString('&lt;b&gt;Aviso&lt;/b&gt;', $html);
+        $this->assertStringContainsString('<span class="sr-only">&lt;b&gt;Nuevo&lt;/b&gt;, sin leer</span>', $this->render('<x-ui.notification-list :items="[[\'title\' => $title, \'unread\' => true]]" />', ['title' => '<b>Nuevo</b>']));
         $this->assertStringContainsString('&lt;i&gt;Detalle&lt;/i&gt;', $html);
         $this->assertStringContainsString('href="/a?b=1&amp;c=&lt;2&gt;"', $html);
         $this->assertStringNotContainsString('<b>', $html);

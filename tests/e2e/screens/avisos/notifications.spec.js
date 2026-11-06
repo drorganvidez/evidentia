@@ -34,8 +34,7 @@ test.describe('Avisos', () => {
         const list = page.getByRole('list', { name: 'Lista de avisos' });
         // the seeds of the activity and of the notices each leave notices about the same evidences
         await expect(
-            // the list leaves a space before the hidden comma
-            list.getByRole('link', { name: /^Evidencia rechazada\s?, sin leer$/ }).first(),
+            list.getByRole('link', { name: 'Evidencia rechazada, sin leer', exact: true }).first(),
         ).toBeVisible();
         await expect(
             list.getByText('Recogida de material · Faltan las fotos').first(),

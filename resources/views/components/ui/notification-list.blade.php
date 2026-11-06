@@ -1,7 +1,9 @@
 {{--
     Notices of the user, the unread ones highlighted: a dot by tone, the title (a link with href, 44 px tall under a
     coarse pointer), a text and the time.
-    The unread state is also a hidden text, so the colour never stands alone.
+    The unread state is also a hidden text, so the colour never stands alone. An unread title is named by one hidden
+    text («Evidencia rechazada, sin leer») and its visible copy is hidden from assistive technology: a hidden text
+    beside the visible one would be a box of its own, and Chrome would read a space before its comma.
     <x-ui.notification-list :items="[
         ['title' => 'Evidencia rechazada', 'text' => 'Montaje del photocall', 'at' => $at, 'href' => '/evidencias/33', 'unread' => true, 'tone' => 'rejected'],
     ]" />
@@ -29,16 +31,20 @@
                     @if ($href !== null)
                         <a href="{{ $href }}"
                             class="font-semibold text-ink no-underline transition hover:text-brand-ink pointer-coarse:flex pointer-coarse:min-h-11 pointer-coarse:items-center">
-                            {{ $item['title'] ?? '' }}
                             @if ($unread)
-                                <span class="sr-only">, sin leer</span>
+                                <span aria-hidden="true">{{ $item['title'] ?? '' }}</span>
+                                <span class="sr-only">{{ $item['title'] ?? '' }}, sin leer</span>
+                            @else
+                                {{ $item['title'] ?? '' }}
                             @endif
                         </a>
                     @else
                         <span class="font-semibold text-ink">
-                            {{ $item['title'] ?? '' }}
                             @if ($unread)
-                                <span class="sr-only">, sin leer</span>
+                                <span aria-hidden="true">{{ $item['title'] ?? '' }}</span>
+                                <span class="sr-only">{{ $item['title'] ?? '' }}, sin leer</span>
+                            @else
+                                {{ $item['title'] ?? '' }}
                             @endif
                         </span>
                     @endif
