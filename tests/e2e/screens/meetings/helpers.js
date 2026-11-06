@@ -56,6 +56,18 @@ export async function pickerReady(page) {
     await expect(page.locator('select[name="users[]"]')).toHaveAttribute('aria-hidden', 'true');
 }
 
+/** Chooses the first default list in the preset select of the picker and loads it in place of the selection. */
+export async function loadFirstPreset(page) {
+    await page.getByRole('combobox', { name: 'Lista predeterminada' }).click();
+    await page
+        .getByRole('listbox', { name: 'Lista predeterminada' })
+        .getByRole('option')
+        .first()
+        .click();
+    await page.getByRole('button', { name: 'Cargar' }).click();
+    await page.getByRole('button', { name: 'Sustituir' }).click();
+}
+
 /** Waits until Alpine has bound every component of the page, so typing never lands before its listeners. */
 export async function alpineReady(page) {
     await page.waitForFunction(() =>

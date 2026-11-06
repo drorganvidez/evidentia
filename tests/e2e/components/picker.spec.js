@@ -1,4 +1,4 @@
-import { expect, test } from '../fixtures/ui.js';
+import { choose, expect, test } from '../fixtures/ui.js';
 
 // The status region of the attendees picker, not the first one the section happens to have
 const status = (section) => section.locator('#attendees-form [x-data="picker"] > p[role="status"]');
@@ -81,7 +81,10 @@ test.describe('Selector de personas', () => {
 
         await expect(load).toBeDisabled();
 
-        await section.getByLabel('Lista predeterminada').selectOption('0');
+        await choose(
+            section.getByRole('combobox', { name: 'Lista predeterminada' }),
+            'Comité de Programa (12)',
+        );
         await expect(load).toBeEnabled();
         // A click from script skips the input pipeline that lets Chromium paint before the timers, so the
         // focus has to wait for the frame that shows the confirmation, as in Firefox and Safari

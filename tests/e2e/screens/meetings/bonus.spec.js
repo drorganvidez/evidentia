@@ -4,6 +4,7 @@ import {
     auditThemes,
     confirmRemoval,
     expectNotice,
+    loadFirstPreset,
     mutatesData,
     pickerReady,
     unique,
@@ -46,9 +47,7 @@ test.describe('Bonos', () => {
             await page.getByLabel('Motivo').fill(reason);
             await page.getByLabel('Horas').fill('1.5');
             await pickerReady(page);
-            await page.getByLabel('Lista predeterminada').selectOption({ index: 1 });
-            await page.getByRole('button', { name: 'Cargar' }).click();
-            await page.getByRole('button', { name: 'Sustituir' }).click();
+            await loadFirstPreset(page);
             await page.getByRole('button', { name: 'Guardar bono' }).click();
 
             await expectNotice(page, 'Bono de horas creado con éxito.');

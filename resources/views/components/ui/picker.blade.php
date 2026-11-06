@@ -64,11 +64,14 @@
         ];
     }
     $lists = [];
+    $presetOptions = [];
     foreach ($presets as $preset) {
-        $lists[] = [
-            'label' => (string) ($preset['label'] ?? ''),
-            'values' => array_map('strval', array_values((array) ($preset['values'] ?? []))),
+        $values = array_map('strval', array_values((array) ($preset['values'] ?? [])));
+        $presetOptions[] = [
+            'value' => (string) count($lists),
+            'label' => (string) ($preset['label'] ?? '') . ' (' . count($values) . ')',
         ];
+        $lists[] = ['label' => (string) ($preset['label'] ?? ''), 'values' => $values];
     }
     $describedBy = implode(
         ' ',
@@ -140,16 +143,12 @@
         </div>
     </div>
     @if ($lists !== [])
-        <div class="flex flex-wrap items-center gap-2 text-sm">
-            <label for="{{ $id }}-preset" class="text-ink-muted">Lista predeterminada</label>
-            <select id="{{ $id }}-preset" x-model="presetIndex"
-                class="h-9 min-w-0 rounded-md border border-field-edge bg-field px-3 text-control text-ink">
-                <option value="">Elige una lista</option>
-                @foreach ($lists as $index => $list)
-                    <option value="{{ $index }}">{{ $list['label'] }} ({{ count($list['values']) }})</option>
-                @endforeach
-            </select>
-            <x-ui.button size="sm" x-on:click="askPreset" x-bind:disabled="presetIndex === ''"
+        {{-- The preset only drives the page: its select has no name and posts nothing --}}
+        <div class="flex flex-wrap items-end gap-2">
+            <x-ui.field :name="$base . '_preset'" :id="$id . '-preset'" label="Lista predeterminada" type="select"
+                :options="$presetOptions" placeholder="Elige una lista" :submit="false" x-model="presetIndex"
+                class="min-w-0 flex-1 sm:max-w-80" />
+            <x-ui.button x-on:click="askPreset" x-bind:disabled="presetIndex === ''"
                 disabled>Cargar</x-ui.button>
         </div>
         <div x-show="confirmingPreset" x-cloak role="group" aria-label="Confirmar la carga"

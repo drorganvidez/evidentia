@@ -122,10 +122,14 @@ class PickerTest extends ComponentTestCase
         ]);
 
         $this->assertStringContainsString('data-presets="[{&quot;label&quot;:&quot;Comité de &lt;Programa&gt;&quot;,&quot;values&quot;:[&quot;1&quot;,&quot;2&quot;]},{&quot;label&quot;:&quot;Secretaría&quot;,&quot;values&quot;:[&quot;3&quot;]}]"', $html);
-        $this->assertStringContainsString('<label for="field-users-preset" class="text-ink-muted">Lista predeterminada</label>', $html);
-        $this->assertStringContainsString('<select id="field-users-preset" x-model="presetIndex"', $html);
-        $this->assertStringContainsString('<option value="0">Comité de &lt;Programa&gt; (2)</option>', $html);
-        $this->assertStringContainsString('<option value="1">Secretaría (1)</option>', $html);
+        // The preset is a select field of its own whose select posts nothing
+        $this->assertMatchesRegularExpression('/<label for="field-users-preset" id="field-users-preset-label"[^>]*>Lista predeterminada/', $html);
+        $this->assertMatchesRegularExpression('/<select id="field-users-preset"\s+class="[^"]*"\s+x-model="presetIndex"/', $html);
+        $this->assertDoesNotMatchRegularExpression('/<select id="field-users-preset"[^>]*\sname=/', $html);
+        $this->assertStringContainsString('id="field-users-preset-combobox"', $html);
+        $this->assertMatchesRegularExpression('/<option value="" disabled data-placeholder\s+selected\s*>Elige una lista\s*<\/option>/', $html);
+        $this->assertMatchesRegularExpression('/<option value="0"\s*>\s*Comité de &lt;Programa&gt; \(2\)<\/option>/', $html);
+        $this->assertMatchesRegularExpression('/<option value="1"\s*>\s*Secretaría \(1\)<\/option>/', $html);
         $this->assertStringContainsString('x-on:click="askPreset"', $html);
         $this->assertStringContainsString('x-bind:disabled="presetIndex === \'\'"', $html);
         $this->assertStringContainsString('role="group" aria-label="Confirmar la carga"', $html);
