@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Screens\PublicAndStudent;
 
+use App\Models\Evidence;
 use App\Models\Token;
 use Illuminate\Support\Str;
 
@@ -20,6 +21,23 @@ class AuthScreensTest extends ScreenTestCase
         $this->assertStringContainsString('aria-label="1 evidencia aceptada"', $html);
         $this->assertStringContainsString('aria-label="5 estudiantes"', $html);
         $this->assertNoAutofocus($html);
+
+        // The scene of the platform goes under the figures, hidden, and the margins stay bare
+        $this->assertSame(1, substr_count($html, 'aria-hidden="true" data-scene="hero"'));
+        $this->assertStringNotContainsString('data-scene="sides"', $html);
+        $this->assertLessThan(strpos($html, 'data-scene="hero"'), strpos($html, 'aria-label="Cifras de la edición"'));
+        $this->assertLessThan(strpos($html, 'id="login-form"'), strpos($html, 'data-scene="hero"'), 'Before the form');
+        $this->assertStringContainsString('Taller de accesibilidad web', $html);
+    }
+
+    public function test_the_access_shows_the_scene_without_figures_on_an_empty_edition(): void
+    {
+        Evidence::query()->update(['status' => 'PENDING']);
+
+        $html = $this->assertPublicScreen($this->get(route('login')));
+
+        $this->assertStringNotContainsString('Cifras de la edición', $html);
+        $this->assertStringContainsString('data-scene="hero"', $html);
     }
 
     public function test_a_failed_login_says_so_in_spanish(): void

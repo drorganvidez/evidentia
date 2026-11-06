@@ -134,7 +134,7 @@ Lo de la columna «Antes» salió del repositorio en la v4.0.1, junto con AdminL
 | Antes | Ahora |
 | --- | --- |
 | `layouts/app`, menús y navbars, `x-li`, `x-lilogo`, `x-lilogout` | `x-layout.app` con `nav`, `breadcrumbs`, `search`, `bell`, `theme-switch`, `menu`, `footer`, `deadline`, `notices` |
-| `home/main`, `auth/*`, `sign/*`, `block`, errores | `x-layout.public` + `card` + `form` + `field` + `choice switch` + `button block` + `count-chip` + `dl` + `alert` + `empty` |
+| `home/main`, `auth/*`, `sign/*`, `block`, errores | `x-layout.public` + `card` + `form` + `field` + `choice switch` + `button block` + `count-chip` + `scene` + `dl` + `alert` + `empty` |
 | DataTables y tablas secundarias | `table` (+ `tabs`, `pagination`, `time`, `hours`, `badge`, `button icon-only`) |
 | `x-evidencestatus`, `x-attendeestatus`, `x-eventstatus`, `x-evidencecommittee`, `x-meetingcommittee`, `x-roles` | `evidence-status`, `attendee-status`, `event-status`, `committee-chip`, `badge variant="chip"` |
 | `x-input`, selects y selectpicker de una opción, textareas, pares horas y minutos | `field` (el select con buscador; fieldset y legend compuestos en la vista) |

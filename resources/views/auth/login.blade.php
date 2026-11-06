@@ -1,6 +1,7 @@
 {{--
-    Access page: the claim and the figures of the edition beside the login form. The field keeps the name email of the
-    login of Laravel; a failed login shows one message of its own instead of the untranslated one of the framework.
+    Access page: the claim, the figures of the edition and the scene of the platform beside the login form. The field
+    keeps the name email of the login of Laravel; a failed login shows one message of its own instead of the
+    untranslated one of the framework.
 --}}
 @php
     $failed = $errors->has('email') || $errors->has('password');
@@ -27,6 +28,7 @@
                 </li>
             </ul>
         @endif
+        <x-ui.scene class="lg:mt-2" />
     </x-slot:aside>
 
     <x-ui.card title="Iniciar sesión" :level="2">

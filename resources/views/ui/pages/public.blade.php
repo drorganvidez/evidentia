@@ -1,7 +1,7 @@
 {{--
-    The public layout in its three uses: the access page (wide, with the claim and the figures of the edition), the
-    public signature of a meeting and the not-found pattern. One page so the catalogue shows them together; the real
-    screens render one each. Served at /_ui/public with the light entry (public.js).
+    The public layout in its three uses: the access page (wide, with the claim, the figures of the edition and the scene of
+    the platform), the public signature of a meeting and the not-found pattern. One page so the catalogue shows them
+    together; the real screens render one each. Served at /_ui/public with the light entry (public.js).
 --}}
 @php
     $here = route('ui.page', 'public');
@@ -26,6 +26,7 @@
                     :delay="160" />
             </li>
         </ul>
+        <x-ui.scene class="lg:mt-2" />
     </x-slot:aside>
 
     <x-ui.card title="Iniciar sesión" :level="2">
