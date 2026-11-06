@@ -147,6 +147,39 @@ test.describe('Menús', () => {
         await expect(menu).toBeVisible();
     });
 
+    test('con puntero grueso los ítems miden 44 px de alto', async ({ page }, testInfo) => {
+        test.skip(
+            testInfo.project.name !== 'mobile',
+            'Solo el proyecto móvil tiene puntero grueso',
+        );
+
+        expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(true);
+
+        for (const id of ['demo-actions', 'demo-user', 'demo-sort']) {
+            await page.locator(`button[aria-controls="${id}"]`).click();
+
+            const items = page
+                .locator(`#${id}`)
+                .locator('[role="menuitem"], [role="menuitemcheckbox"]');
+            const heights = await items.evaluateAll((all) =>
+                all.map((item) => ({
+                    text: item.textContent.trim(),
+                    h: item.getBoundingClientRect().height,
+                    w: item.getBoundingClientRect().width,
+                })),
+            );
+
+            expect(heights.length).toBeGreaterThan(0);
+
+            for (const item of heights) {
+                expect(item.h, `Alto de «${item.text}»`).toBeGreaterThanOrEqual(44);
+                expect(item.w, `Ancho de «${item.text}»`).toBeGreaterThanOrEqual(44);
+            }
+
+            await page.keyboard.press('Escape');
+        }
+    });
+
     test('un clic en la cabecera del menú de usuario no lo cierra', async ({ page }) => {
         const trigger = page.locator('button[aria-controls="demo-user"]');
         const menu = page.locator('#demo-user');

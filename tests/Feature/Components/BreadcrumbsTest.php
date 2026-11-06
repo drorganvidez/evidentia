@@ -41,7 +41,7 @@ class BreadcrumbsTest extends ComponentTestCase
         $this->assertSame(1, substr_count($html, '<li class="hidden min-w-0 items-center gap-2 lg:inline-flex">'));
         $this->assertSame(1, substr_count($html, '<li class="hidden min-w-0 items-center gap-2 md:inline-flex">'));
         $this->assertLessThan(strpos($html, 'md:inline-flex'), strpos($html, 'lg:inline-flex'), 'The parent is the last link');
-        $this->assertMatchesRegularExpression('#<a href="/"\s+class="inline-flex min-h-6 min-w-0 items-center text-ink-muted no-underline transition hover:text-ink"><span\s+class="truncate">Inicio</span></a>#', $html);
+        $this->assertMatchesRegularExpression('#<a href="/"\s+class="inline-flex min-h-6 min-w-0 items-center text-ink-muted no-underline transition hover:text-ink pointer-coarse:min-h-11 pointer-coarse:min-w-11"><span\s+class="truncate">Inicio</span></a>#', $html);
         $this->assertSame(2, substr_count($html, 'class="size-4 shrink-0 opacity-60"'), 'The separators never shrink');
         $this->assertSame(2, substr_count($html, '<svg'));
         $this->assertSame(2, substr_count($html, 'aria-hidden="true"'));

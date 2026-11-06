@@ -261,6 +261,42 @@ test.describe('Shell en su propia página', () => {
         expect(room.left, 'Izquierda').toBeGreaterThanOrEqual(room.reach);
     });
 
+    test('con puntero grueso los enlaces de las migas miden 44 px', async ({ page }, testInfo) => {
+        test.skip(
+            testInfo.project.name !== 'mobile',
+            'Solo el proyecto móvil tiene puntero grueso',
+        );
+
+        expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(true);
+
+        // A tablet in both orientations: the parent alone below lg, every previous item from lg
+        for (const width of [820, 1180]) {
+            await page.setViewportSize({ width, height: 1000 });
+            await page.goto('/_ui/detail');
+
+            const links = page.locator('nav[aria-label="Migas de pan"] a');
+
+            await expect(links.first()).toBeAttached();
+
+            const boxes = await links.evaluateAll((all) =>
+                all
+                    .filter((link) => link.getClientRects().length > 0)
+                    .map((link) => {
+                        const { width: w, height: h } = link.getBoundingClientRect();
+
+                        return { text: link.textContent.trim(), w, h };
+                    }),
+            );
+
+            expect(boxes.length, `Migas visibles a ${width} px`).toBeGreaterThan(0);
+
+            for (const box of boxes) {
+                expect(box.h, `Alto de «${box.text}» a ${width} px`).toBeGreaterThanOrEqual(44);
+                expect(box.w, `Ancho de «${box.text}» a ${width} px`).toBeGreaterThanOrEqual(44);
+            }
+        }
+    });
+
     test('el menú de usuario abre desde el avatar con el nombre y Salir', async ({
         page,
     }, testInfo) => {

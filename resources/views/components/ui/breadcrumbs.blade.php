@@ -4,7 +4,7 @@
     Every item shrinks with an ellipsis. The current one, which repeats the h1, takes the room the links leave (flex-1)
     and never drops below a readable minimum; only then the links shrink. Below lg only the parent comes before it.
     The list clips its overflow, so it pads its box (and takes it back with a negative margin) for the focus ring.
-    items may be an array or a collection (of arrays or Arrayable items).
+    items may be an array or a collection (of arrays or Arrayable items). Under a coarse pointer the links measure 44 px.
 --}}
 @props(['items' => [], 'label' => 'Migas de pan'])
 @php
@@ -28,7 +28,7 @@
                     $index === $last - 1 ? 'md:inline-flex' : 'lg:inline-flex',
                 ])>
                     <a href="{{ $item['href'] }}"
-                        class="inline-flex min-h-6 min-w-0 items-center text-ink-muted no-underline transition hover:text-ink"><span
+                        class="inline-flex min-h-6 min-w-0 items-center text-ink-muted no-underline transition hover:text-ink pointer-coarse:min-h-11 pointer-coarse:min-w-11"><span
                             class="truncate">{{ $item['label'] }}</span></a>
                     <x-lucide-chevron-right class="size-4 shrink-0 opacity-60" aria-hidden="true" />
                 </li>
