@@ -28,7 +28,8 @@ class CommitteeManagementTest extends TestCase
         $this->post(route($prefix.'.committee.management.new'), ['name' => 'Logística'])
             ->assertSessionHasErrors('name');
 
-        $this->assertSame(['Logística'], Committee::pluck('name')->all());
+        // besides the committee of the presidency that the migrations create
+        $this->assertSame(['Logística'], Committee::where('presidency', false)->pluck('name')->all());
     }
 
     #[DataProvider('managers')]
@@ -59,7 +60,7 @@ class CommitteeManagementTest extends TestCase
             'name_'.$program->id => 'Programa',
         ])->assertSessionHas('error');
 
-        $this->assertSame(['Logística', 'Programa'], Committee::orderBy('id')->pluck('name')->all());
+        $this->assertSame(['Logística', 'Programa'], Committee::where('presidency', false)->orderBy('id')->pluck('name')->all());
     }
 
     private function signInAs(string $role): User

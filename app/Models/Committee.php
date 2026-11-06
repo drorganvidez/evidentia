@@ -11,6 +11,17 @@ class Committee extends Model
 
     protected $fillable = ['icon', 'name'];
 
+    protected function casts(): array
+    {
+        return ['presidency' => 'boolean'];
+    }
+
+    /** The committee of the presidency (App\Services\ReviewQueue), the first one marked if there were more. */
+    public static function presidency(): ?self
+    {
+        return self::query()->where('presidency', true)->orderBy('id')->first();
+    }
+
     // Relaciones
 
     public function evidences()
@@ -64,10 +75,11 @@ class Committee extends Model
         return $this->evidences()->where('last', true)->where('status', 'REJECTED')->orderByDesc('updated_at');
     }
 
-    // Lógica de eliminación
+    // Lógica de eliminación: el comité de presidencia nunca se borra, sus presidentes revisan en él
     public function can_be_removed(): bool
     {
         return
+            ! $this->presidency &&
             $this->coordinators->isEmpty() &&
             $this->secretaries->isEmpty() &&
             $this->evidences->isEmpty() &&

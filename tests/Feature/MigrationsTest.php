@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
@@ -38,11 +39,47 @@ class MigrationsTest extends TestCase
             $expected['evidences']['indexes'],
             fn (array $index): bool => $index['name'] !== 'evidences_review_queue_index',
         ));
+        $expected['committees']['columns'] = array_values(array_filter(
+            $expected['committees']['columns'],
+            fn (array $column): bool => $column['name'] !== 'presidency',
+        ));
+        $this->assertFalse(Schema::hasColumn('committees', 'presidency'));
         $this->assertEquals($expected, $this->schema());
 
         $this->assertSame(0, Artisan::call('migrate'));
 
         $this->assertEquals($before, $this->schema());
+        // the committee of the presidency outlives the rollback and is marked again, never twice
+        $this->assertSame(1, DB::table('committees')->where('name', 'Presidencia')->count());
+        $this->assertSame(1, DB::table('committees')->where('presidency', true)->count());
+    }
+
+    public function test_a_fresh_course_gets_the_committee_of_the_presidency(): void
+    {
+        $presidency = DB::table('committees')->where('presidency', true)->sole();
+
+        $this->assertSame('Presidencia', $presidency->name);
+        $this->assertSame('crown', $presidency->icon);
+    }
+
+    public function test_the_committee_called_presidencia_of_a_course_is_marked_and_nothing_else_changes(): void
+    {
+        $migration = require database_path('migrations/2026_11_06_000007_add_presidency_to_committees_table.php');
+        $migration->down();
+        DB::table('committees')->delete();
+        DB::table('committees')->insert([
+            ['id' => 1, 'name' => 'Logística', 'icon' => 'warehouse', 'created_at' => '2026-01-01 10:00:00', 'updated_at' => '2026-01-01 10:00:00'],
+            ['id' => 2, 'name' => 'Presidencia', 'icon' => '<i class="fas fa-user-tie"></i>', 'created_at' => '2026-01-01 10:00:00', 'updated_at' => '2026-01-01 10:00:00'],
+        ]);
+        $before = DB::table('committees')->orderBy('id')->get()->map(fn (object $row): array => (array) $row)->all();
+
+        $migration->up();
+        $migration->up();
+
+        $after = DB::table('committees')->orderBy('id')->get()->map(fn (object $row): array => (array) $row)->all();
+        $this->assertCount(2, $after);
+        $this->assertSame([false, true], array_map(fn (array $row): bool => (bool) $row['presidency'], $after));
+        $this->assertEquals($before, array_map(fn (array $row): array => array_diff_key($row, ['presidency' => true]), $after));
     }
 
     /**

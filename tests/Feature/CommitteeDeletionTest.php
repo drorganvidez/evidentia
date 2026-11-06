@@ -38,6 +38,19 @@ class CommitteeDeletionTest extends TestCase
         $this->assertModelExists($other);
     }
 
+    #[DataProvider('roles')]
+    public function test_the_committee_of_the_presidency_is_never_removed(string $role, string $prefix): void
+    {
+        $this->signInWithRole($role);
+        $presidency = Committee::presidency();
+
+        $this->post(route($prefix.'.committee.management.remove'), ['_id' => $presidency->id])
+            ->assertRedirect(route($prefix.'.committee.list'))
+            ->assertSessionHas('error', 'El comité no ha podido ser eliminado.');
+
+        $this->assertModelExists($presidency);
+    }
+
     public static function occupiedCommittees(): array
     {
         $cases = [];
