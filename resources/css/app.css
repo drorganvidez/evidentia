@@ -557,13 +557,19 @@
     ::details-content {
         height: 0;
         overflow: clip;
-        transition:
-            height 180ms var(--ease-aurora),
-            content-visibility 180ms allow-discrete;
     }
 
     details[open]::details-content {
         height: auto;
+    }
+
+    /* The reduced motion rule above does not reach this pseudo-element, so the opening slides only on request */
+    @media (prefers-reduced-motion: no-preference) {
+        ::details-content {
+            transition:
+                height 180ms var(--ease-aurora),
+                content-visibility 180ms allow-discrete;
+        }
     }
 
     /* A native modal dialog locks the document scroll */

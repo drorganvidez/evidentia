@@ -68,6 +68,26 @@ test.describe('Desplegables', () => {
         }
     });
 
+    test('la apertura se anima salvo con movimiento reducido', async ({ page, ui }) => {
+        const details = ui.section('disclosure').locator('details').first();
+        const longest = async () =>
+            Math.max(
+                ...(
+                    await details.evaluate(
+                        (element) =>
+                            getComputedStyle(element, '::details-content').transitionDuration,
+                    )
+                )
+                    .split(',')
+                    .map((duration) => parseFloat(duration)),
+            );
+
+        expect(await longest(), 'Con movimiento').toBeGreaterThan(0);
+
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        expect(await longest(), 'Con movimiento reducido').toBeLessThanOrEqual(0.001);
+    });
+
     test('la sección cumple WCAG 2.2 AA', async ({ ui }) => {
         expect(await ui.axe('#ui-disclosure')).toEqual([]);
     });
