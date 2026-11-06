@@ -24,7 +24,12 @@ Hecha (commits `b6aa479..5bc7b89`).
 
 ## Fase 3. Biblioteca de componentes
 
-En curso. Plan diseñado con tres inventarios (vistas actuales, mockups, buenas prácticas), tres propuestas, dos jueces y una síntesis; se implementa por lotes con tests de render y de extremo a extremo y se enseña en `/_ui`.
+Hecha la implementación (pendiente la revisión adversaria de cierre). Plan diseñado con tres inventarios (vistas actuales, mockups, buenas prácticas), tres propuestas, dos jueces y una síntesis; implementado en seis lotes (fundamentos y primitivas; shell, navegación y avisos; datos y listados; formularios; detalle, editores e impresión; integración), los cuatro intermedios en paralelo sobre ramas propias e integrados en `main` con sus commits atómicos.
+
+- 57 componentes Blade en `resources/views/components/ui`, `layout` y `pdf`, documentados en `COMPONENTS.md` y expuestos en `/_ui` (49 secciones) con cuatro páginas compuestas, `/_ui/shell`, `/_ui/public`, `/_ui/detail` y `/_ui/pdf`.
+- Dos layouts, `x-layout.app` (barra lateral, raíl en tableta, topbar, cajón y barra inferior en el teléfono, avisos, pie con versión) y `x-layout.public` (acceso, firma, bloqueo y errores con la entrada ligera `public.js`). El propio catálogo se renderiza con el shell.
+- Comportamiento en módulos Alpine (build CSP) descubiertos por nombre de fichero, con una sonda que verifica la gramática permitida; sin estilos en línea ni manejadores en atributos en ninguna vista nueva.
+- Tests de render por componente (PHPUnit, 642 tests en total con los de la aplicación), `CspSafeViewsTest`, `DesignSystemPageTest` (catálogo, páginas, ids únicos) y Playwright en escritorio y móvil con la fixture que falla ante cualquier error de consola, axe (WCAG 2.2 AA) en claro y oscuro sobre todo el catálogo y las páginas, y specs de interacción (diálogos, menús, avisos, plazos, tablas, formularios, subida, selector de personas e iconos, editores, acceso y detalle).
 
 ## Fases siguientes
 
