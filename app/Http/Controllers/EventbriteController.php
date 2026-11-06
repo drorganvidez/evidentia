@@ -16,6 +16,7 @@ use App\Services\Activity\SubjectInfo;
 use App\Services\SelfReview;
 use App\Support\Changes;
 use App\Support\ListPage;
+use App\Support\ListSort;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -325,10 +326,19 @@ class EventbriteController extends Controller
 
     public function event_list(Request $request)
     {
-        // Show all events to the register coordinator (including hidden ones), newest first, in pages
-        $events = $this->searchList(Event::query(), $request, ['name'])->orderByDesc('start_datetime')->orderByDesc('id');
+        // every event for the register coordinator, hidden ones too, in pages; the newest first by default
+        $sort = ListSort::from($request, [
+            'name' => 'name',
+            'start_datetime' => ListSort::desc('start_datetime'),
+            'hours' => 'hours',
+            'capacity' => 'capacity',
+            'status' => ListSort::rank('status', Event::STATUS_ORDER),
+        ], 'start_datetime');
+        $events = $this->searchList(Event::query(), $request, ['name']);
 
-        return view('eventbrite.event_list', ['events' => $this->paginateList($events, $request), 'term' => ListPage::term($request)]);
+        return view('eventbrite.event_list', [
+            'events' => $this->paginateList($sort->apply($events), $request), 'term' => ListPage::term($request), 'sort' => $sort,
+        ]);
     }
 
     /**
@@ -472,13 +482,19 @@ class EventbriteController extends Controller
 
     public function attendee_list(Request $request)
     {
-        // newest event first, in pages, searched on the server by person or event
+        // the attendances of the course in pages, searched on the server by person or event; the newest event first by default
+        $sort = ListSort::from($request, [
+            'user' => ['user.surname', 'user.name'],
+            'event' => 'event.name',
+            'start_datetime' => ListSort::desc('event.start_datetime'),
+            'status' => ListSort::rank('status', Attendee::STATUS_ORDER),
+        ], 'start_datetime');
         $attendees = $this->searchList(Attendee::query(), $request, ['user.name', 'user.surname', 'user.username', 'event.name'])
-            ->with(['user', 'event'])
-            ->orderByDesc(Event::select('start_datetime')->whereColumn('events.id', 'attendees.event_id'))
-            ->orderByDesc('attendees.id');
+            ->with(['user', 'event']);
 
-        return view('eventbrite.attendee_list', ['attendees' => $this->paginateList($attendees, $request), 'term' => ListPage::term($request)]);
+        return view('eventbrite.attendee_list', [
+            'attendees' => $this->paginateList($sort->apply($attendees), $request), 'term' => ListPage::term($request), 'sort' => $sort,
+        ]);
     }
 
     public function attendee_export()

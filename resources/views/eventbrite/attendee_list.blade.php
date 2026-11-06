@@ -3,13 +3,13 @@
     $closesAt = \Config::attendee_timestamp();
     $open = !\Carbon\Carbon::now()->gt($closesAt);
     $text = fn($html) => trim(html_entity_decode(strip_tags(\Html::clean((string) $html)), ENT_QUOTES | ENT_HTML5));
-    $columns = [
+    $columns = $sort->columns([
         ['label' => 'Estudiante', 'key' => 'user'],
         ['label' => 'Evento', 'key' => 'event'],
         ['label' => 'Fecha', 'key' => 'start_datetime'],
         ['label' => 'Asistencia', 'key' => 'status'],
         ['label' => 'Acciones', 'srOnly' => true],
-    ];
+    ]);
 @endphp
 <x-layout.app title="Asistencias" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Asistencias']]">
     <x-ui.page-header title="Asistencias">

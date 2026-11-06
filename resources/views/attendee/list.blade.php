@@ -3,14 +3,14 @@
     to the register coordination about any of them.
 --}}
 @php
-    $columns = [
+    $columns = $sort->columns([
         ['label' => 'Evento', 'key' => 'event'],
         ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
         ['label' => 'Empieza', 'key' => 'start'],
         ['label' => 'Termina', 'key' => 'end', 'hide' => true],
         ['label' => 'Asistencia', 'key' => 'status'],
         ['label' => 'Acciones', 'srOnly' => true],
-    ];
+    ]);
     $attended = $attendees->where('status', 'Checked In');
 @endphp
 <x-layout.app title="Mis asistencias" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Mis asistencias']]">

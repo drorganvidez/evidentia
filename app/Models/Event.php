@@ -8,6 +8,9 @@ class Event extends Model
 {
     protected $table = 'events';
 
+    /** The statuses of Eventbrite along the life of an event, the order of the lists */
+    public const STATUS_ORDER = ['draft', 'live', 'started', 'ended', 'completed', 'canceled'];
+
     protected $fillable = [
         'name',
         'description',

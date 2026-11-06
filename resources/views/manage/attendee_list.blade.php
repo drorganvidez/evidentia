@@ -38,16 +38,17 @@
         'no-asistidas' => 'No hay ausencias',
         default => 'No hay asistencias',
     };
-    $columns = [
+    $columns = $sort->columns([
         ['label' => 'Persona', 'key' => 'user'],
         ['label' => 'Evento', 'key' => 'event'],
         ['label' => 'Fecha', 'key' => 'start_datetime'],
         ['label' => 'Asistencia', 'key' => 'status'],
         ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
-    ];
+    ]);
+    // The events are few and all on the page: they order in the browser, the newest first
     $eventColumns = [
         ['label' => 'Evento', 'key' => 'name'],
-        ['label' => 'Fecha', 'key' => 'start_datetime'],
+        ['label' => 'Fecha', 'key' => 'start_datetime', 'sorted' => 'desc'],
         ['label' => 'Inscritos', 'key' => 'attendees', 'align' => 'end'],
         ['label' => 'Asistentes', 'key' => 'attended', 'align' => 'end'],
         ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
@@ -107,7 +108,7 @@
         @endif
     </x-ui.table>
 
-    <x-ui.table id="events" caption="Eventos" show-caption :columns="$eventColumns" :filterable="$events->isNotEmpty()"
+    <x-ui.table id="events" caption="Eventos" show-caption :columns="$eventColumns" sortable :filterable="$events->isNotEmpty()"
         count-label="eventos" filter-placeholder="Filtrar eventos">
         @if ($events->isEmpty())
             <x-slot:empty>

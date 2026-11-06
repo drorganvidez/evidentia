@@ -208,20 +208,28 @@ class ManagementController extends Controller
         $counts = collect(self::ATTENDEE_STATES)->map(fn (array $statuses): int => (int) $byStatus->only($statuses)->sum())
             ->put('todas', (int) $byStatus->sum());
 
+        // orden en la URL; por defecto, el evento más reciente primero
+        $sort = ListSort::from($request, [
+            'user' => ['user.surname', 'user.name'],
+            'event' => 'event.name',
+            'start_datetime' => ListSort::desc('event.start_datetime'),
+            'status' => ListSort::rank('status', Attendee::STATUS_ORDER),
+            'hours' => ListSort::using(
+                fn ($query, string $dir) => $query->orderByRaw('case when attendees.status = ? then coalesce((select events.hours from events where events.id = attendees.event_id), 0) else 0 end '.$dir, [Attendee::ATTENDED]),
+                fn (Attendee $attendee) => $attendee->computedHours(),
+            ),
+        ], 'start_datetime');
+
         $filtered = $base()->when($state !== null, fn ($query) => $query->whereIn('attendees.status', self::ATTENDEE_STATES[$state]));
         $hours = (float) $filtered->clone()->where('attendees.status', Attendee::ATTENDED)
             ->sum(DB::raw('(select hours from events where events.id = attendees.event_id)'));
-        $attendees = $this->paginateList(
-            $filtered->with(['user', 'event'])
-                ->orderByDesc(Event::select('start_datetime')->whereColumn('events.id', 'attendees.event_id'))
-                ->orderByDesc('attendees.id'),
-            $request,
-        );
+        $attendees = $this->paginateList($sort->apply($filtered->with(['user', 'event'])), $request);
 
         return view('manage.attendee_list', [
             'attendees' => $attendees,
             'hours' => $hours,
             'term' => ListPage::term($request),
+            'sort' => $sort,
             'events' => $events,
             'event' => $event,
             'state' => $state,

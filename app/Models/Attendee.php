@@ -9,6 +9,9 @@ class Attendee extends Model
     /** The only status whose event counts towards the hours of the person (User::attendees_hours) */
     public const ATTENDED = 'Checked In';
 
+    /** The statuses in the order of the lists: pending, attended, not attended, canceled */
+    public const STATUS_ORDER = ['Attending', 'Guests Attending', 'Checked In', 'Guests Attended', 'Not Attending', 'Not Attending (Refunded/Canceled)'];
+
     protected $table = 'attendees';
 
     protected $fillable = [

@@ -3,14 +3,14 @@
     $closesAt = \Config::attendee_timestamp();
     $open = !\Carbon\Carbon::now()->gt($closesAt);
     $text = fn($html) => trim(html_entity_decode(strip_tags(\Html::clean((string) $html)), ENT_QUOTES | ENT_HTML5));
-    $columns = [
+    $columns = $sort->columns([
         ['label' => 'Evento', 'key' => 'name'],
         ['label' => 'Fecha', 'key' => 'start_datetime'],
         ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
         ['label' => 'Capacidad', 'key' => 'capacity', 'align' => 'end'],
         ['label' => 'Estado', 'key' => 'status'],
         ['label' => 'Acciones', 'srOnly' => true],
-    ];
+    ]);
 @endphp
 <x-layout.app title="Eventos" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Eventos']]">
     <x-ui.page-header title="Eventos">
