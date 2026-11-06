@@ -7,6 +7,7 @@ use App\Models\Evidence;
 use App\Models\MeetingMinutes;
 use App\Models\MeetingRequest;
 use App\Models\User;
+use App\Services\ReviewQueue;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -100,7 +101,8 @@ final class Audience
     }
 
     /**
-     * Who the author can write to, the suggested one first: about an evidence its coordination, about minutes or a
+     * Who the author can write to, the suggested one first: about an evidence whoever reviews it (its coordination, or
+     * the presidency for its committee and for what a coordinator writes), about minutes or a
      * meeting request its secretary, otherwise every committee with someone assigned (the author's own first, those
      * with an accepted evidence before the rest). Never
      * an audience the author belongs to or one without members.
@@ -137,6 +139,11 @@ final class Audience
             ->filter(fn ($id): bool => $id !== null)
             ->flatMap(fn ($id): array => array_map(fn (string $role): self => new self($role, (int) $id), $order))
             ->push(new self('REGISTER_COORDINATOR'), new self('PRESIDENT'), new self('LECTURE'));
+
+        // An evidence the presidency reviews (sent to its committee or written by a coordinator) asks the presidency first
+        if ($about instanceof Evidence && app(ReviewQueue::class)->goesToPresidency($about->headEvidence())) {
+            $audiences = $audiences->sortBy(fn (self $audience): int => $audience->role === 'PRESIDENT' ? 0 : 1)->values();
+        }
 
         return $audiences
             ->reject(fn (self $audience): bool => $audience->includes($author) || ! $audience->membersQuery()->exists())

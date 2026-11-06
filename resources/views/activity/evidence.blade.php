@@ -23,7 +23,8 @@
         @if ($isOwner || $moveRoute || $canReview)
             <x-slot:actions>
                 @if ($isOwner)
-                    <x-ui.button icon="message-square" :href="route('messages.create', ['evidence' => $head->id])">Escribir al coordinador</x-ui.button>
+                    <x-ui.button icon="message-square"
+                        :href="route('messages.create', ['evidence' => $head->id])">{{ app(\App\Services\ReviewQueue::class)->goesToPresidency($head) ? 'Escribir a presidencia' : 'Escribir al coordinador' }}</x-ui.button>
                 @endif
                 @if ($moveRoute)
                     <x-ui.dialog id="move-dialog" :title="$moveTitle" :trigger="$moveTitle" trigger-icon="arrow-right-left"

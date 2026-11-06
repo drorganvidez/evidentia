@@ -126,4 +126,34 @@ class QuickContactTest extends TestCase
             ->assertSee('value="REGISTER_COORDINATOR" selected', false)
             ->assertSee('value="Sobre mis asistencias"', false);
     }
+
+    public function test_what_the_presidency_reviews_asks_the_presidency(): void
+    {
+        // Inés coordinates Logística and sent an evidence to it; Marta sent one to the committee of the presidency
+        foreach (['coordinadora', 'secretario'] as $who) {
+            $author = $this->person($who);
+            $this->assertSame(['to' => 'PRESIDENT', 'subject' => 'Sobre mis evidencias'], $this->queryOf(QuickContact::coordination($author)), $who);
+            $this->assertSame('Escribir a presidencia', QuickContact::coordinationLabel($author), $who);
+
+            $evidence = Evidence::where('user_id', $author->id)->where('status', 'PENDING')->sole();
+            $this->assertSame('PRESIDENT', Audience::optionsFor($author, $evidence)->first()['value'], $who);
+        }
+
+        // what the coordination reviews still asks the coordination
+        $student = $this->person('estudiante');
+        $this->assertSame('Escribir a la coordinación', QuickContact::coordinationLabel($student));
+        $this->assertSame('COORDINATOR:'.$this->logistics->id, Audience::optionsFor($student, Evidence::where('title', 'Montaje del photocall')->sole())->first()['value']);
+    }
+
+    public function test_the_evidence_pages_name_who_to_write_to(): void
+    {
+        $this->actingAs($this->person('coordinadora'));
+        $mine = Evidence::where('title', 'Inventario del almacén')->sole();
+
+        $this->get(route('activity.evidence', ['id' => $mine->id]))->assertOk()->assertSee('Escribir a presidencia')->assertDontSee('Escribir al coordinador');
+        $this->get(route('evidence.list'))->assertOk()->assertSee('Escribir a presidencia');
+
+        $this->actingAs($this->person('estudiante'));
+        $this->get(route('activity.evidence', ['id' => Evidence::where('title', 'Recogida de material')->sole()->id]))->assertOk()->assertSee('Escribir al coordinador');
+    }
 }

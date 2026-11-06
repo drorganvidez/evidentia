@@ -114,7 +114,8 @@
                 @endif
             @endif
             @if ($author)
-                <x-ui.button icon="message-square" :href="route('messages.create', ['evidence' => $evidence->id])">Escribir al coordinador</x-ui.button>
+                <x-ui.button icon="message-square"
+                    :href="route('messages.create', ['evidence' => $evidence->id])">{{ app(\App\Services\ReviewQueue::class)->goesToPresidency($evidence) ? 'Escribir a presidencia' : 'Escribir al coordinador' }}</x-ui.button>
             @endif
             @if ($canMove)
                 <x-ui.button icon="arrow-right-left"
