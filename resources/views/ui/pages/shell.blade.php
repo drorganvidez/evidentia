@@ -74,7 +74,7 @@
         'surname' => 'Pérez',
         'roles' => ['Estudiante', 'Coordinador', 'Presidente'],
         'profileHref' => $here . '#perfil',
-        'logoutAction' => $here,
+        'logoutAction' => route('ui.demo.submit'),
     ];
     $cards = [
         ['title' => 'Horas aceptadas', 'value' => 4.0, 'text' => 'de 8,25 h declaradas', 'tone' => 'accepted'],

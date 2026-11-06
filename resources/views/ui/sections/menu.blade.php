@@ -1,6 +1,8 @@
 {{-- Menus: the actions menu with links, a divider and a danger command, the user menu with an avatar trigger, and start alignment --}}
 @php
     $here = route('ui.index') . '#ui-menu';
+    // The forms post to the sink of the catalogue, which comes back with a notice
+    $sink = route('ui.demo.submit');
 @endphp
 {{-- relative z-10: the glass blur makes the section a stacking context, so its popups would paint under the next card --}}
 <section id="ui-menu" class="glass relative z-10 grid grid-cols-[minmax(0,1fr)] gap-6 rounded-xl p-6 md:p-8"
@@ -15,7 +17,7 @@
                 <x-ui.menu.item href="{{ $here }}" icon="download">Exportar</x-ui.menu.item>
                 <x-ui.menu.item href="{{ $here }}" icon="shuffle">Aleatorizar</x-ui.menu.item>
                 <x-ui.menu.item divider />
-                <x-ui.menu.item tone="danger" icon="trash-2" method="post" action="{{ $here }}">Borrar todos
+                <x-ui.menu.item tone="danger" icon="trash-2" method="post" action="{{ $sink }}">Borrar todos
                     los
                     usuarios</x-ui.menu.item>
             </x-ui.menu>
@@ -45,7 +47,7 @@
                     x-bind:aria-checked="$store.shortcuts.enabled ? 'true' : 'false'"
                     x-on:click="$store.shortcuts.toggle()">Atajos de teclado</x-ui.menu.item>
                 <x-ui.menu.item divider />
-                <x-ui.menu.item icon="log-out" method="post" action="{{ $here }}">Salir</x-ui.menu.item>
+                <x-ui.menu.item icon="log-out" method="post" action="{{ $sink }}">Salir</x-ui.menu.item>
             </x-ui.menu>
         </div>
 

@@ -148,7 +148,7 @@
         'surname' => 'Pérez',
         'roles' => ['Estudiante', 'Coordinador', 'Presidente'],
         'profileHref' => $here . '#ui-avatar',
-        'logoutAction' => $here,
+        'logoutAction' => route('ui.demo.submit'),
     ];
     // The layout renders the one stack of notices of the page; the notices section must not add another
     $hasGlobalNotices = true;

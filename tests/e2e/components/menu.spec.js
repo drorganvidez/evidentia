@@ -180,6 +180,32 @@ test.describe('Menús', () => {
         }
     });
 
+    test('los ítems con method envían el formulario y vuelven con el aviso', async ({ page }) => {
+        for (const [id, name] of [
+            ['demo-actions', 'Borrar todos los usuarios'],
+            ['demo-user', 'Salir'],
+        ]) {
+            await page.locator(`button[aria-controls="${id}"]`).click();
+
+            const sent = page.waitForRequest((request) =>
+                request.url().endsWith('/_ui/demo/submit'),
+            );
+
+            await page.locator(`#${id}`).getByRole('menuitem', { name }).click();
+
+            const request = await sent;
+            const body = new URLSearchParams(request.postData() ?? '');
+
+            expect(request.method()).toBe('POST');
+            expect(body.get('_token')).toBeTruthy();
+            await expect(
+                page.getByRole('region', { name: 'Avisos' }).getByText('Formulario recibido'),
+            ).toBeVisible();
+
+            await page.goto('/_ui#ui-menu');
+        }
+    });
+
     test('un clic en la cabecera del menú de usuario no lo cierra', async ({ page }) => {
         const trigger = page.locator('button[aria-controls="demo-user"]');
         const menu = page.locator('#demo-user');

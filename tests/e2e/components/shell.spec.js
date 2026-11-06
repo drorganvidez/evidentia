@@ -297,6 +297,27 @@ test.describe('Shell en su propia página', () => {
         }
     });
 
+    test('«Salir» envía un POST con su token y vuelve con el aviso', async ({ page }, testInfo) => {
+        const sent = page.waitForRequest((request) => request.url().endsWith('/_ui/demo/submit'));
+
+        if (testInfo.project.name === 'mobile') {
+            await page.getByRole('button', { name: 'Abrir menú' }).click();
+            await page.locator('#drawer').getByRole('button', { name: 'Salir' }).click();
+        } else {
+            await page.getByRole('button', { name: 'Menú de Juan Pérez' }).click();
+            await page.locator('#user-menu').getByRole('menuitem', { name: 'Salir' }).click();
+        }
+
+        const request = await sent;
+
+        expect(request.method()).toBe('POST');
+        expect(new URLSearchParams(request.postData() ?? '').get('_token')).toBeTruthy();
+        await expect(page).toHaveURL(/\/_ui\/shell$/);
+        await expect(
+            page.getByRole('region', { name: 'Avisos' }).getByText('Formulario recibido'),
+        ).toBeVisible();
+    });
+
     test('el menú de usuario abre desde el avatar con el nombre y Salir', async ({
         page,
     }, testInfo) => {

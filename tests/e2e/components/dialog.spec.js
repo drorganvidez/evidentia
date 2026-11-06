@@ -64,6 +64,43 @@ test.describe('Diálogos', () => {
         await expect(page).toHaveURL(/#ui-dialog$/);
     });
 
+    test('«Sí, eliminar» envía un POST con su token y vuelve con el aviso', async ({ page }) => {
+        await page.locator('button[aria-controls="demo-remove"]').click();
+
+        const sent = page.waitForRequest((request) => request.url().endsWith('/_ui/demo/submit'));
+
+        await page.locator('#demo-remove').getByRole('button', { name: 'Sí, eliminar' }).click();
+
+        const request = await sent;
+        const body = new URLSearchParams(request.postData() ?? '');
+
+        expect(request.method()).toBe('POST');
+        expect(body.get('_id')).toBe('33');
+        expect(body.get('_token')).toBeTruthy();
+        await expect(
+            page.getByRole('region', { name: 'Avisos' }).getByText('Formulario recibido'),
+        ).toBeVisible();
+    });
+
+    test('el rechazo envía su motivo por POST y vuelve con el aviso', async ({ page }) => {
+        await page.locator('button[aria-controls="demo-reject"]').click();
+        await page.locator('#demo-reject-reason').fill('Falta la foto del montaje');
+
+        const sent = page.waitForRequest((request) => request.url().endsWith('/_ui/demo/submit'));
+
+        await page.locator('#demo-reject').getByRole('button', { name: 'Rechazar' }).click();
+
+        const request = await sent;
+        const body = new URLSearchParams(request.postData() ?? '');
+
+        expect(request.method()).toBe('POST');
+        expect(body.get('reason')).toBe('Falta la foto del montaje');
+        expect(body.get('_token')).toBeTruthy();
+        await expect(
+            page.getByRole('region', { name: 'Avisos' }).getByText('Formulario recibido'),
+        ).toBeVisible();
+    });
+
     test('el cajón se desliza desde la izquierda y ocupa toda la altura', async ({ page, ui }) => {
         await page.locator('button[aria-controls="demo-drawer"]').click();
 

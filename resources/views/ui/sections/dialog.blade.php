@@ -1,6 +1,8 @@
 {{-- Dialogs: a modal with a form, the alert that confirms a deletion, a long modal that scrolls, a drawer and a custom trigger --}}
 @php
     $here = route('ui.index') . '#ui-dialog';
+    // The forms post with their token to the sink of the catalogue, as the real ones do, and come back with a notice
+    $sink = route('ui.demo.submit');
 @endphp
 <section id="ui-dialog" class="glass grid grid-cols-[minmax(0,1fr)] gap-6 rounded-xl p-6 md:p-8"
     aria-labelledby="ui-dialog-title">
@@ -11,7 +13,8 @@
             <x-ui.dialog id="demo-reject" title="Rechazar la evidencia"
                 description="El estudiante verá el motivo y podrá corregirla." trigger="Rechazar"
                 trigger-icon="circle-x">
-                <form id="demo-reject-form" method="get" action="{{ $here }}" class="grid gap-2">
+                <form id="demo-reject-form" method="post" action="{{ $sink }}" class="grid gap-2">
+                    @csrf
                     <label for="demo-reject-reason" class="text-sm font-semibold">Motivo</label>
                     <textarea id="demo-reject-reason" name="reason" rows="3"
                         class="w-full rounded-sm border border-field-edge bg-field px-3 py-2 text-control text-ink focus:border-aurora-500 focus:outline-none focus:ring-4 focus:ring-aurora-500/18"></textarea>
@@ -30,7 +33,9 @@
                 trigger="Eliminar la evidencia" trigger-icon="trash-2" trigger-icon-only>
                 <x-slot:footer>
                     <x-ui.button x-on:click="close" autofocus>Cancelar</x-ui.button>
-                    <form method="get" action="{{ $here }}">
+                    <form method="post" action="{{ $sink }}">
+                        @csrf
+                        <input type="hidden" name="_id" value="33">
                         <x-ui.button variant="danger" type="submit" icon="trash-2" block>Sí, eliminar</x-ui.button>
                     </form>
                 </x-slot:footer>
