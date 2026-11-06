@@ -5,12 +5,13 @@ import { bootAlpine } from './alpine/boot';
 import busyForm from './components/busyForm';
 import clipboard from './components/clipboard';
 import countUp from './components/countUp';
+import dismissible from './components/dismissible';
 import notices from './components/notices';
 import passwordField from './components/passwordField';
 import noticesStore from './stores/notices';
 import theme from './stores/theme';
 
 bootAlpine({
-    components: { busyForm, clipboard, countUp, notices, passwordField },
+    components: { busyForm, clipboard, countUp, dismissible, notices, passwordField },
     stores: { notices: noticesStore, theme },
 });

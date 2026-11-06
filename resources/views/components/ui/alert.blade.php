@@ -7,6 +7,7 @@
     </x-ui.alert>
     <x-ui.alert tone="accepted" role="status" title="Firma registrada" compact />
     <x-ui.alert dismissible>El plazo de subida termina el viernes.</x-ui.alert>
+    dismissible runs on dismissible.js, which hands the focus to the next control when the alert closes.
 --}}
 @props([
     'tone' => 'notice',
@@ -33,7 +34,7 @@
 @endphp
 <div role="{{ $role }}"
     {{ $attributes->class(['grid grid-cols-[minmax(0,1fr)] rounded-xl border backdrop-blur-glass', $toneClasses, $layout]) }}
-    @if ($dismissible) x-data="{ open: true }" x-show="open" @endif>
+    @if ($dismissible) x-data="dismissible" x-show="open" @endif>
     @unless ($compact)
         <span aria-hidden="true"
             class="{{ Arr::toCssClasses(['grid size-11 place-items-center rounded-[0.875rem] inset-shadow-hi', $bubbleClasses]) }}">
@@ -59,8 +60,8 @@
             @endisset
         </div>
         @if ($dismissible)
-            <x-ui.button icon-only icon="x" variant="ghost" size="sm" label="Cerrar aviso"
-                x-on:click="open = false" class="-mt-1 -mr-1 shrink-0" />
+            <x-ui.button icon-only icon="x" variant="ghost" size="sm" label="Cerrar aviso" x-on:click="close"
+                class="-mt-1 -mr-1 shrink-0" />
         @endif
     </div>
     @isset($actions)

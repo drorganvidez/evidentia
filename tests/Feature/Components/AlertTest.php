@@ -89,13 +89,15 @@ class AlertTest extends ComponentTestCase
         $this->assertStringNotContainsString('md:col-start-2', $bare);
     }
 
-    public function test_dismissible_adds_the_trivial_alpine_state_and_the_close_button(): void
+    public function test_dismissible_adds_the_alpine_component_and_the_close_button(): void
     {
         $html = $this->render('<x-ui.alert dismissible>Hola</x-ui.alert>');
 
-        $this->assertStringContainsString('x-data="{ open: true }"', $html);
+        // The module, not an inline state: closing has to hand the focus on before the button disappears
+        $this->assertStringContainsString('x-data="dismissible"', $html);
         $this->assertStringContainsString('x-show="open"', $html);
-        $this->assertStringContainsString('x-on:click="open = false"', $html);
+        $this->assertStringContainsString('x-on:click="close"', $html);
+        $this->assertFileExists(resource_path('js/components/dismissible.js'));
         $this->assertStringContainsString('aria-label="Cerrar aviso"', $html);
         $this->assertStringContainsString($this->icon('x', 'shrink-0 size-4 shrink-0'), $html);
         $this->assertCspSafe($html);
