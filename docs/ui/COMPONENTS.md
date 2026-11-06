@@ -117,14 +117,17 @@ Los listados que crecen se paginan en el servidor con `App\Support\ListPage`, qu
 - Los recuentos de las pestañas, los totales del pie (filas, horas) y los resúmenes se calculan sobre la consulta filtrada y buscada antes de paginarla (`$query->clone()->sum('hours')`), nunca sobre la página.
 - En las vistas, `ListPage::url(['estado' => 'pendientes'], $list)` construye el enlace de una pestaña o de un orden con el resto de la query string y de vuelta en la primera página (un valor `null` quita su clave), y `ListPage::query(['comite', 'desde'])` da lo que la barra de filtros reenvía con `keep`, sin sus propios campos.
 
+Cada pantalla ordena la consulta con su `ListSort` (ver «Orden de las tablas») antes de paginarla, y la vista pasa sus columnas por `$sort->columns()`.
+
 ```php
+$sort = ListSort::from($request, ['title' => 'title', 'author' => ['user.surname', 'user.name'], 'updated' => ListSort::desc('updated_at')], 'updated');
 $query = $this->searchList(Evidence::where('last', true), $request, ['title', 'user.name', 'user.surname']);
 $hours = (float) $query->clone()->sum('hours');
-$evidences = $this->paginateList($query->latest()->latest('id'), $request);
+$evidences = $this->paginateList($sort->apply($query->with('user')), $request);
 ```
 
 ```blade
-<x-ui.table caption="Evidencias del curso" :columns="$columns" :paginator="$evidences" filterable
+<x-ui.table caption="Evidencias del curso" :columns="$sort->columns($columns)" :paginator="$evidences" filterable
     count-label="evidencias" count-singular="evidencia" filter-placeholder="Buscar evidencias">
     ...
     <x-slot:footer><span>{{ $evidences->total() }} evidencias · <x-ui.hours :value="$hours" size="sm" /></span></x-slot:footer>
