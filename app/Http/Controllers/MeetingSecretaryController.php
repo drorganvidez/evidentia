@@ -40,8 +40,13 @@ class MeetingSecretaryController extends Controller
 
     public function manage()
     {
+        $secretary = Auth::user()->secretary;
 
-        return view('meeting.manage', []);
+        return view('meeting.manage', [
+            'meeting_requests' => $secretary->meetingRequests,
+            'signature_sheets' => $secretary->signatureSheets()->withCount('users')->get(),
+            'meeting_minutes' => $secretary->meetingMinutes()->with('meeting')->get(),
+        ]);
     }
 
     /*
