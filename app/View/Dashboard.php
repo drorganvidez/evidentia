@@ -10,6 +10,7 @@ use App\Models\Meeting;
 use App\Models\MeetingRequest;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\ReviewQueue;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
@@ -21,6 +22,8 @@ use Illuminate\Support\Collection;
 final class Dashboard
 {
     private const PARTICIPANTS = ['STUDENT', 'COORDINATOR', 'SECRETARY', 'REGISTER_COORDINATOR'];
+
+    public function __construct(private ReviewQueue $queue) {}
 
     /**
      * @return array<string, mixed>
@@ -87,16 +90,17 @@ final class Dashboard
         ];
     }
 
-    /** The evidences of the committee of a coordinator waiting for a review, never their own. */
+    /** The queue of the coordination of the committee of a coordinator (App\Services\ReviewQueue). */
     private function review(User $user, ?Configuration $config): ?array
     {
-        $committee = $user->coordinator?->committee;
+        $queue = $this->queue->queueOf($user, ReviewQueue::COORDINATION);
 
-        if ($committee === null) {
+        if ($queue === null) {
             return null;
         }
 
-        $pending = $committee->evidencesPending()->where('user_id', '!=', $user->id)->with('user')->get();
+        $committee = $queue['committee'];
+        $pending = ReviewQueue::pending($queue)->with('user')->orderByDesc('updated_at')->get();
         $closesAt = $config?->validate_evidences_timestamp;
 
         return [

@@ -8,6 +8,7 @@ use App\Models\ErrorReport;
 use App\Models\Evidence;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\ReviewQueue;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -15,8 +16,8 @@ use Illuminate\Support\Facades\DB;
 /**
  * Control panel of the course for the president and the lecturer: the figures that matter (hours, participation,
  * review queue, acceptance), how the hours spread among the students and by origin, each committee at a glance,
- * the submissions week by week, and the traceability of the activity log (latest actions, its signals, the
- * accesses) with the open server errors.
+ * the submissions week by week, the queue of the presidency (App\Services\ReviewQueue) and the traceability of the
+ * activity log (latest actions, its signals, the accesses) with the open server errors.
  */
 final class ManagementDashboard
 {
@@ -32,7 +33,7 @@ final class ManagementDashboard
         ['20 h o más', 20, INF],
     ];
 
-    public function __construct(private Dashboard $dashboard) {}
+    public function __construct(private Dashboard $dashboard, private ReviewQueue $queue) {}
 
     /** @return array<string, mixed> */
     public function for(User $user): array
@@ -45,11 +46,14 @@ final class ManagementDashboard
         $pendingOldest = Evidence::where('last', true)->where('status', 'PENDING')->min('updated_at');
         $decided = $byStatus['ACCEPTED'] + $byStatus['REJECTED'];
         $participating = Evidence::where('status', '!=', 'DRAFT')->whereIn('user_id', $students)->distinct()->count('user_id');
+        $presidency = $this->queue->forPresidency()->where('status', 'PENDING')->where('user_id', '!=', $user->id);
 
         return [
             'name' => (string) $user->name,
             'lecturer' => $prefix === 'lecture',
             'routes' => [
+                // the presidents review their queue; the lecturer, the whole course
+                'review' => in_array('PRESIDENT', $roles, true) ? route('president.review.pending') : route("$prefix.evidence.list"),
                 'evidences' => route("$prefix.evidence.list"),
                 'users' => route("$prefix.user.list"),
                 'meetings' => route("$prefix.meeting.list"),
@@ -74,8 +78,11 @@ final class ManagementDashboard
             'distribution' => $this->distribution($hours['perStudent'], $students->count()),
             'committees' => $this->committees(),
             'weeks' => $this->weeks(),
-            'queue' => Evidence::where('last', true)->where('status', 'PENDING')
-                ->with(['user', 'committee'])->orderBy('updated_at')->limit(5)->get(),
+            'presidency' => [
+                'count' => (clone $presidency)->count(),
+                'items' => (clone $presidency)->with(['user', 'committee'])->orderBy('updated_at')->orderBy('id')->limit(5)->get(),
+                'href' => route('president.review.pending'),
+            ],
             'activity' => $this->activity(),
             'signals' => $this->signals(),
             'access' => $this->access(),
@@ -168,9 +175,11 @@ final class ManagementDashboard
         }, self::BUCKETS);
     }
 
-    /** Each committee with its coordination, the state of its evidences and its oldest pending one. */
+    /** Each committee with its coordination (the presidents in the committee of the presidency), the state of its evidences and its oldest pending one. */
     private function committees(): Collection
     {
+        $presidents = $this->queue->presidents()->map(fn (User $user): string => trim($user->name.' '.$user->surname))->implode(', ');
+
         return Committee::with(['coordinators.user', 'secretaries.user'])
             ->withCount([
                 'evidences as accepted_count' => fn ($query) => $query->where('last', true)->where('status', 'ACCEPTED'),
@@ -180,14 +189,18 @@ final class ManagementDashboard
             ->withMin(['evidences as oldest_pending' => fn ($query) => $query->where('last', true)->where('status', 'PENDING')], 'updated_at')
             ->orderBy('name')
             ->get()
-            ->map(function (Committee $committee): array {
+            ->map(function (Committee $committee) use ($presidents): array {
                 $counts = [$committee->accepted_count, $committee->pending_count, $committee->rejected_count];
+                $coordinators = $committee->coordinators->map(fn ($coordinator) => trim($coordinator->user?->name.' '.$coordinator->user?->surname))->filter();
+                if ($this->queue->isPresidency($committee) && $presidents !== '') {
+                    $coordinators->prepend($presidents);
+                }
                 $shares = $this->percentages($counts);
 
                 return [
                     'id' => $committee->id,
                     'name' => $committee->name,
-                    'coordinators' => $committee->coordinators->map(fn ($coordinator) => trim($coordinator->user?->name.' '.$coordinator->user?->surname))->filter()->implode(', '),
+                    'coordinators' => $coordinators->implode(', '),
                     'secretaries' => $committee->secretaries->count(),
                     'total' => array_sum($counts),
                     'pending' => $committee->pending_count,

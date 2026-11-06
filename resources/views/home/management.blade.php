@@ -12,7 +12,7 @@
     <x-ui.page-header title="Panel del curso" :lede="'Hola, ' . $name">
         <x-slot:actions>
             <x-ui.button icon="download" :href="$routes['export']">Exportar</x-ui.button>
-            <x-ui.button variant="primary" icon="list-checks" :href="$routes['evidences']">Revisar evidencias</x-ui.button>
+            <x-ui.button variant="primary" icon="list-checks" :href="$routes['review']">Revisar evidencias</x-ui.button>
         </x-slot:actions>
     </x-ui.page-header>
 
@@ -183,20 +183,28 @@
                 </x-ui.card>
             @endif
 
-            <x-ui.card title="Cola de revisión" :level="2" id="queue">
-                @if ($queue->isEmpty())
+            <x-ui.card title="Cola de presidencia" :level="2" id="presidency">
+                <x-slot:extra>
+                    <x-ui.badge variant="count">{{ $presidency['count'] }}</x-ui.badge>
+                </x-slot:extra>
+                @if ($presidency['items']->isEmpty())
                     <x-ui.empty icon="circle-check" title="Nada por revisar" size="sm" :level="3" />
                 @else
-                    <ul class="grid gap-3">
-                        @foreach ($queue as $evidence)
+                    <ul class="grid gap-3" aria-label="Evidencias que esperan a la presidencia">
+                        @foreach ($presidency['items'] as $evidence)
                             <li class="grid gap-0.5">
-                                <span class="font-semibold">{{ $evidence->title }}</span>
+                                <a href="{{ route('president.review.view', ['id' => $evidence->id]) }}"
+                                    class="font-semibold text-ink hover:text-brand-ink pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center">{{ $evidence->title }}</a>
                                 <span class="text-sm text-ink-muted">{{ $evidence->user?->name }}
                                     {{ $evidence->user?->surname }} · {{ $evidence->committee?->name }} ·
                                     <x-ui.time :value="$evidence->updated_at" format="relative" /></span>
                             </li>
                         @endforeach
                     </ul>
+                    <x-slot:footer>
+                        <x-ui.button size="sm" variant="quiet" icon="stamp" :href="$presidency['href']">Abrir la
+                            cola</x-ui.button>
+                    </x-slot:footer>
                 @endif
             </x-ui.card>
 
