@@ -18,7 +18,7 @@
     <h2 id="ui-file-list-title" class="text-2xl font-bold tracking-tight">Archivos</h2>
 
     <div class="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-2">
-        <x-ui.card title="Pruebas" :level="3">
+        <x-ui.card title="Pruebas" :level="3" id="card-pruebas-archivos">
             <x-slot:extra>
                 <span class="text-sm text-ink-muted">4 archivos</span>
             </x-slot:extra>

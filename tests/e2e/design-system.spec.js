@@ -1,23 +1,18 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures/ui.js';
 
-/** Collects console errors, page errors and any CSP message, whatever its type or wording. */
-function watchConsole(page) {
-    const errors = [];
+/** The theme switch lives in the topbar on wide screens and inside the drawer on the phone. */
+async function themeRegion(page, isMobile) {
+    if (!isMobile) {
+        return page.getByRole('banner');
+    }
 
-    page.on('console', (message) => {
-        if (message.type() === 'error' || message.text().includes('Content Security Policy')) {
-            errors.push(message.text());
-        }
-    });
-    page.on('pageerror', (error) => errors.push(error.message));
+    await page.getByRole('button', { name: 'Abrir menú' }).click();
 
-    return errors;
+    return page.getByRole('dialog', { name: 'Menú' });
 }
 
 test.describe('Página del sistema de diseño', () => {
-    test('se abre bajo la CSP estricta sin errores en consola', async ({ page }) => {
-        const errors = watchConsole(page);
-
+    test('se abre bajo la CSP estricta con el shell de la aplicación', async ({ page, ui }) => {
         const response = await page.goto('/_ui');
 
         expect(response.status()).toBe(200);
@@ -30,41 +25,63 @@ test.describe('Página del sistema de diseño', () => {
         await expect(page).toHaveTitle(/Sistema de diseño/);
         await expect(
             page.getByRole('heading', { level: 1, name: 'Sistema de diseño' }),
-        ).toBeAttached();
+        ).toBeVisible();
         await expect(page.getByRole('heading', { name: 'Color' })).toBeVisible();
         await expect(page.getByRole('heading', { name: 'Iconos', exact: true })).toBeVisible();
         await expect(page.getByRole('navigation', { name: 'Contenido' })).toBeVisible();
-
-        expect(errors).toEqual([]);
+        await expect(page.getByRole('contentinfo')).toContainText('Evidentia');
+        await expect(page.getByRole('link', { name: 'Saltar al contenido' })).toBeAttached();
+        await ui.noOverflow();
     });
 
-    test('el tema se cambia y se recuerda', async ({ page }) => {
+    test('la tabla de contenidos enlaza cada sección con su título', async ({ page }) => {
+        await page.goto('/_ui');
+
+        const links = page.getByRole('navigation', { name: 'Contenido' }).getByRole('link');
+        const count = await links.count();
+
+        expect(count).toBeGreaterThanOrEqual(49);
+
+        for (let index = 0; index < count; index++) {
+            const href = await links.nth(index).getAttribute('href');
+            const label = (await links.nth(index).textContent()).trim();
+            const section = page.locator(href);
+
+            await expect(section, `Sección ${href}`).toBeAttached();
+            await expect(section.getByRole('heading', { level: 2 }).first()).toHaveText(label);
+        }
+    });
+
+    test('el tema se cambia y se recuerda', async ({ page, isMobile }) => {
         await page.goto('/_ui');
 
         const html = page.locator('html');
-        const dark = page.getByRole('button', { name: 'Oscuro', exact: true });
+        let region = await themeRegion(page, isMobile);
+        const dark = region.getByRole('radio', { name: 'Oscuro' });
 
-        await dark.click();
+        await region.locator('label', { has: page.getByRole('radio', { name: 'Oscuro' }) }).click();
         await expect(html).toHaveAttribute('data-theme', 'dark');
-        await expect(dark).toHaveAttribute('aria-pressed', 'true');
+        await expect(dark).toBeChecked();
 
         await page.reload();
         await expect(html).toHaveAttribute('data-theme', 'dark');
 
-        await page.getByRole('button', { name: 'Claro', exact: true }).click();
+        region = await themeRegion(page, isMobile);
+        const light = region.getByRole('radio', { name: 'Claro' });
+
+        await region.locator('label', { has: page.getByRole('radio', { name: 'Claro' }) }).click();
         await expect(html).toHaveAttribute('data-theme', 'light');
+        await expect(light).toBeChecked();
     });
 
-    test('no desborda a 320 px de ancho', async ({ page }) => {
+    test('no desborda a 320 px de ancho', async ({ page, ui }) => {
         await page.setViewportSize({ width: 320, height: 568 });
         await page.goto('/_ui');
 
-        const widths = await page.evaluate(() => ({
-            scroll: document.documentElement.scrollWidth,
-            client: document.documentElement.clientWidth,
-        }));
-
-        expect(widths.scroll).toBeLessThanOrEqual(widths.client);
-        await expect(page.getByRole('button', { name: 'Oscuro', exact: true })).toBeVisible();
+        await expect(
+            page.getByRole('heading', { level: 1, name: 'Sistema de diseño' }),
+        ).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Abrir menú' })).toBeVisible();
+        await ui.noOverflow();
     });
 });
