@@ -47,6 +47,7 @@ export default function selectField() {
         emptyText: '',
         pointing: false,
         timer: null,
+        onViewport: null,
 
         init() {
             const id = this.$refs.entry.id;
@@ -69,6 +70,15 @@ export default function selectField() {
             this.ready = true;
             // x-model on the select sets its value once init() has run, without a change event
             this.$nextTick(() => this.read());
+            // A virtual keyboard shrinks the visual viewport only, without a resize of the window
+            this.onViewport = () => this.place();
+            window.visualViewport?.addEventListener('resize', this.onViewport);
+            window.visualViewport?.addEventListener('scroll', this.onViewport);
+        },
+
+        destroy() {
+            window.visualViewport?.removeEventListener('resize', this.onViewport);
+            window.visualViewport?.removeEventListener('scroll', this.onViewport);
         },
 
         /** The label points to the combobox once it is there and to the select without JS. */
@@ -200,10 +210,14 @@ export default function selectField() {
                 return;
             }
 
+            // Fixed coordinates follow the layout viewport; the room is what the visual viewport shows
             const box = this.$refs.box.getBoundingClientRect();
             const viewport = document.documentElement.clientHeight;
-            const below = viewport - box.bottom - GAP;
-            const above = box.top - GAP;
+            const visual = window.visualViewport;
+            const visibleTop = visual ? visual.offsetTop : 0;
+            const visibleBottom = visual ? visual.offsetTop + visual.height : viewport;
+            const below = visibleBottom - box.bottom - GAP;
+            const above = box.top - visibleTop - GAP;
             const wanted =
                 Math.min(LIST_MAX, Math.max(this.options.length, 1) * OPTION_HEIGHT) + LIST_CHROME;
             const up = below < wanted && above > below;
