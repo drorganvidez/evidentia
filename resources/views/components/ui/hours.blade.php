@@ -4,6 +4,7 @@
     <x-ui.hours :value="$evidence->hours" />                      1,75 h
     <x-ui.hours :value="$total" size="xl" :decimals="1" />         1.204,5 h
     <x-ui.hours :value="null" null-text="Sin horas" muted />
+    The figure is also the data-sort-value the browser order of x-ui.table reads.
 --}}
 @props([
     'value' => null,
@@ -28,14 +29,15 @@
     $loses = $number !== null && $exact !== $trim($shown);
 @endphp
 @if ($number === null)
-    <span {{ $attributes->class(['font-mono tabular-nums text-ink-muted', $sizeClass]) }}>{{ $nullText }}</span>
+    <span {{ $attributes->class(['font-mono tabular-nums text-ink-muted', $sizeClass]) }}
+        data-sort-value="">{{ $nullText }}</span>
 @elseif ($loses)
-    <span
-        {{ $attributes->class(['font-mono tabular-nums whitespace-nowrap', $sizeClass, 'text-ink-muted' => $muted]) }}>
+    <span {{ $attributes->class(['font-mono tabular-nums whitespace-nowrap', $sizeClass, 'text-ink-muted' => $muted]) }}
+        data-sort-value="{{ $number }}">
         <span aria-hidden="true" title="{{ $exact . $unit }}">{{ $shown . $unit }}</span>
         <span class="sr-only">{{ $exact . $unit }}</span>
     </span>
 @else
-    <span
-        {{ $attributes->class(['font-mono tabular-nums whitespace-nowrap', $sizeClass, 'text-ink-muted' => $muted]) }}>{{ $shown }}{{ $unit }}</span>
+    <span {{ $attributes->class(['font-mono tabular-nums whitespace-nowrap', $sizeClass, 'text-ink-muted' => $muted]) }}
+        data-sort-value="{{ $number }}">{{ $shown }}{{ $unit }}</span>
 @endif

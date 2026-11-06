@@ -26,7 +26,7 @@
     ]);
 @endphp
 @if ($date === null)
-    <span {{ $attributes->class(['text-ink-faint']) }}>
+    <span {{ $attributes->class(['text-ink-faint']) }} data-sort-value="">
         —<span class="sr-only">Sin fecha</span></span>
 @elseif ($format === 'absolute')
     <time

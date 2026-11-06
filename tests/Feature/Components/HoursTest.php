@@ -28,7 +28,7 @@ class HoursTest extends ComponentTestCase
         $rounded = $this->render('<x-ui.hours :value="1.755" class="ml-2" />');
 
         // Screen readers get the exact figure as text; the rounded one is only painted, with the exact one on hover
-        $this->assertMatchesRegularExpression('/<span\s+class="font-mono tabular-nums whitespace-nowrap text-md ml-2">\s*<span aria-hidden="true" title="1,755 h">1,76 h<\/span>\s*<span class="sr-only">1,755 h<\/span>\s*<\/span>/', $rounded);
+        $this->assertMatchesRegularExpression('/<span\s+class="font-mono tabular-nums whitespace-nowrap text-md ml-2"\s+data-sort-value="1.755">\s*<span aria-hidden="true" title="1,755 h">1,76 h<\/span>\s*<span class="sr-only">1,755 h<\/span>\s*<\/span>/', $rounded);
         $this->assertSame(1, substr_count($rounded, 'title='));
         $this->assertCspSafe($rounded);
 
@@ -52,9 +52,15 @@ class HoursTest extends ComponentTestCase
         }
     }
 
+    public function test_the_figure_is_the_value_the_browser_order_reads(): void
+    {
+        $this->assertStringContainsString('data-sort-value="2.5">2,50 h</span>', $this->render('<x-ui.hours :value="2.5" />'));
+        $this->assertStringContainsString('data-sort-value="10">10,00 h</span>', $this->render('<x-ui.hours value="10" />'));
+    }
+
     public function test_a_missing_value_prints_the_null_text(): void
     {
-        $this->assertStringContainsString('<span class="font-mono tabular-nums text-ink-muted text-md">—</span>', $this->render('<x-ui.hours :value="null" />'));
+        $this->assertStringContainsString('<span class="font-mono tabular-nums text-ink-muted text-md" data-sort-value="">—</span>', $this->render('<x-ui.hours :value="null" />'));
         $this->assertStringContainsString('>Sin horas</span>', $this->render('<x-ui.hours :value="null" null-text="Sin horas" />'));
         $this->assertStringContainsString('>—</span>', $this->render('<x-ui.hours value="" />'));
     }

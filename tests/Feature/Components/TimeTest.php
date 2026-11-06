@@ -94,7 +94,7 @@ class TimeTest extends ComponentTestCase
     {
         $html = $this->render('<x-ui.time :value="null" class="ml-2" />');
 
-        $this->assertMatchesRegularExpression('/<span class="text-ink-faint ml-2">\s*—<span class="sr-only">Sin fecha<\/span><\/span>/', $html);
+        $this->assertMatchesRegularExpression('/<span class="text-ink-faint ml-2" data-sort-value="">\s*—<span class="sr-only">Sin fecha<\/span><\/span>/', $html);
         $this->assertStringNotContainsString('<time', $html);
         $this->assertCspSafe($html);
     }

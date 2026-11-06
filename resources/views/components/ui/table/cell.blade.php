@@ -3,8 +3,10 @@
     only assistive technology reads and the quick filter skips (never in the title or action cells); primary is the
     title cell, whose links reach 44 px under a coarse pointer; meta is the secondary text, numeric the figures; end
     pushes the content to the right of the card; hide and actions disappear on the phone (hide only what the detail
-    behind the row link shows again); header prints a th scope="row".
+    behind the row link shows again); header prints a th scope="row". sort-value is the value the browser order of
+    x-ui.table sortable reads instead of the text: a date becomes its ISO instant in UTC, a boolean 1 or 0.
     <x-ui.table.cell label="Evidencia" primary><a href="...">{{ $title }}</a></x-ui.table.cell>
+    <x-ui.table.cell label="Firmada" :sort-value="$signature->created_at"><x-ui.time ... /></x-ui.table.cell>
     <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="1.75" /></x-ui.table.cell>
     <x-ui.table.cell actions><x-ui.button icon-only icon="eye" label="Abrir" href="..." dim /></x-ui.table.cell>
     The tag is printed from PHP because blade-formatter does not follow dynamic tags.
@@ -19,8 +21,18 @@
     'full' => false,
     'actions' => false,
     'header' => false,
+    'sortValue' => null,
 ])
 @php
+    $sortValue = match (true) {
+        $sortValue instanceof DateTimeInterface => \Illuminate\Support\Carbon::instance($sortValue)
+            ->utc()
+            ->format('Y-m-d\TH:i:s\Z'),
+        $sortValue instanceof BackedEnum => (string) $sortValue->value,
+        is_bool($sortValue) => $sortValue ? '1' : '0',
+        $sortValue === null => null,
+        default => (string) $sortValue,
+    };
     $tag = $header ? 'th' : 'td';
     $attrs = $attributes
         ->class([
@@ -38,7 +50,7 @@
             array_filter([
                 'role' => $header ? 'rowheader' : 'cell',
                 'scope' => $header ? 'row' : null,
-            ]),
+            ]) + ($sortValue !== null ? ['data-sort-value' => $sortValue] : []),
         );
     $columnName = filled($label) && !$primary && !$actions ? $label : null;
 @endphp

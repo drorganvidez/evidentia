@@ -2,6 +2,7 @@
     Avatar, name and an optional role line; the name becomes a link with href, 44 px tall under a coarse pointer.
     <x-ui.person name="Juan" surname="Pérez" role="como coordinador de Programa" href="/usuarios/4" />
     <x-ui.person name="Lucía" surname="Pérez" size="sm" reverse />
+    Its data-sort-value, surname and name, orders the browser tables by the surname whatever the order shown.
 --}}
 @props([
     'name' => '',
@@ -20,7 +21,8 @@
         default => 'text-md font-semibold text-ink',
     };
 @endphp
-<span {{ $attributes->class(['inline-flex items-center gap-2']) }}>
+<span
+    {{ $attributes->class(['inline-flex items-center gap-2'])->merge(['data-sort-value' => trim($surname . ' ' . trim($name))]) }}>
     <x-ui.avatar :name="$name" :surname="$surname" :src="$src" :size="$size === 'sm' ? 'sm' : 'md'" />
     <span class="grid leading-tight">
         @if ($href !== null)
