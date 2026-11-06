@@ -34,7 +34,7 @@ class BonusFormTest extends TestCase
         $dom = new DOMDocument;
         @$dom->loadHTML('<?xml encoding="UTF-8">'.$html);
         $selected = [];
-        foreach ((new DOMXPath($dom))->query('//select[@id="users"]/option[@selected]') as $option) {
+        foreach ((new DOMXPath($dom))->query('//select[@name="users[]"]/option[@selected]') as $option) {
             $selected[] = (int) $option->getAttribute('value');
         }
         $this->assertEqualsCanonicalizing([$ana->id, $pedro->id], $selected);

@@ -1,168 +1,58 @@
-@extends('layouts.app')
+{{-- Create or edit an hour bonus: its reason, its hours and the people who receive it, with the default lists --}}
+@php
+    $editing = isset($edit);
+    $people = $users
+        ->map(
+            fn($user) => [
+                'value' => $user->id,
+                'label' => trim($user->surname) . ', ' . trim($user->name),
+                'hint' => $user->username,
+            ],
+        )
+        ->values()
+        ->all();
+    $presets = $defaultlists
+        ->map(fn($list) => ['label' => trim($list->name), 'values' => $list->users->modelKeys()])
+        ->values()
+        ->all();
+    $deadline = \Config::bonus_timestamp();
+@endphp
+<x-layout.app :title="$editing ? 'Editar bono' : 'Nuevo bono'" :breadcrumbs="[
+    ['label' => 'Inicio', 'href' => route('home')],
+    ['label' => 'Bonos', 'href' => route('secretary.bonus.list')],
+    ['label' => $editing ? 'Editar' : 'Nuevo'],
+]">
+    <x-ui.page-header :title="$editing ? $bonus->reason : 'Nuevo bono'">
+        @if ($deadline)
+            <x-slot:meta>
+                <x-ui.deadline label="Registro de bonos" variant="inline" :closes-at="\Carbon\Carbon::parse($deadline)" />
+            </x-slot:meta>
+        @endif
+        @if ($editing)
+            <x-slot:actions>
+                @include('bonus.partials.remove', ['bono' => $bonus, 'dialogId' => 'remove-bonus'])
+            </x-slot:actions>
+        @endif
+    </x-ui.page-header>
 
-@isset($edit)
-    @section('title', 'Editar bono: ' . $bonus->reason)
-@else
-@section('title', 'Crear bono')
-@endisset
+    <x-ui.card>
+        <x-ui.form :action="$route" id="bonus-form" :fields="['reason' => 'Motivo', 'hours' => 'Horas', 'users' => 'Personas']">
+            @if ($editing)
+                <input type="hidden" name="_id" value="{{ $bonus->id }}">
+            @endif
 
-@section('title-icon', 'fas fa-puzzle-piece')
-
-@section('breadcrumb')
-<li class="breadcrumb-item"><a href="/">Home</a></li>
-@isset($edit)
-    <li class="breadcrumb-item"><a href="{{ route('secretary.bonus.list', []) }}">Gestionar bonos</a></li>
-@endisset
-<li class="breadcrumb-item active">@yield('title')</li>
-@endsection
-
-@section('info')
-<x-slimreminder :datetime="\Config::bonus_timestamp()" />
-@endsection
-
-@section('content')
-
-<div class="row">
-    <div class="col-lg-12">
-
-        <div class="card">
-
-            <div class="card-body">
-                <form method="POST" action="{{ $route }}">
-                    @csrf
-
-                    <x-id :id="$bonus->id ?? ''" :edit="$edit ?? ''" />
-
-                    <div class="form-row">
-
-                        <x-input col="6" attr="reason" :value="$bonus->reason ?? ''" label="Razón"
-                            description="Escribe una razón para este bono de horas." />
-
-                        <x-input col="6" attr="hours" :value="$bonus->hours ?? ''" type="number" step="0.01"
-                            label="Horas" description="Números enteros o decimales." />
-
-                    </div>
-
-
-                    <div class="form-row">
-
-                        <div class="form-group col-md-6">
-                            <label for="defaultlist">Elige una lista predeterminada</label>
-                            <select id="defaultlist" onchange="getLista(this);"
-                                class="selectpicker form-control @error('defaultlist') is-invalid @enderror"
-                                value="{{ old('type') }}" required autofocus>
-
-                                <option value="-1">Selecciona una lista</option>
-                                @foreach ($defaultlists as $defaultlist)
-                                    <option value="{{ trim($defaultlist->id) }}">{{ trim($defaultlist->name) }}</option>
-                                @endforeach
-
-                            </select>
-
-                            @error('defaultlist')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                        <div class="form-group col-md-12">
-                            <label>Seleccionar alumnos</label>
-                            <select id="users" name="users[]" class="duallistbox"
-                                multiple="multiple @error('users') is-invalid @enderror">
-                                @php $selected_users = array_map('intval', old('users', isset($bonus) ? $bonus->users->modelKeys() : [])); @endphp
-                                @foreach ($users as $user)
-                                    <option @selected(in_array($user->id, $selected_users)) value="{{ $user->id }}">
-                                        {{ trim($user->surname) }}, {{ trim($user->name) }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('users')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                    </div>
-
-                    <div class="form-row">
-                        <div class="col-lg-3 mt-1">
-                            <button type="submit" class="btn btn-primary btn-block">Guardar bono</button>
-                        </div>
-                    </div>
-
-
-                </form>
+            <div class="grid grid-cols-[minmax(0,1fr)] gap-5 md:grid-cols-2">
+                <x-ui.field name="reason" label="Motivo" :value="$bonus->reason ?? null" required />
+                <x-ui.field name="hours" label="Horas" type="number" :value="$bonus->hours ?? null" min="0.5" max="99.99"
+                    step="0.01" inputmode="decimal" suffix="h" required />
             </div>
 
-        </div>
+            <x-ui.picker name="users[]" label="Personas" :options="$people" :selected="$editing ? $bonus->users->modelKeys() : []" :presets="$presets" />
 
-
-    </div>
-</div>
-
-@section('scripts')
-
-    <script>
-        // Cada elección de lista invalida las respuestas de la anterior, para no duplicar opciones
-        var peticion_lista = 0;
-
-        function getLista(sel) {
-
-            if (sel.value != -1) {
-
-                var peticion = ++peticion_lista;
-                var demo = $('.duallistbox').bootstrapDualListbox();
-                $("#users").empty();
-
-                var seleccionados = new Array();
-
-                $.ajax({
-                    url: '/secretary/meeting/defaultlist/' + sel.value,
-                    success: function(respuesta) {
-
-                        if (peticion != peticion_lista) return;
-
-                        for (var i = 0; i < respuesta.length; i++) {
-                            demo.append($('<option selected>').val(respuesta[i].id).text(respuesta[i].surname + ', ' + respuesta[i].name))
-                            seleccionados.push(respuesta[i].id);
-                        }
-
-                        // Volvemos a incluir todos los usuarios
-                        $.ajax({
-                            url: '/gp/users/all/',
-                            success: function(respuesta) {
-
-                                if (peticion != peticion_lista) return;
-
-                                for (var i = 0; i < respuesta.length; i++) {
-                                    if (seleccionados.indexOf(respuesta[i].id) == -1) {
-                                        demo.append($('<option>').val(respuesta[i].id).text(respuesta[i].surname + ', ' + respuesta[i].name))
-                                    }
-
-                                }
-
-                                demo.bootstrapDualListbox('refresh');
-
-                            },
-                            error: function() {
-                                console.log(
-                                    "No se ha podido obtener la información de todos los usuarios"
-                                );
-                            }
-                        });
-
-                    },
-                    error: function() {
-                        console.log("No se ha podido obtener la información de la lista predeterminada");
-                    }
-                });
-
-            }
-        }
-    </script>
-
-@endsection
-
-@endsection
+            <x-slot:actions>
+                <x-ui.button type="submit" variant="primary" icon="puzzle">Guardar bono</x-ui.button>
+                <x-ui.button variant="ghost" :href="route('secretary.bonus.list')">Cancelar</x-ui.button>
+            </x-slot:actions>
+        </x-ui.form>
+    </x-ui.card>
+</x-layout.app>
