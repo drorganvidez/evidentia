@@ -6,14 +6,14 @@
     $closesAt = \Config::upload_evidences_timestamp();
     // Open as the routes read it (CheckUploadEvidences): until the date passes, also when there is none
     $open = !now()->gt($closesAt ?? now());
-    $columns = [
+    $columns = $sort->columns([
         ['label' => 'Evidencia', 'key' => 'title'],
         ['label' => 'Comité', 'key' => 'committee', 'hide' => true],
         ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
         ['label' => 'Estado', 'key' => 'status'],
         ['label' => 'Creada', 'key' => 'created'],
         ['label' => 'Acciones', 'srOnly' => true],
-    ];
+    ]);
 @endphp
 <x-layout.app title="Mis evidencias" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Mis evidencias']]">
     <x-ui.page-header title="Mis evidencias">

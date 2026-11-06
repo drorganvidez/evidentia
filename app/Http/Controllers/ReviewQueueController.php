@@ -11,6 +11,7 @@ use App\Services\EvidenceReview;
 use App\Services\ReviewQueue;
 use App\Services\SelfReview;
 use App\Support\ListPage;
+use App\Support\ListSort;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -94,12 +95,22 @@ abstract class ReviewQueueController extends Controller
         if ($this->kind() === ReviewQueue::PRESIDENCY) {
             $columns[] = 'committee.name';
         }
+        // orden en la URL; por defecto, la última modificación primero
+        $sort = ListSort::from($request, array_filter([
+            'title' => 'title',
+            'student' => ['user.surname', 'user.name'],
+            'committee' => $this->kind() === ReviewQueue::PRESIDENCY ? 'committee.name' : null,
+            'hours' => 'hours',
+            'created_at' => ListSort::desc('created_at'),
+            'status' => ListSort::rank('status', ['PENDING', 'ACCEPTED', 'REJECTED']),
+            'updated' => ListSort::desc('updated_at'),
+        ]), 'updated');
         $scope = fn (): Builder => $this->searchList($this->evidences($user), $request, $columns);
         $counts = $scope()->reorder()->selectRaw('status, count(*) as total')->groupBy('status')->pluck('total', 'status');
         $filtered = $scope()->when($type !== 'all', fn (Builder $query) => $query->where('status', self::STATES[$type]));
         $hours = (float) (clone $filtered)->reorder()->sum('hours');
         $evidences = $this->paginateList(
-            $filtered->with(['user', 'committee', 'reasonRejection'])->reorder()->orderByDesc('updated_at')->latest()->latest('id'),
+            $sort->apply($filtered->with(['user', 'committee', 'reasonRejection'])),
             $request,
         );
 
@@ -112,6 +123,7 @@ abstract class ReviewQueueController extends Controller
             'counts' => ['all' => (int) $counts->sum()] + array_map(fn (string $status): int => (int) ($counts[$status] ?? 0), self::STATES),
             'hours' => $hours,
             'term' => ListPage::term($request),
+            'sort' => $sort,
         ]);
     }
 

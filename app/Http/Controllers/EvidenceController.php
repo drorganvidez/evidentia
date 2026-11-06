@@ -17,6 +17,7 @@ use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
 use App\Support\Changes;
 use App\Support\ListPage;
+use App\Support\ListSort;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -42,14 +43,23 @@ class EvidenceController extends Controller
 
     public function list(Request $request)
     {
+        $sort = ListSort::from($request, [
+            'title' => 'title',
+            'committee' => 'committee.name',
+            'hours' => 'hours',
+            'status' => ListSort::rank('status', ['DRAFT', 'PENDING', 'ACCEPTED', 'REJECTED']),
+            'created' => ListSort::desc('created_at'),
+        ], 'created');
+
         // la búsqueda, el número y las horas cuentan todas las evidencias, no solo las de la página
         $evidences = $this->searchList(Evidence::where(['user_id' => Auth::id(), 'last' => true]), $request, ['title', 'committee.name']);
         $hours = (float) $evidences->clone()->sum('hours');
 
         return view('evidence.list', [
-            'evidences' => $this->paginateList($evidences->with(['committee', 'reasonRejection'])->latest()->latest('id'), $request),
+            'evidences' => $this->paginateList($sort->apply($evidences->with(['committee', 'reasonRejection'])), $request),
             'hours' => $hours,
             'term' => ListPage::term($request),
+            'sort' => $sort,
         ]);
     }
 

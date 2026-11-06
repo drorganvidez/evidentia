@@ -32,16 +32,18 @@
         'rejected' => 'No hay evidencias rechazadas',
         default => 'No hay evidencias',
     };
-    $columns = array_values(
-        array_filter([
-            ['label' => 'Evidencia', 'key' => 'title'],
-            ['label' => 'Estudiante', 'key' => 'student'],
-            $presidency ? ['label' => 'Comité', 'key' => 'committee'] : null,
-            ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
-            ['label' => 'Recibida', 'key' => 'created_at'],
-            ['label' => 'Estado', 'key' => 'status'],
-            ['label' => 'Acciones', 'srOnly' => true],
-        ]),
+    $columns = $sort->columns(
+        array_values(
+            array_filter([
+                ['label' => 'Evidencia', 'key' => 'title'],
+                ['label' => 'Estudiante', 'key' => 'student'],
+                $presidency ? ['label' => 'Comité', 'key' => 'committee'] : null,
+                ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
+                ['label' => 'Recibida', 'key' => 'created_at'],
+                ['label' => 'Estado', 'key' => 'status'],
+                ['label' => 'Acciones', 'srOnly' => true],
+            ]),
+        ),
     );
 @endphp
 <x-layout.app :title="'Revisar evidencias de ' . $name" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Revisar evidencias']]">
