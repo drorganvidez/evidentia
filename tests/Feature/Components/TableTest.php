@@ -456,6 +456,20 @@ class TableTest extends ComponentTestCase
         $this->assertStringNotContainsString('tableSort', $legacy);
     }
 
+    public function test_beside_a_search_on_the_server_the_phone_select_takes_a_row_of_its_own(): void
+    {
+        $columns = [['label' => 'Evidencia', 'key' => 'title', 'sort' => ['href' => '/lista?sort=title&dir=asc', 'dir' => null, 'asc' => '/lista?sort=title&dir=asc', 'desc' => '/lista?sort=title&dir=desc']]];
+        $html = $this->render(
+            '<x-ui.table caption="Evidencias del curso" :columns="$columns" :paginator="$paginator" filterable><x-ui.table.row><x-ui.table.cell>x</x-ui.table.cell></x-ui.table.row></x-ui.table>',
+            ['columns' => $columns, 'paginator' => $this->paginator()],
+        );
+
+        $this->assertStringContainsString('role="search"', $html);
+        $this->assertStringContainsString('aria-label="Quitar la búsqueda"', $html);
+        $this->assertMatchesRegularExpression('/<div class="relative flex max-w-full min-w-0 items-center md:hidden max-md:basis-full">\s*<svg[^>]*>.*?<select data-table-sort/s', $html, 'Its buttons keep their size on the phone');
+        $this->assertStringNotContainsString('max-md:basis-full', $this->browserTable('sortable filterable'), 'The quick filter shares its row');
+    }
+
     public function test_a_cell_carries_the_value_the_browser_orders_by(): void
     {
         $date = $this->render('<x-ui.table.cell :sort-value="$date">hace 3 días</x-ui.table.cell>', ['date' => Carbon::parse('2026-11-03 10:30:00', 'Europe/Madrid')]);

@@ -174,7 +174,11 @@
                 <span role="status" class="text-sm text-ink-muted tabular-nums" x-text="summary"></span>
             @endif
             @if ($phoneSort)
-                <div class="relative flex max-w-full min-w-0 items-center md:hidden">
+                {{-- Beside a search on the server it takes a row of its own, so that its buttons keep their size --}}
+                <div @class([
+                    'relative flex max-w-full min-w-0 items-center md:hidden',
+                    'max-md:basis-full' => $searchable,
+                ])>
                     <x-lucide-arrow-up-down aria-hidden="true"
                         class="pointer-events-none absolute left-3 size-4 text-ink-muted" />
                     <select data-table-sort x-on:change="choose" aria-label="{{ $sortLabel }}"
