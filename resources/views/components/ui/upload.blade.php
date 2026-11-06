@@ -76,12 +76,13 @@
     x-bind:data-state="dragging ? 'dragging' : 'idle'" x-bind:aria-busy="uploading ? 'true' : 'false'"
     x-on:dragenter.prevent="onDragEnter" x-on:dragover.prevent="onDragOver" x-on:dragleave="onDragLeave"
     x-on:drop.prevent="onDrop" {{ $attributes->class(['group grid grid-cols-[minmax(0,1fr)] gap-3']) }}>
-    <label for="{{ $id }}"
+    {{-- The file input covers the whole zone; the label names it and the hint, outside the label, only describes it --}}
+    <div
         class="relative grid min-h-32 cursor-pointer content-center justify-items-center gap-2 rounded-lg border-[1.5px] border-dashed border-aurora-500/45 bg-aurora-500/6 px-4 py-6 text-center transition focus-within:ring-4 focus-within:ring-aurora-500/12 hover:bg-aurora-500/10 group-data-[state=dragging]:bg-aurora-500/10 group-data-[state=dragging]:ring-4 group-data-[state=dragging]:ring-aurora-500/12">
         <span aria-hidden="true" class="grid size-12 place-items-center rounded-md bg-brand-soft text-brand-soft-ink">
             <x-lucide-upload class="size-6" />
         </span>
-        <span class="text-md"><strong>{{ $labelStrong }}</strong>{{ $labelRest }}</span>
+        <label for="{{ $id }}" class="text-md"><strong>{{ $labelStrong }}</strong>{{ $labelRest }}</label>
         @if ($hint !== null)
             <span id="{{ $id }}-hint" class="text-md text-ink-muted">{{ $hint }}</span>
         @endif
@@ -92,7 +93,7 @@
             @if ($capture !== null) capture="{{ $capture }}" @endif
             @if ($error !== null) aria-invalid="true" @endif
             @if ($describedBy !== '') aria-describedby="{{ $describedBy }}" @endif>
-    </label>
+    </div>
     <ul role="list" aria-label="Archivos" x-show="files.length" x-cloak class="grid grid-cols-[minmax(0,1fr)] gap-2">
         <template x-for="file in files" x-bind:key="file.key">
             <li

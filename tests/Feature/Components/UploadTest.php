@@ -29,7 +29,10 @@ class UploadTest extends ComponentTestCase
         $this->assertStringContainsString('x-bind:data-state="dragging ? \'dragging\' : \'idle\'"', $html);
         $this->assertStringContainsString('x-bind:aria-busy="uploading ? \'true\' : \'false\'"', $html);
         $this->assertStringContainsString('<strong>Arrastra aquí el documento</strong> o pulsa para elegirlo', $html);
+        // The label names the input with its text alone; the hint only describes it
+        $this->assertStringContainsString('<label for="field-uploaded" class="text-md"><strong>Arrastra aquí el documento</strong> o pulsa para elegirlo</label>', $html);
         $this->assertStringContainsString('<span id="field-uploaded-hint" class="text-md text-ink-muted">PDF, imágenes o ZIP · hasta 50 MB por archivo</span>', $html);
+        $this->assertGreaterThan(strpos($html, '</label>'), strpos($html, 'id="field-uploaded-hint"'));
         $this->assertMatchesRegularExpression('/<input [^>]*aria-describedby="field-uploaded-hint"/', $html);
         $this->assertStringContainsString('<template x-for="file in files" x-bind:key="file.key">', $html);
         $this->assertStringContainsString('<template x-if="file.status === \'done\'">', $html);

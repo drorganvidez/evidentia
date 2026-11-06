@@ -140,6 +140,21 @@ test.describe('Subida de archivos', () => {
         await expect(rows).toHaveCount(1);
     });
 
+    test('el campo se llama por su etiqueta y la pista solo lo describe', async ({ ui }) => {
+        const input = ui
+            .section('upload')
+            .locator('[x-data="upload"]')
+            .first()
+            .locator('input[type="file"]');
+
+        await expect(input).toHaveAccessibleName(
+            'Arrastra aquí el documento o pulsa para elegirlo',
+        );
+        await expect(input).toHaveAccessibleDescription(
+            'PDF, imágenes o ZIP · hasta 1 MB por archivo',
+        );
+    });
+
     test('arrastrar sobre la zona la marca y soltar fuera la desmarca', async ({ ui }) => {
         const zone = ui.section('upload').locator('[x-data="upload"]').first();
         const label = zone.locator('label');
