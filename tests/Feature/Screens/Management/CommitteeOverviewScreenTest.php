@@ -102,7 +102,7 @@ class CommitteeOverviewScreenTest extends ScreenTestCase
             ->assertSee('Montaje del photocall')
             ->assertDontSee('Notas de prensa')
             ->assertSee('Filtros de evidencias')
-            ->assertSee('href="'.e(route('lecture.evidence.list', ['estado' => 'pendientes', 'comite' => $logistics->id])).'"', false);
+            ->assertSee('href="'.e(route('lecture.evidence.list', ['comite' => $logistics->id, 'estado' => 'pendientes'])).'"', false);
 
         $this->screen('presidente', route('president.evidence.list', ['estado' => 'atrasadas']))
             ->assertSee('Atención en el registro')
