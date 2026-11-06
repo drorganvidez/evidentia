@@ -572,7 +572,7 @@
         height: auto;
     }
 
-    /* The reduced motion rule above does not reach this pseudo-element, so the opening slides only on request */
+    /* The reduced motion rule above does not reach this pseudo-element: it slides open only without that preference */
     @media (prefers-reduced-motion: no-preference) {
         ::details-content {
             transition:
