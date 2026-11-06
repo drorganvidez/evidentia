@@ -1,13 +1,13 @@
-{{-- Section of the record: the meetings the person attended, with their minutes --}}
+{{-- Section of the record: the meetings the person attended, with their minutes, ordered in the browser --}}
 @php
     $columns = [
         ['label' => 'Reunión', 'key' => 'title'],
         ['label' => 'Comité', 'key' => 'committee'],
-        ['label' => 'Fecha', 'key' => 'datetime'],
+        ['label' => 'Fecha', 'key' => 'datetime', 'sorted' => 'desc'],
         ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
     ];
 @endphp
-<x-ui.table caption="Reuniones" :columns="$columns" show-caption>
+<x-ui.table caption="Reuniones" :columns="$columns" show-caption sortable>
     @foreach ($meetings as $meeting)
         @php
             $href = $meeting->meetingMinutes ? route('activity.minutes', ['id' => $meeting->meetingMinutes->id]) : null;

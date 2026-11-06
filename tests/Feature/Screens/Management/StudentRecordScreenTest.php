@@ -140,6 +140,33 @@ class StudentRecordScreenTest extends ScreenTestCase
         $this->assertSame($student->id, $thread->author_id);
     }
 
+    public function test_every_table_of_the_record_orders_in_the_browser_from_its_newest_date(): void
+    {
+        // section => the header of the date the server already ordered the rows by, the newest first
+        $sections = [
+            'evidencias' => ['Actualizada'],
+            'reuniones' => ['Fecha'],
+            'firmas' => ['Firmada', 'Fecha'],
+            'asistencias' => ['Fecha'],
+            'bonos' => ['Fecha'],
+            'mensajes' => ['Último mensaje'],
+        ];
+        foreach ($sections as $tab => $dates) {
+            $html = $this->record('presidente', 'estudiante', ['tab' => $tab]);
+
+            $this->assertSame(count($dates), substr_count($html, 'data-sort-mode="browser"'), "Every table of {$tab} orders in the browser");
+            $this->assertStringContainsString('x-on:click="toggle"', $html);
+            $this->assertStringContainsString('aria-label="Ordenar por"', $html, 'The phone cards get the order select');
+            foreach ($dates as $date) {
+                $this->assertMatchesRegularExpression('/data-label="'.preg_quote($date, '/').'"\s+aria-sort="descending"/', $html);
+            }
+        }
+
+        // the version orders as a number and the attendance of a request from the strongest record to none
+        $this->assertMatchesRegularExpression('/data-sort-value="1"[^>]*>\s*<span class="md:hidden">Versión/', $this->record('presidente', 'estudiante'));
+        $this->assertMatchesRegularExpression('/<td role="cell" data-sort-value="0"[^>]*>(?:(?!<\/td>).)*Firmó/s', $this->record('presidente', 'estudiante', ['tab' => 'firmas']));
+    }
+
     public function test_each_section_has_its_own_empty_state(): void
     {
         $empty = [

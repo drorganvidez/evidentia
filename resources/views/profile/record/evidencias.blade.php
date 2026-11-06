@@ -1,4 +1,4 @@
-{{-- Section of the record: the last version of every evidence the person sent, with its history --}}
+{{-- Section of the record: the last version of every evidence the person sent, with its history, ordered in the browser --}}
 @php
     $columns = [
         ['label' => 'Evidencia', 'key' => 'title'],
@@ -6,12 +6,12 @@
         ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
         ['label' => 'Versión', 'key' => 'version', 'align' => 'end'],
         ['label' => 'Estado', 'key' => 'status'],
-        ['label' => 'Actualizada', 'key' => 'updated'],
+        ['label' => 'Actualizada', 'key' => 'updated', 'sorted' => 'desc'],
         ['label' => 'Historial', 'key' => 'history', 'srOnly' => true],
     ];
     $sum = $totals['evidences'];
 @endphp
-<x-ui.table caption="Evidencias enviadas" :columns="$columns" show-caption>
+<x-ui.table caption="Evidencias enviadas" :columns="$columns" show-caption sortable>
     @foreach ($evidences as $evidence)
         @php
             $href = route('profiles.view.evidence', ['id_user' => $user->id, 'id_evidence' => $evidence->id]);
@@ -25,7 +25,7 @@
                 @endif
             </x-ui.table.cell>
             <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$evidence->hours" /></x-ui.table.cell>
-            <x-ui.table.cell numeric meta><span class="md:hidden">Versión
+            <x-ui.table.cell numeric meta :sort-value="$evidence->version"><span class="md:hidden">Versión
                 </span>{{ $evidence->version }}</x-ui.table.cell>
             <x-ui.table.cell label="Estado" end><x-ui.evidence-status :status="$evidence->status" :reason="$evidence->reasonRejection?->reason"
                     size="sm" /></x-ui.table.cell>

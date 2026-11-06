@@ -1,13 +1,13 @@
-{{-- Section of the record: the attendances of the person to the events, with the hours each one computes --}}
+{{-- Section of the record: the attendances of the person to the events, with the hours each one computes, ordered in the browser --}}
 @php
     $columns = [
         ['label' => 'Evento', 'key' => 'event'],
-        ['label' => 'Fecha', 'key' => 'start'],
+        ['label' => 'Fecha', 'key' => 'start', 'sorted' => 'desc'],
         ['label' => 'Estado', 'key' => 'status'],
         ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
     ];
 @endphp
-<x-ui.table caption="Asistencias" :columns="$columns" show-caption>
+<x-ui.table caption="Asistencias" :columns="$columns" show-caption sortable>
     @foreach ($attendances as $attendee)
         <x-ui.table.row>
             <x-ui.table.cell label="Evento" primary><span

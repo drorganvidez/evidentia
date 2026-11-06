@@ -1,14 +1,14 @@
-{{-- Section of the record: the threads in which the person wrote, with how many messages they wrote in each --}}
+{{-- Section of the record: the threads in which the person wrote, with how many messages they wrote in each, ordered in the browser --}}
 @php
     $columns = [
         ['label' => 'Asunto', 'key' => 'subject'],
         ['label' => 'Para', 'key' => 'audience'],
         ['label' => 'Escritos', 'key' => 'written', 'align' => 'end'],
         ['label' => 'Estado', 'key' => 'state'],
-        ['label' => 'Último mensaje', 'key' => 'last_message_at'],
+        ['label' => 'Último mensaje', 'key' => 'last_message_at', 'sorted' => 'desc'],
     ];
 @endphp
-<x-ui.table caption="Mensajes que ha escrito" :columns="$columns" show-caption>
+<x-ui.table caption="Mensajes que ha escrito" :columns="$columns" show-caption sortable>
     @foreach ($threads as $thread)
         @php
             $href = route('messages.show', $thread);

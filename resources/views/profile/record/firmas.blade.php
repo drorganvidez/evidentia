@@ -1,26 +1,28 @@
 {{--
     Section of the record: the sheets the person signed and the meeting requests of the committees they belong to (by a
-    default list or because they run it), with how the person shows in each one
+    default list or because they run it), with how the person shows in each one; both order in the browser, the
+    attendance from the strongest record to none
 --}}
 @php
     $sheetColumns = [
         ['label' => 'Hoja de firmas', 'key' => 'title'],
         ['label' => 'Convocatoria', 'key' => 'request'],
         ['label' => 'Comité', 'key' => 'committee'],
-        ['label' => 'Firmada', 'key' => 'signed_at'],
+        ['label' => 'Firmada', 'key' => 'signed_at', 'sorted' => 'desc'],
     ];
     $requestColumns = [
         ['label' => 'Convocatoria', 'key' => 'title'],
         ['label' => 'Comité', 'key' => 'committee'],
-        ['label' => 'Fecha', 'key' => 'datetime'],
+        ['label' => 'Fecha', 'key' => 'datetime', 'sorted' => 'desc'],
         ['label' => 'Asistencia', 'key' => 'state'],
         ['label' => 'Acta', 'key' => 'minutes', 'srOnly' => true],
     ];
+    $attendanceOrder = ['signed', 'minutes', 'upcoming', 'missing'];
     $recorded = $requests->whereIn('state', ['signed', 'minutes'])->count();
     $missing = $requests->where('state', 'missing')->count();
 @endphp
 <div class="grid grid-cols-[minmax(0,1fr)] gap-6">
-    <x-ui.table caption="Hojas firmadas" :columns="$sheetColumns" show-caption>
+    <x-ui.table caption="Hojas firmadas" :columns="$sheetColumns" show-caption sortable>
         @foreach ($signatures as $sheet)
             @php
                 $request = $sheet->meetingRequest;
@@ -55,7 +57,7 @@
         @endif
     </x-ui.table>
 
-    <x-ui.table caption="Convocatorias de sus comités" :columns="$requestColumns" show-caption>
+    <x-ui.table caption="Convocatorias de sus comités" :columns="$requestColumns" show-caption sortable>
         @foreach ($requests as $item)
             @php
                 $request = $item['request'];
@@ -72,7 +74,7 @@
                 </x-ui.table.cell>
                 <x-ui.table.cell label="Fecha" meta><x-ui.time :value="$request->datetime" format="absolute"
                         pattern="d/m/Y H:i" /></x-ui.table.cell>
-                <x-ui.table.cell label="Asistencia"><x-ui.badge :tone="$item['tone']"
+                <x-ui.table.cell label="Asistencia" :sort-value="array_search($item['state'], $attendanceOrder, true)"><x-ui.badge :tone="$item['tone']"
                         size="sm">{{ $item['label'] }}</x-ui.badge></x-ui.table.cell>
                 <x-ui.table.cell>
                     @if ($minutes)

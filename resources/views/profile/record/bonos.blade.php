@@ -1,13 +1,13 @@
-{{-- Section of the record: the bonuses the person received, with the committee that granted them --}}
+{{-- Section of the record: the bonuses the person received, with the committee that granted them, ordered in the browser --}}
 @php
     $columns = [
         ['label' => 'Motivo', 'key' => 'reason'],
         ['label' => 'Comité', 'key' => 'committee'],
-        ['label' => 'Fecha', 'key' => 'created_at'],
+        ['label' => 'Fecha', 'key' => 'created_at', 'sorted' => 'desc'],
         ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
     ];
 @endphp
-<x-ui.table caption="Bonos" :columns="$columns" show-caption>
+<x-ui.table caption="Bonos" :columns="$columns" show-caption sortable>
     @foreach ($bonuses as $bonus)
         <x-ui.table.row>
             <x-ui.table.cell label="Motivo" primary><span
