@@ -16,12 +16,6 @@
         'fragment' => 'ui-table',
     ]);
     $hue = fn(int $id): int => (($id * 7) % 12) * 30;
-    $statuses = [
-        'DRAFT' => ['draft', 'En borrador', false],
-        'PENDING' => ['pending', 'Pendiente de revisión', true],
-        'ACCEPTED' => ['accepted', 'Aceptada', false],
-        'REJECTED' => ['rejected', 'Rechazada', false],
-    ];
     $evidences = [
         [
             'id' => 33,
@@ -210,11 +204,10 @@
             </x-slot:toolbar>
             @foreach ($evidences as $evidence)
                 @php
-                    [$tone, $label, $pulse] = $statuses[$evidence['status']];
                     [$committeeId, $committeeName] = $evidence['committee'];
                     $href = route('ui.index', ['evidence' => $evidence['id']]) . '#ui-table';
                 @endphp
-                <x-ui.table.row :href="$href" :search="$evidence['title'] . ' ' . $committeeName . ' ' . $label">
+                <x-ui.table.row :href="$href">
                     <x-ui.table.cell label="Evidencia" primary>
                         <a href="{{ $href }}">{{ $evidence['title'] }}</a>
                         <span
@@ -225,7 +218,7 @@
                     </x-ui.table.cell>
                     <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$evidence['hours']" /></x-ui.table.cell>
                     <x-ui.table.cell label="Estado" end>
-                        <x-ui.badge :tone="$tone" :pulse="$pulse" size="sm">{{ $label }}</x-ui.badge>
+                        <x-ui.evidence-status :status="$evidence['status']" size="sm" />
                     </x-ui.table.cell>
                     <x-ui.table.cell label="Actualizada" meta><x-ui.time :value="$evidence['updated']" inline
                             short /></x-ui.table.cell>
@@ -246,7 +239,6 @@
         <x-ui.table caption="Evidencias de Programa" :columns="$managementColumns" density="compact" :cards="false">
             @foreach ($management as $evidence)
                 @php
-                    [$tone, $label, $pulse] = $statuses[$evidence['status']];
                     [$committeeId, $committeeName] = $evidence['committee'];
                     [$name, $surname] = $evidence['student'];
                     $href = route('ui.index', ['evidence' => $evidence['id']]) . '#ui-table';
@@ -264,8 +256,7 @@
                     </x-ui.table.cell>
                     <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$evidence['hours']" /></x-ui.table.cell>
                     <x-ui.table.cell label="Estado">
-                        <x-ui.badge :tone="$tone" :pulse="$pulse"
-                            size="sm">{{ $label }}</x-ui.badge>
+                        <x-ui.evidence-status :status="$evidence['status']" size="sm" />
                     </x-ui.table.cell>
                     <x-ui.table.cell label="Actualizada" meta><x-ui.time :value="$evidence['updated']" inline
                             short /></x-ui.table.cell>
