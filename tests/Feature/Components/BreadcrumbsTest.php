@@ -23,7 +23,8 @@ class BreadcrumbsTest extends ComponentTestCase
         $this->assertStringStartsWith('<nav aria-label="Migas de pan" class="min-w-0">', trim($html));
         $this->assertStringContainsString('<ol class="flex items-center gap-2 overflow-hidden text-md font-medium whitespace-nowrap text-ink-muted">', $html);
         $this->assertSame(1, substr_count($html, 'aria-current="page"'));
-        $this->assertStringContainsString('<li aria-current="page" class="truncate font-semibold text-ink">Montaje del photocall</li>', $html);
+        // It takes the room the links leave and never drops below a readable minimum
+        $this->assertStringContainsString('<li aria-current="page" class="min-w-16 flex-1 truncate font-semibold text-ink">Montaje del photocall</li>', $html);
         $this->assertSame(2, substr_count($html, '<a href='), 'Only the previous items are links');
         $this->assertStringNotContainsString('href="/evidencias" aria-current', $html);
         $this->assertCspSafe($html);
@@ -33,8 +34,12 @@ class BreadcrumbsTest extends ComponentTestCase
     {
         $html = $this->render('<x-ui.breadcrumbs :items="$items" />', ['items' => $this->items()]);
 
-        $this->assertSame(2, substr_count($html, '<li class="hidden items-center gap-2 md:inline-flex">'));
-        $this->assertMatchesRegularExpression('#<a href="/"\s+class="inline-flex min-h-6 items-center text-ink-muted no-underline transition hover:text-ink">Inicio</a>#', $html);
+        // Below lg only the parent of the current page shows; every previous item shrinks with an ellipsis
+        $this->assertSame(1, substr_count($html, '<li class="hidden min-w-0 items-center gap-2 lg:inline-flex">'));
+        $this->assertSame(1, substr_count($html, '<li class="hidden min-w-0 items-center gap-2 md:inline-flex">'));
+        $this->assertLessThan(strpos($html, 'md:inline-flex'), strpos($html, 'lg:inline-flex'), 'The parent is the last link');
+        $this->assertMatchesRegularExpression('#<a href="/"\s+class="inline-flex min-h-6 min-w-0 items-center text-ink-muted no-underline transition hover:text-ink"><span\s+class="truncate">Inicio</span></a>#', $html);
+        $this->assertSame(2, substr_count($html, 'class="size-4 shrink-0 opacity-60"'), 'The separators never shrink');
         $this->assertSame(2, substr_count($html, '<svg'));
         $this->assertSame(2, substr_count($html, 'aria-hidden="true"'));
         $this->assertStringNotContainsString('›', $html);
@@ -46,7 +51,7 @@ class BreadcrumbsTest extends ComponentTestCase
         $html = $this->render('<x-ui.breadcrumbs :items="$items" label="Ruta" class="flex-1" />', ['items' => [['label' => 'Inicio']]]);
 
         $this->assertStringContainsString('<nav aria-label="Ruta" class="min-w-0 flex-1">', $html);
-        $this->assertStringContainsString('<li aria-current="page" class="truncate font-semibold text-ink">Inicio</li>', $html);
+        $this->assertStringContainsString('<li aria-current="page" class="min-w-16 flex-1 truncate font-semibold text-ink">Inicio</li>', $html);
         $this->assertStringNotContainsString('<a', $html);
         $this->assertStringNotContainsString('<svg', $html);
     }

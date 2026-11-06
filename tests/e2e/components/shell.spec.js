@@ -320,6 +320,21 @@ for (const path of ['/_ui/shell', '/_ui/detail']) {
             }
         });
 
+        test('la miga actual se lee a 768, 1024 y 1100 px', async ({ page }) => {
+            const current = page.locator('nav[aria-label="Migas de pan"] [aria-current="page"]');
+
+            for (const width of [768, 1024, 1100]) {
+                await page.setViewportSize({ width, height: 900 });
+
+                const box = await current.boundingBox();
+
+                expect(
+                    box?.width ?? 0,
+                    `Ancho de la miga actual a ${width} px`,
+                ).toBeGreaterThanOrEqual(63.5);
+            }
+        });
+
         test('no desborda a 768, 1024 y 1100 px', async ({ page }) => {
             for (const width of [768, 1024, 1100]) {
                 await page.setViewportSize({ width, height: 900 });

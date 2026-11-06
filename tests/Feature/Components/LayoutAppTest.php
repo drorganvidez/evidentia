@@ -92,7 +92,7 @@ class LayoutAppTest extends ComponentTestCase
         $this->assertSame(2, substr_count($html, '>Mis cosas</p>'), 'Group heading');
         $this->assertStringContainsString('md:max-lg:sr-only', $html, 'The rail hides the heading in the aside');
         $this->assertStringContainsString('hidden md:max-lg:flex', $html, 'Mark-only brand for the rail');
-        $this->assertSame(3, substr_count($html, 'aria-current="page"') - substr_count($html, 'aria-current="page" class="truncate'), 'Inicio is current in the aside, the drawer and the bottom bar');
+        $this->assertSame(3, substr_count($html, 'aria-current="page"') - substr_count($html, 'aria-current="page" class="min-w-16 flex-1 truncate'), 'Inicio is current in the aside, the drawer and the bottom bar');
 
         $plain = $this->render('<x-layout.app :nav="$nav">Hola</x-layout.app>', ['nav' => [['label' => null, 'items' => $this->nav()[0]['items']]]]);
 
@@ -104,7 +104,7 @@ class LayoutAppTest extends ComponentTestCase
     {
         $html = $this->render_shell();
 
-        $this->assertStringContainsString('<li aria-current="page" class="truncate font-semibold text-ink">Mis evidencias</li>', $html);
+        $this->assertStringContainsString('<li aria-current="page" class="min-w-16 flex-1 truncate font-semibold text-ink">Mis evidencias</li>', $html);
         $this->assertStringContainsString('href="/inicio"', $html);
     }
 
