@@ -132,6 +132,9 @@ class ListPageTest extends TestCase
         $this->assertSame(['Atención en el registro'], $found('juan registro'), 'One word in the relation, another in the title');
         $this->assertCount(4, $found('logística'));
         $this->assertSame([], $found('photocall garcía'));
+        $this->assertSame([], $found('%'), 'A wildcard is text');
+        $this->assertSame([], $found('mont_je'));
+        $this->assertSame([], $found('!'));
     }
 
     public function test_the_controllers_reach_it_through_the_trait(): void

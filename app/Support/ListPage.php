@@ -69,19 +69,26 @@ final class ListPage
         $words = $term === null ? [] : array_slice(array_unique(explode(' ', $term)), 0, self::MAX_WORDS);
 
         foreach ($words as $word) {
-            $like = '%'.$word.'%';
+            // % and _ are text, not wildcards: a search never widens the list
+            $like = '%'.str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $word).'%';
             $query->where(function (Builder $query) use ($columns, $like) {
                 foreach ($columns as $column) {
                     if (str_contains($column, '.')) {
-                        $query->orWhereRelation(Str::beforeLast($column, '.'), Str::afterLast($column, '.'), 'like', $like);
+                        $query->orWhereHas(Str::beforeLast($column, '.'), fn (Builder $related) => self::like($related, Str::afterLast($column, '.'), $like));
                     } else {
-                        $query->orWhere($query->qualifyColumn($column), 'like', $like);
+                        $query->orWhere(fn (Builder $own) => self::like($own, $column, $like));
                     }
                 }
             });
         }
 
         return $query;
+    }
+
+    /** column like ? escape '!', the same on MySQL and SQLite; the column is the screen's, never the person's. */
+    private static function like(Builder $query, string $column, string $like): void
+    {
+        $query->whereRaw($query->getQuery()->getGrammar()->wrap($query->qualifyColumn($column))." like ? escape '!'", [$like]);
     }
 
     /**
