@@ -12,7 +12,9 @@ test.describe('Contacto rápido del alumno', () => {
         await ui.noOverflow();
         await page.getByRole('link', { name: 'Escribir a la coordinación' }).click();
 
-        await expect(page.getByLabel('Destinatario')).toHaveValue(/^COORDINATOR:\d+$/);
+        await expect(page.getByRole('combobox', { name: 'Destinatario' })).toHaveValue(
+            'Coordinación de Logística',
+        );
         await expect(page.getByLabel('Asunto')).toHaveValue('Sobre mis evidencias');
     });
 
@@ -24,7 +26,9 @@ test.describe('Contacto rápido del alumno', () => {
             .getByRole('link', { name: 'Escribir a la secretaría sobre Reunión de logística' })
             .click();
 
-        await expect(page.getByLabel('Destinatario')).toHaveValue(/^SECRETARY:\d+$/);
+        await expect(page.getByRole('combobox', { name: 'Destinatario' })).toHaveValue(
+            'Secretaría de Logística',
+        );
         await expect(page.getByLabel('Asunto')).toHaveValue('Sobre «Reunión de logística»');
     });
 
@@ -38,7 +42,9 @@ test.describe('Contacto rápido del alumno', () => {
             })
             .click();
 
-        await expect(page.getByLabel('Destinatario')).toHaveValue('REGISTER_COORDINATOR');
+        await expect(page.getByRole('combobox', { name: 'Destinatario' })).toHaveValue(
+            'Coordinación de registro',
+        );
         await expect(page.getByLabel('Asunto')).toHaveValue(
             'Sobre mi asistencia a «Taller de Git»',
         );

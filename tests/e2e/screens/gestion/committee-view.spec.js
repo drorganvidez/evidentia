@@ -1,5 +1,5 @@
 import { signIn } from '../../fixtures/auth.js';
-import { expect, test } from '../../fixtures/ui.js';
+import { choose, expect, test } from '../../fixtures/ui.js';
 
 // What the management sees of each committee: its page with alerts and nudges, and the filtered lists
 test.describe('Ficha de un comité', () => {
@@ -51,7 +51,9 @@ test.describe('Ficha de un comité', () => {
             .click();
         await page.getByRole('link', { name: 'Escribir a la coordinación' }).click();
 
-        await expect(page.getByLabel('Destinatario')).toHaveValue(/^COORDINATOR:\d+$/);
+        await expect(page.getByRole('combobox', { name: 'Destinatario' })).toHaveValue(
+            'Coordinación de Logística',
+        );
         await expect(page.getByLabel('Asunto')).toHaveValue('Logística');
     });
 
@@ -81,7 +83,7 @@ test.describe('Filtros de gestión', () => {
         await page.goto('/lecture/evidence/list');
 
         await page.getByText('Filtros de evidencias').click();
-        await page.getByLabel('Comité').selectOption({ label: 'Comunicación' });
+        await choose(page.getByRole('combobox', { name: 'Comité' }), 'Comunicación');
         await page.getByRole('button', { name: 'Aplicar' }).click();
         await expect(page).toHaveURL(/comite=\d+/);
         await expect(page.getByText('No hay evidencias')).toBeVisible();
