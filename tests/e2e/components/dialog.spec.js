@@ -199,3 +199,48 @@ test.describe('Diálogos', () => {
         ).toBe(true);
     });
 });
+
+test.describe('Diálogos con movimiento reducido', () => {
+    test.use({ reducedMotion: 'reduce' });
+
+    /** Longest transition of an element, in seconds (the base layer cuts them to 0.001 ms). */
+    function longest(locator) {
+        return locator.evaluate((el) =>
+            Math.max(...getComputedStyle(el).transitionDuration.split(',').map(parseFloat)),
+        );
+    }
+
+    test('el modal y el cajón aparecen sin deslizarse', async ({ page }) => {
+        await page.goto('/_ui#ui-dialog');
+
+        await page.locator('button[aria-controls="demo-drawer"]').click();
+
+        const drawer = page.locator('#demo-drawer');
+
+        await expect(drawer).toHaveAttribute('open', '');
+        expect(await longest(drawer)).toBeLessThanOrEqual(0.00001);
+        // Already against the left edge, without waiting for a slide
+        expect((await drawer.boundingBox()).x).toBe(0);
+        await page.keyboard.press('Escape');
+
+        await page.locator('button[aria-controls="demo-reject"]').click();
+
+        const modal = page.locator('#demo-reject');
+
+        await expect(modal).toHaveAttribute('open', '');
+        expect(await longest(modal)).toBeLessThanOrEqual(0.00001);
+    });
+
+    test('el cajón del shell tampoco se desliza', async ({ page }, testInfo) => {
+        test.skip(testInfo.project.name !== 'mobile', 'El cajón es cosa del teléfono');
+
+        await page.goto('/_ui/shell');
+        await page.getByRole('button', { name: 'Abrir menú' }).click();
+
+        const drawer = page.locator('#drawer');
+
+        await expect(drawer).toHaveAttribute('open', '');
+        expect(await longest(drawer)).toBeLessThanOrEqual(0.00001);
+        expect((await drawer.boundingBox()).x).toBe(0);
+    });
+});
