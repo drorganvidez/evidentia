@@ -1,13 +1,13 @@
 import { expect, test } from '../fixtures/ui.js';
 
 /** No horizontal overflow inside a document (the page or a frame). */
-async function noOverflowIn(root) {
+async function noOverflowIn(root, where = '') {
     const widths = await root.locator('html').evaluate((el) => ({
         scroll: el.scrollWidth,
         client: el.clientWidth,
     }));
 
-    expect(widths.scroll, 'Desborde horizontal').toBeLessThanOrEqual(widths.client);
+    expect(widths.scroll, `Desborde horizontal${where}`).toBeLessThanOrEqual(widths.client);
 }
 
 /** A frame receives its document when it scrolls into view: bring one there and return its locator. */
@@ -277,3 +277,54 @@ test.describe('Shell en su propia página', () => {
         await noOverflowIn(page);
     });
 });
+
+// Between md and xl the column is narrow: the shell (short breadcrumbs) and the detail (a long current one)
+for (const path of ['/_ui/shell', '/_ui/detail']) {
+    test.describe(`Topbar de ${path} en tableta y portátil pequeño`, () => {
+        test.beforeEach(async ({ page }, testInfo) => {
+            test.skip(
+                testInfo.project.name !== 'chromium',
+                'Los tramos se fuerzan con el tamaño de la ventana',
+            );
+            await page.goto(path);
+        });
+
+        test('la topbar cabe en la columna a 768, 1024 y 1100 px', async ({ page }) => {
+            for (const width of [768, 1024, 1100]) {
+                await page.setViewportSize({ width, height: 900 });
+
+                const box = await page.evaluate(() => {
+                    const right = (selector) =>
+                        document.querySelector(selector).getBoundingClientRect().right;
+                    const header = document.querySelector('header.glass');
+
+                    return {
+                        client: document.documentElement.clientWidth,
+                        header: right('header.glass'),
+                        main: right('main'),
+                        footer: right('footer'),
+                        inner: header.scrollWidth - header.clientWidth,
+                    };
+                });
+
+                expect(box.header, `Topbar dentro de la ventana a ${width} px`).toBeLessThanOrEqual(
+                    box.client,
+                );
+                expect(box.main, `Main dentro de la ventana a ${width} px`).toBeLessThanOrEqual(
+                    box.client,
+                );
+                expect(box.footer, `Pie dentro de la ventana a ${width} px`).toBeLessThanOrEqual(
+                    box.client,
+                );
+                expect(box.inner, `Nada se sale de la topbar a ${width} px`).toBeLessThanOrEqual(0);
+            }
+        });
+
+        test('no desborda a 768, 1024 y 1100 px', async ({ page }) => {
+            for (const width of [768, 1024, 1100]) {
+                await page.setViewportSize({ width, height: 900 });
+                await noOverflowIn(page, ` a ${width} px`);
+            }
+        });
+    });
+}
