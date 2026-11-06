@@ -1,88 +1,49 @@
-@extends('layouts.app')
+{{-- The events of Eventbrite the student signed up for, with the hours each one counts and whether they attended --}}
+@php
+    $columns = [
+        ['label' => 'Evento', 'key' => 'event'],
+        ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
+        ['label' => 'Empieza', 'key' => 'start'],
+        ['label' => 'Termina', 'key' => 'end', 'hide' => true],
+        ['label' => 'Asistencia', 'key' => 'status'],
+    ];
+    $attended = $attendees->where('status', 'Checked In');
+@endphp
+<x-layout.app title="Mis asistencias" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Mis asistencias']]">
+    <x-ui.page-header title="Mis asistencias" />
 
-@section('title', 'Mis asistencias')
-
-@section('title-icon', 'fas fa-hiking')
-
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item active">@yield('title')</li>
-@endsection
-
-@section('content')
-
-    <div class="row">
-        <div class="col-lg-12">
-
-            <div class="card">
-
-                <div class="card-body">
-                    <table id="dataset" class="table table-hover table-responsive">
-                        <thead>
-                            <tr>
-                                <th scope="col">Evento</th>
-                                <th scope="col">Horas</th>
-                                <th scope="col">Fecha de inicio</th>
-                                <th scope="col">Fecha de fin</th>
-                                <th scope="col">Asistencia</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($attendees as $attendee)
-                                <tr scope="row">
-                                    <td><a href="{{ $attendee->event->url }}" target="_blank">{!! \Html::clean($attendee->event->name) !!}</a>
-                                    </td>
-                                    <td>{{ $attendee->event->hours }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($attendee->event->start_datetime) }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($attendee->event->end_datetime) }}</td>
-                                    <td><x-attendeestatus :attendee="$attendee" /></td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-body">
-
-                    <div class="alert alert-info mb-0">
-                        <h4 class="mb-2">
-                            <i class="fas fa-stopwatch"></i> Fecha límite para el registro de eventos y asistencias
-                        </h4>
-                        <p class="mb-0">
-                            {{ \Carbon\Carbon::parse(Config::attendee_timestamp())->format('d/m/Y \a \l\a\s H:i') }}
-                        </p>
-                        <div class="countdown_container mt-2" style="display: none">
-                            <p>
-                                Quedan <b><span id="countdown"></span></b> para registrar eventos y asistencias desde
-                                Eventbrite.
-                            </p>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-
-        </div>
-    </div>
-
-@section('scripts')
-
-    <script>
-        $(document).ready(function() {
-            countdown(
-                "{{ \Carbon\Carbon::create(\Carbon\Carbon::now())->diffInSeconds(Config::attendee_timestamp(), false) }}"
-            );
-        });
-    </script>
-
-@endsection
-
-@endsection
+    <x-ui.table caption="Mis asistencias" :columns="$columns">
+        @foreach ($attendees as $attendee)
+            <x-ui.table.row>
+                <x-ui.table.cell label="Evento" primary>
+                    @if (filled($attendee->event->url))
+                        <a href="{{ $attendee->event->url }}" target="_blank"
+                            rel="noopener noreferrer">{{ $attendee->event->name }}<span class="sr-only">(se abre en una
+                                pestaña nueva)</span></a>
+                    @else
+                        {{ $attendee->event->name }}
+                    @endif
+                </x-ui.table.cell>
+                <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$attendee->event->hours" /></x-ui.table.cell>
+                <x-ui.table.cell label="Empieza" meta><x-ui.time :value="$attendee->event->start_datetime" format="absolute" /></x-ui.table.cell>
+                <x-ui.table.cell label="Termina" meta hide><x-ui.time :value="$attendee->event->end_datetime"
+                        format="absolute" /></x-ui.table.cell>
+                <x-ui.table.cell label="Asistencia" end><x-ui.attendee-status :status="$attendee->status"
+                        size="sm" /></x-ui.table.cell>
+            </x-ui.table.row>
+        @endforeach
+        @if ($attendees->isEmpty())
+            <x-slot:empty>
+                <x-ui.empty icon="ticket" title="Aún no hay asistencias" size="sm" :level="2" />
+            </x-slot:empty>
+        @else
+            <x-slot:footer>
+                <span>{{ $attended->count() }} de {{ $attendees->count() }} con asistencia ·
+                    <x-ui.hours :value="$attended->sum(fn($attendee) => $attendee->event->hours)" size="sm" class="text-ink" /></span>
+                @if ($attendees_update)
+                    <span>Actualizado <x-ui.time :value="$attendees_update" format="relative" /></span>
+                @endif
+            </x-slot:footer>
+        @endif
+    </x-ui.table>
+</x-layout.app>
