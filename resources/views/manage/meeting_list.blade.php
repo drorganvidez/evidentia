@@ -7,14 +7,14 @@
     $prefix = Auth::user()->hasRole('LECTURE') ? 'lecture' : 'president';
     $list = route($prefix . '.meeting.list');
     $active = count(array_filter($filters));
-    $columns = [
+    $columns = $sort->columns([
         ['label' => 'Reunión', 'key' => 'title'],
         ['label' => 'Comité', 'key' => 'committee'],
         ['label' => 'Fecha', 'key' => 'datetime'],
         ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
         ['label' => 'Asistentes', 'key' => 'users', 'align' => 'end'],
         ['label' => 'Acta', 'key' => 'minutes'],
-    ];
+    ]);
 @endphp
 <x-layout.app title="Reuniones" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Reuniones']]">
     <x-ui.page-header title="Reuniones" />

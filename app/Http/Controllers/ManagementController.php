@@ -168,17 +168,30 @@ class ManagementController extends Controller
             'acta' => in_array($request->query('acta'), ['con', 'sin'], true) ? $request->query('acta') : null,
         ];
 
+        // orden en la URL; por defecto, la más reciente primero
+        $sort = ListSort::from($request, [
+            'title' => 'title',
+            'committee' => 'committee.name',
+            'datetime' => ListSort::desc('datetime'),
+            'hours' => 'hours',
+            'users' => ListSort::count('users'),
+            'minutes' => ListSort::using(
+                fn ($query, string $dir) => $query->withExists('meetingMinutes as sort_minutes')->orderBy('sort_minutes', $dir),
+                fn (Meeting $meeting) => $meeting->meetingMinutes !== null,
+            ),
+        ], 'datetime');
+
         $meetings = $this->searchList(Meeting::query(), $request, ['title', 'place', 'committee.name'])
             ->with(['committee', 'meetingMinutes'])->withCount('users')
             ->when($filters['comite'], fn ($query, $id) => $query->where('committee_id', $id))
             ->when($filters['desde'], fn ($query, $date) => $query->where('datetime', '>=', $date->copy()->startOfDay()))
             ->when($filters['hasta'], fn ($query, $date) => $query->where('datetime', '<=', $date->copy()->endOfDay()))
             ->when($filters['acta'] === 'con', fn ($query) => $query->has('meetingMinutes'))
-            ->when($filters['acta'] === 'sin', fn ($query) => $query->doesntHave('meetingMinutes'))
-            ->orderByDesc('datetime')->orderByDesc('id');
+            ->when($filters['acta'] === 'sin', fn ($query) => $query->doesntHave('meetingMinutes'));
 
         return view('manage.meeting_list', [
-            'meetings' => $this->paginateList($meetings, $request), 'filters' => $filters, 'term' => ListPage::term($request),
+            'meetings' => $this->paginateList($sort->apply($meetings), $request), 'filters' => $filters, 'term' => ListPage::term($request),
+            'sort' => $sort,
             'committees' => $committees->map(fn (Committee $committee): array => ['value' => (string) $committee->id, 'label' => $committee->name])->all(),
         ]);
     }

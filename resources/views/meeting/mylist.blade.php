@@ -3,14 +3,14 @@
     meeting they are missing from, and the deadline to register meetings.
 --}}
 @php
-    $columns = [
+    $columns = $sort->columns([
         ['label' => 'Reunión', 'key' => 'title'],
         ['label' => 'Comité', 'key' => 'committee', 'hide' => true],
         ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
         ['label' => 'Celebrada', 'key' => 'datetime'],
         ['label' => 'Acciones', 'srOnly' => true],
-    ];
-    $list = $meetings->sortByDesc('datetime');
+    ]);
+    $list = $meetings;
     $deadline = \Config::meetings_timestamp();
 @endphp
 <x-layout.app title="Mis reuniones" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Mis reuniones']]">
