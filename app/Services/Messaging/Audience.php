@@ -101,7 +101,8 @@ final class Audience
 
     /**
      * Who the author can write to, the suggested one first: about an evidence its coordination, about minutes or a
-     * meeting request its secretary, otherwise every committee with someone assigned (the author's own first). Never
+     * meeting request its secretary, otherwise every committee with someone assigned (the author's own first, those
+     * with an accepted evidence before the rest). Never
      * an audience the author belongs to or one without members.
      *
      * @return Collection<int, array{value: string, label: string}>
@@ -122,10 +123,12 @@ final class Audience
             $committees = [$committeeId];
             $order = ['SECRETARY', 'COORDINATOR'];
         } else {
+            // The committees of the author's evidences first, those with an accepted one before the rest
             $own = Evidence::where('user_id', $author->getKey())->where('last', true)->whereNotNull('committee_id')
-                ->pluck('committee_id')->map(fn ($id): int => (int) $id)->unique()->all();
+                ->orderByRaw("case when status = 'ACCEPTED' then 0 else 1 end")->orderByDesc('updated_at')
+                ->pluck('committee_id')->map(fn ($id): int => (int) $id)->unique()->values()->all();
             $committees = Committee::orderBy('name')->pluck('id')
-                ->sortBy(fn ($id): int => in_array((int) $id, $own, true) ? 0 : 1)
+                ->sortBy(fn ($id): int => ($position = array_search((int) $id, $own, true)) === false ? PHP_INT_MAX : $position)
                 ->all();
             $order = ['COORDINATOR', 'SECRETARY'];
         }
