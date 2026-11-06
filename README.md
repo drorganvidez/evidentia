@@ -1,108 +1,125 @@
-# 🧪 Evidentia (Laravel 12)
+# Evidentia
 
-This project is built with [Laravel 12](https://laravel.com/docs/12.x), the modern and elegant PHP framework for web development.
+Free software to manage the evidences of work in teaching conferences. Built with [Laravel 13](https://laravel.com/docs/13.x) on PHP 8.4; the front end is compiled with Vite 8, Tailwind CSS 4 and Alpine.js on Node 26.
 
----
-
-## 📦 Requirements
-
-Make sure you have the following installed:
+## Requirements
 
 - Docker
-- Docker compose
+- Docker Compose
 
----
+PHP, Composer and Node run inside the containers; nothing else is needed on the host.
 
-## 🚀 Deployment in develop
+## Development
 
-### Create `.env` file
+### Create the `.env` file
 
 ```
 cp .env.example.dev .env
 ```
 
-### Generate app key
+### Generate the app key
 
-Laravel requires a unique `APP_KEY` to secure encrypted data within the application, such as cookies, sessions, and other sensitive information. This key must be set in your `.env` file and should be a random 32-character string encoded in base64.
+Laravel needs a unique `APP_KEY` to encrypt cookies, sessions and other sensitive data. Add a random 32-byte key encoded in base64 to the `.env` file.
 
 ```
 php -r "echo 'APP_KEY=base64:' . base64_encode(random_bytes(32)) . PHP_EOL;" >> .env
 ```
 
-### Run containers
+### Run the containers
 
 ```
 docker compose -f docker/docker-compose.dev.yml up -d --build
 ```
 
-This will build and start the Laravel, MySQL, Redis, and Mailhog containers.
+This starts the Laravel app on `localhost:8000`, the Vite dev server on `localhost:5173` (hot module replacement, assets are rebuilt as you save), MySQL, Redis and Mailhog. The `vite` service installs `node_modules` the first time it runs.
 
-You can see Evidentia app running on `localhost:8000`
-
-### 📧 View test emails
-
-Use Mailhog to inspect outgoing emails in development:
+To compile the assets once, without the dev server
 
 ```
-http://localhost:8025
+docker compose -f docker/docker-compose.dev.yml run --rm vite npm run build
 ```
 
-## 🚀 Deployment in production
+### Design system
 
-### Create `.env` file
+The tokens and components of the UI are shown on `http://localhost:8000/_ui` (local and testing environments only).
+
+### Test emails
+
+Mailhog shows the outgoing emails on `http://localhost:8025`.
+
+## Production
+
+### Create the `.env` file
 
 ```
 cp .env.example.prod .env
 ```
 
-⚠️ Important: The `.env` file contains sensitive information such as database credentials, API keys, and encryption secrets.
-Do not leave default values in production—review and update every field accordingly.
+The `.env` file contains database credentials, API keys and encryption secrets. Review and update every field; never keep the default values in production.
 
-### Generate app key
-
-Laravel requires a unique `APP_KEY` to secure encrypted data within the application, such as cookies, sessions, and other sensitive information. This key must be set in your `.env` file and should be a random 32-character string encoded in base64.
+### Generate the app key
 
 ```
 php -r "echo 'APP_KEY=base64:' . base64_encode(random_bytes(32)) . PHP_EOL;" >> .env
 ```
 
-### Run containers
+### Run the containers
 
 ```
 docker compose -f docker/docker-compose.prod.yml up -d --build
 ```
 
-You can see Evidentia app running on `localhost` or your own web domain
+The production image compiles the front end in a Node stage and ships without Node. The compiled assets live in the `public_build` volume shared by the `app` and `nginx` containers; the entrypoint refreshes that volume from the image on every start, so a new image (released through Docker Hub and Watchtower) always serves its own assets.
 
-Remember to enter inside the `evidentia_app_container` to execute the rest of the commands
+The app is available on `localhost` or on your own domain. The remaining commands run inside the `evidentia_app_container`
 
 ```
 docker exec -it evidentia_app_container bash
 ```
 
-### Create default values
+### Create the default values
 
 ```
 php artisan create:roles
 php artisan create:committees
 ```
 
-### Create new professor
+### Create a new professor
 
 ```
 php artisan create:professor
 ```
 
-## 	🎁 Utilities
+## Content Security Policy
 
-### 🧹 Auto-format PHP files
+Every response carries a strict, nonce-based Content Security Policy (no `unsafe-inline`, no `unsafe-eval`). While the views on the old layout remain, `CSP_MODE=report-only` keeps it informative; the routes already on the new UI enforce it. Set `CSP_REPORT=true` to have browsers post their violation reports to `/csp-report` and into the log.
 
-```
-./vendor/bin/pint 
-```
+## Quality
 
-### 🧹 Auto-format HTML Blade files
+### PHP
 
 ```
-npx blade-formatter "resources/views/**/*.blade.php" --write
+vendor/bin/pint
+vendor/bin/phpunit
 ```
+
+### Front end
+
+```
+npm run lint          # ESLint, Stylelint and the blade-formatter check
+npm run format        # Prettier, Stylelint --fix and blade-formatter --write
+npm run format:check
+```
+
+Both run inside the containers as well
+
+```
+docker compose -f docker/docker-compose.dev.yml exec app vendor/bin/pint
+docker compose -f docker/docker-compose.dev.yml run --rm vite npm run lint
+```
+
+The views that still use the old layout are listed in `.bladeignore`; remove a line when its view moves to the new UI.
+
+### Continuous integration
+
+Every push to `main` and every pull request runs Pint, PHPUnit, the front-end lint and format checks and the Vite build. Publishing a GitHub release builds the production image and pushes it to Docker Hub.
