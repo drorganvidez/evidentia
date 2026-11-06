@@ -172,9 +172,12 @@ class ListSortTest extends TestCase
         Evidence::factory()->count(3)->for($big)->create();
         $sort = ListSort::from($this->asked(['sort' => 'evidences', 'dir' => 'desc']), ['evidences' => ListSort::count('evidences'), 'name' => 'name'], 'name', 'asc');
 
-        $this->assertSame(['Grande', 'Pequeño', 'Vacío'], $sort->apply(Committee::query())->pluck('name')->all());
-        $this->assertSame(['Grande', 'Pequeño', 'Vacío'], $sort->apply(Committee::with('evidences')->get())->pluck('name')->all());
-        $this->assertSame(['Grande', 'Pequeño', 'Vacío'], $sort->apply(Committee::withCount('evidences')->get())->pluck('name')->all());
+        // the migrations also create the committee of the presidency, without evidences
+        $created = fn () => Committee::where('presidency', false);
+
+        $this->assertSame(['Grande', 'Pequeño', 'Vacío'], $sort->apply($created())->pluck('name')->all());
+        $this->assertSame(['Grande', 'Pequeño', 'Vacío'], $sort->apply($created()->with('evidences')->get())->pluck('name')->all());
+        $this->assertSame(['Grande', 'Pequeño', 'Vacío'], $sort->apply($created()->withCount('evidences')->get())->pluck('name')->all());
     }
 
     public function test_the_columns_take_links_that_keep_the_query_and_go_back_to_the_first_page(): void

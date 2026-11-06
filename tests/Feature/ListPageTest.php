@@ -24,11 +24,14 @@ class ListPageTest extends TestCase
         return $request;
     }
 
-    private function evidences(int $count, array $attributes = []): void
+    /** Evidences of one author in a new committee, Logística, which it returns: the migrations also create the presidency. */
+    private function evidences(int $count, array $attributes = []): Committee
     {
         $author = User::factory()->create(['name' => 'Lucía', 'surname' => 'Pérez Romero']);
         $committee = Committee::create(['name' => 'Logística']);
         Evidence::factory()->count($count)->for($author, 'user')->for($committee)->create($attributes);
+
+        return $committee;
     }
 
     public function test_the_size_is_25_by_default_and_the_query_chooses_50_or_100(): void
@@ -101,8 +104,7 @@ class ListPageTest extends TestCase
 
     public function test_a_relation_and_a_collection_are_paginated_the_same_way(): void
     {
-        $this->evidences(30);
-        $committee = Committee::sole();
+        $committee = $this->evidences(30);
 
         $relation = ListPage::paginate($committee->evidences(), $this->asked(['page' => '2']));
 
@@ -118,10 +120,10 @@ class ListPageTest extends TestCase
 
     public function test_the_search_needs_every_word_in_some_column_also_through_relations(): void
     {
-        $this->evidences(3);
+        $committee = $this->evidences(3);
         Evidence::query()->orderBy('id')->first()->update(['title' => 'Montaje del photocall']);
         $other = User::factory()->create(['name' => 'Juan', 'surname' => 'García López']);
-        Evidence::factory()->for($other, 'user')->for(Committee::sole())->create(['title' => 'Atención en el registro']);
+        Evidence::factory()->for($other, 'user')->for($committee)->create(['title' => 'Atención en el registro']);
         $columns = ['title', 'user.name', 'user.surname', 'committee.name'];
         $found = fn (?string $term): array => ListPage::search(Evidence::query(), $term, $columns)->orderBy('id')->pluck('title')->all();
 
