@@ -71,7 +71,8 @@ test.describe('Selector de iconos', () => {
         const radios = ui.section('icon-picker').getByRole('radio');
         const count = await radios.count();
 
-        expect(count).toBeGreaterThan(200);
+        // The full catalogue once plus two short lists
+        expect(count).toBeGreaterThan(100);
 
         for (const index of [0, 7, 50, count - 1]) {
             const box = await radios.nth(index).boundingBox();

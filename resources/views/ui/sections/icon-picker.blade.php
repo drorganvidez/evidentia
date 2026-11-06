@@ -6,7 +6,31 @@
     <div class="grid grid-cols-[minmax(0,1fr)] gap-6 md:grid-cols-2 lg:grid-cols-3">
         <x-ui.icon-picker name="committee_icon" label="Icono del comité" required
             hint="Escribe para filtrar por nombre o por alias" />
-        <x-ui.icon-picker name="event_icon" label="Icono del evento" value="megaphone" />
-        <x-ui.icon-picker name="badge_icon" label="Icono de la insignia" :columns="5" error="Elige un icono" />
+        {{-- Short lists for the other two: three full catalogues would add 300 inline SVG to the page --}}
+        <x-ui.icon-picker name="event_icon" label="Icono del evento" value="megaphone" :icons="[
+            'megaphone',
+            'calendar',
+            'ticket',
+            'handshake',
+            'mic',
+            'users',
+            'map-pin',
+            'camera',
+            'music',
+            'coffee',
+        ]" />
+        <x-ui.icon-picker name="badge_icon" label="Icono de la insignia" :columns="5" error="Elige un icono"
+            :icons="[
+                'award',
+                'medal',
+                'star',
+                'trophy',
+                'badge-check',
+                'shield',
+                'sparkles',
+                'flag',
+                'heart-handshake',
+                'crown',
+            ]" />
     </div>
 </section>
