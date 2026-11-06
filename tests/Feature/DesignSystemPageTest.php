@@ -129,6 +129,21 @@ class DesignSystemPageTest extends TestCase
         $this->get('/_ui/demo/remove/informe.pdf')->assertNoContent();
     }
 
+    public function test_the_demo_forms_post_and_come_back_with_a_notice(): void
+    {
+        foreach (['post', 'put', 'patch', 'delete'] as $method) {
+            $this->from('/_ui/detail')
+                ->call(strtoupper($method), '/_ui/demo/submit')
+                ->assertRedirect('/_ui/detail')
+                ->assertSessionHas('success', 'Formulario recibido');
+        }
+
+        $this->get('/_ui/demo/submit')->assertStatus(405);
+
+        $html = $this->withSession(['success' => 'Formulario recibido'])->get('/_ui/detail')->assertOk()->getContent();
+        $this->assertStringContainsString('Formulario recibido', $html, 'The notices of the layout show the flash');
+    }
+
     public function test_nothing_is_published_outside_local_and_testing(): void
     {
         $this->app['env'] = 'production';
@@ -140,6 +155,7 @@ class DesignSystemPageTest extends TestCase
         $this->get('/_ui/pdf')->assertNotFound();
         $this->getJson('/_ui/demo/people')->assertNotFound();
         $this->withSession(['_token' => 'token'])->post('/_ui/demo/upload', ['_token' => 'token'])->assertNotFound();
+        $this->withSession(['_token' => 'token'])->post('/_ui/demo/submit', ['_token' => 'token'])->assertNotFound();
     }
 
     private function assertUniqueIds(string $html): void

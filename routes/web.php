@@ -439,6 +439,13 @@ Route::middleware('csp:enforce')->prefix('_ui')->name('ui.')->group(function () 
         return response()->noContent();
     })->name('demo.remove');
 
+    // Sink for the forms of the catalogue: they post, put or delete as the real screens will and come back with a notice
+    Route::match(['post', 'put', 'patch', 'delete'], '/demo/submit', function () use ($development) {
+        $development();
+
+        return back()->with('success', 'Formulario recibido');
+    })->name('demo.submit');
+
     // Full page demos (ui/pages/<page>.blade.php)
     Route::get('/{page}', function (string $page) use ($development) {
         $development();
