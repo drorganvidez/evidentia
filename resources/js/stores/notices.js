@@ -1,11 +1,12 @@
 /**
  * Notices shared by the whole page (Alpine store): the stack of visible notices and the two live regions.
  *
- * - push({ tone, text, timeout }) adds a notice; accepted and notice close themselves after 8 s, rejected and
+ * - push({ tone, text, timeout }) adds a notice and announces it, rejected and pending as an alert and the rest
+ *   as a status (the visible stack is not live); accepted and notice close themselves after 8 s, rejected and
  *   pending stay until the person closes them (WCAG 2.2.1), unless a timeout is given
  * - pause(id) and resume(id) hold the countdown while the pointer or the focus is on the notice
  * - announce(text, 'status' | 'alert') writes to the hidden live region and clears it 5 s later, so the
- *   same text can be announced again
+ *   same text can be announced again; on its own it is for messages without a visible notice
  *
  * From JS: Alpine.store('notices').push(...) or this.$store.notices.announce('Copiado'); from Blade,
  * $dispatch('ui-notice', { tone: 'accepted', text: 'Guardado' }) reaches the <x-ui.notices> component.
@@ -40,6 +41,7 @@ export default {
                 : timeout;
 
         this.items.push({ id, tone: safeTone, text });
+        this.announce(text, PERSISTENT.includes(safeTone) ? 'alert' : 'status');
 
         if (delay) {
             this.schedule(id, delay);

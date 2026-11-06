@@ -57,6 +57,31 @@ test.describe('Botones', () => {
         expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('EV-0033');
     });
 
+    test('si no se puede copiar, el aviso se anuncia como alerta', async ({ page, ui }) => {
+        // A refused permission or an insecure origin: the write rejects
+        await page.addInitScript(() => {
+            Object.defineProperty(navigator, 'clipboard', {
+                configurable: true,
+                value: {
+                    writeText: () =>
+                        Promise.reject(new DOMException('Permiso denegado', 'NotAllowedError')),
+                },
+            });
+        });
+        await page.reload();
+
+        await ui.section('button').getByRole('button', { name: 'Copiar enlace' }).click();
+
+        await expect(page.locator('[x-data="notices"] [role="alert"]')).toHaveText(
+            'No se ha podido copiar',
+        );
+        await expect(
+            page.locator('[aria-label="Avisos"] [role="group"]').filter({
+                hasText: 'No se ha podido copiar',
+            }),
+        ).toBeVisible();
+    });
+
     test('todos los objetivos miden al menos 44 px en móvil', async ({ page, ui }, testInfo) => {
         test.skip(
             testInfo.project.name !== 'mobile',

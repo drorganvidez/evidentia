@@ -84,6 +84,27 @@ test.describe('Avisos', () => {
         await expect(notice).toHaveCount(0);
     });
 
+    test('los avisos que un módulo empuja al store se anuncian por sí solos', async ({ page }) => {
+        await page.evaluate(() =>
+            window.Alpine.store('notices').push({
+                tone: 'rejected',
+                text: 'No se ha podido subir el archivo',
+            }),
+        );
+
+        await expect(
+            page.locator(NOTICE).filter({ hasText: 'No se ha podido subir el archivo' }),
+        ).toBeVisible();
+        await expect(page.locator(ALERT)).toHaveText('No se ha podido subir el archivo');
+        await expect(page.locator(STATUS)).toHaveText('');
+
+        await page.evaluate(() =>
+            window.Alpine.store('notices').push({ tone: 'accepted', text: 'Archivo subido' }),
+        );
+
+        await expect(page.locator(STATUS)).toHaveText('Archivo subido');
+    });
+
     test('el anuncio llega a la región de estado y los avisos se apilan', async ({ page, ui }) => {
         const section = ui.section('notices');
 

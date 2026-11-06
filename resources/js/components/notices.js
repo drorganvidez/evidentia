@@ -4,10 +4,8 @@
  *
  * Blade: <div x-data="notices" data-messages="[...]" x-on:ui-notice.window="receive"> with the live regions on
  * x-text="statusText" and x-text="alertText" and the stack on x-for="item in items". The messages arrive
- * escaped inside data-messages, never inside a <script>.
+ * escaped inside data-messages, never inside a <script>. The store announces every notice it receives.
  */
-const ALERTS = ['rejected', 'pending'];
-
 export default function notices() {
     return {
         init() {
@@ -32,10 +30,7 @@ export default function notices() {
                 return;
             }
 
-            const store = this.$store.notices;
-
-            store.push({ tone, text, timeout });
-            store.announce(text, ALERTS.includes(tone) ? 'alert' : 'status');
+            this.$store.notices.push({ tone, text, timeout });
         },
 
         dismiss(id) {
