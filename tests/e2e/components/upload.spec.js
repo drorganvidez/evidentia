@@ -6,6 +6,27 @@ const pdf = (name, kilobytes = 8) => ({
     buffer: Buffer.alloc(kilobytes * 1024, 'a'),
 });
 
+/**
+ * The browser logs as an error every response of 400 or more, also the one a test provokes on purpose.
+ * This takes over the console guard of the fixture and lets only that message through.
+ */
+function expectingStatus(page, status) {
+    const unexpected = [];
+    const expected = `Failed to load resource: the server responded with a status of ${status}`;
+
+    page.removeAllListeners('console');
+    page.on('console', (message) => {
+        const text = message.text();
+        const counts = message.type() === 'error' || text.includes('Content Security Policy');
+
+        if (counts && !text.startsWith(expected)) {
+            unexpected.push(text);
+        }
+    });
+
+    return unexpected;
+}
+
 test.describe('Subida de archivos', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto('/_ui#ui-upload');
@@ -126,6 +147,60 @@ test.describe('Subida de archivos', () => {
 
         await label.dispatchEvent('dragleave');
         await expect(zone).toHaveAttribute('data-state', 'idle');
+    });
+
+    test('soltar un archivo sobre la zona lo sube', async ({ page, ui }) => {
+        const zone = ui.section('upload').locator('[x-data="upload"]').first();
+        const rows = zone.getByRole('listitem');
+        const post = page.waitForRequest(
+            (request) => request.method() === 'POST' && request.url().includes('/_ui/demo/upload'),
+        );
+        const dataTransfer = await page.evaluateHandle(() => {
+            const transfer = new DataTransfer();
+
+            transfer.items.add(new File(['%PDF-1.4'], 'soltado.pdf', { type: 'application/pdf' }));
+
+            return transfer;
+        });
+
+        await zone.locator('label').dispatchEvent('dragenter');
+        await expect(zone).toHaveAttribute('data-state', 'dragging');
+        await zone.locator('label').dispatchEvent('drop', { dataTransfer });
+
+        await post;
+        await expect(zone).toHaveAttribute('data-state', 'idle');
+        await expect(rows).toHaveCount(3);
+        await expect(rows.last()).toContainText('soltado.pdf');
+        await expect(rows.last()).toContainText('Subido', { timeout: 10_000 });
+        await expect(zone.locator('input[type="hidden"][name="uploaded[]"]')).toHaveCount(1);
+    });
+
+    test('una subida que falla se reintenta hasta subir', async ({ page, ui }) => {
+        const unexpected = expectingStatus(page, 500);
+        const zone = ui.section('upload').locator('[x-data="upload"]').first();
+        const row = zone.getByRole('listitem').last();
+        const hidden = zone.locator('input[type="hidden"][name="uploaded[]"]');
+        const failing = async (route) => {
+            if (route.request().method() === 'POST') {
+                await route.fulfill({ status: 500, contentType: 'text/plain', body: '' });
+            } else {
+                await route.continue();
+            }
+        };
+
+        await page.route('**/_ui/demo/upload', failing);
+        await zone.locator('input[type="file"]').setInputFiles([pdf('informe.pdf')]);
+
+        await expect(row).toContainText('No se ha podido subir');
+        await expect(hidden).toHaveCount(0);
+
+        await page.unroute('**/_ui/demo/upload', failing);
+        await zone.getByRole('button', { name: 'Reintentar informe.pdf' }).click();
+
+        await expect(row).toContainText('Subido', { timeout: 10_000 });
+        await expect(zone.getByRole('button', { name: 'Reintentar informe.pdf' })).toBeHidden();
+        await expect(hidden).toHaveCount(1);
+        expect(unexpected, 'Errores en la consola del navegador').toEqual([]);
     });
 
     test('la zona de un solo archivo rechaza el segundo', async ({ ui }) => {
