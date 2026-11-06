@@ -51,7 +51,7 @@ jobs:
           cp .env.ci .env
           php artisan key:generate --force
           touch database/database.sqlite
-          php artisan migrate --force --seed --seeder=DevelopmentSeeder
+          php artisan migrate --force --seed --seeder=E2eSeeder
 
       # Playwright advises against caching the browsers: restoring takes as long as downloading
       - name: Install Playwright browsers
