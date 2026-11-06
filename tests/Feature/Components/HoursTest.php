@@ -60,7 +60,7 @@ class HoursTest extends ComponentTestCase
 
     public function test_a_missing_value_prints_the_null_text(): void
     {
-        $this->assertStringContainsString('<span class="font-mono tabular-nums text-ink-muted text-md" data-sort-value="">—</span>', $this->render('<x-ui.hours :value="null" />'));
+        $this->assertMatchesRegularExpression('/<span class="font-mono tabular-nums text-ink-muted text-md"\s+data-sort-value="">—<\/span>/', $this->render('<x-ui.hours :value="null" />'));
         $this->assertStringContainsString('>Sin horas</span>', $this->render('<x-ui.hours :value="null" null-text="Sin horas" />'));
         $this->assertStringContainsString('>—</span>', $this->render('<x-ui.hours value="" />'));
     }

@@ -412,10 +412,10 @@ class TableTest extends ComponentTestCase
         $html = $this->browserTable('sortable filterable');
 
         $this->assertMatchesRegularExpression('/<select data-table-sort x-on:change="choose" aria-label="Ordenar por"/', $html);
-        $this->assertStringContainsString('<option value="" disabled >Ordenar por</option>', $html);
-        $this->assertStringContainsString('<option value="0:asc" >Persona, ascendente</option>', $html);
-        $this->assertStringContainsString('<option value="1:desc" selected>Inscrita, descendente</option>', $html);
-        $this->assertStringContainsString('<option value="2:desc" >Horas, descendente</option>', $html);
+        $this->assertMatchesRegularExpression('/<option value=""\s*disabled\s*>Ordenar por\s*<\/option>/', $html);
+        $this->assertMatchesRegularExpression('/<option value="0:asc"\s*>Persona, ascendente\s*<\/option>/', $html);
+        $this->assertMatchesRegularExpression('/<option value="1:desc"\s*selected>Inscrita, descendente\s*<\/option>/', $html);
+        $this->assertMatchesRegularExpression('/<option value="2:desc"\s*>Horas, descendente\s*<\/option>/', $html);
         $this->assertSame(6, substr_count($html, '<option value="'.'') - 1, 'Three columns in two directions besides the placeholder');
         $this->assertStringNotContainsString('Nota, ', $html);
         $this->assertStringContainsString('x-data="tableFilter"', $html, 'The order lives with the quick filter');
@@ -441,8 +441,8 @@ class TableTest extends ComponentTestCase
 
         $this->assertStringContainsString('data-sort-mode="server"', $html);
         $this->assertStringNotContainsString('x-on:click="toggle"', $html, 'With links of the server there are no buttons of the browser');
-        $this->assertStringContainsString('<option value="/l?sort=title&amp;dir=desc" >Evidencia, descendente</option>', $html);
-        $this->assertStringContainsString('<option value="/l?sort=created&amp;dir=desc" selected>Creada, descendente</option>', $html);
+        $this->assertMatchesRegularExpression('/<option value="\/l\?sort=title&amp;dir=desc"\s*>Evidencia, descendente\s*<\/option>/', $html);
+        $this->assertMatchesRegularExpression('/<option value="\/l\?sort=created&amp;dir=desc"\s*selected>Creada, descendente\s*<\/option>/', $html);
         $this->assertStringNotContainsString('Comité, ', $html);
         $this->assertSame(1, substr_count($html, 'aria-sort="descending"'));
 
