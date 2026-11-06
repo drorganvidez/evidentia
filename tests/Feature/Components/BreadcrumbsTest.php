@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Components;
 
+use Illuminate\Support\Fluent;
+
 class BreadcrumbsTest extends ComponentTestCase
 {
     /**
@@ -55,6 +57,27 @@ class BreadcrumbsTest extends ComponentTestCase
         $this->assertStringContainsString('<li aria-current="page" class="min-w-16 flex-1 truncate font-semibold text-ink">Inicio</li>', $html);
         $this->assertStringNotContainsString('<a', $html);
         $this->assertStringNotContainsString('<svg', $html);
+    }
+
+    public function test_a_collection_works_as_the_items(): void
+    {
+        $html = $this->render('<x-ui.breadcrumbs :items="$items" />', ['items' => collect($this->items())->keyBy('label')]);
+
+        $this->assertStringContainsString('>Montaje del photocall</li>', $html);
+        $this->assertSame(1, substr_count($html, 'aria-current="page"'));
+        $this->assertSame(2, substr_count($html, '<a href='));
+
+        $empty = $this->render('<x-ui.breadcrumbs :items="$items" />', ['items' => collect()]);
+
+        $this->assertStringNotContainsString('<li', $empty);
+
+        // Arrayable items, as a view model or a Fluent would give
+        $fluent = $this->render('<x-ui.breadcrumbs :items="$items" />', [
+            'items' => collect([new Fluent(['label' => 'Inicio', 'href' => '/']), new Fluent(['label' => 'Actas'])]),
+        ]);
+
+        $this->assertMatchesRegularExpression('/<span\s+class="truncate">Inicio<\/span>/', $fluent);
+        $this->assertStringContainsString('>Actas</li>', $fluent);
     }
 
     public function test_the_labels_and_the_links_are_escaped(): void

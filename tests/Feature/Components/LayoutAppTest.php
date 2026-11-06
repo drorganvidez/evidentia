@@ -126,6 +126,24 @@ class LayoutAppTest extends ComponentTestCase
         $this->assertStringNotContainsString('Navegación principal (móvil)', $none);
     }
 
+    public function test_the_navigation_and_the_breadcrumbs_can_be_collections(): void
+    {
+        $nav = collect($this->nav())->map(fn (array $group) => collect([...$group, 'items' => collect($group['items'])]));
+        $html = $this->render('<x-layout.app :nav="$nav" :breadcrumbs="$breadcrumbs"><h1 id="page-title">Hola</h1></x-layout.app>', [
+            'nav' => $nav,
+            'breadcrumbs' => collect([['label' => 'Inicio', 'href' => '/inicio'], ['label' => 'Mis evidencias']]),
+        ]);
+
+        preg_match('/<nav aria-label="Navegación principal \(móvil\)".*?<\/nav>/s', $html, $bar);
+        $this->assertNotEmpty($bar);
+        $this->assertSame(5, substr_count($bar[0], '<li class="min-w-0">'), 'The first five mobile items');
+        $this->assertSame(2, substr_count($html, '<nav aria-label="Mis cosas"'));
+        $this->assertStringContainsString('>Mis evidencias</li>', $html);
+
+        $empty = $this->render('<x-layout.app :nav="$nav" :mobile-nav="$mobileNav">Hola</x-layout.app>', ['nav' => $nav, 'mobileNav' => collect()]);
+        $this->assertStringNotContainsString('Navegación principal (móvil)', $empty, 'An empty collection draws no bar');
+    }
+
     public function test_the_deadline_the_bell_and_the_search_appear_only_when_given(): void
     {
         $bare = $this->render_shell();

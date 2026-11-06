@@ -49,11 +49,15 @@
             'logoutAction' => Route::has('logout') ? route('logout') : url('/logout'),
         ];
     }
-    // Bottom bar of the phone: the first five items flagged mobile, in the order of the groups
-    $mobileNav ??= collect($nav)
-        ->flatMap(fn(array $group): array => $group['items'] ?? [])
-        ->filter(fn(array $item): bool => (bool) ($item['mobile'] ?? false))
-        ->take(5)
+    // Bottom bar of the phone: the first five items flagged mobile, in the order of the groups. The groups and their
+    // items may be arrays or collections.
+    $mobileNav = collect(
+        $mobileNav ??
+            collect($nav)
+                ->flatMap(fn($group) => collect($group['items'] ?? [])->all())
+                ->filter(fn($item) => (bool) ($item['mobile'] ?? false))
+                ->take(5),
+    )
         ->values()
         ->all();
 @endphp
