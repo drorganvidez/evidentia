@@ -225,11 +225,18 @@ class ManagementController extends Controller
         return view('manage.defaultlist_list', ['default_lists' => $default_lists]);
     }
 
-    public function bonus_list()
+    public function bonus_list(Request $request)
     {
-        $bonus = Bonus::with(['committee', 'users'])->latest()->latest('id')->get();
+        // en páginas, con la búsqueda y las horas repartidas de todo el resultado
+        $bonus = $this->searchList(Bonus::query(), $request, ['reason', 'committee.name', 'users.name', 'users.surname']);
+        $hours = (float) $bonus->clone()->select(['bonuses.id', 'bonuses.hours'])->withCount('users')->get()
+            ->sum(fn (Bonus $bono): float => (float) $bono->hours * $bono->users_count);
 
-        return view('manage.bonus_list', ['bonus' => $bonus]);
+        return view('manage.bonus_list', [
+            'bonus' => $this->paginateList($bonus->with(['committee', 'users'])->latest()->latest('id'), $request),
+            'hours' => $hours,
+            'term' => ListPage::term($request),
+        ]);
     }
 
     public function committee_list()

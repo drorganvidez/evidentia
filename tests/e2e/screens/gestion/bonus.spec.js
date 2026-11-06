@@ -14,9 +14,14 @@ test.describe('Bonos de la gestión', () => {
         await expect(page.getByRole('link', { name: 'Nuevo bono' })).toHaveCount(0);
         await ui.noOverflow();
 
-        await page.getByRole('searchbox', { name: 'Filtrar bonos' }).fill('nada parecido');
-        await expect(table.getByText('Montaje del escenario')).toBeHidden();
-        await page.getByRole('searchbox', { name: 'Filtrar bonos' }).fill('pérez');
+        // The search runs on the server over the reason, the committee and the people
+        const search = table.getByRole('searchbox', { name: 'Buscar bonos' });
+        await search.fill('nada parecido');
+        await search.press('Enter');
+        await expect(table.getByText('Ningún bono coincide con la búsqueda')).toBeVisible();
+        await search.fill('pérez');
+        await search.press('Enter');
+        await expect(page).toHaveURL(/q=p%C3%A9rez$/);
         await expect(table.getByText('Montaje del escenario')).toBeVisible();
     });
 

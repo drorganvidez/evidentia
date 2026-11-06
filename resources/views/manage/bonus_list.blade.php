@@ -1,4 +1,7 @@
-{{-- The hour bonuses of every committee, for the lecturer and the president, newest first, with the people of each. Read only. --}}
+{{--
+    The hour bonuses of every committee, for the lecturer and the president, newest first and in pages, with the
+    people of each and a search on the server. Read only.
+--}}
 @php
     $columns = [
         ['label' => 'Bono', 'key' => 'reason'],
@@ -15,18 +18,18 @@
 <x-layout.app title="Bonos" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Bonos']]">
     <x-ui.page-header title="Bonos" />
 
-    <x-ui.table caption="Bonos de todos los comités" :columns="$columns" :filterable="$bonus->isNotEmpty()" count-label="bonos"
-        filter-placeholder="Filtrar bonos">
+    <x-ui.table caption="Bonos de todos los comités" :columns="$columns" :paginator="$bonus" filterable count-label="bonos"
+        count-singular="bono" filter-placeholder="Buscar bonos">
         @if ($bonus->isEmpty())
             <x-slot:empty>
-                <x-ui.empty icon="puzzle" title="No hay bonos" size="sm" :level="2" />
+                <x-ui.empty icon="puzzle" :title="$term !== null ? 'Ningún bono coincide con la búsqueda' : 'No hay bonos'" size="sm" :level="2" />
             </x-slot:empty>
         @endif
         @foreach ($bonus as $bono)
             @php
                 $people = $names($bono->users);
             @endphp
-            <x-ui.table.row :search="implode(' ', [$bono->reason, $bono->committee?->name, $people])">
+            <x-ui.table.row>
                 <x-ui.table.cell label="Bono" primary>
                     <span class="font-semibold tracking-tight">{{ $bono->reason }}</span>
                     @if ($people !== '')
@@ -45,9 +48,8 @@
         @endforeach
         @if ($bonus->isNotEmpty())
             <x-slot:footer>
-                <span>{{ $bonus->count() }} {{ $bonus->count() === 1 ? 'bono' : 'bonos' }} ·
-                    <x-ui.hours :value="$bonus->sum(fn($bono) => $bono->hours * $bono->users->count())" size="sm" class="text-ink" />
-                    repartidas</span>
+                <span>{{ $bonus->total() }} {{ $bonus->total() === 1 ? 'bono' : 'bonos' }} ·
+                    <x-ui.hours :value="$hours" size="sm" class="text-ink" /> repartidas</span>
             </x-slot:footer>
         @endif
     </x-ui.table>
