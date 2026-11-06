@@ -46,4 +46,9 @@ class DeploymentFilesTest extends TestCase
     {
         $this->assertStringContainsString('exec "$@"', file_get_contents(base_path('scripts/wait-for-db.sh')));
     }
+
+    public function test_production_caches_the_discovered_listeners_on_start(): void
+    {
+        $this->assertStringContainsString('php artisan event:cache', file_get_contents(base_path('docker/entrypoint.prod.sh')));
+    }
 }

@@ -15,6 +15,8 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 php artisan icons:cache
+# the listeners are only discovered (app/Listeners); cached once here instead of on every request
+php artisan event:cache
 
 sh ./scripts/wait-for-db.sh
 php artisan migrate --force
