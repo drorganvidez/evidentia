@@ -226,6 +226,65 @@ class StudentRecordScreenTest extends ScreenTestCase
         $this->screen('profesor', route('profiles.view', ['id' => $id, 'tab' => 'actividad', 'ambito' => 'nada']))->assertSee('Evidencia enviada');
     }
 
+    public function test_the_record_downloads_as_a_csv_and_leaves_its_annotation(): void
+    {
+        $student = $this->person('estudiante');
+        Evidence::where('title', 'Montaje del photocall')->update(['title' => '=HYPERLINK("https://example.com")']);
+
+        $html = $this->record('presidente', 'estudiante');
+        $this->assertStringContainsString('href="'.route('profiles.export', ['id' => $student->id]).'"', $html);
+        $this->assertStringContainsString('Descargar expediente', $this->text($html));
+
+        $response = $this->actingAs($this->person('presidente'))->get(route('profiles.export', ['id' => $student->id]));
+
+        $response->assertOk();
+        $this->assertSame('text/csv; charset=UTF-8', $response->headers->get('Content-Type'));
+        $this->assertSame('attachment; filename="expediente-lucia-perez-romero-'.now()->format('Y-m-d').'.csv"', $response->headers->get('Content-Disposition'));
+        $csv = $response->getContent();
+        $this->assertStringStartsWith("\u{FEFF}seccion;fecha;concepto;comite;estado;horas;detalle\n", $csv);
+        $rows = array_map(fn (string $line): array => str_getcsv($line, ';', '"', ''), array_filter(explode("\n", substr($csv, 3))));
+        $section = fn (string $name): array => array_values(array_filter($rows, fn (array $row): bool => $row[0] === $name));
+
+        $this->assertSame(['Persona', '', 'Lucía Pérez Romero', '', 'Estudiante', '8,50', 'estudiante · estudiante@e2e.test'], $section('Persona')[0]);
+        $this->assertSame([['Evidencias', '2,00'], ['Reuniones', '2,00'], ['Asistencia', '1,50'], ['Bonos', '3,00']],
+            array_map(fn (array $row): array => [$row[2], $row[5]], $section('Horas')));
+        $evidences = $section('Evidencias');
+        $this->assertCount(3, $evidences, 'The last version of each one sent, never the draft');
+        $this->assertContains(['Cartelería del vestíbulo', 'Logística', 'Aceptada', '2,00', 'Versión 1'], array_map(fn (array $row): array => array_slice($row, 2), $evidences));
+        $this->assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/', $evidences[0][1]);
+        $this->assertContains("'=HYPERLINK(\"https://example.com\")", array_column($evidences, 2), 'A title that looks like a formula stays text');
+        $this->assertStringNotContainsString('Borrador de la memoria', $csv);
+        $this->assertSame(['Reunión de logística', 'Logística', 'Con acta', '2,00'], array_slice($section('Reuniones')[0], 2, 4));
+        $this->assertSame(['Hoja de firmas de logística', 'Logística', 'Firmada'], array_slice($section('Firmas')[0], 2, 3));
+        $this->assertSame(['Convocatoria de logística', 'Logística', 'Firmó'], array_slice($section('Convocatorias')[0], 2, 3));
+        $this->assertSame(['Taller de Git', '', 'Asistido', '1,50'], array_slice($section('Asistencias')[0], 2, 4));
+        $this->assertSame(['Montaje del escenario', 'Logística', '', '3,00'], array_slice($section('Bonos')[0], 2, 4));
+        $this->assertContains('Evidencia rechazada', array_column($section('Actividad'), 2));
+        $this->assertSame(['Duda sobre el photocall', 'Logística', 'Abierto'], array_slice($section('Mensajes')[0], 2, 3));
+
+        $log = ActivityLog::where('action', ActivityAction::ExportRecord->value)->sole();
+        $this->assertSame('PRESIDENT', $log->acting_role);
+        $this->assertSame($this->person('presidente')->id, $log->user_id);
+        $this->assertSame($student->id, $log->target_user_id);
+        $this->assertSame(['user', $student->id, 'Pérez Romero, Lucía'], [$log->subject_type, $log->subject_id, $log->subject_title]);
+        $this->assertSame(['rows' => count($rows) - 1], $log->details);
+
+        // The download is part of the record: it affects the person
+        $html = $this->record('profesor', 'estudiante', ['tab' => 'actividad', 'ambito' => 'afecta']);
+        $this->assertStringContainsString('Exportación del expediente', $html);
+        $this->assertStringContainsString('por Elena Moreno Jiménez como presidente', $this->text($html));
+    }
+
+    public function test_only_the_management_downloads_it(): void
+    {
+        $id = $this->person('estudiante')->id;
+        foreach (['estudiante', 'coordinador', 'secretario', 'registro'] as $who) {
+            $this->actingAs($this->person($who))->get(route('profiles.export', ['id' => $id]))->assertNotFound();
+        }
+        $this->actingAs($this->person('profesor'))->get(route('profiles.export', ['id' => 999]))->assertNotFound();
+        $this->assertSame(0, ActivityLog::where('action', ActivityAction::ExportRecord->value)->count());
+    }
+
     public function test_only_the_management_opens_it(): void
     {
         $id = $this->person('estudiante')->id;

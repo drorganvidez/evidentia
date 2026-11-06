@@ -252,6 +252,7 @@ class PageAccessTest extends TestCase
             'president.integrity' => [[], self::MANAGEMENT],
             'randomize.randomize' => [[], ['LECTURE']],
             'profiles.view' => [['id' => 'student'], self::MANAGEMENT],
+            'profiles.export' => [['id' => 'student'], self::MANAGEMENT],
             'profiles.view.evidence' => [['id_user' => 'student', 'id_evidence' => 'evidence'], self::MANAGEMENT],
 
             // Activity log and histories (routes/activity.php)

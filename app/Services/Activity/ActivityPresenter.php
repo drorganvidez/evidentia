@@ -146,7 +146,7 @@ final class ActivityPresenter
             'config.changed' => [$this->deadlineChanges($d)],
             'import.users' => [$this->count($d['created'] ?? null, 'usuario nuevo', 'usuarios nuevos')],
             'export.evidences' => [is_array($d['sections'] ?? null) ? implode(', ', array_filter($d['sections'], 'is_string')) : null],
-            'export.attendees', 'export.activity', 'committee.exported' => [$this->count($d['rows'] ?? null, 'fila', 'filas')],
+            'export.attendees', 'export.activity', 'export.record', 'committee.exported' => [$this->count($d['rows'] ?? null, 'fila', 'filas')],
             'randomize.run' => [$this->count($d['count'] ?? null, 'evidencia', 'evidencias')],
             'message.sent' => [filled($d['audience'] ?? null) && is_string($d['audience']) ? 'Para '.$this->audience($d['audience']) : null],
             'notification.sent' => [$this->text($d['title'] ?? null), $this->channels($d['channels'] ?? null)],

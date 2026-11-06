@@ -118,6 +118,7 @@ class ActivityPresenterTest extends TestCase
             ['import.users', ['created' => 25], '25 usuarios nuevos'],
             ['export.evidences', ['sections' => ['Evidencias', 'Reuniones']], 'Evidencias, Reuniones'],
             ['export.activity', ['rows' => 1], '1 fila'],
+            ['export.record', ['rows' => 12], '12 filas'],
             ['committee.exported', ['rows' => 3], '3 filas'],
             ['randomize.run', ['count' => 4], '4 evidencias'],
             ['notification.sent', ['title' => 'Evidencia rechazada', 'channels' => ['database', 'mail']], 'Evidencia rechazada · bandeja y correo'],

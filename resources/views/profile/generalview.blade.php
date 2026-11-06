@@ -1,7 +1,8 @@
 {{--
     Record of a person for the president and the lecturers (App\View\StudentRecord): the summary of their hours, their
     account, committees and accesses, and one section at a time (?tab=, linkable and without script) with every
-    evidence, meeting, signature, attendance, bonus, annotation and message, the newest first.
+    evidence, meeting, signature, attendance, bonus, annotation and message, the newest first; all of it downloads as
+    a CSV.
 --}}
 @php
     $fullName = trim($user->name . ' ' . $user->surname);
@@ -32,6 +33,8 @@
         <x-slot:actions>
             <x-ui.button icon="user-cog" :href="route($prefix . '.user.management', ['id' => $user->id])">Gestionar la
                 cuenta</x-ui.button>
+            <x-ui.button variant="primary" icon="download" :href="route('profiles.export', ['id' => $user->id])">Descargar
+                expediente</x-ui.button>
         </x-slot:actions>
     </x-ui.page-header>
 

@@ -325,6 +325,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware([CheckRoles::class.':PRESIDENT,LECTURE'])->group(function () {
         Route::middleware(CheckNotNull::class.':User')->group(function () {
             Route::get('profiles/view/{id}', [ProfileController::class, 'profiles_view'])->name('profiles.view');
+            Route::get('profiles/view/{id}/export', [ProfileController::class, 'profiles_export'])->name('profiles.export');
         });
         Route::get('profiles/view/{id_user}/evidence/{id_evidence}', [ProfileController::class, 'evidences_view'])->name('profiles.view.evidence');
     });

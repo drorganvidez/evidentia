@@ -13,9 +13,11 @@ use App\Support\StrongPassword;
 use App\View\Dashboard;
 use App\View\StudentRecord;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
@@ -124,6 +126,20 @@ class ProfileController extends Controller
         $user = User::findOrFail($id);
 
         return view('profile.generalview', $record->for($user, $request->user(), $request->query('tab'), $request->query('ambito')));
+    }
+
+    /** The whole record of a person as a CSV, annotated with who downloaded it */
+    public function profiles_export(StudentRecord $record, $id): Response
+    {
+        $user = User::findOrFail($id);
+        $rows = $record->rows($user);
+
+        DB::transaction(fn () => Activity::record(ActivityAction::ExportRecord, $user, $user, details: ['rows' => count($rows) - 1]));
+
+        return response(StudentRecord::csv($rows), 200, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="expediente-'.Str::slug(trim($user->name.' '.$user->surname)).'-'.now()->format('Y-m-d').'.csv"',
+        ]);
     }
 
     public function evidences_view(Dashboard $dashboard, $id_user, $id_evidence)

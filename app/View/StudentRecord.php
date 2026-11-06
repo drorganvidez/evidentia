@@ -17,6 +17,9 @@ use App\Models\MessageThread;
 use App\Models\Secretary;
 use App\Models\SignatureSheet;
 use App\Models\User;
+use App\Services\Activity\ActivityExport;
+use App\Services\Activity\ActivityPresenter;
+use App\Support\Roles;
 use Carbon\CarbonInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -27,7 +30,7 @@ use Illuminate\Support\Collection;
  * The whole record of a person for the president and the lecturers, so that they can evaluate it: their account and
  * accesses, the committees they run, the hours by origin, and every evidence they sent, meeting they attended, sheet
  * they signed (and request of their committees they were expected at), attendance, bonus, annotation of the activity
- * log and message they wrote, the newest first.
+ * log and message they wrote, the newest first. The same data leaves as a CSV for a spreadsheet.
  */
 final class StudentRecord
 {
@@ -52,7 +55,19 @@ final class StudentRecord
 
     public const PAGE_SIZE = 30;
 
-    public function __construct(private Dashboard $dashboard) {}
+    public const CSV_HEADERS = ['seccion', 'fecha', 'concepto', 'comite', 'estado', 'horas', 'detalle'];
+
+    /** Literals of Eventbrite in the words of x-ui.attendee-status */
+    private const ATTENDANCE = [
+        'Attending' => 'Pendiente de asistir',
+        'Checked In' => 'Asistido',
+        'Guests Attended' => 'Asistido (invitado)',
+        'Guests Attending' => 'Pendiente de asistir (invitado)',
+        'Not Attending (Refunded/Canceled)' => 'Asistencia cancelada',
+        'Not Attending' => 'No asistido',
+    ];
+
+    public function __construct(private Dashboard $dashboard, private ActivityPresenter $presenter) {}
 
     /** The section asked for in the query string, or the first one for anything else (an array included). */
     public static function tab(mixed $tab): string
@@ -289,6 +304,99 @@ final class StudentRecord
             'accesos' => $query->access(),
             default => $query,
         };
+    }
+
+    /**
+     * The whole record as the rows of a CSV, the headers first.
+     *
+     * @return list<list<string|int|float|null>>
+     */
+    public function rows(User $user): array
+    {
+        $hours = fn (float|int|string|null $value): string => number_format((float) $value, 2, ',', '');
+        $date = fn ($value): ?string => $value === null || $value === '' ? null : Carbon::parse($value)->toIso8601String();
+        $account = $this->account($user);
+        $committee = fn ($committee): ?string => $committee?->name;
+
+        $rows = [self::CSV_HEADERS];
+        $rows[] = [
+            'Persona', $date($account['lastLogin']), trim($user->name.' '.$user->surname),
+            $account['committees']->map(fn (array $item): string => ($item['role'] === 'COORDINATOR' ? 'Coordinación de ' : 'Secretaría de ').$item['committee']->name)->implode(', '),
+            $user->roles->map(fn ($role): string => Roles::label($role->rol))->implode(', '),
+            $hours(array_sum($this->origins($user))),
+            implode(' · ', array_filter([$account['username'], $account['email'], $account['blocked'] ? 'Bloqueada' : null])),
+        ];
+        foreach ($this->origins($user) as $label => $value) {
+            $rows[] = ['Horas', null, $label, null, null, $hours($value), null];
+        }
+
+        foreach ($this->evidences($user) as $evidence) {
+            $rows[] = ['Evidencias', $date($evidence->updated_at), $evidence->title, $committee($evidence->committee), $evidence->status_label,
+                $hours($evidence->hours), 'Versión '.$evidence->version];
+        }
+        foreach ($this->meetings($user) as $meeting) {
+            $rows[] = ['Reuniones', $date($meeting->datetime), $meeting->title, $committee($meeting->committee), $meeting->meetingMinutes ? 'Con acta' : 'Sin acta',
+                $hours($meeting->hours), $meeting->place];
+        }
+        foreach ($this->signatures($user) as $sheet) {
+            $rows[] = ['Firmas', $date($sheet->signed_at), $sheet->title, $committee($sheet->meetingRequest?->committee ?? $sheet->secretary?->committee),
+                'Firmada', null, $sheet->meetingRequest?->title];
+        }
+        foreach ($this->expectedRequests($user) as $item) {
+            $rows[] = ['Convocatorias', $date($item['request']->datetime), $item['request']->title, $committee($item['request']->committee), $item['label'],
+                null, $item['request']->place];
+        }
+        foreach ($this->attendances($user) as $attendee) {
+            $rows[] = ['Asistencias', $date($attendee->event?->start_datetime), $attendee->event?->name, null, self::ATTENDANCE[$attendee->status] ?? $attendee->status,
+                $hours($attendee->computedHours()), null];
+        }
+        foreach ($this->bonuses($user) as $bonus) {
+            $rows[] = ['Bonos', $date($bonus->created_at), $bonus->reason, $committee($bonus->committee), null, $hours($bonus->hours), null];
+        }
+        $this->activityQuery($user, 'todo')->with('user')->latest('id')->each(function (ActivityLog $entry) use (&$rows, $date): void {
+            $rows[] = ['Actividad', $date($entry->created_at), $this->presenter->label($entry), $entry->committee_name, null, null,
+                implode(' · ', array_filter([
+                    $entry->subject_title,
+                    $this->presenter->summary($entry),
+                    $entry->user_id === null ? 'Sistema' : 'por '.$this->presenter->actorName($entry),
+                    $this->presenter->roleLine($entry),
+                ]))];
+        });
+        foreach ($this->threads($user) as $thread) {
+            $rows[] = ['Mensajes', $date($thread->last_message_at), $thread->subject, $committee($thread->committee), $thread->isResolved() ? 'Resuelto' : 'Abierto',
+                null, $thread->written_count.' '.($thread->written_count === 1 ? 'mensaje' : 'mensajes').' · Para '.$thread->audienceLabel()];
+        }
+
+        return $rows;
+    }
+
+    /** The rows as a CSV for a spreadsheet: UTF-8 with BOM, «;» as separator and no cell read as a formula. */
+    public static function csv(array $rows): string
+    {
+        $stream = fopen('php://temp', 'r+');
+        foreach ($rows as $row) {
+            fputcsv($stream, array_map(fn ($value): string => ActivityExport::cell($value === null ? null : (string) $value), $row), ';', '"', '');
+        }
+        rewind($stream);
+        $csv = (string) stream_get_contents($stream);
+        fclose($stream);
+
+        return "\u{FEFF}".$csv;
+    }
+
+    /**
+     * Computed hours of the person by origin, as the summary of the profile counts them (App\View\Dashboard::hours).
+     *
+     * @return array<string, float>
+     */
+    private function origins(User $user): array
+    {
+        return [
+            'Evidencias' => (float) $user->evidences_accepted_hours(),
+            'Reuniones' => (float) $user->meetings_hours(),
+            'Asistencia' => (float) $user->events_hours(),
+            'Bonos' => (float) $user->bonus_hours(),
+        ];
     }
 
     /** Version number of an evidence along its chain of points_to, safe against a broken or circular chain. */
