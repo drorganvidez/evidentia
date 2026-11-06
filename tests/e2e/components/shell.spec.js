@@ -249,6 +249,12 @@ test.describe('Shell en su propia página', () => {
 
         await trigger.click();
         await expect(item).toHaveAttribute('aria-checked', 'true');
+        // The label stays on one line beside its switch (only the switch makes it a little taller): the menu widens
+        const profile = page.locator('#user-menu').getByRole('menuitem', { name: 'Mi perfil' });
+
+        expect((await item.boundingBox()).height).toBeLessThanOrEqual(
+            (await profile.boundingBox()).height + 4,
+        );
         await item.click();
         await expect(item).toHaveAttribute('aria-checked', 'false');
         await page.keyboard.press('Escape');

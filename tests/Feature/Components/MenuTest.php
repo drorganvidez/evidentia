@@ -108,7 +108,7 @@ class MenuTest extends ComponentTestCase
             BLADE);
 
         $this->assertMatchesRegularExpression('#<button type="button" role="menuitemcheckbox" aria-checked="true" tabindex="-1"\s+class="group [^"]*text-ink hover:bg-glass-2 focus:bg-glass-2" x-on:click="\$store.shortcuts.toggle\(\)">#', $html);
-        $this->assertMatchesRegularExpression('#<button type="button" role="menuitemcheckbox" aria-checked="false" tabindex="-1"\s+class="group [^"]*">\s*Avisos por correo#', $html);
+        $this->assertMatchesRegularExpression('#<button type="button" role="menuitemcheckbox" aria-checked="false" tabindex="-1"\s+class="group [^"]*">\s*<span class="min-w-0 flex-1 truncate">Avisos por correo</span>#', $html);
         $this->assertSame(1, substr_count($html, 'role="menuitem"'), 'Only the item without checked is a plain menu item');
         $this->assertSame(2, substr_count($html, 'group-aria-checked:bg-aurora-500'), 'A switch drawn from aria-checked');
         $this->assertSame(2, preg_match_all('/<span aria-hidden="true"\s+class="relative ml-auto /', $html), 'The switch is decorative and sits at the end');

@@ -235,7 +235,7 @@ class LayoutAppTest extends ComponentTestCase
         $this->assertStringContainsString('aria-checked="true"', $item[0]);
         $this->assertStringContainsString('x-bind:aria-checked="$store.shortcuts.enabled ? \'true\' : \'false\'"', $item[0]);
         $this->assertStringContainsString('x-on:click="$store.shortcuts.toggle()"', $item[0]);
-        $this->assertMatchesRegularExpression('/Atajos de teclado\s*<span aria-hidden="true"/', $menu[0]);
+        $this->assertMatchesRegularExpression('/<span class="min-w-0 flex-1 truncate">Atajos de teclado<\/span>\s*<span aria-hidden="true"/', $menu[0]);
 
         preg_match('/<dialog id="drawer".*?<\/dialog>/s', $html, $drawer);
         $this->assertNotEmpty($drawer);

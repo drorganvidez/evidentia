@@ -43,7 +43,8 @@
             @if ($icon !== null)
                 <x-ui.icon :name="$icon" class="size-4.5" />
             @endif
-            {{ $slot }}
+            {{-- One line beside the switch: the popup widens to fit it (up to its cap, then the text truncates) --}}
+            <span class="min-w-0 flex-1 truncate">{{ $slot }}</span>
             <span aria-hidden="true"
                 class="relative ml-auto h-5.5 w-9.5 shrink-0 rounded-full bg-slate-500 transition group-aria-checked:bg-aurora-500 after:absolute after:top-0.75 after:left-0.75 after:size-4 after:rounded-full after:bg-white after:shadow-[0_1px_3px_rgb(0_0_0/.25)] after:transition after:content-[''] group-aria-checked:after:translate-x-4"></span>
         </button>
