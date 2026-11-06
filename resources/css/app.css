@@ -24,6 +24,16 @@
 @source '../views/ui';
 @source '../views/errors';
 @source '../views/system';
+@source '../views/home.blade.php';
+@source '../views/home';
+@source '../views/auth';
+@source '../views/evidence';
+@source '../views/manage';
+@source '../views/config';
+@source '../views/eventbrite';
+@source '../views/importexport';
+@source '../views/integrity';
+@source '../views/randomize';
 @source '../js';
 
 /* ------------------------------------------------------------------------------------------

@@ -21,7 +21,7 @@ test.describe('Configurar curso', () => {
         await ui.noOverflow();
     });
 
-    test('pasa axe en claro y oscuro', async ({ page, ui }) => {
+    test('pasa axe en claro y oscuro', async ({ ui }) => {
         expect(await ui.axe()).toEqual([]);
 
         await ui.setTheme('dark');
