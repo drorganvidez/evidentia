@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\ActivityAction;
 use App\Enums\Deadline;
 use App\Facades\Activity;
+use App\Http\Controllers\Concerns\PaginatesLists;
 use App\Models\ActivityLog;
 use App\Models\Committee;
 use App\Models\Evidence;
@@ -30,6 +31,8 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
  */
 class ActivityController extends Controller
 {
+    use PaginatesLists;
+
     public function __construct(private ActivityAccess $access, private ActivityPresenter $presenter) {}
 
     public function index(Request $request)
@@ -40,16 +43,14 @@ class ActivityController extends Controller
         $scope = $this->access->committeeScope($me);
         $filters = ActivityFilters::fromRequest($request, $scope);
 
-        $entries = $this->logQuery($scope, $filters)
+        $entries = $this->paginateList($this->logQuery($scope, $filters)
             ->with(['user', 'targetUser', 'committee'])
             ->withCount('targets')
             ->when(
                 $filters->request !== null,
                 fn (Builder $query) => $query->oldest('created_at')->oldest('id'),
                 fn (Builder $query) => $query->latest('created_at')->latest('id'),
-            )
-            ->paginate(config('activity.page_size'))
-            ->withQueryString();
+            ), $request, config('activity.page_size'));
 
         $siblings = ActivityLog::query()
             ->whereIn('request_id', $entries->getCollection()->pluck('request_id')->filter()->unique()->values())
@@ -107,7 +108,7 @@ class ActivityController extends Controller
         $scope = in_array($request->query('scope'), ['own', 'about', 'access'], true) ? $request->query('scope') : 'all';
 
         $scoped = fn (string $scope): Builder => $this->mineQuery($me, $scope);
-        $entries = $scoped($scope)->with('user')->latest('id')->paginate(30)->withQueryString();
+        $entries = $this->paginateList($scoped($scope)->with('user')->latest('id'), $request, 30);
 
         return view('activity.mine', [
             'me' => $me,

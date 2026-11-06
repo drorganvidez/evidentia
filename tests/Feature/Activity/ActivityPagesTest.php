@@ -80,8 +80,15 @@ class ActivityPagesTest extends ScreenTestCase
             Activity::record(ActivityAction::ConfigChanged, actor: $lecturer, actingRole: 'LECTURE');
         }
 
-        $this->screen('profesor', route('activity.index'))->assertSee('Paginación del registro');
+        $this->screen('profesor', route('activity.index'))
+            ->assertSee('<nav aria-label="Paginación del registro"', false)
+            ->assertSee('aria-label="Filas por página"', false);
         $this->assertRows($this->screen('profesor', route('activity.index', ['page' => 2])), ['Comité editado']);
+        // a page past the last shows the last; the size of the query string stays in the filters
+        $this->assertRows($this->screen('profesor', route('activity.index', ['page' => 40])), ['Comité editado']);
+        $this->screen('profesor', route('activity.index', ['per_page' => 100]))
+            ->assertDontSee('<nav aria-label="Paginación del registro"', false)
+            ->assertSee('<input type="hidden" name="per_page" value="100">', false);
     }
 
     public function test_each_person_sees_their_own_activity(): void
