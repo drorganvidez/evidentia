@@ -98,14 +98,14 @@ test.describe('Página de acceso', () => {
         await expect(password).toHaveAttribute('type', 'password');
         await expect(toggle).toHaveAttribute('aria-pressed', 'false');
 
+        // A toggle button keeps its name and says its state with aria-pressed
         await toggle.click();
         await expect(password).toHaveAttribute('type', 'text');
+        await expect(toggle).toHaveAttribute('aria-pressed', 'true');
 
-        const hide = page.getByRole('button', { name: 'Ocultar la contraseña' });
-        await expect(hide).toHaveAttribute('aria-pressed', 'true');
-
-        await hide.click();
+        await toggle.click();
         await expect(password).toHaveAttribute('type', 'password');
+        await expect(toggle).toHaveAttribute('aria-pressed', 'false');
     });
 
     for (const [form, fields] of Object.entries({
