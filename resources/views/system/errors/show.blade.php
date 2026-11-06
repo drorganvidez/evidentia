@@ -54,7 +54,8 @@
             </x-ui.card>
 
             <x-ui.card title="Traza" :level="2">
-                <pre class="overflow-x-auto font-mono text-xs leading-relaxed whitespace-pre text-ink-muted">{{ $report->trace }}</pre>
+                <pre tabindex="0" role="region" aria-label="Traza del error"
+                    class="overflow-x-auto font-mono text-xs leading-relaxed whitespace-pre text-ink-muted">{{ $report->trace }}</pre>
             </x-ui.card>
         </div>
 
