@@ -10,7 +10,7 @@
     $name = $count > 0 ? $label . ', ' . $count . ' sin leer' : $label;
     $shown = $count > 99 ? '99+' : (string) $count;
 @endphp
-<a href="{{ $href }}" title="{{ $name }}"
+<a href="{{ $href }}"
     {{ $attributes->class(['relative grid size-9 place-items-center rounded-full text-ink-muted transition hover:bg-glass-2 hover:text-ink pointer-coarse:size-11']) }}>
     <x-lucide-bell class="size-4.5" aria-hidden="true" />
     <span class="sr-only">{{ $name }}</span>

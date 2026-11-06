@@ -11,7 +11,8 @@ class BellTest extends ComponentTestCase
     {
         $html = $this->render('<x-ui.bell href="/avisos" class="ml-2" />');
 
-        $this->assertMatchesRegularExpression('#^<a href="/avisos" title="Avisos"\s+class="relative grid size-9 place-items-center rounded-full text-ink-muted transition hover:bg-glass-2 hover:text-ink pointer-coarse:size-11 ml-2">#', trim($html));
+        $this->assertMatchesRegularExpression('#^<a href="/avisos"\s+class="relative grid size-9 place-items-center rounded-full text-ink-muted transition hover:bg-glass-2 hover:text-ink pointer-coarse:size-11 ml-2">#', trim($html));
+        $this->assertStringNotContainsString('title=', $html, 'The hidden text names it once: a title would repeat the name');
         $this->assertStringContainsString('<span class="sr-only">Avisos</span>', $html);
         $this->assertSame(1, substr_count($html, '<svg'));
         $this->assertStringNotContainsString('bg-brand', $html, 'No counter without unread notices');
@@ -24,7 +25,7 @@ class BellTest extends ComponentTestCase
     {
         $html = $this->render('<x-ui.bell :count="3" href="/avisos" />');
 
-        $this->assertStringContainsString('title="Avisos, 3 sin leer"', $html);
+        $this->assertStringNotContainsString('title=', $html);
         $this->assertStringContainsString('<span class="sr-only">Avisos, 3 sin leer</span>', $html);
         $this->assertMatchesRegularExpression('/<span aria-hidden="true"\s+class="absolute -top-0.5 -right-0.5 grid min-w-4.5 place-items-center rounded-full bg-brand px-1 font-mono text-2xs font-bold text-on-brand tabular-nums">3<\/span>/', $html);
     }
@@ -35,7 +36,7 @@ class BellTest extends ComponentTestCase
 
         $this->assertStringContainsString('>99+</span>', $html);
         $this->assertStringContainsString('<span class="sr-only">Notificaciones, 120 sin leer</span>', $html);
-        $this->assertStringContainsString('title="Notificaciones, 120 sin leer"', $html);
+        $this->assertSame(1, substr_count($html, 'Notificaciones, 120 sin leer'), 'Named once');
     }
 
     public function test_negative_counts_are_treated_as_zero_and_the_href_is_required(): void
