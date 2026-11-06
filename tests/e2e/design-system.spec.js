@@ -122,6 +122,26 @@ test.describe('Página del sistema de diseño', () => {
         ).toEqual({ ring: true, radius: '0px' });
     });
 
+    test('el margen inferior del desplazamiento reserva la barra inferior solo donde la hay', async ({
+        page,
+    }) => {
+        await page.goto('/_ui');
+
+        const bar = page.getByRole('navigation', { name: 'Navegación principal (móvil)' });
+        const padding = await page.evaluate(() =>
+            parseFloat(getComputedStyle(document.documentElement).scrollPaddingBottom),
+        );
+
+        if (await bar.isVisible()) {
+            // An element scrolled into view stops above the bar (WCAG 2.4.11)
+            const { y } = await bar.boundingBox();
+
+            expect(padding).toBeGreaterThanOrEqual(page.viewportSize().height - y);
+        } else {
+            expect(padding).toBeLessThanOrEqual(16);
+        }
+    });
+
     test('no desborda a 320 px de ancho', async ({ page, ui }) => {
         await page.setViewportSize({ width: 320, height: 568 });
         await page.goto('/_ui');

@@ -552,11 +552,15 @@
     }
 
     html {
-        /* The sticky topbar and the bottom bar never cover the focused element (WCAG 2.4.11) */
-        scroll-padding-block: 5.5rem 6.5rem;
+        /* The sticky topbar never covers the focused element (WCAG 2.4.11), nor does the bottom bar of the phone */
+        scroll-padding-block: 5.5rem 1rem;
 
         /* Height animation of <details> as a progressive enhancement */
         interpolate-size: allow-keywords;
+
+        @variant max-md {
+            scroll-padding-bottom: 6.5rem;
+        }
     }
 
     ::details-content {
