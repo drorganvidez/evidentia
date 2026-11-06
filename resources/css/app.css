@@ -11,10 +11,15 @@
 @import 'tailwindcss/preflight.css' layer(base);
 @import 'tailwindcss/utilities.css' layer(utilities) source(none);
 
-/* Where classes are scanned (paths relative to this file). vendor/ and public/ are never read. */
-@source '../views';
+/*
+ * Where classes are scanned (paths relative to this file). Only the trees of the new UI: the
+ * views still on AdminLTE would drag Bootstrap class names in. Add a directory here when it
+ * moves to the new layout; vendor/ and public/ are never read.
+ */
+@source '../views/components/layout';
+@source '../views/components/ui';
+@source '../views/ui';
 @source '../js';
-@source '../../app';
 
 /* ------------------------------------------------------------------------------------------
  * 1. Primitive tokens. Each one becomes a utility: bg-aurora-600, text-sm, rounded-lg, md:...
@@ -124,15 +129,13 @@
 
         --color-white: #fff;
         --color-black: #000;
-        --color-transparent: transparent;
-        --color-current: currentcolor;
 
         /* Spacing scale: p-1 = 4px, p-4 = 16px, p-8 = 32px */
         --spacing: 0.25rem;
 
-        /* Breakpoints (min-width variants). The phone layout is everything below md. */
+        /* Breakpoints (min-width variants). The phone layout is everything below md (720 px). */
         --breakpoint-sm: 40rem;
-        --breakpoint-md: 48rem;
+        --breakpoint-md: 45rem;
         --breakpoint-lg: 64rem;
         --breakpoint-xl: 80rem;
         --breakpoint-2xl: 96rem;
@@ -213,8 +216,12 @@
         /* Shadows reference semantic colours so they adapt to the theme */
         --shadow-raised: 0 2px 8px -2px var(--shadow-ink), inset 0 1px 0 var(--glass-hi);
         --shadow-glass: inset 0 1px 0 var(--glass-hi), 0 24px 60px -32px var(--shadow-ink);
-        --shadow-glow: 0 12px 28px -12px var(--glow);
-        --shadow-glow-lg: 0 18px 36px -12px var(--glow);
+        --shadow-glow:
+            inset 0 1px 0 color-mix(in oklch, var(--color-white) 20%, transparent),
+            0 12px 28px -12px var(--glow);
+        --shadow-glow-lg:
+            inset 0 1px 0 color-mix(in oklch, var(--color-white) 25%, transparent),
+            0 18px 36px -12px var(--glow);
         --shadow-none: 0 0 #0000;
 
         /* Blur */
@@ -303,13 +310,13 @@
         --ink-muted: var(--color-slate-600);
         --ink-faint: var(--color-slate-500);
         --rule: color-mix(in oklch, var(--color-slate-400) 28%, transparent);
-        --field: color-mix(in oklch, white 75%, transparent);
+        --field: color-mix(in oklch, var(--color-white) 75%, transparent);
 
         /* Soft glass: surfaces stay about 92 % opaque with a light blur */
-        --glass: color-mix(in oklch, white 92%, transparent);
-        --glass-2: color-mix(in oklch, white 97%, transparent);
-        --glass-edge: color-mix(in oklch, white 85%, transparent);
-        --glass-hi: color-mix(in oklch, white 95%, transparent);
+        --glass: color-mix(in oklch, var(--color-white) 92%, transparent);
+        --glass-2: color-mix(in oklch, var(--color-white) 97%, transparent);
+        --glass-edge: color-mix(in oklch, var(--color-white) 85%, transparent);
+        --glass-hi: color-mix(in oklch, var(--color-white) 95%, transparent);
         --shadow-ink: color-mix(in oklch, var(--color-aurora-900) 18%, transparent);
 
         /* brand carries white text (6.1:1); brand-lo is the hover (8.2:1); brand-hi is for
@@ -356,9 +363,9 @@
 
             --glass: color-mix(in oklch, var(--color-slate-900) 88%, transparent);
             --glass-2: color-mix(in oklch, var(--color-slate-800) 85%, transparent);
-            --glass-edge: color-mix(in oklch, white 14%, transparent);
-            --glass-hi: color-mix(in oklch, white 22%, transparent);
-            --shadow-ink: color-mix(in oklch, black 55%, transparent);
+            --glass-edge: color-mix(in oklch, var(--color-white) 14%, transparent);
+            --glass-hi: color-mix(in oklch, var(--color-white) 22%, transparent);
+            --shadow-ink: color-mix(in oklch, var(--color-black) 55%, transparent);
 
             --brand-ink: var(--color-aurora-300);
             --brand-soft: var(--color-aurora-900);
@@ -499,9 +506,4 @@
     background-color: var(--glass-2);
     border: 1px solid var(--glass-edge);
     box-shadow: inset 0 1px 0 var(--glass-hi);
-}
-
-/* Tabular figures for numbers that line up in tables and counters */
-@utility tabular {
-    font-variant-numeric: tabular-nums;
 }
