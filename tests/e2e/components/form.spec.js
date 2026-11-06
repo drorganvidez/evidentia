@@ -197,6 +197,26 @@ test.describe('Formularios', () => {
         await expect.poll(() => requests).toBe(1);
     });
 
+    test('en móvil el resumen de una barra de filtros mide al menos 44 px', async ({
+        page,
+        ui,
+    }, testInfo) => {
+        test.skip(testInfo.project.name !== 'mobile', 'Los 44 px se exigen con puntero grueso');
+
+        expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(true);
+
+        const summaries = ui.section('filter-bar').locator('summary');
+
+        await expect(summaries).toHaveCount(2);
+
+        for (let i = 0; i < 2; i++) {
+            const box = await summaries.nth(i).boundingBox();
+
+            expect(box.height, `Resumen ${i + 1}`).toBeGreaterThanOrEqual(44);
+            expect(box.width, `Resumen ${i + 1}`).toBeGreaterThanOrEqual(44);
+        }
+    });
+
     test('la sección cumple WCAG 2.2 AA', async ({ ui }) => {
         expect(await ui.axe('#ui-form')).toEqual([]);
     });

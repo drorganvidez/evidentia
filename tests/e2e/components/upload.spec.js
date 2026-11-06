@@ -399,6 +399,40 @@ test.describe('Subida de archivos', () => {
         expect(submits[0]).toContain('demo-retenido');
     });
 
+    test('en móvil la zona y los botones de las filas miden al menos 44 px', async ({
+        page,
+        ui,
+    }, testInfo) => {
+        test.skip(testInfo.project.name !== 'mobile', 'Los 44 px se exigen con puntero grueso');
+
+        expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(true);
+
+        const zone = ui.section('upload').locator('[x-data="upload"]').first();
+        const area = zone.locator('input[type="file"]').locator('xpath=..');
+        const buttons = zone.getByRole('listitem').getByRole('button');
+        const box = await area.boundingBox();
+
+        expect(box.height, 'Zona de subida').toBeGreaterThanOrEqual(44);
+        expect(box.width, 'Zona de subida').toBeGreaterThanOrEqual(44);
+        expect(await buttons.count()).toBeGreaterThan(1);
+
+        for (let i = 0; i < (await buttons.count()); i++) {
+            const button = buttons.nth(i);
+
+            if (!(await button.isVisible())) {
+                continue;
+            }
+
+            const size = await button.boundingBox();
+            const name = await button.getAttribute('aria-label');
+
+            expect(size.height, name).toBeGreaterThanOrEqual(44);
+            expect(size.width, name).toBeGreaterThanOrEqual(44);
+        }
+
+        await ui.noOverflow();
+    });
+
     test('la sección cumple WCAG 2.2 AA', async ({ ui }) => {
         expect(await ui.axe('#ui-upload')).toEqual([]);
     });

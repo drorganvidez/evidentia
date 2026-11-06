@@ -152,6 +152,37 @@ test.describe('Selector de personas', () => {
         await expect(input).toHaveValue(value);
     });
 
+    test('en móvil los chips y sus botones miden al menos 44 px', async ({
+        page,
+        ui,
+    }, testInfo) => {
+        test.skip(testInfo.project.name !== 'mobile', 'Los 44 px se exigen con puntero grueso');
+
+        expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(true);
+
+        const chips = ui
+            .section('picker')
+            .getByRole('list', { name: 'Seleccionados' })
+            .getByRole('listitem');
+
+        await expect(chips).toHaveCount(3);
+
+        for (let i = 0; i < 3; i++) {
+            const button = chips.nth(i).getByRole('button');
+            const size = await button.boundingBox();
+            const name = await button.getAttribute('aria-label');
+
+            expect(
+                (await chips.nth(i).boundingBox()).height,
+                `Chip ${i + 1}`,
+            ).toBeGreaterThanOrEqual(44);
+            expect(size.height, name).toBeGreaterThanOrEqual(44);
+            expect(size.width, name).toBeGreaterThanOrEqual(44);
+        }
+
+        await ui.noOverflow();
+    });
+
     test('la sección cumple WCAG 2.2 AA', async ({ ui }) => {
         expect(await ui.axe('#ui-picker')).toEqual([]);
     });
