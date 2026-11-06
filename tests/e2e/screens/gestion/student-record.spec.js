@@ -126,6 +126,40 @@ test.describe('Expediente de un estudiante', () => {
         });
     }
 
+    test('en el teléfono cada objetivo de cada sección mide al menos 44 px', async ({
+        page,
+    }, testInfo) => {
+        test.skip(
+            testInfo.project.name !== 'mobile',
+            'El objetivo de 44 px se exige con puntero grueso',
+        );
+        test.setTimeout(60_000);
+        await signIn(page, 'presidente');
+
+        for (const query of [
+            '',
+            '?tab=reuniones',
+            '?tab=firmas',
+            '?tab=bonos',
+            '?tab=actividad',
+            '?tab=mensajes',
+        ]) {
+            await page.goto(`${RECORD}${query}`);
+            const small = await page.locator('main').evaluate((main) =>
+                Array.from(main.querySelectorAll('a[href], button'))
+                    .filter((el) => el.checkVisibility())
+                    .map((el) => ({ el, box: el.getBoundingClientRect() }))
+                    .filter(({ box }) => box.width < 43.5 || box.height < 43.5)
+                    .map(
+                        ({ el, box }) =>
+                            `«${el.textContent.trim()}» ${Math.round(box.width)} × ${Math.round(box.height)}`,
+                    ),
+            );
+
+            expect(small, query || '?tab=evidencias').toEqual([]);
+        }
+    });
+
     test('las filas llevan a la ficha de cada cosa', async ({ page }) => {
         await signIn(page, 'presidente');
 
