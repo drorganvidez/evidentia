@@ -83,7 +83,7 @@ Con la demo levantada (ver `README.md`), abre `http://localhost:8000/_ui`. La ta
 | `x-layout.public` | `layout/public.blade.php` | — | Páginas públicas (acceso, firma, bloqueo, errores) con la aurora intensa, cabecera flotante y pie compacto. |
 | `x-pdf.document`, `x-pdf.table`, `x-pdf.section` | `pdf/` | — | Documentos para dompdf con hex planos y Helvetica; vista previa en `/_ui/pdf`. |
 
-Los módulos sin componente propio son `resources/js/components/lazyFrame.js` (los marcos del catálogo reciben su documento al entrar en el viewport) y `resources/js/alpine/announce.js` (anunciador compartido que usa `$store.notices` si existe).
+Los módulos sin componente propio son `resources/js/components/lazyFrame.js` (los marcos del catálogo reciben su documento al entrar en el viewport), `resources/js/components/currentInView.js` (un `x-ui.tabs` con `x-data="currentInView"` desplaza su píldora hasta el enlace actual al cargar, como en el expediente de un estudiante) y `resources/js/alpine/announce.js` (anunciador compartido que usa `$store.notices` si existe).
 
 ## Layouts
 

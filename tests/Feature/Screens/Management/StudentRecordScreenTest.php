@@ -45,7 +45,7 @@ class StudentRecordScreenTest extends ScreenTestCase
 
             $this->assertStringContainsString('Lucía Pérez Romero', $html);
             $this->assertStringContainsString('Horas computadas', $html);
-            $this->assertStringContainsString('aria-label="Secciones del expediente"', $html);
+            $this->assertMatchesRegularExpression('/<nav aria-label="Secciones del expediente" class="[^"]*" id="secciones" x-data="currentInView">/', $html);
             $this->assertStringContainsString('Usuario estudiante', $text);
             $this->assertStringContainsString('estudiante@e2e.test', $html);
             $this->assertStringContainsString('Comités Ninguno', $text);

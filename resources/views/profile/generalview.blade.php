@@ -96,8 +96,8 @@
         </x-ui.card>
     </div>
 
-    <x-ui.tabs id="secciones" class="min-w-0 scroll-mt-24" label="Secciones del expediente" size="md"
-        :items="$tabs" />
+    <x-ui.tabs id="secciones" x-data="currentInView" class="min-w-0 scroll-mt-24" label="Secciones del expediente"
+        size="md" :items="$tabs" />
 
     @include('profile.record.' . $tab)
 </x-layout.app>

@@ -25,7 +25,7 @@
 @endphp
 <x-ui.card title="Actividad" :level="2" id="activity-title" padding="sm">
     <div class="grid gap-4">
-        <x-ui.tabs class="min-w-0" label="Ámbito de la actividad" :items="$scopeTabs" />
+        <x-ui.tabs x-data="currentInView" class="min-w-0" label="Ámbito de la actividad" :items="$scopeTabs" />
         @include('activity.partials.log', [
             'entries' => $activity,
             'viewer' => auth()->user(),
