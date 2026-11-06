@@ -199,15 +199,22 @@ test.describe('Subida de archivos', () => {
         const zone = ui.section('upload').locator('[x-data="upload"]').first();
         const row = zone.getByRole('listitem').last();
         const hidden = zone.locator('input[type="hidden"][name="uploaded[]"]');
-        const failing = async (route) => {
-            if (route.request().method() === 'POST') {
-                await route.fulfill({ status: 500, contentType: 'text/plain', body: '' });
-            } else {
-                await route.continue();
-            }
-        };
+        let failing = true;
 
-        await page.route('**/_ui/demo/upload', failing);
+        // Both answers are fulfilled here, so the retry does not wait for the slower demo endpoint
+        await page.route('**/_ui/demo/upload', async (route) => {
+            if (route.request().method() !== 'POST') {
+                await route.continue();
+
+                return;
+            }
+
+            await route.fulfill(
+                failing
+                    ? { status: 500, contentType: 'text/plain', body: '' }
+                    : { status: 200, contentType: 'text/plain', body: 'demo-reintento' },
+            );
+        });
         await zone.locator('input[type="file"]').setInputFiles([pdf('informe.pdf')]);
 
         await expect(row).toContainText('No se ha podido subir');
@@ -217,13 +224,14 @@ test.describe('Subida de archivos', () => {
         ).toHaveCount(0);
         await expect(hidden).toHaveCount(0);
 
-        await page.unroute('**/_ui/demo/upload', failing);
+        failing = false;
         await zone.getByRole('button', { name: 'Reintentar informe.pdf' }).click();
 
-        await expect(row).toContainText('Subido', { timeout: 10_000 });
+        await expect(row).toContainText('Subido');
         await expect(zone.getByRole('button', { name: 'Reintentar informe.pdf' })).toBeHidden();
         await expect(zone.getByRole('alert')).toBeHidden();
         await expect(hidden).toHaveCount(1);
+        await expect(hidden).toHaveValue('demo-reintento');
         expect(unexpected, 'Errores en la consola del navegador').toEqual([]);
     });
 
