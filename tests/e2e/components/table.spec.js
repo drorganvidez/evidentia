@@ -20,6 +20,18 @@ async function stubDestination(page) {
     return hits;
 }
 
+/** Records every navigation the page starts: the Navigation API fires navigate synchronously. */
+async function trackNavigations(page) {
+    await page.evaluate(() => {
+        window.uiNavigations = [];
+        navigation.addEventListener('navigate', (event) =>
+            window.uiNavigations.push(event.destination.url),
+        );
+    });
+
+    return () => page.evaluate(() => window.uiNavigations);
+}
+
 test.describe('Tablas', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto('/_ui#ui-table');
@@ -37,6 +49,42 @@ test.describe('Tablas', () => {
         await page.waitForURL(destination);
         expect(hits).toHaveLength(1);
         expect(page.url()).toContain('evidence=33');
+    });
+
+    test('el clic central en una fila abre su destino en otra pestaña', async ({
+        page,
+        context,
+        ui,
+    }) => {
+        const opened = [];
+
+        await context.route(destination, (route) => {
+            opened.push(route.request().url());
+
+            return route.fulfill({
+                status: 200,
+                contentType: 'text/html; charset=utf-8',
+                body: '<!doctype html><html lang="es"><head><title>Destino</title></head><body><main><h1>Destino</h1></main></body></html>',
+            });
+        });
+
+        const navigations = await trackNavigations(page);
+        const row = ui
+            .section('table')
+            .getByRole('row')
+            .filter({ hasText: 'Montaje del photocall' });
+        const tab = context.waitForEvent('page', { timeout: 10_000 });
+
+        await row.getByRole('cell').filter({ hasText: '1,75 h' }).click({ button: 'middle' });
+
+        const opener = await tab;
+
+        await opener.waitForLoadState();
+        expect(opener.url()).toContain('evidence=33');
+        expect(opened).toHaveLength(1);
+        expect(await navigations(), 'La pestaña actual no navega').toEqual([]);
+        await expect(page).toHaveURL(/\/_ui#ui-table$/);
+        await opener.close();
     });
 
     test('el enlace del título navega una sola vez', async ({ page, ui }) => {
