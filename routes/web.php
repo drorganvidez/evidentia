@@ -216,6 +216,13 @@ Route::middleware('auth')->group(function () {
         // Hide/unhide events
         Route::post('registercoordinator/event/hide/{id}', [EventbriteController::class, 'hide'])->name('registercoordinator.event.hide');
         Route::post('registercoordinator/event/unhide/{id}', [EventbriteController::class, 'unhide'])->name('registercoordinator.event.unhide');
+
+        // Events created by hand (sessions held before the edition used Eventbrite)
+        Route::get('registercoordinator/event/create', [EventbriteController::class, 'event_create'])->name('registercoordinator.event.create');
+        Route::post('registercoordinator/event/create', [EventbriteController::class, 'event_store'])->name('registercoordinator.event.store');
+        Route::get('registercoordinator/event/{id}/edit', [EventbriteController::class, 'event_edit'])->whereNumber('id')->name('registercoordinator.event.edit');
+        Route::post('registercoordinator/event/{id}/edit', [EventbriteController::class, 'event_update'])->whereNumber('id')->name('registercoordinator.event.update');
+        Route::delete('registercoordinator/event/{id}', [EventbriteController::class, 'event_destroy'])->whereNumber('id')->name('registercoordinator.event.destroy');
     });
 
     Route::prefix('attendees')->middleware(['auth', CheckRoles::class.':REGISTER_COORDINATOR'])->group(function () {
