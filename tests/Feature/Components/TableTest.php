@@ -163,7 +163,7 @@ class TableTest extends ComponentTestCase
         $this->assertStringNotContainsString('tableFilter', $html);
         $this->assertStringNotContainsString('x-model="query"', $html);
         $this->assertStringContainsString('<span>Pestañas</span>', $html);
-        $this->assertMatchesRegularExpression('/<form role="search" method="get" action="\/lista" aria-label="Buscar evidencias"\s+class="flex min-w-0 flex-1 items-center gap-1\.5 md:ml-auto md:max-w-80">/', $html);
+        $this->assertMatchesRegularExpression('/<form role="search" method="get" action="\/lista"\s+aria-label="Buscar evidencias"\s+class="flex min-w-0 flex-1 items-center gap-1\.5 md:ml-auto md:max-w-80">/', $html);
         // every other key of the query string goes with the search, the page does not
         $this->assertStringContainsString('<input type="hidden" name="estado" value="pendientes">', $html);
         $this->assertStringContainsString('<input type="hidden" name="per_page" value="25">', $html);
@@ -186,6 +186,16 @@ class TableTest extends ComponentTestCase
         $one = $this->paged($this->paginator(1, 1, ['q' => 'montaje']), 'filterable count-label="evidencias" count-singular="evidencia"');
 
         $this->assertMatchesRegularExpression('/tabular-nums">1\s+evidencia<\/span>/', $one);
+    }
+
+    public function test_the_fragment_of_the_paginator_brings_the_search_and_the_sizes_back_to_the_table(): void
+    {
+        $html = $this->paged($this->paginator()->fragment('evidencias'), 'filterable');
+
+        $this->assertStringContainsString('action="/lista#evidencias"', $html);
+        $this->assertMatchesRegularExpression('/href="\/lista\?estado=pendientes&amp;per_page=25#evidencias"\s+aria-label="Quitar la búsqueda"/', $html);
+        $this->assertStringContainsString('href="/lista?estado=pendientes&amp;q=montaje&amp;per_page=50#evidencias"', $html);
+        $this->assertStringContainsString('href="/lista?estado=pendientes&amp;q=montaje&amp;per_page=25&amp;page=3#evidencias" rel="next"', $html);
     }
 
     public function test_the_search_stays_while_a_search_finds_nothing_and_goes_with_an_empty_list(): void

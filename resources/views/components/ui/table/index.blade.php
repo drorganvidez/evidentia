@@ -57,7 +57,11 @@
         unset($listQuery[$paginator->getPageName()]);
         $term = is_string($listQuery[ListPage::SEARCH] ?? null) ? $listQuery[ListPage::SEARCH] : '';
         $kept = Arr::except($listQuery, [ListPage::SEARCH]);
-        $listUrl = fn(array $query): string => $paginator->path() . ($query === [] ? '' : '?' . Arr::query($query));
+        // The fragment of the paginator brings every link and the search back to the table
+        $fragment = filled($paginator->fragment()) ? '#' . $paginator->fragment() : '';
+        $listUrl = fn(array $query): string => $paginator->path() .
+            ($query === [] ? '' : '?' . Arr::query($query)) .
+            $fragment;
         $searchable = $filterable && ($paginator->total() > 0 || $term !== '');
         $sizes = $paginator->total() > min(ListPage::SIZES) ? ListPage::SIZES : [];
         $pageFooter = $paginator->hasPages() || $sizes !== [];
@@ -97,7 +101,8 @@
                 {{ $toolbar }}
             @endisset
             @if ($searchable)
-                <form role="search" method="get" action="{{ $paginator->path() }}" aria-label="{{ $filterPlaceholder }}"
+                <form role="search" method="get" action="{{ $paginator->path() . $fragment }}"
+                    aria-label="{{ $filterPlaceholder }}"
                     class="flex min-w-0 flex-1 items-center gap-1.5 md:ml-auto md:max-w-80">
                     @foreach (ListPage::fields($kept) as $name => $value)
                         <input type="hidden" name="{{ $name }}" value="{{ $value }}">
