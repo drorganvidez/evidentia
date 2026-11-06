@@ -74,6 +74,36 @@ test.describe('Página del sistema de diseño', () => {
         await expect(light).toBeChecked();
     });
 
+    test('en modo Sistema el tema sigue la preferencia del sistema', async ({ page, isMobile }) => {
+        const scheme = () =>
+            page.evaluate(() => getComputedStyle(document.documentElement).colorScheme);
+
+        await page.emulateMedia({ colorScheme: 'dark' });
+        await page.goto('/_ui');
+
+        const html = page.locator('html');
+        const region = await themeRegion(page, isMobile);
+
+        // From an explicit choice, so that going back to the system has something to undo
+        await region.locator('label', { has: page.getByRole('radio', { name: 'Claro' }) }).click();
+        await expect(html).toHaveAttribute('data-theme', 'light');
+        expect(await scheme()).toBe('light');
+
+        await region
+            .locator('label', { has: page.getByRole('radio', { name: 'Sistema' }) })
+            .click();
+        await expect(region.getByRole('radio', { name: 'Sistema' })).toBeChecked();
+        await expect(html).not.toHaveAttribute('data-theme');
+        expect(await scheme()).toBe('dark');
+
+        await page.emulateMedia({ colorScheme: 'light' });
+        await expect.poll(scheme).toBe('light');
+
+        await page.reload();
+        await expect(html).not.toHaveAttribute('data-theme');
+        expect(await scheme()).toBe('light');
+    });
+
     test('no desborda a 320 px de ancho', async ({ page, ui }) => {
         await page.setViewportSize({ width: 320, height: 568 });
         await page.goto('/_ui');
