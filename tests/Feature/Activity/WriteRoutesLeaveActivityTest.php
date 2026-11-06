@@ -23,6 +23,7 @@ final class WriteRoutesLeaveActivityTest extends TestCase
     private const GET_WITH_EFFECT = [
         'registercoordinator.event.load', 'registercoordinator.attendee.load', 'registercoordinator.attendee.export',
         'activity.export', 'upload.remove', 'xls.upload.remove', 'ui.demo.remove', 'notifications.open',
+        'coordinator.committee.export',
     ];
 
     protected function setUp(): void

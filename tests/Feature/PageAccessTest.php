@@ -164,6 +164,8 @@ class PageAccessTest extends TestCase
             'upload.remove' => [['file_name' => 'missing.pdf'], self::EVERYONE],
             'xls.upload.remove' => [['file_name' => 'missing.xls'], self::EVERYONE],
 
+            'coordinator.committee' => [[], ['COORDINATOR']],
+            'coordinator.committee.export' => [[], ['COORDINATOR']],
             'coordinator.evidence.list.all' => [[], ['COORDINATOR']],
             'coordinator.evidence.list.pending' => [[], ['COORDINATOR']],
             'coordinator.evidence.list.accepted' => [[], ['COORDINATOR']],

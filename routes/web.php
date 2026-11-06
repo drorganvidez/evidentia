@@ -4,6 +4,7 @@ use App\Http\Controllers\AttendeeController;
 // Controladores importados explícitamente
 use App\Http\Controllers\BlockController;
 use App\Http\Controllers\BonusSecretaryController;
+use App\Http\Controllers\CommitteeCoordinatorController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\DefaultListSecretaryController;
 use App\Http\Controllers\DownloadController;
@@ -367,6 +368,12 @@ Route::middleware('auth')->group(function () {
 
     // EVIDENCES MANAGEMENT BY A COORDINATOR
     Route::prefix('coordinator')->group(function () {
+        // MY COMMITTEE
+        Route::middleware([CheckRoles::class.':COORDINATOR'])->group(function () {
+            Route::get('/committee', [CommitteeCoordinatorController::class, 'show'])->name('coordinator.committee');
+            Route::get('/committee/export', [CommitteeCoordinatorController::class, 'export'])->name('coordinator.committee.export');
+        });
+
         Route::get('/evidence/list/all', [EvidenceCoordinatorController::class, 'all'])->name('coordinator.evidence.list.all');
         Route::get('/evidence/list/pending', [EvidenceCoordinatorController::class, 'pending'])->name('coordinator.evidence.list.pending');
         Route::get('/evidence/list/accepted', [EvidenceCoordinatorController::class, 'accepted'])->name('coordinator.evidence.list.accepted');
