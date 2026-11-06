@@ -123,4 +123,16 @@ class MessageTest extends ComponentTestCase
         $this->assertStringContainsString('&lt;b&gt;Lucía&lt;/b&gt; Pérez</span>', $html);
         $this->assertStringNotContainsString('<b>', $html);
     }
+
+    public function test_the_reply_demo_posts_to_the_demo_sink(): void
+    {
+        $this->startSession();
+
+        $html = view('ui.sections.message')->render();
+        $sink = preg_quote(route('ui.demo.submit'), '/');
+
+        $this->assertMatchesRegularExpression('/<form method="post" action="'.$sink.'"[^>]*>\s*<input type="hidden" name="_token" value="[^"]+"/', $html);
+        $this->assertSame(1, substr_count($html, '<form '));
+        $this->assertStringNotContainsString('action="'.route('ui.index').'#', $html);
+    }
 }

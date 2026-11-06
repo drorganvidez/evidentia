@@ -27,7 +27,7 @@
         <div class="glass-2 rounded-lg">
             <x-ui.empty icon="lock" title="Tu cuenta está bloqueada" text="Un responsable tiene que desbloquearla.">
                 <x-slot:actions>
-                    <form method="post" action="{{ route('ui.index') }}">
+                    <form method="post" action="{{ route('ui.demo.submit') }}">
                         @csrf
                         <button type="submit"
                             class="glass-2 inline-flex h-10.5 items-center gap-2 rounded-full px-5 text-md font-semibold text-ink transition hover:bg-glass-hi pointer-coarse:min-h-11">

@@ -54,6 +54,42 @@ test.describe('Detalle de una evidencia', () => {
         await expect(trigger).toBeFocused();
     });
 
+    test('confirmar la eliminación envía un DELETE con token y vuelve con un aviso', async ({
+        page,
+    }) => {
+        await page.goto('/_ui/detail');
+
+        // Every form that changes data posts to the demo sink, as the real screens will post to theirs
+        await expect(page.locator('form[action$="/_ui/detail"]')).toHaveCount(0);
+        await expect(page.locator('form[method="get"]:not([role="search"])')).toHaveCount(0);
+        await expect(page.locator('form[method="post"][action$="/_ui/demo/submit"]')).toHaveCount(
+            4,
+        );
+        await expect(page.locator('#proof-form')).toHaveAttribute('action', /\/_ui\/demo\/submit$/);
+
+        await page.getByRole('button', { name: 'Eliminar', exact: true }).click();
+
+        const dialog = page.getByRole('alertdialog', { name: 'Eliminar la evidencia' });
+        const sent = page.waitForRequest((request) => request.url().endsWith('/_ui/demo/submit'));
+
+        await dialog.getByRole('button', { name: 'Sí, eliminar' }).click();
+
+        const request = await sent;
+        const fields = new URLSearchParams(request.postData());
+
+        expect(request.method()).toBe('POST');
+        expect(fields.get('_method')).toBe('DELETE');
+        expect(fields.get('_token')).toBeTruthy();
+
+        await page.waitForURL(/\/_ui\/detail$/);
+        await expect(
+            page
+                .getByRole('region', { name: 'Avisos' })
+                .getByRole('group')
+                .filter({ hasText: 'Formulario recibido' }),
+        ).toBeVisible();
+    });
+
     test('en el teléfono apila el lateral bajo el contenido y muestra la barra inferior', async ({
         page,
         ui,

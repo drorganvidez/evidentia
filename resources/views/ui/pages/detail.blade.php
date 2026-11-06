@@ -2,10 +2,12 @@
     The detail of an evidence as the student sees it after a rejection: the header with its badges and deadline,
     the steps, the reason of the coordinator, the purified description, the proofs with the upload to correct them,
     the data and the history in the aside, and the deletion behind an alert dialog. Served at /_ui/detail.
+    Every form that changes data posts to the demo sink, which comes back here with a notice.
 --}}
 @php
     $here = route('ui.page', 'detail');
     $home = route('ui.index');
+    $sink = route('ui.demo.submit');
     $now = now();
     $nav = [
         [
@@ -51,7 +53,7 @@
         'surname' => 'Pérez',
         'roles' => ['Estudiante'],
         'profileHref' => $here . '#perfil',
-        'logoutAction' => $here,
+        'logoutAction' => $sink,
     ];
     $files = [
         ['name' => 'informe-montaje.pdf', 'size' => 1258291, 'href' => $here . '#informe', 'type' => 'application/pdf'],
@@ -88,7 +90,9 @@
                 trigger-icon="trash-2">
                 <x-slot:footer>
                     <x-ui.button x-on:click="close" autofocus>Cancelar</x-ui.button>
-                    <form method="get" action="{{ $here }}">
+                    <form method="post" action="{{ $sink }}">
+                        @csrf
+                        @method('DELETE')
                         <x-ui.button variant="danger" type="submit" icon="trash-2" block>Sí, eliminar</x-ui.button>
                     </form>
                 </x-slot:footer>
@@ -126,7 +130,7 @@
                 </x-slot:extra>
                 <div class="grid grid-cols-[minmax(0,1fr)] gap-6">
                     <x-ui.file-list :files="$files" label="Pruebas de la evidencia" />
-                    <x-ui.form :action="$here" files id="proof-form" busy-label="Enviando" :fields="['evidence_files' => 'Pruebas']">
+                    <x-ui.form :action="$sink" files id="proof-form" busy-label="Enviando" :fields="['evidence_files' => 'Pruebas']">
                         <x-ui.upload name="evidence_files[]" :url="route('ui.demo.upload')" :revert-url="route('ui.demo.revert')" :remove-url="route('ui.demo.remove', 'NAME')"
                             label="Arrastra aquí las fotos que faltan o pulsa para elegirlas" />
                         <x-slot:actions>

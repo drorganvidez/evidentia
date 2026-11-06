@@ -85,4 +85,16 @@ class EmptyTest extends ComponentTestCase
 
         $this->fail('The component rendered without a title');
     }
+
+    public function test_the_blocked_account_demo_signs_out_through_the_demo_sink(): void
+    {
+        $this->startSession();
+
+        $html = view('ui.sections.empty')->render();
+        $sink = preg_quote(route('ui.demo.submit'), '/');
+
+        $this->assertMatchesRegularExpression('/<form method="post" action="'.$sink.'">\s*<input type="hidden" name="_token" value="[^"]+"/', $html);
+        $this->assertSame(1, substr_count($html, '<form '));
+        $this->assertStringNotContainsString('action="'.route('ui.index').'"', $html);
+    }
 }

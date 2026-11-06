@@ -24,8 +24,7 @@
         </div>
 
         <x-ui.card title="Responder" :level="3">
-            <form method="post" action="{{ route('ui.index') }}#ui-message"
-                class="grid grid-cols-[minmax(0,1fr)] gap-3">
+            <form method="post" action="{{ route('ui.demo.submit') }}" class="grid grid-cols-[minmax(0,1fr)] gap-3">
                 @csrf
                 <label for="reply-body" class="text-sm font-semibold">Tu respuesta</label>
                 <textarea id="reply-body" name="body" rows="4" placeholder="Escribe tu respuesta"
