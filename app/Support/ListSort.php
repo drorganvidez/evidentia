@@ -24,13 +24,15 @@ use InvalidArgumentException;
  *         'status' => ListSort::rank('status', ['PENDING', 'ACCEPTED', 'REJECTED']),  // a logical order
  *         'created' => ListSort::desc('created_at'),                   // a date: newest first on the first click
  *         'members' => fn (Builder $query, string $dir) => $query->orderBy('users_count', $dir),
+ *         'counted' => ListSort::using(fn ($query, $dir) => ..., fn (Attendee $row) => $row->computedHours()),
  *     ], default: 'created');
  *     $evidences = $sort->apply(Evidence::where(...))->paginate();      // or ListPage::paginate($sort->apply(...))
  *     $columns = $sort->columns([['label' => 'Evidencia', 'key' => 'title'], ...]);   // in the view
  *
  * Dates always order by their timestamp (created_at, updated_at, datetime...), never by the text the table shows.
  * Over a collection a string reads data_get (user.surname), a closure returns the value of a row
- * (fn ($row) => $row->event?->start_datetime) and the comparison ignores case and accents.
+ * (fn ($row) => $row->event?->start_datetime) and the comparison ignores case and accents. ListSort::using gives a
+ * term both forms, so that a list keeps its order when it moves from a collection to a paginated query.
  */
 final class ListSort
 {
@@ -90,6 +92,16 @@ final class ListSort
     public static function rank(string $column, array $values): array
     {
         return ['rank' => $column, 'values' => array_values($values)];
+    }
+
+    /**
+     * A term with one form for a query, fn (Builder $query, string $dir), and another for a collection, fn ($row).
+     *
+     * @return array{query: Closure, row: Closure}
+     */
+    public static function using(Closure $query, Closure $row): array
+    {
+        return ['query' => $query, 'row' => $row];
     }
 
     /** Whether the list is ordered by this column, and in which direction. */
@@ -192,7 +204,7 @@ final class ListSort
     {
         $flat = [];
         foreach ($terms as $term) {
-            if (is_array($term) && ! array_key_exists('rank', $term)) {
+            if (is_array($term) && ! array_key_exists('rank', $term) && ! array_key_exists('query', $term)) {
                 array_push($flat, ...self::terms($term));
             } elseif (is_string($term) || $term instanceof Closure || is_array($term)) {
                 $flat[] = $term;
@@ -209,6 +221,8 @@ final class ListSort
     {
         if ($term instanceof Closure) {
             $term($query, $this->dir);
+        } elseif (is_array($term) && isset($term['query'])) {
+            $term['query']($query, $this->dir);
         } elseif (is_array($term)) {
             $cases = implode(' ', array_fill(0, count($term['values']), 'when ? then ?'));
             $bindings = [];
@@ -257,6 +271,9 @@ final class ListSort
     {
         if ($term instanceof Closure) {
             return $term($row);
+        }
+        if (is_array($term) && isset($term['row'])) {
+            return $term['row']($row);
         }
         if (is_array($term)) {
             $position = array_search(data_get($row, $term['rank']), $term['values'], true);

@@ -147,6 +147,20 @@ class ListSortTest extends TestCase
         $this->assertSame([0, 1, 2], $sort(['sort' => 'name'])->apply($rows)->keys()->all(), 'Keys start again');
     }
 
+    public function test_a_term_may_order_a_query_and_a_collection_alike(): void
+    {
+        $this->evidences();
+        $term = ListSort::using(
+            fn (Builder $query, string $dir) => $query->orderByRaw('length(title) '.$dir),
+            fn (Evidence $evidence) => mb_strlen($evidence->title),
+        );
+        $sort = ListSort::from($this->asked(['sort' => 'length', 'dir' => 'asc']), ['length' => $term, 'created' => ListSort::desc('created_at')], 'created');
+        $expected = ['Diseño del cartel', 'Montaje del photocall', 'atención en el registro'];
+
+        $this->assertSame($expected, $sort->apply(Evidence::query())->pluck('title')->all());
+        $this->assertSame($expected, $sort->apply(Evidence::all())->pluck('title')->all());
+    }
+
     public function test_the_columns_take_links_that_keep_the_query_and_go_back_to_the_first_page(): void
     {
         $sort = $this->sort(['estado' => 'pendientes', 'q' => 'montaje', 'per_page' => '50', 'page' => '3', 'sort' => 'title', 'dir' => 'asc']);
