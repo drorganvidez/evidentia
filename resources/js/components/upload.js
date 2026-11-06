@@ -241,20 +241,7 @@ export default function upload() {
 
             this.problem = problems.join('. ');
 
-            if (this.problem) {
-                this.notify(this.problem);
-            }
-
             queued.forEach((key) => this.send(key));
-        },
-
-        /** Through the notices store when the page registers it; the inline alert always shows the text. */
-        notify(text) {
-            const notices = this.$store.notices;
-
-            if (notices && typeof notices.push === 'function') {
-                notices.push({ tone: 'rejected', text });
-            }
         },
 
         send(key) {
@@ -314,13 +301,15 @@ export default function upload() {
             xhr.send(data);
         },
 
+        /** The row says what happened and the alert of the zone, next to it, announces it once. */
         fail(file) {
             file.status = 'error';
             file.error = STATUS.error;
-            this.notify(`${file.name}: no se ha podido subir`);
+            this.problem = `${file.name}: no se ha podido subir`;
         },
 
         retry(key) {
+            this.problem = '';
             this.send(key);
         },
 

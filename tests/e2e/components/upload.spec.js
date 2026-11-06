@@ -94,6 +94,10 @@ test.describe('Subida de archivos', () => {
         await expect(zone.getByRole('alert')).toHaveText('enorme.pdf: el archivo pesa más de 1 MB');
         await expect(zone.getByRole('listitem')).toHaveCount(2);
         expect(posts).toBe(0);
+        // Said once, next to the zone: no notice repeats it
+        await expect(
+            page.getByRole('region', { name: 'Avisos' }).filter({ hasText: 'enorme.pdf' }),
+        ).toHaveCount(0);
 
         await zone.locator('input[type="file"]').setInputFiles([
             {
@@ -192,6 +196,10 @@ test.describe('Subida de archivos', () => {
         await zone.locator('input[type="file"]').setInputFiles([pdf('informe.pdf')]);
 
         await expect(row).toContainText('No se ha podido subir');
+        await expect(zone.getByRole('alert')).toHaveText('informe.pdf: no se ha podido subir');
+        await expect(
+            page.getByRole('region', { name: 'Avisos' }).filter({ hasText: 'informe.pdf' }),
+        ).toHaveCount(0);
         await expect(hidden).toHaveCount(0);
 
         await page.unroute('**/_ui/demo/upload', failing);
@@ -199,6 +207,7 @@ test.describe('Subida de archivos', () => {
 
         await expect(row).toContainText('Subido', { timeout: 10_000 });
         await expect(zone.getByRole('button', { name: 'Reintentar informe.pdf' })).toBeHidden();
+        await expect(zone.getByRole('alert')).toBeHidden();
         await expect(hidden).toHaveCount(1);
         expect(unexpected, 'Errores en la consola del navegador').toEqual([]);
     });
