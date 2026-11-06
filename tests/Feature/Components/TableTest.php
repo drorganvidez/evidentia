@@ -4,6 +4,7 @@ namespace Tests\Feature\Components;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Fluent;
 use Illuminate\View\ViewException;
 use InvalidArgumentException;
@@ -364,6 +365,7 @@ class TableTest extends ComponentTestCase
         $this->assertStringNotContainsString('<b>', $html);
         $this->assertStringNotContainsString('<i>', $html);
     }
+
     private const BROWSER_COLUMNS = <<<'PHP'
         [
             ['label' => 'Persona', 'key' => 'person'],
@@ -455,7 +457,7 @@ class TableTest extends ComponentTestCase
 
     public function test_a_cell_carries_the_value_the_browser_orders_by(): void
     {
-        $date = $this->render('<x-ui.table.cell :sort-value="$date">hace 3 días</x-ui.table.cell>', ['date' => \Illuminate\Support\Carbon::parse('2026-11-03 10:30:00', 'Europe/Madrid')]);
+        $date = $this->render('<x-ui.table.cell :sort-value="$date">hace 3 días</x-ui.table.cell>', ['date' => Carbon::parse('2026-11-03 10:30:00', 'Europe/Madrid')]);
 
         $this->assertStringContainsString('data-sort-value="2026-11-03T09:30:00Z"', $date, 'The instant in UTC, so that the text order is the time order');
         $this->assertStringContainsString('data-sort-value="1"', $this->render('<x-ui.table.cell :sort-value="true">Sí</x-ui.table.cell>'));
