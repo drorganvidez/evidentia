@@ -112,7 +112,7 @@ Los módulos sin componente propio son `resources/js/components/pageProgress.js`
 
 `x-layout.app` recibe `nav` (grupos de ítems con `label`, `href`, `icon`, `current`, `count`, `countLabel`, `mobile`), `mobileNav` (por defecto los cinco primeros marcados `mobile`), `breadcrumbs`, `deadline`, `user` (por defecto la persona autenticada), `notifications`, `search`, `subtitle`, `version` y `footerLinks`. Los componentes no leen roles ni rutas; esos arrays los compone por rol `App\View\Navigation`. Bajo `md` la barra lateral se oculta y aparecen la barra inferior y el cajón; entre `md` y `lg` la barra lateral es un raíl de 5 rem; desde `lg` mide 17 rem con rótulos y la tarjeta de plazo.
 
-`x-layout.public` acepta `wide` (el `aside` a la izquierda del contenido desde `lg`), `intense`, `subtitle`, `version`, `showTheme` y `contentId`; carga `public.js`.
+`x-layout.public` acepta `wide` (el `aside` a la izquierda del contenido desde `lg`), `intense`, `subtitle`, `version`, `showTheme`, `contentId` y `scene`; carga `public.js`. Una página de una columna pinta `x-ui.scene variant="sides"` en los márgenes salvo con `:scene="false"`; la de acceso pone la escena completa en su `aside`.
 
 ## Gramática Alpine permitida (build CSP)
 

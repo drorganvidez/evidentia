@@ -149,6 +149,38 @@ test.describe('Acceso', () => {
 });
 
 test.describe('Contraseña', () => {
+    test('las piezas de la plataforma quedan en los márgenes, lejos de la tarjeta', async ({
+        page,
+        ui,
+        isMobile,
+    }) => {
+        await page.goto('/password/reset');
+
+        const sides = page.locator('[data-scene="sides"]');
+
+        await expect(sides).toHaveAttribute('aria-hidden', 'true');
+
+        if (isMobile) {
+            await expect(sides).toBeHidden();
+        } else {
+            const card = await page.locator('main section').first().boundingBox();
+            const pieces = sides.locator(':scope > div');
+
+            await expect(pieces).toHaveCount(4);
+
+            for (let index = 0; index < 4; index++) {
+                const piece = await pieces.nth(index).boundingBox();
+                const apart = piece.x + piece.width <= card.x || piece.x >= card.x + card.width;
+
+                expect(apart, `Pieza ${index + 1} fuera de la tarjeta`).toBe(true);
+            }
+
+            expect(await sides.textContent()).toMatch(/^\s*$/);
+        }
+
+        await ui.noOverflow();
+    });
+
     test('el restablecimiento pide el correo y vuelve al acceso con un aviso', async ({
         page,
         ui,
@@ -163,7 +195,7 @@ test.describe('Contraseña', () => {
 
         for (const theme of ['light', 'dark']) {
             await ui.setTheme(theme);
-            expect(await ui.axe(AUDITED), `axe en ${theme}`).toEqual([]);
+            expect(await ui.axe(`${AUDITED}, [data-scene]`), `axe en ${theme}`).toEqual([]);
         }
 
         await page.getByLabel('Correo electrónico').fill('nadie@e2e.test');

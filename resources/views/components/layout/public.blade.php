@@ -1,6 +1,7 @@
 {{--
     Layout of the public pages (access, password reset, public signature, block, errors): the intense aurora, a floating
-    header with the brand and the theme, the notices under it, one centred column and the compact footer.
+    header with the brand and the theme, the notices under it, one centred column and the compact footer. A one-column
+    page shows the pieces of the platform in its margins from lg (x-ui.scene variant="sides"); scene=false removes them.
     <x-layout.public title="Acceso" wide subtitle="Jornadas InnoSoft 2026">
         <x-slot:aside>...claim and count chips...</x-slot:aside>
         <x-ui.card>...form...</x-ui.card>
@@ -21,11 +22,15 @@
     'contentId' => 'main',
     'skipLabel' => 'Saltar al formulario',
     'centered' => false,
+    'scene' => true,
 ])
 <x-layout.base :title="$title" :entry="$entry">
     <x-slot:head>{{ $head ?? '' }}</x-slot:head>
     <x-ui.skip-link :target="'#' . $contentId">{{ $skipLabel }}</x-ui.skip-link>
     <x-ui.aurora :intense="$intense" />
+    @if ($scene && !$wide)
+        <x-ui.scene variant="sides" />
+    @endif
 
     <header class="absolute inset-x-0 top-0 flex items-center justify-between gap-4 p-4 md:px-6 md:py-5">
         <x-ui.brand size="lg" :subtitle="$subtitle" />

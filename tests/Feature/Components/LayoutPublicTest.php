@@ -25,14 +25,18 @@ class LayoutPublicTest extends ComponentTestCase
         $this->assertStringContainsString('print-hidden flex flex-wrap items-center justify-center gap-x-4 gap-y-1 px-4 py-4 text-xs text-ink', $html, 'Compact footer');
         $this->assertStringNotContainsString('lg:grid-cols-', $html);
         $this->assertStringNotContainsString('<div class="grid gap-6">', $html, 'No aside wrapper without the slot');
+        $this->assertSame(1, substr_count($html, 'data-scene="sides"'), 'The pieces of the platform in the margins');
+        $this->assertStringNotContainsString('data-scene="hero"', $html, 'The page places the hero itself');
 
         $skip = strpos($html, 'href="#main"');
+        $aurora = strpos($html, '[--blob-opacity:.8]');
+        $scene = strpos($html, 'data-scene="sides"');
         $header = strpos($html, '<header');
         $notices = strpos($html, 'x-data="notices"');
         $main = strpos($html, '<main id="main"');
         $footer = strpos($html, '<footer');
 
-        $this->assertTrue($skip < $header && $header < $notices && $notices < $main && $main < $footer, 'DOM order');
+        $this->assertTrue($skip < $aurora && $aurora < $scene && $scene < $header && $header < $notices && $notices < $main && $main < $footer, 'DOM order');
         $this->assertSame(1, substr_count($html, '<main '));
         $this->assertSame(1, substr_count($html, '<footer'));
         $this->assertUniqueIds($html);
@@ -54,6 +58,7 @@ class LayoutPublicTest extends ComponentTestCase
         $this->assertLessThan(strpos($html, '<form>Formulario</form>'), strpos($html, '<h1>Lo que haces'), 'The aside comes first');
         $this->assertStringContainsString('aria-label="Evidentia, Jornadas InnoSoft 2026, inicio"', $html);
         $this->assertStringContainsString('Jornadas InnoSoft 2026</span>', $html);
+        $this->assertStringNotContainsString('data-scene', $html, 'The aside of a wide page holds its own scene');
     }
 
     public function test_the_aurora_the_theme_the_content_id_the_version_and_the_footer_can_change(): void
@@ -73,6 +78,11 @@ class LayoutPublicTest extends ComponentTestCase
         $this->assertStringContainsString('<footer class="own">Pie propio</footer>', $html);
         $this->assertStringNotContainsString('Universidad de Sevilla', $html, 'The footer slot replaces the compact footer');
         $this->assertSame(1, substr_count($html, '<footer'));
+        $this->assertStringContainsString('data-scene="sides"', $html, 'The calm aurora keeps the pieces');
+
+        $bare = $this->render('<x-layout.public :scene="false"><h1>x</h1></x-layout.public>');
+
+        $this->assertStringNotContainsString('data-scene', $bare);
 
         $versioned = $this->render('<x-layout.public version="4.0.0"><h1>x</h1></x-layout.public>');
 
