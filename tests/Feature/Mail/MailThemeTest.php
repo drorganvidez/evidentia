@@ -76,6 +76,11 @@ class MailThemeTest extends TestCase
         $this->assertStringContainsString('Mira [aquí](http://y.test)', $html);
     }
 
+    public function test_the_smtp_mailer_gives_up_after_ten_seconds(): void
+    {
+        $this->assertSame(10, config('mail.mailers.smtp.timeout'));
+    }
+
     public function test_the_preview_without_a_message_keeps_the_name_in_text(): void
     {
         $user = User::factory()->create(['name' => 'Lucía']);
