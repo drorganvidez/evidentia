@@ -46,8 +46,9 @@
                 {{ $plural($sum['accepted'], 'aceptada', 'aceptadas') }} ·
                 {{ $plural($sum['pending'], 'pendiente', 'pendientes') }} ·
                 {{ $plural($sum['rejected'], 'rechazada', 'rechazadas') }}</p>
-            <p><x-ui.hours :value="$sum['acceptedHours']" size="sm" /> aceptadas de <x-ui.hours :value="$sum['hours']"
-                    size="sm" /></p>
+            <p class="flex flex-wrap items-baseline gap-x-1.5"><x-ui.hours :value="$sum['acceptedHours']" size="sm" />
+                <span>aceptadas de</span> <x-ui.hours :value="$sum['hours']" size="sm" />
+            </p>
         </x-slot:footer>
     @endif
 </x-ui.table>

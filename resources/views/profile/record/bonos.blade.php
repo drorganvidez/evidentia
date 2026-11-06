@@ -29,7 +29,9 @@
     @else
         <x-slot:footer>
             <p>{{ $plural($bonuses->count(), 'bono', 'bonos') }}</p>
-            <p><x-ui.hours :value="$totals['bonuses']" size="sm" /> computadas</p>
+            <p class="flex flex-wrap items-baseline gap-x-1.5"><x-ui.hours :value="$totals['bonuses']" size="sm" />
+                <span>computadas</span>
+            </p>
         </x-slot:footer>
     @endif
 </x-ui.table>

@@ -26,7 +26,9 @@
         <x-slot:footer>
             <p>{{ $plural($attendances->count(), 'asistencia', 'asistencias') }} ·
                 {{ $plural($totals['attendances']['attended'], 'asistida', 'asistidas') }}</p>
-            <p><x-ui.hours :value="$totals['attendances']['hours']" size="sm" /> computadas</p>
+            <p class="flex flex-wrap items-baseline gap-x-1.5"><x-ui.hours :value="$totals['attendances']['hours']" size="sm" />
+                <span>computadas</span>
+            </p>
         </x-slot:footer>
     @endif
 </x-ui.table>
