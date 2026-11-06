@@ -16,7 +16,7 @@ Con la demo levantada (ver `README.md`), abre `http://localhost:8000/_ui`. La ta
 - Ningún elemento toma el foco al cargar salvo el resumen de errores de `form`. Los diálogos nativos devuelven el foco a su disparador.
 - Los textos de la interfaz van en español, sin copy explicativo y sin emojis. Las fechas y los plazos fuerzan el locale `es`.
 - Los ids de los controles se derivan del `name` con `ui_field_id()` (`users[]` pasa a `field-users`) y la clave del error con `ui_error_key()`. Dos instancias del mismo componente en una página necesitan `id` o `name` distintos; `DesignSystemPageTest` comprueba que ningún id se repite en el catálogo ni en las páginas.
-- Todo el comportamiento vive en módulos de `resources/js/components` descubiertos por `import.meta.glob` (el nombre del fichero es el `x-data`). `app.js` registra todos; `public.js` solo `busyForm`, `clipboard`, `countUp`, `notices` y `passwordField` con los stores `theme` y `notices`.
+- Todo el comportamiento vive en módulos de `resources/js/components` descubiertos por `import.meta.glob` (el nombre del fichero es el `x-data`). `app.js` registra todos; `public.js` solo `busyForm`, `charCount`, `clipboard`, `countUp`, `dismissible`, `notices`, `pageProgress`, `passwordField`, `passwordRules` y `selectField` con los stores `theme` y `notices`.
 - Ninguna vista nueva lleva `style=`, manejadores `on*=` ni `<script>` sin nonce (`CspSafeViewsTest`). La CSP es estricta y Alpine corre en su build CSP (ver la gramática más abajo).
 
 ## Componentes
@@ -65,7 +65,7 @@ Con la demo levantada (ver `README.md`), abre `http://localhost:8000/_ui`. La ta
 | `x-ui.notification-list` | `ui/notification-list.blade.php` | — | Avisos de la persona con los no leídos destacados. |
 | `x-ui.message` | `ui/message.blade.php` | — | Un mensaje de un hilo con autor, rol, hora, estado y cuerpo. |
 | `x-ui.form` | `ui/form.blade.php` | `busyForm` | Formulario con CSRF, método suplantado, estado ocupado contra el doble envío y resumen de errores enlazado. |
-| `x-ui.field` | `ui/field.blade.php` | `passwordField`, `charCount` | Control etiquetado (input, select, textarea, contraseña con ojo) con pista, error, icono, prefijo o sufijo y valores del servidor. |
+| `x-ui.field` | `ui/field.blade.php` | `passwordField`, `charCount`, `selectField` | Control etiquetado (input, desplegable con buscador sobre un `<select>` nativo, textarea, contraseña con ojo) con pista, error, icono, prefijo o sufijo y valores del servidor. |
 | `x-ui.choice` | `ui/choice.blade.php` | — | Casilla, radio o conmutador dentro de su etiqueta; solo CSS. |
 | `x-ui.checkbox-group` | `ui/checkbox-group.blade.php` | `checkboxGroup` | Casillas bajo una leyenda con pista y error comunes y un bloque dependiente de lo marcado. |
 | `x-ui.upload` | `ui/upload.blade.php` | `upload` | Zona de subida sobre un `<input type="file">` real, lista de archivos con progreso y hidden por archivo subido. |

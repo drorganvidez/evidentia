@@ -9,6 +9,14 @@
     pattern, x-model) lands on the control. old() wins over value; the error comes from $errors or the error prop.
     value takes a scalar, a date (Y-m-d, H:i or Y-m-d\TH:i for those types, d/m/Y H:i otherwise), a backed enum or a
     Stringable; any other object fails loudly.
+    A select is a combobox with a search box (selectField, APG editable combobox with list autocomplete) over the native
+    <select>, which keeps the id, the name, the attributes and the options, posts the value and is the control without JS.
+    A click opens the list with the chosen option marked and the box emptied; typing filters ignoring case and accents;
+    arrows, Home and End move, Enter chooses, Escape closes and puts the chosen label back, Tab leaves. Every choice
+    writes the select and fires input and change on it, so x-model and the forms that follow it keep working. The list
+    is a popover of the top layer pinned to the box, above it when there is no room below, so no card clips it.
+    options is value => label or a list of {value, label, disabled}; placeholder is the empty choice and never listed.
+    :submit="false" leaves the name out of the select, for a choice that only drives the page.
 --}}
 @props([
     'name' => '',
@@ -30,6 +38,7 @@
     'maxlength' => null,
     'hideLabel' => false,
     'toggle' => true,
+    'submit' => true,
     'id' => null,
 ])
 @php
@@ -131,19 +140,33 @@
     ];
     $control = $attributes->except('class');
     $root = $attributes->only('class')->class(['grid grid-cols-[minmax(0,1fr)] gap-1.5']);
-    if ($hasToggle) {
+    // A select labels its listbox too and points the label to the combobox once it is there
+    $labelAttributes = new \Illuminate\View\ComponentAttributeBag(
+        array_merge(['for' => $id], $isSelect ? ['id' => $id . '-label', 'x-bind:for' => 'labelFor'] : [], [
+            'class' => $hideLabel ? 'sr-only' : 'text-sm font-semibold',
+        ]),
+    );
+    if ($isSelect) {
+        $root = $root->merge([
+            'x-data' => 'selectField',
+            'x-on:focusout' => 'onFocusOut',
+            'x-on:click.outside' => 'dismiss',
+            'x-on:scroll.window.capture' => 'place',
+            'x-on:resize.window' => 'place',
+        ]);
+    } elseif ($hasToggle) {
         $root = $root->merge(['x-data' => 'passwordField']);
     } elseif ($hasCount) {
         $root = $root->merge(['x-data' => 'charCount']);
     }
 @endphp
 <div {{ $root }}>
-    <label for="{{ $id }}" class="{{ $hideLabel ? 'sr-only' : 'text-sm font-semibold' }}">{{ $label }}
+    <label {{ $labelAttributes }}>{{ $label }}
         @if ($required)
             <span aria-hidden="true" class="text-rejected-ink after:content-['*']"></span>
         @endif
     </label>
-    <div
+    <div @if ($isSelect) x-ref="box" @endif
         class="{{ Arr::toCssClasses([
             'relative flex gap-2 rounded-md border border-field-edge bg-field pl-4 pr-3 transition focus-within:border-aurora-500 focus-within:bg-glass-2 focus-within:ring-4 focus-within:ring-aurora-500/18 has-[[aria-invalid=true]]:border-rejected has-[[aria-invalid=true]]:focus-within:ring-rejected/18 has-[:disabled]:border-dashed has-[:disabled]:bg-rule/40',
             $heightClass,
@@ -155,21 +178,55 @@
             <span class="shrink-0 text-md text-ink-muted">{{ $prefix }}</span>
         @endif
         @if ($isSelect)
-            <select id="{{ $id }}" name="{{ $name }}" {{ $control->class($controlClasses) }}
-                @required($required) @disabled($disabled)
+            {{-- Without JS the select is the control; with JS it stays, hidden, as the source of truth --}}
+            <select id="{{ $id }}" @if ($submit) name="{{ $name }}" @endif
+                {{ $control->class($controlClasses) }} x-ref="source" x-on:change="read" x-on:focus="focusEntry"
+                x-bind:class="ready ? 'sr-only' : ''" x-bind:tabindex="ready ? '-1' : null"
+                x-bind:aria-hidden="ready ? 'true' : null" @required($required) @disabled($disabled)
                 @if ($required) aria-required="true" @endif
                 @if ($error !== null) aria-invalid="true" @endif
                 @if ($describedBy !== '') aria-describedby="{{ $describedBy }}" @endif>
                 @if ($placeholder !== null)
-                    <option value="" disabled @selected($current === '')>{{ $placeholder }}</option>
+                    <option value="" disabled data-placeholder @selected($current === '')>{{ $placeholder }}
+                    </option>
                 @endif
                 @foreach ($items as $item)
                     <option value="{{ $item['value'] }}" @selected($current !== '' && $current === $item['value']) @disabled($item['disabled'])>
                         {{ $item['label'] }}</option>
                 @endforeach
             </select>
+            <input id="{{ $id }}-combobox" type="text" role="combobox" x-ref="entry" x-cloak
+                aria-autocomplete="list" aria-controls="{{ $id }}-list" aria-expanded="false"
+                x-bind:aria-expanded="open ? 'true' : 'false'" x-bind:aria-activedescendant="activeId" x-model="query"
+                x-bind:placeholder="placeholderText" x-on:input="onInput" x-on:keydown="onKeydown"
+                x-on:pointerdown="onPointerDown" x-on:focus="onFocus" x-on:click="toggle" autocomplete="off"
+                autocapitalize="off" spellcheck="false"
+                class="w-0 min-w-0 flex-1 cursor-pointer truncate border-0 bg-transparent pr-8 text-control text-ink outline-none placeholder:text-ink-muted focus:cursor-text disabled:cursor-not-allowed disabled:text-ink-muted"
+                @if ($placeholder !== null) placeholder="{{ $placeholder }}" @endif
+                @disabled($disabled) @if ($required) aria-required="true" @endif
+                @if ($error !== null) aria-invalid="true" @endif
+                @if ($describedBy !== '') aria-describedby="{{ $describedBy }}" @endif>
             <x-lucide-chevron-down class="pointer-events-none absolute right-3 size-4 text-ink-muted"
                 aria-hidden="true" />
+            {{-- A manual popover in the top layer, placed by the module: nothing around can clip or cover it --}}
+            <div x-ref="popup" popover="manual" hidden
+                class="glass fixed inset-auto z-50 m-0 rounded-lg p-1.5 text-ink">
+                <ul id="{{ $id }}-list" role="listbox" aria-labelledby="{{ $id }}-label"
+                    x-ref="list" class="relative max-h-64 overflow-y-auto overscroll-contain">
+                    <template x-for="option in filtered" x-bind:key="option.id">
+                        <li role="option" x-bind:id="option.id"
+                            x-bind:aria-selected="option.selected ? 'true' : 'false'"
+                            x-bind:aria-disabled="option.disabled ? 'true' : null"
+                            x-bind:data-active="option.active ? '' : null" x-on:mousedown.prevent="choose(option)"
+                            x-on:mouseenter="activate(option)"
+                            class="flex min-h-11 cursor-pointer items-center justify-between gap-3 rounded-sm px-3 py-2 text-md aria-disabled:cursor-not-allowed aria-disabled:text-ink-muted aria-selected:font-semibold data-[active]:bg-brand-soft data-[active]:text-brand-soft-ink">
+                            <span x-text="option.label" class="min-w-0 break-words"></span>
+                            <x-lucide-check x-show="option.selected" class="size-4 shrink-0" aria-hidden="true" />
+                        </li>
+                    </template>
+                </ul>
+                <p x-show="!filtered.length" class="px-3 py-2 text-sm text-ink-muted">Sin resultados</p>
+            </div>
         @elseif ($isTextarea)
             <textarea id="{{ $id }}" name="{{ $name }}" rows="{{ $rows }}"
                 {{ $control->class($controlClasses) }} @if ($maxlength !== null) maxlength="{{ $maxlength }}" @endif

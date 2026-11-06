@@ -1,4 +1,4 @@
-import { expect, test } from '../fixtures/ui.js';
+import { choose, expect, test } from '../fixtures/ui.js';
 
 test.describe('Campos', () => {
     test.beforeEach(async ({ page }) => {
@@ -56,10 +56,13 @@ test.describe('Campos', () => {
 
     test('el select con placeholder y la pareja de horas y minutos', async ({ ui }) => {
         const section = ui.section('field');
-        const select = section.getByLabel('Comité');
+        const committee = section.getByRole('combobox', { name: 'Comité', exact: true });
+        const select = section.locator('select[name="committee_id"]');
 
+        await expect(committee).toHaveValue('');
+        await expect(committee).toHaveAttribute('placeholder', 'Elige un comité');
         await expect(select).toHaveValue('');
-        await select.selectOption('2');
+        await choose(committee, 'Logística');
         await expect(select).toHaveValue('2');
 
         await expect(

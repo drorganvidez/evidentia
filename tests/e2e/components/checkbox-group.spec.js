@@ -1,4 +1,4 @@
-import { expect, test } from '../fixtures/ui.js';
+import { choose, expect, test } from '../fixtures/ui.js';
 
 test.describe('Casillas y grupos de casillas', () => {
     test.beforeEach(async ({ page }) => {
@@ -22,8 +22,8 @@ test.describe('Casillas y grupos de casillas', () => {
 
         await secretary.check();
         await expect(committee).toBeVisible();
-        await committee.selectOption('2');
-        await expect(committee).toHaveValue('2');
+        await choose(committee, 'Logística');
+        await expect(group.locator('select[name="role_committee"]')).toHaveValue('2');
     });
 
     test('las casillas, los radios y los conmutadores cambian con el teclado y el ratón', async ({

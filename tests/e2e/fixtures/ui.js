@@ -90,6 +90,20 @@ export function contrast(first, second) {
 }
 
 /**
+ * Chooses an option of a select field (<x-ui.field type="select">) the way a person does: a click opens the
+ * combobox and a click on the option of its listbox chooses it. The option is found by its whole name.
+ */
+export async function choose(combobox, option) {
+    await combobox.click();
+
+    const list = combobox.page().locator(`[id="${await combobox.getAttribute('aria-controls')}"]`);
+
+    await list.getByRole('option', { name: option, exact: true }).click();
+    await expect(combobox).toHaveAttribute('aria-expanded', 'false');
+    await expect(combobox).toHaveValue(option);
+}
+
+/**
  * Shared fixtures of the UI tests.
  *
  * - `page` fails the test when the browser logs an error, a page error, a CSP message or an Alpine warning.

@@ -176,9 +176,9 @@ class FieldTest extends ComponentTestCase
 
         $empty = $this->render($blade);
 
-        $this->assertMatchesRegularExpression('/<select id="field-committee" name="committee" class="[^"]*appearance-none pr-8[^"]*"/', $empty);
-        $this->assertStringNotContainsString('<select id="field-committee" name="committee" value=', $empty);
-        $this->assertMatchesRegularExpression('/<option value="" disabled\s+selected\s*>Elige un comité<\/option>/', $empty);
+        $this->assertMatchesRegularExpression('/<select id="field-committee"\s+name="committee"\s+class="[^"]*appearance-none pr-8[^"]*"/', $empty);
+        $this->assertDoesNotMatchRegularExpression('/<select [^>]*\svalue=/', $empty);
+        $this->assertMatchesRegularExpression('/<option value="" disabled data-placeholder\s+selected\s*>Elige un comité\s*<\/option>/', $empty);
         $this->assertStringContainsString('<option value="1"', $empty);
         $this->assertMatchesRegularExpression('/>\s*Logística<\/option>/', $empty);
         $this->assertStringContainsString('<svg', $empty, 'The decorative chevron');
@@ -188,7 +188,7 @@ class FieldTest extends ComponentTestCase
         $this->withOldInput(['committee' => '2']);
         $chosen = $this->render($blade);
 
-        $this->assertMatchesRegularExpression('/<option value="" disabled\s*>Elige un comité<\/option>/', $chosen);
+        $this->assertMatchesRegularExpression('/<option value="" disabled data-placeholder\s*>Elige un comité\s*<\/option>/', $chosen);
         $this->assertMatchesRegularExpression('/<option value="2"\s+selected\s*>\s*Logística<\/option>/', $chosen);
         $this->assertDoesNotMatchRegularExpression('/<option value="1"[^>]*selected/', $chosen);
 
@@ -198,6 +198,70 @@ class FieldTest extends ComponentTestCase
 
         $this->assertStringContainsString('<option value="a"', $list);
         $this->assertMatchesRegularExpression('/<option value="b"\s+disabled\s*>\s*Segunda<\/option>/', $list);
+    }
+
+    public function test_a_select_becomes_a_combobox_with_a_search_over_the_native_select(): void
+    {
+        $html = $this->render('<x-ui.field name="committee" label="Comité" type="select" :options="[1 => \'Programa\', 2 => \'Logística\']" value="2" x-model="committee" />');
+
+        $this->assertStringContainsString('x-data="selectField"', $html);
+        $this->assertStringContainsString('x-on:focusout="onFocusOut"', $html);
+        $this->assertStringContainsString('x-on:click.outside="dismiss"', $html);
+        $this->assertStringContainsString('x-on:scroll.window.capture="place" x-on:resize.window="place"', $html);
+        // Without JS the label and the posted value belong to the select; with JS the label moves to the combobox
+        $this->assertMatchesRegularExpression('/<label for="field-committee" id="field-committee-label" x-bind:for="labelFor" class="text-sm font-semibold">Comité/', $html);
+        $this->assertMatchesRegularExpression('/<select id="field-committee"\s+name="committee"[^>]*\sx-model="committee"/', $html);
+        $this->assertMatchesRegularExpression('/<select [^>]*x-ref="source" x-on:change="read" x-on:focus="focusEntry"\s+x-bind:class="ready \? \'sr-only\' : \'\'"/', $html);
+        $this->assertMatchesRegularExpression('/x-bind:tabindex="ready \? \'-1\' : null"\s+x-bind:aria-hidden="ready \? \'true\' : null"/', $html);
+        $this->assertMatchesRegularExpression('/<option value="2"\s+selected\s*>\s*Logística<\/option>/', $html);
+
+        // The combobox has no name, stays hidden without JS and controls the listbox
+        $this->assertMatchesRegularExpression('/<input id="field-committee-combobox" type="text" role="combobox" x-ref="entry" x-cloak\s+aria-autocomplete="list" aria-controls="field-committee-list" aria-expanded="false"/', $html);
+        $this->assertDoesNotMatchRegularExpression('/<input id="field-committee-combobox"[^>]*\sname=/', $html);
+        $this->assertStringContainsString('x-bind:aria-expanded="open ? \'true\' : \'false\'" x-bind:aria-activedescendant="activeId"', $html);
+        $this->assertStringContainsString('x-on:input="onInput" x-on:keydown="onKeydown"', $html);
+        $this->assertStringContainsString('x-on:click="toggle"', $html);
+        $this->assertStringContainsString('autocomplete="off"', $html);
+        $this->assertStringContainsString('text-control', $html);
+        $this->assertMatchesRegularExpression('/<ul id="field-committee-list" role="listbox" aria-labelledby="field-committee-label"\s+x-ref="list"/', $html);
+        // The list lives in a manual popover of the top layer, hidden until the module opens it
+        $this->assertMatchesRegularExpression('/<div x-ref="popup" popover="manual" hidden\s+class="glass fixed inset-auto/', $html);
+        $this->assertStringContainsString('<template x-for="option in filtered" x-bind:key="option.id">', $html);
+        $this->assertStringContainsString('role="option"', $html);
+        $this->assertStringContainsString('x-bind:aria-selected="option.selected ? \'true\' : \'false\'"', $html);
+        $this->assertStringContainsString('x-bind:aria-disabled="option.disabled ? \'true\' : null"', $html);
+        $this->assertStringContainsString('x-on:mousedown.prevent="choose(option)"', $html);
+        $this->assertStringContainsString('min-h-11', $html, 'Options of 44 px');
+        $this->assertStringContainsString('>Sin resultados</p>', $html);
+        $this->assertStringContainsString('x-ref="box"', $html);
+        $this->assertNoAutofocus($html);
+        $this->assertUniqueIds($html);
+        $this->assertCspSafe($html);
+    }
+
+    public function test_required_disabled_error_and_hint_reach_the_select_and_the_combobox(): void
+    {
+        $html = $this->render('<x-ui.field name="committee" label="Comité" type="select" :options="[1 => \'Programa\']" placeholder="Elige un comité" required disabled hint="Pista" error="Elige un comité" />');
+
+        $this->assertMatchesRegularExpression('/<select [^>]*\srequired[\s>]/', $html);
+        $this->assertMatchesRegularExpression('/<select [^>]*\sdisabled[\s>]/', $html);
+        $this->assertMatchesRegularExpression('/<input id="field-committee-combobox"[^>]*\sdisabled[\s>]/', $html);
+        $this->assertDoesNotMatchRegularExpression('/<input id="field-committee-combobox"[^>]*\srequired[\s>]/', $html);
+        $this->assertMatchesRegularExpression('/<input id="field-committee-combobox"[^>]*placeholder="Elige un comité"/', $html);
+        $this->assertSame(2, substr_count($html, 'aria-required="true"'));
+        $this->assertSame(2, substr_count($html, 'aria-invalid="true"'));
+        $this->assertSame(2, substr_count($html, 'aria-describedby="field-committee-error field-committee-hint"'));
+        $this->assertUniqueIds($html);
+    }
+
+    public function test_a_select_that_only_drives_the_page_posts_nothing(): void
+    {
+        $html = $this->render('<x-ui.field name="preset" id="field-users-preset" label="Lista" type="select" :options="[\'Primera\']" :submit="false" />');
+
+        $this->assertMatchesRegularExpression('/<select id="field-users-preset"\s/', $html);
+        $this->assertDoesNotMatchRegularExpression('/\sname="/', $html);
+        $this->assertStringContainsString('id="field-users-preset-combobox"', $html);
+        $this->assertStringContainsString('id="field-users-preset-list"', $html);
     }
 
     public function test_a_textarea_sizes_to_its_rows_and_counts_with_maxlength(): void
