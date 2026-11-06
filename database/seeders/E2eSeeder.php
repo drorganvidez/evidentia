@@ -122,6 +122,6 @@ class E2eSeeder extends Seeder
         Attendee::forceCreate(['event_id' => $event->id, 'user_id' => $student->id, 'status' => 'Checked In']);
         Attendee::forceCreate(['event_id' => $event->id, 'user_id' => $register->id, 'status' => 'Checked In']);
 
-        $this->call([E2e\ActivitySeeder::class, E2e\MessagesSeeder::class]);
+        $this->call([E2e\ActivitySeeder::class, E2e\MessagesSeeder::class, E2e\NotificationsSeeder::class]);
     }
 }

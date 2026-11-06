@@ -15,6 +15,13 @@ use Tests\Feature\Screens\PublicAndStudent\ScreenTestCase;
  */
 class NotificationsPagesTest extends ScreenTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // the seed already leaves notices; every test here writes the ones it needs
+        DB::table('notifications')->delete();
+    }
+
     /** A row of the inbox written by hand, for the cases the real notices never produce. */
     private function notice(User $user, string $title, string $url = '/', bool $read = false, ?string $at = null): string
     {
