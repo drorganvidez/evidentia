@@ -1,3 +1,5 @@
+import { freshText } from '../alpine/announce';
+
 /**
  * File upload zone (<x-ui.upload>): validates the picked files, sends each one with XMLHttpRequest to show
  * its progress, keeps the server id in a hidden input and removes files from the server when asked.
@@ -151,12 +153,13 @@ export default function upload() {
 
             event.preventDefault();
             event.stopImmediatePropagation();
-            this.problem = WAIT;
+            // A second try says it again: the repeated text changes (freshText) so the alert is read anew
+            this.problem = freshText(this.problem, WAIT);
         },
 
         /** Once nothing is on its way, the request to wait has done its job. */
         settle() {
-            if (!this.uploading && this.problem === WAIT) {
+            if (!this.uploading && this.problem.trimEnd() === WAIT) {
                 this.problem = '';
             }
         },

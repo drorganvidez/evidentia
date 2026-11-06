@@ -386,6 +386,18 @@ test.describe('Subida de archivos', () => {
         await expect(save).toBeFocused();
         expect(submits).toHaveLength(0);
 
+        // A second try says it again: the text changes by a silent no-break space, so the alert is read anew
+        const alertText = () =>
+            zone
+                .getByRole('alert')
+                .locator('span')
+                .evaluate((node) => node.textContent);
+
+        expect(await alertText()).toBe('Espera a que termine la subida');
+        await save.click();
+        await expect.poll(alertText).toBe('Espera a que termine la subida\u00A0');
+        expect(submits).toHaveLength(0);
+
         release();
 
         await expect(row).toContainText('Subido');
