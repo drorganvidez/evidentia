@@ -76,15 +76,40 @@ class PdfDocumentTest extends ComponentTestCase
 
         $this->assertStringContainsString('<img class="pdf-header__mark" src="'.$expected.'" alt="" width="28" height="28">', $html);
 
-        $url = $this->render('<x-pdf.document title="Acta" logo="https://evidentia.us.es/img/brand/mark-256.png">Cuerpo</x-pdf.document>');
+        $other = $this->render('<x-pdf.document title="Acta" :logo="$logo">Cuerpo</x-pdf.document>', ['logo' => public_path('img/brand/mark-32.png')]);
 
-        $this->assertStringContainsString('src="https://evidentia.us.es/img/brand/mark-256.png"', $url);
-        $this->assertStringNotContainsString('base64', $url);
+        $this->assertStringContainsString('src="data:image/png;base64,'.base64_encode(file_get_contents(public_path('img/brand/mark-32.png'))).'"', $other);
 
         $missing = $this->render('<x-pdf.document title="Acta" logo="/no/such/file.png">Cuerpo</x-pdf.document>');
 
         $this->assertStringNotContainsString('<img', $missing);
         $this->assertStringContainsString('Evidentia', $missing);
+    }
+
+    public function test_the_logo_is_only_an_image_inside_public_or_resources(): void
+    {
+        // The same mark copied out of the public directory
+        $outside = tempnam(sys_get_temp_dir(), 'logo');
+        copy(public_path('img/brand/mark-32.png'), $outside);
+
+        try {
+            $logos = [
+                'remote URL' => 'https://evidentia.us.es/img/brand/mark-256.png',
+                'data URI' => 'data:image/png;base64,'.base64_encode(file_get_contents(public_path('img/brand/mark-32.png'))),
+                'image outside the allowed directories' => $outside,
+                'path that climbs out of public' => public_path('../composer.json'),
+                'file inside public that is not an image' => public_path('site.webmanifest'),
+            ];
+
+            foreach ($logos as $case => $logo) {
+                $html = $this->render('<x-pdf.document title="Acta" :logo="$logo">Cuerpo</x-pdf.document>', ['logo' => $logo]);
+
+                $this->assertStringNotContainsString('<img', $html, $case);
+                $this->assertStringContainsString('<span class="pdf-header__name">Evidentia</span>', $html, $case);
+            }
+        } finally {
+            unlink($outside);
+        }
     }
 
     public function test_event_committee_subtitle_and_footer_are_printed_and_escaped(): void

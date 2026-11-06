@@ -4,7 +4,8 @@
     <x-pdf.document title="Acta de reunión" committee="Comité de Programa" subtitle="Reunión ordinaria 3">
         <x-pdf.section :number="1" title="Datos de la reunión"><x-pdf.table key-value :rows="$rows" /></x-pdf.section>
     </x-pdf.document>
-    The logo is a file path (embedded as a data URI so dompdf and the browser both show it) or a URL.
+    The logo is the path of an image inside public/ or resources/, embedded as a data URI so dompdf and the browser
+    both show it; any other path or a URL prints no logo.
 --}}
 @props([
     'title' => null,
@@ -20,15 +21,16 @@
     $event ??= 'Jornadas InnoSoft Days ' . now()->year;
     $logo ??= public_path('img/brand/mark-256.png');
     $logoSrc = null;
-    if (is_string($logo) && $logo !== '') {
-        if (preg_match('#^(data:|https?://)#', $logo) === 1) {
-            $logoSrc = $logo;
-        } elseif (is_file($logo)) {
-            $logoSrc =
-                'data:' .
-                (mime_content_type($logo) ?: 'image/png') .
-                ';base64,' .
-                base64_encode(file_get_contents($logo));
+    // realpath resolves ../ and links before the check; a URL or a data URI has no real path
+    $logoPath = is_string($logo) && $logo !== '' ? realpath($logo) : false;
+    $logoRoots = array_map(
+        fn(string $root): string => $root . DIRECTORY_SEPARATOR,
+        array_filter([realpath(public_path()), realpath(resource_path())]),
+    );
+    if ($logoPath !== false && is_file($logoPath) && Str::startsWith($logoPath, $logoRoots)) {
+        $logoMime = mime_content_type($logoPath) ?: '';
+        if (str_starts_with($logoMime, 'image/')) {
+            $logoSrc = 'data:' . $logoMime . ';base64,' . base64_encode(file_get_contents($logoPath));
         }
     }
     // dompdf runs the embedded PHP only with enable_php; the browser ignores a script of that type
