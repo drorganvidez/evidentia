@@ -3,6 +3,7 @@
 namespace Tests\Feature\Components;
 
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\MessageBag;
 use Illuminate\Support\ViewErrorBag;
 
 class FormTest extends ComponentTestCase
@@ -166,6 +167,19 @@ class FormTest extends ComponentTestCase
         $this->assertStringContainsString('aria-labelledby="password-form-errors-title"', $named);
         $this->assertMatchesRegularExpression('/<a href="#field-password" class="[^"]+">password ·\s+La contraseña no coincide<\/a>/', $named);
         $this->assertSame(1, substr_count($named, 'autofocus'));
+    }
+
+    public function test_the_bag_may_be_a_message_bag_of_its_own(): void
+    {
+        // A demo or a custom validator brings its own errors without touching the shared ones
+        $this->withViewErrors(['email' => 'Error compartido']);
+
+        $html = $this->render('<x-ui.form action="/x" id="demo-form" :bag="$bag">x</x-ui.form>', [
+            'bag' => new MessageBag(['title' => ['Falta el título']]),
+        ]);
+
+        $this->assertMatchesRegularExpression('/<a href="#field-title" class="[^"]+">title ·\s+Falta el título<\/a>/', $html);
+        $this->assertStringNotContainsString('Error compartido', $html);
     }
 
     public function test_with_fields_each_form_of_a_page_lists_only_its_own_errors(): void
