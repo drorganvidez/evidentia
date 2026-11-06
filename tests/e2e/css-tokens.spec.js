@@ -1,6 +1,9 @@
 import { expect, test } from './fixtures/ui.js';
 
-/** Classes Tailwind must always generate, whether a view uses them or not (@source inline). */
+/**
+ * Classes the stylesheet must contain: the ones Tailwind always generates (@source inline) and the
+ * utilities of the design system that the catalogue exercises.
+ */
 const ALWAYS = [
     ...Array.from({ length: 101 }, (_, n) => `.w-${n}\\/100`),
     ...[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((hue) => `.hue-${hue}`),
@@ -8,6 +11,10 @@ const ALWAYS = [
     '.committee-dot',
     '.glass',
     '.glass-2',
+    '.halo-aurora',
+    '.text-control',
+    '.inset-shadow-hi',
+    '.shadow-glow-sm',
 ];
 
 test('la hoja de estilos servida contiene las utilidades generadas', async ({ page, request }) => {
