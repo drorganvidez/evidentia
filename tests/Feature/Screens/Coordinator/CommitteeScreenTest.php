@@ -9,6 +9,7 @@ use App\Models\MeetingMinutes;
 use App\Models\MeetingRequest;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Tests\Feature\Screens\Management\ScreenTestCase;
 
 /**
@@ -93,6 +94,9 @@ class CommitteeScreenTest extends ScreenTestCase
 
     public function test_an_empty_committee_says_so(): void
     {
+        // Only the annotations of this test: the end-to-end seed also leaves a history of its own
+        DB::table('activity_log_targets')->delete();
+        DB::table('activity_log')->delete();
         $communication = Committee::where('name', 'Comunicación')->sole();
         $this->person('coordinador')->coordinator()->update(['committee_id' => $communication->id]);
 

@@ -7,6 +7,7 @@ use App\Facades\Activity;
 use App\Models\Evidence;
 use App\Models\MeetingMinutes;
 use App\Models\MeetingRequest;
+use Illuminate\Support\Facades\DB;
 use Tests\Feature\Screens\Management\ScreenTestCase;
 
 /** The history pages of an evidence, a minutes and a meeting request, and what each person sees and does there. */
@@ -78,9 +79,13 @@ class ActivityHistoryPagesTest extends ScreenTestCase
 
     public function test_the_committee_does_not_see_the_draft_annotations_nor_the_notices_of_others(): void
     {
+        // Only the annotations of this test: the end-to-end seed also leaves a history of its own
+        DB::table('activity_log_targets')->delete();
+        DB::table('activity_log')->delete();
         $evidence = $this->evidence('Montaje del photocall');
         $student = $this->person('estudiante');
         Activity::record(ActivityAction::EvidenceCreated, $evidence, actor: $student, actingRole: 'STUDENT', committeeId: false);
+        Activity::record(ActivityAction::EvidencePublished, $evidence, actor: $student, actingRole: 'STUDENT');
         Activity::system(ActivityAction::NotificationSent, $evidence, $this->person('coordinador'), details: ['title' => 'Evidencia recibida']);
 
         $this->screen('secretario', route('activity.evidence', ['id' => $evidence->id]))
@@ -113,6 +118,9 @@ class ActivityHistoryPagesTest extends ScreenTestCase
 
     public function test_minutes_are_open_to_everybody_and_their_history_to_who_took_part(): void
     {
+        // Only the annotations of this test: the end-to-end seed also leaves a history of its own
+        DB::table('activity_log_targets')->delete();
+        DB::table('activity_log')->delete();
         $minutes = MeetingMinutes::sole();
 
         $this->screen('secretario', route('activity.minutes', ['id' => $minutes->id]))

@@ -162,6 +162,9 @@ class CommitteePanelTest extends TestCase
 
     public function test_the_activity_is_the_committee_one_without_accesses_nor_notices(): void
     {
+        // Only the annotations of this test: the end-to-end seed also leaves a history of its own
+        DB::table('activity_log_targets')->delete();
+        DB::table('activity_log')->delete();
         $base = ['created_at' => now(), 'user_id' => $this->coordinator->id, 'acting_role' => 'COORDINATOR'];
         ActivityLog::create($base + ['action' => 'evidence.accepted', 'committee_id' => $this->logistics->id, 'committee_name' => 'Logística']);
         ActivityLog::create($base + ['action' => 'evidence.rejected', 'committee_id' => $this->communication->id, 'committee_name' => 'Comunicación']);

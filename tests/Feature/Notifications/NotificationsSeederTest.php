@@ -18,10 +18,13 @@ class NotificationsSeederTest extends TestCase
         $person = fn (string $username): User => User::where('username', $username)->sole();
 
         $student = $person('estudiante');
-        $this->assertEqualsCanonicalizing(['evidence.rejected', 'minutes.registered'], $student->unreadNotifications()->pluck('type')->all());
-        $this->assertSame(['evidence.accepted'], $student->readNotifications()->pluck('type')->all());
+        // The other seeds of the end-to-end data (activity, messages) add notices of their own
+        $unread = $student->unreadNotifications()->pluck('type')->all();
+        $this->assertContains('evidence.rejected', $unread);
+        $this->assertContains('minutes.registered', $unread);
+        $this->assertContains('evidence.accepted', $student->readNotifications()->pluck('type')->all());
         $this->assertSame(2, $person('coordinador')->unreadNotifications()->where('type', 'evidence.submitted')->count());
         $this->assertSame(2, $person('secretario')->unreadNotifications()->where('type', 'evidence.submitted')->count());
-        $this->assertSame(0, $person('companero')->notifications()->count());
+        $this->assertSame(0, $person('companero')->notifications()->where('type', 'like', 'evidence.%')->count());
     }
 }
