@@ -96,7 +96,7 @@
     </select>
     <div class="relative">
         <div
-            class="flex min-h-10.5 flex-wrap items-center gap-1.5 rounded-md border border-field-edge bg-field px-3 py-1.5 transition focus-within:border-aurora-500 focus-within:bg-glass-2 focus-within:ring-4 focus-within:ring-aurora-500/18 has-[[aria-invalid=true]]:border-rejected has-[[aria-invalid=true]]:focus-within:ring-rejected/18 pointer-coarse:min-h-11">
+            class="flex min-h-10.5 flex-wrap items-center gap-1.5 rounded-md border border-field-edge bg-field px-3 py-1.5 transition focus-within:border-aurora-500 focus-within:bg-glass-2 focus-within:ring-4 focus-within:ring-aurora-500/18 has-[[aria-invalid=true]]:border-rejected has-[[aria-invalid=true]]:focus-within:ring-rejected/18 pointer-coarse:min-h-11 pointer-coarse:py-0">
             @unless ($single)
                 <ul x-show="chosen.length" x-cloak class="flex flex-wrap gap-1.5" aria-label="Seleccionados">
                     <template x-for="option in chosen" x-bind:key="option.value">
@@ -116,7 +116,7 @@
                 x-bind:aria-expanded="open ? 'true' : 'false'" x-bind:aria-activedescendant="activeId" x-ref="input"
                 x-model="query" x-on:focus="show" x-on:input="onInput" x-on:keydown="onKeydown" inputmode="search"
                 autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="{{ $placeholder }}"
-                class="min-w-32 flex-1 border-0 bg-transparent text-control text-ink outline-none placeholder:text-ink-muted"
+                class="min-w-32 flex-1 border-0 bg-transparent text-control text-ink outline-none placeholder:text-ink-muted pointer-coarse:min-h-11"
                 @if ($error !== null) aria-invalid="true" @endif
                 @if ($describedBy !== '') aria-describedby="{{ $describedBy }}" @endif>
         </div>

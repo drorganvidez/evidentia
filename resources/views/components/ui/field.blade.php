@@ -134,6 +134,8 @@
         };
     $controlClasses = [
         'w-0 min-w-0 flex-1 border-0 bg-transparent text-control text-ink outline-none placeholder:text-ink-muted disabled:cursor-not-allowed disabled:text-ink-muted',
+        // the control fills the height of its box, 44 px under a coarse pointer, so the whole box is the target
+        'self-stretch' => !$isTextarea,
         'cursor-pointer appearance-none pr-8' => $isSelect,
         'resize-none field-sizing-content min-h-[calc(var(--rows)*1.5rem)] max-h-[50dvh]' => $isTextarea,
         $rowsClass => $isTextarea,
