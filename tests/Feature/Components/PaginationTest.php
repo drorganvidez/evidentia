@@ -30,7 +30,9 @@ class PaginationTest extends ComponentTestCase
 
         $this->assertStringContainsString('<nav aria-label="Paginación" class="flex flex-wrap items-center gap-3 ml-auto">', $html);
         $this->assertSame(1, substr_count($html, 'aria-current="page"'));
-        $this->assertMatchesRegularExpression('/<a href="\/evidencias\?pagina=7"\s+aria-label="Página 7, actual"\s+aria-current="page"\s+class="[^"]*current:bg-brand-soft current:text-brand-soft-ink[^"]*">7<\/a>/', $html);
+        // aria-current already says it is the current page; the name only gives its number
+        $this->assertMatchesRegularExpression('/<a href="\/evidencias\?pagina=7"\s+aria-label="Página 7"\s+aria-current="page"\s+class="[^"]*current:bg-brand-soft current:text-brand-soft-ink[^"]*">7<\/a>/', $html);
+        $this->assertStringNotContainsString('actual', $html);
         $this->assertMatchesRegularExpression('/<a href="\/evidencias\?pagina=6"\s+aria-label="Ir a la página 6"\s+class="/', $html);
         $this->assertMatchesRegularExpression('/<a href="\/evidencias\?pagina=6" rel="prev" aria-label="Página anterior"\s+title="Página anterior"/', $html);
         $this->assertMatchesRegularExpression('/<a href="\/evidencias\?pagina=8" rel="next" aria-label="Página siguiente"\s+title="Página siguiente"/', $html);

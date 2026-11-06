@@ -74,7 +74,7 @@
                     @else
                         <li>
                             <a href="{{ $paginator->url($element) }}"
-                                aria-label="{{ $element === $current ? 'Página ' . $element . ', actual' : 'Ir a la página ' . $element }}"
+                                aria-label="{{ $element === $current ? 'Página ' . $element : 'Ir a la página ' . $element }}"
                                 @if ($element === $current) aria-current="page" @endif
                                 class="grid size-8 place-items-center rounded-full text-sm font-semibold text-ink-muted no-underline transition current:bg-brand-soft current:text-brand-soft-ink hover:bg-glass-2 hover:text-ink pointer-coarse:size-11">{{ $element }}</a>
                         </li>
