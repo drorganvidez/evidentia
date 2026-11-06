@@ -4,6 +4,7 @@
     <x-ui.notices position="top" />        under the header of the public pages
     <x-ui.notices :messages="[['tone' => 'accepted', 'text' => 'Evidencia guardada']]" />
     The texts travel escaped in data-messages; from JS use $dispatch('ui-notice', { tone, text }) or the store.
+    The root is display: contents so it takes no row (nor gap) in the grid of the layout; the stack is fixed.
 --}}
 @props(['messages' => null, 'position' => 'end'])
 @php
@@ -23,7 +24,7 @@
     };
 @endphp
 <div x-data="notices" data-messages="{{ json_encode($messages, JSON_THROW_ON_ERROR) }}"
-    x-on:ui-notice.window="receive" {{ $attributes }}>
+    x-on:ui-notice.window="receive" {{ $attributes->class(['contents']) }}>
     <div role="status" class="sr-only" x-text="statusText"></div>
     <div role="alert" class="sr-only" x-text="alertText"></div>
     <div role="region" aria-label="Avisos" class="{{ $stack }}">

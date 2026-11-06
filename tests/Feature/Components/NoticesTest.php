@@ -8,7 +8,7 @@ class NoticesTest extends ComponentTestCase
     {
         $html = $this->render('<x-ui.notices class="print-hidden" />');
 
-        $this->assertMatchesRegularExpression('/^<div x-data="notices" data-messages="\[\]"\s+x-on:ui-notice.window="receive"\s+class="print-hidden">/', trim($html));
+        $this->assertMatchesRegularExpression('/^<div x-data="notices" data-messages="\[\]"\s+x-on:ui-notice.window="receive"\s+class="contents print-hidden">/', trim($html));
         $this->assertStringContainsString('<div role="status" class="sr-only" x-text="statusText"></div>', $html);
         $this->assertStringContainsString('<div role="alert" class="sr-only" x-text="alertText"></div>', $html);
         $this->assertStringContainsString('<div role="region" aria-label="Avisos" class="fixed right-5 bottom-5 z-40 grid w-96 max-w-[calc(100vw-1.5rem)] gap-3 max-md:inset-x-3 max-md:right-3 max-md:bottom-24 max-md:w-auto">', $html);

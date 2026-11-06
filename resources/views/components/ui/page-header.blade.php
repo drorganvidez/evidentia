@@ -15,7 +15,7 @@
     $heading = 'h' . max(1, min(6, (int) $level));
 @endphp
 <header
-    {{ $attributes->class(['flex flex-col items-stretch gap-4 px-2 pt-3 md:flex-row md:items-end md:justify-between md:gap-8 md:px-3 md:pt-6']) }}>
+    {{ $attributes->class(['flex flex-col items-stretch gap-4 px-2 md:flex-row md:items-end md:justify-between md:gap-8 md:px-3']) }}>
     <div class="min-w-0">
         @isset($eyebrow)
             <div {{ $eyebrow->attributes->class(['mb-2 flex flex-wrap items-center gap-2 text-sm font-medium text-ink']) }}>

@@ -12,7 +12,7 @@ class PageHeaderTest extends ComponentTestCase
         $html = $this->render('<x-ui.page-header title="Hola, Juan" class="mt-4" />');
 
         $this->assertStringStartsWith('<header', trim($html));
-        $this->assertStringContainsString('flex flex-col items-stretch gap-4 px-2 pt-3 md:flex-row md:items-end md:justify-between md:gap-8 md:px-3 md:pt-6 mt-4', $html);
+        $this->assertStringContainsString('flex flex-col items-stretch gap-4 px-2 md:flex-row md:items-end md:justify-between md:gap-8 md:px-3 mt-4', $html);
         $this->assertStringContainsString('<h1 id="page-title" class="text-4xl font-bold tracking-tighter md:text-5xl">Hola, Juan</h1>', $html);
         $this->assertStringNotContainsString('<p', $html);
         $this->assertStringNotContainsString('lg:hidden', $html);

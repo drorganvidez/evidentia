@@ -75,7 +75,7 @@
             <x-layout.app.topbar :breadcrumbs="$breadcrumbs" :search="$search" :notifications="$notifications" :user="$user" />
             <x-ui.notices :messages="$flash" />
             <main id="main" tabindex="-1" @if ($labelledBy) aria-labelledby="page-title" @endif
-                class="grid content-start gap-6 px-0 pb-4 outline-none md:gap-8 md:px-2 md:pt-2 md:pb-10">
+                class="grid content-start gap-6 px-0 pt-2 pb-4 outline-none md:gap-8 md:px-2 md:pb-10">
                 {{ $slot }}
             </main>
             <x-ui.footer :version="$version" :links="$footerLinks" />
