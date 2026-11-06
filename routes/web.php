@@ -44,6 +44,7 @@ use App\Http\Middleware\MeetingRequestMine;
 use App\Http\Middleware\SignatureSheetMine;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 // Rutas de autenticación: solo login y logout (las cuentas las crea la gestión y la contraseña se recupera en /password)
 Auth::routes(['register' => false, 'reset' => false, 'confirm' => false, 'verify' => false]);
@@ -385,11 +386,64 @@ Route::prefix('password')->group(function () {
 
 /**
  *  DESIGN SYSTEM
- *  Developer page with the tokens and components of the new UI. Only in local and testing;
- *  it already runs under the strict CSP.
+ *  Developer catalogue of the new UI with demo endpoints for its interactive components.
+ *  Only in local and testing; it already runs under the strict CSP.
  */
-Route::middleware('csp:enforce')->get('/_ui', function () {
-    abort_unless(app()->environment('local', 'testing'), 404);
+Route::middleware('csp:enforce')->prefix('_ui')->name('ui.')->group(function () {
+    $development = fn () => abort_unless(app()->environment('local', 'testing'), 404);
 
-    return view('ui.index');
-})->name('ui.index');
+    Route::get('/', function () use ($development) {
+        $development();
+
+        return view('ui.index');
+    })->name('index');
+
+    // 300 deterministic people for the person picker
+    Route::get('/demo/people', function () use ($development) {
+        $development();
+
+        $names = ['Juan', 'María', 'Carlos', 'Lucía', 'Pedro', 'Ana', 'Miguel', 'Laura', 'Javier', 'Elena', 'Sergio', 'Marta', 'David', 'Paula', 'Álvaro', 'Carmen', 'Pablo', 'Sara', 'Diego', 'Nuria'];
+        $surnames = ['García', 'Pérez', 'López', 'Martínez', 'Sánchez', 'Romero', 'Navarro', 'Torres', 'Ruiz', 'Díaz', 'Moreno', 'Jiménez', 'Muñoz', 'Álvarez', 'Gómez'];
+
+        return response()->json(collect(range(1, 300))->map(fn (int $i): array => [
+            'value' => $i,
+            'label' => $surnames[$i % 15].' '.$surnames[($i * 7) % 15].', '.$names[$i % 20],
+            'hint' => 'uvus'.str_pad((string) $i, 3, '0', STR_PAD_LEFT),
+        ]));
+    })->name('demo.people');
+
+    // Ids of a preset list of people
+    Route::get('/demo/list/{id}', function (int $id) use ($development) {
+        $development();
+
+        return response()->json(collect(range(1, 12))->map(fn (int $i): int => $i * $id));
+    })->whereNumber('id')->name('demo.list');
+
+    // Upload protocol of the upload component: an id as plain text, revert by id, remove by name
+    Route::post('/demo/upload', function () use ($development) {
+        $development();
+        usleep(300000);
+
+        return response('demo-'.Str::random(8), 200, ['Content-Type' => 'text/plain']);
+    })->name('demo.upload');
+
+    Route::delete('/demo/upload', function () use ($development) {
+        $development();
+
+        return response()->noContent();
+    })->name('demo.revert');
+
+    Route::get('/demo/remove/{name}', function () use ($development) {
+        $development();
+
+        return response()->noContent();
+    })->name('demo.remove');
+
+    // Full page demos (ui/pages/<page>.blade.php)
+    Route::get('/{page}', function (string $page) use ($development) {
+        $development();
+        abort_unless(view()->exists('ui.pages.'.$page), 404);
+
+        return view('ui.pages.'.$page);
+    })->where('page', '[a-z-]+')->name('page');
+});

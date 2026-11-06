@@ -32,7 +32,8 @@ test.describe('Página del sistema de diseño', () => {
             page.getByRole('heading', { level: 1, name: 'Sistema de diseño' }),
         ).toBeAttached();
         await expect(page.getByRole('heading', { name: 'Color' })).toBeVisible();
-        await expect(page.getByRole('heading', { name: 'Botones' })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Iconos' })).toBeVisible();
+        await expect(page.getByRole('navigation', { name: 'Contenido' })).toBeVisible();
 
         expect(errors).toEqual([]);
     });
