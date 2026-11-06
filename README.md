@@ -22,7 +22,7 @@ cp .env.example.dev .env
 Laravel needs a unique `APP_KEY` to encrypt cookies, sessions and other sensitive data. Add a random 32-byte key encoded in base64 to the `.env` file.
 
 ```
-php -r "echo 'APP_KEY=base64:' . base64_encode(random_bytes(32)) . PHP_EOL;" >> .env
+echo "APP_KEY=base64:$(openssl rand -base64 32)" >> .env
 ```
 
 ### Run the containers
@@ -31,12 +31,12 @@ php -r "echo 'APP_KEY=base64:' . base64_encode(random_bytes(32)) . PHP_EOL;" >> 
 docker compose -f docker/docker-compose.dev.yml up -d --build
 ```
 
-This starts the Laravel app on `localhost:8000`, the Vite dev server on `localhost:5173` (hot module replacement, assets are rebuilt as you save), MySQL, Redis and Mailhog. The `vite` service installs `node_modules` the first time it runs.
+This starts the Laravel app on `localhost:8000`, the Vite dev server on `localhost:5173` (hot module replacement, assets are rebuilt as you save), MySQL, Redis and Mailhog. The `vite` service installs `node_modules` inside the container the first time it runs and again whenever `package-lock.json` changes; do not install it on the host, its native binaries would not match.
 
 To compile the assets once, without the dev server
 
 ```
-docker compose -f docker/docker-compose.dev.yml run --rm vite npm run build
+docker compose -f docker/docker-compose.dev.yml run --rm vite sh -c 'npm ci && npm run build'
 ```
 
 ### Design system
@@ -60,16 +60,16 @@ The `.env` file contains database credentials, API keys and encryption secrets. 
 ### Generate the app key
 
 ```
-php -r "echo 'APP_KEY=base64:' . base64_encode(random_bytes(32)) . PHP_EOL;" >> .env
+echo "APP_KEY=base64:$(openssl rand -base64 32)" >> .env
 ```
 
 ### Run the containers
 
 ```
-docker compose -f docker/docker-compose.prod.yml up -d --build
+docker compose -f docker/docker-compose.prod.yml up -d
 ```
 
-The production image compiles the front end in a Node stage and ships without Node. The compiled assets live in the `public_build` volume shared by the `app` and `nginx` containers; the entrypoint refreshes that volume from the image on every start, so a new image (released through Docker Hub and Watchtower) always serves its own assets.
+The production image comes from Docker Hub and compiles the front end in a Node stage, so it ships without Node. The compiled assets live in the `public_build` volume shared by the `app` and `nginx` containers; the entrypoint refreshes that volume from the image on every start, so a new image (released through Docker Hub and Watchtower) always serves its own assets. When the compose file changes (the volume was added with the new UI), run `git pull` and `docker compose -f docker/docker-compose.prod.yml up -d` once on the server so that `app` and `nginx` are recreated with it.
 
 The app is available on `localhost` or on your own domain. The remaining commands run inside the `evidentia_app_container`
 
@@ -92,34 +92,55 @@ php artisan create:professor
 
 ## Content Security Policy
 
-Every response carries a strict, nonce-based Content Security Policy (no `unsafe-inline`, no `unsafe-eval`). While the views on the old layout remain, `CSP_MODE=report-only` keeps it informative; the routes already on the new UI enforce it. Set `CSP_REPORT=true` to have browsers post their violation reports to `/csp-report` and into the log.
+Every response carries a strict, nonce-based Content Security Policy (no `unsafe-inline`, no `unsafe-eval`) and `X-Frame-Options: DENY`. The behaviour is set in `config/csp.php`
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `CSP_ENABLED` | `true` | Switch the policy off only to debug. |
+| `CSP_MODE` | `report-only` | `report-only` while the views on the old layout remain; `enforce` afterwards. Routes already on the new UI enforce it through the `csp:enforce` middleware alias. |
+| `CSP_REPORT` | `false` | When `true`, browsers post their violation reports to `/csp-report`. |
+| `CSP_LOG_CHANNEL` | `csp` | Where the reports are written; the `csp` channel is `storage/logs/csp.log`, independent of `LOG_LEVEL`. |
+| `CSP_UPGRADE_INSECURE_REQUESTS` | `true` | Adds `upgrade-insecure-requests` to requests that arrived over https. |
+
+The client address and scheme come from the `X-Forwarded-*` headers of the reverse proxies in front of the app (`bootstrap/app.php`).
 
 ## Quality
+
+The commands below run inside the containers of `docker-compose.dev.yml`; with PHP and Node installed on the host they also run directly.
 
 ### PHP
 
 ```
-vendor/bin/pint
-vendor/bin/phpunit
+docker compose -f docker/docker-compose.dev.yml exec app vendor/bin/pint
+docker compose -f docker/docker-compose.dev.yml exec app vendor/bin/phpunit
 ```
 
 ### Front end
 
 ```
-npm run lint          # ESLint, Stylelint and the blade-formatter check
-npm run format        # Prettier, Stylelint --fix and blade-formatter --write
-npm run format:check
-```
-
-Both run inside the containers as well
-
-```
-docker compose -f docker/docker-compose.dev.yml exec app vendor/bin/pint
-docker compose -f docker/docker-compose.dev.yml run --rm vite npm run lint
+docker compose -f docker/docker-compose.dev.yml run --rm vite npm run lint          # ESLint, Stylelint and the blade-formatter check
+docker compose -f docker/docker-compose.dev.yml run --rm vite npm run format        # Prettier, Stylelint --fix and blade-formatter --write
+docker compose -f docker/docker-compose.dev.yml run --rm vite npm run format:check
 ```
 
 The views that still use the old layout are listed in `.bladeignore`; remove a line when its view moves to the new UI.
 
+### End to end
+
+Playwright drives the app in Chromium, desktop and mobile. `playwright.config.js` starts `php artisan serve` unless something already answers at `APP_URL` (default `http://127.0.0.1:8000`).
+
+```
+npm run test:e2e
+```
+
+Without Node on the host, run it from the official image against the running app
+
+```
+docker run --rm -v "$PWD":/app -w /app -e HOME=/tmp -e APP_URL=http://host.docker.internal:8000 --add-host=host.docker.internal:host-gateway mcr.microsoft.com/playwright:v1.65.0-noble npx playwright test
+```
+
+The report lands in `playwright-report/` and the traces in `test-results/`, both ignored by git.
+
 ### Continuous integration
 
-Every push to `main` and every pull request runs Pint, PHPUnit, the front-end lint and format checks and the Vite build. Publishing a GitHub release builds the production image and pushes it to Docker Hub.
+Every push to `main` and every pull request runs Pint and PHPUnit, the front-end lint and format checks and the Vite build (`tests.yml`), and the Playwright suite against the app served with PHP and SQLite, desktop and mobile, with the HTML report as an artifact (`e2e.yml`). Dependabot opens pull requests for the GitHub Actions, the Docker images and the npm and Composer packages. Publishing a GitHub release builds the production image and pushes it to Docker Hub.
