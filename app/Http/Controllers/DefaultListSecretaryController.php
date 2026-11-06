@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityAction;
+use App\Facades\Activity;
 use App\Http\Middleware\CheckRoles;
 use App\Models\DefaultList;
 use App\Models\User;
+use App\Support\Changes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -62,6 +65,9 @@ class DefaultListSecretaryController extends Controller
                 $defaultlist->users()->attach($user);
 
             }
+
+            $after = $this->snapshot($defaultlist);
+            Activity::record(ActivityAction::DefaultListCreated, $defaultlist, details: ['users' => count($after['users'])], targets: $after['users']);
         });
 
         return redirect()->route('secretary.defaultlist.list')->with('success', 'Lista creada con éxito.');
@@ -91,8 +97,9 @@ class DefaultListSecretaryController extends Controller
 
         $users_ids = $request->input('users', []);
         $defaultlist = DefaultList::find($request->_id);
+        $before = $this->snapshot($defaultlist);
 
-        DB::transaction(function () use ($request, $users_ids, $defaultlist) {
+        DB::transaction(function () use ($request, $users_ids, $defaultlist, $before) {
             $defaultlist->name = $request->input('name');
             $defaultlist->save();
 
@@ -106,17 +113,34 @@ class DefaultListSecretaryController extends Controller
                 $user = User::find($user_id);
                 $defaultlist->users()->attach($user);
             }
+
+            $after = $this->snapshot($defaultlist);
+            Activity::record(ActivityAction::DefaultListEdited, $defaultlist, details: Changes::between($before, $after), targets: $after['users']);
         });
 
         return redirect()->route('secretary.defaultlist.list')->with('success', 'Lista editada con éxito.');
 
     }
 
+    // nombre y miembros de una lista, tal como se anotan
+    private function snapshot(DefaultList $defaultlist): array
+    {
+        return [
+            'name' => $defaultlist->name,
+            'users' => $defaultlist->users()->pluck('users.id')->map(fn ($id) => (int) $id)->sort()->values()->all(),
+        ];
+    }
+
     public function remove(Request $request)
     {
         $defaultlist = DefaultList::find($request->_id);
+        $before = $this->snapshot($defaultlist);
 
-        $defaultlist->delete();
+        DB::transaction(function () use ($defaultlist, $before) {
+            $defaultlist->delete();
+
+            Activity::record(ActivityAction::DefaultListDeleted, $defaultlist, details: ['users' => count($before['users'])], subjectTitle: $before['name']);
+        });
 
         return redirect()->route('secretary.defaultlist.list')->with('success', 'Lista eliminada con éxito.');
     }

@@ -127,6 +127,18 @@ final class LegacyWrites
                 ['_id' => fn (array $ids) => $ids['minutes']] + self::minutes()),
             'secretary.meeting.manage.minutes.remove' => self::secretary('secretary.meeting.manage.minutes.remove', ['minutes.deleted'],
                 ['_id' => fn (array $ids) => $ids['minutes']]),
+            'secretary.bonus.new' => self::secretary('secretary.bonus.new', ['bonus.created'],
+                ['reason' => 'Montaje del escenario', 'hours' => 3, 'users' => fn (array $ids) => [$ids['student']]]),
+            'secretary.bonus.save' => self::secretary('secretary.bonus.save', ['bonus.edited'],
+                ['_id' => fn (array $ids) => $ids['bonus'], 'reason' => 'Montaje del escenario', 'hours' => 4, 'users' => fn (array $ids) => [$ids['student']]]),
+            'secretary.bonus.remove' => self::secretary('secretary.bonus.remove', ['bonus.deleted'],
+                ['_id' => fn (array $ids) => $ids['bonus']]),
+            'secretary.defaultlist.new' => self::secretary('secretary.defaultlist.new', ['defaultlist.created'],
+                ['name' => 'Equipo de sonido', 'users' => fn (array $ids) => [$ids['student']]]),
+            'secretary.defaultlist.save' => self::secretary('secretary.defaultlist.save', ['defaultlist.edited'],
+                ['_id' => fn (array $ids) => $ids['list'], 'name' => 'Equipo de sonido', 'users' => fn (array $ids) => [$ids['student']]]),
+            'secretary.defaultlist.remove' => self::secretary('secretary.defaultlist.remove', ['defaultlist.deleted'],
+                ['_id' => fn (array $ids) => $ids['list']]),
             'password.reset_p' => [
                 'role' => 'GUEST',
                 'method' => 'POST',
@@ -181,12 +193,6 @@ final class LegacyWrites
     public static function pending(): array
     {
         return [
-            'secretary.bonus.new' => 'A',
-            'secretary.bonus.save' => 'A',
-            'secretary.bonus.remove' => 'A',
-            'secretary.defaultlist.new' => 'A',
-            'secretary.defaultlist.save' => 'A',
-            'secretary.defaultlist.remove' => 'A',
             'attendee.store' => 'A',
             'attendee.update' => 'A',
             'attendee.destroy' => 'A',
