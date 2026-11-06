@@ -88,9 +88,10 @@ class MenuTest extends ComponentTestCase
             BLADE);
 
         $this->assertStringContainsString('<li role="separator" class="my-1 border-t border-rule"></li>', $html);
-        $this->assertMatchesRegularExpression('#<form method="post" action="/usuarios">\s*<input type="hidden" name="_token" value="[^"]*" autocomplete="off">\s*<input type="hidden" name="_method" value="DELETE">#', $html);
+        // role none on the form too, so the menu item hangs from the list through presentational parents only
+        $this->assertMatchesRegularExpression('#<li role="none">\s*<form method="post" action="/usuarios" role="none">\s*<input type="hidden" name="_token" value="[^"]*" autocomplete="off">\s*<input type="hidden" name="_method" value="DELETE">#', $html);
         $this->assertMatchesRegularExpression('#<button type="submit" role="menuitem" tabindex="-1" class="[^"]*text-rejected-ink hover:bg-rejected-soft focus:bg-rejected-soft">#', $html);
-        $this->assertMatchesRegularExpression('#<form method="post" action="/salir">\s*<input type="hidden" name="_token"#', $html, 'Without action the href is the target');
+        $this->assertMatchesRegularExpression('#<form method="post" action="/salir" role="none">\s*<input type="hidden" name="_token"#', $html, 'Without action the href is the target');
         $this->assertSame(1, substr_count($html, 'name="_method"'), 'A post form needs no method override');
         $this->assertStringContainsString('Borrar todos los usuarios', $html);
         $this->assertCspSafe($html);
@@ -112,6 +113,29 @@ class MenuTest extends ComponentTestCase
         $this->assertSame(2, substr_count($html, 'group-aria-checked:bg-aurora-500'), 'A switch drawn from aria-checked');
         $this->assertSame(2, preg_match_all('/<span aria-hidden="true"\s+class="relative ml-auto /', $html), 'The switch is decorative and sits at the end');
         $this->assertCspSafe($html);
+    }
+
+    public function test_the_method_is_post_put_patch_or_delete(): void
+    {
+        foreach (['PATCH' => 'PATCH', 'put' => 'PUT'] as $given => $sent) {
+            $html = $this->render('<x-ui.menu label="Acciones" id="m"><x-ui.menu.item :method="$method" action="/x">Uno</x-ui.menu.item></x-ui.menu>', ['method' => $given]);
+
+            $this->assertStringContainsString('<input type="hidden" name="_method" value="'.$sent.'">', $html);
+        }
+
+        foreach (['get', 'DELETE"><b>x</b>'] as $method) {
+            try {
+                $this->render('<x-ui.menu label="Acciones" id="m"><x-ui.menu.item :method="$method" action="/x">Uno</x-ui.menu.item></x-ui.menu>', ['method' => $method]);
+                $this->fail('A menu item with the method '.$method.' was rendered');
+            } catch (ViewException $exception) {
+                while ($exception->getPrevious() !== null) {
+                    $exception = $exception->getPrevious();
+                }
+
+                $this->assertInstanceOf(InvalidArgumentException::class, $exception);
+                $this->assertSame('The method of a menu item is post, put, patch or delete.', $exception->getMessage());
+            }
+        }
     }
 
     public function test_the_trigger_slot_replaces_the_button_and_the_popup_can_open_to_the_start(): void

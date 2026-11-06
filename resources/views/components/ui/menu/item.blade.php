@@ -7,6 +7,7 @@
         x-on:click="$store.shortcuts.toggle()">Atajos de teclado</x-ui.menu.item>
     <x-ui.menu.item divider />
     checked makes a menuitemcheckbox with a switch drawn from aria-checked; Space and a click change it in place.
+    method is post, put, patch or delete; any other value throws.
 --}}
 @props([
     'href' => null,
@@ -26,6 +27,12 @@
         },
     ];
     $method = $method !== null ? strtolower((string) $method) : null;
+    // method_field() prints the value as is: only the verbs a form can spoof get through
+    throw_if(
+        $method !== null && !in_array($method, ['post', 'put', 'patch', 'delete'], true),
+        InvalidArgumentException::class,
+        'The method of a menu item is post, put, patch or delete.',
+    );
 @endphp
 @if ($divider)
     <li role="separator" class="my-1 border-t border-rule"></li>
@@ -42,8 +49,9 @@
         </button>
     </li>
 @elseif ($method !== null)
+    {{-- role none on the form as well: the menu item reaches the list through presentational parents only --}}
     <li role="none">
-        <form method="post" action="{{ $action ?? $href }}">
+        <form method="post" action="{{ $action ?? $href }}" role="none">
             @csrf
             @if ($method !== 'post')
                 @method(strtoupper($method))

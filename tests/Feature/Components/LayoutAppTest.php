@@ -207,7 +207,8 @@ class LayoutAppTest extends ComponentTestCase
         $this->assertStringContainsString('<span class="sr-only">Menú de Juan Pérez</span>', $html);
         $this->assertStringContainsString('>JP</span>', $html);
         $this->assertStringContainsString('Estudiante · Coordinador', $html);
-        $this->assertSame(2, substr_count($html, '<form method="post" action="/salir">'), 'User menu and drawer');
+        $this->assertSame(1, substr_count($html, '<form method="post" action="/salir" role="none">'), 'User menu');
+        $this->assertSame(1, substr_count($html, '<form method="post" action="/salir">'), 'Drawer');
         $this->assertSame(2, substr_count($html, 'name="_token"'));
         $this->assertStringContainsString('<ul id="user-menu" role="menu"', $html);
         $this->assertStringContainsString('<h3 id="drawer-account-title"', $html);
