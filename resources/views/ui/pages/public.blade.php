@@ -15,7 +15,7 @@
             class="max-w-[14ch] text-[clamp(2rem,9vw,2.625rem)] leading-none font-extrabold tracking-tightest text-ink lg:text-6xl">
             Lo que haces en las jornadas,
             <em
-                class="bg-linear-to-r from-aurora-500 via-cyan-500 via-60% to-rose-400 bg-clip-text not-italic text-transparent">cuenta.</em>
+                class="bg-linear-to-r from-aurora-600 via-cyan-600 via-60% to-rose-600 bg-clip-text not-italic text-transparent dark:from-aurora-400 dark:via-cyan-400 dark:to-rose-400">cuenta.</em>
         </h1>
         <ul class="flex flex-wrap gap-3 max-lg:text-sm" aria-label="Cifras de la edición">
             <li><x-ui.count-chip :value="1204" unit="h acreditadas" /></li>

@@ -1,4 +1,4 @@
-import { expect, test } from '../fixtures/ui.js';
+import { contrast, expect, test } from '../fixtures/ui.js';
 
 /** Waits for the finite animations (entrances, count-ups); the aurora's infinite ones are left alone. */
 async function settle(page) {
@@ -89,6 +89,25 @@ test.describe('Página de acceso', () => {
     });
 
     for (const theme of ['light', 'dark']) {
+        // axe leaves text painted with a gradient as incomplete: each stop is measured against the canvas
+        test(`los tonos del degradado del titular superan 3 a 1 sobre el lienzo en tema ${theme === 'dark' ? 'oscuro' : 'claro'}`, async ({
+            page,
+            ui,
+        }) => {
+            await page.goto('/_ui/public');
+            await ui.setTheme(theme);
+
+            const stops = ['--tw-gradient-from', '--tw-gradient-via', '--tw-gradient-to'];
+            const paint = await ui.paint(
+                page.getByRole('heading', { level: 1 }).locator('em'),
+                stops,
+            );
+
+            for (const stop of stops) {
+                expect(contrast(paint.extra[stop], paint.behind), stop).toBeGreaterThanOrEqual(3);
+            }
+        });
+
         test(`cumple WCAG 2.2 AA en tema ${theme === 'dark' ? 'oscuro' : 'claro'}`, async ({
             page,
             ui,
