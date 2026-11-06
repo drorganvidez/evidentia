@@ -367,6 +367,21 @@ test.describe('Shell en su propia página', () => {
         }
     });
 
+    test('la navegación de la demo vuelve al catálogo', async ({ page }, testInfo) => {
+        if (testInfo.project.name === 'mobile') {
+            await page.getByRole('button', { name: 'Abrir menú' }).click();
+        }
+
+        const nav = page.locator(testInfo.project.name === 'mobile' ? '#drawer' : 'aside');
+
+        await nav.getByRole('link', { name: 'Catálogo' }).click();
+
+        await expect(page).toHaveURL(/\/_ui$/);
+        await expect(
+            page.getByRole('heading', { level: 1, name: 'Sistema de diseño' }),
+        ).toBeVisible();
+    });
+
     test('«Salir» envía un POST con su token y vuelve con el aviso', async ({ page }, testInfo) => {
         const sent = page.waitForRequest((request) => request.url().endsWith('/_ui/demo/submit'));
 

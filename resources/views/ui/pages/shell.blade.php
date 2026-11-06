@@ -55,6 +55,11 @@
                 ['label' => 'Exportar', 'href' => $here . '#exportar', 'icon' => 'download'],
             ],
         ],
+        // Not part of the app: the way back from the demo to the catalogue
+        [
+            'label' => 'Sistema de diseño',
+            'items' => [['label' => 'Catálogo', 'href' => route('ui.index'), 'icon' => 'swatch-book']],
+        ],
     ];
     $mobileNav = [
         ['label' => 'Inicio', 'href' => $here, 'icon' => 'layout-dashboard', 'current' => true],
