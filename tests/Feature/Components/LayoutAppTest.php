@@ -56,7 +56,7 @@ class LayoutAppTest extends ComponentTestCase
         }
 
         $this->assertTrue($skip < $aside && $aside < $header && $header < $notices && $notices < $main && $main < $footer && $footer < $bar && $bar < $drawer, 'DOM order');
-        $this->assertMatchesRegularExpression('/<main id="main" tabindex="-1"\s+aria-labelledby="page-title"\s+class="grid content-start gap-6 px-0 pt-2 pb-4 outline-none md:gap-8 md:px-2 md:pb-10">/', $html);
+        $this->assertMatchesRegularExpression('/<main id="main" tabindex="-1"\s+aria-labelledby="page-title"\s+class="grid content-start gap-6 px-0 pb-4 outline-none md:gap-8 md:px-2 md:pb-10">/', $html, 'No top padding: the gap of the column is all the room above the title');
         $this->assertStringContainsString('<title>Inicio · '.config('app.name').'</title>', $html);
         $this->assertMatchesRegularExpression('/<body class="[^"]*pb-safe-nav md:pb-0[^"]*">/', $html);
         $this->assertStringContainsString('<h1 id="page-title">Hola</h1>', $html);

@@ -367,6 +367,19 @@ test.describe('Shell en su propia página', () => {
         }
     });
 
+    test('entre la topbar y el título solo queda el hueco de la columna', async ({
+        page,
+    }, testInfo) => {
+        const room = await page.evaluate(
+            () =>
+                document.querySelector('main header').getBoundingClientRect().top -
+                document.querySelector('header.glass').getBoundingClientRect().bottom,
+        );
+
+        // gap-3 on the phone, md:gap-6 from the tablet on
+        expect(Math.round(room)).toBe(testInfo.project.name === 'mobile' ? 12 : 24);
+    });
+
     test('la navegación de la demo vuelve al catálogo', async ({ page }, testInfo) => {
         if (testInfo.project.name === 'mobile') {
             await page.getByRole('button', { name: 'Abrir menú' }).click();
