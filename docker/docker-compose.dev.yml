@@ -23,6 +23,26 @@ services:
     networks:
       - evidentia_net
 
+  vite:
+    # Vite dev server with HMR. It shares the bind mount with `app`: the plugin
+    # writes public/hot with http://localhost:5173 and Laravel reads it.
+    # One-off build without the server: docker compose -f docker/docker-compose.dev.yml run --rm vite npm run build
+    image: node:26-alpine
+    container_name: evidentia_vite_container
+    user: '1000:1000'
+    working_dir: /var/www/html
+    command: >
+      sh -c "[ -f node_modules/.package-lock.json ] || npm ci --no-audit --no-fund;
+             exec npm run dev"
+    volumes:
+      - ../:/var/www/html
+    ports:
+      - '${VITE_PORT:-5173}:5173'
+    environment:
+      VITE_DOCKER: '1'
+    networks:
+      - evidentia_net
+
   mysql:
     image: mysql:8
     container_name: evidentia_mysql_container

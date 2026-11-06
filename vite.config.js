@@ -3,7 +3,21 @@ import laravel from 'laravel-vite-plugin';
 import { local } from 'laravel-vite-plugin/fonts';
 import tailwindcss from '@tailwindcss/vite';
 
+// Inside the `vite` service of docker-compose.dev.yml (VITE_DOCKER=1) the server must listen on
+// every interface for the published port to be reachable, while the URL written to public/hot,
+// the one the browser on the host uses, must stay localhost.
+const inDocker = process.env.VITE_DOCKER === '1';
+
 export default defineConfig({
+    server: inDocker
+        ? {
+              host: '0.0.0.0',
+              port: 5173,
+              strictPort: true,
+              // laravel-vite-plugin 3.2 reads server.hmr.host to compose the hot file URL
+              hmr: { host: 'localhost' },
+          }
+        : {},
     build: {
         // Fonts and small images must stay files: font-src/img-src 'self' forbids data: URIs.
         assetsInlineLimit: 0,

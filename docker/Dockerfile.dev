@@ -3,11 +3,13 @@ FROM php:8.4-fpm
 ARG USER_ID=1000
 ARG GROUP_ID=1000
 
+# No nodejs/npm here: in development Vite runs in the `vite` service of docker-compose.dev.yml
 RUN apt-get update && apt-get install -y \
     zip unzip git curl libpng-dev libonig-dev libxml2-dev libzip-dev libjpeg-dev libfreetype6-dev \
-    nodejs npm default-mysql-client \
+    default-mysql-client \
     && docker-php-ext-install pdo_mysql mbstring zip exif pcntl gd \
-    && pecl install redis && docker-php-ext-enable redis
+    && pecl install redis && docker-php-ext-enable redis \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -20,14 +22,5 @@ USER laraveluser
 
 WORKDIR /var/www/html
 
-# Copiar solo package.json y package-lock.json con permisos correctos
-COPY --chown=laraveluser:laravelgroup package*.json ./
-
-RUN npm install
-
-# Copiar el resto del código con permisos correctos
-COPY --chown=laraveluser:laravelgroup . .
-
-RUN npm run build
-
+# The code arrives through the bind mount of docker-compose.dev.yml; nothing is copied or compiled here
 CMD ["php-fpm"]
