@@ -16,8 +16,8 @@ class DlTest extends ComponentTestCase
             </x-ui.dl>
             BLADE);
 
-        $this->assertStringContainsString('<dl class="grid [--term-w:5.75rem] md:[--term-w:6.25rem] [--dl-py:0.5625rem] mt-4">', $html);
-        $this->assertSame(2, preg_match_all('/<div\s+class="grid grid-cols-\[var\(--term-w\)_minmax\(0,1fr\)\] items-center gap-3 border-t border-rule py-\(--dl-py\) text-md">/', $html));
+        $this->assertStringContainsString('<dl class="@container grid [--term-w:5.75rem] md:[--term-w:6.25rem] [--dl-py:0.5625rem] mt-4">', $html);
+        $this->assertSame(2, substr_count($html, 'class="grid grid-cols-[minmax(0,1fr)] items-center gap-x-3 gap-y-1 border-t border-rule py-(--dl-py) text-md @min-[13.5rem]:grid-cols-[var(--term-w)_minmax(0,1fr)]"'));
         $this->assertStringContainsString('<dt class="font-medium text-ink-muted">Registro</dt>', $html);
         $this->assertStringContainsString('<dd class="m-0 min-w-0 font-mono tabular-nums">EV-0033</dd>', $html);
         $this->assertStringContainsString('<dd class="m-0 min-w-0">1,75 h</dd>', $html);
@@ -31,13 +31,25 @@ class DlTest extends ComponentTestCase
     {
         $small = $this->render('<x-ui.dl term-width="sm" dense>x</x-ui.dl>');
 
-        $this->assertStringContainsString('<dl class="grid [--term-w:5rem] [--dl-py:0.375rem]">', $small);
+        $this->assertStringContainsString('<dl class="@container grid [--term-w:5rem] [--dl-py:0.375rem]">', $small);
         $this->assertStringNotContainsString('5.75rem', $small);
+    }
+
+    public function test_the_pair_stacks_the_value_under_the_term_when_the_list_is_narrow(): void
+    {
+        $html = $this->render('<x-ui.dl><x-ui.dl.item term="Comité">Logística</x-ui.dl.item></x-ui.dl>');
+
+        // The list is the query container; one column below 13.5rem of list, term and value side by side above
+        $this->assertMatchesRegularExpression('/<dl class="@container grid /', $html);
+        $this->assertStringContainsString(' grid-cols-[minmax(0,1fr)] ', $html);
+        $this->assertStringContainsString(' @min-[13.5rem]:grid-cols-[var(--term-w)_minmax(0,1fr)]', $html);
+        $this->assertStringNotContainsString(' grid-cols-[var(--term-w)_minmax(0,1fr)]', $html, 'Never side by side without the query');
+        $this->assertStringNotContainsString('@xs:', $html);
     }
 
     public function test_the_item_keeps_the_consumer_classes_and_needs_a_term(): void
     {
-        $this->assertStringContainsString('text-md items-start"', $this->render('<x-ui.dl.item term="Nota" class="items-start">x</x-ui.dl.item>'));
+        $this->assertStringContainsString('_minmax(0,1fr)] items-start"', $this->render('<x-ui.dl.item term="Nota" class="items-start">x</x-ui.dl.item>'));
 
         try {
             $this->render('<x-ui.dl.item>x</x-ui.dl.item>');

@@ -77,6 +77,51 @@ test.describe('Detalle de una evidencia', () => {
         await ui.noOverflow();
     });
 
+    for (const width of [1024, 1100]) {
+        test(`a ${width} px los valores de la tarjeta Datos no se salen de ella`, async ({
+            page,
+            ui,
+        }, testInfo) => {
+            test.skip(
+                testInfo.project.name !== 'chromium',
+                'Las dos columnas del detalle se comprueban en escritorio',
+            );
+
+            await page.setViewportSize({ width, height: 900 });
+            await page.goto('/_ui/detail');
+
+            const card = page.getByRole('region', { name: 'Datos', exact: true });
+            const aside = page.getByRole('complementary', { name: 'Datos e historial' });
+            const proofs = page.getByRole('region', { name: 'Pruebas', exact: true });
+
+            expect((await aside.boundingBox()).x, 'El lateral va a la derecha').toBeGreaterThan(
+                (await proofs.boundingBox()).x,
+            );
+
+            const outside = await card.evaluate((section) => {
+                const bounds = section.getBoundingClientRect();
+                const list = section.querySelector('dl').getBoundingClientRect();
+
+                return Array.from(section.querySelectorAll('dd, dd *'))
+                    .map((el) => ({ el, box: el.getBoundingClientRect() }))
+                    .filter(({ box }) => box.width > 1 && box.height > 1)
+                    .filter(
+                        ({ box }) =>
+                            box.left < list.left - 0.5 ||
+                            box.right > list.right + 0.5 ||
+                            box.right > bounds.right,
+                    )
+                    .map(
+                        ({ el, box }) =>
+                            `${el.textContent.replace(/\s+/g, ' ').trim()} (${Math.round(box.right)})`,
+                    );
+            });
+
+            expect(outside, 'Valores fuera de la lista').toEqual([]);
+            await ui.noOverflow();
+        });
+    }
+
     for (const theme of ['light', 'dark']) {
         test(`cumple WCAG 2.2 AA en tema ${theme === 'dark' ? 'oscuro' : 'claro'}`, async ({
             page,
