@@ -21,7 +21,8 @@ test.describe('Plazos', () => {
         await page.clock.runFor(1);
     });
 
-    test('el servidor pinta el texto y el tono de cada estado', async ({ ui }) => {
+    // By now the module has recomputed every deadline; the markup the server prints is checked by DeadlineTest
+    test('al arrancar, cada plazo muestra el texto y el tono de su estado', async ({ ui }) => {
         const section = ui.section('deadline');
 
         await expect(section.locator('[data-demo="open"] [data-tone]')).toHaveText('14 días');
