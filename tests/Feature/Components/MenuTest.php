@@ -16,7 +16,8 @@ class MenuTest extends ComponentTestCase
             </x-ui.menu>
             BLADE);
 
-        $this->assertMatchesRegularExpression('/^<div x-data="menu" x-on:keydown.escape.prevent="close\(true\)"\s+class="relative inline-block ml-2">/', trim($html));
+        // The focus leaving the root closes the menu, also from the trigger
+        $this->assertMatchesRegularExpression('/^<div x-data="menu" x-on:keydown.escape.prevent="close\(true\)" x-on:focusout="onFocusOut"\s+class="relative inline-block ml-2">/', trim($html));
 
         preg_match('/<button [^>]*>/s', $html, $trigger);
         $this->assertNotEmpty($trigger, 'The trigger button is generated');
@@ -26,7 +27,9 @@ class MenuTest extends ComponentTestCase
         $this->assertStringNotContainsString('aria-label', $trigger[0], 'The visible text names the button');
         $this->assertMatchesRegularExpression('/Acciones\s*<\/button>/', $html);
 
-        $this->assertMatchesRegularExpression('/<ul id="actions" role="menu" aria-label="Acciones" x-ref="menu" hidden\s+x-bind:hidden="!open"\s+x-on:keydown="onKeydown"\s+x-on:click.outside="onOutsideClick"\s+x-on:click="onItemClick"\s+x-on:focusout="onFocusOut"\s+class="glass absolute top-\[calc\(100%\+0.5rem\)\] z-20 min-w-56 max-w-\[calc\(100vw-1.5rem\)\] rounded-lg p-1.5 right-0">/', $html);
+        // tabindex -1: a click on the header of the list keeps the focus inside the root
+        $this->assertMatchesRegularExpression('/<ul id="actions" role="menu" aria-label="Acciones" tabindex="-1" x-ref="menu" hidden\s+x-bind:hidden="!open"\s+x-on:keydown="onKeydown"\s+x-on:click.outside="onOutsideClick"\s+x-on:click="onItemClick"\s+class="glass absolute top-\[calc\(100%\+0.5rem\)\] z-20 min-w-56 max-w-\[calc\(100vw-1.5rem\)\] rounded-lg p-1.5 right-0">/', $html);
+        $this->assertSame(1, substr_count($html, 'x-on:focusout'), 'Only the root listens to the focus leaving');
         $this->assertSame(2, substr_count($html, '<li role="none">'));
         $this->assertMatchesRegularExpression('#<a href="/importar" role="menuitem" tabindex="-1" class="[^"]*text-ink hover:bg-glass-2 focus:bg-glass-2">#', $html);
         $this->assertMatchesRegularExpression('#<button type="button" role="menuitem" tabindex="-1" class="[^"]*">#', $html);

@@ -1,10 +1,12 @@
 /**
  * Menu button of <x-ui.menu> (APG pattern): one tab stop on the trigger, roving focus with the arrows,
  * Home, End and type-ahead inside, Escape returns the focus to the trigger, Tab and an outside click close it.
+ * Enter and Space on the trigger open the menu on its first item; a pointer opens it without moving the focus.
  *
- * Blade: <div x-data="menu"> with the trigger on x-ref="button" x-on:click="toggle"
- * x-on:keydown.down.prevent="openAndFocusFirst", and the list on x-ref="menu" hidden x-bind:hidden="!open"
- * x-on:keydown="onKeydown" x-on:click.outside="onOutsideClick" x-on:click="onItemClick" x-on:focusout="onFocusOut".
+ * Blade: <div x-data="menu" x-on:focusout="onFocusOut"> with the trigger on x-ref="button" x-on:click="toggle"
+ * x-on:keydown.down.prevent="openAndFocusFirst", and the list on x-ref="menu" tabindex="-1" hidden
+ * x-bind:hidden="!open" x-on:keydown="onKeydown" x-on:click.outside="onOutsideClick" x-on:click="onItemClick".
+ * The focus leaving the root closes the menu, whether it leaves from the trigger or from an item.
  * The list toggles the hidden attribute (applied in the same flush) rather than x-show, whose display change
  * waits for the next animation frame and would race the focus of the first item; in exchange the outside
  * click handler has to ignore the trigger itself, which already reads as "outside" once the list is shown.
@@ -24,9 +26,12 @@ export default function menu() {
             this.open = true;
         },
 
-        toggle() {
+        /** A click from the keyboard (Enter or Space, detail 0) moves the focus to the first item. */
+        toggle(event) {
             if (this.open) {
                 this.close(true);
+            } else if (event && event.detail === 0) {
+                this.openAndFocusFirst();
             } else {
                 this.show();
             }
@@ -132,6 +137,7 @@ export default function menu() {
             }
         },
 
+        /** Bound on the root: moving between the trigger and the items keeps the menu open. */
         onFocusOut(event) {
             if (!this.$root.contains(event.relatedTarget)) {
                 this.close(false);

@@ -63,6 +63,64 @@ test.describe('Menús', () => {
         await expect(trigger).toBeFocused();
     });
 
+    test('Intro abre, enfoca el primer ítem y Tab cierra con aria-expanded false', async ({
+        page,
+    }) => {
+        const trigger = page.locator('button[aria-controls="demo-actions"]');
+        const menu = page.locator('#demo-actions');
+
+        await trigger.focus();
+        await page.keyboard.press('Enter');
+
+        await expect(menu).toBeVisible();
+        await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+        await expect(menu.getByRole('menuitem').first()).toBeFocused();
+
+        await page.keyboard.press('Tab');
+
+        await expect(menu).toBeHidden();
+        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+
+        // Space opens it the same way, also from a trigger passed in the slot
+        const user = page.locator('button[aria-controls="demo-user"]');
+
+        await user.focus();
+        await page.keyboard.press(' ');
+
+        await expect(page.locator('#demo-user')).toBeVisible();
+        await expect(page.locator('#demo-user').getByRole('menuitem').first()).toBeFocused();
+    });
+
+    test('clic abre y Tab cierra', async ({ page }) => {
+        const trigger = page.locator('button[aria-controls="demo-actions"]');
+        const menu = page.locator('#demo-actions');
+
+        await trigger.click();
+
+        await expect(menu).toBeVisible();
+        // The pointer opens the menu without moving the focus away from the trigger
+        await expect(trigger).toBeFocused();
+
+        await page.keyboard.press('Tab');
+
+        await expect(menu).toBeHidden();
+        await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+        await expect(trigger).not.toBeFocused();
+    });
+
+    test('un clic en la cabecera del menú de usuario no lo cierra', async ({ page }) => {
+        const trigger = page.locator('button[aria-controls="demo-user"]');
+        const menu = page.locator('#demo-user');
+
+        await trigger.click();
+        await expect(menu).toBeVisible();
+
+        await menu.getByText('Estudiante · Coordinador de Programa').click();
+
+        await expect(menu).toBeVisible();
+        await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    });
+
     test('un clic fuera y el tabulador cierran el menú sin mover el foco al disparador', async ({
         page,
     }) => {
