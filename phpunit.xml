@@ -18,6 +18,8 @@
         </include>
     </source>
     <php>
+        <!-- The whole suite runs in one process; the default 128M runs out before the spreadsheet exports -->
+        <ini name="memory_limit" value="512M"/>
         <env name="APP_ENV" value="testing"/>
         <env name="APP_KEY" value="base64:w7Vl/END/HhUmczejgHq97psQUyWwZuelCw3Kqbx8E0="/>
         <env name="APP_LOCALE" value="es"/>
