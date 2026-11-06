@@ -107,8 +107,8 @@ class CoordinatorReviewTest extends TestCase
         $this->actingAs($this->student)
             ->get(route('evidence.view', ['id' => $evidence->id]))
             ->assertOk()
-            ->assertSee('Rechazada: Las horas no cuadran con el acta.')
-            ->assertSeeInOrder(['Motivos de rechazo anteriores', 'Falta el certificado.', 'Las horas no cuadran con el acta.']);
+            ->assertSeeInOrder(['Motivo del rechazo', 'Las horas no cuadran con el acta.', 'Descripción'])
+            ->assertSeeInOrder(['Historial', 'Las horas no cuadran con el acta.', 'Falta el certificado.']);
     }
 
     public function test_only_coordinators_see_the_evidence_lists(): void

@@ -1,331 +1,116 @@
-@extends('layouts.app')
+{{--
+    Form of a new evidence and of the edit of a draft or a rejected one. The same form saves a draft (its action) or
+    publishes (the formaction of the confirmation); the proofs travel to the temporary folder of the session through
+    the upload endpoints, where the controller picks them up. The description is plain text: the HTML of the old
+    editor reaches the textarea as its text.
+--}}
+@php
+    $editing = isset($edit);
+    $title = $editing ? 'Editar evidencia' : 'Nueva evidencia';
+    $closesAt = \Config::upload_evidences_timestamp();
+    $reasons = $editing ? $evidence->allRejectionReasons() : collect();
+    $committeeOptions = $committees->mapWithKeys(fn($committee) => [$committee->id => $committee->name])->all();
+    $breadcrumbs = [
+        ['label' => 'Inicio', 'href' => route('home')],
+        ['label' => 'Mis evidencias', 'href' => route('evidence.list')],
+    ];
+    if ($editing) {
+        $breadcrumbs[] = ['label' => $evidence->title, 'href' => route('evidence.view', ['id' => $evidence->id])];
+    }
+    $breadcrumbs[] = ['label' => $title];
+@endphp
+<x-layout.app :title="$title" :breadcrumbs="$breadcrumbs" :nav-current="$editing ? 'evidence.list' : 'evidence.create'">
+    <x-ui.page-header :title="$title">
+        @if ($closesAt !== null)
+            <x-slot:meta>
+                <x-ui.deadline label="Subida de evidencias" variant="inline" verb="para enviarla" :closes-at="$closesAt" />
+            </x-slot:meta>
+        @endif
+    </x-ui.page-header>
 
-@isset($edit)
-    @section('title', 'Editar evidencia: ' . $evidence->title)
-@else
-@section('title', 'Crear evidencia')
-@endisset
+    <div class="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)] lg:gap-8">
+        <x-ui.card :title="$editing ? $evidence->title : 'Datos de la evidencia'" :level="2" id="evidence-card">
+            <x-ui.form :action="$route_draft" files id="evidence-form" busy-label="Guardando" :fields="[
+                'title' => 'Título',
+                'hours' => 'Horas',
+                'minutes' => 'Minutos',
+                'committee' => 'Comité',
+                'description' => 'Descripción',
+            ]">
+                @if ($editing)
+                    <input type="hidden" name="_id" value="{{ $evidence->id }}">
+                @endif
+                <input type="hidden" name="removed_files" id="removed_files">
 
-@section('title-icon', 'fab fa-angellist')
+                <x-ui.field name="title" label="Título" :value="$evidence->title ?? null" required hint="Al menos 5 caracteres" />
 
-@section('breadcrumb')
-<li class="breadcrumb-item"><a href="/">Home</a></li>
-@isset($edit)
-    <li class="breadcrumb-item"><a href="{{ route('evidence.list') }}">Mis evidencias</a></li>
-@endisset
-<li class="breadcrumb-item active">@yield('title')</li>
-@endsection
-
-@section('content')
-
-@isset($edit)
-
-    <div class="row">
-        <div class="col-lg-3 col-sm-12">
-            <p>
-                <button class="btn btn-info btn-block" type="button" data-toggle="collapse" data-target="#collapseExample"
-                    aria-expanded="false" aria-controls="collapseExample">
-                    <i class="fas fa-eraser"></i> Ver todas las ediciones
-                </button>
-            </p>
-        </div>
-    </div>
-
-    <div class="collapse" id="collapseExample">
-
-        <div class="row">
-
-            @foreach ($evidence->flowEvidences() as $evidence_i)
-                <div class="col-lg-3 mb-0 pb-0">
-
-                    @if (Request()->route('id') == $evidence_i->id)
-                        <div class="small-box bg-info">
-                        @else
-                            <div class="small-box bg-light">
-                    @endif
-
-                    <div class="inner">
-                        <h5>{{ Str::limit($evidence_i->title, 30) }}</h5>
-
-                        {{ \Carbon\Carbon::parse($evidence_i->created_at)->diffForHumans() }}
-
-                        ({{ $evidence_i->created_at->format('d/m/y H:i:s') }})
+                <fieldset class="grid gap-1.5">
+                    <legend class="mb-1.5 text-sm font-semibold">Duración</legend>
+                    <div class="grid grid-cols-2 gap-3">
+                        <x-ui.field name="hours" label="Horas" type="number" suffix="h" inputmode="decimal"
+                            min="0" max="99" step="0.01" :value="\Time::complex_shape_hours($evidence->hours ?? '')" />
+                        <x-ui.field name="minutes" label="Minutos" type="number" suffix="min" inputmode="numeric"
+                            min="0" max="60" :value="\Time::complex_shape_minutes($evidence->hours ?? '')" />
                     </div>
+                </fieldset>
 
-                    @if (Request()->route('id') == $evidence_i->id)
-                        <a href="#" class="small-box-footer disabled">Actualmente editando</a>
-                    @else
-                        <a href="{{ route('evidence.edit', ['id' => $evidence_i->id]) }}" class="small-box-footer"><i
-                                class="fas fa-pencil-alt"></i> Continuar edición</a>
-                    @endif
+                <x-ui.field name="committee" label="Comité" type="select" :options="$committeeOptions" :value="$evidence->committee_id ?? null"
+                    required />
 
+                <x-ui.field name="description" label="Descripción" type="textarea" :rows="8" :maxlength="20000"
+                    :value="$editing ? \App\View\PlainText::fromHtml($evidence->description) : null" hint="Al menos 10 caracteres" required />
 
-                </div>
+                <x-ui.upload name="files[]" :url="route('upload.process')" :revert-url="route('upload.revert')" :remove-url="route('upload.remove', ['file_name' => 'NAME'])" :files="Filepond::getFilesFromTemporaryFolder()->all()"
+                    label="Arrastra aquí las pruebas o pulsa para elegirlas" />
 
-        </div>
-        @endforeach
+                <x-slot:actions>
+                    <x-ui.dialog id="publish" variant="alert" title="Publicar la evidencia"
+                        description="Una vez publicada no podrás editarla mientras se revisa." trigger="Publicar"
+                        trigger-icon="send" trigger-variant="primary">
+                        <x-slot:footer>
+                            <x-ui.button x-on:click="close" autofocus>Cancelar</x-ui.button>
+                            <x-ui.button variant="primary" type="submit" icon="send"
+                                formaction="{{ $route_publish }}">Sí, publicar</x-ui.button>
+                        </x-slot:footer>
+                    </x-ui.dialog>
+                    <x-ui.button type="submit" icon="save">Guardar borrador</x-ui.button>
+                </x-slot:actions>
+            </x-ui.form>
+        </x-ui.card>
 
+        @if ($editing)
+            <aside aria-label="Rechazos y ediciones" class="grid grid-cols-[minmax(0,1fr)] content-start gap-6">
+                @if ($reasons->isNotEmpty())
+                    <x-ui.alert tone="rejected" title="Motivos del rechazo">
+                        <ul class="grid gap-2">
+                            @foreach ($reasons->reverse() as $rejection)
+                                <li>
+                                    {{ $rejection->reason }}
+                                    <x-ui.time :value="$rejection->created_at" format="absolute" class="block text-xs" />
+                                </li>
+                            @endforeach
+                        </ul>
+                    </x-ui.alert>
+                @endif
+
+                <x-ui.card title="Ediciones" :level="2" id="versions">
+                    <x-ui.timeline label="Ediciones de la evidencia">
+                        @foreach ($evidence->flowEvidences() as $version)
+                            @php
+                                $current = (int) request()->route('id') === $version->id;
+                            @endphp
+                            <x-ui.timeline.item :tone="$current ? 'notice' : 'draft'" :title="$current ? 'Editando ahora' : $version->status_label" :at="$version->created_at">
+                                @if ($current)
+                                    <span class="block">{{ $version->title }}</span>
+                                @else
+                                    <a href="{{ route('evidence.edit', ['id' => $version->id]) }}"
+                                        class="block font-medium text-brand-ink">{{ $version->title }}</a>
+                                @endif
+                            </x-ui.timeline.item>
+                        @endforeach
+                    </x-ui.timeline>
+                </x-ui.card>
+            </aside>
+        @endif
     </div>
-
-    </div>
-@endisset
-
-<form method="POST" enctype="multipart/form-data">
-    @csrf
-
-    <x-id :id="$evidence->id ?? ''" :edit="$edit ?? ''" />
-
-    <input type="hidden" name="removed_files" id="removed_files" />
-
-
-    <div class="row">
-
-        <div class="col-lg-8">
-
-            <div class="card">
-
-                <div class="card-body">
-
-                    <div class="form-row">
-
-                        <x-input col="5" attr="title" :value="$evidence->title ?? ''" label="Título"
-                            description="Escribe un título que describa con precisión tu evidencia (mínimo 5 caracteres)" />
-
-                        <div class="form-group col-md-2">
-                            <label for="hours">Horas</label>
-                            <input id="" type="number" min="0" max="99" class="form-control"
-                                placeholder="" name="hours"
-                                value="{{ \Time::complex_shape_hours($evidence->hours ?? '') }}" autocomplete="hours"
-                                autofocus="" step="0.01">
-                            <small class="form-text text-muted">Enteros o decimales</small>
-                            @error('hours')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                        <div class="form-group col-md-2">
-                            <label for="minutes">Minutos</label>
-                            <input id="" type="number" min="0" max="60" class="form-control"
-                                placeholder="" name="minutes"
-                                value="{{ \Time::complex_shape_minutes($evidence->hours ?? '') }}"
-                                autocomplete="minutes" autofocus="">
-                            <small class="form-text text-muted">Enteros</small>
-                            @error('minutes')
-                                <span class="invalid-feedback d-block" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                        <div class="form-group col-md-3">
-                            <label for="committee">Comité asociado</label>
-                            <select id="committee"
-                                class="selectpicker form-control @error('committee') is-invalid @enderror"
-                                name="committee" value="{{ old('committee') }}" required autofocus>
-                                @foreach ($committees as $committee)
-                                    @isset($evidence)
-                                        <option
-                                            {{ $committee->id == old('committee') || $evidence->committee->id == $committee->id ? 'selected' : '' }}
-                                            value="{{ $committee->id }}">
-                                        @else
-                                        <option {{ $committee->id == old('committee') ? 'selected' : '' }}
-                                            value="{{ $committee->id }}">
-                                        @endisset
-                                        {{ $committee->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            <small class="form-text text-muted">Elige un comité al que quieres asociar tu
-                                evidencia.</small>
-
-                            @error('comite')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                        <x-textarea col="12" attr="description" :value="$evidence->description ?? ''"
-                            label="Descripción de la evidencia"
-                            description="Escribe una descripción concisa de tu evidencia (entre 10 y 20000 caracteres)." />
-
-                        <div class="form-group col-md-4">
-                            <button type="submit" formaction="{{ $route_draft }}"
-                                class="btn btn-secondary btn-block"><i class="fas fa-pencil-ruler"></i> &nbsp;Guardar
-                                como borrador</button>
-                        </div>
-
-                        <div class="form-group col-md-4">
-                            <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-                                data-target="#modal-default"><i class="fas fa-external-link-square-alt"></i>
-                                &nbsp;Publicar evidencia</button>
-                        </div>
-
-                        <div class="modal fade" id="modal-default">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">Publicar una evidencia</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Cuando se publica una evidencia, esta se envía al coordinador de tu comité
-                                            para su posterior revisión. Mientras esté en proceso de revisión,
-                                            <b>no podrá ser editada.</b>
-                                        </p>
-                                        <p>¿Deseas continuar?</p>
-                                    </div>
-                                    <div class="modal-footer justify-content-between">
-                                        <button type="button" class="btn btn-default"
-                                            data-dismiss="modal">Cerrar</button>
-                                        <button type="submit" formaction="{{ $route_publish }}"
-                                            class="btn btn-primary" data-toggle="modal"
-                                            data-target="#modal-default"><i
-                                                class="fas fa-external-link-square-alt"></i> &nbsp;Sí, publicar
-                                            evidencia</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-lg-4">
-
-            <div class="card">
-
-                <div class="card-body">
-
-                    @isset($edit)
-                        @if ($evidence->allRejectionReasons()->isNotEmpty())
-                            <div class="alert alert-warning mb-4">
-                                <h5 class="mb-2">
-                                    <i class="fas fa-exclamation-circle"></i> Motivos de rechazo anteriores
-                                </h5>
-                                <ul class="mb-0">
-                                    @foreach ($evidence->allRejectionReasons() as $reason)
-                                        <li>{{ $reason->reason }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-                    @endisset
-
-                    <label>Adjuntar pruebas</label>
-
-                    <input type="file" name="files[]" id="files" multiple>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</form>
-
-@section('scripts')
-
-    <script>
-        setInterval(function() {
-            $(".filepond--file-info-main").each(function() {
-                var uri = $(this).text();
-                $(this).text(decodeURI(uri));
-            });
-        }, 1);
-
-        // plugins de interés
-        FilePond.registerPlugin(FilePondPluginFileValidateSize);
-        FilePond.registerPlugin(FilePondPluginFileValidateType);
-
-        FilePond.create(
-            document.querySelector('input[id="files"]'), {
-                maxFileSize: 50000000,
-                maxTotalFileSize: 200000000,
-                labelMaxTotalFileSizeExceeded: 'Tamaño total máximo excedido',
-                labelMaxFileSizeExceeded: 'El archivo es demasiado grande',
-                labelMaxFileSize: 'El tamaño máximo es de {filesize}',
-                labelMaxTotalFileSize: 'El tamaño máximo total es de {filesize}',
-                acceptedFileTypes: ['image/*', 'application/zip', 'application/x-7z-compressed', 'application/x-tar',
-                    'application/msword', 'application/vnd.ms-excel',
-                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', '.xlsx', 'application/pdf',
-                    'application/x-rar-compressed', 'application/vnd.ms-powerpoint',
-                    'application/vnd.oasis.opendocument.presentation',
-                    'application/vnd.oasis.opendocument.spreadsheet', 'application/vnd.oasis.opendocument.text'
-                ],
-                labelFileTypeNotAllowed: 'Tipo de archivo no válido',
-                server: {
-                    url: '{{ route('upload.process') }}',
-                    process: {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                    },
-                    load: (source, load, error, progress, abort, headers) => {
-
-                        var request = new Request(decodeURI(source));
-                        fetch(request).then(function(response) {
-
-                            response.blob().then(function(myBlob) {
-
-                                load(myBlob);
-
-                                $(".filepond--file-info-main").each(function() {
-                                    var uri = $(this).text();
-                                    $(this).text(decodeURI(uri));
-                                });
-
-                            });
-                        });
-
-                        $(".filepond--file-info-main").each(function() {
-                            var uri = $(this).text();
-                            $(this).text(decodeURI(uri));
-                        });
-
-                    },
-                    remove: function(source, load, errorCallback) {
-                        var filename = source.split('/').pop()
-                        var url = location.origin + '/evidence/upload/remove/' + filename;
-                        var request = new Request(url);
-
-                        fetch(request).then(function(response) {
-                            console.log(response);
-                        });
-
-                        load();
-                    },
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                },
-
-                files: [
-                    @foreach (Filepond::getFilesFromTemporaryFolder() as $file_name)
-
-                        {
-                            source: '{{ route('upload.load', ['file_name' => $file_name]) }}',
-                            options: {
-                                type: 'local'
-                            }
-                        },
-                    @endforeach
-                ]
-            }
-        );
-    </script>
-
-@endsection
-
-@endsection
+</x-layout.app>

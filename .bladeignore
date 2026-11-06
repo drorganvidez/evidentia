@@ -5,7 +5,7 @@ resources/views/config/**
 resources/views/defaultlist/**
 resources/views/email/**
 resources/views/eventbrite/**
-resources/views/evidence/**
+resources/views/evidence/coordinator/**
 resources/views/importexport/**
 resources/views/integrity/**
 resources/views/layouts/**

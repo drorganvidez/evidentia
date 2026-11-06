@@ -102,8 +102,7 @@ class RejectedEvidenceActionsTest extends TestCase
     }
 
     /**
-     * Action of the form each confirmation modal really submits, resolved the way the browser
-     * does it: the first form in the page with the id named in the confirm button.
+     * Action of the form each confirmation dialog really submits: the form inside every alert dialog of the page.
      */
     private function confirmedActions(string $html): array
     {
@@ -114,10 +113,8 @@ class RejectedEvidenceActionsTest extends TestCase
         $xpath = new DOMXPath($document);
 
         $actions = [];
-        foreach ($xpath->query('//div[starts-with(@id, "modal-confirm-")]//button[contains(@onclick, "getElementById")]') as $button) {
-            preg_match("/getElementById\('([^']+)'\)/", $button->getAttribute('onclick'), $match);
-            $form = $xpath->query('//form[@id="'.$match[1].'"]')->item(0);
-            $actions[] = $form?->getAttribute('action');
+        foreach ($xpath->query('//dialog[@role="alertdialog"]//form') as $form) {
+            $actions[] = $form->getAttribute('action');
         }
 
         return $actions;
