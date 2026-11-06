@@ -7,13 +7,6 @@
     $plural = fn(int $count, string $one, string $many): string => $count . ' ' . ($count === 1 ? $one : $many);
     $hours = fn(float $value): string => number_format($value, 2, ',', '.');
     $maxWeek = max(1, max(array_column($weeks, 'value')));
-    $columns = [
-        ['label' => 'Miembro', 'key' => 'member'],
-        ['label' => 'Evidencias', 'key' => 'evidences'],
-        ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
-        ['label' => 'Reuniones', 'key' => 'meetings', 'align' => 'end'],
-        ['label' => 'Última actividad', 'key' => 'last'],
-    ];
 @endphp
 <x-layout.app title="Mi comité" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Mi comité']]">
     <x-ui.page-header title="Mi comité">
@@ -57,67 +50,11 @@
             href="#members" />
     </div>
 
-    <x-ui.table id="members" :caption="'Miembros de ' . $committee->name" show-caption :columns="$columns" :filterable="$members->isNotEmpty()"
-        count-label="miembros" filter-placeholder="Filtrar miembros">
-        @if ($members->isEmpty())
-            <x-slot:empty>
-                <x-ui.empty icon="users" title="Sin miembros todavía" size="sm" :level="3" />
-            </x-slot:empty>
-        @endif
-        @foreach ($members as $member)
-            <x-ui.table.row :search="implode(
-                ' ',
-                array_filter([
-                    $member['surname'],
-                    $member['name'],
-                    $member['username'],
-                    $member['email'],
-                    $member['pending'] > 0 ? 'pendiente' : null,
-                    $member['rejected'] > 0 ? 'rechazada' : null,
-                ]),
-            )">
-                <x-ui.table.cell label="Miembro" primary header>
-                    <x-ui.person :name="$member['name']" :surname="$member['surname']" :role="$member['username']" size="sm" reverse />
-                </x-ui.table.cell>
-                <x-ui.table.cell label="Evidencias" full>
-                    @if ($member['accepted'] + $member['pending'] + $member['rejected'] === 0)
-                        <span class="text-sm text-ink-muted">Sin evidencias</span>
-                    @else
-                        <span class="flex flex-wrap items-center gap-1.5">
-                            @if ($member['accepted'] > 0)
-                                <x-ui.badge tone="accepted"
-                                    size="sm">{{ $plural($member['accepted'], 'aceptada', 'aceptadas') }}</x-ui.badge>
-                            @endif
-                            @if ($member['pending'] > 0)
-                                <x-ui.badge tone="pending"
-                                    size="sm">{{ $plural($member['pending'], 'pendiente', 'pendientes') }}</x-ui.badge>
-                            @endif
-                            @if ($member['rejected'] > 0)
-                                <x-ui.badge tone="rejected"
-                                    size="sm">{{ $plural($member['rejected'], 'rechazada', 'rechazadas') }}</x-ui.badge>
-                            @endif
-                        </span>
-                    @endif
-                </x-ui.table.cell>
-                <x-ui.table.cell label="Horas" numeric><x-ui.hours :value="$member['hours']" /></x-ui.table.cell>
-                <x-ui.table.cell label="Reuniones" numeric meta end>{{ $member['meetings'] }}<span class="md:hidden">
-                        {{ $member['meetings'] === 1 ? 'reunión' : 'reuniones' }}</span></x-ui.table.cell>
-                <x-ui.table.cell label="Última actividad" meta>
-                    @if ($member['last'])
-                        <x-ui.time :value="$member['last']" format="relative" />
-                    @else
-                        —
-                    @endif
-                </x-ui.table.cell>
-            </x-ui.table.row>
-        @endforeach
-        @if ($members->isNotEmpty())
-            <x-slot:footer>
-                <span>{{ $plural($members->count(), 'miembro', 'miembros') }} ·
-                    <x-ui.hours :value="$kpis['hours']" size="sm" class="text-ink" /></span>
-            </x-slot:footer>
-        @endif
-    </x-ui.table>
+    @include('coordinator.partials.members', [
+        'committee' => $committee,
+        'members' => $members,
+        'hours' => $kpis['hours'],
+    ])
 
     <div class="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-2 lg:gap-8">
         <x-ui.card title="Horas por miembro" :level="2" id="distribution">
