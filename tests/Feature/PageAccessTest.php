@@ -18,6 +18,8 @@ use App\Models\File;
 use App\Models\Meeting;
 use App\Models\MeetingMinutes;
 use App\Models\MeetingRequest;
+use App\Models\Message;
+use App\Models\MessageThread;
 use App\Models\Point;
 use App\Models\Proof;
 use App\Models\Role;
@@ -129,10 +131,18 @@ class PageAccessTest extends TestCase
 
         $token = Token::create(['token' => str_repeat('a', 60), 'used' => false, 'valid_until_timestamp' => now()->addDay(), 'user_id' => $student->id]);
 
+        $thread = MessageThread::create([
+            'subject' => 'Duda sobre las mesas', 'author_id' => $student->id, 'author_name' => $student->name, 'author_role' => 'STUDENT',
+            'recipient_role' => 'COORDINATOR', 'committee_id' => $committee->id, 'state' => 'open', 'last_message_at' => now(),
+            'last_message_by' => $student->id,
+        ]);
+        Message::create(['message_thread_id' => $thread->id, 'user_id' => $student->id, 'user_name' => $student->name, 'role' => 'STUDENT', 'body' => '¿Cuento el montaje?']);
+
         $this->ids = [
             'evidence' => $evidence->id, 'draft' => $draft->id, 'proof' => $proof->id, 'student' => $student->id,
             'request' => $request->id, 'sheet' => $sheet->id, 'minutes' => $minutes->id, 'bonus' => $bonus->id,
             'list' => $list->id, 'attendee' => $attendee->id, 'manualEvent' => $manualEvent->id, 'errorReport' => $errorReport->id, 'token' => $token->token,
+            'thread' => $thread->id,
         ];
     }
 
@@ -227,6 +237,20 @@ class PageAccessTest extends TestCase
             'randomize.randomize' => [[], ['LECTURE']],
             'profiles.view' => [['id' => 'student'], self::MANAGEMENT],
             'profiles.view.evidence' => [['id_user' => 'student', 'id_evidence' => 'evidence'], self::MANAGEMENT],
+
+            // Activity log and histories (routes/activity.php)
+            'activity.index' => [[], []],
+            'activity.export' => [[], self::MANAGEMENT],
+            'activity.mine' => [[], self::EVERYONE],
+            'activity.evidence' => [['id' => 'evidence'], []],
+            'activity.minutes' => [['id' => 'minutes'], self::EVERYONE],
+            'activity.request' => [['id' => 'request'], self::EVERYONE],
+
+            // Messages (routes/messages.php)
+            'messages.inbox' => [[], []],
+            'messages.mine' => [[], self::EVERYONE],
+            'messages.create' => [[], self::EVERYONE],
+            'messages.show' => [['thread' => 'thread'], []],
         ];
     }
 
