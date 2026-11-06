@@ -1,8 +1,10 @@
 {{--
-    Tables: the evidence list with quick filter and active sort, a list of 128 paginated and searched on the server, a
-    compact management list, the activity log with a flagged row and an empty one
+    Tables: the evidence list with quick filter and the order of the server (ListSort over the demo rows), a list of 128
+    paginated and searched on the server, a compact management list, a list ordered in the browser, the activity log with
+    a flagged row and an empty one
 --}}
 @use('App\Support\ListPage')
+@use('App\Support\ListSort')
 @use('Illuminate\Pagination\LengthAwarePaginator')
 @php
     $now = now();
@@ -75,24 +77,53 @@
             'updated' => $now->copy()->subDays(9),
         ],
     ];
-    $evidenceColumns = [
+    // The order of the server: allowed keys, dates by their timestamp, links that keep the query string
+    $sort = ListSort::from(
+        request(),
         [
-            'label' => 'Evidencia',
-            'key' => 'title',
-            'sort' => ['href' => route('ui.index', ['sort' => 'title']) . '#ui-table', 'dir' => null],
+            'title' => 'title',
+            'committee' => 'committee.1',
+            'hours' => 'hours',
+            'status' => ListSort::rank('status', ['DRAFT', 'PENDING', 'ACCEPTED', 'REJECTED']),
+            'updated' => ListSort::desc('updated'),
         ],
-        ['label' => 'Comité', 'key' => 'committee', 'hide' => true],
+        'updated',
+        path: route('ui.index'),
+    );
+    $evidences = $sort->apply(collect($evidences))->all();
+    $evidenceColumns = array_map(
+        fn(array $column): array => isset($column['sort'])
+            ? [
+                    'sort' => [
+                        'href' => $column['sort']['href'] . '#ui-table',
+                        'dir' => $column['sort']['dir'],
+                        'asc' => $column['sort']['asc'] . '#ui-table',
+                        'desc' => $column['sort']['desc'] . '#ui-table',
+                    ],
+                ] + $column
+            : $column,
+        $sort->columns([
+            ['label' => 'Evidencia', 'key' => 'title'],
+            ['label' => 'Comité', 'key' => 'committee', 'hide' => true],
+            ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
+            ['label' => 'Estado', 'key' => 'status'],
+            ['label' => 'Actualizada', 'key' => 'updated'],
+            ['label' => 'Abrir', 'srOnly' => true],
+        ]),
+    );
+    $signups = [
+        ['Lucía', 'Pérez', $now->copy()->subMinutes(10), 2, 'Checked In'],
+        ['Carlos', 'Navarro', $now->copy()->subHours(2), 0.5, 'Attending'],
+        ['Elena', 'Álvarez', $now->copy()->subDays(3), 10, 'Not Attending'],
+        ['Marta', 'Gómez', $now->copy()->subMonth(), 1.25, 'Guests Attended'],
+        ['Diego', 'Torres', null, null, 'Not Attending (Refunded/Canceled)'],
+    ];
+    $signupColumns = [
+        ['label' => 'Persona', 'key' => 'person'],
+        ['label' => 'Inscrita', 'key' => 'signed', 'sorted' => 'desc'],
         ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
         ['label' => 'Estado', 'key' => 'status'],
-        [
-            'label' => 'Actualizada',
-            'key' => 'updated',
-            'sort' => [
-                'href' => route('ui.index', ['sort' => 'updated', 'dir' => 'asc']) . '#ui-table',
-                'dir' => 'desc',
-            ],
-        ],
-        ['label' => 'Abrir', 'srOnly' => true],
+        ['label' => 'Acciones', 'srOnly' => true],
     ];
     $management = [
         [
@@ -355,6 +386,29 @@
                 <span>Mostrando de la 21 a la 30 de 128 evidencias</span>
                 <x-ui.pagination :paginator="$managementPages" label="Paginación de las evidencias de Programa" />
             </x-slot:footer>
+        </x-ui.table>
+    </div>
+
+    <div class="grid grid-cols-[minmax(0,1fr)] gap-3">
+        <h3 class="text-lg font-bold tracking-tight">Orden en el navegador</h3>
+        <x-ui.table id="ui-table-sortable" caption="Inscripciones de la jornada" :columns="$signupColumns" sortable filterable
+            count-label="inscripciones" filter-placeholder="Filtrar inscripciones">
+            @foreach ($signups as [$name, $surname, $signed, $hours, $status])
+                <x-ui.table.row>
+                    <x-ui.table.cell label="Persona" primary>
+                        <x-ui.person :name="$name" :surname="$surname" size="sm" reverse />
+                    </x-ui.table.cell>
+                    <x-ui.table.cell label="Inscrita" meta><x-ui.time :value="$signed"
+                            format="relative" /></x-ui.table.cell>
+                    <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$hours" /></x-ui.table.cell>
+                    <x-ui.table.cell label="Estado" end><x-ui.attendee-status :status="$status"
+                            size="sm" /></x-ui.table.cell>
+                    <x-ui.table.cell actions>
+                        <x-ui.button icon-only icon="mail" :label="'Escribir a ' . $name . ' ' . $surname" href="#ui-table-sortable"
+                            variant="ghost" size="sm" dim />
+                    </x-ui.table.cell>
+                </x-ui.table.row>
+            @endforeach
         </x-ui.table>
     </div>
 
