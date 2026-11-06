@@ -27,6 +27,11 @@
         ['label' => 'Asistencias', 'href' => $here, 'icon' => 'ticket'],
         ['label' => 'Perfil', 'href' => $here, 'icon' => 'user-round'],
     ];
+    $crumbs = [
+        ['label' => 'Inicio', 'href' => $here],
+        ['label' => 'Mis evidencias', 'href' => $here],
+        ['label' => 'Montaje del photocall con un título largo que se trunca'],
+    ];
 @endphp
 <section id="ui-nav" class="glass grid grid-cols-[minmax(0,1fr)] gap-6 rounded-xl p-6 md:p-8"
     aria-labelledby="ui-nav-title">
@@ -51,6 +56,16 @@
                 class="mx-auto w-full max-w-[390px] rounded-xl border border-rule bg-canvas p-3 [&_nav]:static [&_nav]:block">
                 <x-ui.nav variant="bar" :items="$mobile" label="Navegación principal (barra)" />
             </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-[minmax(0,1fr)] gap-3">
+        <h3 class="text-lg font-bold tracking-tight">Migas de pan</h3>
+        <div class="glass-2 grid grid-cols-[minmax(0,1fr)] gap-3 rounded-lg p-4" data-demo="breadcrumbs">
+            <span class="font-mono text-2xs text-ink-muted">la última es la página actual; las anteriores se ocultan en
+                el teléfono</span>
+            <x-ui.breadcrumbs :items="$crumbs" />
+            <x-ui.breadcrumbs :items="[['label' => 'Inicio', 'href' => $here], ['label' => 'Mis reuniones']]" label="Migas de pan (corta)" />
         </div>
     </div>
 </section>
