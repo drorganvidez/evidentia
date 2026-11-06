@@ -56,7 +56,8 @@ class MessagingTest extends TestCase
         $this->assertSame('STUDENT', $log->acting_role);
         $this->assertNull($log->committee_id);
         $this->assertSame('COORDINATOR:'.$thread->committee_id, $log->details['audience']);
-        $this->assertSame([$this->person('coordinador')->id], $log->targets()->pluck('user_id')->map(fn ($id) => (int) $id)->all());
+        // both coordinators of Logística
+        $this->assertSame([$this->person('coordinador')->id, $this->person('coordinadora')->id], $log->targets()->orderBy('user_id')->pluck('user_id')->map(fn ($id) => (int) $id)->all());
     }
 
     public function test_answering_updates_the_thread_and_reaches_the_other_participants(): void

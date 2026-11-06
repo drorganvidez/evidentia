@@ -16,7 +16,8 @@ use Tests\TestCase;
 
 /**
  * The figures of «Mi comité» over the seed of the end-to-end tests: Logística has Lucía (one evidence in each state,
- * the meeting and the bonus), Juan (one pending) and Marta (the meeting); Comunicación is empty.
+ * the meeting and the bonus), Juan (one pending), Marta (the meeting) and Inés, its second coordinator, whose pending
+ * evidence waits in the queue of the presidency; Comunicación is empty.
  */
 class CommitteePanelTest extends TestCase
 {
@@ -54,13 +55,14 @@ class CommitteePanelTest extends TestCase
         $this->assertSame([
             'pending' => 2,
             'pendingDays' => 0,
+            'delegated' => 1,
             'acceptedHours' => 2.0,
             'accepted' => 1,
             'hours' => 9.0,
             'rejected' => 1,
-            'members' => 3,
+            'members' => 4,
         ], $panel['kpis']);
-        $this->assertSame(['Carlos'], $panel['coordinators']->pluck('name')->all());
+        $this->assertSame(['Carlos', 'Inés'], $panel['coordinators']->pluck('name')->all());
         $this->assertSame(['Marta'], $panel['secretaries']->pluck('name')->all());
     }
 
@@ -72,6 +74,7 @@ class CommitteePanelTest extends TestCase
         ))->all();
 
         $this->assertSame([
+            ['username' => 'coordinadora', 'accepted' => 0, 'pending' => 1, 'rejected' => 0, 'hours' => 0.0, 'meetings' => 0],
             ['username' => 'companero', 'accepted' => 0, 'pending' => 1, 'rejected' => 0, 'hours' => 0.0, 'meetings' => 0],
             ['username' => 'estudiante', 'accepted' => 1, 'pending' => 1, 'rejected' => 1, 'hours' => 7.0, 'meetings' => 1],
             ['username' => 'secretario', 'accepted' => 0, 'pending' => 0, 'rejected' => 0, 'hours' => 2.0, 'meetings' => 1],
@@ -95,8 +98,8 @@ class CommitteePanelTest extends TestCase
             ['label' => 'Marta Ruiz Díaz', 'value' => 2.0],
         ], $panel['distribution']);
         $this->assertCount(8, $panel['weeks']);
-        $this->assertSame(['label' => 'Esta semana', 'value' => 4], $panel['weeks'][7]);
-        $this->assertSame(4, array_sum(array_column($panel['weeks'], 'value')));
+        $this->assertSame(['label' => 'Esta semana', 'value' => 5], $panel['weeks'][7]);
+        $this->assertSame(5, array_sum(array_column($panel['weeks'], 'value')));
     }
 
     public function test_the_meetings_of_the_committee(): void
@@ -107,17 +110,18 @@ class CommitteePanelTest extends TestCase
         $this->assertSame(['Reunión de logística'], $panel['minutes']->map(fn ($minutes) => $minutes->meeting->title)->all());
     }
 
-    public function test_the_own_evidences_of_the_coordinator_count_but_stay_out_of_the_queue(): void
+    public function test_the_evidences_of_the_coordinators_count_but_wait_in_the_presidency(): void
     {
         Evidence::create([
-            'title' => 'Inventario del almacén', 'description' => '<p>Inventario.</p>', 'hours' => 1.5, 'status' => 'PENDING',
+            'title' => 'Recuento de sillas', 'description' => '<p>Recuento.</p>', 'hours' => 1.5, 'status' => 'PENDING',
             'user_id' => $this->coordinator->id, 'committee_id' => $this->logistics->id,
         ]);
 
         $panel = $this->panel();
 
         $this->assertSame(2, $panel['kpis']['pending']);
-        $this->assertSame(4, $panel['kpis']['members']);
+        $this->assertSame(2, $panel['kpis']['delegated']);
+        $this->assertSame(5, $panel['kpis']['members']);
         $own = $panel['members']->firstWhere('username', 'coordinador');
         $this->assertSame(1, $own['pending']);
     }
@@ -154,7 +158,7 @@ class CommitteePanelTest extends TestCase
 
         $panel = $this->panel();
 
-        $this->assertSame(['companero', 'estudiante', 'secretario'], $panel['members']->pluck('username')->all());
+        $this->assertSame(['coordinadora', 'companero', 'estudiante', 'secretario'], $panel['members']->pluck('username')->all());
         $this->assertSame(9.0, $panel['kpis']['hours']);
         $this->assertSame(1, $panel['members']->firstWhere('username', 'estudiante')['meetings']);
         $this->assertSame(0.0, $panel['members']->firstWhere('username', 'companero')['hours']);
@@ -181,9 +185,9 @@ class CommitteePanelTest extends TestCase
 
         $this->assertStringStartsWith("\u{FEFF}nombre;apellidos;uvus;correo;aceptadas;pendientes;rechazadas;horas;reuniones\n", $csv);
         $lines = explode("\n", trim(substr($csv, 3)));
-        $this->assertCount(4, $lines);
-        $this->assertSame('Lucía;"Pérez Romero";estudiante;estudiante@e2e.test;1;1;1;7,00;1', $lines[2]);
-        $this->assertSame('Juan;"García López";companero;companero@e2e.test;0;1;0;0,00;0', $lines[1]);
+        $this->assertCount(5, $lines);
+        $this->assertSame('Lucía;"Pérez Romero";estudiante;estudiante@e2e.test;1;1;1;7,00;1', $lines[3]);
+        $this->assertSame('Juan;"García López";companero;companero@e2e.test;0;1;0;0,00;0', $lines[2]);
     }
 
     public function test_the_csv_keeps_formulas_as_text(): void

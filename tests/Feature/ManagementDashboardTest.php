@@ -10,7 +10,10 @@ use Database\Seeders\E2eSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-/** The figures of the control panel, checked against the end-to-end seed (five students, one committee with work). */
+/**
+ * The figures of the control panel, checked against the end-to-end seed (six students, one committee with work and the
+ * queue of the presidency).
+ */
 class ManagementDashboardTest extends TestCase
 {
     use RefreshDatabase;
@@ -32,10 +35,10 @@ class ManagementDashboardTest extends TestCase
 
         // Lucía 2 accepted + 2 meeting + 1,5 event + 3 bonus; Marta 2 meeting; Pablo 1,5 event
         $this->assertEqualsWithDelta(12.0, $kpis['hours'], 0.001);
-        $this->assertSame(5, $kpis['students']);
-        $this->assertSame(2, $kpis['participating']);
-        $this->assertSame(40, $kpis['participation']);
-        $this->assertSame(2, $kpis['pending']);
+        $this->assertSame(6, $kpis['students']);
+        $this->assertSame(4, $kpis['participating']);
+        $this->assertSame(67, $kpis['participation']);
+        $this->assertSame(4, $kpis['pending']);
         $this->assertSame(50, $kpis['acceptance']);
         $this->assertSame(1, $kpis['rejected']);
     }
@@ -44,7 +47,7 @@ class ManagementDashboardTest extends TestCase
     {
         $panel = $this->panel();
 
-        $this->assertSame([2, 2, 1, 0, 0, 0], array_column($panel['distribution'], 'value'));
+        $this->assertSame([3, 2, 1, 0, 0, 0], array_column($panel['distribution'], 'value'));
         $this->assertSame(['Evidencias', 'Reuniones', 'Asistencia', 'Bonos'], array_column($panel['origins'], 'label'));
         $this->assertSame(100, array_sum(array_column($panel['origins'], 'value')));
         $this->assertSame('3,00 h', $panel['origins'][3]['text']);
@@ -54,11 +57,26 @@ class ManagementDashboardTest extends TestCase
     {
         $committees = $this->panel()['committees']->keyBy('name');
 
-        $this->assertSame('Carlos Navarro Ruiz', $committees['Logística']['coordinators']);
-        $this->assertSame(2, $committees['Logística']['pending']);
-        $this->assertSame(4, $committees['Logística']['total']);
+        $this->assertSame('Carlos Navarro Ruiz, Inés Castro Vidal', $committees['Logística']['coordinators']);
+        $this->assertSame(3, $committees['Logística']['pending']);
+        $this->assertSame(5, $committees['Logística']['total']);
         $this->assertSame('', $committees['Comunicación']['coordinators']);
         $this->assertSame(0, $committees['Comunicación']['total']);
+        // the presidents coordinate the committee of the presidency
+        $this->assertSame('Elena Moreno Jiménez', $committees['Presidencia']['coordinators']);
+    }
+
+    public function test_the_queue_of_the_presidency_holds_what_the_presidents_review(): void
+    {
+        foreach (['presidente', 'profesor'] as $who) {
+            $presidency = $this->panel($who)['presidency'];
+
+            $this->assertSame(2, $presidency['count'], $who);
+            $this->assertSame(['Inventario del almacén', 'Acreditación de ponentes'], $presidency['items']->pluck('title')->all(), $who);
+            $this->assertSame(route('president.review.pending'), $presidency['href']);
+        }
+        $this->assertSame(route('president.review.pending'), $this->panel('presidente')['routes']['review']);
+        $this->assertSame(route('lecture.evidence.list'), $this->panel('profesor')['routes']['review']);
     }
 
     public function test_the_traceability_reads_the_activity_log(): void
@@ -86,6 +104,6 @@ class ManagementDashboardTest extends TestCase
 
         $this->assertCount(8, $weeks);
         $this->assertSame('Esta semana', $weeks[7]['label']);
-        $this->assertSame(4, array_sum(array_column($weeks, 'value')), 'The four evidences sent by the seed this week');
+        $this->assertSame(6, array_sum(array_column($weeks, 'value')), 'The six evidences sent by the seed this week');
     }
 }

@@ -15,7 +15,8 @@ use Tests\TestCase;
 
 /**
  * The signals of a committee for the management over the seed of the end-to-end tests: Logística works (no signal),
- * Comunicación has nobody in charge and never met; each problem names who to nudge and prefills the message.
+ * Comunicación has nobody in charge and never met, Presidencia is coordinated by the president; each problem names
+ * who to nudge and prefills the message.
  */
 class CommitteeOverviewTest extends TestCase
 {
@@ -64,6 +65,35 @@ class CommitteeOverviewTest extends TestCase
         $this->assertStringStartsWith(route('messages.create').'?', $signal['action']['href']);
         $this->assertStringContainsString('to=COORDINATOR%3A'.$this->logistics->id, $signal['action']['href']);
         $this->assertStringContainsString('subject=Evidencias%20pendientes%20de%20revisar%20en%20Log', $signal['action']['href']);
+    }
+
+    public function test_late_evidences_of_its_coordinators_point_to_the_queue_of_the_presidency(): void
+    {
+        DB::table('evidences')->where('title', 'Inventario del almacén')->update(['updated_at' => now()->subDays(9)]);
+
+        $signals = $this->signals($this->logistics);
+
+        $this->assertArrayNotHasKey('late-evidences', $signals);
+        $this->assertSame('1 evidencia de la coordinación espera más de 7 días', $signals['late-presidency']['title']);
+        $this->assertSame('La más antigua lleva 9 días en la cola de presidencia', $signals['late-presidency']['detail']);
+        $this->assertSame(route('president.review.pending'), $signals['late-presidency']['action']['href']);
+    }
+
+    public function test_the_presidents_coordinate_the_committee_of_the_presidency(): void
+    {
+        $presidency = Committee::presidency();
+        DB::table('evidences')->where('title', 'Acreditación de ponentes')->update(['updated_at' => now()->subDays(8)]);
+
+        $signals = $this->signals($presidency);
+
+        $this->assertArrayNotHasKey('no-coordinator', $signals);
+        $this->assertArrayNotHasKey('late-presidency', $signals);
+        $this->assertSame('1 evidencia espera más de 7 días', $signals['late-evidences']['title']);
+        $this->assertSame(route('president.review.pending'), $signals['late-evidences']['action']['href']);
+        $this->assertSame(['Elena'], app(CommitteeOverview::class)->for($presidency, User::where('username', 'profesor')->sole())['presidents']->pluck('name')->all());
+
+        User::where('username', 'presidente')->sole()->roles()->detach();
+        $this->assertArrayHasKey('no-coordinator', $this->signals($presidency));
     }
 
     public function test_a_meeting_request_held_without_minutes_nudges_the_secretary_about_it(): void
@@ -116,14 +146,18 @@ class CommitteeOverviewTest extends TestCase
     {
         $summaries = app(CommitteeOverview::class)->summaries()->keyBy(fn (array $summary) => $summary['committee']->name);
 
-        $this->assertSame(['Comunicación', 'Logística'], $summaries->keys()->all());
+        $this->assertSame(['Comunicación', 'Logística', 'Presidencia'], $summaries->keys()->all());
+        // the evidence of Inés waits in the presidency, not in the queue of Logística
         $this->assertSame(2, $summaries['Logística']['pending']);
-        $this->assertSame(4, $summaries['Logística']['sent']);
+        $this->assertSame(5, $summaries['Logística']['sent']);
         $this->assertSame(1, $summaries['Logística']['meetings']);
         // 2 h accepted, 2 h × 2 at the meeting and the 3 h bonus
         $this->assertSame(9.0, $summaries['Logística']['hours']);
         $this->assertSame([], $summaries['Logística']['signals']);
         $this->assertCount(3, $summaries['Comunicación']['signals']);
         $this->assertSame(0.0, $summaries['Comunicación']['hours']);
+        $this->assertSame(['Elena'], $summaries['Presidencia']['presidents']->pluck('name')->all());
+        $this->assertSame([], $summaries['Logística']['presidents']->all());
+        $this->assertSame(['no-secretary', 'no-meetings'], array_column($summaries['Presidencia']['signals'], 'key'));
     }
 }

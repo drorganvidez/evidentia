@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Screens\PublicAndStudent;
 
+use App\Models\Evidence;
 use App\Models\User;
 
 class HomeScreenTest extends ScreenTestCase
@@ -39,9 +40,12 @@ class HomeScreenTest extends ScreenTestCase
 
             foreach (['Panel del curso', 'Horas acreditadas', 'Participación', 'Por revisar', 'Aceptación',
                 'Horas por estudiante', 'Origen de las horas', 'Sin coordinación', 'Actividad reciente',
-                'Envíos por semana', 'Señales del registro', 'Accesos', 'Cola de revisión', 'Montaje del photocall'] as $text) {
+                'Envíos por semana', 'Señales del registro', 'Accesos', 'Cola de presidencia', 'Inventario del almacén'] as $text) {
                 $this->assertStringContainsString($text, $html, "$who sees $text");
             }
+            $inventory = Evidence::where('title', 'Inventario del almacén')->sole();
+            $this->assertStringContainsString(route('president.review.view', ['id' => $inventory->id]), $html);
+            $this->assertStringContainsString(route('president.review.pending'), $html);
             $this->assertStringContainsString(route("$prefix.evidence.list"), $html);
             $this->assertStringContainsString(route("$prefix.export"), $html);
             $this->assertStringNotContainsString('Mis últimas evidencias', $html, 'Nothing of the page of a participant');

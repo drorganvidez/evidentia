@@ -19,7 +19,7 @@ class AuthScreensTest extends ScreenTestCase
         $this->assertStringContainsString('href="'.route('password.custom_reset').'"', $html);
         $this->assertStringContainsString('aria-label="2 h acreditadas"', $html);
         $this->assertStringContainsString('aria-label="1 evidencia aceptada"', $html);
-        $this->assertStringContainsString('aria-label="5 estudiantes"', $html);
+        $this->assertStringContainsString('aria-label="6 estudiantes"', $html);
         $this->assertNoAutofocus($html);
 
         // The scene of the platform goes under the figures, hidden, and the margins stay bare

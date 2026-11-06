@@ -28,7 +28,9 @@ use Illuminate\Support\Facades\Hash;
 /**
  * Data of the end-to-end tests: one person per role (password «evidentia», email <role>@e2e.test), a committee
  * with its coordinator and secretary, evidences in every state, a meeting with its minutes, an event with
- * attendances, a bonus and a default list, with every deadline open.
+ * attendances, a bonus and a default list, with every deadline open. Logística has a second coordinator, whose
+ * evidence to it waits in the queue of the presidency with one sent to the committee of the presidency, which the
+ * migrations create.
  *
  *     php artisan migrate:fresh --seed --seeder=E2eSeeder --force
  */
@@ -68,6 +70,7 @@ class E2eSeeder extends Seeder
         $student = $person('estudiante', 'Lucía', 'Pérez Romero', ['STUDENT']);
         $classmate = $person('companero', 'Juan', 'García López', ['STUDENT']);
         $coordinator = $person('coordinador', 'Carlos', 'Navarro Ruiz', ['STUDENT', 'COORDINATOR']);
+        $cocoordinator = $person('coordinadora', 'Inés', 'Castro Vidal', ['STUDENT', 'COORDINATOR']);
         $secretary = $person('secretario', 'Marta', 'Ruiz Díaz', ['STUDENT', 'SECRETARY']);
         $register = $person('registro', 'Pablo', 'Torres Gómez', ['STUDENT', 'REGISTER_COORDINATOR']);
         $person('presidente', 'Elena', 'Moreno Jiménez', ['PRESIDENT']);
@@ -76,6 +79,7 @@ class E2eSeeder extends Seeder
         $logistics = Committee::create(['name' => 'Logística']);
         Committee::create(['name' => 'Comunicación']);
         Coordinator::forceCreate(['user_id' => $coordinator->id, 'committee_id' => $logistics->id]);
+        Coordinator::forceCreate(['user_id' => $cocoordinator->id, 'committee_id' => $logistics->id]);
         $secretaryProfile = Secretary::forceCreate(['user_id' => $secretary->id, 'committee_id' => $logistics->id]);
 
         $evidence = fn (User $author, string $title, string $status, float $hours) => Evidence::create([
@@ -88,6 +92,12 @@ class E2eSeeder extends Seeder
         ReasonRejection::forceCreate(['evidence_id' => $rejected->id, 'reason' => 'Faltan las fotos del montaje terminado.']);
         $evidence($student, 'Borrador de la memoria', 'DRAFT', 1);
         $evidence($classmate, 'Atención en el registro', 'PENDING', 3);
+        // the presidency reviews them (App\Services\ReviewQueue)
+        $evidence($cocoordinator, 'Inventario del almacén', 'PENDING', 1.5);
+        Evidence::create([
+            'title' => 'Acreditación de ponentes', 'description' => '<p>Acreditación de ponentes durante las jornadas.</p>',
+            'hours' => 2.5, 'status' => 'PENDING', 'user_id' => $secretary->id, 'committee_id' => Committee::presidency()?->id,
+        ]);
 
         $request = MeetingRequest::forceCreate([
             'title' => 'Convocatoria de logística', 'place' => 'Aula A3.10', 'datetime' => now()->addWeek(),

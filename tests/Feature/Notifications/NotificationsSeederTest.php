@@ -24,7 +24,14 @@ class NotificationsSeederTest extends TestCase
         $this->assertContains('minutes.registered', $unread);
         $this->assertContains('evidence.accepted', $student->readNotifications()->pluck('type')->all());
         $this->assertSame(2, $person('coordinador')->unreadNotifications()->where('type', 'evidence.submitted')->count());
-        $this->assertSame(2, $person('secretario')->unreadNotifications()->where('type', 'evidence.submitted')->count());
+        // the secretary also hears of what the second coordinator sends, which goes to the presidency
+        $this->assertSame(3, $person('secretario')->unreadNotifications()->where('type', 'evidence.submitted')->count());
         $this->assertSame(0, $person('companero')->notifications()->where('type', 'like', 'evidence.%')->count());
+        $this->assertSame(2, $person('presidente')->unreadNotifications()->where('type', 'evidence.submitted')->count());
+        // the weekly summary of each queue with pending evidences
+        foreach (['coordinador', 'coordinadora', 'presidente'] as $reviewer) {
+            $this->assertSame(1, $person($reviewer)->unreadNotifications()->where('type', 'review.weekly')->count(), $reviewer);
+        }
+        $this->assertSame(0, $person('profesor')->notifications()->where('type', 'review.weekly')->count());
     }
 }

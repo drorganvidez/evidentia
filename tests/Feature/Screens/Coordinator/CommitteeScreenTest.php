@@ -25,10 +25,10 @@ class CommitteeScreenTest extends ScreenTestCase
         $response->assertSee('Mi comité')
             ->assertSee('Logística')
             ->assertSeeInOrder(['Equipo de Logística', 'Carlos', 'Coordinación', 'Marta', 'Secretaría'])
-            ->assertSeeInOrder(['Pendientes', '2', 'la más antigua es de hoy'])
+            ->assertSeeInOrder(['Pendientes', '2', 'la más antigua es de hoy · 1 en presidencia'])
             ->assertSeeInOrder(['Horas aceptadas', '2,00', '1 evidencia aceptada · 9,00 h acreditadas'])
             ->assertSeeInOrder(['Rechazadas sin corregir', '1'])
-            ->assertSeeInOrder(['Miembros activos', '3'])
+            ->assertSeeInOrder(['Miembros activos', '4'])
             ->assertSee('href="'.route('coordinator.evidence.list.pending').'"', false)
             ->assertSee('href="'.route('coordinator.committee.export').'"', false)
             ->assertSee('Revisar')
@@ -40,10 +40,11 @@ class CommitteeScreenTest extends ScreenTestCase
         $response = $this->screen('coordinador', route('coordinator.committee'));
 
         $response->assertSee('Miembros de Logística')
+            ->assertSeeInOrder(['Castro Vidal, Inés', '1 pendiente', '0,00'])
             ->assertSeeInOrder(['García López, Juan', '1 pendiente', '0,00'])
             ->assertSeeInOrder(['Pérez Romero, Lucía', '1 aceptada', '1 pendiente', '1 rechazada', '7,00'])
             ->assertSeeInOrder(['Ruiz Díaz, Marta', 'Sin evidencias', '2,00'])
-            ->assertSee('3 miembros')
+            ->assertSee('4 miembros')
             ->assertDontSee('Navarro Ruiz, Carlos');
     }
 
@@ -89,7 +90,7 @@ class CommitteeScreenTest extends ScreenTestCase
         $this->screen('coordinador', route('coordinator.committee'))
             ->assertDontSee('Torres Gómez, Pablo')
             ->assertDontSee('Convocatoria de comunicación')
-            ->assertSeeInOrder(['Miembros activos', '3']);
+            ->assertSeeInOrder(['Miembros activos', '4']);
     }
 
     public function test_an_empty_committee_says_so(): void
@@ -137,13 +138,13 @@ class CommitteeScreenTest extends ScreenTestCase
         $this->assertStringContainsString('attachment; filename="comite-logistica-'.now()->format('Y-m-d').'.csv"', $response->headers->get('Content-Disposition'));
         $csv = $response->getContent();
         $this->assertStringStartsWith("\u{FEFF}nombre;apellidos;uvus;correo;", $csv);
-        $this->assertSame(4, substr_count($csv, "\n"));
+        $this->assertSame(5, substr_count($csv, "\n"));
         $this->assertStringContainsString('Lucía;"Pérez Romero";estudiante;estudiante@e2e.test;1;1;1;7,00;1', $csv);
 
         $log = ActivityLog::where('action', 'committee.exported')->sole();
         $this->assertSame('COORDINATOR', $log->acting_role);
         $this->assertSame($this->person('coordinador')->id, $log->user_id);
         $this->assertSame(Committee::where('name', 'Logística')->value('id'), $log->committee_id);
-        $this->assertSame(['rows' => 3], $log->details);
+        $this->assertSame(['rows' => 4], $log->details);
     }
 }

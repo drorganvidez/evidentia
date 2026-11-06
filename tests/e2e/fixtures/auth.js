@@ -5,7 +5,8 @@
  *     import { signIn } from '../fixtures/auth.js';
  *     await signIn(page, 'coordinador');
  *
- * People → estudiante, companero, coordinador, secretario, registro, presidente, profesor.
+ * People → estudiante, companero, coordinador, coordinadora (a second coordinator of Logística), secretario, registro,
+ * presidente, profesor.
  */
 export const PASSWORD = 'evidentia';
 
