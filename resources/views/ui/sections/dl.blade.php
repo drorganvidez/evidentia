@@ -11,8 +11,7 @@
         <x-ui.card title="Detalles de la evidencia" :level="3">
             <x-ui.dl>
                 <x-ui.dl.item term="Registro" mono>EV-0033</x-ui.dl.item>
-                <x-ui.dl.item term="Comité"><x-ui.badge variant="chip"
-                        :hue="30">Logística</x-ui.badge></x-ui.dl.item>
+                <x-ui.dl.item term="Comité"><x-ui.committee-chip name="Logística" :id="7" /></x-ui.dl.item>
                 <x-ui.dl.item term="Horas"><x-ui.hours :value="1.75" /></x-ui.dl.item>
                 <x-ui.dl.item term="Estado">
                     <x-ui.badge tone="pending" pulse size="sm">Pendiente de revisión</x-ui.badge>

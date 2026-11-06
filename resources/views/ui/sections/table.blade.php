@@ -15,7 +15,6 @@
         'pageName' => 'pagina',
         'fragment' => 'ui-table',
     ]);
-    $hue = fn(int $id): int => (($id * 7) % 12) * 30;
     $evidences = [
         [
             'id' => 33,
@@ -214,7 +213,7 @@
                             class="mt-0.5 block max-w-[40ch] truncate text-sm text-ink-muted md:line-clamp-none">{{ $evidence['text'] }}</span>
                     </x-ui.table.cell>
                     <x-ui.table.cell label="Comité" hide>
-                        <x-ui.badge variant="chip" :hue="$hue($committeeId)">{{ $committeeName }}</x-ui.badge>
+                        <x-ui.committee-chip :name="$committeeName" :id="$committeeId" />
                     </x-ui.table.cell>
                     <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$evidence['hours']" /></x-ui.table.cell>
                     <x-ui.table.cell label="Estado" end>
@@ -252,7 +251,7 @@
                     <x-ui.table.cell label="Estudiante"><x-ui.person :name="$name" :surname="$surname"
                             size="sm" /></x-ui.table.cell>
                     <x-ui.table.cell label="Comité">
-                        <x-ui.badge variant="chip" :hue="$hue($committeeId)">{{ $committeeName }}</x-ui.badge>
+                        <x-ui.committee-chip :name="$committeeName" :id="$committeeId" />
                     </x-ui.table.cell>
                     <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$evidence['hours']" /></x-ui.table.cell>
                     <x-ui.table.cell label="Estado">
