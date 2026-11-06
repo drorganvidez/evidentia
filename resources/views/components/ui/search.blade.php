@@ -18,7 +18,9 @@
 @php
     throw_if(blank($action), InvalidArgumentException::class, 'The search needs an action.');
     $id ??= 'field-' . Str::slug($name);
-    $value ??= request()->query($name);
+    // ?q[]=x reaches the query string as an array: only a scalar fills the field (same rule as field)
+    $query = request()->query($name);
+    $value ??= is_scalar($query) ? (string) $query : '';
 @endphp
 <form role="search" method="get" action="{{ $action }}" x-data="shortcut" data-key="{{ $shortcut }}"
     x-on:keydown.window="onKey" {{ $attributes->class(['hidden md:block' => $hideOnPhone]) }}>

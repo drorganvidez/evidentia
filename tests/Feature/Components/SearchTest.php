@@ -51,6 +51,20 @@ class SearchTest extends ComponentTestCase
         $this->assertStringContainsString('value="propio"', $this->render('<x-ui.search action="/evidencias" value="propio" />'));
     }
 
+    public function test_a_query_string_in_array_form_leaves_the_field_empty(): void
+    {
+        foreach ([['x'], ['a' => '1']] as $query) {
+            $this->app['request']->query->set('q', $query);
+
+            $html = $this->render('<x-ui.search action="/evidencias" />');
+
+            $this->assertStringContainsString('<input id="field-q" type="search" name="q" value=""', $html);
+        }
+
+        $this->app['request']->query->set('q', 42);
+        $this->assertStringContainsString('value="42"', $this->render('<x-ui.search action="/evidencias" />'), 'Scalars still fill it');
+    }
+
     public function test_the_action_is_required(): void
     {
         try {
