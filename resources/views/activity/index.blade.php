@@ -12,7 +12,7 @@
     </x-ui.page-header>
 
     <x-ui.filter-bar :action="route('activity.index')" label="Filtros del registro" :open="$filters->active() > 0" :active="$filters->active()" :reset-href="route('activity.index')"
-        :download="$canExport ? ['href' => route('activity.export'), 'label' => 'Descargar CSV'] : null" :keep="Arr::only(request()->query(), ['per_page'])" id="activity-filters">
+        :download="$canExport ? ['href' => route('activity.export'), 'label' => 'Descargar CSV'] : null" :keep="Arr::only(\App\Support\ListPage::query(), [\App\Support\ListPage::SIZE, \App\Support\ListSort::KEY, \App\Support\ListSort::DIR])" id="activity-filters">
         <x-ui.field name="type" label="Tipo" type="select" :options="[['value' => '', 'label' => 'Todos'], ...$types]" :value="$filters->type ?? ''" />
         <x-ui.picker name="user" label="Persona" :options="$people" :selected="array_filter([$filters->user])" :max="1"
             placeholder="Buscar persona" />
@@ -26,14 +26,14 @@
     </x-ui.filter-bar>
 
     <x-ui.table caption="Registro de actividad" density="compact" :paginator="$entries"
-        pagination-label="Paginación del registro" :columns="[
+        pagination-label="Paginación del registro" :columns="$sort->columns([
             ['label' => 'Cuándo', 'key' => 'at'],
             ['label' => 'Quién', 'key' => 'who'],
             ['label' => 'Acción', 'key' => 'action'],
             ['label' => 'Objeto', 'key' => 'subject', 'hide' => true],
             ['label' => 'Afecta a', 'key' => 'target', 'hide' => true],
             ['label' => 'Señales', 'key' => 'flags', 'align' => 'end'],
-        ]">
+        ])">
         @foreach ($entries as $entry)
             <x-ui.table.row :flag="$presenter->flagsLabel($entry)">
                 <x-ui.table.cell label="Cuándo" meta header>

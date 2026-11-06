@@ -19,6 +19,7 @@ use App\Services\Activity\ActivityFilters;
 use App\Services\Activity\ActivityPresenter;
 use App\Services\Deadlines;
 use App\Services\EvidenceMover;
+use App\Support\ListSort;
 use App\Support\Roles;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -43,14 +44,18 @@ class ActivityController extends Controller
         $scope = $this->access->committeeScope($me);
         $filters = ActivityFilters::fromRequest($request, $scope);
 
-        $entries = $this->paginateList($this->logQuery($scope, $filters)
+        // the newest first, or in the order they happened for the annotations of one request
+        $sort = ListSort::from($request, [
+            'at' => ListSort::desc('created_at'),
+            'who' => ['user.surname', 'user.name', 'user_name'],
+            'action' => 'action',
+            'subject' => 'subject_title',
+            'target' => ['targetUser.surname', 'targetUser.name', 'target_name'],
+            'flags' => 'flags',
+        ], 'at', $filters->request !== null ? 'asc' : 'desc');
+        $entries = $this->paginateList($sort->apply($this->logQuery($scope, $filters)
             ->with(['user', 'targetUser', 'committee'])
-            ->withCount('targets')
-            ->when(
-                $filters->request !== null,
-                fn (Builder $query) => $query->oldest('created_at')->oldest('id'),
-                fn (Builder $query) => $query->latest('created_at')->latest('id'),
-            ), $request, config('activity.page_size'));
+            ->withCount('targets')), $request, config('activity.page_size'));
 
         $siblings = ActivityLog::query()
             ->whereIn('request_id', $entries->getCollection()->pluck('request_id')->filter()->unique()->values())
@@ -71,6 +76,7 @@ class ActivityController extends Controller
         return view('activity.index', [
             'title' => $title,
             'entries' => $entries,
+            'sort' => $sort,
             'siblings' => $siblings,
             'filters' => $filters,
             'me' => $me,
