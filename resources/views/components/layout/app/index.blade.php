@@ -8,8 +8,9 @@
     </x-layout.app>
     nav is a list of groups ['label' => 'Gestión'|null, 'items' => [['label', 'href', 'icon', 'current', 'count', 'countLabel', 'mobile']]];
     mobileNav defaults to the first five items flagged mobile; user to the signed-in person; flash to the session.
-    labelled-by points main at the page-title of the page-header; pass false on a page without one. aurora=false
-    drops the background light (the catalogue frames several shells at once and the blurred blobs are costly to paint).
+    main points at the page-title of the page-header only when the slot has that id; labelled-by gives another id or,
+    with false, drops the reference. aurora=false drops the background light (the catalogue frames several shells at
+    once and the blurred blobs are costly to paint).
 --}}
 @props([
     'title' => null,
@@ -28,6 +29,9 @@
     'aurora' => true,
 ])
 @php
+    // Never a dangling reference: main names the title only when the page renders it
+    $titleId = is_string($labelledBy) && $labelledBy !== '' ? $labelledBy : 'page-title';
+    $labelled = $labelledBy !== false && str_contains((string) $slot, 'id="' . e($titleId) . '"');
     if ($user === null && Auth::check()) {
         $account = Auth::user();
         $roleNames = [
@@ -79,7 +83,8 @@
         <div class="grid min-w-0 grid-cols-[minmax(0,1fr)] content-start gap-3 md:gap-6">
             <x-layout.app.topbar :breadcrumbs="$breadcrumbs" :search="$search" :notifications="$notifications" :user="$user" />
             <x-ui.notices :messages="$flash" />
-            <main id="main" tabindex="-1" @if ($labelledBy) aria-labelledby="page-title" @endif
+            <main id="main" tabindex="-1"
+                @if ($labelled) aria-labelledby="{{ $titleId }}" @endif
                 class="grid content-start gap-6 px-0 pt-2 pb-4 outline-none md:gap-8 md:px-2 md:pb-10">
                 {{ $slot }}
             </main>

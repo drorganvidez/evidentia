@@ -77,10 +77,28 @@ class LayoutAppTest extends ComponentTestCase
 
     public function test_main_can_drop_the_reference_to_the_page_title(): void
     {
-        $html = $this->render('<x-layout.app :nav="$nav" :labelled-by="false">Hola</x-layout.app>', ['nav' => $this->nav()]);
+        $html = $this->render('<x-layout.app :nav="$nav" :labelled-by="false"><h1 id="page-title">Hola</h1></x-layout.app>', ['nav' => $this->nav()]);
 
         $this->assertMatchesRegularExpression('/<main id="main" tabindex="-1"\s+class="/', $html);
         $this->assertStringNotContainsString('aria-labelledby="page-title"', $html);
+    }
+
+    public function test_main_points_only_at_a_title_the_page_has(): void
+    {
+        // A page without page-header would leave a dangling reference
+        $bare = $this->render('<x-layout.app :nav="$nav"><p>Hola</p></x-layout.app>', ['nav' => $this->nav()]);
+
+        $this->assertMatchesRegularExpression('/<main id="main" tabindex="-1"\s+class="/', $bare);
+        $this->assertDoesNotMatchRegularExpression('/<main [^>]*aria-labelledby/', $bare);
+
+        $header = $this->render('<x-layout.app :nav="$nav"><x-ui.page-header title="Mis reuniones" /></x-layout.app>', ['nav' => $this->nav()]);
+
+        $this->assertMatchesRegularExpression('/<main id="main" tabindex="-1"\s+aria-labelledby="page-title"/', $header);
+
+        // Another id, when the page names its own title
+        $own = $this->render('<x-layout.app :nav="$nav" labelled-by="acta-title"><h1 id="acta-title">Acta</h1></x-layout.app>', ['nav' => $this->nav()]);
+
+        $this->assertMatchesRegularExpression('/<main id="main" tabindex="-1"\s+aria-labelledby="acta-title"/', $own);
     }
 
     public function test_the_navigation_groups_render_in_the_aside_and_in_the_drawer(): void
