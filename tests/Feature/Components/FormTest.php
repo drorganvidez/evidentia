@@ -153,6 +153,25 @@ class FormTest extends ComponentTestCase
         $this->assertCspSafe($html);
     }
 
+    public function test_the_errors_of_one_list_share_a_single_link(): void
+    {
+        $this->withViewErrors([
+            'users.0' => 'La primera persona no es válida',
+            'users.1' => 'La segunda persona no es válida',
+            'title' => 'Falta el título',
+        ]);
+
+        $html = $this->render(<<<'BLADE'
+            <x-ui.form action="/meetings" :fields="['users[]' => 'Asistentes', 'title' => 'Título']">x</x-ui.form>
+            BLADE);
+
+        $this->assertSame(1, substr_count($html, 'href="#field-users"'));
+        $this->assertMatchesRegularExpression('/<a href="#field-users" class="[^"]+">Asistentes ·\s+La primera persona no es válida<\/a>/', $html);
+        $this->assertStringNotContainsString('La segunda persona no es válida', $html);
+        $this->assertStringContainsString('href="#field-title"', $html);
+        $this->assertUniqueIds($html);
+    }
+
     public function test_the_summary_reads_the_bag_it_is_given(): void
     {
         $this->withViewErrors(['password' => 'La contraseña no coincide'], 'password');

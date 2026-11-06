@@ -9,7 +9,7 @@
     <x-ui.form :action="route('profile.password')" id="password-form" bag="password" :fields="['password' => 'Contraseña']">
     The summary reads the error bag named by bag (or the MessageBag given as bag) and, with fields, lists only their
     errors, so every form of a page shows its own. Each link goes to ui_field_id of the key without its last index (users.0 to field-users, items.0.title
-    to field-items-0-title). Several forms on a page need an id each; focus-summary=false keeps the summary from taking
+    to field-items-0-title), once per target. Several forms on a page need an id each; focus-summary=false keeps the summary from taking
     the focus on load.
 --}}
 @props([
@@ -56,8 +56,13 @@
             if ($labels !== [] && !isset($labels[$key]) && !isset($labels[$base])) {
                 continue;
             }
-            $items[] = [
-                'id' => ui_field_id(str_replace('.', '-', $base)),
+            // users.0 and users.1 land on the same list: one link per target, with its first message
+            $target = ui_field_id(str_replace('.', '-', $base));
+            if (isset($items[$target])) {
+                continue;
+            }
+            $items[$target] = [
+                'id' => $target,
                 'label' => $labels[$key] ?? ($labels[$base] ?? $key),
                 'message' => $list[0] ?? '',
             ];
