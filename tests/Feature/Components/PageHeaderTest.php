@@ -54,7 +54,7 @@ class PageHeaderTest extends ComponentTestCase
         $html = $this->render('<x-ui.page-header :title="$title" :lede="$lede" />', ['title' => '<b>Hola</b>', 'lede' => '<i>Dos</i> pendientes']);
 
         $this->assertStringContainsString('>&lt;b&gt;Hola&lt;/b&gt;</h1>', $html);
-        $this->assertStringContainsString('<p class="mt-2 max-w-[56ch] text-md text-ink-muted md:text-base">&lt;i&gt;Dos&lt;/i&gt; pendientes</p>', $html);
+        $this->assertStringContainsString('<p class="mt-2 max-w-[56ch] text-md text-ink md:text-base">&lt;i&gt;Dos&lt;/i&gt; pendientes</p>', $html);
         $this->assertStringNotContainsString('<b>', $html);
     }
 
@@ -68,7 +68,7 @@ class PageHeaderTest extends ComponentTestCase
             </x-ui.page-header>
             BLADE);
 
-        $this->assertMatchesRegularExpression('/<div\s+class="mb-2 flex flex-wrap items-center gap-2 text-sm font-medium text-ink-muted">\s*EV-0033<\/div>/', $html);
+        $this->assertMatchesRegularExpression('/<div\s+class="mb-2 flex flex-wrap items-center gap-2 text-sm font-medium text-ink">\s*EV-0033<\/div>/', $html);
         $this->assertStringContainsString('<div class="mt-3 lg:hidden text-sm">14 días</div>', $html);
         $this->assertMatchesRegularExpression('/<div\s+class="flex flex-col gap-3 md:shrink-0 md:flex-row md:items-center md:justify-end">\s*<a href="\/editar">Editar<\/a><\/div>/', $html);
 

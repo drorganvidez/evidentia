@@ -2,7 +2,8 @@
     Deadline card of the sidebar, or its inline line under the page title: label, time left, consumed bar and closing date.
     <x-ui.deadline label="Subida de evidencias" :closes-at="$closesAt" :opens-at="$opensAt" href="{{ route('evidence.list') }}" />
     <x-ui.deadline label="Subida de evidencias" :closes-at="$closesAt" variant="inline" verb="para subir evidencias" />
-    The server prints the whole text (it works without JS); deadline.js refreshes it every minute.
+    The server prints the whole text (it works without JS); deadline.js refreshes it every minute. The inline
+    variant uses ink because it sits under the page title, on the bare canvas where the aurora drifts.
     The root tag is printed from PHP because blade-formatter does not follow dynamic tags.
 --}}
 @use('Illuminate\Support\Carbon')
@@ -55,7 +56,7 @@
             'class' => Arr::toCssClasses([
                 'glass-2 grid gap-2 rounded-lg p-4 text-sm' => $variant !== 'inline',
                 'text-ink no-underline transition hover:-translate-y-0.5' => $variant !== 'inline' && $isLink,
-                'flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-muted' => $variant === 'inline',
+                'flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink' => $variant === 'inline',
             ]),
             'href' => $variant !== 'inline' ? $href : null,
             'role' => $tag === 'a' ? null : 'note',

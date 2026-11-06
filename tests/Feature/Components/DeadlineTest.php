@@ -107,7 +107,7 @@ class DeadlineTest extends ComponentTestCase
     {
         $html = $this->render('<x-ui.deadline label="Subida de evidencias" variant="inline" verb="para subir evidencias" closes-at="2026-11-19 20:00:00" />');
 
-        $this->assertMatchesRegularExpression('/^<p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-muted" role="note" x-data="deadline"/', trim($html));
+        $this->assertMatchesRegularExpression('/^<p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink" role="note" x-data="deadline"/', trim($html));
         $this->assertBadgeText('14 días', $html);
         $this->assertStringContainsString('para subir evidencias', $html);
         $this->assertStringContainsString('<span x-text="closesVerbLower">cierra el</span>', $html);
