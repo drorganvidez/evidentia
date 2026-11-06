@@ -42,7 +42,7 @@ test.describe('Página del sistema de diseño', () => {
         await page.goto('/_ui');
 
         const html = page.locator('html');
-        const dark = page.getByRole('button', { name: 'Oscuro' });
+        const dark = page.getByRole('button', { name: 'Oscuro', exact: true });
 
         await dark.click();
         await expect(html).toHaveAttribute('data-theme', 'dark');
@@ -51,7 +51,7 @@ test.describe('Página del sistema de diseño', () => {
         await page.reload();
         await expect(html).toHaveAttribute('data-theme', 'dark');
 
-        await page.getByRole('button', { name: 'Claro' }).click();
+        await page.getByRole('button', { name: 'Claro', exact: true }).click();
         await expect(html).toHaveAttribute('data-theme', 'light');
     });
 
@@ -65,6 +65,6 @@ test.describe('Página del sistema de diseño', () => {
         }));
 
         expect(widths.scroll).toBeLessThanOrEqual(widths.client);
-        await expect(page.getByRole('button', { name: 'Oscuro' })).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Oscuro', exact: true })).toBeVisible();
     });
 });

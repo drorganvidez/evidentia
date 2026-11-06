@@ -91,7 +91,7 @@
             </ul>
         </nav>
 
-        <main id="contenido" class="grid gap-8">
+        <main id="contenido" class="grid grid-cols-[minmax(0,1fr)] gap-8">
             @foreach ($present as $name)
                 @include('ui.sections.' . $name)
             @endforeach
