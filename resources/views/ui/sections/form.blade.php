@@ -33,6 +33,8 @@
                     placeholder="Elige un comité" value="2" required />
                 <x-ui.field name="description" label="Descripción" type="textarea" :rows="3" :maxlength="1000"
                     value="Montaje del photocall." />
+                <x-ui.upload name="evidence_files[]" :url="route('ui.demo.upload')" :revert-url="route('ui.demo.revert')" :remove-url="route('ui.demo.remove', 'NAME')"
+                    :files="['informe-final.pdf']" />
                 <x-slot:actions>
                     <x-ui.button type="submit" variant="primary">Guardar</x-ui.button>
                     <x-ui.button href="{{ route('ui.index') }}#ui-form">Cancelar</x-ui.button>
