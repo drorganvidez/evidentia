@@ -32,15 +32,34 @@ test.describe('Formularios', () => {
         const evidence = section.locator('#evidence-form');
 
         await expect(evidence).toHaveAttribute('method', 'post');
+        await expect(evidence).toHaveAttribute('action', /\/_ui\/demo\/submit$/);
         await expect(evidence).toHaveAttribute('enctype', 'multipart/form-data');
         await expect(evidence).toHaveAttribute('novalidate', '');
         await expect(evidence).toHaveAttribute('aria-busy', 'false');
         await expect(evidence.locator('input[name="_token"]')).toHaveCount(1);
+        await expect(section.locator('#access-form')).toHaveAttribute(
+            'action',
+            /\/_ui\/demo\/submit$/,
+        );
 
         const search = section.locator('#search-form');
 
         await expect(search).toHaveAttribute('method', 'get');
         await expect(search.locator('input[name="_token"]')).toHaveCount(0);
+    });
+
+    test('el acceso envía por POST y vuelve con el aviso del servidor', async ({ page, ui }) => {
+        const form = ui.section('form').locator('#access-form');
+        const request = page.waitForRequest(
+            (sent) => sent.method() === 'POST' && sent.url().endsWith('/_ui/demo/submit'),
+        );
+
+        await form.getByRole('button', { name: 'Entrar' }).click();
+
+        expect((await request).postData()).toContain('_token=');
+        await expect(
+            page.getByRole('region', { name: 'Avisos' }).filter({ hasText: 'Formulario recibido' }),
+        ).toBeVisible();
     });
 
     test('al enviar el botón pasa a ocupado y un segundo envío no sale', async ({ page, ui }) => {

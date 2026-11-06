@@ -19,7 +19,7 @@
         <div class="glass-2 grid grid-cols-[minmax(0,1fr)] content-start gap-4 rounded-lg p-5">
             <h3 class="text-lg font-bold tracking-tight">Resumen de errores</h3>
             {{-- Without the autofocus of the summary: the catalogue would open scrolled to this section --}}
-            <x-ui.form :action="route('ui.index')" files id="evidence-form" :fields="['title' => 'Título', 'description' => 'Descripción']" :focus-summary="false">
+            <x-ui.form :action="route('ui.demo.submit')" files id="evidence-form" :fields="['title' => 'Título', 'description' => 'Descripción']" :focus-summary="false">
                 <x-ui.field name="title" label="Título" required value="" hint="Mínimo 5 caracteres" />
                 <fieldset class="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-1.5">
                     <legend class="text-sm font-semibold">Duración</legend>
@@ -48,7 +48,7 @@
 
         <div class="glass-2 grid grid-cols-[minmax(0,1fr)] content-start gap-4 rounded-lg p-5">
             <h3 class="text-lg font-bold tracking-tight">Acceso</h3>
-            <x-ui.form :action="route('ui.index')" busy-label="Entrando" id="access-form">
+            <x-ui.form :action="route('ui.demo.submit')" busy-label="Entrando" id="access-form">
                 <x-ui.field name="login_user" label="Usuario" size="lg" icon="user-round" autocomplete="username"
                     required />
                 <x-ui.field name="login_password" label="Contraseña" type="password" size="lg" icon="lock"
