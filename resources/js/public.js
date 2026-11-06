@@ -9,11 +9,21 @@ import clipboard from './components/clipboard';
 import countUp from './components/countUp';
 import dismissible from './components/dismissible';
 import notices from './components/notices';
+import pageProgress from './components/pageProgress';
 import passwordField from './components/passwordField';
 import noticesStore from './stores/notices';
 import theme from './stores/theme';
 
 bootAlpine({
-    components: { busyForm, charCount, clipboard, countUp, dismissible, notices, passwordField },
+    components: {
+        busyForm,
+        charCount,
+        clipboard,
+        countUp,
+        dismissible,
+        notices,
+        pageProgress,
+        passwordField,
+    },
     stores: { notices: noticesStore, theme },
 });

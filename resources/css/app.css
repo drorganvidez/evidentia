@@ -260,6 +260,8 @@
         /* Time left of a timed notice: the same 8 s as the store, paused with it */
         --animate-countdown: countdown 8s linear forwards;
 
+        /* Page on its way: grows fast and then slows down, never reaching the end */
+        --animate-progress: progress 12s cubic-bezier(0.1, 0.7, 0.2, 1) forwards;
 
         @keyframes drift-1 {
             to {
@@ -314,6 +316,16 @@
 
             to {
                 transform: scaleX(0);
+            }
+        }
+
+        @keyframes progress {
+            from {
+                transform: scaleX(0);
+            }
+
+            to {
+                transform: scaleX(0.92);
             }
         }
     }

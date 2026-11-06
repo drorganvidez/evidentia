@@ -30,6 +30,13 @@
 </head>
 
 <body {{ $attributes->merge(['class' => 'min-h-dvh bg-canvas font-sans text-ink antialiased']) }}>
+    {{-- Visible status while the next page loads (pageProgress.js); decorative, the browser reports the load itself --}}
+    <div x-data="pageProgress" x-bind:data-active="active ? 'true' : null" aria-hidden="true"
+        class="group pointer-events-none fixed inset-x-0 top-0 z-50 h-0.75 print-hidden">
+        <div
+            class="h-full origin-left bg-linear-to-r from-aurora-500 to-cyan-400 opacity-0 shadow-glow-sm transition-opacity [transform:scaleX(0)] group-data-[active=true]:animate-progress group-data-[active=true]:opacity-100 motion-reduce:group-data-[active=true]:animate-none motion-reduce:group-data-[active=true]:[transform:scaleX(0.5)]">
+        </div>
+    </div>
     {{ $slot }}
 </body>
 
