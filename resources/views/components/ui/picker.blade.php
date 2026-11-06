@@ -1,11 +1,12 @@
 {{--
     People picker: a combobox with a listbox and chips over a native <select multiple>, which stays the source of truth
     (without JS the form still sends name[]). Presets replace the selection after a confirmation.
-    <x-ui.picker name="users[]" label="Asistentes" :options="$people" :selected="$chosen" :presets="$lists" />
+    <x-ui.picker name="users[]" label="Asistentes" :options="$people" :selected="$meeting->attendees->pluck('id')->all()" :presets="$lists" />
     <x-ui.picker name="student" label="Alumno" :options="$students" :max="1" placeholder="Buscar al alumno" />
     options is a list of {value, label, hint}; presets a list of {label, values}. max 1 keeps one choice in the box, no chips.
-    selected rules the first load only: once a failed validation brings the input back, old() decides and a missing key
-    means nobody chosen; inside a GET x-ui.form old() is never read.
+    selected takes an array, a collection, models (by their key) or one value, and rules the first load only: once a
+    failed validation brings the input back, old() decides and a missing key means nobody chosen; inside a GET
+    x-ui.form old() is never read.
 --}}
 @props([
     'name' => '',
@@ -41,7 +42,18 @@
     if (strtolower((string) $method) !== 'get' && request()->hasSession() && request()->session()->hasOldInput()) {
         $selected = old($errorKey, []);
     }
-    $selected = array_map('strval', array_values((array) $selected));
+    // An array, a collection or models (compared by their key): every value is compared as a string
+    $selected = collect($selected instanceof \Illuminate\Database\Eloquent\Model ? [$selected] : $selected)
+        ->map(
+            fn($item): string => (string) match (true) {
+                $item instanceof \Illuminate\Database\Eloquent\Model => $item->getKey(),
+                $item instanceof \BackedEnum => $item->value,
+                default => $item,
+            },
+        )
+        ->filter(fn(string $item): bool => $item !== '')
+        ->values()
+        ->all();
 
     $items = [];
     foreach ($options as $option) {

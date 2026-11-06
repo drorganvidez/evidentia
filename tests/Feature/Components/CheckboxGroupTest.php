@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Components;
 
+use App\Models\Committee;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ViewErrorBag;
 
@@ -53,6 +54,31 @@ class CheckboxGroupTest extends ComponentTestCase
         $this->assertSame(3, substr_count($html, ' name="roles[]"'));
         $this->assertStringNotContainsString('roles[][]', $html);
         $this->assertStringContainsString('<div class="grid gap-2 md:grid-cols-2">', $html);
+    }
+
+    public function test_selected_takes_collections_of_values_or_models(): void
+    {
+        $empty = $this->render('<x-ui.checkbox-group name="roles" legend="Roles" :options="'.self::ROLES.'" :selected="collect()" />');
+
+        $this->assertDoesNotMatchRegularExpression('/\schecked[\s>]/', $empty);
+
+        $values = $this->render('<x-ui.checkbox-group name="roles" legend="Roles" :options="'.self::ROLES.'" :selected="$selected" />', [
+            'selected' => collect(['STUDENT', 'SECRETARY']),
+        ]);
+
+        $this->assertMatchesRegularExpression('/<input id="field-roles-student"[^>]*\schecked[\s>]/', $values);
+        $this->assertMatchesRegularExpression('/<input id="field-roles-secretary"[^>]*\schecked[\s>]/', $values);
+        $this->assertDoesNotMatchRegularExpression('/<input id="field-roles-coordinator"[^>]*\schecked[\s>]/', $values);
+
+        // Models count by their key
+        $models = $this->render('<x-ui.checkbox-group name="committees" legend="Comités" :options="$options" :selected="$selected" />', [
+            'options' => [['value' => 1, 'label' => 'Programa'], ['value' => 2, 'label' => 'Logística'], ['value' => 3, 'label' => 'Comunicación']],
+            'selected' => collect([(new Committee)->forceFill(['id' => 2]), (new Committee)->forceFill(['id' => 3])]),
+        ]);
+
+        $this->assertDoesNotMatchRegularExpression('/<input id="field-committees-1"[^>]*\schecked[\s>]/', $models);
+        $this->assertMatchesRegularExpression('/<input id="field-committees-2"[^>]*\schecked[\s>]/', $models);
+        $this->assertMatchesRegularExpression('/<input id="field-committees-3"[^>]*\schecked[\s>]/', $models);
     }
 
     public function test_old_input_wins_over_the_selected_prop(): void

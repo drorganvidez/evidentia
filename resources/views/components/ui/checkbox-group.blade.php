@@ -1,14 +1,14 @@
 {{--
     Checkboxes under one legend with a shared hint and error, plus a block that depends on what is ticked.
-    <x-ui.checkbox-group name="roles" legend="Roles" :options="$roles" :selected="$user->roles" :columns="2">
+    <x-ui.checkbox-group name="roles" legend="Roles" :options="$roles" :selected="$user->roles->pluck('rol')->all()" :columns="2">
         <x-slot:dependent>
             <div x-show="hasAny('COORDINATOR', 'SECRETARY')" x-cloak>...select of the committee...</div>
         </x-slot:dependent>
     </x-ui.checkbox-group>
-    options is a list of {value, label, hint}; the inputs are named name[]. selected rules the first load only: once a
-    failed validation brings the input back, old() decides and a missing key means nothing ticked; inside a GET
-    x-ui.form old() is never read. The server decides the initial state of the dependent block, so it works without
-    JS: add x-cloak only when it renders hidden.
+    options is a list of {value, label, hint}; the inputs are named name[]. selected takes an array, a collection or
+    models (by their key) and rules the first load only: once a failed validation brings the input back, old() decides
+    and a missing key means nothing ticked; inside a GET x-ui.form old() is never read. The server decides the initial
+    state of the dependent block, so it works without JS: add x-cloak only when it renders hidden.
 --}}
 @props([
     'name' => '',
@@ -42,7 +42,18 @@
     if (strtolower((string) $method) !== 'get' && request()->hasSession() && request()->session()->hasOldInput()) {
         $selected = old($errorKey, []);
     }
-    $selected = array_map('strval', array_values((array) $selected));
+    // An array, a collection or models (compared by their key): every value is compared as a string
+    $selected = collect($selected instanceof \Illuminate\Database\Eloquent\Model ? [$selected] : $selected)
+        ->map(
+            fn($item): string => (string) match (true) {
+                $item instanceof \Illuminate\Database\Eloquent\Model => $item->getKey(),
+                $item instanceof \BackedEnum => $item->value,
+                default => $item,
+            },
+        )
+        ->filter(fn(string $item): bool => $item !== '')
+        ->values()
+        ->all();
 
     $describedBy = implode(
         ' ',

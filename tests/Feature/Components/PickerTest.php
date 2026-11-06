@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Components;
 
+use App\Models\User;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ViewErrorBag;
 
@@ -52,6 +53,36 @@ class PickerTest extends ComponentTestCase
         $this->assertNoAutofocus($html);
         $this->assertUniqueIds($html);
         $this->assertCspSafe($html);
+    }
+
+    public function test_selected_takes_collections_of_values_or_models(): void
+    {
+        $empty = $this->render('<x-ui.picker name="users[]" label="Asistentes" :options="'.self::PEOPLE.'" :selected="collect()" />');
+
+        $this->assertDoesNotMatchRegularExpression('/<option value="\d"[^>]*selected/', $empty);
+
+        $values = $this->render('<x-ui.picker name="users[]" label="Asistentes" :options="'.self::PEOPLE.'" :selected="$selected" />', [
+            'selected' => collect([1, 3]),
+        ]);
+
+        $this->assertMatchesRegularExpression('/<option value="1"[^>]*\sselected/', $values);
+        $this->assertMatchesRegularExpression('/<option value="3"\s+selected/', $values);
+        $this->assertDoesNotMatchRegularExpression('/<option value="2"[^>]*selected/', $values);
+
+        // Models count by their key, a single model too
+        $models = $this->render('<x-ui.picker name="users[]" label="Asistentes" :options="'.self::PEOPLE.'" :selected="$selected" />', [
+            'selected' => collect([(new User)->forceFill(['id' => 2])]),
+        ]);
+
+        $this->assertMatchesRegularExpression('/<option value="2"\s+selected/', $models);
+        $this->assertDoesNotMatchRegularExpression('/<option value="1"[^>]*selected/', $models);
+
+        $one = $this->render('<x-ui.picker name="student" label="Alumno" :options="'.self::PEOPLE.'" :max="1" :selected="$selected" />', [
+            'selected' => (new User)->forceFill(['id' => 3]),
+        ]);
+
+        $this->assertMatchesRegularExpression('/<option value="3"\s+selected/', $one);
+        $this->assertMatchesRegularExpression('/<option value=""\s*>Sin selección<\/option>/', $one);
     }
 
     public function test_old_input_wins_over_the_selected_prop(): void
