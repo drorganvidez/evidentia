@@ -33,8 +33,11 @@
                     <label>Evento</label>
                     <select name="event_id" class="form-control">
                         @foreach ($events as $event)
-                            <option value="{{ $event->id }}">
+                            <option value="{{ $event->id }}" @selected((string) old('event_id', request('event')) === (string) $event->id)>
                                 {{ $event->name }}
+                                @if ($event->start_datetime)
+                                    · {{ \Carbon\Carbon::parse($event->start_datetime)->format('d/m/Y H:i') }}
+                                @endif
                             </option>
                         @endforeach
                     </select>

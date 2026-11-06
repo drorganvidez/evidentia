@@ -322,6 +322,82 @@ class EventbriteController extends Controller
         return back()->with('success', 'Evento visible nuevamente.');
     }
 
+    // Events created by hand, for the sessions held before the edition used Eventbrite
+
+    public function event_create()
+    {
+        return view('eventbrite.event_create', ['event' => new Event]);
+    }
+
+    public function event_store(Request $request)
+    {
+        $event = new Event;
+        $this->fill_manual_event($event, $request);
+
+        return redirect()->route('registercoordinator.event.list')
+            ->with('success', 'Evento creado con éxito.');
+    }
+
+    public function event_edit($id)
+    {
+        return view('eventbrite.event_create', ['event' => $this->manual_event($id)]);
+    }
+
+    public function event_update(Request $request, $id)
+    {
+        $this->fill_manual_event($this->manual_event($id), $request);
+
+        return redirect()->route('registercoordinator.event.list')
+            ->with('success', 'Evento actualizado con éxito.');
+    }
+
+    public function event_destroy($id)
+    {
+        $event = $this->manual_event($id);
+
+        if ($event->attendees()->exists()) {
+            return redirect()->route('registercoordinator.event.list')
+                ->with('error', 'No se puede borrar un evento con asistencias. Borra antes sus asistencias.');
+        }
+
+        $event->delete();
+
+        return redirect()->route('registercoordinator.event.list')
+            ->with('success', 'Evento borrado con éxito.');
+    }
+
+    // Only hand-made events are edited here; the Eventbrite ones are overwritten on every load
+    private function manual_event($id): Event
+    {
+        return Event::whereNull('id_eventbrite')->findOrFail($id);
+    }
+
+    private function fill_manual_event(Event $event, Request $request): void
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:5000',
+            'start_datetime' => 'required|date',
+            'end_datetime' => 'required|date|after:start_datetime',
+            'capacity' => 'nullable|integer|min:0',
+        ]);
+
+        $start = Carbon::parse($data['start_datetime']);
+        $end = Carbon::parse($data['end_datetime']);
+
+        $event->fill([
+            'name' => $data['name'],
+            'description' => $data['description'] ?? null,
+            'start_datetime' => $start,
+            'end_datetime' => $end,
+            'capacity' => $data['capacity'] ?? null,
+            // same rule as the Eventbrite events: the length of the session
+            'hours' => $end->diffInMinutes($start, true) / 60,
+            'status' => $end->isPast() ? 'completed' : 'live',
+        ]);
+        $event->save();
+    }
+
     public function attendee_list()
     {
 
@@ -348,7 +424,7 @@ class EventbriteController extends Controller
     public function attendee_edit($id)
     {
         $attendee = Attendee::findOrFail($id);
-        $events = Event::all();
+        $events = Event::orderByDesc('start_datetime')->get();
         $users = User::orderBy('surname')->get();
 
         return view('eventbrite.attendee_edit', compact('attendee', 'events', 'users'));
@@ -384,7 +460,7 @@ class EventbriteController extends Controller
 
     public function attendee_create()
     {
-        $events = Event::all();
+        $events = Event::orderByDesc('start_datetime')->get();
         $users = User::orderBy('surname')->get();
 
         return view('eventbrite.attendee_create', compact('events', 'users'));

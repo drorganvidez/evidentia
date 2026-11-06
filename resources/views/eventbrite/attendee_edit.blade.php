@@ -35,6 +35,9 @@
                         @foreach ($events as $event)
                             <option value="{{ $event->id }}" @if ($attendee->event_id == $event->id) selected @endif>
                                 {{ $event->name }}
+                                @if ($event->start_datetime)
+                                    · {{ \Carbon\Carbon::parse($event->start_datetime)->format('d/m/Y H:i') }}
+                                @endif
                             </option>
                         @endforeach
                     </select>

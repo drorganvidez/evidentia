@@ -27,6 +27,9 @@
                         <a href="{{ route('registercoordinator.event.load') }}" class="btn btn-success">
                             <i class="fas fa-sync"></i> Cargar eventos desde Eventbrite
                         </a>
+                        <a href="{{ route('registercoordinator.event.create') }}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Crear evento a mano
+                        </a>
                     </div>
 
                     <table id="dataset" class="table table-hover table-responsive">
@@ -46,7 +49,15 @@
                             @foreach ($events as $event)
                                 <tr>
                                     <td>
-                                        <a href="{{ $event->url }}" target="_blank">{!! \Html::clean($event->name) !!}</a>
+                                        @if ($event->url)
+                                            <a href="{{ $event->url }}" target="_blank">{!! \Html::clean($event->name) !!}</a>
+                                        @else
+                                            {!! \Html::clean($event->name) !!}
+                                        @endif
+                                        @if ($event->id_eventbrite === null)
+                                            <br>
+                                            <span class="badge badge-info mt-1">Creado a mano</span>
+                                        @endif
                                         @if (!empty($event->hidden) && $event->hidden)
                                             <br>
                                             <span class="badge badge-secondary mt-1">Oculto</span>
@@ -64,10 +75,30 @@
                                         <x-eventstatus :event="$event" />
                                     </td>
                                     <td class="text-center">
-                                        <a href="{{ route('registercoordinator.attendee.load', ['id' => $event->id_eventbrite]) }}"
-                                            class="btn btn-primary btn-block mb-1" role="button">
-                                            <i class="fas fa-cloud-download-alt"></i>
-                                        </a>
+                                        @if ($event->id_eventbrite !== null)
+                                            <a href="{{ route('registercoordinator.attendee.load', ['id' => $event->id_eventbrite]) }}"
+                                                class="btn btn-primary btn-block mb-1" role="button"
+                                                title="Cargar asistencias desde Eventbrite">
+                                                <i class="fas fa-cloud-download-alt"></i>
+                                            </a>
+                                        @else
+                                            <a href="{{ route('attendee.create', ['event' => $event->id]) }}"
+                                                class="btn btn-primary btn-block mb-1" role="button" title="Añadir asistencia">
+                                                <i class="fas fa-user-plus"></i>
+                                            </a>
+                                            <a href="{{ route('registercoordinator.event.edit', $event->id) }}"
+                                                class="btn btn-secondary btn-block mb-1" role="button" title="Editar evento">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </a>
+                                            <form action="{{ route('registercoordinator.event.destroy', $event->id) }}"
+                                                method="POST" class="mb-1">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-block" title="Borrar evento">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        @endif
 
                                         @if (!empty($event->hidden) && $event->hidden)
                                             <form
