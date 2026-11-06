@@ -68,6 +68,27 @@ test.describe('Página de acceso', () => {
         await ui.noOverflow();
     });
 
+    test('la entrada ligera trae el contador que x-ui.field pone a un textarea con límite', async ({
+        page,
+    }) => {
+        await page.goto('/_ui/public');
+
+        // The markup the field prints for type="textarea" with maxlength; Alpine picks it up when it lands
+        await page.evaluate(() => {
+            const field = document.createElement('div');
+
+            field.setAttribute('x-data', 'charCount');
+            field.innerHTML =
+                '<label for="field-notes">Observaciones</label>' +
+                '<textarea id="field-notes" name="notes" maxlength="20" x-on:input="update"></textarea>' +
+                '<span id="field-notes-count" x-text="text">0 de 20 caracteres</span>';
+            document.getElementById('sign-form').append(field);
+        });
+
+        await page.locator('#field-notes').fill('Llegué tarde');
+        await expect(page.locator('#field-notes-count')).toHaveText('12 de 20 caracteres');
+    });
+
     test('el ojo muestra y oculta la contraseña', async ({ page }) => {
         await page.goto('/_ui/public');
 
