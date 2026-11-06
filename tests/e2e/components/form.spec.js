@@ -5,7 +5,7 @@ test.describe('Formularios', () => {
         await page.goto('/_ui#ui-form');
     });
 
-    test('el resumen de errores enlaza con los campos y es lo único con autofocus', async ({
+    test('el resumen de errores enlaza con los campos y nada toma el foco al cargar', async ({
         page,
         ui,
     }) => {
@@ -14,7 +14,11 @@ test.describe('Formularios', () => {
 
         await expect(summary).toBeVisible();
         await expect(summary).toHaveAttribute('tabindex', '-1');
-        expect(await page.locator('[autofocus]').count()).toBe(1);
+        // The catalogue renders the summary without its autofocus (several forms on one page); the only
+        // autofocus left belongs to the Cancel button inside a closed alert dialog
+        await expect(summary).not.toHaveAttribute('autofocus', '');
+        await expect(page.locator('[autofocus]')).toHaveCount(1);
+        await expect(page.locator('dialog[open]')).toHaveCount(0);
 
         await summary.getByRole('link', { name: /^Título/ }).click();
 

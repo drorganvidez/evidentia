@@ -89,7 +89,8 @@ test.describe('Menús', () => {
         page,
         ui,
     }) => {
-        const trigger = page.getByRole('button', { name: 'Menú de Juan Pérez' });
+        // The topbar of the page has its own user menu with the same name; stay inside the section
+        const trigger = ui.section('menu').getByRole('button', { name: 'Menú de Juan Pérez' });
         const menu = page.locator('#demo-user');
 
         await trigger.click();
