@@ -1,110 +1,63 @@
-@extends('layouts.app')
+{{-- A signature sheet: the people who signed, its meeting call and the link to sign --}}
+@php
+    $signUrl = url('/sign/' . $signature_sheet->random_identifier);
+    $signers = $signature_sheet->users->sortByDesc(fn($user) => $user->pivot->created_at);
+    $columns = [
+        ['label' => 'Persona', 'key' => 'name'],
+        ['label' => 'UVUS', 'key' => 'username'],
+        ['label' => 'Firmada', 'key' => 'signed_at'],
+    ];
+@endphp
+<x-layout.app :title="$signature_sheet->title" :breadcrumbs="[
+    ['label' => 'Inicio', 'href' => route('home')],
+    ['label' => 'Reuniones', 'href' => route('secretary.meeting.manage')],
+    ['label' => 'Hojas de firmas', 'href' => route('secretary.meeting.manage.signaturesheet.list')],
+    ['label' => $signature_sheet->title],
+]">
+    <x-ui.page-header :title="$signature_sheet->title">
+        <x-slot:eyebrow>
+            <x-ui.badge variant="chip" mono>{{ $signature_sheet->random_identifier }}</x-ui.badge>
+        </x-slot:eyebrow>
+        <x-slot:actions>
+            <x-ui.button icon="pen-line" :href="route('secretary.meeting.manage.signaturesheet.edit', ['id' => $signature_sheet->id])">Editar</x-ui.button>
+            @include('meeting.partials.remove-sheet', [
+                'signature_sheet' => $signature_sheet,
+                'dialogId' => 'remove-sheet',
+            ])
+        </x-slot:actions>
+    </x-ui.page-header>
 
-@section('title', 'Hoja de firma: ' . $signature_sheet->title)
+    @include('meeting.partials.tabs')
 
-@section('title-icon', 'fas fa-list')
+    <div class="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)] lg:gap-8">
+        <x-ui.table caption="Firmas" :columns="$columns" :filterable="$signers->isNotEmpty()" count-label="firmas"
+            filter-placeholder="Filtrar firmas">
+            @forelse ($signers as $user)
+                <x-ui.table.row>
+                    <x-ui.table.cell label="Persona" primary>
+                        <x-ui.person :name="$user->name" :surname="$user->surname" size="sm" />
+                    </x-ui.table.cell>
+                    <x-ui.table.cell label="UVUS" meta>{{ $user->username }}</x-ui.table.cell>
+                    <x-ui.table.cell label="Firmada" meta>
+                        <x-ui.time :value="$user->pivot->created_at" inline short />
+                    </x-ui.table.cell>
+                </x-ui.table.row>
+            @empty
+                <x-slot:empty>
+                    <x-ui.empty icon="file-signature" title="Sin firmas" size="sm" :level="3" />
+                </x-slot:empty>
+            @endforelse
+        </x-ui.table>
 
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('secretary.meeting.manage') }}">Gestionar reuniones</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('secretary.meeting.manage.signaturesheet.list') }}">Mis firmas</a></li>
-    <li class="breadcrumb-item active">@yield('title')</li>
-@endsection
-
-@section('content')
-
-    <div class="row">
-
-        <x-menumeeting />
-
-        <div class="col-md-8">
-
-            <div class="card">
-
-                <div class="card-body">
-
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h4>
-                                <i class="fas fa-child"></i> Convocatoria asociada
-                            </h4>
-                            @if ($signature_sheet->meetingRequest)
-                                <p>
-                                    {{ $signature_sheet->meetingRequest->title }}
-                                    <br>
-                                    {{ \Carbon\Carbon::parse($signature_sheet->meetingRequest->datetime)->format('d/m/Y') }}
-                                    <br>
-                                    {{ \Carbon\Carbon::parse($signature_sheet->meetingRequest->datetime)->format('H:i') }}
-                                    <br>
-                                    {{ $signature_sheet->meetingRequest->place }}
-                                </p>
-                            @else
-                                No hay ninguna convocatoria asociada a esta hoja de firmas.
-                            @endif
-                        </div>
-                        <div>
-
-                            <div class="callout callout-info">
-                                <b>URL para firmar</b>
-                                <br>
-                                <span id="signature_sheets_{{ $signature_sheet->id }}">
-                                    <a href="{{ URL::to('/') }}/sign/{{ $signature_sheet->random_identifier }}"
-                                        target="_blank">
-                                        {{ URL::to('/') }}/sign/{{ $signature_sheet->random_identifier }}
-                                    </a>
-                                </span>
-                                <button onclick="copyToClipboard('#signature_sheets_{{ $signature_sheet->id }}')"
-                                    type="button" class="btn btn-light btn-xs"><i class="far fa-copy"></i> Copiar
-                                    URL</button>
-                            </div>
-
-
-                        </div>
-                    </div>
-
-                    <hr>
-
-                    <h4>
-                        <i class="fas fa-signature"></i> Firmas ({{ $signature_sheet->users->count() }})
-                    </h4>
-
-                    <table id="dataset" class="table table-hover table-responsive">
-                        <thead>
-                            <tr>
-                                <th scope="col">UVUS</th>
-                                <th scope="col">Apellido</th>
-                                <th scope="col">Nombre</th>
-                                <th scope="col">Fecha y hora de firma</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($signature_sheet->users as $user)
-                                <tr scope="row">
-                                    <td>
-                                        {{ $user->username }}
-                                    </td>
-                                    <td>
-                                        {{ $user->surname }}
-                                    </td>
-                                    <td>
-                                        {{ $user->name }}
-                                    </td>
-                                    <td>
-                                        {{ \Carbon\Carbon::parse($user->pivot->created_at)->format('d/m/Y') }}
-                                        {{ \Carbon\Carbon::parse($user->pivot->created_at)->format('H:i:s') }}
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-
+        <aside aria-label="Enlace y convocatoria" class="grid grid-cols-[minmax(0,1fr)] content-start gap-6">
+            <x-ui.card title="Enlace para firmar" :level="2">
+                <div class="grid gap-3">
+                    <a href="{{ $signUrl }}" class="font-mono text-sm break-all">{{ $signUrl }}</a>
+                    <x-ui.button icon="copy" :copy="$signUrl" class="justify-self-start">Copiar
+                        enlace</x-ui.button>
                 </div>
-
-            </div>
-
-
-        </div>
+            </x-ui.card>
+            @include('meeting.partials.sheet-request')
+        </aside>
     </div>
-
-
-@endsection
+</x-layout.app>
