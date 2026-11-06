@@ -56,7 +56,7 @@ class NavigationTest extends TestCase
         $menu = app(Navigation::class)->for($this->user('STUDENT'), 'evidence.view');
 
         $this->assertSame([
-            '' => ['Inicio', 'Mi perfil'],
+            '' => ['Inicio', 'Mi perfil', 'Mis mensajes', 'Mi actividad'],
             'Mis cosas' => ['Nueva evidencia', 'Mis evidencias', 'Mis reuniones', 'Mis asistencias'],
         ], $this->labels($menu['nav']));
         $this->assertTrue($menu['nav'][1]['items'][1]['current'], 'Mis evidencias is current on its detail');
@@ -86,7 +86,8 @@ class NavigationTest extends TestCase
 
         $menu = app(Navigation::class)->for($coordinator->fresh(), 'coordinator.evidence.list.pending');
 
-        $review = collect($menu['nav'])->firstWhere('label', 'Comité')['items'][0];
+        $this->assertSame(['Mi comité', 'Revisar evidencias', 'Mensajes', 'Actividad del comité'], $this->labels($menu['nav'])['Comité']);
+        $review = collect($menu['nav'])->firstWhere('label', 'Comité')['items'][1];
         $this->assertSame('Revisar evidencias', $review['label']);
         $this->assertSame(2, $review['count'], 'Their own evidence does not count');
         $this->assertTrue($review['current']);
@@ -100,12 +101,12 @@ class NavigationTest extends TestCase
         Secretary::forceCreate(['user_id' => $secretary->id, 'committee_id' => $this->committee->id]);
 
         $menu = app(Navigation::class)->for($secretary->fresh(), 'secretary.meeting.manage.minutes.create.step2');
-        $this->assertSame(['Reuniones', 'Bonos', 'Listas'], $this->labels($menu['nav'])['Reuniones y bonos']);
+        $this->assertSame(['Reuniones', 'Bonos', 'Listas', 'Mensajes', 'Actividad del comité'], $this->labels($menu['nav'])['Reuniones y bonos']);
         $this->assertTrue(collect($menu['nav'])->firstWhere('label', 'Reuniones y bonos')['items'][0]['current']);
         $this->assertSame('Registro de reuniones', $menu['deadline']['label']);
 
         $register = app(Navigation::class)->for($this->user('STUDENT', 'REGISTER_COORDINATOR'), 'attendee.create');
-        $this->assertSame(['Eventbrite', 'Eventos', 'Asistencias'], $this->labels($register['nav'])['Asistencias y eventos']);
+        $this->assertSame(['Eventbrite', 'Eventos', 'Asistencias', 'Mensajes'], $this->labels($register['nav'])['Asistencias y eventos']);
         $this->assertSame('Importación de eventos y asistencias', $register['deadline']['label']);
     }
 
@@ -115,7 +116,7 @@ class NavigationTest extends TestCase
 
         $labels = $this->labels($menu['nav']);
         $this->assertSame(1, collect($menu['nav'])->where('label', 'Gestión')->count());
-        $this->assertSame(['Configurar curso', 'Alumnos', 'Evidencias', 'Reuniones', 'Comités', 'Aleatorizar', 'Integridad', 'Importar', 'Exportar', 'Errores'], $labels['Gestión']);
+        $this->assertSame(['Configurar curso', 'Alumnos', 'Evidencias', 'Reuniones', 'Comités', 'Aleatorizar', 'Integridad', 'Importar', 'Exportar', 'Registro de actividad', 'Mensajes', 'Errores'], $labels['Gestión']);
         $this->assertStringContainsString('/lecture/', collect($menu['nav'])->firstWhere('label', 'Gestión')['items'][0]['href']);
         $this->assertSame(['Inicio', 'Evidencias', 'Alumnos', 'Reuniones', 'Perfil'], array_column($menu['mobileNav'], 'label'));
 

@@ -4,6 +4,7 @@ namespace App\View;
 
 use App\Enums\Deadline;
 use App\Models\ErrorReport;
+use App\Models\MessageThread;
 use App\Models\User;
 use App\Services\Deadlines;
 
@@ -41,11 +42,25 @@ final class Navigation
             'route' => $name,
         ] + $extra;
 
+        // The people in charge read the messages written to them in one inbox, shown once whatever their roles
+        $responsible = array_intersect($roles, ['COORDINATOR', 'SECRETARY', 'REGISTER_COORDINATOR', 'PRESIDENT', 'LECTURE']) !== [];
+        $management = $has('PRESIDENT') || $has('LECTURE');
+        $unreadMine = MessageThread::unreadMineCount($user);
+        $inbox = function () use ($item, $user): array {
+            $unread = MessageThread::unreadInboxCount($user);
+
+            return $item('Mensajes', 'messages.inbox', 'messages-square', ['messages.show'], $unread > 0 ? ['count' => $unread, 'countLabel' => 'sin leer'] : []);
+        };
+        $inboxShown = false;
+
         $nav = [[
             'label' => null,
             'items' => [
                 $item('Inicio', 'home', 'layout-dashboard'),
-                $item('Mi perfil', 'profile.view', 'user-round'),
+                $item('Mi perfil', 'profile.view', 'user-round', ['notifications.preferences']),
+                $item('Mis mensajes', 'messages.mine', 'message-square', $responsible ? ['messages.create'] : ['messages.create', 'messages.show'],
+                    $unreadMine > 0 ? ['count' => $unreadMine, 'countLabel' => 'sin leer'] : []),
+                $item('Mi actividad', 'activity.mine', 'history'),
             ],
         ]];
 
@@ -66,20 +81,35 @@ final class Navigation
         $committee = $user->coordinator?->committee;
         if ($has('COORDINATOR') && $committee !== null) {
             $pending = $committee->evidencesPending()->where('user_id', '!=', $user->id)->count();
-            $nav[] = ['label' => 'Comité', 'items' => [
+            $items = [
+                $item('Mi comité', 'coordinator.committee', 'users-round'),
                 $item('Revisar evidencias', 'coordinator.evidence.list.all', 'list-checks', [
                     'coordinator.evidence.list.pending', 'coordinator.evidence.list.accepted',
                     'coordinator.evidence.list.rejected', 'coordinator.evidence.view',
                 ], $pending > 0 ? ['count' => $pending, 'countLabel' => 'pendientes'] : []),
-            ]];
+                $inbox(),
+            ];
+            $inboxShown = true;
+            if (! $management) {
+                $items[] = $item('Actividad del comité', 'activity.index', 'activity');
+            }
+            $nav[] = ['label' => 'Comité', 'items' => $items];
         }
 
         if ($has('SECRETARY') && $user->secretary?->committee !== null) {
-            $nav[] = ['label' => 'Reuniones y bonos', 'items' => [
+            $items = [
                 $item('Reuniones', 'secretary.meeting.manage', 'handshake', self::SECRETARY_MEETINGS),
                 $item('Bonos', 'secretary.bonus.list', 'puzzle', ['secretary.bonus.create', 'secretary.bonus.edit']),
                 $item('Listas', 'secretary.defaultlist.list', 'users', ['secretary.defaultlist.create', 'secretary.defaultlist.edit']),
-            ]];
+            ];
+            if (! $inboxShown) {
+                $items[] = $inbox();
+                $inboxShown = true;
+                if (! $management) {
+                    $items[] = $item('Actividad del comité', 'activity.index', 'activity');
+                }
+            }
+            $nav[] = ['label' => 'Reuniones y bonos', 'items' => $items];
         }
 
         if ($has('REGISTER_COORDINATOR')) {
@@ -89,6 +119,10 @@ final class Navigation
             }
             $items[] = $item('Eventos', 'registercoordinator.event.list', 'calendar', ['registercoordinator.event.create', 'registercoordinator.event.edit']);
             $items[] = $item('Asistencias', 'registercoordinator.attendee.list', 'user-check', ['attendee.create', 'attendee.edit']);
+            if (! $inboxShown && ! $management) {
+                $items[] = $inbox();
+                $inboxShown = true;
+            }
             $nav[] = ['label' => 'Asistencias y eventos', 'items' => $items];
         }
 
@@ -109,6 +143,11 @@ final class Navigation
                 $items[] = $item('Importar', 'lecture.import', 'import');
             }
             $items[] = $item('Exportar', "$p.export", 'download');
+            $items[] = $item('Registro de actividad', 'activity.index', 'activity', ['activity.export']);
+            if (! $inboxShown) {
+                $items[] = $inbox();
+                $inboxShown = true;
+            }
             if ($has('LECTURE')) {
                 $open = ErrorReport::open()->count();
                 $items[] = $item('Errores', 'lecture.errors', 'bug', ['lecture.errors.show'], $open > 0 ? ['count' => $open, 'countLabel' => 'abiertos'] : []);
@@ -120,6 +159,8 @@ final class Navigation
             'nav' => $this->strip($nav),
             'mobileNav' => $this->mobile($nav, $roles),
             'deadline' => $this->deadline($roles, $route),
+            // The bell of the topbar: unread notices and the inbox
+            'notifications' => ['count' => $user->unreadNotifications()->count(), 'href' => route('notifications.index')],
         ];
     }
 

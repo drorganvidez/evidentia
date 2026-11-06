@@ -40,8 +40,10 @@
         $nav = $composed['nav'] ?? [];
         $mobileNav ??= $composed['mobileNav'] ?? null;
         $deadline ??= $composed['deadline'] ?? null;
+        $notifications ??= $composed['notifications'] ?? null;
     }
     $deadline = $deadline === false ? null : $deadline;
+    $notifications = $notifications === false ? null : $notifications;
     // Never a dangling reference: main names the title only when the page renders it
     $titleId = is_string($labelledBy) && $labelledBy !== '' ? $labelledBy : 'page-title';
     $labelled = $labelledBy !== false && str_contains((string) $slot, 'id="' . e($titleId) . '"');
