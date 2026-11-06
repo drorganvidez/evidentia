@@ -24,6 +24,7 @@ use InvalidArgumentException;
  *         'status' => ListSort::rank('status', ['PENDING', 'ACCEPTED', 'REJECTED']),  // a logical order
  *         'created' => ListSort::desc('created_at'),                   // a date: newest first on the first click
  *         'members' => fn (Builder $query, string $dir) => $query->orderBy('users_count', $dir),
+ *         'people' => ListSort::count('users'),                         // how many related rows
  *         'counted' => ListSort::using(fn ($query, $dir) => ..., fn (Attendee $row) => $row->computedHours()),
  *     ], default: 'created');
  *     $evidences = $sort->apply(Evidence::where(...))->paginate();      // or ListPage::paginate($sort->apply(...))
@@ -102,6 +103,21 @@ final class ListSort
     public static function using(Closure $query, Closure $row): array
     {
         return ['query' => $query, 'row' => $row];
+    }
+
+    /**
+     * How many rows of a relation each row has (attendees, people of a bonus, signatures).
+     *
+     * @return array{query: Closure, row: Closure}
+     */
+    public static function count(string $relation): array
+    {
+        $alias = 'sort_count_'.Str::snake($relation);
+
+        return self::using(
+            fn (Builder|Relation $query, string $dir) => $query->withCount($relation.' as '.$alias)->orderBy($alias, $dir),
+            fn (mixed $row): int => (int) (data_get($row, Str::snake($relation).'_count') ?? data_get($row, $relation)?->count()),
+        );
     }
 
     /** Whether the list is ordered by this column, and in which direction. */

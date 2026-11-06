@@ -161,6 +161,20 @@ class ListSortTest extends TestCase
         $this->assertSame($expected, $sort->apply(Evidence::all())->pluck('title')->all());
     }
 
+    public function test_a_count_of_a_relation_orders_a_query_and_a_collection(): void
+    {
+        $small = Committee::create(['name' => 'Pequeño']);
+        $big = Committee::create(['name' => 'Grande']);
+        Committee::create(['name' => 'Vacío']);
+        Evidence::factory()->count(1)->for($small)->create();
+        Evidence::factory()->count(3)->for($big)->create();
+        $sort = ListSort::from($this->asked(['sort' => 'evidences', 'dir' => 'desc']), ['evidences' => ListSort::count('evidences'), 'name' => 'name'], 'name', 'asc');
+
+        $this->assertSame(['Grande', 'Pequeño', 'Vacío'], $sort->apply(Committee::query())->pluck('name')->all());
+        $this->assertSame(['Grande', 'Pequeño', 'Vacío'], $sort->apply(Committee::with('evidences')->get())->pluck('name')->all());
+        $this->assertSame(['Grande', 'Pequeño', 'Vacío'], $sort->apply(Committee::withCount('evidences')->get())->pluck('name')->all());
+    }
+
     public function test_the_columns_take_links_that_keep_the_query_and_go_back_to_the_first_page(): void
     {
         $sort = $this->sort(['estado' => 'pendientes', 'q' => 'montaje', 'per_page' => '50', 'page' => '3', 'sort' => 'title', 'dir' => 'asc']);
