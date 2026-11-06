@@ -15,7 +15,7 @@
         if (stored === 'light' || stored === 'dark') {
             mode = stored;
         }
-    } catch (error) {
+    } catch {
         // Storage unavailable: follow the system preference.
     }
 

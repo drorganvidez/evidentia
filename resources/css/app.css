@@ -8,13 +8,13 @@
  * Tailwind's utility engine without its default theme: theme.css is not imported, so no
  * stock palette, radius, shadow, text size or breakpoint exists. Every token is ours.
  */
-@import "tailwindcss/preflight.css" layer(base);
-@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
 
 /* Where classes are scanned (paths relative to this file). vendor/ and public/ are never read. */
-@source "../views";
-@source "../js";
-@source "../../app";
+@source '../views';
+@source '../js';
+@source '../../app';
 
 /* ------------------------------------------------------------------------------------------
  * 1. Primitive tokens. Each one becomes a utility: bg-aurora-600, text-sm, rounded-lg, md:...
@@ -152,8 +152,8 @@
         --container-shell: 95rem;
 
         /* Typography. The --font-ui-* variables are printed by @fonts (laravel-vite-plugin). */
-        --font-sans: var(--font-ui-sans, "Plus Jakarta Sans Variable", system-ui, sans-serif);
-        --font-mono: var(--font-ui-mono, "JetBrains Mono Variable", ui-monospace, monospace);
+        --font-sans: var(--font-ui-sans, 'Plus Jakarta Sans Variable', system-ui, sans-serif);
+        --font-mono: var(--font-ui-mono, 'JetBrains Mono Variable', ui-monospace, monospace);
         --default-font-family: var(--font-sans);
         --default-mono-font-family: var(--font-mono);
 
@@ -278,7 +278,7 @@
  * 2. Theme switch. data-theme on <html> wins; without it the system preference applies.
  * ---------------------------------------------------------------------------------------- */
 @custom-variant dark {
-    &:where([data-theme="dark"], [data-theme="dark"] *) {
+    &:where([data-theme='dark'], [data-theme='dark'] *) {
         @slot;
     }
 
@@ -434,16 +434,12 @@
 @layer base {
     /* Metric-compatible fallback for the mono font (values from Capsize for Courier New) */
     @font-face {
-        font-family: "JetBrains Mono Variable fallback";
-        src: local("Courier New"), local("CourierNewPSMT");
+        font-family: 'JetBrains Mono Variable fallback';
+        src: local('Courier New'), local('CourierNewPSMT');
         ascent-override: 102.0166%;
         descent-override: 30.0049%;
         line-gap-override: 0%;
         size-adjust: 99.9837%;
-    }
-
-    html {
-        -webkit-text-size-adjust: 100%;
     }
 
     body {

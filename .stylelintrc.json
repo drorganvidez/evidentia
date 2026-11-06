@@ -1,0 +1,39 @@
+{
+    "$schema": "https://json.schemastore.org/stylelintrc",
+    "extends": ["stylelint-config-standard"],
+    "ignoreFiles": ["public/**", "vendor/**", "node_modules/**", "storage/**", "docs/**"],
+    "rules": {
+        "import-notation": "string",
+        "hue-degree-notation": "number",
+        "custom-property-pattern": null,
+        "custom-property-empty-line-before": null,
+        "declaration-empty-line-before": null,
+        "nesting-selector-no-missing-scoping-root": null,
+        "at-rule-no-unknown": [
+            true,
+            {
+                "ignoreAtRules": [
+                    "theme",
+                    "source",
+                    "custom-variant",
+                    "utility",
+                    "variant",
+                    "slot",
+                    "reference",
+                    "plugin",
+                    "config",
+                    "apply",
+                    "tailwind"
+                ]
+            }
+        ],
+        "at-rule-prelude-no-invalid": [true, { "ignoreAtRules": ["apply", "variant"] }],
+        "at-rule-empty-line-before": [
+            "always",
+            {
+                "except": ["blockless-after-blockless", "first-nested"],
+                "ignore": ["after-comment"]
+            }
+        ]
+    }
+}
