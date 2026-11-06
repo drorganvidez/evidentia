@@ -7,6 +7,8 @@
         ...
     </x-layout.app>
     nav is a list of groups ['label' => 'Gestión'|null, 'items' => [['label', 'href', 'icon', 'current', 'count', 'countLabel', 'mobile']]];
+    Without nav, App\View\Navigation composes the sidebar, the bottom bar and the deadline of the signed-in person;
+    nav-current marks another route as current (a detail reached from a list). deadline=false hides the card.
     mobileNav defaults to the first five items flagged mobile; user to the signed-in person; flash to the session.
     main points at the page-title of the page-header only when the slot has that id; labelled-by gives another id or,
     with false, drops the reference. aurora=false drops the background light (the catalogue frames several shells at
@@ -15,7 +17,8 @@
 @props([
     'title' => null,
     'breadcrumbs' => [],
-    'nav' => [],
+    'nav' => null,
+    'navCurrent' => null,
     'mobileNav' => null,
     'deadline' => null,
     'user' => null,
@@ -29,6 +32,16 @@
     'aurora' => true,
 ])
 @php
+    // The real screens leave nav to the composer; the catalogue and the tests pass their own arrays
+    if ($nav === null) {
+        $composed = Auth::check()
+            ? app(\App\View\Navigation::class)->for(Auth::user(), $navCurrent ?? Route::currentRouteName())
+            : null;
+        $nav = $composed['nav'] ?? [];
+        $mobileNav ??= $composed['mobileNav'] ?? null;
+        $deadline ??= $composed['deadline'] ?? null;
+    }
+    $deadline = $deadline === false ? null : $deadline;
     // Never a dangling reference: main names the title only when the page renders it
     $titleId = is_string($labelledBy) && $labelledBy !== '' ? $labelledBy : 'page-title';
     $labelled = $labelledBy !== false && str_contains((string) $slot, 'id="' . e($titleId) . '"');
