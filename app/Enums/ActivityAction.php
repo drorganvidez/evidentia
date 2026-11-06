@@ -75,6 +75,7 @@ enum ActivityAction: string
     case CommitteeCreated = 'committee.created';
     case CommitteeEdited = 'committee.edited';
     case CommitteeDeleted = 'committee.deleted';
+    case CommitteeExported = 'committee.exported';
     case ConfigChanged = 'config.changed';
     case ImportUsers = 'import.users';
     case ExportEvidences = 'export.evidences';
@@ -174,6 +175,7 @@ enum ActivityAction: string
         'committee.created' => ['Comité creado', 'accepted', 'management', null],
         'committee.edited' => ['Comité editado', 'draft', 'management', null],
         'committee.deleted' => ['Comité eliminado', 'rejected', 'management', null],
+        'committee.exported' => ['Exportación del comité', 'notice', 'management', null],
         'config.changed' => ['Configuración del curso cambiada', 'notice', 'management', null],
         'import.users' => ['Importación de alumnos', 'notice', 'management', null],
         'export.evidences' => ['Exportación de evidencias', 'notice', 'management', null],

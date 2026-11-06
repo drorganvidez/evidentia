@@ -17,9 +17,9 @@ class ActivityActionTest extends TestCase
 {
     private const TONES = ['accepted', 'rejected', 'pending', 'notice', 'draft'];
 
-    public function test_there_are_sixty_six_verbs_with_a_label_a_tone_and_a_group(): void
+    public function test_there_are_seventy_verbs_with_a_label_a_tone_and_a_group(): void
     {
-        $this->assertCount(69, ActivityAction::cases());
+        $this->assertCount(70, ActivityAction::cases());
 
         foreach (ActivityAction::cases() as $action) {
             $this->assertNotSame('', $action->label(), $action->value);
@@ -45,7 +45,7 @@ class ActivityActionTest extends TestCase
             $verbs = [...$verbs, ...ActivityAction::inGroup($group)];
         }
 
-        $this->assertCount(69, $verbs);
+        $this->assertCount(70, $verbs);
         $this->assertSame(
             ['login', 'login_failed', 'logout', 'password_reset_requested', 'password_reset'],
             ActivityAction::inGroup('access'),
@@ -83,7 +83,7 @@ class ActivityActionTest extends TestCase
     {
         $options = ActivityAction::options();
 
-        $this->assertCount(69 + count(ActivityAction::groups()), $options);
+        $this->assertCount(70 + count(ActivityAction::groups()), $options);
         $this->assertSame(['value' => 'group:access', 'label' => 'Accesos (todos)'], $options[0]);
         $this->assertSame(['value' => 'login', 'label' => 'Inicio de sesión'], $options[1]);
         $this->assertContains(['value' => 'group:evidence', 'label' => 'Evidencias (todos)'], $options);
