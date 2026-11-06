@@ -57,9 +57,22 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      # playwright.config.js starts `php artisan serve` through its webServer option
-      - name: Run Playwright tests
-        run: npx playwright test
+      # playwright.config.js starts `php artisan serve` through its webServer option. The desktop specs write
+      # (they accept, reject and create), so the phone specs start again from a fresh seed.
+      - name: Run Playwright tests on the desktop
+        run: npx playwright test --project=chromium
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report/desktop
+
+      - name: Reseed for the phone
+        if: ${{ !cancelled() }}
+        run: php artisan migrate:fresh --force --seed --seeder=E2eSeeder
+
+      - name: Run Playwright tests on the phone
+        if: ${{ !cancelled() }}
+        run: npx playwright test --project=mobile
+        env:
+          PLAYWRIGHT_HTML_OUTPUT_DIR: playwright-report/mobile
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v7
