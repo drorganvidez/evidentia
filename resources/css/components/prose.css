@@ -1,0 +1,89 @@
+/* HTML purified by Html::clean (descriptions, biographies). Lowered hierarchy, nothing that looks like a button. */
+@layer components {
+    .prose-ui {
+        font-size: var(--text-base);
+        line-height: var(--text-base--line-height);
+        overflow-wrap: anywhere;
+    }
+
+    .prose-ui :where(p, ul, ol, blockquote, pre, table, h1, h2, h3, h4, h5, h6) {
+        margin-block: 0.75em;
+    }
+
+    .prose-ui :where(h1, h2, h3, h4, h5, h6) {
+        font-weight: var(--font-weight-semibold);
+        letter-spacing: var(--tracking-tight);
+        line-height: var(--leading-tight);
+    }
+
+    .prose-ui :where(h1) {
+        font-size: var(--text-xl);
+    }
+
+    .prose-ui :where(h2) {
+        font-size: var(--text-lg);
+    }
+
+    .prose-ui :where(h3, h4, h5, h6) {
+        font-size: var(--text-base);
+    }
+
+    .prose-ui :where(ul) {
+        list-style: disc;
+        padding-inline-start: 1.5em;
+    }
+
+    .prose-ui :where(ol) {
+        list-style: decimal;
+        padding-inline-start: 1.5em;
+    }
+
+    .prose-ui :where(a) {
+        color: var(--brand-ink);
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
+    }
+
+    .prose-ui :where(blockquote) {
+        border-inline-start: 3px solid var(--rule);
+        padding-inline-start: 1em;
+        color: var(--ink-muted);
+    }
+
+    .prose-ui :where(code, pre) {
+        font-family: var(--font-mono);
+        font-size: 0.9em;
+    }
+
+    .prose-ui :where(pre) {
+        background: var(--glass-2);
+        border: 1px solid var(--glass-edge);
+        border-radius: var(--radius-sm);
+        padding: 0.75em 1em;
+        overflow-x: auto;
+    }
+
+    .prose-ui :where(img) {
+        max-width: 100%;
+        height: auto;
+        border-radius: var(--radius-sm);
+    }
+
+    .prose-ui :where(table) {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        border-collapse: collapse;
+    }
+
+    .prose-ui :where(th, td) {
+        border: 1px solid var(--rule);
+        padding: 0.375em 0.625em;
+        text-align: start;
+    }
+
+    .prose-ui :where(hr) {
+        border: 0;
+        border-top: 1px solid var(--rule);
+    }
+}
