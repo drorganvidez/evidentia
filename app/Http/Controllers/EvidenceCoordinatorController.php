@@ -3,15 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ActivityAction;
+use App\Http\Controllers\Concerns\PaginatesLists;
 use App\Http\Middleware\CheckRoles;
 use App\Models\Evidence;
 use App\Services\EvidenceReview;
 use App\Services\SelfReview;
+use App\Support\ListPage;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class EvidenceCoordinatorController extends Controller
 {
+    use PaginatesLists;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -22,48 +27,50 @@ class EvidenceCoordinatorController extends Controller
      * MANAGE EVIDENCES
      ****************************************************************************/
 
-    public function all()
+    public function all(Request $request)
     {
-
-        $coordinator = Auth::user()->coordinator;
-        $committee = $coordinator->committee;
-        $evidences = $committee->evidencesNotDraft()->latest()->latest('id')->get();
-
-        return view('evidence.coordinator.list',
-            ['evidences' => $evidences, 'type' => 'all']);
+        return $this->list($request, 'all');
     }
 
-    public function pending()
+    public function pending(Request $request)
     {
-
-        $coordinator = Auth::user()->coordinator;
-        $committee = $coordinator->committee;
-        $evidences = $committee->evidencesPending()->latest()->latest('id')->get();
-
-        return view('evidence.coordinator.list',
-            ['evidences' => $evidences, 'type' => 'pending']);
+        return $this->list($request, 'pending');
     }
 
-    public function accepted()
+    public function accepted(Request $request)
     {
-
-        $coordinator = Auth::user()->coordinator;
-        $committee = $coordinator->committee;
-        $evidences = $committee->evidencesAccepted()->latest()->latest('id')->get();
-
-        return view('evidence.coordinator.list',
-            ['evidences' => $evidences, 'type' => 'accepted']);
+        return $this->list($request, 'accepted');
     }
 
-    public function rejected()
+    public function rejected(Request $request)
     {
+        return $this->list($request, 'rejected');
+    }
 
-        $coordinator = Auth::user()->coordinator;
-        $committee = $coordinator->committee;
-        $evidences = $committee->evidencesRejected()->latest()->latest('id')->get();
+    /** One tab of the evidences of the committee, in pages, with the counts and the hours of the whole search. */
+    private function list(Request $request, string $type)
+    {
+        $committee = Auth::user()->coordinator->committee;
+        $base = fn (): Builder => $this->searchList(
+            $committee->evidences()->getQuery()->where('last', true)->where('status', '!=', 'DRAFT'),
+            $request,
+            ['title', 'user.name', 'user.surname', 'user.username'],
+        );
+        $statuses = ['pending' => 'PENDING', 'accepted' => 'ACCEPTED', 'rejected' => 'REJECTED'];
+        $byStatus = $base()->groupBy('status')->selectRaw('status, count(*) as total')->pluck('total', 'status');
+        $counts = ['all' => (int) $byStatus->sum()] + array_map(fn (string $status): int => (int) $byStatus->get($status, 0), $statuses);
 
-        return view('evidence.coordinator.list',
-            ['evidences' => $evidences, 'type' => 'rejected']);
+        $filtered = $base()->when($type !== 'all', fn ($query) => $query->where('status', $statuses[$type]));
+        $hours = (float) $filtered->clone()->sum('hours');
+        $evidences = $this->paginateList(
+            $filtered->with(['user', 'reasonRejection'])->orderByDesc('updated_at')->latest()->latest('id'),
+            $request,
+        );
+
+        return view('evidence.coordinator.list', [
+            'evidences' => $evidences, 'type' => $type, 'counts' => $counts, 'hours' => $hours, 'committee' => $committee,
+            'term' => ListPage::term($request),
+        ]);
     }
 
     public function accept($id)

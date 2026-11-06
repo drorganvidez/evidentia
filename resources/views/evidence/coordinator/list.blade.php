@@ -1,25 +1,27 @@
-{{-- Review of the evidences of the coordinator's committee, with one tab per state --}}
+{{-- Review of the evidences of the coordinator's committee, with one tab per state, a search and pages --}}
+@use('App\Support\ListPage')
 @php
-    $committee = Auth::user()->coordinator->committee;
     $route = Route::currentRouteName();
     $closesAt = \Config::validate_evidences_timestamp();
     $open = !\Carbon\Carbon::now()->gt($closesAt);
+    // Every tab keeps the search and the rows per page, back on the first page
     $tabs = collect([
-        ['Todas', 'coordinator.evidence.list.all', $committee->evidencesNotDraft()->count()],
-        ['Pendientes', 'coordinator.evidence.list.pending', $committee->evidencesPending()->count()],
-        ['Aceptadas', 'coordinator.evidence.list.accepted', $committee->evidencesAccepted()->count()],
-        ['Rechazadas', 'coordinator.evidence.list.rejected', $committee->evidencesRejected()->count()],
+        ['Todas', 'coordinator.evidence.list.all', $counts['all']],
+        ['Pendientes', 'coordinator.evidence.list.pending', $counts['pending']],
+        ['Aceptadas', 'coordinator.evidence.list.accepted', $counts['accepted']],
+        ['Rechazadas', 'coordinator.evidence.list.rejected', $counts['rejected']],
     ])
         ->map(
             fn($tab) => [
                 'label' => $tab[0],
-                'href' => route($tab[1]),
+                'href' => ListPage::url([], route($tab[1])),
                 'count' => $tab[2],
                 'current' => $route === $tab[1],
             ],
         )
         ->all();
-    $empty = match ($type ?? 'all') {
+    $empty = match ($term !== null ? 'search' : $type) {
+        'search' => 'Ninguna evidencia coincide con la búsqueda',
         'pending' => 'No hay evidencias pendientes',
         'accepted' => 'No hay evidencias aceptadas',
         'rejected' => 'No hay evidencias rechazadas',
@@ -50,8 +52,8 @@
         </x-slot:actions>
     </x-ui.page-header>
 
-    <x-ui.table :caption="'Evidencias de ' . $committee->name" :columns="$columns" :filterable="$evidences->isNotEmpty()" count-label="evidencias"
-        filter-placeholder="Filtrar evidencias">
+    <x-ui.table :caption="'Evidencias de ' . $committee->name" :columns="$columns" :paginator="$evidences" filterable count-label="evidencias"
+        count-singular="evidencia" filter-placeholder="Buscar evidencias">
         <x-slot:toolbar>
             <x-ui.tabs label="Filtrar evidencias por estado" :items="$tabs" />
         </x-slot:toolbar>
@@ -66,12 +68,7 @@
                 // A coordinator never reviews their own evidence
                 $reviewable = $open && $evidence->user_id != Auth::id();
             @endphp
-            <x-ui.table.row :href="$href" :search="implode(' ', [
-                $evidence->title,
-                $evidence->user->surname,
-                $evidence->user->name,
-                $evidence->status_label,
-            ])">
+            <x-ui.table.row :href="$href">
                 <x-ui.table.cell label="Evidencia" primary>
                     <a href="{{ $href }}">{{ $evidence->title }}</a>
                 </x-ui.table.cell>
@@ -123,8 +120,8 @@
         @endforeach
         @if ($evidences->isNotEmpty())
             <x-slot:footer>
-                <span>{{ $evidences->count() }} {{ $evidences->count() === 1 ? 'evidencia' : 'evidencias' }} ·
-                    <x-ui.hours :value="$evidences->sum('hours')" size="sm" class="text-ink" /></span>
+                <span>{{ $evidences->total() }} {{ $evidences->total() === 1 ? 'evidencia' : 'evidencias' }} ·
+                    <x-ui.hours :value="$hours" size="sm" class="text-ink" /></span>
             </x-slot:footer>
         @endif
     </x-ui.table>

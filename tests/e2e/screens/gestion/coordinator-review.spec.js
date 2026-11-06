@@ -35,17 +35,27 @@ test.describe('Revisión del coordinador', () => {
         ).toHaveCount(0);
     });
 
-    test('filtra las filas en el navegador', async ({ page }) => {
+    test('busca en el servidor y las pestañas conservan la búsqueda', async ({ page }) => {
         await page.goto('/coordinator/evidence/list/all');
 
-        await page.getByRole('searchbox', { name: 'Filtrar evidencias' }).fill('photocall');
         const table = page.getByRole('region', { name: 'Evidencias de Logística' });
+        const search = table.getByRole('searchbox', { name: 'Buscar evidencias' });
+        await search.fill('photocall');
+        await search.press('Enter');
+        await expect(page).toHaveURL(/\/coordinator\/evidence\/list\/all\?q=photocall$/);
         await expect(
             table.getByRole('link', { name: 'Montaje del photocall', exact: true }),
         ).toBeVisible();
         await expect(
             table.getByRole('link', { name: 'Cartelería del vestíbulo', exact: true }),
-        ).toBeHidden();
+        ).toHaveCount(0);
+
+        await page
+            .getByRole('navigation', { name: 'Filtrar evidencias por estado' })
+            .getByRole('link', { name: /Pendientes/ })
+            .click();
+        await expect(page).toHaveURL(/\/coordinator\/evidence\/list\/pending\?q=photocall$/);
+        await expect(search).toHaveValue('photocall');
     });
 
     test('enlaza cada fila con su evidencia', async ({ page }) => {
