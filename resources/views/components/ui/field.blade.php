@@ -168,7 +168,7 @@
     </label>
     <div @if ($isSelect) x-ref="box" @endif
         class="{{ Arr::toCssClasses([
-            'relative flex gap-2 rounded-md border border-field-edge bg-field pl-4 pr-3 transition focus-within:border-aurora-500 focus-within:bg-glass-2 focus-within:ring-4 focus-within:ring-aurora-500/18 has-[[aria-invalid=true]]:border-rejected has-[[aria-invalid=true]]:focus-within:ring-rejected/18 has-[:disabled]:border-dashed has-[:disabled]:bg-rule/40',
+            'relative flex gap-2 rounded-md border border-field-edge bg-field pl-4 pr-3 transition focus-within:border-aurora-500 focus-within:bg-glass-2 focus-within:ring-4 focus-within:ring-aurora-500/18 has-[[aria-invalid=true]]:border-rejected has-[[aria-invalid=true]]:focus-within:ring-rejected/18 has-[:is(input,select,textarea):disabled]:border-dashed has-[:is(input,select,textarea):disabled]:bg-rule/40',
             $heightClass,
         ]) }}">
         @if ($icon !== null)

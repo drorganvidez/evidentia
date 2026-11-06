@@ -84,6 +84,9 @@ class FieldTest extends ComponentTestCase
         $disabled = $this->render('<x-ui.field name="title" label="Título" disabled />');
 
         $this->assertMatchesRegularExpression('/<input [^>]*\sdisabled[\s>]/', $disabled);
+        // Only a disabled control greys the box out, never the disabled placeholder option of a select
+        $this->assertStringContainsString('has-[:is(input,select,textarea):disabled]:border-dashed', $disabled);
+        $this->assertStringNotContainsString('has-[:disabled]', $disabled);
         $this->assertStringNotContainsString('aria-required', $disabled);
         $this->assertStringNotContainsString('after:content', $disabled);
 

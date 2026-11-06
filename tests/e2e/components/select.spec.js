@@ -210,6 +210,14 @@ test.describe('Desplegables', () => {
 
         await locked.click({ force: true });
         await expect(locked).toHaveAttribute('aria-expanded', 'false');
+
+        // Only the disabled field looks disabled: a placeholder or a disabled option leave the box as it is
+        const border = (combobox) =>
+            combobox.locator('xpath=..').evaluate((box) => getComputedStyle(box).borderTopStyle);
+
+        expect(await border(locked)).toBe('dashed');
+        expect(await border(field(section, 'Comité'))).toBe('solid');
+        expect(await border(field(section, 'Dirigido a'))).toBe('solid');
     });
 
     test('un cambio hecho en el select desde fuera se refleja', async ({ ui }) => {
