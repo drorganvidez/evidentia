@@ -50,7 +50,7 @@ class MinutesAttendeesAfterErrorTest extends TestCase
         $dom = new DOMDocument;
         @$dom->loadHTML('<?xml encoding="UTF-8">'.$html);
         $ids = [];
-        foreach ((new DOMXPath($dom))->query('//select[@id="users"]/option[@selected]') as $option) {
+        foreach ((new DOMXPath($dom))->query('//select[@name="users[]"]/option[@selected]') as $option) {
             $ids[] = $option->getAttribute('value');
         }
 

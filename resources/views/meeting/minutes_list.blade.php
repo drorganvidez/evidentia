@@ -1,123 +1,69 @@
-@extends('layouts.app')
+{{-- Minutes of the secretary: each row opens its edition while the meetings deadline is open, its PDF afterwards --}}
+@php
+    $meetingsOpen = !\Carbon\Carbon::now()->gt(\Config::meetings_timestamp());
+    $columns = [
+        ['label' => 'Reunión', 'key' => 'title'],
+        ['label' => 'Celebrada', 'key' => 'datetime'],
+        ['label' => 'Duración', 'key' => 'hours', 'align' => 'end'],
+        ['label' => 'Modificada', 'key' => 'updated_at', 'hide' => true],
+        ['label' => 'Acciones', 'srOnly' => true],
+    ];
+    $minutesList = $meeting_minutes->sortByDesc(fn($minutes) => $minutes->meeting?->datetime);
+@endphp
+<x-layout.app title="Actas" :breadcrumbs="[
+    ['label' => 'Inicio', 'href' => route('home')],
+    ['label' => 'Reuniones', 'href' => route('secretary.meeting.manage')],
+    ['label' => 'Actas'],
+]">
+    <x-ui.page-header title="Actas">
+        @if ($meetingsOpen)
+            <x-slot:actions>
+                <x-ui.button variant="primary" icon="plus" :href="route('secretary.meeting.manage.minutes.create')">Nueva
+                    acta</x-ui.button>
+            </x-slot:actions>
+        @endif
+    </x-ui.page-header>
 
-@section('title', 'Mis actas')
+    @include('meeting.partials.tabs')
 
-@section('title-icon', 'fas fa-list')
-
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item"><a href="{{ route('secretary.meeting.manage') }}">Gestionar reuniones</a></li>
-    <li class="breadcrumb-item active">@yield('title')</li>
-@endsection
-
-@section('content')
-
-    <div class="row">
-
-        <x-menumeeting />
-
-        <div class="col-lg-8">
-
-            <div class="card">
-
-                <div class="card-body">
-
-                    <table id="dataset" class="table table-hover table-responsive">
-                        <thead>
-                            <tr>
-                                <th scope="col">Título</th>
-                                <th scope="col">Lugar</th>
-                                <th scope="col">Realizada</th>
-                                <th scope="col">Duración</th>
-                                <th scope="col">Última modificación</th>
-                                <th scope="col">Opciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($meeting_minutes as $m)
-                                <tr scope="row">
-                                    <td>
-                                        {{ $m->meeting->title }}
-                                    </td>
-                                    <td>
-                                        {{ $m->meeting->place }}
-                                    </td>
-                                    <td>
-                                        {{ \Carbon\Carbon::parse($m->meeting->datetime)->format('d/m/Y') }}
-                                        {{ \Carbon\Carbon::parse($m->meeting->datetime)->format('H:i') }}
-                                    </td>
-                                    <td>
-                                        {{ $m->meeting->hours }} horas
-                                    </td>
-                                    <td>
-                                        {{ \Carbon\Carbon::parse($m->updated_at)->diffForHumans() }}
-                                    </td>
-                                    <td>
-                                        <a class="btn btn-primary btn-sm"
-                                            href="{{ route('download.minutes', ['id' => $m->id]) }}"><i
-                                                class="fas fa-file-pdf"></i></a>
-
-                                        @if (!\Carbon\Carbon::now()->gt(\Config::meetings_timestamp()))
-                                            <a class="btn btn-info btn-sm"
-                                                href="{{ route('secretary.meeting.manage.minutes.edit', ['id' => $m->id]) }}"><i
-                                                    class="fas fa-edit"></i></a>
-
-                                            <a class="btn btn-danger btn-sm" href="#" data-toggle="modal"
-                                                data-target="#modal-confirm-REMOVE-{{ $m->id }}">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        @endif
-
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-
-                </div>
-
-            </div>
-
-
-        </div>
-    </div>
-
-    @foreach ($meeting_minutes as $m)
-        <div class="modal fade" id="modal-confirm-REMOVE-{{ $m->id }}">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content" style="overflow: visible">
-                    <div class="modal-header">
-                        <h4 class="modal-title text-wrap">¿Seguro?</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body text-wrap">
-                        <p>Esto borrará el acta, el archivo PDF, la reunión (con sus asistencias), los puntos y los
-                            acuerdos.</p>
-                        <p>En caso de haber adjuntado alguna convocatoria y/o hoja de firmas, no serán modificadas.</p>
-                        <p>¿Deseas continuar?</p>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-
-                        <form id="buttonconfirm-form-{{ $m->id }}"
-                            action="{{ route('secretary.meeting.manage.minutes.remove') }}" method="post">
-                            @csrf
-
-                            <input type="hidden" name="_id" value="{{ $m->id }}" />
-
-                        </form>
-
-                        <button type="buton"
-                            onclick="event.preventDefault(); document.getElementById('buttonconfirm-form-{{ $m->id }}').submit();"
-                            class="btn btn-danger" data-dismiss="modal">
-                            <i class="fas fa-trash"></i> &nbsp;Sí, eliminar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endforeach
-
-@endsection
+    <x-ui.table caption="Actas" :columns="$columns" :filterable="$minutesList->isNotEmpty()" count-label="actas" filter-placeholder="Filtrar actas">
+        @forelse ($minutesList as $m)
+            @php
+                $pdf = route('download.minutes', ['id' => $m->id]);
+                $open = $meetingsOpen ? route('secretary.meeting.manage.minutes.edit', ['id' => $m->id]) : $pdf;
+            @endphp
+            <x-ui.table.row :href="$open">
+                <x-ui.table.cell label="Reunión" primary>
+                    <a href="{{ $open }}">{{ $m->meeting->title }}</a>
+                    <span class="mt-0.5 block text-sm text-ink-muted">{{ $m->meeting->place }}</span>
+                </x-ui.table.cell>
+                <x-ui.table.cell label="Celebrada" meta>
+                    <x-ui.time :value="$m->meeting->datetime" inline short />
+                </x-ui.table.cell>
+                <x-ui.table.cell label="Duración" numeric meta><x-ui.hours :value="$m->meeting->hours" /></x-ui.table.cell>
+                <x-ui.table.cell label="Modificada" meta hide>
+                    <x-ui.time :value="$m->updated_at" inline short />
+                </x-ui.table.cell>
+                <x-ui.table.cell actions>
+                    <span class="flex justify-end gap-0.5">
+                        <x-ui.button icon-only icon="file-text" variant="ghost" size="sm" :label="'Descargar el PDF de ' . $m->meeting->title"
+                            :href="$pdf" />
+                        @if ($meetingsOpen)
+                            <x-ui.button icon-only icon="pen-line" variant="ghost" size="sm" :label="'Editar ' . $m->meeting->title"
+                                :href="$open" />
+                            @include('meeting.partials.remove-minutes', [
+                                'meeting_minutes' => $m,
+                                'dialogId' => 'remove-minutes-' . $m->id,
+                                'iconOnly' => true,
+                            ])
+                        @endif
+                    </span>
+                </x-ui.table.cell>
+            </x-ui.table.row>
+        @empty
+            <x-slot:empty>
+                <x-ui.empty icon="scroll-text" title="Sin actas" size="sm" :level="2" />
+            </x-slot:empty>
+        @endforelse
+    </x-ui.table>
+</x-layout.app>

@@ -86,14 +86,16 @@ class MeetingTypeModalityFormTest extends TestCase
         return $request;
     }
 
-    /** The option a browser submits: the last one marked as selected, or the first one. */
-    private function selected(string $html, string $select): ?string
+    /** The value a browser submits: the checked radio of the group. */
+    private function selected(string $html, string $name): ?string
     {
-        preg_match('/<select id="'.$select.'".*?<\/select>/s', $html, $block);
-        preg_match_all('/<option\b([^>]*)>/', $block[0], $options);
-        $values = array_map(fn ($attributes) => preg_match('/value="(\d)"/', $attributes, $value) ? $value[1] : null, $options[1]);
-        $selected = array_keys(array_filter($options[1], fn ($attributes) => preg_match('/\bselected\b/', $attributes)));
+        preg_match_all('/<input\b[^>]*\bname="'.$name.'"[^>]*>/', $html, $inputs);
+        foreach ($inputs[0] as $input) {
+            if (preg_match('/\schecked\b/', $input) && preg_match('/value="(\d)"/', $input, $value)) {
+                return $value[1];
+            }
+        }
 
-        return $values[$selected ? end($selected) : 0] ?? null;
+        return null;
     }
 }

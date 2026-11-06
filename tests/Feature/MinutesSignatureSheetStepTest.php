@@ -89,7 +89,7 @@ class MinutesSignatureSheetStepTest extends TestCase
     private function selectedAttendees(string $html): array
     {
         $ids = [];
-        foreach ($this->xpath($html)->query('//select[@id="users"]/option[@selected]') as $option) {
+        foreach ($this->xpath($html)->query('//select[@name="users[]"]/option[@selected]') as $option) {
             $ids[] = $option->getAttribute('value');
         }
 
