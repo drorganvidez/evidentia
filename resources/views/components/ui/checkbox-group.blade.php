@@ -5,10 +5,10 @@
             <div x-show="hasAny('COORDINATOR', 'SECRETARY')" x-cloak>...select of the committee...</div>
         </x-slot:dependent>
     </x-ui.checkbox-group>
-    options is a list of {value, label, hint}; the inputs are named name[]. selected takes an array, a collection or
-    models (by their key) and rules the first load only: once a failed validation brings the input back, old() decides
-    and a missing key means nothing ticked; inside a GET x-ui.form old() is never read. The server decides the initial
-    state of the dependent block, so it works without JS: add x-cloak only when it renders hidden.
+    options is a list of {value, label, hint}; the inputs are named name[]. selected takes an array, a collection or models
+    (by their key) and rules the first load only: once a failed validation of any form of the page brings the input
+    back, old() decides and a missing key means nothing ticked; inside a GET x-ui.form old() is never read. The server
+    decides the initial state of the dependent block, so it works without JS: add x-cloak only when it renders hidden.
 --}}
 @props([
     'name' => '',

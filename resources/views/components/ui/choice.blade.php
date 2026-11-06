@@ -3,10 +3,10 @@
     <x-ui.choice name="remember" label="Recordarme" hint="Durante 30 días en este dispositivo" />
     <x-ui.choice type="radio" name="participation" value="online" label="En línea" />
     <x-ui.choice type="switch" name="allow_access" label="Permitir acceso a la aplicación" :checked="$user->allow_access" />
-    checked rules the first load only. Once a failed validation brings the input back, old() decides and a missing key
-    means unticked (a radio compares it with value, a checkbox named name[] accepts arrays); inside a GET x-ui.form old()
-    is never read. The consumer class goes to the root; every other attribute (x-on:change, data-*) lands on the input,
-    which covers the whole label.
+    checked rules the first load only. Once a failed validation of any form of the page brings the input back, old() decides
+    and a missing key means unticked (a radio compares it with value, a checkbox named name[] accepts arrays); inside a
+    GET x-ui.form old() is never read. The consumer class goes to the root; every other attribute (x-on:change, data-*)
+    lands on the input, which covers the whole label.
 --}}
 @props([
     'type' => 'checkbox',

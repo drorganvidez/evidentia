@@ -4,9 +4,9 @@
     <x-ui.picker name="users[]" label="Asistentes" :options="$people" :selected="$meeting->attendees->pluck('id')->all()" :presets="$lists" />
     <x-ui.picker name="student" label="Alumno" :options="$students" :max="1" placeholder="Buscar al alumno" />
     options is a list of {value, label, hint}; presets a list of {label, values}. max 1 keeps one choice in the box, no chips.
-    selected takes an array, a collection, models (by their key) or one value, and rules the first load only: once a
-    failed validation brings the input back, old() decides and a missing key means nobody chosen; inside a GET
-    x-ui.form old() is never read.
+    selected takes an array, a collection, models (by their key) or one value, and rules the first load only: once a failed
+    validation of any form of the page brings the input back, old() decides and a missing key means nobody chosen;
+    inside a GET x-ui.form old() is never read.
 --}}
 @props([
     'name' => '',
