@@ -2,6 +2,9 @@
 
 namespace Tests\Feature\Components;
 
+use Illuminate\View\ViewException;
+use InvalidArgumentException;
+
 class FilterBarTest extends ComponentTestCase
 {
     public function test_it_is_a_closed_details_with_a_get_form_by_default(): void
@@ -71,7 +74,16 @@ class FilterBarTest extends ComponentTestCase
         $this->assertStringContainsString('Descargar CSV', $html);
         $this->assertStringContainsString('formaction="/export"', $html);
 
-        $this->expectException(\Throwable::class);
-        $this->render('<x-ui.filter-bar>x</x-ui.filter-bar>');
+        try {
+            $this->render('<x-ui.filter-bar>x</x-ui.filter-bar>');
+            $this->fail('Rendered without an action');
+        } catch (ViewException $exception) {
+            while ($exception->getPrevious() !== null) {
+                $exception = $exception->getPrevious();
+            }
+
+            $this->assertInstanceOf(InvalidArgumentException::class, $exception);
+            $this->assertSame('The filter bar needs an action.', $exception->getMessage());
+        }
     }
 }
