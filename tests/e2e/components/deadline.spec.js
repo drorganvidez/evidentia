@@ -5,9 +5,14 @@ const DAY = 24 * HOUR;
 
 test.describe('Plazos', () => {
     test.beforeEach(async ({ page }) => {
-        // The demo dates are relative to the server clock; the page clock starts at the same moment
-        await page.clock.install({ time: Date.now() });
+        // The demo dates are relative to the server clock; the page clock starts at the same moment and is
+        // paused a minute later (a running fake clock gets ahead of the wall clock), so the minute timers
+        // only run when the test moves it
+        const start = Date.now();
+
+        await page.clock.install({ time: start });
         await page.goto('/_ui#ui-deadline');
+        await page.clock.pauseAt(start + 60_000);
     });
 
     test('el servidor pinta el texto y el tono de cada estado', async ({ ui }) => {
@@ -52,6 +57,10 @@ test.describe('Plazos', () => {
         await expect(section.locator('[data-demo="urgent"] [x-text="closesVerb"]')).toHaveText(
             'Cerró el',
         );
+        // The closing is announced once through the status region of the notices
+        await expect(page.locator('[x-data="notices"] [role="status"]')).toHaveText(
+            'Plazo cerrado',
+        );
         await expect(open).toHaveText('12 días');
         await expect(open).toHaveAttribute('data-tone', 'pending');
 
@@ -62,7 +71,9 @@ test.describe('Plazos', () => {
         await expect(open).toHaveAttribute('data-tone', 'rejected');
     });
 
-    test('la sección cumple WCAG 2.2 AA y no desborda', async ({ ui }) => {
+    test('la sección cumple WCAG 2.2 AA y no desborda', async ({ page, ui }) => {
+        // axe needs real timers
+        await page.clock.resume();
         expect(await ui.axe('#ui-deadline')).toEqual([]);
         await ui.noOverflow();
     });
