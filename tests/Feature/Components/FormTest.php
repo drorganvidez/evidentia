@@ -80,7 +80,7 @@ class FormTest extends ComponentTestCase
 
         $this->assertMatchesRegularExpression('/<div role="group" aria-labelledby="form-errors-title" tabindex="-1"\s+autofocus/', $html);
         $this->assertStringContainsString('<p id="form-errors-title" class="font-bold">Revisa el formulario</p>', $html);
-        $this->assertMatchesRegularExpression('/<a href="#field-title" class="underline underline-offset-2">title ·\s+El título es obligatorio<\/a>/', $html);
+        $this->assertMatchesRegularExpression('/<a href="#field-title" class="underline underline-offset-2 [^"]*min-h-11[^"]*">title ·\s+El título es obligatorio<\/a>/', $html);
         $this->assertMatchesRegularExpression('/<a href="#field-hours" class="[^"]+">hours ·\s+Indica las horas<\/a>/', $html);
         $this->assertStringContainsString('href="#field-a-b"', $html);
         $this->assertMatchesRegularExpression('/<a href="#field-users" class="[^"]+">users.0 ·\s+Elige al menos una persona<\/a>/', $html);

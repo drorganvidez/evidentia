@@ -1,6 +1,8 @@
 {{-- Every attribute expression the components use, run live under the strict policy --}}
-<section id="ui-csp" class="glass grid gap-6 rounded-xl p-6 md:p-8" aria-labelledby="ui-csp-title"
-    x-data="probe" x-on:keydown.window="onKey" x-on:ui-notice.window="receive">
+{{-- The probe uses bare controls; under a coarse pointer every one of them grows to 44 px from here --}}
+<section id="ui-csp"
+    class="glass grid gap-6 rounded-xl p-6 md:p-8 pointer-coarse:[&_button]:min-h-11 pointer-coarse:[&_button]:min-w-11 pointer-coarse:[&_input]:min-h-11 pointer-coarse:[&_input[type=radio]]:size-11"
+    aria-labelledby="ui-csp-title" x-data="probe" x-on:keydown.window="onKey" x-on:ui-notice.window="receive">
     <h2 id="ui-csp-title" class="text-2xl font-bold tracking-tight">Sonda CSP</h2>
 
     <div class="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-2">

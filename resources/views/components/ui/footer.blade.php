@@ -35,6 +35,8 @@
     $versionTitle = $version !== null ? 'Ver las novedades de la versión ' . $version : null;
     $pill =
         'inline-flex min-h-6 items-center rounded-full bg-brand-soft px-2 font-mono text-2xs font-semibold text-brand-soft-ink no-underline';
+    // Only the link grows to 44 px under a coarse pointer; the plain pill keeps its size
+    $pillLink = $pill . ' pointer-coarse:min-h-11 pointer-coarse:min-w-11 pointer-coarse:justify-center';
     $link = $compact
         ? 'inline-flex min-h-6 items-center gap-1.5 rounded-full px-2 text-ink no-underline transition hover:text-brand-ink pointer-coarse:min-h-11'
         : 'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-medium text-ink-muted no-underline transition hover:bg-glass-2 hover:text-ink pointer-coarse:min-h-11';
@@ -53,7 +55,7 @@
         @if ($version !== null)
             @if ($versionHref !== null)
                 <a href="{{ $versionHref }}" title="{{ $versionTitle }}"
-                    class="{{ $pill }}">v{{ $version }}</a>
+                    class="{{ $pillLink }}">v{{ $version }}</a>
             @else
                 <span class="{{ $pill }}">v{{ $version }}</span>
             @endif

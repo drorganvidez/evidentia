@@ -185,7 +185,7 @@
             <span class="text-ink-muted">ink-muted</span>
             <span class="text-brand-ink">brand-ink</span>
             <a href="#ui-tokens"
-                class="text-brand-ink underline decoration-brand-ink/40 underline-offset-3 hover:decoration-brand-ink">enlace</a>
+                class="text-brand-ink underline decoration-brand-ink/40 underline-offset-3 hover:decoration-brand-ink pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center">enlace</a>
         </p>
     </div>
 

@@ -167,7 +167,7 @@
             @foreach ($present as $name)
                 <li>
                     <a href="#ui-{{ $name }}"
-                        class="inline-flex rounded-full px-3 py-1.5 text-sm font-medium text-ink-muted no-underline transition hover:bg-glass-2 hover:text-ink pointer-coarse:min-h-11 pointer-coarse:items-center">{{ $sections[$name] }}</a>
+                        class="inline-flex rounded-full px-3 py-1.5 text-sm font-medium text-ink-muted no-underline transition hover:bg-glass-2 hover:text-ink pointer-coarse:min-h-11 pointer-coarse:min-w-11 pointer-coarse:items-center pointer-coarse:justify-center">{{ $sections[$name] }}</a>
                 </li>
             @endforeach
         </ul>

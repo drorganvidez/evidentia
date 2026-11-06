@@ -21,7 +21,7 @@
     $label ??= 'Evidentia' . ($subtitle !== null && !$markOnly ? ', ' . $subtitle : '') . ', inicio';
 @endphp
 <a href="{{ $href }}" aria-label="{{ $label }}"
-    {{ $attributes->class(['flex items-center gap-3 p-1 text-ink no-underline']) }}>
+    {{ $attributes->class(['flex items-center gap-3 p-1 text-ink no-underline pointer-coarse:min-h-11 pointer-coarse:min-w-11']) }}>
     <span aria-hidden="true"
         class="{{ $mark }} grid place-items-center bg-linear-135 from-aurora-500 to-cyan-400 to-[120%] font-extrabold tracking-tightest text-white shadow-glow inset-shadow-hi before:content-['e']"></span>
     @unless ($markOnly)

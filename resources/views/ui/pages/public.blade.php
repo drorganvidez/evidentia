@@ -36,7 +36,9 @@
                 autocomplete="current-password" required />
             <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
                 <x-ui.choice type="switch" name="remember" label="Recordarme" />
-                <a href="{{ $here }}#recuperar" class="text-sm font-semibold text-brand-ink">He olvidado la
+                <a href="{{ $here }}#recuperar"
+                    class="text-sm font-semibold text-brand-ink pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center">He
+                    olvidado la
                     contraseña</a>
             </div>
             <x-slot:actions>

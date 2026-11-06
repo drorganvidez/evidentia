@@ -87,10 +87,11 @@
             @if ($focusSummary) autofocus @endif
             class="rounded-lg border border-rejected/30 bg-rejected-glass p-4 text-rejected-ink">
             <p id="{{ $summaryId }}" class="font-bold">{{ $summaryTitle }}</p>
+            @php($summaryLink = 'underline underline-offset-2 pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center')
             <ul class="mt-2 grid gap-1 text-md">
                 @foreach ($items as $item)
                     <li>
-                        <a href="#{{ $item['id'] }}" class="underline underline-offset-2">{{ $item['label'] }} ·
+                        <a href="#{{ $item['id'] }}" class="{{ $summaryLink }}">{{ $item['label'] }} ·
                             {{ $item['message'] }}</a>
                     </li>
                 @endforeach
