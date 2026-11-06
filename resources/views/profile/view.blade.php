@@ -7,7 +7,11 @@
     $user = Auth::user();
 @endphp
 <x-layout.app title="Mi perfil" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Mi perfil']]">
-    <x-ui.page-header title="Mi perfil" />
+    <x-ui.page-header title="Mi perfil">
+        <x-slot:actions>
+            <x-ui.button variant="ghost" icon="bell" :href="route('notifications.preferences')">Preferencias de avisos</x-ui.button>
+        </x-slot:actions>
+    </x-ui.page-header>
 
     <div class="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)] lg:gap-8">
         <div class="grid grid-cols-[minmax(0,1fr)] content-start gap-6">

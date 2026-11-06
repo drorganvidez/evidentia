@@ -10,7 +10,16 @@ final class NotificationsWrites
     /** @return array<string, array<string, mixed>> */
     public static function writes(): array
     {
-        return [];
+        return [
+            'notifications.preferences.save' => [
+                'role' => 'COORDINATOR',
+                'method' => 'POST',
+                'uri' => fn (array $ids) => route('notifications.preferences.save'),
+                'data' => fn (array $ids) => ['mail' => ['meeting.convened'], 'digest' => '1'],
+                'expect' => ['notification.preferences_changed'],
+                'acting_role' => null,
+            ],
+        ];
     }
 
     /** @return array<string, string> route => reason */

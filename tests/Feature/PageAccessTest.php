@@ -163,6 +163,7 @@ class PageAccessTest extends TestCase
             'download.request' => [['id' => 'request'], self::EVERYONE],
             'download.minutes' => [['id' => 'minutes'], self::EVERYONE],
             'notifications.index' => [[], self::EVERYONE],
+            'notifications.preferences' => [[], self::EVERYONE],
             // nobody owns this notice: everybody gets a 404
             'notifications.open' => [['id' => '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'], []],
 

@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Notifications\Catalog;
+use App\Services\Notifications\NotificationPreferences;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 /**
- * The inbox of the notices of the signed-in person and its read marks. Nobody reaches the notices of someone else:
- * every query starts from the person.
+ * The inbox of the notices of the signed-in person, its read marks and the choice of which notices also arrive by
+ * mail. Nobody reaches the notices of someone else: every query starts from the person.
  */
 final class NotificationController extends Controller
 {
@@ -63,6 +66,37 @@ final class NotificationController extends Controller
         $me->unreadNotifications()->update(['read_at' => now()]);
 
         return redirect()->route('notifications.index')->with('success', 'Avisos marcados como leídos.');
+    }
+
+    public function preferences(Request $request): View
+    {
+        /** @var User $me */
+        $me = $request->user();
+
+        return view('notifications.preferences', [
+            'me' => $me,
+            'catalog' => Catalog::forPreferences($me),
+            'prefs' => app(NotificationPreferences::class),
+            'unread' => $me->unreadNotifications()->count(),
+        ]);
+    }
+
+    public function savePreferences(Request $request): RedirectResponse
+    {
+        /** @var User $me */
+        $me = $request->user();
+        $catalog = Catalog::forPreferences($me);
+        $tunable = array_map(fn (string $class): string => $class::key(), [...$catalog['important'], ...$catalog['informative']]);
+
+        $data = $request->validate([
+            'mail' => ['sometimes', 'array'],
+            'mail.*' => ['string', Rule::in($tunable)],
+            'digest' => ['sometimes', 'boolean'],
+        ]);
+
+        app(NotificationPreferences::class)->update($me, array_values($data['mail'] ?? []), (bool) ($data['digest'] ?? false));
+
+        return redirect()->route('notifications.preferences')->with('success', 'Preferencias guardadas.');
     }
 
     /** A path of this app: one slash, never //host nor a backslash that a browser reads as one. */

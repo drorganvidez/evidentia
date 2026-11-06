@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', 'csp:enforce'])->prefix('notifications')->name('notifications.')
     ->controller(NotificationController::class)->group(function (): void {
         Route::get('/', 'index')->name('index');
+        Route::get('/preferences', 'preferences')->name('preferences');
+        Route::post('/preferences', 'savePreferences')->name('preferences.save');
         Route::post('/read-all', 'readAll')->name('read_all');
         Route::get('/{id}', 'open')->whereUuid('id')->name('open');
     });

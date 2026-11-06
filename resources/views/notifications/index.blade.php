@@ -17,6 +17,7 @@
                 @csrf
                 <x-ui.button type="submit" icon="check-check" :disabled="$unread === 0">Marcar todo como leído</x-ui.button>
             </form>
+            <x-ui.button variant="ghost" icon="settings" :href="route('notifications.preferences')">Preferencias</x-ui.button>
         </x-slot:actions>
     </x-ui.page-header>
 
