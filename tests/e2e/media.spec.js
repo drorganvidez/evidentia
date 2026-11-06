@@ -45,4 +45,33 @@ test.describe('Medios del sistema', () => {
             ).toBeGreaterThanOrEqual(4.5);
         }
     });
+
+    for (const path of ['/_ui/detail', '/_ui/public']) {
+        test(`con colores forzados ${path} cumple WCAG 2.2 AA y no desborda`, async ({
+            page,
+            ui,
+        }) => {
+            await page.emulateMedia({ forcedColors: 'active' });
+            await page.goto(path);
+
+            expect(await page.evaluate(() => matchMedia('(forced-colors: active)').matches)).toBe(
+                true,
+            );
+
+            // The entrances fade in: axe measures once the finite animations are over
+            await page.evaluate(() =>
+                Promise.all(
+                    document
+                        .getAnimations()
+                        .filter((animation) => animation.effect.getTiming().iterations !== Infinity)
+                        .map((animation) => animation.finished),
+                ),
+            );
+
+            const violations = await ui.axe();
+
+            expect(violations, JSON.stringify(violations, null, 2)).toEqual([]);
+            await ui.noOverflow();
+        });
+    }
 });
