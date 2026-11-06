@@ -56,6 +56,7 @@
     );
 @endphp
 <x-layout.base title="Sistema de diseño">
+    <x-ui.skip-link />
     <x-ui.aurora />
 
     <div class="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] gap-8 p-4 md:p-8">
@@ -91,7 +92,7 @@
             </ul>
         </nav>
 
-        <main id="contenido" class="grid grid-cols-[minmax(0,1fr)] gap-8">
+        <main id="main" tabindex="-1" class="grid grid-cols-[minmax(0,1fr)] gap-8 outline-none">
             @foreach ($present as $name)
                 @include('ui.sections.' . $name)
             @endforeach
