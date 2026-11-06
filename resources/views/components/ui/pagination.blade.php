@@ -1,7 +1,8 @@
 {{--
-    Links to the pages of a Laravel paginator: numbers with a window around the current page for a
-    LengthAwarePaginator, only previous and next for a simple Paginator. With a single page only the summary prints.
-    Same semantics as the tailwind view of Laravel, so it can become Paginator::defaultView later.
+    Links to the pages of a Laravel paginator: numbers with a window around the current page (the first and the last
+    always among them) for a LengthAwarePaginator, only previous and next for a simple Paginator. On the phone the
+    numbers give way to «Página 7 de 13» between the first, previous, next and last links. With a single page only
+    the summary prints. Same semantics as the tailwind view of Laravel, so it can become Paginator::defaultView later.
     <x-ui.pagination :paginator="$evidences" summary="Mostrando de la 21 a la 30 de 128" />
     <x-ui.pagination :paginator="$log" label="Paginación del registro" :window="2" />
 --}}
@@ -18,6 +19,9 @@
     $current = $paginator->currentPage();
     $last = $lengthAware ? $paginator->lastPage() : null;
     $position = $last !== null ? 'Página ' . $current . ' de ' . $last : 'Página ' . $current;
+    $edgeClasses =
+        'grid size-8 place-items-center rounded-full text-ink-muted no-underline transition hover:bg-glass-2 hover:text-ink md:hidden pointer-coarse:size-11';
+    $edgeOffClasses = 'grid size-8 place-items-center rounded-full text-ink-faint md:hidden pointer-coarse:size-11';
     // Page numbers to print: the first, the last and the window around the current one; a single missing
     // page is printed in place of an ellipsis
     $elements = [];
@@ -51,6 +55,18 @@
     <nav aria-label="{{ $label }}" {{ $attributes->class(['flex flex-wrap items-center gap-3']) }}>
         @if ($summary !== null)
             <span class="text-sm text-ink-muted max-md:hidden">{{ $summary }}</span>
+        @endif
+        @if ($lengthAware)
+            @if ($paginator->onFirstPage())
+                <span aria-disabled="true" class="{{ $edgeOffClasses }}">
+                    <x-lucide-chevrons-left aria-hidden="true" class="size-4" />
+                </span>
+            @else
+                <a href="{{ $paginator->url(1) }}" aria-label="Primera página" title="Primera página"
+                    class="{{ $edgeClasses }}">
+                    <x-lucide-chevrons-left aria-hidden="true" class="size-4" />
+                </a>
+            @endif
         @endif
         @if ($paginator->onFirstPage())
             <span aria-disabled="true"
@@ -97,6 +113,18 @@
                 class="grid size-8 place-items-center rounded-full text-ink-faint pointer-coarse:size-11">
                 <x-lucide-chevron-right aria-hidden="true" class="size-4" />
             </span>
+        @endif
+        @if ($lengthAware)
+            @if ($current >= $last)
+                <span aria-disabled="true" class="{{ $edgeOffClasses }}">
+                    <x-lucide-chevrons-right aria-hidden="true" class="size-4" />
+                </span>
+            @else
+                <a href="{{ $paginator->url($last) }}" aria-label="Última página" title="Última página"
+                    class="{{ $edgeClasses }}">
+                    <x-lucide-chevrons-right aria-hidden="true" class="size-4" />
+                </a>
+            @endif
         @endif
     </nav>
 @endif

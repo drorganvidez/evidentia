@@ -50,7 +50,9 @@ class PaginationTest extends ComponentTestCase
         $first = $this->render('<x-ui.pagination :paginator="$paginator" />', ['paginator' => $this->paginator(1)]);
 
         $this->assertStringNotContainsString('rel="prev"', $first);
-        $this->assertSame(1, substr_count($first, '<span aria-disabled="true"'));
+        $this->assertSame(2, substr_count($first, '<span aria-disabled="true"'), 'The previous and the first page');
+        $this->assertStringNotContainsString('Primera página', $first);
+        $this->assertStringContainsString('<a href="/evidencias?pagina=13" aria-label="Última página"', $first);
         $this->assertStringContainsString('<a href="/evidencias?pagina=2" rel="next"', $first);
         $this->assertSame([1, 2, null, 13], $this->elements($first));
 
@@ -58,8 +60,21 @@ class PaginationTest extends ComponentTestCase
 
         $this->assertStringContainsString('<a href="/evidencias?pagina=12" rel="prev"', $last);
         $this->assertStringNotContainsString('rel="next"', $last);
-        $this->assertSame(1, substr_count($last, '<span aria-disabled="true"'));
+        $this->assertSame(2, substr_count($last, '<span aria-disabled="true"'), 'The next and the last page');
+        $this->assertStringNotContainsString('Última página', $last);
+        $this->assertStringContainsString('<a href="/evidencias?pagina=1" aria-label="Primera página"', $last);
         $this->assertSame([1, null, 12, 13], $this->elements($last));
+    }
+
+    public function test_the_phone_jumps_to_the_first_and_the_last_page_instead_of_the_numbers(): void
+    {
+        $html = $this->render('<x-ui.pagination :paginator="$paginator" />', ['paginator' => $this->paginator(7)]);
+
+        $this->assertMatchesRegularExpression('/<a href="\/evidencias\?pagina=1" aria-label="Primera página" title="Primera página"\s+class="[^"]*md:hidden pointer-coarse:size-11">/', $html);
+        $this->assertMatchesRegularExpression('/<a href="\/evidencias\?pagina=13" aria-label="Última página" title="Última página"\s+class="[^"]*md:hidden pointer-coarse:size-11">/', $html);
+        $this->assertStringContainsString('<ul class="hidden gap-1 md:inline-flex">', $html);
+        // first, previous, next and last in the order a person reads them
+        $this->assertMatchesRegularExpression('/Primera página.*Página anterior.*Página 7 de 13.*Página siguiente.*Última página/s', $html);
     }
 
     public function test_the_window_widens_the_numbers_and_a_single_gap_is_printed(): void
@@ -103,6 +118,8 @@ class PaginationTest extends ComponentTestCase
         $this->assertStringContainsString('<a href="/evidencias?pagina=3" rel="next"', $html);
         $this->assertMatchesRegularExpression('/<span class="font-mono text-sm text-ink-muted tabular-nums">\s*Página 2\s*<\/span>/', $html);
         $this->assertStringNotContainsString('md:hidden', $html);
+        $this->assertStringNotContainsString('Primera página', $html, 'A simple paginator does not know its last page');
+        $this->assertStringNotContainsString('aria-disabled', $html);
 
         $end = $this->render('<x-ui.pagination :paginator="$paginator" />', ['paginator' => new Paginator(range(1, 5), 10, 2, self::OPTIONS)]);
 
