@@ -18,6 +18,13 @@ const ALWAYS = [
     '.prose-ui',
 ];
 
+/** The class as a whole selector: `.glass` is not satisfied by `.glass-2`, nor `.hue-30` by `.hue-300`. */
+function hasClass(css, selector) {
+    const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    return new RegExp(`${escaped}(?![\\w\\\\-])`).test(css);
+}
+
 test('la hoja de estilos servida contiene las utilidades generadas', async ({ page, request }) => {
     await page.goto('/_ui');
 
@@ -28,7 +35,7 @@ test('la hoja de estilos servida contiene las utilidades generadas', async ({ pa
 
     const css = await (await request.get(href)).text();
 
-    const missing = ALWAYS.filter((selector) => !css.includes(selector));
+    const missing = ALWAYS.filter((selector) => !hasClass(css, selector));
     expect(missing).toEqual([]);
 
     // The tokens of the design system, not Tailwind's stock palette
