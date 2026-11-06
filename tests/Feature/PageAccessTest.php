@@ -247,10 +247,10 @@ class PageAccessTest extends TestCase
             'activity.request' => [['id' => 'request'], self::EVERYONE],
 
             // Messages (routes/messages.php)
-            'messages.inbox' => [[], []],
+            'messages.inbox' => [[], ['COORDINATOR', 'SECRETARY', 'REGISTER_COORDINATOR', ...self::MANAGEMENT]],
             'messages.mine' => [[], self::EVERYONE],
             'messages.create' => [[], self::EVERYONE],
-            'messages.show' => [['thread' => 'thread'], []],
+            'messages.show' => [['thread' => 'thread'], ['STUDENT', 'COORDINATOR', 'LECTURE']],
         ];
     }
 
