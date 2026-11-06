@@ -5,9 +5,9 @@ const STATUS = '[x-data="notices"] [role="status"]';
 const ALERT = '[x-data="notices"] [role="alert"]';
 const NOTICE = '[aria-label="Avisos"] [role="group"]';
 
-/** Focuses the last control before the stack of notices, so the next Tab enters the stack. */
+/** Focuses the last control before the stack of notices, so the next Tab enters the stack, and returns it. */
 async function focusBeforeTheStack(page) {
-    await page.evaluate(() => {
+    return page.evaluateHandle(() => {
         const stack = document.querySelector('[aria-label="Avisos"]');
         const controls = [
             ...document.querySelectorAll('a[href], button, input, select, textarea, summary'),
@@ -18,8 +18,11 @@ async function focusBeforeTheStack(page) {
                 control.checkVisibility() &&
                 control.compareDocumentPosition(stack) & Node.DOCUMENT_POSITION_FOLLOWING,
         );
+        const last = controls.at(-1);
 
-        controls.at(-1).focus();
+        last.focus();
+
+        return last;
     });
 }
 
@@ -150,6 +153,34 @@ test.describe('Avisos', () => {
         await page.keyboard.press('Tab');
         await page.clock.fastForward(9_000);
         await expect(notice).toHaveCount(0);
+    });
+
+    test('al cerrar un aviso con el teclado el foco pasa al siguiente y después vuelve de donde vino', async ({
+        page,
+        ui,
+    }) => {
+        const section = ui.section('notices');
+
+        await section.getByRole('button', { name: 'Aviso de error' }).click();
+        await section.getByRole('button', { name: 'Aviso de atención' }).click();
+
+        const notices = page.locator(NOTICE);
+
+        await expect(notices).toHaveCount(2);
+
+        const origin = await focusBeforeTheStack(page);
+
+        await page.keyboard.press('Tab');
+        await expect(notices.nth(0).getByRole('button', { name: 'Cerrar aviso' })).toBeFocused();
+
+        await page.keyboard.press('Enter');
+        await expect(notices).toHaveCount(1);
+        await expect(notices.nth(0)).toContainText('El plazo de subida cierra en dos horas');
+        await expect(notices.nth(0).getByRole('button', { name: 'Cerrar aviso' })).toBeFocused();
+
+        await page.keyboard.press('Enter');
+        await expect(notices).toHaveCount(0);
+        expect(await origin.evaluate((control) => control === document.activeElement)).toBe(true);
     });
 
     test('los avisos que un módulo empuja al store se anuncian por sí solos', async ({ page }) => {
