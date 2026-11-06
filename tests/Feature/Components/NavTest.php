@@ -82,6 +82,17 @@ class NavTest extends ComponentTestCase
         $this->assertMatchesRegularExpression('/<p class="[^"]*\bsr-only\b[^"]*">\s*Gestión/', $rail);
     }
 
+    public function test_a_long_label_breaks_instead_of_widening_the_rail(): void
+    {
+        $items = ['items' => [['label' => 'Coordinadores', 'href' => '/c', 'icon' => 'users']]];
+
+        // anywhere also lowers the min-content width, so the word never pushes the rail open; hyphens go first.
+        // In the rail the label reaches into the side padding of the link, so a word up to 62 px stays whole.
+        $this->assertStringContainsString('<span class="min-w-0 wrap-anywhere hyphens-auto md:max-lg:-mx-1">Coordinadores</span>', $this->render('<x-ui.nav :items="$items" />', $items));
+        $this->assertStringContainsString('<span class="min-w-0 -mx-1 wrap-anywhere hyphens-auto">Coordinadores</span>', $this->render('<x-ui.nav variant="rail" :items="$items" />', $items));
+        $this->assertStringContainsString('<span class="min-w-0 wrap-anywhere hyphens-auto">Coordinadores</span>', $this->render('<x-ui.nav :items="$items" :rail="false" />', $items));
+    }
+
     public function test_the_bar_variant_is_the_fixed_bottom_navigation_of_the_phone(): void
     {
         $html = $this->render('<x-ui.nav variant="bar" :items="$items" class="mb-2" />', ['items' => $this->items()]);

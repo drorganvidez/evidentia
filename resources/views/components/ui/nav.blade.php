@@ -5,7 +5,8 @@
     <x-ui.nav :items="$nav['management']" heading="Gestión" label="Gestión" />
     <x-ui.nav variant="bar" :items="$mobileNav" />
     An item is ['label' => 'Mis evidencias', 'href' => '/evidencias', 'icon' => 'file-text', 'current' => true,
-    'count' => 6, 'countLabel' => 'pendientes'].
+    'count' => 6, 'countLabel' => 'pendientes']. In the rail a word longer than the link breaks (hyphenated where the
+    browser can) instead of widening it.
 --}}
 @props([
     'items' => [],
@@ -29,6 +30,12 @@
     $icon = match ($variant) {
         'rail' => 'size-5.5 group-current:text-brand-ink',
         default => ['size-4.5 group-current:text-brand-ink', 'md:max-lg:size-5.5' => $rail],
+    };
+    // In the rail the label reaches into the side padding of the link (62 px instead of 54) and only a longer word
+    // breaks; anywhere also lowers its min-content width, so the word never pushes the rail open
+    $text = match ($variant) {
+        'rail' => 'min-w-0 -mx-1 wrap-anywhere hyphens-auto',
+        default => ['min-w-0 wrap-anywhere hyphens-auto', 'md:max-lg:-mx-1' => $rail],
     };
     $count = match ($variant) {
         'rail'
@@ -70,7 +77,7 @@
                     <a href="{{ $item['href'] }}" @if ($item['current'] ?? false) aria-current="page" @endif
                         @class($entry)>
                         <x-ui.icon :name="$item['icon']" @class($icon) />
-                        <span class="min-w-0">{{ $item['label'] }}</span>
+                        <span @class($text)>{{ $item['label'] }}</span>
                         @if (($item['count'] ?? null) !== null)
                             @php
                                 // Escaped here so the hidden label can sit flush against the figure

@@ -20,6 +20,8 @@
         ],
         ['label' => 'Comités', 'href' => $here, 'icon' => 'network'],
     ];
+    // The rail leaves some 56 px to a label: a word longer than that breaks instead of spilling out
+    $rail = [...$main, ['label' => 'Coordinadores', 'href' => $here, 'icon' => 'users']];
     $mobile = [
         ['label' => 'Inicio', 'href' => $here, 'icon' => 'layout-dashboard'],
         ['label' => 'Evidencias', 'href' => $here, 'icon' => 'file-text', 'current' => true],
@@ -47,7 +49,7 @@
 
         <div class="glass-2 grid max-w-20 content-start gap-3 rounded-lg px-2 py-4" data-demo="rail">
             <span class="justify-self-center font-mono text-2xs text-ink-muted">raíl</span>
-            <x-ui.nav variant="rail" :items="$main" label="Navegación principal (raíl)" />
+            <x-ui.nav variant="rail" :items="$rail" label="Navegación principal (raíl)" />
         </div>
 
         <div class="grid content-start gap-3" data-demo="bar">

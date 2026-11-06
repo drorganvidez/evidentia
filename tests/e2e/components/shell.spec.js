@@ -79,6 +79,66 @@ test.describe('Shell en la sección layout', () => {
     });
 });
 
+test.describe('Raíl de navegación', () => {
+    /** The rail keeps its 5 rem: no label widens it nor spills out of a link. */
+    async function fits(rail) {
+        return rail.evaluate((box) => ({
+            width: box.getBoundingClientRect().width,
+            spill: box.scrollWidth - box.clientWidth,
+            links: [...box.querySelectorAll('nav a')]
+                .filter((link) => link.scrollWidth > link.clientWidth)
+                .map((link) => link.textContent.trim()),
+        }));
+    }
+
+    test('los rótulos largos parten la palabra en vez de ensanchar el raíl', async ({ page }) => {
+        await page.goto('/_ui#ui-nav');
+
+        const rail = page.locator('[data-demo="rail"]');
+
+        await expect(rail.getByRole('link', { name: 'Coordinadores' })).toBeVisible();
+
+        const box = await fits(rail);
+
+        expect(box.width).toBeLessThanOrEqual(80.5);
+        expect(box.spill).toBeLessThanOrEqual(0);
+        expect(box.links).toEqual([]);
+    });
+
+    test('a 768 px ningún rótulo se sale del raíl', async ({ page }, testInfo) => {
+        test.skip(
+            testInfo.project.name !== 'chromium',
+            'Los tramos se fuerzan con el tamaño de la ventana',
+        );
+
+        await page.setViewportSize({ width: 768, height: 1024 });
+        await page.goto('/_ui/shell');
+
+        const box = await fits(page.locator('aside'));
+
+        expect(box.width).toBeLessThanOrEqual(80.5);
+        expect(box.spill).toBeLessThanOrEqual(0);
+        expect(box.links).toEqual([]);
+
+        // Words that fit stay whole: every label of the demo has two words at most, so two lines at most
+        const tall = await page
+            .locator('aside nav a > span:not([class*="rounded-full"])')
+            .evaluateAll((spans) =>
+                spans
+                    .filter((span) => {
+                        const lines =
+                            span.getBoundingClientRect().height /
+                            parseFloat(getComputedStyle(span).lineHeight);
+
+                        return Math.round(lines) > 2;
+                    })
+                    .map((span) => span.textContent.trim()),
+            );
+
+        expect(tall).toEqual([]);
+    });
+});
+
 test.describe('Shell en su propia página', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto('/_ui/shell');
