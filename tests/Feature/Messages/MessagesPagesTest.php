@@ -85,13 +85,13 @@ class MessagesPagesTest extends ScreenTestCase
 
         $mine = $this->screen('estudiante', route('messages.mine'))
             ->assertSee('<nav aria-label="Paginación de mis mensajes"', false)
-            ->assertSee('De la 1 a la 25 de 31')
+            ->assertSee('De la 1 a la 10 de 31')
             ->assertSee('aria-label="Filas por página"', false)
             ->getContent();
         $this->assertStringContainsString('href="'.route('messages.mine', ['page' => 2]).'" rel="next"', $mine);
 
         $this->screen('estudiante', route('messages.mine', ['state' => 'open', 'page' => 9]))
-            ->assertSee('De la 26 a la 31 de 31')
+            ->assertSee('De la 31 a la 31 de 31')
             ->assertSee('Duda sobre el photocall');
 
         $inbox = $this->screen('profesor', route('messages.inbox', ['q' => 'consulta', 'per_page' => 25]))

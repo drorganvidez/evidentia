@@ -2,7 +2,7 @@ import { signIn } from '../../fixtures/auth.js';
 import { expect, test } from '../../fixtures/ui.js';
 import { ensureEvidences } from './volume.js';
 
-// The evidences of the course for the management in pages of 25, searched on the server
+// The evidences of the course for the management in pages of 10, searched on the server
 test.describe('Evidencias del curso en páginas', () => {
     test.beforeAll(async ({ playwright }, testInfo) => ensureEvidences(playwright, testInfo));
 
@@ -18,7 +18,7 @@ test.describe('Evidencias del curso en páginas', () => {
         const table = page.getByRole('region', { name: 'Evidencias del curso' });
         const pages = table.getByRole('navigation', { name: 'Paginación de Evidencias del curso' });
         await expect(pages).toBeVisible();
-        await expect(table.locator('tbody tr')).toHaveCount(25);
+        await expect(table.locator('tbody tr')).toHaveCount(10);
         await expect(table.getByText(/^\d{2} evidencias ·/)).toBeVisible();
         await ui.noOverflow();
 
@@ -30,14 +30,14 @@ test.describe('Evidencias del curso en páginas', () => {
             await expect(
                 pages.getByRole('link', { name: 'Página 2', exact: true }),
             ).toHaveAttribute('aria-current', 'page');
-            await expect(pages.getByText(/^De la 26 a la \d+ de \d+$/)).toBeVisible();
+            await expect(pages.getByText(/^De la 11 a la \d+ de \d+$/)).toBeVisible();
         }
 
         const previous = pages.getByRole('link', { name: 'Página anterior' });
         await previous.focus();
         await page.keyboard.press('Enter');
         await expect(page).toHaveURL(/\/lecture\/evidence\/list\?page=1$/);
-        await expect(table.locator('tbody tr')).toHaveCount(25);
+        await expect(table.locator('tbody tr')).toHaveCount(10);
     });
 
     test('la presidenta busca en el servidor sin perder la pestaña ni el tamaño', async ({

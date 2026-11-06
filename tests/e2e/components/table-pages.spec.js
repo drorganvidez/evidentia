@@ -1,6 +1,6 @@
 import { expect, test } from '../fixtures/ui.js';
 
-// The table of the catalogue paginated and searched on the server: 128 evidences in pages of 25 by default
+// The table of the catalogue paginated and searched on the server: 128 evidences in pages of 10 by default
 test.describe('Tabla paginada en el servidor', () => {
     const isPhone = () => test.info().project.name === 'mobile';
 
@@ -12,22 +12,22 @@ test.describe('Tabla paginada en el servidor', () => {
             name: 'Paginación de Evidencias en páginas',
         });
         const position = isPhone()
-            ? pages.getByText('Página 1 de 6', { exact: true })
-            : pages.getByText('De la 1 a la 25 de 128', { exact: true });
+            ? pages.getByText('Página 1 de 13', { exact: true })
+            : pages.getByText('De la 1 a la 10 de 128', { exact: true });
 
         await expect(position).toBeVisible();
-        await expect(table.locator('tbody tr')).toHaveCount(25);
+        await expect(table.locator('tbody tr')).toHaveCount(10);
         await expect(table.getByRole('link', { name: 'Boletín semanal 128' })).toBeVisible();
         await expect(pages.getByRole('link', { name: 'Página anterior' })).toHaveCount(0);
 
         await pages.getByRole('link', { name: 'Página siguiente' }).click();
         await expect(page).toHaveURL(/\/_ui\?page=2#paged-evidences$/);
         await expect(table.getByRole('link', { name: 'Boletín semanal 128' })).toHaveCount(0);
-        await expect(table.getByRole('link', { name: 'Visita guiada 101' })).toBeVisible();
+        await expect(table.getByRole('link', { name: 'Inventario del almacén 114' })).toBeVisible();
         if (isPhone()) {
-            await expect(pages.getByText('Página 2 de 6', { exact: true })).toBeVisible();
+            await expect(pages.getByText('Página 2 de 13', { exact: true })).toBeVisible();
         } else {
-            await expect(pages.getByText('De la 26 a la 50 de 128', { exact: true })).toBeVisible();
+            await expect(pages.getByText('De la 11 a la 20 de 128', { exact: true })).toBeVisible();
             await expect(
                 pages.getByRole('link', { name: 'Página 2', exact: true }),
             ).toHaveAttribute('aria-current', 'page');
@@ -55,21 +55,21 @@ test.describe('Tabla paginada en el servidor', () => {
             // On the phone the numbers give way to the first and the last page
             await expect(pages.getByRole('link', { name: 'Ir a la página 2' })).toBeHidden();
             await pages.getByRole('link', { name: 'Última página' }).click();
-            await expect(pages.getByText('Página 6 de 6', { exact: true })).toBeVisible();
+            await expect(pages.getByText('Página 13 de 13', { exact: true })).toBeVisible();
             await expect(pages.getByRole('link', { name: 'Primera página' })).toBeVisible();
         } else {
             await expect(pages.getByRole('link', { name: 'Última página' })).toBeHidden();
-            await pages.getByRole('link', { name: 'Ir a la página 6' }).click();
+            await pages.getByRole('link', { name: 'Ir a la página 13' }).click();
             await expect(
-                pages.getByText('De la 126 a la 128 de 128', { exact: true }),
+                pages.getByText('De la 121 a la 128 de 128', { exact: true }),
             ).toBeVisible();
         }
-        await expect(page).toHaveURL(/page=6#paged-evidences$/);
-        await expect(table.locator('tbody tr')).toHaveCount(3);
+        await expect(page).toHaveURL(/page=13#paged-evidences$/);
+        await expect(table.locator('tbody tr')).toHaveCount(8);
         await expect(pages.getByRole('link', { name: 'Página siguiente' })).toHaveCount(0);
 
         const sizes = table.getByRole('group', { name: 'Filas por página' });
-        await expect(sizes.getByRole('link', { name: '25', exact: true })).toHaveAttribute(
+        await expect(sizes.getByRole('link', { name: '10', exact: true })).toHaveAttribute(
             'aria-current',
             'true',
         );

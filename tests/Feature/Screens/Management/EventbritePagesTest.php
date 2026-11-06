@@ -25,15 +25,15 @@ class EventbritePagesTest extends ScreenTestCase
 
         $html = $this->screen('registro', route('registercoordinator.event.list'))
             ->assertSee('31 eventos')
-            ->assertSee('De la 1 a la 25 de 31')
-            ->assertSeeInOrder(['Charla 01', 'Charla 02', 'Charla 25'])
-            ->assertDontSee('Charla 26')
+            ->assertSee('De la 1 a la 10 de 31')
+            ->assertSeeInOrder(['Charla 01', 'Charla 02', 'Charla 10'])
+            ->assertDontSee('Charla 11')
             ->assertDontSee('Taller de Git')
             ->getContent();
 
-        $this->assertSame(25, substr_count($html, '<tr role="row"') - 1);
+        $this->assertSame(10, substr_count($html, '<tr role="row"') - 1);
 
-        $this->screen('registro', route('registercoordinator.event.list', ['page' => 2]))
+        $this->screen('registro', route('registercoordinator.event.list', ['page' => 2, 'per_page' => 25]))
             ->assertSee('Charla 30')
             ->assertSee('Taller de Git');
         $this->screen('registro', route('registercoordinator.event.list', ['q' => 'git']))
@@ -50,12 +50,12 @@ class EventbritePagesTest extends ScreenTestCase
 
         $html = $this->screen('registro', route('registercoordinator.attendee.list'))
             ->assertSee('32 asistencias')
-            ->assertSee('De la 1 a la 25 de 32')
+            ->assertSee('De la 1 a la 10 de 32')
             ->assertSeeInOrder(['Charla 01', 'Charla 02'])
             ->assertDontSee('Taller de Git')
             ->getContent();
 
-        $this->assertSame(25, substr_count($html, '<tr role="row"') - 1);
+        $this->assertSame(10, substr_count($html, '<tr role="row"') - 1);
 
         $this->screen('registro', route('registercoordinator.attendee.list', ['page' => 2, 'per_page' => 25]))
             ->assertSee('Taller de Git')

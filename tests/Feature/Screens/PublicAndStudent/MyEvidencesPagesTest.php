@@ -20,8 +20,8 @@ class MyEvidencesPagesTest extends ScreenTestCase
 
         $html = $this->assertAppScreen($this->signedAs('estudiante')->get(route('evidence.list')));
 
-        $this->assertSame(25, substr_count($html, ' data-href="'));
-        $this->assertStringContainsString('De la 1 a la 25 de 34', $html);
+        $this->assertSame(10, substr_count($html, ' data-href="'));
+        $this->assertStringContainsString('De la 1 a la 10 de 34', $html);
         // 1,75 + 2 + 0,5 + 1 of the seed and 30 of one hour
         $this->assertStringContainsString('34 evidencias', $html);
         $this->assertStringContainsString('35,25 h', $html);

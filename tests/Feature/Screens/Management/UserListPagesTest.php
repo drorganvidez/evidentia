@@ -28,19 +28,19 @@ class UserListPagesTest extends ScreenTestCase
         return substr_count($html, ' data-href="');
     }
 
-    public function test_the_first_page_holds_25_in_order_and_counts_everybody(): void
+    public function test_the_first_page_holds_10_in_order_and_counts_everybody(): void
     {
         $this->volume();
 
         $html = $this->screen('profesor', route('lecture.user.list'))
             ->assertSee('47 usuarios')
-            ->assertSee('De la 1 a la 25 de 47')
-            ->assertSeeInOrder(['Castro Vidal, Inés', 'García López, Juan', 'Torres Gómez, Pablo', 'Zubiri 01, Ana', 'Zubiri 18, Ana'])
-            ->assertDontSee('Zubiri 19, Ana')
+            ->assertSee('De la 1 a la 10 de 47')
+            ->assertSeeInOrder(['Castro Vidal, Inés', 'García López, Juan', 'Torres Gómez, Pablo', 'Zubiri 01, Ana', 'Zubiri 03, Ana'])
+            ->assertDontSee('Zubiri 04, Ana')
             ->assertDontSee('Romero Organvídez, David')
             ->getContent();
 
-        $this->assertSame(25, $this->rows($html));
+        $this->assertSame(10, $this->rows($html));
         $this->assertStringContainsString('href="'.route('lecture.user.list', ['page' => 2]).'" rel="next"', $html);
 
         // the president neither sees the lecturer nor themselves
@@ -99,10 +99,10 @@ class UserListPagesTest extends ScreenTestCase
         User::where('username', 'anazub40')->update(['block' => true]);
 
         $html = $this->screen('profesor', route('lecture.user.list', ['page' => 7]))
-            ->assertSee('De la 26 a la 47 de 47')
+            ->assertSee('De la 41 a la 47 de 47')
             ->getContent();
 
-        $this->assertSame(22, $this->rows($html));
+        $this->assertSame(7, $this->rows($html));
 
         $this->screen('profesor', route('lecture.user.list', ['estado' => 'bloqueados']))
             ->assertSee('Zubiri 40, Ana')

@@ -176,12 +176,13 @@ class ErrorReportingTest extends TestCase
         $this->actingAs($this->lecturer);
         $this->get(route('lecture.errors', ['estado' => 'todos']))->assertOk()
             ->assertSee('<nav aria-label="Páginas de errores"', false)
-            ->assertSee('De la 1 a la 25 de 30')
+            ->assertSee('De la 1 a la 10 de 30')
             ->assertSee('Fallo 01')
-            ->assertDontSee('Fallo 26')
+            ->assertSee('Fallo 10')
+            ->assertDontSee('Fallo 11')
             ->assertSee('href="'.e(route('lecture.errors', ['estado' => 'todos', 'page' => 2])).'" rel="next"', false);
         $this->get(route('lecture.errors', ['estado' => 'todos', 'page' => 9]))->assertOk()
-            ->assertSee('De la 26 a la 30 de 30')
+            ->assertSee('De la 21 a la 30 de 30')
             ->assertSee('Fallo 30');
 
         // ordered by how many times, the tabs and the search by code keep the order and the rows per page

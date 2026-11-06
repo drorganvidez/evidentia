@@ -86,9 +86,13 @@ class ActivityPagesTest extends ScreenTestCase
         $this->assertRows($this->screen('profesor', route('activity.index', ['page' => 2])), ['Comité editado']);
         // a page past the last shows the last; the size of the query string stays in the filters
         $this->assertRows($this->screen('profesor', route('activity.index', ['page' => 40])), ['Comité editado']);
-        $this->screen('profesor', route('activity.index', ['per_page' => 100]))
-            ->assertDontSee('<nav aria-label="Paginación del registro"', false)
-            ->assertSee('<input type="hidden" name="per_page" value="100">', false);
+        $smaller = $this->screen('profesor', route('activity.index', ['per_page' => 10]))
+            ->assertSee('<nav aria-label="Paginación del registro"', false)
+            ->assertSee('<input type="hidden" name="per_page" value="10">', false)
+            ->getContent();
+        $this->assertMatchesRegularExpression('/per_page=10"\s+aria-current="true"/', $smaller);
+        // 100 is no longer a size: the log keeps its own 50
+        $this->assertMatchesRegularExpression('/per_page=50"\s+aria-current="true"/', $this->screen('profesor', route('activity.index', ['per_page' => 100]))->getContent());
     }
 
     public function test_each_person_sees_their_own_activity(): void

@@ -24,22 +24,22 @@ class EvidenceListPagesTest extends ScreenTestCase
         return substr_count($html, ' data-href="');
     }
 
-    public function test_the_first_page_holds_25_with_the_totals_and_the_counts_of_the_whole_list(): void
+    public function test_the_first_page_holds_10_with_the_totals_and_the_counts_of_the_whole_list(): void
     {
         $this->volume();
 
         $html = $this->screen('profesor', route('lecture.evidence.list'))
             ->assertSee('<nav aria-label="Paginación de Evidencias del curso"', false)
-            ->assertSee('De la 1 a la 25 de 66')
+            ->assertSee('De la 1 a la 10 de 66')
             // 6 of the seed (2 of them for the presidency) and 60 of the factory, 71,25 hours, newest first
             ->assertSeeInOrder(['Montaje del photocall', 'Volumen 01', 'Volumen 02'])
-            ->assertSee('Volumen 19')
-            ->assertDontSee('Volumen 20')
+            ->assertSee('Volumen 04')
+            ->assertDontSee('Volumen 05')
             ->assertSee('66 evidencias')
             ->assertSee('71,25 h')
             ->getContent();
 
-        $this->assertSame(25, $this->rows($html));
+        $this->assertSame(10, $this->rows($html));
         $this->assertMatchesRegularExpression('/Pendientes\s*<span[^>]*>\s*64\s*</', $html);
         $this->assertMatchesRegularExpression('/Todas\s*<span[^>]*>\s*66\s*</', $html);
         $this->assertStringContainsString('href="'.route('lecture.evidence.list', ['page' => 2]).'" rel="next"', $html);
@@ -102,12 +102,12 @@ class EvidenceListPagesTest extends ScreenTestCase
         $this->volume();
 
         $html = $this->screen('profesor', route('lecture.evidence.list', ['page' => 99]))
-            ->assertSee('De la 51 a la 66 de 66')
+            ->assertSee('De la 61 a la 66 de 66')
             ->assertSee('Volumen 60')
             ->getContent();
 
-        $this->assertSame(16, $this->rows($html));
-        $this->assertMatchesRegularExpression('/aria-label="Página 3"\s+aria-current="page"/', $html);
+        $this->assertSame(6, $this->rows($html));
+        $this->assertMatchesRegularExpression('/aria-label="Página 7"\s+aria-current="page"/', $html);
     }
 
     public function test_a_short_list_has_neither_pages_nor_sizes(): void

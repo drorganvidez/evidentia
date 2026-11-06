@@ -19,12 +19,12 @@ class BonusListPagesTest extends ScreenTestCase
 
         $html = $this->screen('profesor', route('lecture.bonus.list'))
             ->assertSee('31 bonos')
-            ->assertSee('De la 1 a la 25 de 31')
+            ->assertSee('De la 1 a la 10 de 31')
             // 30 × 2 h × 2 people and the 3 h of the seed
             ->assertSee('123,00 h')
             ->getContent();
 
-        $this->assertSame(25, substr_count($html, '<tr role="row"') - 1);
+        $this->assertSame(10, substr_count($html, '<tr role="row"') - 1);
 
         $this->screen('profesor', route('lecture.bonus.list', ['q' => 'pérez']))
             ->assertSee('1 bono')

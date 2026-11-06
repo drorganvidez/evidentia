@@ -20,12 +20,13 @@ class MeetingListPagesTest extends ScreenTestCase
 
         $html = $this->screen('presidente', route('president.meeting.list'))
             ->assertSee('31 reuniones')
-            ->assertSee('De la 1 a la 25 de 31')
-            ->assertSeeInOrder(['Reunión 01', 'Reunión 25'])
+            ->assertSee('De la 1 a la 10 de 31')
+            ->assertSeeInOrder(['Reunión 01', 'Reunión 10'])
+            ->assertDontSee('Reunión 11')
             ->assertDontSee('Reunión de logística')
             ->getContent();
 
-        $this->assertSame(25, substr_count($html, '<tr role="row"') - 1);
+        $this->assertSame(10, substr_count($html, '<tr role="row"') - 1);
 
         $url = route('president.meeting.list', ['comite' => $committee->id, 'acta' => 'sin', 'q' => 'juntas']);
         $filtered = $this->screen('presidente', $url)->assertSee('30 reuniones')->getContent();

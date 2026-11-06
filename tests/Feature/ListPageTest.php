@@ -34,14 +34,15 @@ class ListPageTest extends TestCase
         return $committee;
     }
 
-    public function test_the_size_is_25_by_default_and_the_query_chooses_50_or_100(): void
+    public function test_the_size_is_10_by_default_and_the_query_chooses_25_or_50(): void
     {
-        $this->assertSame(25, ListPage::size($this->asked()));
+        $this->assertSame(10, ListPage::size($this->asked()));
+        $this->assertSame(25, ListPage::size($this->asked(['per_page' => '25'])));
         $this->assertSame(50, ListPage::size($this->asked(['per_page' => '50'])));
-        $this->assertSame(100, ListPage::size($this->asked(['per_page' => '100'])));
-        $this->assertSame(25, ListPage::size($this->asked(['per_page' => '30'])));
-        $this->assertSame(25, ListPage::size($this->asked(['per_page' => 'todas'])));
-        $this->assertSame(25, ListPage::size($this->asked(['per_page' => ['50']])));
+        $this->assertSame(10, ListPage::size($this->asked(['per_page' => '100'])), 'No longer a size');
+        $this->assertSame(10, ListPage::size($this->asked(['per_page' => '30'])));
+        $this->assertSame(10, ListPage::size($this->asked(['per_page' => 'todas'])));
+        $this->assertSame(10, ListPage::size($this->asked(['per_page' => ['25']])));
         $this->assertSame(50, ListPage::size($this->asked(), 50), 'A list may default to another size');
     }
 
@@ -56,17 +57,17 @@ class ListPageTest extends TestCase
 
     public function test_a_query_is_paginated_with_its_whole_query_string_in_the_links(): void
     {
-        $this->evidences(60);
+        $this->evidences(25);
         $request = $this->asked(['estado' => 'pendientes', 'comite' => '3', 'sort' => 'title', 'page' => '2']);
 
         $page = ListPage::paginate(Evidence::query()->latest('id'), $request);
 
-        $this->assertSame(60, $page->total());
-        $this->assertSame(25, $page->perPage());
+        $this->assertSame(25, $page->total());
+        $this->assertSame(10, $page->perPage());
         $this->assertSame(2, $page->currentPage());
         $this->assertSame(3, $page->lastPage());
-        $this->assertCount(25, $page->items());
-        $this->assertSame(Evidence::orderByDesc('id')->skip(25)->value('id'), $page->items()[0]->id, 'Newest first, second page');
+        $this->assertCount(10, $page->items());
+        $this->assertSame(Evidence::orderByDesc('id')->skip(10)->value('id'), $page->items()[0]->id, 'Newest first, second page');
         $this->assertSame('http://localhost/lista?estado=pendientes&comite=3&sort=title&page=3', $page->nextPageUrl());
         $this->assertSame('http://localhost/lista?estado=pendientes&comite=3&sort=title&page=1', $page->previousPageUrl());
     }
@@ -84,12 +85,12 @@ class ListPageTest extends TestCase
 
     public function test_a_page_past_the_last_shows_the_last_and_an_empty_list_its_only_page(): void
     {
-        $this->evidences(60);
+        $this->evidences(25);
 
         $page = ListPage::paginate(Evidence::query(), $this->asked(['page' => '99']));
 
         $this->assertSame(3, $page->currentPage());
-        $this->assertCount(10, $page->items());
+        $this->assertCount(5, $page->items());
         $this->assertNull($page->nextPageUrl());
 
         $none = ListPage::paginate(Evidence::where('status', 'ACCEPTED'), $this->asked(['page' => '4']));
@@ -104,17 +105,17 @@ class ListPageTest extends TestCase
 
     public function test_a_relation_and_a_collection_are_paginated_the_same_way(): void
     {
-        $committee = $this->evidences(30);
+        $committee = $this->evidences(15);
 
         $relation = ListPage::paginate($committee->evidences(), $this->asked(['page' => '2']));
 
-        $this->assertSame(30, $relation->total());
+        $this->assertSame(15, $relation->total());
         $this->assertCount(5, $relation->items());
 
-        $collection = ListPage::paginate(collect(range(1, 30)), $this->asked(['page' => '9', 'q' => 'x']));
+        $collection = ListPage::paginate(collect(range(1, 15)), $this->asked(['page' => '9', 'q' => 'x']));
 
         $this->assertSame(2, $collection->currentPage());
-        $this->assertSame([26, 27, 28, 29, 30], $collection->items());
+        $this->assertSame([11, 12, 13, 14, 15], $collection->items());
         $this->assertSame('http://localhost/lista?q=x&page=1', $collection->previousPageUrl());
     }
 

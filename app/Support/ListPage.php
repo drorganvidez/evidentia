@@ -13,7 +13,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 /**
- * Server pagination of the lists: the size of the page (25 by default, 50 or 100 by the query), the search q over the
+ * Server pagination of the lists: the size of the page (10 by default, 25 or 50 by the query), the search q over the
  * columns each screen names, the query string kept in every link and the last valid page when a missing one is asked.
  * Controllers reach it through App\Http\Controllers\Concerns\PaginatesLists; views build their links with url().
  *
@@ -23,9 +23,9 @@ use Illuminate\Support\Str;
  */
 final class ListPage
 {
-    public const SIZES = [25, 50, 100];
+    public const SIZES = [10, 25, 50];
 
-    public const DEFAULT_SIZE = 25;
+    public const DEFAULT_SIZE = 10;
 
     public const PAGE = 'page';
 

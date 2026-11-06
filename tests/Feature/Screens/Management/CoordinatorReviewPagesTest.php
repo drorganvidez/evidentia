@@ -19,25 +19,26 @@ class CoordinatorReviewPagesTest extends ScreenTestCase
         Evidence::factory()->count(3)->for($this->person('companero'), 'user')->for(Committee::where('name', 'Comunicación')->sole())->create();
     }
 
-    public function test_the_queue_holds_25_with_the_counts_and_the_hours_of_the_whole_committee(): void
+    public function test_the_queue_holds_10_with_the_counts_and_the_hours_of_the_whole_committee(): void
     {
         $this->volume();
 
         $html = $this->screen('coordinador', route('coordinator.evidence.list.pending'))
-            ->assertSee('De la 1 a la 25 de 32')
+            ->assertSee('De la 1 a la 10 de 32')
             ->assertSee('32 evidencias')
             ->assertSee('34,75 h')
             ->assertSeeInOrder(['Atención en el registro', 'Volumen 01'])
-            ->assertDontSee('Volumen 24')
+            ->assertSee('Volumen 08')
+            ->assertDontSee('Volumen 09')
             ->getContent();
 
-        $this->assertSame(25, substr_count($html, ' data-href="'));
+        $this->assertSame(10, substr_count($html, ' data-href="'));
         $this->assertMatchesRegularExpression('/Todas\s*<span[^>]*>\s*34\s*</', $html);
         $this->assertMatchesRegularExpression('/Pendientes\s*<span[^>]*>\s*32\s*</', $html);
         $this->assertStringContainsString('href="'.route('coordinator.evidence.list.pending', ['page' => 2]).'" rel="next"', $html);
 
         $this->screen('coordinador', route('coordinator.evidence.list.pending', ['page' => 5]))
-            ->assertSee('De la 26 a la 32 de 32')
+            ->assertSee('De la 31 a la 32 de 32')
             ->assertSee('Volumen 30');
     }
 

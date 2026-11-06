@@ -2,7 +2,7 @@
     Data table. Sorting and pagination live in the URL (the server orders and paginates). Without a paginator the
     quick filter (filterable) runs in the browser over the whole collection in the DOM; with one it becomes a GET
     search (q) the server runs over the columns each screen chooses, and the footer prints the pagination and the
-    rows per page (25, 50 or 100) after the slot of the footer, which keeps the totals of the whole result.
+    rows per page (10, 25 or 50) after the slot of the footer, which keeps the totals of the whole result.
     Explicit roles keep the semantics when the rows turn into cards on the phone.
     <x-ui.table caption="Mis evidencias" :columns="[
         ['label' => 'Evidencia', 'key' => 'title', 'sort' => ['href' => '?sort=title', 'dir' => null]],

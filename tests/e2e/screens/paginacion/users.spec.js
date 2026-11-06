@@ -2,7 +2,7 @@ import { signIn } from '../../fixtures/auth.js';
 import { expect, test } from '../../fixtures/ui.js';
 import { ensureStudents } from './volume.js';
 
-// The people of the course in pages of 25, searched and sorted on the server
+// The people of the course in pages of 10, searched and sorted on the server
 test.describe('Alumnos en páginas', () => {
     test.beforeAll(async ({ playwright }, testInfo) => ensureStudents(playwright, testInfo));
 
@@ -14,7 +14,7 @@ test.describe('Alumnos en páginas', () => {
 
         const table = page.getByRole('region', { name: 'Usuarios' });
         const pages = table.getByRole('navigation', { name: 'Paginación de Usuarios' });
-        await expect(table.locator('tbody tr')).toHaveCount(25);
+        await expect(table.locator('tbody tr')).toHaveCount(10);
         await expect(table.getByText(/^\d{2} usuarios$/)).toBeVisible();
         await expect(
             table.getByRole('link', { name: 'García López, Juan', exact: true }),
@@ -27,7 +27,7 @@ test.describe('Alumnos en páginas', () => {
         await page.keyboard.press('Enter');
         await expect(page).toHaveURL(/\/lecture\/user\/list\?page=2$/);
         await expect(
-            table.getByRole('link', { name: 'Volumen 30, Ana', exact: true }),
+            table.getByRole('link', { name: /^Volumen \d{2}, Ana$/ }).first(),
         ).toBeVisible();
         await expect(
             table.getByRole('link', { name: 'García López, Juan', exact: true }),

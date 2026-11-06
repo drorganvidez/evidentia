@@ -215,8 +215,9 @@ class TableTest extends ComponentTestCase
         $this->assertStringContainsString('<a href="/lista?estado=pendientes&amp;q=montaje&amp;per_page=25&amp;page=3" rel="next"', $html);
         $this->assertStringContainsString('<div role="group" aria-label="Filas por página" class="flex items-center gap-1">', $html);
         $this->assertMatchesRegularExpression('/<a href="\/lista\?estado=pendientes&amp;q=montaje&amp;per_page=25"\s+aria-current="true"\s+class="[^"]*pointer-coarse:size-11">25<\/a>/', $html);
+        $this->assertMatchesRegularExpression('/<a href="\/lista\?estado=pendientes&amp;q=montaje&amp;per_page=10"\s+class="[^"]*">10<\/a>/', $html);
         $this->assertMatchesRegularExpression('/<a href="\/lista\?estado=pendientes&amp;q=montaje&amp;per_page=50"\s+class="[^"]*">50<\/a>/', $html);
-        $this->assertMatchesRegularExpression('/<a href="\/lista\?estado=pendientes&amp;q=montaje&amp;per_page=100"\s+class="[^"]*">100<\/a>/', $html);
+        $this->assertStringNotContainsString('per_page=100', $html);
         $this->assertSame(1, substr_count($html, 'aria-current="true"'));
         $this->assertUniqueIds($html);
         $this->assertCspSafe($html);
@@ -229,17 +230,17 @@ class TableTest extends ComponentTestCase
 
     public function test_a_single_page_keeps_the_sizes_only_when_a_smaller_one_would_paginate(): void
     {
-        $few = $this->paged($this->paginator(20, 1, []));
+        $few = $this->paged($this->paginator(8, 1, []));
 
         $this->assertStringNotContainsString('border-t border-rule px-5', $few);
         $this->assertStringNotContainsString('Filas por página', $few);
 
-        $wide = $this->paged((new LengthAwarePaginator(range(1, 60), 60, 100, 1, ['path' => '/lista']))->appends(['per_page' => '100']));
+        $wide = $this->paged((new LengthAwarePaginator(range(1, 40), 40, 50, 1, ['path' => '/lista']))->appends(['per_page' => '50']));
 
         $this->assertStringContainsString('aria-label="Filas por página"', $wide);
-        $this->assertMatchesRegularExpression('/href="\/lista\?per_page=100"\s+aria-current="true"/', $wide);
+        $this->assertMatchesRegularExpression('/href="\/lista\?per_page=50"\s+aria-current="true"/', $wide);
         $this->assertStringNotContainsString('<nav aria-label="Paginación', $wide);
-        $this->assertStringContainsString('De la 1 a la 60 de 60', $wide);
+        $this->assertStringContainsString('De la 1 a la 40 de 40', $wide);
     }
 
     public function test_the_paginator_must_know_its_total(): void

@@ -24,7 +24,7 @@ class AttendanceListPagesTest extends ScreenTestCase
             ]));
 
         $html = $this->screen('profesor', route('lecture.attendee.list'))
-            ->assertSee('De la 1 a la 25 de 32')
+            ->assertSee('De la 1 a la 10 de 32')
             ->assertSee('32 asistencias')
             // 20 × 2 h of the talk and 2 × 1,5 h of the workshop
             ->assertSee('43,00 h')
@@ -32,15 +32,15 @@ class AttendanceListPagesTest extends ScreenTestCase
             ->getContent();
 
         $attendances = substr($html, strpos($html, 'id="attendances"'), strpos($html, 'id="events"') - strpos($html, 'id="attendances"'));
-        $this->assertSame(25, substr_count($attendances, '<tr role="row"') - 1, 'The header row aside');
+        $this->assertSame(10, substr_count($attendances, '<tr role="row"') - 1, 'The header row aside');
         $this->assertMatchesRegularExpression('/Asistidas\s*<span[^>]*>\s*22\s*</', $html);
         $this->assertMatchesRegularExpression('/Pendientes\s*<span[^>]*>\s*10\s*</', $html);
 
-        // the second page holds the older workshop, the tabs keep the event and the search
-        $this->screen('profesor', route('lecture.attendee.list', ['page' => 2]))->assertSee('Taller de Git')->assertSee('De la 26 a la 32 de 32');
+        // the last page holds the older workshop, the tabs keep the event and the search
+        $this->screen('profesor', route('lecture.attendee.list', ['page' => 4]))->assertSee('Taller de Git')->assertSee('De la 31 a la 32 de 32');
 
         $found = $this->screen('profesor', route('lecture.attendee.list', ['evento' => $talk->id, 'q' => 'zubiri 1']))
-            ->assertSee('Zubiri 10')->assertDontSee('Zubiri 20')
+            ->assertSee('Zubiri 11')->assertDontSee('Zubiri 20')
             ->getContent();
 
         // Zubiri 01, 10 to 19 and 21
