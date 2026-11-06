@@ -1,92 +1,52 @@
-@extends('layouts.app')
+{{-- Meetings the signed-in person attended, with their hours, and the deadline to register meetings --}}
+@php
+    $columns = [
+        ['label' => 'Reunión', 'key' => 'title'],
+        ['label' => 'Comité', 'key' => 'committee', 'hide' => true],
+        ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
+        ['label' => 'Celebrada', 'key' => 'datetime'],
+    ];
+    $list = $meetings->sortByDesc('datetime');
+    $deadline = \Config::meetings_timestamp();
+@endphp
+<x-layout.app title="Mis reuniones" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Mis reuniones']]">
+    <x-ui.page-header title="Mis reuniones" />
 
-@section('title', 'Mis reuniones')
-
-@section('title-icon', 'nav-icon fas fa-cocktail')
-
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item active">@yield('title')</li>
-@endsection
-
-@section('content')
-
-    <div class="row">
-
-        <div class="col-lg-12">
-
-            <div class="card">
-
-                <div class="card-body">
-                    <table id="dataset" class="table table-hover table-responsive">
-                        <thead>
-                            <tr>
-                                <th>Reunión</th>
-                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Lugar</th>
-                                <th>Horas</th>
-                                <th class="d-none d-sm-none d-md-table-cell d-lg-table-cell">Realizada</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($meetings as $meeting)
-                                <tr scope="row">
-                                    <td>{{ $meeting->title }}</td>
-                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">{{ $meeting->place }}</td>
-                                    <td>{{ $meeting->hours }}</td>
-                                    <td class="d-none d-sm-none d-md-table-cell d-lg-table-cell">
-                                        {{ \Carbon\Carbon::parse($meeting->datetime)->diffForHumans() }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-
-
-
-                </div>
-
-            </div>
-
-
-        </div>
-
-        <div class="col-lg-6">
-
-            <div class="card">
-                <div class="card-body">
-
-                    <div class="alert alert-info mb-0">
-                        <h4 class="mb-2">
-                            <i class="fas fa-stopwatch"></i> Fecha límite para registrar reuniones
-                        </h4>
-                        <p class="mb-0">
-                            {{ \Carbon\Carbon::parse(Config::meetings_timestamp())->format('d/m/Y \a \l\a\s H:i') }}
-                        </p>
-                        <div class="countdown_container mt-2" style="display: none">
-                            <p>
-                                Quedan <b><span id="countdown"></span></b> para registrar reuniones en Evidentia.
-                            </p>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-
-        </div>
-
-
+    <div class="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)] lg:gap-8">
+        <x-ui.table caption="Mis reuniones" :columns="$columns" :filterable="$list->isNotEmpty()" count-label="reuniones"
+            filter-placeholder="Filtrar reuniones">
+            @forelse ($list as $meeting)
+                <x-ui.table.row>
+                    <x-ui.table.cell label="Reunión" primary>
+                        <span class="font-semibold">{{ $meeting->title }}</span>
+                        <span class="mt-0.5 block text-sm text-ink-muted">{{ $meeting->place }}</span>
+                    </x-ui.table.cell>
+                    <x-ui.table.cell label="Comité" hide>
+                        @if ($meeting->committee)
+                            <x-ui.committee-chip :committee="$meeting->committee" />
+                        @endif
+                    </x-ui.table.cell>
+                    <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$meeting->hours" /></x-ui.table.cell>
+                    <x-ui.table.cell label="Celebrada" meta>
+                        <x-ui.time :value="$meeting->datetime" inline short />
+                    </x-ui.table.cell>
+                </x-ui.table.row>
+            @empty
+                <x-slot:empty>
+                    <x-ui.empty icon="handshake" title="Sin reuniones" size="sm" :level="2" />
+                </x-slot:empty>
+            @endforelse
+            @if ($list->isNotEmpty())
+                <x-slot:footer>
+                    <span>{{ $list->count() === 1 ? '1 reunión' : $list->count() . ' reuniones' }} ·
+                        <x-ui.hours :value="$list->sum('hours')" size="sm" class="text-ink" /></span>
+                </x-slot:footer>
+            @endif
+        </x-ui.table>
+        @if ($deadline)
+            <aside aria-label="Plazo de las reuniones" class="grid grid-cols-[minmax(0,1fr)] content-start gap-6">
+                <x-ui.deadline label="Registro de reuniones" :closes-at="\Carbon\Carbon::parse($deadline)" />
+            </aside>
+        @endif
     </div>
-
-@section('scripts')
-
-    <script>
-        $(document).ready(function() {
-            countdown(
-                "{{ \Carbon\Carbon::create(\Carbon\Carbon::now())->diffInSeconds(Config::meetings_timestamp(), false) }}"
-            );
-        });
-    </script>
-
-@endsection
-
-@endsection
+</x-layout.app>

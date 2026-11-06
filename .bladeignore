@@ -3,7 +3,6 @@ resources/views/bonus/**
 resources/views/defaultlist/**
 resources/views/email/**
 resources/views/layouts/**
-resources/views/meeting/**
 resources/views/message/**
 resources/views/components/menus/**
 resources/views/components/navbars/**
