@@ -1,6 +1,58 @@
 {{-- Every kind of field: icon, email, password, number pairs in a fieldset, dates, search, select, textarea and states --}}
 @php
     $committees = [1 => 'Programa', 2 => 'Logística', 3 => 'Comunicación', 4 => 'Patrocinio'];
+    $provinces = [
+        'A Coruña',
+        'Álava',
+        'Albacete',
+        'Alicante',
+        'Almería',
+        'Asturias',
+        'Ávila',
+        'Badajoz',
+        'Barcelona',
+        'Bizkaia',
+        'Burgos',
+        'Cáceres',
+        'Cádiz',
+        'Cantabria',
+        'Castellón',
+        'Ciudad Real',
+        'Córdoba',
+        'Cuenca',
+        'Gipuzkoa',
+        'Girona',
+        'Granada',
+        'Guadalajara',
+        'Huelva',
+        'Huesca',
+        'Illes Balears',
+        'Jaén',
+        'La Rioja',
+        'Las Palmas',
+        'León',
+        'Lleida',
+        'Lugo',
+        'Madrid',
+        'Málaga',
+        'Murcia',
+        'Navarra',
+        'Ourense',
+        'Palencia',
+        'Pontevedra',
+        'Salamanca',
+        'Santa Cruz de Tenerife',
+        'Segovia',
+        'Sevilla',
+        'Soria',
+        'Tarragona',
+        'Teruel',
+        'Toledo',
+        'Valencia',
+        'Valladolid',
+        'Zamora',
+        'Zaragoza',
+    ];
 @endphp
 <section id="ui-field" class="glass grid grid-cols-[minmax(0,1fr)] gap-6 rounded-xl p-6 md:p-8"
     aria-labelledby="ui-field-title">
@@ -41,6 +93,19 @@
 
         <x-ui.field name="committee_id" label="Comité" type="select" :options="$committees" placeholder="Elige un comité"
             required />
+        <x-ui.field name="session_state" label="Estado" type="select" :options="['open' => 'Abierta', 'closed' => 'Cerrada']" value="open" />
+        <x-ui.field name="province" label="Provincia" type="select" :options="array_combine($provinces, $provinces)" placeholder="Elige una provincia"
+            icon="map-pin" />
+        <x-ui.field name="target_committee" label="Comité de destino" type="select" :options="$committees"
+            placeholder="Elige un comité" error="Elige un comité de destino" />
+        <x-ui.field name="locked_committee" label="Comité asignado" type="select" :options="$committees" value="3"
+            disabled />
+        <x-ui.field name="audience" label="Dirigido a" type="select" :options="[
+            ['value' => '', 'label' => 'Todos'],
+            ['value' => 'students', 'label' => 'Estudiantes'],
+            ['value' => 'lecturers', 'label' => 'Profesorado', 'disabled' => true],
+            ['value' => 'secretaries', 'label' => 'Secretaría'],
+        ]" />
         <x-ui.field name="reference" label="Identificador" value="EV-0033" readonly prefix="#"
             hint="Lo asigna la aplicación" />
         <x-ui.field name="locked_field" label="Campo deshabilitado" value="Sin cambios" disabled />
