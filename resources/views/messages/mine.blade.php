@@ -1,21 +1,23 @@
-{{-- Threads the signed-in person opened, by state --}}
+{{-- Threads the signed-in person opened, by state; the tabs keep the order and the rows per page --}}
+@use('App\Support\ListPage')
 @php
+    $mine = route('messages.mine');
     $tabs = [
         [
             'label' => 'Abiertos',
-            'href' => route('messages.mine', ['state' => 'open']),
+            'href' => ListPage::url(['state' => 'open'], $mine),
             'count' => $counts['open'],
             'current' => $state === 'open',
         ],
         [
             'label' => 'Resueltos',
-            'href' => route('messages.mine', ['state' => 'resolved']),
+            'href' => ListPage::url(['state' => 'resolved'], $mine),
             'count' => $counts['resolved'],
             'current' => $state === 'resolved',
         ],
         [
             'label' => 'Todos',
-            'href' => route('messages.mine'),
+            'href' => ListPage::url(['state' => null], $mine),
             'count' => $counts['all'],
             'current' => $state === 'all',
         ],

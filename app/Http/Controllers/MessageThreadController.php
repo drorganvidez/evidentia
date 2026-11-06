@@ -83,7 +83,6 @@ class MessageThreadController extends Controller
             'audiences' => $audiences->all(),
             'committees' => $committees->map(fn (Committee $committee) => ['value' => $committee->id, 'label' => $committee->name])->all(),
             'active' => count(array_filter([$to, $committee, $q])),
-            'query' => array_filter(['to' => $to, 'committee' => $committee, 'q' => $q]),
             'counts' => ['open' => $base()->open()->count(), 'resolved' => $base()->resolved()->count()],
             'unread' => MessageThread::unreadInboxCount($me),
         ]);

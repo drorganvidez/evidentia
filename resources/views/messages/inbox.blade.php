@@ -1,24 +1,26 @@
 {{--
     Inbox of the people in charge: the threads addressed to their audiences or in which they wrote; the management can
-    also read every thread.
+    also read every thread. The tabs and the filters keep the order, the search and the rows per page.
 --}}
+@use('App\Support\ListPage')
 @php
+    $inbox = route('messages.inbox');
     $tabs = [
         [
             'label' => 'Abiertos',
-            'href' => route('messages.inbox', $query + ['state' => 'open']),
+            'href' => ListPage::url(['state' => 'open'], $inbox),
             'count' => $counts['open'],
             'current' => $state === 'open',
         ],
         [
             'label' => 'Resueltos',
-            'href' => route('messages.inbox', $query + ['state' => 'resolved']),
+            'href' => ListPage::url(['state' => 'resolved'], $inbox),
             'count' => $counts['resolved'],
             'current' => $state === 'resolved',
         ],
         [
             'label' => 'Todos',
-            'href' => route('messages.inbox', $query + ['state' => 'all']),
+            'href' => ListPage::url(['state' => 'all'], $inbox),
             'current' => $state === 'all',
         ],
     ];
@@ -30,9 +32,9 @@
         </x-slot:actions>
     </x-ui.page-header>
 
-    <x-ui.filter-bar :action="route('messages.inbox')" label="Filtros de la bandeja" :open="$active > 0" :active="$active"
-        :reset-href="route('messages.inbox')" id="inbox-filters">
-        <input type="hidden" name="state" value="{{ $state }}">
+    <x-ui.filter-bar :action="$inbox" label="Filtros de la bandeja" :open="$active > 0" :active="$active"
+        :reset-href="ListPage::url(['to' => null, 'committee' => null, 'q' => null], $inbox)" :keep="ListPage::query(['to', 'committee', 'q'])"
+        id="inbox-filters">
         <x-ui.field name="to" label="Dirigido a" type="select" :options="[['value' => '', 'label' => 'Mis bandejas'], ...$audiences]" :value="$to" />
         <x-ui.field name="committee" label="Comité" type="select" :options="[['value' => '', 'label' => 'Todos'], ...$committees]" :value="$committee ?? ''" />
         <x-ui.field name="q" label="Texto" type="search" icon="search" placeholder="Asunto o remitente"

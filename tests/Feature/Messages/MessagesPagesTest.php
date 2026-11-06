@@ -101,6 +101,26 @@ class MessagesPagesTest extends ScreenTestCase
         $this->assertStringContainsString('href="'.e(route('messages.inbox', ['q' => 'consulta', 'per_page' => 25, 'page' => 2])).'" rel="next"', $inbox);
     }
 
+    public function test_the_tabs_and_the_filters_keep_the_order_and_the_rows_per_page(): void
+    {
+        $order = ['sort' => 'subject', 'dir' => 'asc', 'per_page' => 50];
+
+        $inbox = $this->screen('coordinador', route('messages.inbox', ['q' => 'turno'] + $order))->getContent();
+        $this->assertStringContainsString('href="'.e(route('messages.inbox', ['q' => 'turno'] + $order + ['state' => 'resolved'])).'"', $inbox);
+        // the bar resends the order, the size and the tab; its own fields and the reset leave the rest alone
+        $this->assertStringContainsString('<input type="hidden" name="sort" value="subject">', $inbox);
+        $this->assertStringContainsString('<input type="hidden" name="per_page" value="50">', $inbox);
+        $this->assertStringNotContainsString('<input type="hidden" name="q"', $inbox);
+        $this->assertStringContainsString('href="'.e(route('messages.inbox', $order)).'"', $inbox);
+
+        $resolved = $this->screen('coordinador', route('messages.inbox', ['state' => 'resolved'] + $order))->getContent();
+        $this->assertStringContainsString('<input type="hidden" name="state" value="resolved">', $resolved);
+
+        $mine = $this->screen('estudiante', route('messages.mine', ['state' => 'open'] + $order))->getContent();
+        $this->assertStringContainsString('href="'.e(route('messages.mine', ['state' => 'resolved'] + $order)).'"', $mine);
+        $this->assertStringContainsString('href="'.e(route('messages.mine', $order)).'"', $mine, 'All the threads, without the state');
+    }
+
     public function test_a_new_message_about_an_evidence_suggests_its_coordination(): void
     {
         $evidence = Evidence::where('title', 'Recogida de material')->sole();
