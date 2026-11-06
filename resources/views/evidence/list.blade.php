@@ -20,12 +20,14 @@
                     :closes-at="$closesAt" />
             </x-slot:meta>
         @endif
-        @if ($open)
-            <x-slot:actions>
+        <x-slot:actions>
+            <x-ui.button icon="send" :href="\App\Services\Messaging\QuickContact::coordination(auth()->user())">Escribir a la
+                coordinación</x-ui.button>
+            @if ($open)
                 <x-ui.button variant="primary" size="lg" icon="plus" :href="route('evidence.create')" block class="md:w-auto">Nueva
                     evidencia</x-ui.button>
-            </x-slot:actions>
-        @endif
+            @endif
+        </x-slot:actions>
     </x-ui.page-header>
 
     <x-ui.table caption="Mis evidencias" :columns="$columns" :filterable="$evidences->isNotEmpty()" count-label="evidencias"

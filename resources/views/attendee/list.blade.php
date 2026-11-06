@@ -1,4 +1,7 @@
-{{-- The events of Eventbrite the student signed up for, with the hours each one counts and whether they attended --}}
+{{--
+    The events the student signed up for, with the hours each one counts, whether they attended and the way to write
+    to the register coordination about any of them.
+--}}
 @php
     $columns = [
         ['label' => 'Evento', 'key' => 'event'],
@@ -6,11 +9,17 @@
         ['label' => 'Empieza', 'key' => 'start'],
         ['label' => 'Termina', 'key' => 'end', 'hide' => true],
         ['label' => 'Asistencia', 'key' => 'status'],
+        ['label' => 'Acciones', 'srOnly' => true],
     ];
     $attended = $attendees->where('status', 'Checked In');
 @endphp
 <x-layout.app title="Mis asistencias" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Mis asistencias']]">
-    <x-ui.page-header title="Mis asistencias" />
+    <x-ui.page-header title="Mis asistencias">
+        <x-slot:actions>
+            <x-ui.button icon="send" :href="\App\Services\Messaging\QuickContact::register()">Escribir a la coordinación de
+                registro</x-ui.button>
+        </x-slot:actions>
+    </x-ui.page-header>
 
     <x-ui.table caption="Mis asistencias" :columns="$columns">
         @foreach ($attendees as $attendee)
@@ -25,11 +34,19 @@
                     @endif
                 </x-ui.table.cell>
                 <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$attendee->event->hours" /></x-ui.table.cell>
-                <x-ui.table.cell label="Empieza" meta><x-ui.time :value="$attendee->event->start_datetime" format="absolute" /></x-ui.table.cell>
+                <x-ui.table.cell label="Empieza" meta><x-ui.time :value="$attendee->event->start_datetime"
+                        format="absolute" /></x-ui.table.cell>
                 <x-ui.table.cell label="Termina" meta hide><x-ui.time :value="$attendee->event->end_datetime"
                         format="absolute" /></x-ui.table.cell>
-                <x-ui.table.cell label="Asistencia" end><x-ui.attendee-status :status="$attendee->status"
+                <x-ui.table.cell label="Asistencia"><x-ui.attendee-status :status="$attendee->status"
                         size="sm" /></x-ui.table.cell>
+                <x-ui.table.cell end class="w-[1%] whitespace-nowrap">
+                    <x-ui.button size="sm" variant="ghost" icon="send" icon-only :label="'Escribir a la coordinación de registro sobre ' . $attendee->event->name"
+                        :href="route('messages.create', [
+                            'to' => 'REGISTER_COORDINATOR',
+                            'subject' => 'Sobre mi asistencia a «' . $attendee->event->name . '»',
+                        ])" />
+                </x-ui.table.cell>
             </x-ui.table.row>
         @endforeach
         @if ($attendees->isEmpty())

@@ -1,16 +1,25 @@
-{{-- Meetings the signed-in person attended, with their hours, and the deadline to register meetings --}}
+{{--
+    Meetings the signed-in person attended, with their hours, the way to write to the secretary of each one or of a
+    meeting they are missing from, and the deadline to register meetings.
+--}}
 @php
     $columns = [
         ['label' => 'Reunión', 'key' => 'title'],
         ['label' => 'Comité', 'key' => 'committee', 'hide' => true],
         ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
         ['label' => 'Celebrada', 'key' => 'datetime'],
+        ['label' => 'Acciones', 'srOnly' => true],
     ];
     $list = $meetings->sortByDesc('datetime');
     $deadline = \Config::meetings_timestamp();
 @endphp
 <x-layout.app title="Mis reuniones" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Mis reuniones']]">
-    <x-ui.page-header title="Mis reuniones" />
+    <x-ui.page-header title="Mis reuniones">
+        <x-slot:actions>
+            <x-ui.button icon="send" :href="\App\Services\Messaging\QuickContact::secretary(auth()->user())">Escribir a la
+                secretaría</x-ui.button>
+        </x-slot:actions>
+    </x-ui.page-header>
 
     <div class="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)] lg:gap-8">
         <x-ui.table caption="Mis reuniones" :columns="$columns" :filterable="$list->isNotEmpty()" count-label="reuniones"
@@ -34,6 +43,18 @@
                     <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$meeting->hours" /></x-ui.table.cell>
                     <x-ui.table.cell label="Celebrada" meta>
                         <x-ui.time :value="$meeting->datetime" inline short />
+                    </x-ui.table.cell>
+                    <x-ui.table.cell end class="w-[1%] whitespace-nowrap">
+                        <x-ui.button size="sm" variant="ghost" icon="send" icon-only :label="'Escribir a la secretaría sobre ' . $meeting->title"
+                            :href="$meeting->meetingMinutes
+                                ? route('messages.create', ['minutes' => $meeting->meetingMinutes->id])
+                                : route(
+                                    'messages.create',
+                                    array_filter([
+                                        'to' => $meeting->committee_id ? 'SECRETARY:' . $meeting->committee_id : null,
+                                        'subject' => 'Sobre «' . $meeting->title . '»',
+                                    ]),
+                                )" />
                     </x-ui.table.cell>
                 </x-ui.table.row>
             @empty
