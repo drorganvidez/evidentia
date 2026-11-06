@@ -2,38 +2,28 @@
 
 namespace App\Mail;
 
+use App\Models\Token;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
+/** The link to choose a new password, in the theme of the app and with the address of the route. */
 class PasswordReset extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public $instance;
+    public function __construct(public Token $token, public User $user) {}
 
-    public $token;
-
-    public $user;
-
-    public function __construct($token, $user)
+    public function envelope(): Envelope
     {
-        $this->token = $token;
-        $this->user = $user;
+        return new Envelope(subject: 'Restablecimiento de contraseña');
     }
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
-    public function build()
+    public function content(): Content
     {
-        return $this->view('email.passwordreset')->subject('Restablecimiento de contraseña');
+        return new Content(markdown: 'mail.password-reset');
     }
 }

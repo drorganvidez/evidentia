@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Mail\PasswordReset;
 use App\Models\Token;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -54,6 +55,24 @@ class PasswordResetTest extends TestCase
         $this->changePassword($old, 'Atacante-Clave-26')->assertSessionHas('error');
 
         $this->assertTrue(Hash::check('original-pass', $this->user->fresh()->password));
+    }
+
+    public function test_the_mail_links_to_the_route_of_the_token_in_the_theme_of_the_app(): void
+    {
+        $this->post(route('password.reset_p'), ['email' => 'ana@us.es']);
+        $token = Token::sole();
+
+        Mail::assertSent(PasswordReset::class, function (PasswordReset $mail) use ($token): bool {
+            $mail->assertHasSubject('Restablecimiento de contraseña');
+            $mail->assertSeeInHtml('href="'.route('password.custom_update', $token->token).'"', false);
+            $mail->assertSeeInHtml('Elegir una contraseña nueva');
+            $mail->assertSeeInHtml('Evidentia · Universidad de Sevilla · ETSII');
+            $mail->assertSeeInText('El enlace caduca en 24 horas.');
+            $mail->assertDontSeeInHtml('googleapis', false);
+            $mail->assertDontSeeInHtml('adminlte', false);
+
+            return $mail->hasTo('ana@us.es');
+        });
     }
 
     private function token(bool $used, $validUntil): Token
