@@ -127,4 +127,48 @@ class DeadlinesTest extends TestCase
         $this->deadlines->refresh();
         $this->assertFalse($this->deadlines->isOpen(Deadline::Bonus));
     }
+
+    public function test_the_menu_only_shows_a_deadline_that_is_set_and_open(): void
+    {
+        $this->set(Deadline::UploadEvidences, null);
+        $this->assertFalse($this->deadlines->isOpenForMenu(Deadline::UploadEvidences));
+        $this->assertNull($this->deadlines->card(Deadline::UploadEvidences));
+        $this->assertNull($this->deadlines->remaining(Deadline::UploadEvidences));
+        $this->assertNull($this->deadlines->remainingText(Deadline::UploadEvidences));
+
+        $this->set(Deadline::UploadEvidences, now()->subMinute());
+        $this->assertFalse($this->deadlines->isOpenForMenu(Deadline::UploadEvidences));
+        $this->assertNull($this->deadlines->card(Deadline::UploadEvidences));
+        $this->assertNull($this->deadlines->remainingText(Deadline::UploadEvidences));
+
+        $this->set(Deadline::UploadEvidences, now()->addDay());
+        $this->assertTrue($this->deadlines->isOpenForMenu(Deadline::UploadEvidences));
+    }
+
+    public function test_the_text_of_the_time_left(): void
+    {
+        $this->travelTo(Carbon::parse('2026-11-20 09:00:00'));
+
+        $this->set(Deadline::ValidateEvidences, '2026-11-20 20:00:00');
+        $this->assertSame('cierra hoy a las 20:00', $this->deadlines->remainingText(Deadline::ValidateEvidences));
+        $this->assertSame(11, (int) $this->deadlines->remaining(Deadline::ValidateEvidences)->totalHours);
+
+        $this->set(Deadline::ValidateEvidences, '2026-11-21 08:00:00');
+        $this->assertSame('queda un día', $this->deadlines->remainingText(Deadline::ValidateEvidences));
+
+        $this->set(Deadline::ValidateEvidences, '2026-11-29 20:00:00');
+        $this->assertSame('quedan 9 días', $this->deadlines->remainingText(Deadline::ValidateEvidences));
+    }
+
+    public function test_the_card_of_the_sidebar(): void
+    {
+        $this->set(Deadline::Meetings, '2030-03-01 20:00:00');
+
+        $card = $this->deadlines->card(Deadline::Meetings);
+
+        $this->assertSame('Registro de reuniones', $card['label']);
+        $this->assertSame('2030-03-01 20:00', $card['closesAt']->format('Y-m-d H:i'));
+        $this->assertNull($card['opensAt']);
+        $this->assertSame(route('secretary.meeting.manage.minutes.list'), $card['href']);
+    }
 }

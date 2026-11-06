@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\Deadline;
 use App\Models\Configuration;
 use Carbon\CarbonImmutable;
+use Carbon\CarbonInterval;
 use WeakMap;
 
 /**
@@ -39,6 +40,58 @@ final class Deadlines
         $closesAt = $this->closesAt($deadline);
 
         return $closesAt === null || now()->lte($closesAt);
+    }
+
+    /** Strict variant of the menus: only a deadline that is set and still open. */
+    public function isOpenForMenu(Deadline $deadline): bool
+    {
+        return $this->isSet($deadline) && $this->isOpen($deadline);
+    }
+
+    /** Time left; null when the deadline is not set or already closed. */
+    public function remaining(Deadline $deadline): ?CarbonInterval
+    {
+        if (! $this->isOpenForMenu($deadline)) {
+            return null;
+        }
+
+        return now()->diffAsCarbonInterval($this->closesAt($deadline));
+    }
+
+    /** «cierra hoy a las 20:00», «queda un día», «quedan 9 días»; null when not set or already closed. */
+    public function remainingText(Deadline $deadline): ?string
+    {
+        if (! $this->isOpenForMenu($deadline)) {
+            return null;
+        }
+
+        $closesAt = $this->closesAt($deadline);
+        $days = (int) now()->startOfDay()->diffInDays($closesAt->startOfDay());
+
+        return match (true) {
+            $days <= 0 => 'cierra hoy a las '.$closesAt->format('H:i'),
+            $days === 1 => 'queda un día',
+            default => 'quedan '.$days.' días',
+        };
+    }
+
+    /**
+     * Data of the deadline card of the sidebar; null unless the deadline is set and open.
+     *
+     * @return array{label: string, closesAt: CarbonImmutable, opensAt: null, href: string}|null
+     */
+    public function card(Deadline $deadline): ?array
+    {
+        if (! $this->isOpenForMenu($deadline)) {
+            return null;
+        }
+
+        return [
+            'label' => $deadline->label(),
+            'closesAt' => $this->closesAt($deadline),
+            'opensAt' => null,
+            'href' => route($deadline->listRoute()),
+        ];
     }
 
     /** Forgets the configuration read in this request, after the deadlines change. */
