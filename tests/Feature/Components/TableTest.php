@@ -364,4 +364,117 @@ class TableTest extends ComponentTestCase
         $this->assertStringNotContainsString('<b>', $html);
         $this->assertStringNotContainsString('<i>', $html);
     }
+    private const BROWSER_COLUMNS = <<<'PHP'
+        [
+            ['label' => 'Persona', 'key' => 'person'],
+            ['label' => 'Inscrita', 'key' => 'signed', 'sorted' => 'desc'],
+            ['label' => 'Horas', 'key' => 'hours', 'align' => 'end'],
+            ['label' => 'Nota', 'key' => 'note', 'sortable' => false],
+            ['label' => 'Acciones', 'srOnly' => true],
+        ]
+        PHP;
+
+    private function browserTable(string $props = 'sortable', string $body = '<x-ui.table.row><x-ui.table.cell>Ana</x-ui.table.cell></x-ui.table.row>'): string
+    {
+        return $this->render('<x-ui.table caption="Inscripciones" :columns="'.self::BROWSER_COLUMNS.'" '.$props.'>'.$body.'</x-ui.table>');
+    }
+
+    public function test_sortable_turns_every_data_column_into_a_header_button_with_its_state(): void
+    {
+        $html = $this->browserTable();
+
+        $this->assertStringContainsString('x-data="tableSort"', $html);
+        $this->assertStringContainsString('data-sort-mode="browser"', $html);
+        $this->assertSame(3, substr_count($html, '<button type="button" x-on:click="toggle"'), 'Persona, Inscrita and Horas; not the opted out column nor the actions');
+        $this->assertStringContainsString('data-column="0"', $html);
+        $this->assertStringContainsString('data-column="2"', $html);
+        $this->assertStringNotContainsString('data-column="3"', $html);
+        $this->assertStringNotContainsString('data-column="4"', $html);
+        $this->assertSame(1, substr_count($html, 'aria-sort='), 'Only the column the server already ordered by');
+        $this->assertMatchesRegularExpression('/<th role="columnheader" scope="col" class="[^"]*group\/sort"\s+data-label="Inscrita"\s+aria-sort="descending"\s*>\s*<button type="button"/', $html);
+        $this->assertMatchesRegularExpression('/<button type="button" x-on:click="toggle" data-column="0"\s+class="inline-flex min-h-6 cursor-pointer items-center gap-1 font-semibold tracking-wider text-ink uppercase pointer-coarse:min-h-11">\s*Persona/', $html);
+        $this->assertStringContainsString('group-aria-[sort=ascending]/sort:block', $html);
+        $this->assertStringContainsString('group-aria-[sort=descending]/sort:block', $html);
+        $this->assertStringContainsString('<span class="sr-only">Acciones</span>', $html);
+        $this->assertMatchesRegularExpression('/<th role="columnheader" scope="col" class="[^"]*"\s*>\s*Nota/', $html);
+        $this->assertUniqueIds($html);
+        $this->assertCspSafe($html);
+
+        $plain = $this->browserTable('');
+
+        $this->assertStringNotContainsString('tableSort', $plain);
+        $this->assertStringNotContainsString('<button', $plain);
+        $this->assertStringNotContainsString('aria-sort', $plain);
+    }
+
+    public function test_the_phone_cards_get_an_order_select_of_the_system_with_every_column_and_direction(): void
+    {
+        $html = $this->browserTable('sortable filterable');
+
+        $this->assertMatchesRegularExpression('/<select data-table-sort x-on:change="choose" aria-label="Ordenar por"/', $html);
+        $this->assertStringContainsString('<option value="" disabled >Ordenar por</option>', $html);
+        $this->assertStringContainsString('<option value="0:asc" >Persona, ascendente</option>', $html);
+        $this->assertStringContainsString('<option value="1:desc" selected>Inscrita, descendente</option>', $html);
+        $this->assertStringContainsString('<option value="2:desc" >Horas, descendente</option>', $html);
+        $this->assertSame(6, substr_count($html, '<option value="'.'') - 1, 'Three columns in two directions besides the placeholder');
+        $this->assertStringNotContainsString('Nota, ', $html);
+        $this->assertStringContainsString('x-data="tableFilter"', $html, 'The order lives with the quick filter');
+        $this->assertMatchesRegularExpression('/<div class="relative flex max-w-full min-w-0 items-center md:hidden">/', $html);
+        $this->assertCspSafe($html);
+
+        // Alone, the toolbar only shows on the phone; without cards or rows there is nothing to choose
+        $this->assertMatchesRegularExpression('/<div\s+class="flex flex-wrap items-center gap-2 border-b border-rule p-3 md:gap-3 md:px-5 md:py-4 md:hidden"\s*>/', $this->browserTable());
+        $this->assertStringNotContainsString('data-table-sort', $this->browserTable('sortable :cards="false"'));
+        $this->assertStringNotContainsString('data-table-sort', $this->browserTable('sortable', '<x-slot:empty>Nada</x-slot:empty>'));
+        $this->assertStringNotContainsString('tableSort', $this->browserTable('sortable', '<x-slot:empty>Nada</x-slot:empty>'));
+    }
+
+    public function test_the_select_follows_the_links_of_the_server_and_the_browser_order_steps_aside(): void
+    {
+        $html = $this->render('<x-ui.table caption="Evidencias" :columns="$columns" sortable><x-ui.table.row><x-ui.table.cell>x</x-ui.table.cell></x-ui.table.row></x-ui.table>', [
+            'columns' => [
+                ['label' => 'Evidencia', 'key' => 'title', 'sort' => ['href' => '/l?sort=title&dir=asc', 'dir' => null, 'asc' => '/l?sort=title&dir=asc', 'desc' => '/l?sort=title&dir=desc']],
+                ['label' => 'Creada', 'key' => 'created', 'sort' => ['href' => '/l?sort=created&dir=asc', 'dir' => 'desc', 'asc' => '/l?sort=created&dir=asc', 'desc' => '/l?sort=created&dir=desc']],
+                ['label' => 'Comité', 'key' => 'committee'],
+            ],
+        ]);
+
+        $this->assertStringContainsString('data-sort-mode="server"', $html);
+        $this->assertStringNotContainsString('x-on:click="toggle"', $html, 'With links of the server there are no buttons of the browser');
+        $this->assertStringContainsString('<option value="/l?sort=title&amp;dir=desc" >Evidencia, descendente</option>', $html);
+        $this->assertStringContainsString('<option value="/l?sort=created&amp;dir=desc" selected>Creada, descendente</option>', $html);
+        $this->assertStringNotContainsString('Comité, ', $html);
+        $this->assertSame(1, substr_count($html, 'aria-sort="descending"'));
+
+        // Links without the two directions (an older column) keep the header link and stay out of the select
+        $legacy = $this->table('', '<x-ui.table.row><x-ui.table.cell>x</x-ui.table.cell></x-ui.table.row>');
+
+        $this->assertStringNotContainsString('data-table-sort', $legacy);
+        $this->assertStringNotContainsString('tableSort', $legacy);
+    }
+
+    public function test_a_cell_carries_the_value_the_browser_orders_by(): void
+    {
+        $date = $this->render('<x-ui.table.cell :sort-value="$date">hace 3 días</x-ui.table.cell>', ['date' => \Illuminate\Support\Carbon::parse('2026-11-03 10:30:00', 'Europe/Madrid')]);
+
+        $this->assertStringContainsString('data-sort-value="2026-11-03T09:30:00Z"', $date, 'The instant in UTC, so that the text order is the time order');
+        $this->assertStringContainsString('data-sort-value="1"', $this->render('<x-ui.table.cell :sort-value="true">Sí</x-ui.table.cell>'));
+        $this->assertStringContainsString('data-sort-value="0"', $this->render('<x-ui.table.cell :sort-value="false">No</x-ui.table.cell>'));
+        $this->assertStringContainsString('data-sort-value="12.5"', $this->render('<x-ui.table.cell :sort-value="12.5">12,5</x-ui.table.cell>'));
+        $this->assertStringContainsString('data-sort-value="Pérez Ana"', $this->render('<x-ui.table.cell sort-value="Pérez Ana">Ana Pérez</x-ui.table.cell>'));
+        $this->assertStringNotContainsString('data-sort-value', $this->render('<x-ui.table.cell>x</x-ui.table.cell>'));
+    }
+
+    public function test_hours_states_and_people_tell_their_order_to_the_browser(): void
+    {
+        $this->assertStringContainsString('data-sort-value="1"', $this->render('<x-ui.evidence-status status="PENDING" />'));
+        $this->assertStringContainsString('data-sort-value="2"', $this->render('<x-ui.evidence-status status="ACCEPTED" />'));
+        $this->assertStringContainsString('data-sort-value="3"', $this->render('<x-ui.evidence-status status="REJECTED" />'));
+        $this->assertStringContainsString('data-sort-value="0"', $this->render('<x-ui.attendee-status status="Attending" />'));
+        $this->assertStringContainsString('data-sort-value="2"', $this->render('<x-ui.attendee-status status="Checked In" />'));
+        $this->assertStringContainsString('data-sort-value="4"', $this->render('<x-ui.attendee-status status="Not Attending" />'));
+        $this->assertStringContainsString('data-sort-value="1"', $this->render('<x-ui.event-status status="live" />'));
+        $this->assertStringContainsString('data-sort-value="Pérez Romero Lucía"', $this->render('<x-ui.person name="Lucía" surname="Pérez Romero" reverse />'));
+        $this->assertStringContainsString('data-sort-value="1.75"', $this->render('<x-ui.hours :value="1.75" />'));
+    }
 }

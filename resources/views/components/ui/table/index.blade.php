@@ -18,10 +18,20 @@
     </x-ui.table>
     <x-ui.table caption="Evidencias del curso" :columns="$columns" :paginator="$evidences" filterable
         filter-placeholder="Buscar evidencias" count-label="evidencias" count-singular="evidencia">...</x-ui.table>
-    A column is ['label', 'key', 'align' => start|end, 'srOnly' => bool, 'hide' => bool, 'sort' => ['href', 'dir' => asc|desc|null], 'class'].
+    A column is ['label', 'key', 'align' => start|end, 'srOnly' => bool, 'hide' => bool, 'sort' => ['href', 'dir' => asc|desc|null,
+    'asc', 'desc'], 'sortable' => bool, 'sorted' => asc|desc, 'class'].
     columns takes an array or a collection; an Arrayable column is read through toArray(). The paginator is a
     LengthAwarePaginator (App\Support\ListPage::paginate); the search form resends every other key of its query
     string and the size links go back to the first page; its count says count-singular for a single row.
+    Order on the server: the columns come from App\Support\ListSort::columns(), whose sort links keep the query string
+    and go back to the first page. Order in the browser (sortable, only without a paginator or server links): every
+    column with a visible label is a header button with aria-sort, except the srOnly ones (actions) and those with
+    'sortable' => false; 'sorted' marks the column the server already ordered the rows by. A cell orders by its
+    :sort-value (the ISO instant of a date), by the data-sort-value of the hours, states and people inside it, by
+    its <time datetime> or by its visible text (resources/js/components/tableSort.js), and it lives with the quick
+    filter. On the phone, where the header is hidden, the cards get an «Ordenar por» select of the system with every
+    column and direction, which follows the links of the server or orders in the browser.
+    <x-ui.table caption="Firmas" :columns="$columns" sortable filterable>...</x-ui.table>
 --}}
 @use('App\Support\ListPage')
 @use('Illuminate\Contracts\Pagination\LengthAwarePaginator')
@@ -39,6 +49,8 @@
     'id' => null,
     'paginator' => null,
     'paginationLabel' => null,
+    'sortable' => false,
+    'sortLabel' => 'Ordenar por',
 ])
 @php
     throw_if(blank($caption), InvalidArgumentException::class, 'The table component needs a caption.');
@@ -76,6 +88,35 @@
         ->map(fn($column) => $column instanceof Arrayable ? $column->toArray() : $column)
         ->values()
         ->all();
+    // Order: links of the server (ListSort) or buttons of the browser, and the select of the phone cards
+    $hasRows = !isset($empty);
+    $serverSorted = fn(array $column): bool => is_array($column['sort'] ?? null) && !empty($column['sort']['href']);
+    $serverSort = collect($columns)->contains($serverSorted);
+    $browserSort = $sortable && !$paged && !$serverSort && $hasRows;
+    $browserSorted = fn(array $column): bool => $browserSort &&
+        filled($column['label'] ?? null) &&
+        empty($column['srOnly']) &&
+        ($column['sortable'] ?? true) !== false;
+    $sortOptions = [];
+    foreach ($columns as $index => $column) {
+        foreach (['asc' => 'ascendente', 'desc' => 'descendente'] as $way => $wayLabel) {
+            if ($serverSorted($column) && !empty($column['sort'][$way])) {
+                $sortOptions[] = [
+                    'value' => $column['sort'][$way],
+                    'label' => $column['label'] . ', ' . $wayLabel,
+                    'selected' => ($column['sort']['dir'] ?? null) === $way,
+                ];
+            } elseif ($browserSorted($column)) {
+                $sortOptions[] = [
+                    'value' => $index . ':' . $way,
+                    'label' => $column['label'] . ', ' . $wayLabel,
+                    'selected' => ($column['sorted'] ?? null) === $way,
+                ];
+            }
+        }
+    }
+    $phoneSort = $cards && $hasRows && $sortOptions !== [];
+    $sortMode = $browserSort ? 'browser' : ($phoneSort ? 'server' : null);
     $rowHeight = match ($density) {
         'compact' => '[--row-h:3.5rem]',
         default => '[--row-h:4.25rem]',
@@ -93,10 +134,17 @@
         : 'Ordenar de forma ascendente';
 @endphp
 <section
-    {{ $attributes->class(['glass overflow-hidden rounded-xl', $rowHeight])->merge(array_filter(['aria-label' => $caption, 'id' => $id])) }}>
-    @if (isset($toolbar) || $quickFilter || $searchable)
+    {{ $attributes->class(['glass overflow-hidden rounded-xl', $rowHeight])->merge(
+        array_filter([
+            'aria-label' => $caption,
+            'id' => $id,
+            'x-data' => $sortMode !== null ? 'tableSort' : null,
+            'data-sort-mode' => $sortMode,
+        ]),
+    ) }}>
+    @if (isset($toolbar) || $quickFilter || $searchable || $phoneSort)
         <div
-            {{ $toolbarAttributes->class([$toolbarClasses])->merge($quickFilter ? ['x-data' => 'tableFilter', 'data-count-label' => $countLabel] : []) }}>
+            {{ $toolbarAttributes->class([$toolbarClasses, 'md:hidden' => !isset($toolbar) && !$quickFilter && !$searchable])->merge($quickFilter ? ['x-data' => 'tableFilter', 'data-count-label' => $countLabel] : []) }}>
             @isset($toolbar)
                 {{ $toolbar }}
             @endisset
@@ -125,6 +173,22 @@
                     class="h-9 w-0 min-w-0 flex-1 rounded-full border border-field-edge bg-field px-4 text-control text-ink placeholder:text-ink-muted md:ml-auto md:max-w-64 pointer-coarse:min-h-11">
                 <span role="status" class="text-sm text-ink-muted tabular-nums" x-text="summary"></span>
             @endif
+            @if ($phoneSort)
+                <div class="relative flex max-w-full min-w-0 items-center md:hidden">
+                    <x-lucide-arrow-up-down aria-hidden="true"
+                        class="pointer-events-none absolute left-3 size-4 text-ink-muted" />
+                    <select data-table-sort x-on:change="choose" aria-label="{{ $sortLabel }}"
+                        class="h-9 max-w-full min-w-0 cursor-pointer appearance-none truncate rounded-full border border-field-edge bg-field pr-9 pl-9 text-control text-ink pointer-coarse:min-h-11">
+                        <option value="" disabled @selected(!collect($sortOptions)->contains('selected', true))>{{ $sortLabel }}</option>
+                        @foreach ($sortOptions as $option)
+                            <option value="{{ $option['value'] }}" @selected($option['selected'])>{{ $option['label'] }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <x-lucide-chevron-down aria-hidden="true"
+                        class="pointer-events-none absolute right-3 size-4 text-ink-muted" />
+                </div>
+            @endif
         </div>
     @endif
     <div x-data="scrollRegion" x-bind:tabindex="tabindex" x-bind:role="role" x-bind:aria-label="label"
@@ -139,15 +203,35 @@
             @if ($columns !== [])
                 <thead role="rowgroup" @if ($cards) class="hidden md:table-header-group" @endif>
                     <tr role="row" class="border-b border-rule">
-                        @foreach ($columns as $column)
+                        @foreach ($columns as $index => $column)
                             @php
                                 $sort = $column['sort'] ?? null;
-                                $dir = is_array($sort) ? $sort['dir'] ?? null : null;
-                                $sortable = is_array($sort) && !empty($sort['href']);
+                                $linked = $serverSorted($column);
+                                $button = !$linked && $browserSorted($column);
+                                $dir = match (true) {
+                                    $linked => $sort['dir'] ?? null,
+                                    $button => $column['sorted'] ?? null,
+                                    default => null,
+                                };
                             @endphp
-                            <th role="columnheader" scope="col" class="{{ $headerClasses($column, $sortable) }}"
-                                @if ($sortable && $dir !== null) aria-sort="{{ $dir === 'asc' ? 'ascending' : 'descending' }}" @endif>
-                                @if ($sortable)
+                            <th role="columnheader" scope="col" @class([
+                                $headerClasses($column, $linked || $button),
+                                'group/sort' => $button,
+                            ])
+                                @if ($button) data-label="{{ $column['label'] }}" @endif
+                                @if (($linked || $button) && in_array($dir, ['asc', 'desc'], true)) aria-sort="{{ $dir === 'asc' ? 'ascending' : 'descending' }}" @endif>
+                                @if ($button)
+                                    <button type="button" x-on:click="toggle" data-column="{{ $index }}"
+                                        class="inline-flex min-h-6 cursor-pointer items-center gap-1 font-semibold tracking-wider text-ink uppercase pointer-coarse:min-h-11">
+                                        {{ $column['label'] }}
+                                        <x-lucide-arrow-up-down aria-hidden="true"
+                                            class="size-3.5 opacity-55 group-aria-[sort]/sort:hidden" />
+                                        <x-lucide-arrow-up aria-hidden="true"
+                                            class="hidden size-3.5 group-aria-[sort=ascending]/sort:block" />
+                                        <x-lucide-arrow-down aria-hidden="true"
+                                            class="hidden size-3.5 group-aria-[sort=descending]/sort:block" />
+                                    </button>
+                                @elseif ($linked)
                                     <a href="{{ $sort['href'] }}" title="{{ $sortTitle($dir) }}"
                                         class="inline-flex min-h-6 items-center gap-1 text-ink pointer-coarse:min-h-11">
                                         {{ $column['label'] ?? '' }}
