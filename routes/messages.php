@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\MessageThreadController;
 use App\Http\Middleware\CheckRoles;
+use Illuminate\Routing\RedirectController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,3 +20,10 @@ Route::middleware(['auth', 'csp:enforce'])->prefix('messages')->name('messages.'
         Route::post('/{thread}/reopen', 'reopen')->whereNumber('thread')->name('reopen');
     });
 
+// The old suggestions mailbox is now a thread to the lecturers (GET only, not the any() of Route::redirect); the name
+// stays while the footer links it
+Route::get('/suggestionsmailbox', RedirectController::class)
+    ->middleware('auth')
+    ->defaults('destination', '/messages/create?to=LECTURE')
+    ->defaults('status', 302)
+    ->name('suggestionsmailbox');

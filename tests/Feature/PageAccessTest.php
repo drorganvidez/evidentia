@@ -154,8 +154,6 @@ class PageAccessTest extends TestCase
             'login' => [[], [self::GUEST]],
             'block' => [[], []],
             'profile.view' => [[], self::EVERYONE],
-            'message.mailbox' => [[], self::EVERYONE],
-            'suggestionsmailbox' => [[], self::EVERYONE],
             'password.custom_reset' => [[], [self::GUEST]],
             'password.custom_update' => [['token' => 'token'], [self::GUEST]],
             'sign' => [['random_identifier' => '7391'], [self::GUEST, ...self::EVERYONE]],

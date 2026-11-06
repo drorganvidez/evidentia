@@ -20,13 +20,11 @@ use App\Http\Controllers\IntegrityController;
 use App\Http\Controllers\ManagementController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\MeetingSecretaryController;
-use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProofController;
 use App\Http\Controllers\RandomizeController;
 use App\Http\Controllers\SignController;
-use App\Http\Controllers\SuggestionsMailboxController;
 use App\Http\Controllers\UploadController;
 use App\Http\Middleware\BonusMine;
 use App\Http\Middleware\CheckNotNull;
@@ -318,10 +316,6 @@ Route::middleware('auth')->group(function () {
         Route::post('randomize/save', [RandomizeController::class, 'randomize_save'])->name('randomize.save');
     });
 
-    // SUGGESTIONS MAILBOX
-    Route::get('suggestionsmailbox', [SuggestionsMailboxController::class, 'suggestionsmailbox'])->name('suggestionsmailbox');
-    Route::post('suggestionsmailbox_p', [SuggestionsMailboxController::class, 'suggestionsmailbox_p'])->name('suggestionsmailbox_p');
-
     // EVIDENCES
     Route::get('evidence/list', [EvidenceController::class, 'list'])->name('evidence.list');
 
@@ -357,9 +351,6 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/xls/upload/process', [UploadController::class, 'process'])->name('xls.upload.process');
     Route::get('/xls/upload/remove/{file_name}', [UploadController::class, 'remove'])->name('xls.upload.remove');
-
-    // MESSAGES
-    Route::get('mailbox', [MessageController::class, 'mailbox'])->name('message.mailbox');
 
     /**
      *  GENERAL PURPOSE

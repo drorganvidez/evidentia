@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Mail\SuggestionsMailbox;
+use App\Models\MessageThread;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -69,15 +69,21 @@ class ProfileTest extends TestCase
         $this->assertTrue(Hash::check('Nuevo-Secreto-26', $this->user->fresh()->password));
     }
 
-    public function test_users_send_suggestions(): void
+    public function test_users_write_to_the_lecturers(): void
     {
         Mail::fake();
+        $lecturer = User::factory()->create();
+        $lecturer->roles()->attach(Role::forceCreate(['rol' => 'LECTURE', 'slug' => 'lecture']));
 
-        $this->post(route('suggestionsmailbox_p'), ['subject' => 'Mejora', 'comment' => '<p>Estaría bien poder exportar mis horas.</p>'])
-            ->assertRedirect(route('suggestionsmailbox'));
-        $this->post(route('suggestionsmailbox_p'), ['subject' => '', 'comment' => 'corto'])
-            ->assertSessionHasErrors(['subject', 'comment']);
+        $this->get('/suggestionsmailbox')->assertRedirect('/messages/create?to=LECTURE');
+        $this->get(route('messages.create', ['to' => 'LECTURE']))->assertOk()->assertSee('Sugerencias al profesorado');
 
-        Mail::assertSent(SuggestionsMailbox::class, 1);
+        $this->post(route('messages.store'), ['recipient' => 'LECTURE', 'subject' => 'Mejora', 'body' => 'Estaría bien poder exportar mis horas.'])
+            ->assertRedirect(route('messages.show', MessageThread::sole()));
+        $this->post(route('messages.store'), ['recipient' => 'LECTURE', 'subject' => '', 'body' => 'corto'])
+            ->assertSessionHasErrors(['subject', 'body']);
+
+        $this->assertSame('LECTURE', MessageThread::sole()->recipient_role);
+        Mail::assertNothingSent();
     }
 }

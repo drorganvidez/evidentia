@@ -357,7 +357,6 @@ final class LegacyWrites
             'ui.demo.submit' => 'Catálogo',
             'lecture.errors.resolve' => 'Errores del servidor, fuera del registro de actividad (ErrorReportingTest)',
             'lecture.errors.reopen' => 'Errores del servidor, fuera del registro de actividad (ErrorReportingTest)',
-            'suggestionsmailbox_p' => 'Se sustituye por los mensajes',
         ];
     }
 
