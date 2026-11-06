@@ -14,8 +14,9 @@ export default defineConfig({
               host: '0.0.0.0',
               port: 5173,
               strictPort: true,
-              // laravel-vite-plugin 3.2 reads server.hmr.host to compose the hot file URL
-              hmr: { host: 'localhost' },
+              // laravel-vite-plugin 3.2 reads server.hmr.host to compose the hot file URL;
+              // clientPort follows the port published by docker-compose.dev.yml
+              hmr: { host: 'localhost', clientPort: Number(process.env.VITE_PORT ?? 5173) },
           }
         : {},
     build: {

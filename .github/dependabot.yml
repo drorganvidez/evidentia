@@ -23,6 +23,18 @@ updates:
     directory: /docker
     schedule:
       interval: weekly
+    ignore:
+      # PHP moves by hand (composer.json platform and the CI matrix must follow)
+      - dependency-name: php
+        update-types: ['version-update:semver-minor', 'version-update:semver-major']
+      # Node majors move by hand (.nvmrc, package.json engines and the CI must follow)
+      - dependency-name: node
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: docker-compose
+    directory: /docker
+    schedule:
+      interval: weekly
 
   - package-ecosystem: composer
     directory: /

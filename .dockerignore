@@ -7,10 +7,14 @@ vendor
 public/build
 public/hot
 public/storage
+storage/app/*
 storage/logs/*
-storage/framework/cache/data/*
+storage/framework/cache/*
 storage/framework/sessions/*
+storage/framework/testing/*
 storage/framework/views/*
+database/*.sqlite*
+.claude
 .env
 .env.*
 .phpunit.result.cache

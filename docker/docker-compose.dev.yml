@@ -31,8 +31,10 @@ services:
     container_name: evidentia_vite_container
     user: '1000:1000'
     working_dir: /var/www/html
+    # node_modules lives in the bind mount and is installed from here (Linux binaries); it is
+    # reinstalled whenever package-lock.json is newer than the last install.
     command: >
-      sh -c "[ -f node_modules/.package-lock.json ] || npm ci --no-audit --no-fund;
+      sh -c "[ node_modules/.package-lock.json -nt package-lock.json ] || npm ci --no-audit --no-fund;
              exec npm run dev"
     volumes:
       - ../:/var/www/html
@@ -40,6 +42,7 @@ services:
       - '${VITE_PORT:-5173}:5173'
     environment:
       VITE_DOCKER: '1'
+      VITE_PORT: '${VITE_PORT:-5173}'
     networks:
       - evidentia_net
 
