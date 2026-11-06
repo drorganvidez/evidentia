@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------------
 # Tests Workflow
-# This workflow checks the code style and runs the test suite on every push
-# to main and on every pull request.
+# Backend (Pint + PHPUnit) and front end (lint, format check, Vite build) on
+# every push to main and on every pull request.
 # ----------------------------------------------------------------------------
 
 name: Tests
@@ -11,15 +11,17 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
-  tests:
+  backend:
+    name: Backend (Pint + PHPUnit)
     runs-on: ubuntu-24.04
 
     steps:
-      # Step 1: Check out the repository code
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
-      # Step 2: Set up PHP with the extensions the app needs
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -27,14 +29,47 @@ jobs:
           extensions: gd, zip, exif, mbstring, pdo_sqlite
           coverage: none
 
-      # Step 3: Install Composer dependencies
       - name: Install dependencies
         run: composer install --no-interaction --no-progress --prefer-dist
 
-      # Step 4: Check the code style
       - name: Check code style
         run: vendor/bin/pint --test
 
-      # Step 5: Run the test suite
       - name: Run tests
         run: vendor/bin/phpunit
+
+  frontend:
+    name: Front end (lint + build)
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v7
+
+      # Node version from .nvmrc (26) and an npm cache keyed by package-lock.json
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      # Clean install; fails if package.json and the lockfile are out of sync
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Upload build
+        uses: actions/upload-artifact@v7
+        with:
+          name: public-build
+          path: public/build
+          retention-days: 7
+          if-no-files-found: error
