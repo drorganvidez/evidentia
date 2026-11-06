@@ -12,10 +12,12 @@ use Illuminate\Support\Facades\Route;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
+        // each area keeps its own file of routes, all of them in the web group
         web: [
             __DIR__.'/../routes/web.php',
             __DIR__.'/../routes/activity.php',
             __DIR__.'/../routes/messages.php',
+            __DIR__.'/../routes/notifications.php',
         ],
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
