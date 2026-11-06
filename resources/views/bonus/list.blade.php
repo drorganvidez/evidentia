@@ -1,6 +1,6 @@
 {{-- Hour bonuses of the committee of the secretary; while the bonus deadline is open each row opens its edition --}}
 @php
-    $bonusOpen = !\Carbon\Carbon::now()->gt(\Config::bonus_timestamp());
+    $bonusOpen = !\Carbon\Carbon::now()->gt(\Config::bonus_timestamp() ?? now());
     $columns = [
         ['label' => 'Bono', 'key' => 'reason'],
         ['label' => 'Personas', 'key' => 'users', 'align' => 'end'],

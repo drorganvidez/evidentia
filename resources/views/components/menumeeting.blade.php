@@ -21,7 +21,7 @@
                     </a>
                 </li>
 
-                @if (!\Carbon\Carbon::now()->gt(\Config::meetings_timestamp()))
+                @if (!\Carbon\Carbon::now()->gt(\Config::meetings_timestamp() ?? now()))
                 <li class="nav-item">
                     <a href="{{ route('secretary.meeting.manage.minutes.create') }}"
                         class="nav-link

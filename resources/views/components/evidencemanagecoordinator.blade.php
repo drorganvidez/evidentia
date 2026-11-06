@@ -1,4 +1,4 @@
-@if ($evidence->status != 'ACCEPTED' and !\Carbon\Carbon::now()->gt(\Config::validate_evidences_timestamp()))
+@if ($evidence->status != 'ACCEPTED' and !\Carbon\Carbon::now()->gt(\Config::validate_evidences_timestamp() ?? now()))
     <form class="d-inline" method="POST" action="{{ route('coordinator.evidence.accept', ['id' => $evidence->id]) }}">
         @csrf
         <button type="submit" class="btn btn-success btn-sm" title="Aceptar evidencia">
@@ -7,14 +7,14 @@
     </form>
 @endif
 
-@if ($evidence->status != 'REJECTED' and !\Carbon\Carbon::now()->gt(\Config::validate_evidences_timestamp()))
+@if ($evidence->status != 'REJECTED' and !\Carbon\Carbon::now()->gt(\Config::validate_evidences_timestamp() ?? now()))
     <a class="btn btn-danger btn-sm" href="#" data-toggle="modal" data-target="#modal-rejected-{{ $evidence->id }}">
         <i class="far fa-thumbs-down"></i>
         <span class="d-none d-sm-none d-md-none d-lg-inline"></span>
     </a>
 @endif
 
-@if (!\Carbon\Carbon::now()->gt(\Config::validate_evidences_timestamp()))
+@if (!\Carbon\Carbon::now()->gt(\Config::validate_evidences_timestamp() ?? now()))
     <div class="container">
         <div class="modal fade" id="modal-rejected-{{ $evidence->id }}">
             <div class="modal-dialog modal-dialog-centered">

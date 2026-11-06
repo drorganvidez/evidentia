@@ -9,7 +9,7 @@
     $reviewer =
         $coordinated !== null && $evidence->committee_id === $coordinated->id && $evidence->user_id !== $user->id;
     $author = !$reviewer && $evidence->user_id === $user->id;
-    $validationOpen = !now()->gt(\Config::validate_evidences_timestamp());
+    $validationOpen = !now()->gt(\Config::validate_evidences_timestamp() ?? now());
     $uploadClosesAt = \Config::upload_evidences_timestamp();
     $uploadOpen = !now()->gt($uploadClosesAt);
     $reason = $evidence->status === 'REJECTED' ? $evidence->reasonRejection : null;

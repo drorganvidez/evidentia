@@ -1,6 +1,6 @@
 {{-- Summary of the meetings of a secretary: the figures of the three documents, the next calls and the last minutes --}}
 @php
-    $meetingsOpen = !\Carbon\Carbon::now()->gt(\Config::meetings_timestamp());
+    $meetingsOpen = !\Carbon\Carbon::now()->gt(\Config::meetings_timestamp() ?? now());
     $upcoming = $meeting_requests
         ->filter(fn($request) => $request->datetime !== null && \Carbon\Carbon::parse($request->datetime)->isFuture())
         ->sortBy('datetime')

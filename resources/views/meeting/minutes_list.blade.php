@@ -1,6 +1,6 @@
 {{-- Minutes of the secretary: each row opens its edition while the meetings deadline is open, its PDF afterwards --}}
 @php
-    $meetingsOpen = !\Carbon\Carbon::now()->gt(\Config::meetings_timestamp());
+    $meetingsOpen = !\Carbon\Carbon::now()->gt(\Config::meetings_timestamp() ?? now());
     $columns = [
         ['label' => 'Reunión', 'key' => 'title'],
         ['label' => 'Celebrada', 'key' => 'datetime'],

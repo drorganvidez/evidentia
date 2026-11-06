@@ -6,7 +6,7 @@
 --}}
 @php
     $compact ??= false;
-    $open = !now()->gt(\Config::upload_evidences_timestamp());
+    $open = !now()->gt(\Config::upload_evidences_timestamp() ?? now());
     $named = fn(string $verb): string => $compact ? $verb . ' ' . $evidence->title : $verb;
 @endphp
 @if ($open)

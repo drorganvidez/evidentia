@@ -4,7 +4,7 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
             <li class="nav-header">ASISTENCIAS Y EVENTOS</li>
-            @if (!\Carbon\Carbon::now()->gt(\Config::attendee_timestamp()))
+            @if (!\Carbon\Carbon::now()->gt(\Config::attendee_timestamp() ?? now()))
                 <x-li route="registercoordinator.token" icon='fas fa-screwdriver' name="Ajustes de Eventbrite" />
             @endif
             <x-li route="registercoordinator.event.list" icon='fas fa-calendar-alt' name="Gestionar eventos" />

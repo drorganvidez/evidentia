@@ -79,59 +79,60 @@ class Config
 {
     private static function config_entity()
     {
+        // a course still without its configuration reads every setting as unset instead of failing
         return Configuration::all()->find(1);
     }
 
     public static function max_attendees_hours()
     {
-        return self::config_entity()->max_attendees_hours;
+        return self::config_entity()?->max_attendees_hours;
     }
 
     // configuración de fechas límite
 
     public static function upload_evidences_timestamp()
     {
-        return self::config_entity()->upload_evidences_timestamp;
+        return self::config_entity()?->upload_evidences_timestamp;
     }
 
     public static function validate_evidences_timestamp()
     {
-        return self::config_entity()->validate_evidences_timestamp;
+        return self::config_entity()?->validate_evidences_timestamp;
     }
 
     public static function meetings_timestamp()
     {
-        return self::config_entity()->meetings_timestamp;
+        return self::config_entity()?->meetings_timestamp;
     }
 
     public static function bonus_timestamp()
     {
-        return self::config_entity()->bonus_timestamp;
+        return self::config_entity()?->bonus_timestamp;
     }
 
     public static function attendee_timestamp()
     {
-        return self::config_entity()->attendee_timestamp;
+        return self::config_entity()?->attendee_timestamp;
     }
 
     public static function events_uploaded_timestamp()
     {
-        return self::config_entity()->events_uploaded_timestamp;
+        return self::config_entity()?->events_uploaded_timestamp;
     }
 
     public static function attendees_uploaded_timestamp()
     {
-        return self::config_entity()->attendees_uploaded_timestamp;
+        return self::config_entity()?->attendees_uploaded_timestamp;
     }
 
     public static function secret()
     {
-        return self::config_entity()->secret;
+        return self::config_entity()?->secret;
     }
 
     public static function eventbrite_token()
     {
-        return self::config_entity()->eventbrite_token;
+        return self::config_entity()?->eventbrite_token;
     }
 }
 

@@ -8,7 +8,7 @@
 
             @if (
                 \App\Models\Configuration::first()?->upload_evidences_timestamp &&
-                    !\Carbon\Carbon::now()->gt(\Config::upload_evidences_timestamp()))
+                    !\Carbon\Carbon::now()->gt(\Config::upload_evidences_timestamp() ?? now()))
                 <x-li route="evidence.create" icon='fab fa-angellist' name="Crear evidencia" />
             @endif
 

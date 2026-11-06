@@ -2,7 +2,7 @@
 @php
     $closesAt = \Config::upload_evidences_timestamp();
     // Open as the routes read it (CheckUploadEvidences): until the date passes, also when there is none
-    $open = !now()->gt($closesAt);
+    $open = !now()->gt($closesAt ?? now());
     $columns = [
         ['label' => 'Evidencia', 'key' => 'title'],
         ['label' => 'Comité', 'key' => 'committee', 'hide' => true],
