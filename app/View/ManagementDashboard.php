@@ -57,7 +57,7 @@ final class ManagementDashboard
                 'committee' => route("$prefix.committee.view", ['id' => '__id__']),
                 'export' => route("$prefix.export"),
                 // Not «errors»: views share a validation bag under that name
-                'serverErrors' => $prefix === 'lecture' ? route('lecture.errors') : null,
+                'serverErrors' => route("$prefix.errors"),
             ],
             'kpis' => [
                 'hours' => $hours['total'],
@@ -80,9 +80,11 @@ final class ManagementDashboard
             'signals' => $this->signals(),
             'access' => $this->access(),
             // Not «errors»: views share a validation bag under that name
-            'serverErrors' => $prefix === 'lecture'
-                ? ['open' => ErrorReport::open()->count(), 'latest' => ErrorReport::open()->orderByDesc('last_seen_at')->limit(3)->get()]
-                : null,
+            'serverErrors' => [
+                'open' => ErrorReport::open()->count(),
+                'latest' => ErrorReport::open()->orderByDesc('last_seen_at')->limit(3)->get(),
+                'show' => "$prefix.errors.show",
+            ],
             'deadlines' => $this->dashboard->for($user)['deadlines'],
         ];
     }

@@ -46,7 +46,7 @@ class HomeScreenTest extends ScreenTestCase
             $this->assertStringContainsString(route("$prefix.export"), $html);
             $this->assertStringNotContainsString('Mis últimas evidencias', $html, 'Nothing of the page of a participant');
             $this->assertStringNotContainsString('Horas computadas', $html);
-            $this->assertSame($prefix === 'lecture', str_contains($html, 'Errores del servidor'), 'Only the lecturer sees the server errors');
+            $this->assertStringContainsString('Errores del servidor', $html, "$who sees the server errors");
         }
     }
 

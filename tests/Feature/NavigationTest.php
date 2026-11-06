@@ -126,7 +126,8 @@ class NavigationTest extends TestCase
 
         $president = app(Navigation::class)->for($this->user('PRESIDENT'), 'home');
         $this->assertNotContains('Importar', $this->labels($president['nav'])['Gestión']);
-        $this->assertNotContains('Errores', $this->labels($president['nav'])['Gestión'], 'The server errors are for the lecturers');
+        $this->assertContains('Errores', $this->labels($president['nav'])['Gestión'], 'The president sees the server errors too');
+        $this->assertStringContainsString('/president/errors', collect(collect($president['nav'])->firstWhere('label', 'Gestión')['items'])->firstWhere('label', 'Errores')['href']);
     }
 
     public function test_the_layout_composes_the_navigation_when_the_page_does_not_pass_it(): void

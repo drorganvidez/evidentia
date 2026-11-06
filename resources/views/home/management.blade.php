@@ -170,7 +170,7 @@
                         <ul class="grid gap-3">
                             @foreach ($serverErrors['latest'] as $report)
                                 <li class="grid gap-0.5">
-                                    <a href="{{ route('lecture.errors.show', $report->id) }}"
+                                    <a href="{{ route($serverErrors['show'], $report->id) }}"
                                         class="font-semibold text-ink hover:text-brand-ink">{{ $report->shortException() }}</a>
                                     <span
                                         class="text-sm text-ink-muted">{{ $plural($report->occurrences, 'vez', 'veces') }}

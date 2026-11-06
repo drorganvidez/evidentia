@@ -164,9 +164,30 @@ class ErrorReportingTest extends TestCase
         $this->assertNull($report->fresh()->resolved_at);
     }
 
-    public function test_only_the_lecturers_open_the_errors_screen(): void
+    public function test_the_president_lists_resolves_and_reopens_them_under_their_own_routes(): void
     {
-        $this->actingAs($this->person('PRESIDENT'))->get(route('lecture.errors'))->assertNotFound();
-        $this->actingAs($this->person('STUDENT'))->get(route('lecture.errors'))->assertNotFound();
+        Notification::fake();
+        $this->get('/_boom');
+        $report = ErrorReport::where('message', 'Fallo de prueba')->sole();
+
+        $this->actingAs($this->person('PRESIDENT'));
+        $this->get(route('president.errors'))->assertOk()->assertSee('Fallo de prueba')
+            ->assertSee('href="'.route('president.errors.show', $report->id).'"', false)
+            ->assertDontSee('/lecture/errors', false);
+        $this->get(route('president.errors.show', $report->id))->assertOk()
+            ->assertSee('action="'.route('president.errors.resolve', $report->id).'"', false);
+
+        $this->post(route('president.errors.resolve', $report->id))->assertRedirect(route('president.errors'));
+        $this->assertNotNull($report->fresh()->resolved_at);
+        $this->post(route('president.errors.reopen', $report->id))->assertRedirect(route('president.errors.show', $report->id));
+        $this->assertNull($report->fresh()->resolved_at);
+    }
+
+    public function test_only_the_management_opens_the_errors_screen(): void
+    {
+        foreach (['STUDENT', 'COORDINATOR'] as $role) {
+            $this->actingAs($this->person($role))->get(route('lecture.errors'))->assertNotFound();
+            $this->actingAs($this->person($role))->get(route('president.errors'))->assertNotFound();
+        }
     }
 }

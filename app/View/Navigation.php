@@ -149,10 +149,8 @@ final class Navigation
                 $items[] = $inbox();
                 $inboxShown = true;
             }
-            if ($has('LECTURE')) {
-                $open = ErrorReport::open()->count();
-                $items[] = $item('Errores', 'lecture.errors', 'bug', ['lecture.errors.show'], $open > 0 ? ['count' => $open, 'countLabel' => 'abiertos'] : []);
-            }
+            $open = ErrorReport::open()->count();
+            $items[] = $item('Errores', "$p.errors", 'bug', ["$p.errors.show"], $open > 0 ? ['count' => $open, 'countLabel' => 'abiertos'] : []);
             $nav[] = ['label' => 'Gestión', 'items' => $items];
         }
 

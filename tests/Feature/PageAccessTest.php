@@ -214,8 +214,10 @@ class PageAccessTest extends TestCase
             'registercoordinator.attendee.export' => [[], ['REGISTER_COORDINATOR']],
             'attendee.create' => [[], ['REGISTER_COORDINATOR']],
             'attendee.edit' => [['id' => 'attendee'], ['REGISTER_COORDINATOR']],
-            'lecture.errors' => [[], ['LECTURE']],
-            'lecture.errors.show' => [['id' => 'errorReport'], ['LECTURE']],
+            'lecture.errors' => [[], self::MANAGEMENT],
+            'lecture.errors.show' => [['id' => 'errorReport'], self::MANAGEMENT],
+            'president.errors' => [[], self::MANAGEMENT],
+            'president.errors.show' => [['id' => 'errorReport'], self::MANAGEMENT],
             'registercoordinator.event.create' => [[], ['REGISTER_COORDINATOR']],
             'registercoordinator.event.edit' => [['id' => 'manualEvent'], ['REGISTER_COORDINATOR']],
 

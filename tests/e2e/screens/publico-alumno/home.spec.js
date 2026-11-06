@@ -75,9 +75,7 @@ test.describe('Inicio', () => {
                 page.getByRole('list', { name: 'Evidencias enviadas en las últimas ocho semanas' }),
             ).toBeVisible();
             await expect(page.getByRole('region', { name: 'Señales del registro' })).toBeVisible();
-            await expect(page.getByRole('region', { name: 'Errores del servidor' })).toHaveCount(
-                prefix === 'lecture' ? 1 : 0,
-            );
+            await expect(page.getByRole('region', { name: 'Errores del servidor' })).toHaveCount(1);
             await audit(page, ui);
         });
     }

@@ -1,6 +1,6 @@
-{{-- Server errors for the lecturers: open, resolved or all, newest first, searchable by the code of the error page --}}
+{{-- Server errors for the lecturers and the president: open, resolved or all, newest first, searchable by the code of the error page --}}
 @php
-    $base = route('lecture.errors');
+    $base = route($prefix . '.errors');
     $tabs = collect(['abiertos' => 'Abiertos', 'resueltos' => 'Resueltos', 'todos' => 'Todos'])
         ->map(
             fn(string $label, string $key) => [
@@ -34,9 +34,9 @@
             </div>
         </x-slot:toolbar>
         @foreach ($reports as $report)
-            <x-ui.table.row :href="route('lecture.errors.show', $report->id)">
+            <x-ui.table.row :href="route($prefix . '.errors.show', $report->id)">
                 <x-ui.table.cell label="Error" primary>
-                    <a href="{{ route('lecture.errors.show', $report->id) }}">{{ $report->shortException() }}</a>
+                    <a href="{{ route($prefix . '.errors.show', $report->id) }}">{{ $report->shortException() }}</a>
                     <span class="block text-sm text-ink-muted">{{ Str::limit($report->message, 120) }}</span>
                 </x-ui.table.cell>
                 <x-ui.table.cell label="Veces" numeric>{{ $report->occurrences }}</x-ui.table.cell>

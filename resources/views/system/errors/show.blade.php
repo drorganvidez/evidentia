@@ -1,7 +1,7 @@
 {{-- One server error: what, where, how many times, its latest occurrences with the code each person saw, and its trace --}}
-<x-layout.app :title="$report->shortException()" nav-current="lecture.errors" :breadcrumbs="[
+<x-layout.app :title="$report->shortException()" :nav-current="$prefix . '.errors'" :breadcrumbs="[
     ['label' => 'Inicio', 'href' => route('home')],
-    ['label' => 'Errores', 'href' => route('lecture.errors')],
+    ['label' => 'Errores', 'href' => route($prefix . '.errors')],
     ['label' => $report->shortException()],
 ]">
     <x-ui.page-header :title="$report->shortException()">
@@ -16,12 +16,12 @@
         </x-slot:eyebrow>
         <x-slot:actions>
             @if ($report->resolved_at)
-                <form method="post" action="{{ route('lecture.errors.reopen', $report->id) }}">
+                <form method="post" action="{{ route($prefix . '.errors.reopen', $report->id) }}">
                     @csrf
                     <x-ui.button type="submit" icon="rotate-ccw">Reabrir</x-ui.button>
                 </form>
             @else
-                <form method="post" action="{{ route('lecture.errors.resolve', $report->id) }}">
+                <form method="post" action="{{ route($prefix . '.errors.resolve', $report->id) }}">
                     @csrf
                     <x-ui.button type="submit" variant="primary" icon="circle-check">Marcar como resuelto</x-ui.button>
                 </form>

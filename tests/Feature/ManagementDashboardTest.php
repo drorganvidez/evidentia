@@ -76,7 +76,7 @@ class ManagementDashboardTest extends TestCase
         $this->assertTrue($panel['activity']->doesntContain('action', 'login'), 'The accesses stay out of the latest actions');
         $this->assertSame(['Autorrevisiones', 'Fuera de plazo', 'Doble rol'], array_column($panel['signals'], 'label'));
         $this->assertNotNull($this->panel('profesor')['serverErrors']);
-        $this->assertNull($this->panel('presidente')['serverErrors']);
+        $this->assertSame('president.errors.show', $this->panel('presidente')['serverErrors']['show']);
         $this->assertNotNull($lecturer);
     }
 

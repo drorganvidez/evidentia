@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\ErrorOccurrence;
 use App\Models\ErrorReport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-/** The server errors for the lecturers: grouped, with their occurrences, resolved by hand and reopened if they return. */
+/**
+ * The server errors for the lecturers and the president: grouped, with their occurrences, resolved by hand and
+ * reopened if they return. Each one reaches them under the routes of their own role (lecture.* or president.*).
+ */
 class ErrorReportController extends Controller
 {
     public function index(Request $request)
@@ -31,6 +35,7 @@ class ErrorReportController extends Controller
             'reports' => $reports,
             'state' => $state,
             'code' => $code,
+            'prefix' => $this->prefix(),
             'counts' => [
                 'abiertos' => ErrorReport::open()->count(),
                 'resueltos' => ErrorReport::resolved()->count(),
@@ -43,20 +48,25 @@ class ErrorReportController extends Controller
     {
         $report = ErrorReport::with('latestOccurrences')->findOrFail($id);
 
-        return view('system.errors.show', ['report' => $report]);
+        return view('system.errors.show', ['report' => $report, 'prefix' => $this->prefix()]);
     }
 
     public function resolve(int $id)
     {
         ErrorReport::findOrFail($id)->update(['resolved_at' => now()]);
 
-        return redirect()->route('lecture.errors')->with('success', 'Error marcado como resuelto.');
+        return redirect()->route($this->prefix().'.errors')->with('success', 'Error marcado como resuelto.');
     }
 
     public function reopen(int $id)
     {
         ErrorReport::findOrFail($id)->update(['resolved_at' => null]);
 
-        return redirect()->route('lecture.errors.show', $id)->with('success', 'Error reabierto.');
+        return redirect()->route($this->prefix().'.errors.show', $id)->with('success', 'Error reabierto.');
+    }
+
+    private function prefix(): string
+    {
+        return Auth::user()->hasRole('LECTURE') ? 'lecture' : 'president';
     }
 }
