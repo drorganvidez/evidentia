@@ -209,7 +209,8 @@ test.describe('Avisos', () => {
 
         await section.getByRole('button', { name: 'Anunciar en la región de estado' }).click();
         await expect(page.locator(STATUS)).toHaveText('Anuncio de prueba');
-        await expect(page.locator(NOTICE)).toHaveCount(0, { timeout: 1000 });
+        // Read once the region has the text: a notice pushed by the same call would be in the DOM already
+        expect(await page.locator(NOTICE).count(), 'Un anuncio no muestra ningún aviso').toBe(0);
 
         // The announcement is cleared so the same text can be announced again
         await page.clock.fastForward(5_500);
