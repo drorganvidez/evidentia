@@ -13,6 +13,7 @@ test.describe('Eventos y asistencias', () => {
         ['/registercoordinator/event/create', 'Nuevo evento'],
         ['/attendees', 'Asistencias'],
         ['/attendees/create', 'Añadir asistencia'],
+        ['/attendees/import', 'Importar asistencias'],
     ]) {
         test(`${title} pasa axe en claro y oscuro`, async ({ page, ui }) => {
             await page.goto(path);
@@ -31,6 +32,16 @@ test.describe('Eventos y asistencias', () => {
         await page.getByLabel('Token', { exact: true }).fill('');
         await page.getByRole('button', { name: 'Validar y guardar' }).click();
         await expect(page.getByText('Revisa el formulario')).toBeVisible();
+    });
+
+    test('importar asistencias sin hoja lo avisa', async ({ page }) => {
+        await page.goto('/attendees');
+        await page.locator('#attendee-import').click();
+        await expect(page.getByRole('heading', { level: 1 })).toHaveText('Importar asistencias');
+        await page.locator('#attendee-import-form [type=submit]').click();
+        await expect(
+            page.getByText('Sube primero la hoja con las asistencias.').first(),
+        ).toBeVisible();
     });
 
     test('lista los eventos y las asistencias del seed', async ({ page }) => {

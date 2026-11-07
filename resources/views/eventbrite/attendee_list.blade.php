@@ -22,6 +22,7 @@
         <x-slot:actions>
             <x-ui.button icon="download" :href="route('registercoordinator.attendee.export')">Exportar</x-ui.button>
             @if ($open)
+                <x-ui.button icon="import" :href="route('attendee.import')" id="attendee-import">Importar</x-ui.button>
                 <x-ui.button variant="primary" icon="plus" :href="route('attendee.create')">Añadir
                     asistencia</x-ui.button>
             @endif

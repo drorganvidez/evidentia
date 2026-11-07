@@ -55,6 +55,7 @@ enum ActivityAction: string
     case AttendeeCreated = 'attendee.created';
     case AttendeeEdited = 'attendee.edited';
     case AttendeeDeleted = 'attendee.deleted';
+    case AttendeesImported = 'attendee.imported';
     case EventCreated = 'event.created';
     case EventEdited = 'event.edited';
     case EventDeleted = 'event.deleted';
@@ -158,6 +159,7 @@ enum ActivityAction: string
         'attendee.created' => ['Asistencia registrada', 'accepted', 'attendance', Deadline::Attendees],
         'attendee.edited' => ['Asistencia editada', 'draft', 'attendance', Deadline::Attendees],
         'attendee.deleted' => ['Asistencia eliminada', 'rejected', 'attendance', Deadline::Attendees],
+        'attendee.imported' => ['Asistencias importadas', 'accepted', 'attendance', Deadline::Attendees],
         'event.created' => ['Evento creado a mano', 'accepted', 'attendance', Deadline::Attendees],
         'event.edited' => ['Evento editado', 'draft', 'attendance', Deadline::Attendees],
         'event.deleted' => ['Evento eliminado', 'rejected', 'attendance', Deadline::Attendees],

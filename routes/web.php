@@ -229,6 +229,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/create', [EventbriteController::class, 'attendee_create'])->name('attendee.create');
             Route::post('/create', [EventbriteController::class, 'attendee_store'])->name('attendee.store');
 
+            Route::get('/import', [EventbriteController::class, 'attendee_import'])->name('attendee.import');
+            Route::post('/import', [EventbriteController::class, 'attendee_import_save'])->name('attendee.import.save');
+
             Route::delete('/{id}', [EventbriteController::class, 'attendee_destroy'])->name('attendee.destroy');
         });
 

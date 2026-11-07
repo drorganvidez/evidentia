@@ -8,6 +8,7 @@ use App\Exports\AttendeesExport;
 use App\Facades\Activity;
 use App\Http\Controllers\Concerns\PaginatesLists;
 use App\Http\Middleware\CheckRoles;
+use App\Imports\AttendeesImport;
 use App\Models\Attendee;
 use App\Models\Configuration;
 use App\Models\Event;
@@ -23,6 +24,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
 class EventbriteController extends Controller
@@ -605,6 +607,96 @@ class EventbriteController extends Controller
 
         return redirect()->route('registercoordinator.attendee.list')
             ->with('success', 'Asistencia creada con éxito.');
+    }
+
+    public function attendee_import()
+    {
+        $events = Event::orderByDesc('start_datetime')->get();
+
+        return view('eventbrite.attendee_import', compact('events'));
+    }
+
+    /**
+     * Marks as attended every person of the sheet in the chosen event, found by UVUS or by mail. The rows with no person
+     * in Evidentia are named back, and the own attendance is left out, as by hand.
+     */
+    public function attendee_import_save(Request $request)
+    {
+        $request->validate(['event_id' => 'required|exists:events,id']);
+        $event = Event::findOrFail($request->event_id);
+        $me = Auth::user();
+
+        $tmp = 'tmp/'.$me->username.'/'.$request->session()->token().'/';
+        $path = collect(Storage::files($tmp))
+            ->first(fn (string $file) => in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), ['xls', 'xlsx', 'csv'], true));
+        if ($path === null) {
+            return back()->withInput()->with('error', 'Sube primero la hoja con las asistencias.');
+        }
+
+        try {
+            $rows = Excel::toArray(new AttendeesImport, $path)[0] ?? [];
+        } catch (\Throwable) {
+            return back()->withInput()->with('error', 'No se pudo leer la hoja. Comprueba que es un Excel válido.');
+        } finally {
+            Storage::delete($path);
+        }
+
+        $ids = [];
+        $unmatched = [];
+        $own = false;
+        foreach ($rows as $row) {
+            $uvus = mb_strtolower(trim((string) ($row['uvus'] ?? '')));
+            $mail = mb_strtolower(trim((string) ($row['correo'] ?? $row['email'] ?? '')));
+            if ($uvus === '' && $mail === '') {
+                continue;
+            }
+            $user = ($uvus !== '' ? User::where('username', $uvus)->first() : null)
+                ?? ($mail !== '' ? User::where('email', $mail)->first() : null);
+            if ($user === null) {
+                $unmatched[] = $uvus !== '' ? $uvus : $mail;
+            } elseif ($user->id === $me->id) {
+                $own = true;
+            } else {
+                $ids[$user->id] = $user->id;
+            }
+        }
+
+        if ($ids === [] && $unmatched === [] && ! $own) {
+            return back()->withInput()->with('error', 'La hoja no tiene ninguna fila con uvus o correo.');
+        }
+
+        [$created, $updated] = DB::transaction(function () use ($event, $ids, $unmatched) {
+            $created = 0;
+            $updated = 0;
+            foreach ($ids as $id) {
+                $attendee = Attendee::firstOrNew(['event_id' => $event->id, 'user_id' => $id]);
+                if ($attendee->exists && $attendee->status === 'Checked In') {
+                    continue;
+                }
+                $attendee->exists ? $updated++ : $created++;
+                $attendee->status = 'Checked In';
+                $attendee->save();
+            }
+            Activity::record(
+                ActivityAction::AttendeesImported,
+                $event,
+                details: ['created' => $created, 'updated' => $updated, 'unmatched' => count($unmatched)],
+                targets: array_values($ids),
+            );
+
+            return [$created, $updated];
+        });
+
+        $name = trim(html_entity_decode(strip_tags((string) $event->name), ENT_QUOTES | ENT_HTML5)) ?: 'el evento';
+        $message = "Asistencias de «{$name}» importadas, {$created} nuevas y {$updated} actualizadas.";
+        if ($unmatched !== []) {
+            $message .= ' Sin alumno en Evidentia '.implode(', ', array_slice($unmatched, 0, 10)).(count($unmatched) > 10 ? ' y '.(count($unmatched) - 10).' más.' : '.');
+        }
+        if ($own) {
+            $message .= ' Tu propia asistencia no se importa.';
+        }
+
+        return redirect()->route('registercoordinator.attendee.list')->with('success', $message);
     }
 
     public function attendee_destroy($id)

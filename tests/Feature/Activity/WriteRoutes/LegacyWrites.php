@@ -231,6 +231,20 @@ final class LegacyWrites
                 'expect' => ['attendee.created'],
                 'acting_role' => 'REGISTER_COORDINATOR',
             ],
+            'attendee.import.save' => [
+                'role' => 'REGISTER_COORDINATOR',
+                'method' => 'POST',
+                'uri' => fn (array $ids) => route('attendee.import.save'),
+                'data' => fn (array $ids) => ['event_id' => $ids['manualEvent']],
+                'expect' => ['attendee.imported'],
+                'acting_role' => 'REGISTER_COORDINATOR',
+                'setup' => function (TestCase $test, array $ids): void {
+                    $student = User::findOrFail($ids['student']);
+                    $register = User::whereHas('roles', fn ($query) => $query->where('rol', 'REGISTER_COORDINATOR'))->first();
+                    $test->withSession(['_token' => 'barrido']);
+                    Storage::put('tmp/'.$register->username.'/barrido/asistencias.csv', "uvus\n".$student->username."\n");
+                },
+            ],
             'attendee.update' => [
                 'role' => 'REGISTER_COORDINATOR',
                 'method' => 'POST',
