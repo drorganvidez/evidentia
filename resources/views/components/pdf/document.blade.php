@@ -44,7 +44,7 @@
     <title>{{ $title }} · {{ $event }}</title>
     <style nonce="{{ Vite::cspNonce() }}">
         @page {
-            margin: 30mm 18mm 24mm;
+            margin: 28mm 18mm 22mm;
         }
 
         body {
@@ -52,29 +52,38 @@
             max-width: 180mm;
             padding: 14mm 12mm;
             font-family: Helvetica, Arial, sans-serif;
-            font-size: 10.5pt;
-            line-height: 1.45;
+            font-size: 10pt;
+            line-height: 1.5;
             color: #282d36;
             background: #ffffff;
         }
 
         p {
-            margin: 0 0 6pt;
+            margin: 0 0 5pt;
         }
 
         ol,
         ul {
             margin: 0 0 6pt;
-            padding-left: 18pt;
+            padding-left: 16pt;
         }
 
         li {
             margin-bottom: 2pt;
         }
 
+        strong,
+        b {
+            font-weight: bold;
+        }
+
+        a {
+            color: #624ad3;
+        }
+
         .pdf-header,
         .pdf-footer {
-            font-size: 8.5pt;
+            font-size: 8pt;
             color: #616875;
         }
 
@@ -118,31 +127,38 @@
             border-top: 1px solid #d4d9e3;
             padding-top: 6pt;
             margin-top: 18pt;
-            text-align: right;
         }
 
+        /* The kind of document, as a small label over the name of the meeting */
         .pdf-title {
-            margin: 0 0 4pt;
-            font-size: 20pt;
-            line-height: 1.2;
-            letter-spacing: 0.04em;
+            margin: 0 0 3pt;
+            font-size: 8.5pt;
+            line-height: 1.3;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             color: #624ad3;
         }
 
         .pdf-subtitle {
-            margin: 0 0 2pt;
-            font-size: 12pt;
+            margin: 0 0 3pt;
+            font-size: 19pt;
+            line-height: 1.2;
             font-weight: bold;
+            color: #282d36;
         }
 
         .pdf-committee {
-            margin: 0 0 12pt;
+            margin: 0 0 14pt;
+            font-size: 10.5pt;
             color: #616875;
         }
 
         .pdf-section {
-            margin-top: 16pt;
+            margin-top: 18pt;
+        }
+
+        .pdf-keep {
+            page-break-inside: avoid;
         }
 
         .pdf-section--break {
@@ -153,8 +169,10 @@
             margin: 0 0 8pt;
             padding-bottom: 4pt;
             border-bottom: 1px solid #d4d9e3;
-            font-size: 13pt;
+            font-size: 9pt;
             line-height: 1.3;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
             color: #624ad3;
         }
 
@@ -162,28 +180,36 @@
             margin-bottom: 4pt;
             padding-bottom: 0;
             border-bottom: 0;
-            font-size: 11.5pt;
+            font-size: 11pt;
+            letter-spacing: 0;
+            text-transform: none;
             color: #282d36;
         }
 
         .pdf-section__number {
             color: #616875;
-            padding-right: 4pt;
+            padding-right: 5pt;
         }
 
         .pdf-table {
             width: 100%;
-            margin: 6pt 0 10pt;
+            margin: 4pt 0 10pt;
             border-collapse: collapse;
-            font-size: 10pt;
+            font-size: 9.5pt;
         }
 
         .pdf-table th,
         .pdf-table td {
-            border: 1px solid #d4d9e3;
-            padding: 5pt 7pt;
+            border-bottom: 1px solid #e4e8ef;
+            padding: 5pt 6pt;
             text-align: left;
             vertical-align: top;
+        }
+
+        .pdf-table thead th {
+            font-size: 8pt;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
         }
 
         .pdf-table--compact th,
@@ -193,19 +219,171 @@
         }
 
         .pdf-table--brand thead th {
-            background: #624ad3;
-            color: #ffffff;
+            border-bottom: 1.5px solid #624ad3;
+            color: #624ad3;
         }
 
         .pdf-table--plain thead th {
             background: #f3f7fe;
-            color: #282d36;
+            color: #616875;
         }
 
         .pdf-table tbody th {
             width: 32%;
+            color: #616875;
+            font-weight: normal;
+        }
+
+        /* Facts of the meeting: a soft panel of label and value pairs, four per row */
+        .pdf-meta {
+            width: 100%;
+            margin: 0 0 6pt;
+            border-collapse: separate;
+            border-spacing: 0;
             background: #f3f7fe;
+            border-radius: 6pt;
+        }
+
+        .pdf-meta td {
+            width: 25%;
+            padding: 7pt 9pt;
+            vertical-align: top;
+        }
+
+        .pdf-meta__label {
+            display: block;
+            font-size: 7.5pt;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #616875;
+        }
+
+        .pdf-meta__value {
+            display: block;
+            font-size: 10pt;
             font-weight: bold;
+            color: #282d36;
+        }
+
+        /* Attendees in two columns, each name with its role in the committee */
+        .pdf-people {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .pdf-people td {
+            width: 50%;
+            padding: 3pt 8pt 3pt 0;
+            border-bottom: 1px solid #e4e8ef;
+            vertical-align: top;
+        }
+
+        .pdf-count {
+            color: #616875;
+            font-weight: normal;
+            letter-spacing: 0;
+            text-transform: none;
+        }
+
+        .pdf-tag {
+            padding: 0 4pt;
+            margin-left: 3pt;
+            font-size: 7.5pt;
+            font-weight: bold;
+            color: #624ad3;
+            background: #efecfc;
+            border-radius: 3pt;
+        }
+
+        /* One point of the agenda: number, title and duration, its text and its agreements */
+        .pdf-point {
+            margin: 0 0 14pt;
+            padding-left: 10pt;
+            border-left: 2pt solid #624ad3;
+        }
+
+        .pdf-point__head {
+            width: 100%;
+            margin: 0 0 4pt;
+            border-collapse: collapse;
+        }
+
+        .pdf-point__head td {
+            padding: 0;
+            vertical-align: baseline;
+        }
+
+        .pdf-point__title {
+            font-size: 11pt;
+            font-weight: bold;
+            color: #282d36;
+        }
+
+        .pdf-point__number {
+            padding-right: 5pt;
+            color: #624ad3;
+        }
+
+        .pdf-point__time {
+            width: 50pt;
+            font-size: 8.5pt;
+            color: #616875;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .pdf-rich p:last-child,
+        .pdf-rich ul:last-child,
+        .pdf-rich ol:last-child {
+            margin-bottom: 0;
+        }
+
+        .pdf-rich blockquote {
+            margin: 0 0 6pt;
+            padding-left: 8pt;
+            border-left: 2pt solid #d4d9e3;
+            color: #616875;
+        }
+
+        .pdf-agreements {
+            margin-top: 8pt;
+            padding: 6pt 9pt;
+            background: #f3f7fe;
+            border-radius: 5pt;
+        }
+
+        .pdf-agreements__label {
+            margin: 0 0 3pt;
+            font-size: 7.5pt;
+            font-weight: bold;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #616875;
+        }
+
+        .pdf-agreements table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .pdf-agreements td {
+            padding: 3pt 0;
+            vertical-align: top;
+        }
+
+        .pdf-agreements td.pdf-agreements__id {
+            width: 62pt;
+            padding-right: 8pt;
+        }
+
+        .pdf-pill {
+            padding: 1pt 5pt;
+            font-size: 8pt;
+            font-weight: bold;
+            color: #ffffff;
+            background: #624ad3;
+            border-radius: 3pt;
+            white-space: nowrap;
         }
 
         .pdf-muted {
@@ -225,13 +403,17 @@
         }
 
         .pdf-signature {
-            margin-top: 28pt;
+            margin-top: 30pt;
             text-align: center;
+            page-break-inside: avoid;
         }
 
         .pdf-signature__name {
-            margin: 14pt 0 2pt;
-            font-size: 12pt;
+            width: 70mm;
+            margin: 26pt auto 2pt;
+            padding-top: 5pt;
+            border-top: 1px solid #282d36;
+            font-size: 11pt;
             font-weight: bold;
         }
 
@@ -244,7 +426,7 @@
 
             .pdf-header {
                 position: fixed;
-                top: -22mm;
+                top: -20mm;
                 left: 0;
                 right: 0;
                 margin: 0;
@@ -252,7 +434,7 @@
 
             .pdf-footer {
                 position: fixed;
-                bottom: -16mm;
+                bottom: -14mm;
                 left: 0;
                 right: 0;
                 margin: 0;
