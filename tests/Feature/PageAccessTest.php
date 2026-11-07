@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Agreement;
 use App\Models\Attendee;
 use App\Models\Bonus;
+use App\Models\Certificate;
 use App\Models\Committee;
 use App\Models\Configuration;
 use App\Models\Coordinator;
@@ -134,6 +135,11 @@ class PageAccessTest extends TestCase
         ]);
         $manualEvent = Event::forceCreate(['name' => 'Taller de Git', 'hours' => 1.5, 'start_datetime' => now()->subWeek(), 'end_datetime' => now()->subWeek()->addMinutes(90)]);
 
+        $diploma = Certificate::forceCreate([
+            'type' => Certificate::DIPLOMA, 'user_id' => $student->id, 'recipient_name' => 'Ana Ruiz', 'title' => 'impartir una charla',
+            'issued_at' => now(),
+        ]);
+
         $token = Token::create(['token' => str_repeat('a', 60), 'used' => false, 'valid_until_timestamp' => now()->addDay(), 'user_id' => $student->id]);
 
         $thread = MessageThread::create([
@@ -147,7 +153,7 @@ class PageAccessTest extends TestCase
             'evidence' => $evidence->id, 'draft' => $draft->id, 'delegated' => $delegated->id, 'proof' => $proof->id, 'student' => $student->id,
             'request' => $request->id, 'committee' => $committee->id, 'sheet' => $sheet->id, 'minutes' => $minutes->id, 'bonus' => $bonus->id,
             'list' => $list->id, 'attendee' => $attendee->id, 'manualEvent' => $manualEvent->id, 'errorReport' => $errorReport->id, 'token' => $token->token,
-            'thread' => $thread->id,
+            'thread' => $thread->id, 'event' => $event->id, 'diploma' => $diploma->code,
         ];
     }
 
@@ -223,6 +229,13 @@ class PageAccessTest extends TestCase
             'attendee.import' => [[], ['REGISTER_COORDINATOR']],
             'registercoordinator.event.groups' => [[], ['REGISTER_COORDINATOR']],
             'attendee.edit' => [['id' => 'attendee'], ['REGISTER_COORDINATOR']],
+            'meeting.search' => [[], self::EVERYONE],
+            'certificate.attendance' => [['id' => 'event'], ['STUDENT']],
+            'certificate.download' => [['code' => 'diploma'], ['STUDENT', ...self::MANAGEMENT]],
+            'certificate.verify' => [['code' => 'diploma'], [self::GUEST, ...self::EVERYONE]],
+            'certificate.index' => [[], self::MANAGEMENT],
+            'certificate.create' => [[], self::MANAGEMENT],
+            'registercoordinator.attendee.load.student' => [[], ['REGISTER_COORDINATOR']],
             'lecture.errors' => [[], self::MANAGEMENT],
             'lecture.errors.show' => [['id' => 'errorReport'], self::MANAGEMENT],
             'president.errors' => [[], self::MANAGEMENT],
