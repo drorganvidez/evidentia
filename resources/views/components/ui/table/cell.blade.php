@@ -1,8 +1,10 @@
 {{--
     Cell of x-ui.table.row. label names the column in the phone cards, where the thead is hidden, with a text that
     only assistive technology reads and the quick filter skips (never in the title or action cells); primary is the
-    title cell, whose links reach 44 px under a coarse pointer; meta is the secondary text, numeric the figures; end
-    pushes the content to the right of the card; hide and actions disappear on the phone (hide only what the detail
+    title cell, whose links reach 44 px under a coarse pointer, and end sits on its right (the status); every other
+    cell joins the one supporting line under the title on the phone, so hide whatever the phone does not need; meta is
+    the secondary text, numeric the figures; full takes a line of its own; tools holds the buttons of the row, at the right end of the
+    supporting line on the phone; hide and actions disappear on the phone (hide only what the detail
     behind the row link shows again); header prints a th scope="row". sort-value is the value the browser order of
     x-ui.table sortable reads instead of the text: a date becomes its ISO instant in UTC, a boolean 1 or 0.
     <x-ui.table.cell label="Evidencia" primary><a href="...">{{ $title }}</a></x-ui.table.cell>
@@ -20,6 +22,7 @@
     'hide' => false,
     'full' => false,
     'actions' => false,
+    'tools' => false,
     'header' => false,
     'sortValue' => null,
 ])
@@ -37,12 +40,15 @@
     $attrs = $attributes
         ->class([
             'h-(--row-h) px-5 py-4 align-middle in-data-cards:block in-data-cards:h-auto in-data-cards:p-0 md:table-cell md:h-(--row-h) md:px-5 md:py-4 md:align-middle',
+            'in-data-cards:max-md:order-4 in-data-cards:max-md:mt-1 in-data-cards:max-md:mr-1 in-data-cards:max-md:text-sm in-data-cards:max-md:text-ink-muted' =>
+                !$primary && !$end && !$tools && !$full,
             'text-right font-mono tabular-nums in-data-cards:text-left md:text-right' => $numeric,
-            'in-data-cards:col-span-2 [&_a]:font-semibold [&_a]:tracking-tight [&_a]:text-ink [&_a:hover]:text-brand-ink pointer-coarse:[&_a]:inline-flex pointer-coarse:[&_a]:min-h-11 pointer-coarse:[&_a]:items-center' => $primary,
+            'in-data-cards:max-md:order-1 in-data-cards:max-md:min-w-0 in-data-cards:max-md:flex-1 [&_a]:font-semibold [&_a]:tracking-tight [&_a]:text-ink [&_a:hover]:text-brand-ink pointer-coarse:[&_a]:inline-flex pointer-coarse:[&_a]:min-h-11 pointer-coarse:[&_a]:items-center' => $primary,
             'text-sm text-ink-muted' => $meta,
-            'in-data-cards:justify-self-end' => $end,
+            'in-data-cards:max-md:order-2 in-data-cards:max-md:shrink-0 in-data-cards:max-md:text-right' => $end,
             'in-data-cards:max-md:hidden' => $hide || $actions,
-            'in-data-cards:col-span-full' => $full,
+            'in-data-cards:max-md:order-4 in-data-cards:max-md:mt-1.5 in-data-cards:max-md:basis-full' => $full,
+            'w-[1%] whitespace-nowrap in-data-cards:max-md:order-5 in-data-cards:max-md:mt-1 in-data-cards:max-md:ml-auto in-data-cards:max-md:w-auto in-data-cards:max-md:flex in-data-cards:max-md:justify-end in-data-cards:max-md:gap-2 in-data-cards:max-md:[&>div]:gap-2' => $tools,
             'w-[1%] whitespace-nowrap' => $actions,
             'text-left font-semibold' => $header,
         ])
@@ -52,7 +58,7 @@
                 'scope' => $header ? 'row' : null,
             ]) + ($sortValue !== null ? ['data-sort-value' => $sortValue] : []),
         );
-    $columnName = filled($label) && !$primary && !$actions ? $label : null;
+    $columnName = filled($label) && !$primary && !$actions && !$tools ? $label : null;
 @endphp
 {!! '<' . $tag . ' ' . $attrs . '>' !!}@if ($columnName !== null)
     <span class="sr-only hidden in-data-cards:max-md:inline" data-filter-ignore>{{ $columnName }}: </span>

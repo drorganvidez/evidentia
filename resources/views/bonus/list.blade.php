@@ -37,7 +37,8 @@
                         {{ $bono->reason }}
                     @endif
                 </x-ui.table.cell>
-                <x-ui.table.cell label="Personas" numeric meta>{{ $bono->users->count() }}</x-ui.table.cell>
+                <x-ui.table.cell label="Personas" numeric meta>{{ $bono->users->count() }}<span
+                        class="md:hidden">{{ $bono->users->count() === 1 ? ' persona' : ' personas' }}</span></x-ui.table.cell>
                 <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$bono->hours" /></x-ui.table.cell>
                 @if ($bonusOpen)
                     <x-ui.table.cell actions>

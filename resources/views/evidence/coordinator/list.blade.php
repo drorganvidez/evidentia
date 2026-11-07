@@ -101,7 +101,7 @@
                 <x-ui.table.cell label="Estado" end>
                     <x-ui.evidence-status :status="$evidence->status" :reason="$evidence->reasonRejection?->reason" size="sm" />
                 </x-ui.table.cell>
-                <x-ui.table.cell actions>
+                <x-ui.table.cell tools>
                     <div class="flex items-center justify-end gap-1">
                         @if ($reviewable && $evidence->status != 'ACCEPTED')
                             <form method="post" action="{{ route($routes['accept'], ['id' => $evidence->id]) }}">

@@ -44,7 +44,7 @@
                     <x-ui.table.cell label="Celebrada" meta>
                         <x-ui.time :value="$meeting->datetime" inline short />
                     </x-ui.table.cell>
-                    <x-ui.table.cell end class="w-[1%] whitespace-nowrap">
+                    <x-ui.table.cell tools>
                         <x-ui.button size="sm" variant="ghost" icon="send" icon-only :label="'Escribir a la secretaría sobre ' . $meeting->title"
                             :href="$meeting->meetingMinutes
                                 ? route('messages.create', ['minutes' => $meeting->meetingMinutes->id])

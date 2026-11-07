@@ -18,7 +18,7 @@
                     href="{{ $href }}">{{ $thread->subject }}</a></x-ui.table.cell>
             <x-ui.table.cell label="Para" meta>{{ $thread->audienceLabel() }}</x-ui.table.cell>
             <x-ui.table.cell label="Escritos" numeric meta>{{ $thread->written_count }}</x-ui.table.cell>
-            <x-ui.table.cell label="Estado"><x-ui.badge :tone="$thread->isResolved() ? 'accepted' : 'pending'"
+            <x-ui.table.cell label="Estado" end><x-ui.badge :tone="$thread->isResolved() ? 'accepted' : 'pending'"
                     size="sm">{{ $thread->isResolved() ? 'Resuelto' : 'Abierto' }}</x-ui.badge></x-ui.table.cell>
             <x-ui.table.cell label="Último mensaje" meta><x-ui.time :value="$thread->last_message_at" inline short /></x-ui.table.cell>
         </x-ui.table.row>

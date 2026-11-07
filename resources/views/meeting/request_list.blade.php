@@ -47,7 +47,7 @@
                 <x-ui.table.cell label="Modificada" meta hide>
                     <x-ui.time :value="$meeting_request->updated_at" inline short />
                 </x-ui.table.cell>
-                <x-ui.table.cell actions>
+                <x-ui.table.cell tools>
                     <span class="flex justify-end gap-0.5">
                         <x-ui.button icon-only icon="history" variant="ghost" size="sm" :label="'Historial de ' . $meeting_request->title"
                             :href="route('activity.request', ['id' => $meeting_request->id, 'tab' => 'historial'])" />

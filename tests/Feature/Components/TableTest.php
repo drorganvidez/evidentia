@@ -282,7 +282,7 @@ class TableTest extends ComponentTestCase
         $this->assertStringContainsString('x-data="rowLink" x-on:click="go" x-on:auxclick="go"', $linked);
         $this->assertStringContainsString('cursor-pointer', $linked);
         $this->assertStringNotContainsString('tabindex', $linked, 'The link inside the row is the keyboard path');
-        $this->assertStringContainsString('in-data-cards:grid in-data-cards:grid-cols-[minmax(0,1fr)_auto]', $linked);
+        $this->assertStringContainsString('in-data-cards:flex in-data-cards:flex-wrap in-data-cards:items-center', $linked);
         $this->assertStringContainsString('md:table-row', $linked);
         $this->assertCspSafe($linked);
 
@@ -321,17 +321,19 @@ class TableTest extends ComponentTestCase
     {
         $cell = fn (string $props): string => $this->render('<x-ui.table.cell '.$props.'>x</x-ui.table.cell>');
 
-        $this->assertStringContainsString('<td role="cell" class="h-(--row-h) px-5 py-4 align-middle in-data-cards:block in-data-cards:h-auto in-data-cards:p-0 md:table-cell md:h-(--row-h) md:px-5 md:py-4 md:align-middle">x</td>', $cell(''));
+        $this->assertStringContainsString('<td role="cell" class="h-(--row-h) px-5 py-4 align-middle in-data-cards:block in-data-cards:h-auto in-data-cards:p-0 md:table-cell md:h-(--row-h) md:px-5 md:py-4 md:align-middle in-data-cards:max-md:order-4 in-data-cards:max-md:mt-1 in-data-cards:max-md:mr-1 in-data-cards:max-md:text-sm in-data-cards:max-md:text-ink-muted">x</td>', $cell(''));
         $this->assertStringContainsString('text-right font-mono tabular-nums in-data-cards:text-left md:text-right', $cell('numeric'));
-        $this->assertStringContainsString('in-data-cards:col-span-2 [&amp;_a]:font-semibold [&amp;_a]:tracking-tight [&amp;_a]:text-ink [&amp;_a:hover]:text-brand-ink pointer-coarse:[&amp;_a]:inline-flex pointer-coarse:[&amp;_a]:min-h-11 pointer-coarse:[&amp;_a]:items-center', $cell('primary'));
+        $this->assertStringContainsString('in-data-cards:max-md:order-1 in-data-cards:max-md:min-w-0 in-data-cards:max-md:flex-1 [&amp;_a]:font-semibold [&amp;_a]:tracking-tight [&amp;_a]:text-ink [&amp;_a:hover]:text-brand-ink pointer-coarse:[&amp;_a]:inline-flex pointer-coarse:[&amp;_a]:min-h-11 pointer-coarse:[&amp;_a]:items-center', $cell('primary'));
         $this->assertStringNotContainsString('pointer-coarse', $cell('meta'));
         $this->assertStringContainsString('text-sm text-ink-muted', $cell('meta'));
-        $this->assertStringContainsString('in-data-cards:justify-self-end', $cell('end'));
+        $this->assertStringContainsString('in-data-cards:max-md:order-2 in-data-cards:max-md:shrink-0', $cell('end'));
         $this->assertStringContainsString('in-data-cards:max-md:hidden', $cell('hide'));
-        $this->assertStringContainsString('in-data-cards:col-span-full', $cell('full'));
+        $this->assertStringContainsString('in-data-cards:max-md:basis-full', $cell('full'));
         $this->assertStringContainsString('in-data-cards:max-md:hidden', $cell('actions'));
         $this->assertStringContainsString('w-[1%] whitespace-nowrap', $cell('actions'));
         $this->assertStringNotContainsString('in-data-cards:max-md:hidden', $cell('meta'));
+        $this->assertStringContainsString('in-data-cards:max-md:order-5 in-data-cards:max-md:mt-1 in-data-cards:max-md:ml-auto', $cell('tools'));
+        $this->assertStringNotContainsString('in-data-cards:max-md:order-4', $cell('tools'));
     }
 
     public function test_the_label_names_the_column_to_assistive_technology_only_in_the_cards(): void
@@ -422,7 +424,7 @@ class TableTest extends ComponentTestCase
         $this->assertSame(6, substr_count($html, '<option value="'.'') - 1, 'Three columns in two directions besides the placeholder');
         $this->assertStringNotContainsString('Nota, ', $html);
         $this->assertStringContainsString('x-data="tableFilter"', $html, 'The order lives with the quick filter');
-        $this->assertMatchesRegularExpression('/<div class="relative flex max-w-full min-w-0 items-center md:hidden">/', $html);
+        $this->assertMatchesRegularExpression('/<div class="relative flex max-w-full min-w-0 items-center max-md:basis-full md:hidden">/', $html);
         $this->assertCspSafe($html);
 
         // Alone, the toolbar only shows on the phone; without cards or rows there is nothing to choose
@@ -466,8 +468,7 @@ class TableTest extends ComponentTestCase
 
         $this->assertStringContainsString('role="search"', $html);
         $this->assertStringContainsString('aria-label="Quitar la búsqueda"', $html);
-        $this->assertMatchesRegularExpression('/<div class="relative flex max-w-full min-w-0 items-center md:hidden max-md:basis-full">\s*<svg[^>]*>.*?<select data-table-sort/s', $html, 'Its buttons keep their size on the phone');
-        $this->assertStringNotContainsString('max-md:basis-full', $this->browserTable('sortable filterable'), 'The quick filter shares its row');
+        $this->assertMatchesRegularExpression('/<div class="relative flex max-w-full min-w-0 items-center max-md:basis-full md:hidden">\s*<svg[^>]*>.*?<select data-table-sort/s', $html, 'Its buttons keep their size on the phone');
     }
 
     public function test_a_cell_carries_the_value_the_browser_orders_by(): void

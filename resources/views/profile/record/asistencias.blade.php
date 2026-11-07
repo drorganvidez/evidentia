@@ -14,7 +14,8 @@
                     class="font-semibold">{{ $attendee->event?->name ?? '—' }}</span></x-ui.table.cell>
             <x-ui.table.cell label="Fecha" meta><x-ui.time :value="$attendee->event?->start_datetime" format="absolute"
                     pattern="d/m/Y H:i" /></x-ui.table.cell>
-            <x-ui.table.cell label="Estado"><x-ui.attendee-status :status="$attendee->status" size="sm" /></x-ui.table.cell>
+            <x-ui.table.cell label="Estado" end><x-ui.attendee-status :status="$attendee->status"
+                    size="sm" /></x-ui.table.cell>
             <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$attendee->computedHours()" /></x-ui.table.cell>
         </x-ui.table.row>
     @endforeach

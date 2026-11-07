@@ -233,13 +233,13 @@ test.describe('Tablas', () => {
         expect(overflowing, 'La tabla de gestión desborda a 768 px').toBeGreaterThan(0);
     });
 
-    test('en móvil las filas son tarjetas y nada desborda', async ({ ui }, testInfo) => {
+    test('en móvil las filas son elementos de lista y nada desborda', async ({ ui }, testInfo) => {
         test.skip(testInfo.project.name !== 'mobile', 'Las tarjetas se comprueban en móvil');
 
         const table = ui.section('table').locator('section[aria-label="Mis evidencias"]');
         const row = table.locator('tbody tr').first();
 
-        expect(await row.evaluate((el) => getComputedStyle(el).display)).toBe('grid');
+        expect(await row.evaluate((el) => getComputedStyle(el).display)).toBe('flex');
         await expect(table.locator('thead')).toBeHidden();
         await expect(
             table.getByRole('link', { name: 'Montaje del photocall', exact: true }),

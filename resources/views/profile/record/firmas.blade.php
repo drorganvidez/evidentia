@@ -74,7 +74,7 @@
                 </x-ui.table.cell>
                 <x-ui.table.cell label="Fecha" meta><x-ui.time :value="$request->datetime" format="absolute"
                         pattern="d/m/Y H:i" /></x-ui.table.cell>
-                <x-ui.table.cell label="Asistencia" :sort-value="array_search($item['state'], $attendanceOrder, true)"><x-ui.badge :tone="$item['tone']"
+                <x-ui.table.cell label="Asistencia" end :sort-value="array_search($item['state'], $attendanceOrder, true)"><x-ui.badge :tone="$item['tone']"
                         size="sm">{{ $item['label'] }}</x-ui.badge></x-ui.table.cell>
                 <x-ui.table.cell>
                     @if ($minutes)

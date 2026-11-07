@@ -38,9 +38,9 @@
                         format="absolute" /></x-ui.table.cell>
                 <x-ui.table.cell label="Termina" meta hide><x-ui.time :value="$attendee->event->end_datetime"
                         format="absolute" /></x-ui.table.cell>
-                <x-ui.table.cell label="Asistencia"><x-ui.attendee-status :status="$attendee->status"
+                <x-ui.table.cell label="Asistencia" end><x-ui.attendee-status :status="$attendee->status"
                         size="sm" /></x-ui.table.cell>
-                <x-ui.table.cell end class="w-[1%] whitespace-nowrap">
+                <x-ui.table.cell tools>
                     <x-ui.button size="sm" variant="ghost" icon="send" icon-only :label="'Escribir a la coordinación de registro sobre ' . $attendee->event->name"
                         :href="route('messages.create', [
                             'to' => 'REGISTER_COORDINATOR',

@@ -48,7 +48,7 @@
                 </x-ui.table.cell>
                 <x-ui.table.cell label="Veces" numeric>{{ $report->occurrences }}</x-ui.table.cell>
                 <x-ui.table.cell label="Última vez" meta><x-ui.time :value="$report->last_seen_at" inline short /></x-ui.table.cell>
-                <x-ui.table.cell label="Estado">
+                <x-ui.table.cell label="Estado" end>
                     @if ($report->resolved_at)
                         <x-ui.badge tone="accepted" size="sm">Resuelto</x-ui.badge>
                     @else

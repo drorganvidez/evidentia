@@ -294,7 +294,7 @@
                         <x-ui.committee-chip :name="$committeeName" :id="$committeeId" />
                     </x-ui.table.cell>
                     <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$evidence['hours']" /></x-ui.table.cell>
-                    <x-ui.table.cell label="Estado" end>
+                    <x-ui.table.cell label="Estado" end end>
                         <x-ui.evidence-status :status="$evidence['status']" size="sm" />
                     </x-ui.table.cell>
                     <x-ui.table.cell label="Actualizada" meta><x-ui.time :value="$evidence['updated']" inline
@@ -330,7 +330,7 @@
                         <x-ui.committee-chip :name="$committeeName" :id="$committeeId" />
                     </x-ui.table.cell>
                     <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$evidence['hours']" /></x-ui.table.cell>
-                    <x-ui.table.cell label="Estado" end>
+                    <x-ui.table.cell label="Estado" end end>
                         <x-ui.evidence-status :status="$evidence['status']" size="sm" />
                     </x-ui.table.cell>
                 </x-ui.table.row>
@@ -371,7 +371,7 @@
                         <x-ui.committee-chip :name="$committeeName" :id="$committeeId" />
                     </x-ui.table.cell>
                     <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$evidence['hours']" /></x-ui.table.cell>
-                    <x-ui.table.cell label="Estado">
+                    <x-ui.table.cell label="Estado" end>
                         <x-ui.evidence-status :status="$evidence['status']" size="sm" />
                     </x-ui.table.cell>
                     <x-ui.table.cell label="Actualizada" meta><x-ui.time :value="$evidence['updated']" inline
@@ -401,7 +401,7 @@
                     <x-ui.table.cell label="Inscrita" meta><x-ui.time :value="$signed"
                             format="relative" /></x-ui.table.cell>
                     <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$hours" /></x-ui.table.cell>
-                    <x-ui.table.cell label="Estado" end><x-ui.attendee-status :status="$status"
+                    <x-ui.table.cell label="Estado" end end><x-ui.attendee-status :status="$status"
                             size="sm" /></x-ui.table.cell>
                     <x-ui.table.cell actions>
                         <x-ui.button icon-only icon="mail" :label="'Escribir a ' . $name . ' ' . $surname" href="#ui-table-sortable"

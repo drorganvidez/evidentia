@@ -74,9 +74,9 @@
                 </x-ui.table.cell>
                 <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$event->hours" /></x-ui.table.cell>
                 <x-ui.table.cell label="Capacidad" numeric meta hide>{{ $event->capacity ?? '—' }}</x-ui.table.cell>
-                <x-ui.table.cell label="Estado"><x-ui.event-status :status="$event->status"
+                <x-ui.table.cell label="Estado" end><x-ui.event-status :status="$event->status"
                         size="sm" /></x-ui.table.cell>
-                <x-ui.table.cell end class="w-[1%] whitespace-nowrap">
+                <x-ui.table.cell tools>
                     @if ($open)
                         <div class="flex items-center justify-end gap-1">
                             @if (!$manual)

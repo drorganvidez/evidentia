@@ -174,15 +174,12 @@
                 <span role="status" class="text-sm text-ink-muted tabular-nums" x-text="summary"></span>
             @endif
             @if ($phoneSort)
-                {{-- Beside a search on the server it takes a row of its own, so that its buttons keep their size --}}
-                <div @class([
-                    'relative flex max-w-full min-w-0 items-center md:hidden',
-                    'max-md:basis-full' => $searchable,
-                ])>
+                {{-- A row of its own on the phone, as wide as the card, with its chevron inside --}}
+                <div class="relative flex max-w-full min-w-0 items-center max-md:basis-full md:hidden">
                     <x-lucide-arrow-up-down aria-hidden="true"
                         class="pointer-events-none absolute left-3 size-4 text-ink-muted" />
                     <select data-table-sort x-on:change="choose" aria-label="{{ $sortLabel }}"
-                        class="h-9 max-w-full min-w-0 cursor-pointer appearance-none truncate rounded-full border border-field-edge bg-field pr-9 pl-9 text-control text-ink pointer-coarse:min-h-11">
+                        class="h-9 w-full min-w-0 cursor-pointer appearance-none truncate rounded-full border border-field-edge bg-field pr-9 pl-9 text-control text-ink pointer-coarse:min-h-11">
                         <option value="" disabled @selected(!collect($sortOptions)->contains('selected', true))>{{ $sortLabel }}</option>
                         @foreach ($sortOptions as $option)
                             <option value="{{ $option['value'] }}" @selected($option['selected'])>{{ $option['label'] }}

@@ -105,11 +105,11 @@
                     <a href="{{ $href }}">{{ $fullName }}</a>
                     <span class="mt-0.5 block text-sm text-ink-muted">{{ $user->email }}</span>
                 </x-ui.table.cell>
-                <x-ui.table.cell label="UVUS" meta><span
+                <x-ui.table.cell label="UVUS" meta hide><span
                         class="font-mono">{{ $user->username }}</span></x-ui.table.cell>
                 <x-ui.table.cell label="DNI" meta hide><span
                         class="font-mono">{{ $user->dni }}</span></x-ui.table.cell>
-                <x-ui.table.cell label="Roles" full>
+                <x-ui.table.cell label="Roles">
                     <span class="flex flex-wrap items-center gap-1.5">
                         @if ($user->block)
                             <x-ui.badge tone="rejected" size="sm">Bloqueado</x-ui.badge>
@@ -127,7 +127,7 @@
                         @endforeach
                     </span>
                 </x-ui.table.cell>
-                <x-ui.table.cell end class="w-[1%] whitespace-nowrap">
+                <x-ui.table.cell tools>
                     <x-ui.button icon-only icon="user-cog" :label="'Gestionar ' . $fullName" :href="route($prefix . '.user.management', ['id' => $user->id])" variant="ghost" />
                 </x-ui.table.cell>
             </x-ui.table.row>

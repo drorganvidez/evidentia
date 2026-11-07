@@ -41,7 +41,8 @@
                         <x-ui.committee-chip :committee="$bono->committee" />
                     @endif
                 </x-ui.table.cell>
-                <x-ui.table.cell label="Personas" numeric meta>{{ $bono->users->count() }}</x-ui.table.cell>
+                <x-ui.table.cell label="Personas" numeric meta>{{ $bono->users->count() }}<span
+                        class="md:hidden">{{ $bono->users->count() === 1 ? ' persona' : ' personas' }}</span></x-ui.table.cell>
                 <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$bono->hours" /></x-ui.table.cell>
                 <x-ui.table.cell label="Creado" meta><x-ui.time :value="$bono->created_at" inline short /></x-ui.table.cell>
             </x-ui.table.row>

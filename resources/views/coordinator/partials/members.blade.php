@@ -59,10 +59,10 @@
                 @endif
             </x-ui.table.cell>
             <x-ui.table.cell label="Horas" numeric><x-ui.hours :value="$member['hours']" /></x-ui.table.cell>
-            <x-ui.table.cell label="Reuniones" numeric meta end :sort-value="$member['meetings']">{{ $member['meetings'] }}<span
+            <x-ui.table.cell label="Reuniones" numeric meta hide :sort-value="$member['meetings']">{{ $member['meetings'] }}<span
                     class="md:hidden">
                     {{ $member['meetings'] === 1 ? 'reunión' : 'reuniones' }}</span></x-ui.table.cell>
-            <x-ui.table.cell label="Última actividad" meta>
+            <x-ui.table.cell label="Última actividad" meta hide>
                 @if ($member['last'])
                     <x-ui.time :value="$member['last']" format="relative" />
                 @else

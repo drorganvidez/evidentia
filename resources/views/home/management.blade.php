@@ -67,12 +67,12 @@
                 </x-ui.table.cell>
                 <x-ui.table.cell label="Coordinación" meta :sort-value="$committee['coordinators']">
                     @if ($committee['coordinators'] !== '')
-                        {{ $committee['coordinators'] }}
+                        <span class="in-data-cards:max-md:hidden">{{ $committee['coordinators'] }}</span>
                     @else
                         <x-ui.badge tone="pending" size="sm">Sin coordinación</x-ui.badge>
                     @endif
                 </x-ui.table.cell>
-                <x-ui.table.cell label="Evidencias" :sort-value="$committee['total']">
+                <x-ui.table.cell label="Evidencias" full :sort-value="$committee['total']">
                     @if ($committee['total'] > 0)
                         <div class="grid min-w-40 gap-1">
                             <x-ui.meter :segments="$committee['segments']" size="sm" :label="'Evidencias de ' .
@@ -91,8 +91,9 @@
                         <span class="text-sm text-ink-muted">Sin evidencias</span>
                     @endif
                 </x-ui.table.cell>
-                <x-ui.table.cell label="Pendientes" numeric>{{ $committee['pending'] }}</x-ui.table.cell>
-                <x-ui.table.cell label="Más antigua" meta>
+                <x-ui.table.cell label="Pendientes" numeric end>{{ $committee['pending'] }}<span
+                        class="md:hidden">{{ $committee['pending'] === 1 ? ' pendiente' : ' pendientes' }}</span></x-ui.table.cell>
+                <x-ui.table.cell label="Más antigua" meta hide>
                     @if ($committee['oldest'])
                         <x-ui.time :value="$committee['oldest']" format="relative" />
                     @else

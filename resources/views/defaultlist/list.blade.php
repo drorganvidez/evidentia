@@ -23,7 +23,8 @@
             <x-ui.table.row :href="$edit">
                 <x-ui.table.cell label="Lista" primary><a
                         href="{{ $edit }}">{{ $defaultlist->name }}</a></x-ui.table.cell>
-                <x-ui.table.cell label="Personas" numeric meta>{{ $defaultlist->users->count() }}</x-ui.table.cell>
+                <x-ui.table.cell label="Personas" numeric meta>{{ $defaultlist->users->count() }}<span
+                        class="md:hidden">{{ $defaultlist->users->count() === 1 ? ' persona' : ' personas' }}</span></x-ui.table.cell>
                 <x-ui.table.cell label="Creada" meta hide>
                     <x-ui.time :value="$defaultlist->created_at" inline short />
                 </x-ui.table.cell>

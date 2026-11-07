@@ -1,5 +1,6 @@
 {{--
-    Row of x-ui.table: a card on the phone, a table row from md. With href the whole row follows the link on click
+    Row of x-ui.table: a list item on the phone (the title with the end cell on its right on the first line, the other
+    cells as one supporting line under it and the tools in a bar at the foot), a table row from md. With href the whole row follows the link on click
     (a pointer enhancement only: the link inside the primary cell is the keyboard path, so the row takes no tabindex).
     <x-ui.table.row :href="route('evidence.view', $evidence)" :search="$evidence->title">...</x-ui.table.row>
     <x-ui.table.row flag="Firma fuera de plazo">...</x-ui.table.row>
@@ -19,7 +20,7 @@
 @endphp
 <tr role="row"
     {{ $attributes->class([
-            'group border-t border-rule transition first:border-t-0 hover:bg-glass-2 in-data-cards:grid in-data-cards:grid-cols-[minmax(0,1fr)_auto] in-data-cards:items-center in-data-cards:gap-x-3 in-data-cards:gap-y-2 in-data-cards:p-4 md:table-row md:p-0',
+            'group border-t border-rule transition first:border-t-0 hover:bg-glass-2 in-data-cards:flex in-data-cards:flex-wrap in-data-cards:items-center in-data-cards:gap-x-3 in-data-cards:px-4 in-data-cards:py-3.5 in-data-cards:max-md:after:order-3 in-data-cards:max-md:after:basis-full md:table-row md:p-0',
             'cursor-pointer' => $href !== null,
             '[&>:first-child]:inset-shadow-[4px_0_0_var(--pending)] in-data-cards:max-md:[&>:first-child]:pl-3' => $flagged,
         ])->merge(array_filter(['data-href' => $href, 'data-search' => $search])) }}

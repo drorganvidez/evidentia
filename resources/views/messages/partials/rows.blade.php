@@ -37,7 +37,7 @@
                 {{ $thread->about_title }}
             @endif
         </x-ui.table.cell>
-        <x-ui.table.cell label="Estado">
+        <x-ui.table.cell label="Estado" end>
             <x-ui.badge :tone="$thread->isResolved() ? 'accepted' : 'pending'"
                 size="sm">{{ $thread->isResolved() ? 'Resuelto' : 'Abierto' }}</x-ui.badge>
         </x-ui.table.cell>

@@ -81,7 +81,7 @@
                         @endforelse
                     </span>
                 </x-ui.table.cell>
-                <x-ui.table.cell label="Pendientes" numeric :sort-value="$summary['pending']">
+                <x-ui.table.cell label="Pendientes" numeric hide :sort-value="$summary['pending']">
                     {{ $summary['pending'] }}
                     @if ($summary['pendingDays'] !== null && $summary['pendingDays'] > 0)
                         <span
@@ -105,7 +105,7 @@
                             size="sm">{{ $plural(count($summary['signals']), 'alerta', 'alertas') }}</x-ui.badge>
                     @endif
                 </x-ui.table.cell>
-                <x-ui.table.cell end class="w-[1%] whitespace-nowrap">
+                <x-ui.table.cell tools>
                     <div class="flex items-center justify-end gap-1">
                         <x-ui.dialog :id="'edit-committee-' . $committee->id" title="Editar el comité" size="lg" :trigger="'Editar ' . $committee->name"
                             trigger-variant="ghost" trigger-icon="pen-line" trigger-icon-only>

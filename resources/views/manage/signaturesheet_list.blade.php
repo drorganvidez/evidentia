@@ -54,7 +54,8 @@
                 </x-ui.table.cell>
                 <x-ui.table.cell label="Convocatoria" :sort-value="$request?->title ?? ''"
                     hide>{{ $request?->title ?? 'Sin convocatoria' }}</x-ui.table.cell>
-                <x-ui.table.cell label="Firmas" numeric meta>{{ $signature_sheet->users->count() }}</x-ui.table.cell>
+                <x-ui.table.cell label="Firmas" numeric meta>{{ $signature_sheet->users->count() }}<span
+                        class="md:hidden">{{ $signature_sheet->users->count() === 1 ? ' firma' : ' firmas' }}</span></x-ui.table.cell>
                 <x-ui.table.cell label="Creada" meta hide>
                     <x-ui.time :value="$signature_sheet->created_at" inline short />
                 </x-ui.table.cell>

@@ -37,11 +37,12 @@
                 <x-ui.table.cell label="Convocatoria" hide :sort-value="$signature_sheet->meetingRequest->title ?? ''">
                     {{ $signature_sheet->meetingRequest->title ?? 'Sin convocatoria' }}
                 </x-ui.table.cell>
-                <x-ui.table.cell label="Firmas" numeric meta>{{ $signature_sheet->users->count() }}</x-ui.table.cell>
+                <x-ui.table.cell label="Firmas" numeric meta>{{ $signature_sheet->users->count() }}<span
+                        class="md:hidden">{{ $signature_sheet->users->count() === 1 ? ' firma' : ' firmas' }}</span></x-ui.table.cell>
                 <x-ui.table.cell label="Modificada" meta hide>
                     <x-ui.time :value="$signature_sheet->updated_at" inline short />
                 </x-ui.table.cell>
-                <x-ui.table.cell actions>
+                <x-ui.table.cell tools>
                     <span class="flex justify-end gap-0.5">
                         <x-ui.button icon-only icon="copy" variant="ghost" size="sm" :label="'Copiar el enlace de ' . $signature_sheet->title"
                             :copy="$signUrl" />

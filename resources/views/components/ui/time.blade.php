@@ -23,6 +23,7 @@
         'font-mono tabular-nums' => $mono,
         'ml-1.5 text-ink-muted' => $format === 'both' && $inline,
         'block text-xs text-ink-muted' => $format === 'both' && !$inline,
+        'in-data-cards:max-md:hidden' => $format === 'both',
     ]);
 @endphp
 @if ($date === null)

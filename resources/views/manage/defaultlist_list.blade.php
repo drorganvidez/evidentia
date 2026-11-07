@@ -58,7 +58,8 @@
                         <x-ui.person :name="$secretary->name" :surname="$secretary->surname" size="sm" reverse :href="route('profiles.view', ['id' => $secretary->id])" />
                     @endif
                 </x-ui.table.cell>
-                <x-ui.table.cell label="Personas" numeric meta>{{ $default_list->users->count() }}</x-ui.table.cell>
+                <x-ui.table.cell label="Personas" numeric meta>{{ $default_list->users->count() }}<span
+                        class="md:hidden">{{ $default_list->users->count() === 1 ? ' persona' : ' personas' }}</span></x-ui.table.cell>
                 <x-ui.table.cell label="Creada" meta hide>
                     <x-ui.time :value="$default_list->created_at" inline short />
                 </x-ui.table.cell>

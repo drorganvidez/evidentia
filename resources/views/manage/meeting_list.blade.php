@@ -53,7 +53,8 @@
                 </x-ui.table.cell>
                 <x-ui.table.cell label="Fecha" meta><x-ui.time :value="$meeting->datetime" inline short /></x-ui.table.cell>
                 <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$meeting->hours" /></x-ui.table.cell>
-                <x-ui.table.cell label="Asistentes" numeric meta>{{ $meeting->users_count }}</x-ui.table.cell>
+                <x-ui.table.cell label="Asistentes" numeric meta>{{ $meeting->users_count }}<span
+                        class="md:hidden">{{ $meeting->users_count === 1 ? ' asistente' : ' asistentes' }}</span></x-ui.table.cell>
                 <x-ui.table.cell label="Acta" end>
                     @if ($meeting->meetingMinutes)
                         <x-ui.button icon="file-text" size="sm" variant="ghost" :aria-label="'Acta de ' . $meeting->title"

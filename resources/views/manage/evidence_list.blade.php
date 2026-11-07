@@ -93,7 +93,7 @@
                             @class([
                                 'mt-0.5 block text-sm',
                                 'font-semibold text-rejected-ink' => $waited >= $lateDays,
-                                'text-ink-muted' => $waited < $lateDays,
+                                'text-ink-muted max-md:hidden' => $waited < $lateDays,
                             ])>{{ $waited === 0 ? 'en cola desde hoy' : 'en cola ' . $waited . ($waited === 1 ? ' día' : ' días') }}</span>
                     @endif
                 </x-ui.table.cell>
