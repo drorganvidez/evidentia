@@ -93,6 +93,7 @@ test.describe('Una evidencia de principio a fin', () => {
 
     test('se guarda con una prueba, se publica, se rechaza, se corrige y se borra', async ({
         page,
+        ui,
     }) => {
         const title = `Guion de la mesa redonda ${Date.now()}`;
 
@@ -119,6 +120,19 @@ test.describe('Una evidencia de principio a fin', () => {
             'guion.pdf',
         );
         await expect(page.getByRole('definition').filter({ hasText: '1,50 h' })).toBeVisible();
+
+        // The proof is previewed in a modal of the same page, the PDF in a frame the policy allows
+        await page.getByRole('button', { name: 'Ver guion.pdf' }).click();
+        const preview = page.getByRole('dialog', { name: 'guion.pdf' });
+        await expect(preview).toBeVisible();
+        await expect(preview.locator('iframe[title="guion.pdf"]')).toBeVisible();
+        await expect(preview.getByRole('link', { name: 'Abrir en otra pestaña' })).toHaveAttribute(
+            'target',
+            '_blank',
+        );
+        expect(await ui.axe(), 'axe con la vista previa abierta').toEqual([]);
+        await page.keyboard.press('Escape');
+        await expect(preview).toBeHidden();
 
         await page.getByRole('link', { name: 'Editar', exact: true }).click();
         await expect(page.getByLabel('Descripción')).toHaveValue(

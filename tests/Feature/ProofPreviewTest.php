@@ -46,6 +46,8 @@ class ProofPreviewTest extends TestCase
         $this->assertStringStartsWith('inline', $response->headers->get('Content-Disposition'));
         $this->assertSame('nosniff', $response->headers->get('X-Content-Type-Options'));
         $this->assertStringContainsString("default-src 'none'", $response->headers->get('Content-Security-Policy'));
+        $this->assertStringContainsString("frame-ancestors 'self'", $response->headers->get('Content-Security-Policy'));
+        $this->assertSame('SAMEORIGIN', $response->headers->get('X-Frame-Options'), 'The preview modal of the app may frame it');
     }
 
     public function test_an_image_opens_inline_in_a_sandbox(): void

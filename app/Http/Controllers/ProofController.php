@@ -41,10 +41,12 @@ class ProofController extends Controller
             'Content-Type' => $mime,
             'X-Content-Type-Options' => 'nosniff',
             'Cache-Control' => 'private, no-store',
-            // An image is drawn with nothing else allowed; the PDF viewer of Chrome refuses a sandboxed document
+            // Only pages of the app may frame it (the preview modal); an image is drawn with nothing else allowed and
+            // the PDF viewer of Chrome refuses a sandboxed document
+            'X-Frame-Options' => 'SAMEORIGIN',
             'Content-Security-Policy' => $mime === 'application/pdf'
-                ? "default-src 'none'; object-src 'self'; frame-ancestors 'none'"
-                : "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; frame-ancestors 'none'; sandbox",
+                ? "default-src 'none'; object-src 'self'; frame-ancestors 'self'"
+                : "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; frame-ancestors 'self'; sandbox",
         ]);
 
         return $response;

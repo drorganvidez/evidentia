@@ -1,6 +1,7 @@
 {{--
-    Attached files: an icon by type, the name, a readable size, a button that opens it in a new tab when the browser
-    shows it (preview) and a download button; an empty state without files.
+    Attached files: an icon by type, the name, a readable size, a button that shows it in a modal when the browser can
+    (preview: a PDF in a frame, an image as it is, with a link to open it in a new tab) and a download button; an
+    empty state without files.
     <x-ui.file-list :files="[['name' => 'informe-final.pdf', 'size' => 1258291, 'href' => '/files/1', 'type' => 'application/pdf']]" />
     <x-ui.file-list :files="$proofs" label="Pruebas de la evidencia" empty-text="No hay pruebas adjuntas" />
     A file is ['name', 'size' => bytes or null, 'href' => null, 'preview' => url or null, 'type' => mime type or
@@ -74,8 +75,34 @@
                         class="font-mono text-sm whitespace-nowrap text-ink-muted tabular-nums">{{ $size }}</span>
                 @endif
                 @if ($preview !== null)
-                    <x-ui.button icon-only icon="eye" :label="$previewLabel . ' ' . $name" :href="$preview" variant="ghost"
-                        size="sm" target="_blank" rel="noopener" />
+                    @php
+                        $previewId = 'preview-' . substr(md5($preview), 0, 12);
+                        $type = Str::lower((string) ($file['type'] ?? ''));
+                        $isPdf =
+                            in_array($type, ['pdf', 'application/pdf'], true) ||
+                            Str::endsWith(Str::lower($name), '.pdf');
+                    @endphp
+                    <x-ui.dialog :id="$previewId" :title="$name" size="xl" data-preview>
+                        <x-slot:trigger>
+                            <x-ui.button icon-only icon="eye" :label="$previewLabel . ' ' . $name" variant="ghost" size="sm"
+                                aria-haspopup="dialog" aria-controls="{{ $previewId }}" x-on:click="show" />
+                        </x-slot:trigger>
+                        {{-- Lazy: the frame or the image loads when the modal opens, not with the page --}}
+                        @if ($isPdf)
+                            <iframe src="{{ $preview }}" title="{{ $name }}" loading="lazy"
+                                class="block h-[70dvh] w-full rounded-lg border border-rule bg-white"></iframe>
+                        @else
+                            <img src="{{ $preview }}" alt="{{ $name }}" loading="lazy"
+                                class="mx-auto block h-auto max-h-[70dvh] w-auto max-w-full rounded-lg">
+                        @endif
+                        <x-slot:footer>
+                            <x-ui.button :href="$preview" target="_blank" rel="noopener" icon="external-link"
+                                variant="quiet">Abrir en otra pestaña</x-ui.button>
+                            @if ($href !== null)
+                                <x-ui.button :href="$href" icon="download">{{ $downloadLabel }}</x-ui.button>
+                            @endif
+                        </x-slot:footer>
+                    </x-ui.dialog>
                 @endif
                 @if ($href !== null)
                     <x-ui.button icon-only icon="download" :label="$downloadLabel . ' ' . $name" :href="$href" variant="ghost"

@@ -142,4 +142,21 @@ class FileListTest extends ComponentTestCase
         $this->assertStringContainsString('aria-label="Bajar &lt;b&gt;x&lt;/b&gt;.pdf"', $html);
         $this->assertStringNotContainsString('<b>', $html);
     }
+
+    public function test_the_preview_opens_in_a_modal_with_a_frame_or_an_image(): void
+    {
+        $html = $this->render('<x-ui.file-list :files="[
+            [\'name\' => \'acta.pdf\', \'size\' => 10, \'href\' => \'/files/1\', \'preview\' => \'/proof/view/1\', \'type\' => \'pdf\'],
+            [\'name\' => \'cartel.jpg\', \'size\' => 10, \'href\' => \'/files/2\', \'preview\' => \'/proof/view/2\', \'type\' => \'jpg\'],
+        ]" />');
+
+        $this->assertSame(2, substr_count($html, '<dialog'));
+        $this->assertSame(2, substr_count($html, 'aria-haspopup="dialog"'));
+        $this->assertStringContainsString('aria-label="Ver acta.pdf"', $html);
+        $this->assertMatchesRegularExpression('/<iframe src="\/proof\/view\/1" title="acta.pdf" loading="lazy"/', $html);
+        $this->assertMatchesRegularExpression('/<img src="\/proof\/view\/2" alt="cartel.jpg" loading="lazy"/', $html);
+        $this->assertSame(2, substr_count($html, 'target="_blank"'), 'Only the fallback link of each modal opens a new tab');
+        $this->assertUniqueIds($html);
+        $this->assertCspSafe($html);
+    }
 }
