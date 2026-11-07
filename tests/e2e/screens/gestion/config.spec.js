@@ -21,6 +21,18 @@ test.describe('Configurar curso', () => {
         await ui.noOverflow();
     });
 
+    test('ofrece cerrar ahora cada plazo abierto y pide confirmarlo', async ({ page, ui }) => {
+        const card = page.getByRole('region', { name: 'Cerrar un plazo ahora' });
+        await card.getByRole('button', { name: 'Subida de evidencias' }).click();
+
+        const dialog = page.getByRole('alertdialog', { name: 'Cerrar subida de evidencias' });
+        await expect(dialog.getByRole('button', { name: 'Sí, cerrar ahora' })).toBeVisible();
+        expect(await ui.axe()).toEqual([]);
+        await dialog.getByRole('button', { name: 'Cancelar' }).click();
+        await expect(dialog).toBeHidden();
+        await ui.noOverflow();
+    });
+
     test('pasa axe en claro y oscuro', async ({ ui }) => {
         expect(await ui.axe()).toEqual([]);
 

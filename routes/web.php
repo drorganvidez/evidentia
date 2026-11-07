@@ -241,6 +241,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware([CheckRoles::class.':PRESIDENT,LECTURE'])->group(function () {
         Route::get('president/config', [ConfigController::class, 'config'])->name('president.config');
         Route::post('president/config/save', [ConfigController::class, 'config_save'])->name('president.config.save');
+        Route::post('president/config/close', [ConfigController::class, 'close'])->name('president.config.close');
 
         Route::get('president/user/list', [ManagementController::class, 'user_list'])->name('president.user.list');
         Route::get('president/evidence/list', [ManagementController::class, 'evidence_list'])->name('president.evidence.list');
@@ -291,6 +292,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware([CheckRoles::class.':LECTURE,PRESIDENT'])->group(function () {
         Route::get('lecture/config', [ConfigController::class, 'config'])->name('lecture.config');
         Route::post('lecture/config/save', [ConfigController::class, 'config_save'])->name('lecture.config.save');
+        Route::post('lecture/config/close', [ConfigController::class, 'close'])->name('lecture.config.close');
 
         Route::get('lecture/committee/list', [ManagementController::class, 'committee_list'])->name('lecture.committee.list');
         Route::get('lecture/committee/{id}', [CommitteeOverviewController::class, 'show'])->whereNumber('id')->name('lecture.committee.view');

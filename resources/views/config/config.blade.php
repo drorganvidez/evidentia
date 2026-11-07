@@ -48,4 +48,34 @@
             <x-ui.button type="submit" variant="primary" icon="save">Guardar configuración</x-ui.button>
         </x-slot:actions>
     </x-ui.form>
+    @php
+        $open = collect(\App\Enums\Deadline::cases())->filter(
+            fn($deadline) => filled($configuration?->{$deadline->column()}) &&
+                \Carbon\Carbon::parse($configuration->{$deadline->column()})->isFuture(),
+        );
+    @endphp
+    @if ($open->isNotEmpty())
+        <x-ui.card title="Cerrar un plazo ahora" :level="2" class="mt-6">
+            <p class="text-sm text-ink-muted">Si una fase ha terminado antes de lo previsto, ciérrala ya sin esperar a
+                su fecha.
+                Cerrar la validación cierra también la subida de evidencias.</p>
+            <div class="mt-4 flex flex-wrap gap-3">
+                @foreach ($open as $deadline)
+                    <x-ui.dialog :id="'close-' . $deadline->value" variant="alert" :title="'Cerrar ' . mb_strtolower($deadline->label())"
+                        description="El plazo se cerrará en este momento. Podrás reabrirlo cambiando su fecha."
+                        :trigger="$deadline->label()" trigger-icon="lock">
+                        <x-slot:footer>
+                            <x-ui.button x-on:click="close" autofocus>Cancelar</x-ui.button>
+                            <form method="post" action="{{ $close }}">
+                                @csrf
+                                <input type="hidden" name="deadline" value="{{ $deadline->value }}">
+                                <x-ui.button variant="primary" type="submit" icon="lock" block>Sí, cerrar
+                                    ahora</x-ui.button>
+                            </form>
+                        </x-slot:footer>
+                    </x-ui.dialog>
+                @endforeach
+            </div>
+        </x-ui.card>
+    @endif
 </x-layout.app>

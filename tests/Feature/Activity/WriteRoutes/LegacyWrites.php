@@ -122,6 +122,7 @@ final class LegacyWrites
                 "$prefix.committee.management.remove" => self::management($role, "$prefix.committee.management.remove", ['committee.deleted'],
                     fn (array $ids) => ['_id' => Committee::create(['name' => 'Sin uso'])->id]),
                 "$prefix.config.save" => self::management($role, "$prefix.config.save", ['config.changed'], fn (array $ids) => self::config()),
+                "$prefix.config.close" => self::management($role, "$prefix.config.close", ['config.changed'], fn (array $ids) => ['deadline' => 'upload_evidences']),
                 "$prefix.export.save" => self::management($role, "$prefix.export.save", ['export.evidences'],
                     fn (array $ids) => ['evidences' => 'on', 'bonus' => 'on']),
                 "$prefix.user.management.save" => self::management($role, "$prefix.user.management.save", ['user.edited'],

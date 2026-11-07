@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class ConfigController extends Controller
 {
@@ -33,9 +34,10 @@ class ConfigController extends Controller
         }
 
         $configuration = Configuration::find(1);
+        $close = route(Auth::user()->hasRole('LECTURE') ? 'lecture.config.close' : 'president.config.close');
 
         return view('config.config',
-            ['route' => $route, 'configuration' => $configuration]);
+            ['route' => $route, 'close' => $close, 'configuration' => $configuration]);
     }
 
     // los cinco plazos, a la hora
@@ -48,6 +50,40 @@ class ConfigController extends Controller
         }
 
         return $deadlines;
+    }
+
+    // cierra un plazo abierto en este minuto; cerrar la validación cierra también la subida
+    public function close(Request $request)
+    {
+        $request->validate(['deadline' => ['required', Rule::enum(Deadline::class)]]);
+
+        $deadline = Deadline::from($request->input('deadline'));
+        $configuration = Configuration::findOrFail(1);
+        $now = now()->startOfMinute();
+        $closing = $deadline === Deadline::ValidateEvidences ? [Deadline::UploadEvidences, $deadline] : [$deadline];
+        $before = $this->deadlines($configuration);
+
+        DB::transaction(function () use ($configuration, $closing, $now, $before) {
+            foreach ($closing as $each) {
+                $value = $configuration->{$each->column()};
+                if ($value === null || Carbon::parse($value)->isAfter($now)) {
+                    $configuration->{$each->column()} = $now->format('Y-m-d H:i:s');
+                }
+            }
+            $configuration->save();
+
+            Activity::record(
+                ActivityAction::ConfigChanged,
+                $configuration,
+                details: Changes::between($before, $this->deadlines($configuration)),
+                subjectTitle: 'Configuración del curso',
+            );
+        });
+
+        app(Deadlines::class)->refresh();
+
+        return redirect()->route(Auth::user()->hasRole('LECTURE') ? 'lecture.config' : 'president.config')
+            ->with('success', 'Plazo de '.mb_strtolower($deadline->label()).' cerrado.');
     }
 
     public function config_save(Request $request)
