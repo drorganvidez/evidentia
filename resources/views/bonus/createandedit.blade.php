@@ -12,7 +12,13 @@
         ->values()
         ->all();
     $presets = $defaultlists
-        ->map(fn($list) => ['label' => trim($list->name), 'values' => $list->users->modelKeys()])
+        // only the people the bonus may go to, the members of the committee
+        ->map(
+            fn($list) => [
+                'label' => trim($list->name),
+                'values' => array_values(array_intersect($list->users->modelKeys(), $users->modelKeys())),
+            ],
+        )
         ->values()
         ->all();
     $deadline = \Config::bonus_timestamp();

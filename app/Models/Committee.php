@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -20,6 +21,22 @@ class Committee extends Model
     public static function presidency(): ?self
     {
         return self::query()->where('presidency', true)->orderBy('id')->first();
+    }
+
+    /**
+     * The people who work in the committee and so may get one of its bonuses: whoever sent it an evidence, attended one
+     * of its meetings or coordinates it or keeps its minutes. The lecturers never get bonuses.
+     */
+    public function members(): Builder
+    {
+        return User::query()
+            ->where(fn (Builder $query) => $query
+                ->whereHas('evidences', fn (Builder $evidences) => $evidences->where('committee_id', $this->id)
+                    ->where('last', true)->whereNotIn('status', ['DRAFT', 'BIN']))
+                ->orWhereHas('meetings', fn (Builder $meetings) => $meetings->where('committee_id', $this->id))
+                ->orWhereHas('coordinator', fn (Builder $coordinator) => $coordinator->where('committee_id', $this->id))
+                ->orWhereHas('secretary', fn (Builder $secretary) => $secretary->where('committee_id', $this->id)))
+            ->whereDoesntHave('roles', fn (Builder $roles) => $roles->where('rol', 'LECTURE'));
     }
 
     // Relaciones

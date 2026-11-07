@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Bonus;
 use App\Models\Committee;
+use App\Models\Evidence;
 use App\Models\Meeting;
 use App\Models\Role;
 use App\Models\Secretary;
@@ -64,6 +65,10 @@ class RepeatedAttendeesTest extends TestCase
     public function test_bonuses_ignore_repeated_users(): void
     {
         [$ana, $pedro] = User::factory()->count(2)->create();
+        // los bonos solo van a quien trabaja en el comité
+        foreach ([$ana, $pedro] as $member) {
+            Evidence::create(['title' => 'Stand', 'description' => 'Stand', 'hours' => 1, 'status' => 'PENDING', 'user_id' => $member->id, 'committee_id' => $this->secretary->committee_id, 'last' => true]);
+        }
 
         $this->post(route('secretary.bonus.new'), ['reason' => 'Montaje del stand', 'hours' => 2, 'users' => [$ana->id, $ana->id]])
             ->assertRedirect(route('secretary.bonus.list'));

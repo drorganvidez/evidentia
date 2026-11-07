@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Committee;
 use App\Models\Configuration;
+use App\Models\Evidence;
 use App\Models\Role;
 use App\Models\Secretary;
 use App\Models\User;
@@ -23,6 +24,10 @@ class BonusFormTest extends TestCase
         $user->roles()->attach(Role::forceCreate(['rol' => 'SECRETARY', 'slug' => 'secretary']));
         Secretary::forceCreate(['user_id' => $user->id, 'committee_id' => Committee::create(['name' => 'Logística'])->id]);
         [$ana, $pedro] = User::factory()->count(2)->create();
+        // los bonos solo van a quien trabaja en el comité
+        foreach ([$ana, $pedro] as $member) {
+            Evidence::create(['title' => 'Stand', 'description' => 'Stand', 'hours' => 1, 'status' => 'PENDING', 'user_id' => $member->id, 'committee_id' => $user->secretary->committee_id, 'last' => true]);
+        }
 
         $html = $this->actingAs($user)
             ->from(route('secretary.bonus.create'))

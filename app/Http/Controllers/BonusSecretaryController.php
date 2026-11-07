@@ -7,7 +7,6 @@ use App\Enums\ActivityFlag;
 use App\Facades\Activity;
 use App\Http\Middleware\CheckRoles;
 use App\Models\Bonus;
-use App\Models\User;
 use App\Support\Changes;
 use App\Support\ListSort;
 use Illuminate\Http\Request;
@@ -39,7 +38,7 @@ class BonusSecretaryController extends Controller
     public function create()
     {
 
-        $users = User::orderBy('surname')->get();
+        $users = Auth::user()->secretary->committee->members()->orderBy('surname')->get();
         $defaultlists = Auth::user()->secretary->defaultLists;
 
         return view('bonus.createandedit',
@@ -53,7 +52,7 @@ class BonusSecretaryController extends Controller
             'reason' => 'required|min:5|max:255',
             'hours' => 'required|numeric|between:0.5,99.99|max:100',
             'users' => 'required|array|min:1',
-            'users.*' => 'integer|exists:users,id',
+            'users.*' => ['integer', $this->member()],
         ]);
 
         DB::transaction(function () use ($request) {
@@ -87,7 +86,9 @@ class BonusSecretaryController extends Controller
     public function edit($id)
     {
         $bonus = Bonus::find($id);
-        $users = User::orderBy('surname')->get();
+        // quien ya estaba en el bono sigue pudiendo quedarse aunque ya no trabaje en el comité
+        $users = Auth::user()->secretary->committee->members()->orWhereIn('id', $bonus->users->modelKeys())
+            ->orderBy('surname')->get();
         $defaultlists = Auth::user()->secretary->defaultLists;
 
         return view('bonus.createandedit',
@@ -101,10 +102,10 @@ class BonusSecretaryController extends Controller
             'reason' => 'required|min:5|max:255',
             'hours' => 'required|numeric|between:0.5,99.99|max:100',
             'users' => 'array',
-            'users.*' => 'integer|exists:users,id',
         ]);
 
         $bonus = Bonus::find($request->_id);
+        $request->validate(['users.*' => ['integer', $this->member($bonus->users->modelKeys())]]);
         $before = $this->snapshot($bonus);
 
         DB::transaction(function () use ($request, $bonus, $before) {
@@ -132,6 +133,18 @@ class BonusSecretaryController extends Controller
     }
 
     // motivo, horas y beneficiarios de un bono, tal como se anotan
+    // alguien del comité del secretario, o de los que ya estaban en el bono
+    private function member(array $kept = []): \Closure
+    {
+        $allowed = Auth::user()->secretary->committee->members()->pluck('id')->merge($kept)->map(fn ($id) => (int) $id)->all();
+
+        return function (string $attribute, mixed $value, \Closure $fail) use ($allowed) {
+            if (! in_array((int) $value, $allowed, true)) {
+                $fail('Solo puedes dar bonos a quien trabaja en tu comité.');
+            }
+        };
+    }
+
     private function snapshot(Bonus $bonus): array
     {
         return [
