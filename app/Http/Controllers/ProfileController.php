@@ -38,7 +38,8 @@ class ProfileController extends Controller
             ['route_upload_info' => $route_upload_info,
                 'route_upload_biography' => $route_upload_biography,
                 'route_upload_pass' => $route_upload_pass,
-                'hours' => $dashboard->hours(Auth::user())]);
+                'hours' => $dashboard->hours(Auth::user()),
+                'biography_locked' => Evidence::randomized()]);
     }
 
     public function upload_info(Request $request)
@@ -75,6 +76,10 @@ class ProfileController extends Controller
     {
 
         $user = Auth::user();
+
+        if (Evidence::randomized()) {
+            return redirect()->route('profile.view')->with('error', 'Las evidencias ya se han aleatorizado, así que el resumen del trabajo no se puede cambiar.');
+        }
 
         $request->validate([
             'biography' => ['required', new MinCharacters(10), new MaxCharacters(20000)],

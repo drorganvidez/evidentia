@@ -187,6 +187,12 @@ class Evidence extends Model
     }
 
     // Scopes estáticos
+    // tras aleatorizar, el resumen de trabajo de los alumnos queda fijo para la evaluación
+    public static function randomized(): bool
+    {
+        return self::where('rand', true)->exists();
+    }
+
     public static function evidencesNotDraft()
     {
         return static::where('last', true)->where('status', '!=', 'DRAFT')->orderByDesc('updated_at')->get();

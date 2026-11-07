@@ -3,7 +3,7 @@
     <x-ui.page-header title="Aleatorizar evidencias">
         <x-slot:actions>
             <x-ui.dialog id="randomize" variant="alert" title="Aleatorizar evidencias"
-                description="Se elegirá al azar una evidencia aceptada de cada alumno y se sustituirá la elección anterior."
+                description="Se elegirá al azar una evidencia aceptada de cada alumno y se sustituirá la elección anterior. Desde ese momento los alumnos ya no podrán cambiar su resumen del trabajo."
                 trigger="Aleatorizar" trigger-variant="primary" trigger-icon="shuffle">
                 <x-slot:footer>
                     <x-ui.button x-on:click="close" autofocus>Cancelar</x-ui.button>

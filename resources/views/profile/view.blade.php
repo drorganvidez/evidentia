@@ -34,14 +34,23 @@
 
             @unless ($user->hasRole('LECTURE'))
                 <x-ui.card title="Resumen del trabajo" :level="2" id="biography-title">
-                    <x-ui.form :action="$route_upload_biography" id="biography-form" :summary="false" busy-label="Guardando">
+                    @if ($biography_locked)
+                        <x-ui.alert title="Resumen cerrado" compact>
+                            Las evidencias ya se han aleatorizado, así que tu resumen queda fijo para la evaluación.
+                        </x-ui.alert>
                         <x-ui.field name="biography" label="Resumen del trabajo en las jornadas" type="textarea"
-                            :rows="8" :maxlength="20000" :value="\App\View\PlainText::fromHtml($user->biography)" hint="Al menos 10 caracteres"
-                            required />
-                        <x-slot:actions>
-                            <x-ui.button type="submit" variant="primary" icon="save">Guardar el resumen</x-ui.button>
-                        </x-slot:actions>
-                    </x-ui.form>
+                            :rows="8" :value="\App\View\PlainText::fromHtml($user->biography)" readonly />
+                    @else
+                        <x-ui.form :action="$route_upload_biography" id="biography-form" :summary="false" busy-label="Guardando">
+                            <x-ui.field name="biography" label="Resumen del trabajo en las jornadas" type="textarea"
+                                :rows="8" :maxlength="20000" :value="\App\View\PlainText::fromHtml($user->biography)" hint="Al menos 10 caracteres"
+                                required />
+                            <x-slot:actions>
+                                <x-ui.button type="submit" variant="primary" icon="save">Guardar el
+                                    resumen</x-ui.button>
+                            </x-slot:actions>
+                        </x-ui.form>
+                    @endif
                 </x-ui.card>
             @endunless
 
