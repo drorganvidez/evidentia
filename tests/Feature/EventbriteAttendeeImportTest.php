@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\ActivityLog;
 use App\Models\Attendee;
 use App\Models\Configuration;
 use App\Models\Event;
@@ -92,6 +93,9 @@ class EventbriteAttendeeImportTest extends TestCase
 
         $this->assertEqualsCanonicalizing([$first->id, $second->id], $ana->fresh()->attendees()->pluck('event_id')->all());
         $this->assertSame(0, $pedro->fresh()->attendees()->count());
+        $log = ActivityLog::where('action', 'eventbrite.attendees_synced')->sole();
+        $this->assertSame($ana->id, $log->subject_id);
+        $this->assertSame(2, $log->details['events']);
     }
 
     public function test_a_coordinator_cannot_load_their_own_attendances(): void
