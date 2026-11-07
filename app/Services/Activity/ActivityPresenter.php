@@ -312,7 +312,15 @@ final class ActivityPresenter
         $limits = ['max_evidences_hours' => 'Límite de evidencias', 'max_attendees_hours' => 'Límite de asistencia'];
         $hours = fn (mixed $value): string => is_numeric($value) ? str_replace('.', ',', (string) (float) $value).' h' : 'sin límite';
 
+        $texts = ['event_name' => 'Evento', 'event_edition' => 'Edición'];
+        $text = fn (mixed $value): string => is_string($value) && $value !== '' ? '«'.$value.'»' : 'sin indicar';
+
         foreach (array_keys($before + $after) as $key) {
+            if (isset($texts[$key])) {
+                $changes[] = $texts[$key].' '.$text($before[$key] ?? null).' → '.$text($after[$key] ?? null);
+
+                continue;
+            }
             if (isset($limits[$key])) {
                 $changes[] = $limits[$key].' '.$hours($before[$key] ?? null).' → '.$hours($after[$key] ?? null);
 

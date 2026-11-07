@@ -47,7 +47,7 @@ class MigrationsTest extends TestCase
         $this->assertFalse(Schema::hasColumn('committees', 'presidency'));
         $expected['configuration']['columns'] = array_values(array_filter(
             $expected['configuration']['columns'],
-            fn (array $column): bool => ! in_array($column['name'], ['max_evidences_hours', 'max_attendees_hours'], true),
+            fn (array $column): bool => ! in_array($column['name'], ['max_evidences_hours', 'max_attendees_hours', 'event_name', 'event_edition'], true),
         ));
         $expected['events']['columns'] = array_values(array_filter(
             $expected['events']['columns'],

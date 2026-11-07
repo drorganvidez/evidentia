@@ -1,7 +1,7 @@
 import { signIn } from '../../fixtures/auth.js';
 import { expect, test } from '../../fixtures/ui.js';
 
-// The deadlines of the course: one card per phase with its day, its hour and whether it is open
+// The settings of the course: the event, one card per phase with its day, its hour and whether it is open, the hour caps
 test.describe('Configurar curso', () => {
     test.beforeEach(async ({ page }) => {
         await signIn(page, 'profesor');
@@ -88,5 +88,35 @@ test.describe('Configurar curso', () => {
                 .getByText('Configuración guardada con éxito.'),
         ).toBeVisible();
         await expect(limits.getByLabel('Evidencias')).toHaveValue('');
+    });
+
+    test('renombra el evento y el acceso lo muestra', async ({ page, browser }, testInfo) => {
+        test.skip(testInfo.project.name !== 'chromium', 'Las mutaciones solo en escritorio');
+
+        const event = page.getByRole('region', { name: 'Evento' });
+        await expect(event.getByLabel('Nombre del evento')).toHaveValue('Jornadas InnoSoft Days');
+        await expect(event.getByLabel('Edición')).toHaveValue('2026');
+
+        const save = async (name, edition) => {
+            await event.getByLabel('Nombre del evento').fill(name);
+            await event.getByLabel('Edición').fill(edition);
+            await page.getByRole('button', { name: 'Guardar configuración' }).click();
+            await expect(
+                page
+                    .getByRole('region', { name: 'Avisos' })
+                    .getByText('Configuración guardada con éxito.'),
+            ).toBeVisible();
+        };
+
+        await save('Semana de la Ciencia', '2027-28');
+        await expect(event.getByLabel('Nombre del evento')).toHaveValue('Semana de la Ciencia');
+
+        const guest = await browser.newPage();
+        await guest.goto('/login');
+        await expect(guest.getByText('Semana de la Ciencia').first()).toBeVisible();
+        await expect(guest.getByText('Edición 2027-28')).toBeVisible();
+        await guest.close();
+
+        await save('Jornadas InnoSoft Days', '2026');
     });
 });

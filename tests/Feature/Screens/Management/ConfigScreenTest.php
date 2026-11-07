@@ -27,7 +27,7 @@ class ConfigScreenTest extends ScreenTestCase
     {
         $this->actingAs($this->person('profesor'))
             ->from(route('lecture.config'))
-            ->post(route('lecture.config.save'), ['upload_evidences_date' => '2031-03-04'])
+            ->post(route('lecture.config.save'), ['event_name' => 'Jornadas InnoSoft Days', 'upload_evidences_date' => '2031-03-04'])
             ->assertSessionHasErrors('validate_evidences_date');
 
         $this->screen('profesor', route('lecture.config'))

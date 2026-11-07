@@ -105,7 +105,7 @@ final class LegacyWrites
         $date = now()->addWeeks(2)->format('Y-m-d');
 
         return [
-            'upload_evidences_date' => $date, 'upload_evidences_time' => '20:00', 'validate_evidences_date' => $date,
+            'event_name' => 'Jornadas InnoSoft Days', 'upload_evidences_date' => $date, 'upload_evidences_time' => '20:00', 'validate_evidences_date' => $date,
             'validate_evidences_time' => '23:59', 'meetings_date' => $date, 'meetings_time' => '23:59',
             'bonus_date' => $date, 'bonus_time' => '23:59', 'attendees_date' => $date, 'attendees_time' => '23:59',
         ];

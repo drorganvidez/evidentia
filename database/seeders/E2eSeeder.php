@@ -43,6 +43,8 @@ class E2eSeeder extends Seeder
         Configuration::query()->delete();
         Configuration::forceCreate([
             'id' => 1,
+            'event_name' => 'Jornadas InnoSoft Days',
+            'event_edition' => '2026',
             'upload_evidences_timestamp' => now()->addMonth(),
             'validate_evidences_timestamp' => now()->addMonths(2),
             'meetings_timestamp' => now()->addMonth(),

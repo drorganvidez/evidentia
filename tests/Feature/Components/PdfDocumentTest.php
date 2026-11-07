@@ -2,18 +2,23 @@
 
 namespace Tests\Feature\Components;
 
+use App\Models\Configuration;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\View\ViewException;
 use InvalidArgumentException;
 
 class PdfDocumentTest extends ComponentTestCase
 {
+    use RefreshDatabase;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         Carbon::setTestNow(Carbon::parse('2026-11-05 22:40:00'));
+        Configuration::forceCreate(['id' => 1, 'event_name' => 'Jornadas InnoSoft Days', 'event_edition' => '2026']);
     }
 
     protected function tearDown(): void
@@ -21,6 +26,27 @@ class PdfDocumentTest extends ComponentTestCase
         Carbon::setTestNow();
 
         parent::tearDown();
+    }
+
+    public function test_the_event_comes_from_the_configuration_of_the_course(): void
+    {
+        Configuration::query()->update(['event_name' => 'Semana de la Ciencia', 'event_edition' => '2027-28']);
+
+        $html = $this->render('<x-pdf.document title="Diploma"><p>Cuerpo</p></x-pdf.document>');
+
+        $this->assertStringContainsString('<title>Diploma · Semana de la Ciencia 2027-28</title>', $html);
+        $this->assertStringContainsString('<td class="pdf-header__event">Semana de la Ciencia 2027-28</td>', $html);
+        $this->assertStringNotContainsString('InnoSoft', $html);
+    }
+
+    public function test_a_course_without_a_name_prints_no_event(): void
+    {
+        Configuration::query()->delete();
+
+        $html = $this->render('<x-pdf.document title="Diploma"><p>Cuerpo</p></x-pdf.document>');
+
+        $this->assertStringContainsString('<title>Diploma</title>', $html);
+        $this->assertStringContainsString('<td class="pdf-header__event"></td>', $html);
     }
 
     public function test_it_is_a_complete_spanish_document_with_flat_colours_and_helvetica(): void

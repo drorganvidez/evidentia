@@ -1,4 +1,4 @@
-{{-- Deadlines of the course: the day and the hour each phase closes, with its state --}}
+{{-- Settings of the course: the event it runs for, the day and the hour each phase closes with its state, the hour caps --}}
 @php
     $deadlines = [
         ['Subida de evidencias', 'upload_evidences', $configuration?->upload_evidences_timestamp],
@@ -7,7 +7,11 @@
         ['Registro de bonos', 'bonus', $configuration?->bonus_timestamp],
         ['Registro de eventos y asistencias', 'attendees', $configuration?->attendee_timestamp],
     ];
-    $fields = collect($deadlines)
+    $fields = [
+        'event_name' => 'Nombre del evento',
+        'event_edition' => 'Edición',
+    ];
+    $fields += collect($deadlines)
         ->flatMap(
             fn($deadline) => [
                 $deadline[1] . '_date' => 'Día · ' . $deadline[0],
@@ -25,6 +29,16 @@
     <x-ui.page-header title="Configurar curso" />
 
     <x-ui.form :action="$route" id="config-form" :fields="$fields">
+        <x-ui.card title="Evento" :level="2" id="card-event" class="mb-6">
+            <p class="text-sm text-ink-muted">Aparece en la página de acceso y en la cabecera de todos los PDF, como
+                actas, certificados y diplomas.</p>
+            <div class="mt-4 grid grid-cols-[minmax(0,1fr)] gap-4 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+                <x-ui.field name="event_name" label="Nombre del evento" :value="$configuration?->event_name" maxlength="120"
+                    hint="Por ejemplo, Jornadas InnoSoft Days" required />
+                <x-ui.field name="event_edition" label="Edición" :value="$configuration?->event_edition" maxlength="20"
+                    hint="Por ejemplo, 2026 o 2026-27" />
+            </div>
+        </x-ui.card>
         <div class="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-2">
             @foreach ($deadlines as [$label, $key, $closesAt])
                 @php

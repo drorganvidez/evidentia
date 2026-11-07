@@ -10,10 +10,12 @@
         ? 'Demasiados intentos, espera un minuto y vuelve a probar'
         : 'El correo o la contraseña no son correctos';
 @endphp
-<x-layout.public title="Acceso" wide :subtitle="'Jornadas InnoSoft ' . $edition">
+<x-layout.public title="Acceso" wide :subtitle="$event?->event_name">
     <x-slot:aside class="content-center lg:pr-8">
-        <x-ui.badge variant="chip" icon="calendar" :hue="270" class="justify-self-start">Edición
-            {{ $edition }}</x-ui.badge>
+        @if (filled($event?->event_edition))
+            <x-ui.badge variant="chip" icon="calendar" :hue="270" class="justify-self-start">Edición
+                {{ $event->event_edition }}</x-ui.badge>
+        @endif
         <h1
             class="max-w-[14ch] text-[clamp(2rem,9vw,2.625rem)] leading-none font-extrabold tracking-tightest text-ink lg:text-6xl">
             Lo que haces en las jornadas,

@@ -22,7 +22,7 @@ class ConfigDeadlinesTest extends TestCase
         $lecture->roles()->attach(Role::forceCreate(['rol' => 'LECTURE', 'slug' => 'lecture']));
 
         $this->actingAs($lecture)->post(route('lecture.config.save'), [
-            'upload_evidences_date' => $closed->format('Y-m-d'), 'upload_evidences_time' => '23:59',
+            'event_name' => 'Jornadas InnoSoft Days', 'upload_evidences_date' => $closed->format('Y-m-d'), 'upload_evidences_time' => '23:59',
             'validate_evidences_date' => $extended->format('Y-m-d'), 'validate_evidences_time' => '23:59',
             'meetings_date' => $extended->format('Y-m-d'), 'meetings_time' => '23:59',
             'bonus_date' => $extended->format('Y-m-d'), 'bonus_time' => '23:59',
@@ -42,7 +42,7 @@ class ConfigDeadlinesTest extends TestCase
         $date = now()->addWeek()->format('Y-m-d');
 
         $this->actingAs($president)->post(route('president.config.save'), [
-            'upload_evidences_date' => $date, 'upload_evidences_time' => '20:00',
+            'event_name' => 'Jornadas InnoSoft Days', 'upload_evidences_date' => $date, 'upload_evidences_time' => '20:00',
             'validate_evidences_date' => $date, 'validate_evidences_time' => '21:00',
             'meetings_date' => $date, 'meetings_time' => '20:00',
             'bonus_date' => $date, 'bonus_time' => '20:00',

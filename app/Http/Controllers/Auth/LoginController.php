@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Configuration;
 use App\Models\Evidence;
 use App\Models\Role;
 use Illuminate\Contracts\View\View;
@@ -50,7 +51,7 @@ class LoginController extends Controller
         $students = Role::where('rol', 'STUDENT')->first();
 
         return view('auth.login', [
-            'edition' => now()->year,
+            'event' => Configuration::query()->find(1, ['event_name', 'event_edition']),
             'figures' => [
                 'hours' => (float) (clone $accepted)->sum('hours'),
                 'evidences' => (clone $accepted)->count(),

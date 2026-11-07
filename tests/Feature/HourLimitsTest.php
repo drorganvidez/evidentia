@@ -85,7 +85,7 @@ class HourLimitsTest extends TestCase
         $date = now()->addWeek()->format('Y-m-d');
 
         return $this->actingAs($this->lecturer)->post(route('lecture.config.save'), $limits + [
-            'upload_evidences_date' => $date, 'upload_evidences_time' => '20:00',
+            'event_name' => 'Jornadas InnoSoft Days', 'upload_evidences_date' => $date, 'upload_evidences_time' => '20:00',
             'validate_evidences_date' => $date, 'validate_evidences_time' => '21:00',
             'meetings_date' => $date, 'meetings_time' => '20:00',
             'bonus_date' => $date, 'bonus_time' => '20:00',

@@ -18,7 +18,7 @@
 ])
 @php
     throw_if(blank($title), InvalidArgumentException::class, 'The pdf document needs a title.');
-    $event ??= 'Jornadas InnoSoft Days ' . now()->year;
+    $event ??= \App\Models\Configuration::eventTitle();
     $logo ??= public_path('img/brand/mark-256.png');
     $logoSrc = null;
     // realpath resolves ../ and links before the check; a URL or a data URI has no real path
@@ -41,7 +41,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>{{ $title }} · {{ $event }}</title>
+    <title>{{ $title }}{{ filled($event) ? ' · ' . $event : '' }}</title>
     <style nonce="{{ Vite::cspNonce() }}">
         @page {
             margin: 28mm 18mm 22mm;

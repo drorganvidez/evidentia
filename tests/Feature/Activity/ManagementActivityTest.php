@@ -138,12 +138,12 @@ class ManagementActivityTest extends TestCase
     {
         $date = Carbon::parse('2026-12-01');
         Configuration::whereKey(1)->update([
-            'upload_evidences_timestamp' => '2026-12-01 20:00:00', 'validate_evidences_timestamp' => '2026-12-01 23:59:00',
+            'event_name' => 'Jornadas InnoSoft Days', 'upload_evidences_timestamp' => '2026-12-01 20:00:00', 'validate_evidences_timestamp' => '2026-12-01 23:59:00',
             'meetings_timestamp' => '2026-12-01 23:59:00', 'bonus_timestamp' => '2026-12-01 23:59:00', 'attendee_timestamp' => '2026-12-01 23:59:00',
         ]);
 
         $this->post(route('lecture.config.save'), [
-            'upload_evidences_date' => '2026-12-08', 'upload_evidences_time' => '20:00',
+            'event_name' => 'Jornadas InnoSoft Days', 'upload_evidences_date' => '2026-12-08', 'upload_evidences_time' => '20:00',
             'validate_evidences_date' => '2026-12-08', 'validate_evidences_time' => '23:59',
             'meetings_date' => $date->format('Y-m-d'), 'meetings_time' => '23:59',
             'bonus_date' => $date->format('Y-m-d'), 'bonus_time' => '23:59',

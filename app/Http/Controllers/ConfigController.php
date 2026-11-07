@@ -52,12 +52,15 @@ class ConfigController extends Controller
         return $deadlines;
     }
 
-    // los plazos y los límites de horas, para anotar solo lo que cambia
+    // el evento, los plazos y los límites de horas, para anotar solo lo que cambia
     private function settings(Configuration $configuration): array
     {
         $limit = fn ($value): ?float => $value === null ? null : (float) $value;
 
-        return $this->deadlines($configuration) + [
+        return [
+            'event_name' => $configuration->event_name,
+            'event_edition' => $configuration->event_edition,
+        ] + $this->deadlines($configuration) + [
             'max_evidences_hours' => $limit($configuration->max_evidences_hours),
             'max_attendees_hours' => $limit($configuration->max_attendees_hours),
         ];
@@ -102,6 +105,8 @@ class ConfigController extends Controller
 
         // un plazo puede estar ya cerrado: así se guarda la configuración sin tener que reabrirlo
         $request->validate([
+            'event_name' => 'required|string|max:120',
+            'event_edition' => 'nullable|string|max:20',
             'upload_evidences_date' => 'required|date_format:Y-m-d',
             'validate_evidences_date' => 'required|date_format:Y-m-d|after_or_equal:upload_evidences_date',
             'meetings_date' => 'required|date_format:Y-m-d',
@@ -114,7 +119,7 @@ class ConfigController extends Controller
             'attendees_time' => 'required|date_format:H:i',
             'max_evidences_hours' => 'nullable|numeric|min:0|max:9999',
             'max_attendees_hours' => 'nullable|numeric|min:0|max:9999',
-        ], [], ['max_evidences_hours' => 'límite de horas de evidencias', 'max_attendees_hours' => 'límite de horas de asistencia']);
+        ], [], ['event_name' => 'nombre del evento', 'event_edition' => 'edición', 'max_evidences_hours' => 'límite de horas de evidencias', 'max_attendees_hours' => 'límite de horas de asistencia']);
 
         $configuration = Configuration::find(1);
 
@@ -123,9 +128,11 @@ class ConfigController extends Controller
             $configuration->id = 1;
         }
 
-        $before = $this->deadlines($configuration);
+        $before = $this->settings($configuration);
 
         DB::transaction(function () use ($request, $configuration, $before) {
+            $configuration->event_name = trim($request->input('event_name'));
+            $configuration->event_edition = $request->filled('event_edition') ? trim($request->input('event_edition')) : null;
             $configuration->upload_evidences_timestamp = $request->input('upload_evidences_date').' '.$request->input('upload_evidences_time');
             $configuration->validate_evidences_timestamp = $request->input('validate_evidences_date').' '.$request->input('validate_evidences_time');
             $configuration->meetings_timestamp = $request->input('meetings_date').' '.$request->input('meetings_time');
@@ -136,7 +143,7 @@ class ConfigController extends Controller
 
             $configuration->save();
 
-            // solo los plazos que cambian
+            // solo lo que cambia
             Activity::record(
                 ActivityAction::ConfigChanged,
                 $configuration,
