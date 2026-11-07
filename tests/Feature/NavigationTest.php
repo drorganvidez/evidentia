@@ -56,7 +56,7 @@ class NavigationTest extends TestCase
         $menu = app(Navigation::class)->for($this->user('STUDENT'), 'evidence.view');
 
         $this->assertSame([
-            '' => ['Inicio', 'Mi perfil', 'Mis mensajes', 'Mi actividad'],
+            '' => ['Inicio', 'Mi perfil', 'Mis mensajes', 'Mi actividad', 'Buscar acuerdos'],
             'Mis cosas' => ['Nueva evidencia', 'Mis evidencias', 'Mis reuniones', 'Mis asistencias'],
         ], $this->labels($menu['nav']));
         $this->assertTrue($menu['nav'][1]['items'][1]['current'], 'Mis evidencias is current on its detail');

@@ -69,6 +69,7 @@ final class Navigation
                 $item('Mis mensajes', 'messages.mine', 'message-square', $responsible ? ['messages.create'] : ['messages.create', 'messages.show'],
                     $unreadMine > 0 ? ['count' => $unreadMine, 'countLabel' => 'sin leer'] : []),
                 $item('Mi actividad', 'activity.mine', 'history'),
+                $item('Buscar acuerdos', 'meeting.search', 'search'),
             ],
         ]];
 

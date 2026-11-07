@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AgreementSearchController;
 use App\Http\Controllers\AttendeeController;
 // Controladores importados explícitamente
 use App\Http\Controllers\BlockController;
@@ -80,6 +81,7 @@ Route::middleware('auth')->group(function () {
     // MEETINGS, LISTS AND BONUS
     Route::prefix('meeting')->group(function () {
         Route::get('list', [MeetingController::class, 'list'])->name('meeting.list');
+        Route::get('search', [AgreementSearchController::class, 'index'])->name('meeting.search');
     });
 
     // DOWNLOADS
