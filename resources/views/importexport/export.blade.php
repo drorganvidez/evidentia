@@ -25,4 +25,14 @@
             </x-slot:actions>
         </x-ui.form>
     </x-ui.card>
+
+    <x-ui.card title="Copia de las evidencias" :level="2" class="max-w-2xl" id="archive-title">
+        <p class="text-ink-muted">Un archivo ZIP con la lista de todas las evidencias enviadas a revisión (autor,
+            comité,
+            texto, horas y estado) y sus pruebas, por alumno. Los borradores no se incluyen.</p>
+        <div class="mt-4">
+            <x-ui.button variant="primary" icon="download" :href="$archive" id="archive-download">Descargar
+                copia</x-ui.button>
+        </div>
+    </x-ui.card>
 </x-layout.app>

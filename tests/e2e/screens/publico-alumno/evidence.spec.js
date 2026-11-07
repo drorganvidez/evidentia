@@ -21,6 +21,16 @@ async function openFromList(page, title) {
 }
 
 test.describe('Evidencias de la estudiante', () => {
+    test('descarga la copia de sus evidencias', async ({ page }, testInfo) => {
+        test.skip(testInfo.project.name !== 'chromium', 'La descarga solo en escritorio');
+        await signIn(page, 'estudiante');
+        await page.goto('/evidence/list');
+
+        const download = page.waitForEvent('download');
+        await page.locator('#evidence-archive').click();
+        expect((await download).suggestedFilename()).toMatch(/^mis-evidencias-.*\.zip$/);
+    });
+
     test('el listado enseña cada evidencia con su estado y se filtra', async ({ page, ui }) => {
         await signIn(page, 'estudiante');
         await page.goto('/evidence/list');

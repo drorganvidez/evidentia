@@ -82,6 +82,7 @@ enum ActivityAction: string
     case ExportAttendees = 'export.attendees';
     case ExportActivity = 'export.activity';
     case ExportRecord = 'export.record';
+    case ExportArchive = 'export.archive';
     case RandomizeRun = 'randomize.run';
 
     // Mensajes
@@ -183,6 +184,7 @@ enum ActivityAction: string
         'export.attendees' => ['Exportación de asistencias', 'notice', 'management', null],
         'export.activity' => ['Exportación del registro', 'notice', 'management', null],
         'export.record' => ['Exportación del expediente', 'notice', 'management', null],
+        'export.archive' => ['Copia de las evidencias', 'notice', 'evidence', null],
         'randomize.run' => ['Aleatorización ejecutada', 'notice', 'management', null],
 
         'message.sent' => ['Mensaje enviado', 'pending', 'messages', null],

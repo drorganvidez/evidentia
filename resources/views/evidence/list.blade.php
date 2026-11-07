@@ -24,10 +24,13 @@
             </x-slot:meta>
         @endif
         <x-slot:actions>
+            <x-ui.button variant="ghost" icon="download" :href="route('evidence.archive')" id="evidence-archive">Descargar
+                copia</x-ui.button>
             <x-ui.button icon="send"
                 :href="\App\Services\Messaging\QuickContact::coordination(auth()->user())">{{ \App\Services\Messaging\QuickContact::coordinationLabel(auth()->user()) }}</x-ui.button>
             @if ($open)
-                <x-ui.button variant="primary" size="lg" icon="plus" :href="route('evidence.create')" block class="md:w-auto">Nueva
+                <x-ui.button variant="primary" size="lg" icon="plus" :href="route('evidence.create')" block
+                    class="md:w-auto">Nueva
                     evidencia</x-ui.button>
             @endif
         </x-slot:actions>

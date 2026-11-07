@@ -16,12 +16,14 @@ use App\Rules\CheckHoursAndMinutes;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
 use App\Support\Changes;
+use App\Support\EvidenceArchive;
 use App\Support\ListPage;
 use App\Support\ListSort;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class EvidenceController extends Controller
 {
@@ -39,6 +41,19 @@ class EvidenceController extends Controller
 
         return view('evidence.view',
             ['evidence' => $evidence]);
+    }
+
+    /**
+     * Copy of the own evidences, drafts included, with their proofs.
+     */
+    public function archive(): BinaryFileResponse
+    {
+        $user = Auth::user();
+        [$path, $count] = EvidenceArchive::build(Evidence::query()->where('user_id', $user->id)->where('status', '!=', 'BIN'));
+        DB::transaction(fn () => Activity::record(ActivityAction::ExportArchive, $user, $user, details: ['evidences' => $count]));
+
+        return response()->download($path, 'mis-evidencias-'.now()->format('Y-m-d').'.zip', ['Content-Type' => 'application/zip'])
+            ->deleteFileAfterSend();
     }
 
     public function list(Request $request)

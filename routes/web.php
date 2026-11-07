@@ -265,6 +265,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('president/export', [ImportExportController::class, 'export'])->name('president.export');
         Route::post('president/export/save', [ImportExportController::class, 'export_save'])->name('president.export.save');
+        Route::get('president/export/archive', [ImportExportController::class, 'archive'])->name('president.export.archive');
 
         // The review queue of the presidency, decided by App\Services\ReviewQueue
         Route::controller(PresidencyReviewController::class)->prefix('president/review')->name('president.review.')->group(function () {
@@ -305,6 +306,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('lecture/export', [ImportExportController::class, 'export'])->name('lecture.export');
         Route::post('lecture/export/save', [ImportExportController::class, 'export_save'])->name('lecture.export.save');
+        Route::get('lecture/export/archive', [ImportExportController::class, 'archive'])->name('lecture.export.archive');
 
         Route::get('lecture/user/management/{id}', [ManagementController::class, 'user_management'])->name('lecture.user.management');
         Route::post('lecture/user/management/save', [ManagementController::class, 'user_management_save'])->name('lecture.user.management.save');
@@ -357,6 +359,7 @@ Route::middleware('auth')->group(function () {
 
     // EVIDENCES
     Route::get('evidence/list', [EvidenceController::class, 'list'])->name('evidence.list');
+    Route::get('evidence/archive', [EvidenceController::class, 'archive'])->name('evidence.archive');
 
     Route::middleware([CheckUploadEvidences::class])->group(function () {
         Route::get('evidence/create', [EvidenceController::class, 'create'])->name('evidence.create');

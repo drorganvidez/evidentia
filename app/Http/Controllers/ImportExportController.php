@@ -7,14 +7,17 @@ use App\Exports\EvidencesExport;
 use App\Facades\Activity;
 use App\Http\Middleware\CheckRoles;
 use App\Imports\UsersImport;
+use App\Models\Evidence;
 use App\Models\Role;
 use App\Models\User;
+use App\Support\EvidenceArchive;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ImportExportController extends Controller
 {
@@ -91,8 +94,10 @@ class ImportExportController extends Controller
 
         $route = Auth::user()->hasRole('LECTURE') ? route('lecture.export.save') : route('president.export.save');
 
+        $archive = Auth::user()->hasRole('LECTURE') ? route('lecture.export.archive') : route('president.export.archive');
+
         return view('importexport.export',
-            ['route' => $route]);
+            ['route' => $route, 'archive' => $archive]);
     }
 
     public function export_save(Request $request)
@@ -119,5 +124,17 @@ class ImportExportController extends Controller
             return redirect()->route('lecture.export')->with('error', 'Ocurrió un error: '.$e->getMessage());
         }
 
+    }
+
+    /**
+     * Copy of every evidence of the course sent for review (drafts stay private to their authors), with its proofs.
+     */
+    public function archive(): BinaryFileResponse
+    {
+        [$path, $count] = EvidenceArchive::build(Evidence::query()->whereNotIn('status', ['DRAFT', 'BIN']));
+        DB::transaction(fn () => Activity::record(ActivityAction::ExportArchive, details: ['evidences' => $count]));
+
+        return response()->download($path, 'evidencias-'.now()->format('Y-m-d').'.zip', ['Content-Type' => 'application/zip'])
+            ->deleteFileAfterSend();
     }
 }

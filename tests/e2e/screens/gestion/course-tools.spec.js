@@ -51,6 +51,15 @@ test.describe('Herramientas del curso', () => {
         expect((await download).suggestedFilename()).toMatch(/^evidencias.*\.xlsx$/);
     });
 
+    test('descarga la copia de las evidencias en un ZIP', async ({ page }, testInfo) => {
+        test.skip(testInfo.project.name !== 'chromium', 'La descarga solo en escritorio');
+
+        await page.goto('/lecture/export');
+        const download = page.waitForEvent('download');
+        await page.locator('#archive-download').click();
+        expect((await download).suggestedFilename()).toMatch(/^evidencias-.*\.zip$/);
+    });
+
     test('importar sin archivo lo avisa', async ({ page }) => {
         await page.goto('/lecture/import');
         await page.getByRole('button', { name: 'Importar alumnos' }).click();
