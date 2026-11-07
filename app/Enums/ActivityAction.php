@@ -61,6 +61,8 @@ enum ActivityAction: string
     case EventDeleted = 'event.deleted';
     case EventHidden = 'event.hidden';
     case EventUnhidden = 'event.unhidden';
+    case EventsGrouped = 'event.grouped';
+    case EventsUngrouped = 'event.ungrouped';
     case EventbriteTokenSaved = 'eventbrite.token_saved';
     case EventbriteEventsSynced = 'eventbrite.events_synced';
     case EventbriteAttendeesSynced = 'eventbrite.attendees_synced';
@@ -165,6 +167,8 @@ enum ActivityAction: string
         'event.deleted' => ['Evento eliminado', 'rejected', 'attendance', Deadline::Attendees],
         'event.hidden' => ['Evento ocultado', 'draft', 'attendance', Deadline::Attendees],
         'event.unhidden' => ['Evento visible', 'draft', 'attendance', Deadline::Attendees],
+        'event.grouped' => ['Eventos agrupados', 'notice', 'attendance', Deadline::Attendees],
+        'event.ungrouped' => ['Grupo de eventos deshecho', 'draft', 'attendance', Deadline::Attendees],
         'eventbrite.token_saved' => ['Token de Eventbrite guardado', 'notice', 'attendance', Deadline::Attendees],
         'eventbrite.events_synced' => ['Eventos sincronizados', 'notice', 'attendance', Deadline::Attendees],
         'eventbrite.attendees_synced' => ['Asistencias sincronizadas', 'notice', 'attendance', Deadline::Attendees],

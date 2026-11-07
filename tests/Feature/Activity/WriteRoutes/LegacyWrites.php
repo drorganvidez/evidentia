@@ -288,6 +288,23 @@ final class LegacyWrites
                 'expect' => ['event.deleted'],
                 'acting_role' => 'REGISTER_COORDINATOR',
             ],
+            'registercoordinator.event.group.save' => [
+                'role' => 'REGISTER_COORDINATOR',
+                'method' => 'POST',
+                'uri' => fn (array $ids) => route('registercoordinator.event.group.save'),
+                'data' => fn (array $ids) => ['event_group' => 'Mesa redonda', 'events' => [$ids['event'], $ids['manualEvent']]],
+                'expect' => ['event.grouped'],
+                'acting_role' => 'REGISTER_COORDINATOR',
+            ],
+            'registercoordinator.event.group.remove' => [
+                'role' => 'REGISTER_COORDINATOR',
+                'method' => 'POST',
+                'setup' => fn (TestCase $test, array $ids) => Event::whereKey([$ids['event'], $ids['manualEvent']])->update(['event_group' => 'Mesa redonda']),
+                'uri' => fn (array $ids) => route('registercoordinator.event.group.remove'),
+                'data' => fn (array $ids) => ['event_group' => 'Mesa redonda'],
+                'expect' => ['event.ungrouped'],
+                'acting_role' => 'REGISTER_COORDINATOR',
+            ],
             'registercoordinator.event.hide' => [
                 'role' => 'REGISTER_COORDINATOR',
                 'method' => 'POST',

@@ -215,6 +215,11 @@ Route::middleware('auth')->group(function () {
         Route::get('registercoordinator/event/{id}/edit', [EventbriteController::class, 'event_edit'])->whereNumber('id')->name('registercoordinator.event.edit');
         Route::post('registercoordinator/event/{id}/edit', [EventbriteController::class, 'event_update'])->whereNumber('id')->name('registercoordinator.event.update');
         Route::delete('registercoordinator/event/{id}', [EventbriteController::class, 'event_destroy'])->whereNumber('id')->name('registercoordinator.event.destroy');
+
+        // Events held in parallel or the same talk repeated: only the longest of each group counts
+        Route::get('registercoordinator/event/groups', [EventbriteController::class, 'event_groups'])->name('registercoordinator.event.groups');
+        Route::post('registercoordinator/event/groups', [EventbriteController::class, 'event_group_save'])->name('registercoordinator.event.group.save');
+        Route::post('registercoordinator/event/groups/remove', [EventbriteController::class, 'event_group_remove'])->name('registercoordinator.event.group.remove');
     });
 
     Route::prefix('attendees')->middleware(['auth', CheckRoles::class.':REGISTER_COORDINATOR'])->group(function () {

@@ -22,7 +22,21 @@ class Event extends Model
         'url',
         'hours',
         'hidden',
+        'event_group',
     ];
+
+    /**
+     * Hours that count from a set of attended events: an event without group counts whole, and of the events that share
+     * a group (held in parallel or the same talk repeated) only the longest one counts.
+     *
+     * @param  iterable<Event>  $events
+     */
+    public static function countedHours(iterable $events): float
+    {
+        return (float) collect($events)->filter()
+            ->groupBy(fn (Event $event) => $event->event_group ?? '#'.$event->id)
+            ->sum(fn ($group) => (float) $group->max('hours'));
+    }
 
     /**
      * Get the attendees for the event.

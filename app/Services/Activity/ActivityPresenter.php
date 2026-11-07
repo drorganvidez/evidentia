@@ -131,6 +131,7 @@ final class ActivityPresenter
             'bonus.created', 'bonus.deleted' => [$this->count($d['users'] ?? null, 'persona', 'personas'), $this->hours($d['hours'] ?? null)],
             'defaultlist.created', 'defaultlist.deleted' => [$this->count($d['users'] ?? null, 'persona', 'personas')],
             'attendee.created', 'attendee.deleted' => [$this->text($d['status'] ?? null)],
+            'event.grouped', 'event.ungrouped' => [$this->text($d['group'] ?? null), $this->count($d['events'] ?? null, 'evento', 'eventos')],
             'eventbrite.events_synced' => [
                 $this->count($d['created'] ?? null, 'nuevo', 'nuevos'),
                 $this->count($d['updated'] ?? null, 'actualizado', 'actualizados'),

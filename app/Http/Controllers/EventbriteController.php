@@ -431,6 +431,75 @@ class EventbriteController extends Controller
             ->with('success', 'Evento borrado con éxito.');
     }
 
+    /**
+     * Groups of events held in parallel or of the same talk repeated, and the form to make a new one.
+     */
+    public function event_groups()
+    {
+        $events = Event::orderByDesc('start_datetime')->get();
+
+        return view('eventbrite.event_groups', [
+            'events' => $events,
+            'groups' => $events->whereNotNull('event_group')->sortBy('start_datetime')->groupBy('event_group')->sortKeys(),
+        ]);
+    }
+
+    /**
+     * Puts the chosen events in a group. A name already in use adds them to that group; an event of another group moves,
+     * and a group left with a single event is undone.
+     */
+    public function event_group_save(Request $request)
+    {
+        $validated = $request->validate([
+            'event_group' => 'required|string|max:100',
+            'events' => 'required|array|min:2',
+            'events.*' => 'integer|distinct|exists:events,id',
+        ], [
+            'events.min' => 'Elige al menos dos eventos.',
+            'events.required' => 'Elige al menos dos eventos.',
+        ], ['event_group' => 'nombre del grupo', 'events' => 'eventos']);
+        $name = trim($validated['event_group']);
+
+        DB::transaction(function () use ($validated, $name) {
+            $events = Event::whereKey($validated['events'])->get();
+            $left = $events->pluck('event_group')->filter()->unique()->reject(fn ($group) => $group === $name);
+            Event::whereKey($events->modelKeys())->update(['event_group' => $name]);
+            foreach ($left as $group) {
+                if (Event::where('event_group', $group)->count() === 1) {
+                    Event::where('event_group', $group)->update(['event_group' => null]);
+                }
+            }
+
+            Activity::record(ActivityAction::EventsGrouped, details: [
+                'group' => $name,
+                'events' => Event::where('event_group', $name)->orderBy('start_datetime')->pluck('name')->all(),
+            ]);
+        });
+
+        return redirect()->route('registercoordinator.event.groups')
+            ->with('success', 'Grupo '.$name.' guardado. De sus eventos solo cuenta el de más horas.');
+    }
+
+    /**
+     * Undoes a group: its events count separately again.
+     */
+    public function event_group_remove(Request $request)
+    {
+        $name = (string) $request->validate(['event_group' => 'required|string|max:100'])['event_group'];
+        $events = Event::where('event_group', $name)->orderBy('start_datetime')->pluck('name');
+        if ($events->isEmpty()) {
+            return redirect()->route('registercoordinator.event.groups')->with('error', 'Ese grupo ya no existe.');
+        }
+
+        DB::transaction(function () use ($name, $events) {
+            Event::where('event_group', $name)->update(['event_group' => null]);
+            Activity::record(ActivityAction::EventsUngrouped, details: ['group' => $name, 'events' => $events->all()]);
+        });
+
+        return redirect()->route('registercoordinator.event.groups')
+            ->with('success', 'Grupo '.$name.' deshecho. Sus eventos vuelven a contar por separado.');
+    }
+
     // Only hand-made events are edited here; the Eventbrite ones are overwritten on every load
     private function manual_event($id): Event
     {

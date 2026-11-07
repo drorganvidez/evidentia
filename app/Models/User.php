@@ -188,7 +188,7 @@ class User extends Authenticatable
             return 0;
         }
 
-        return $this->attendees_checkedin()->sum(fn ($a) => $a->event->hours);
+        return Event::countedHours($this->attendees_checkedin()->pluck('event'));
     }
 
     // horas de asistencia que cuentan, con el tope del curso si lo hay

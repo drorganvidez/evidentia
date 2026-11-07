@@ -14,6 +14,7 @@ test.describe('Eventos y asistencias', () => {
         ['/attendees', 'Asistencias'],
         ['/attendees/create', 'Añadir asistencia'],
         ['/attendees/import', 'Importar asistencias'],
+        ['/registercoordinator/event/groups', 'Grupos de eventos'],
     ]) {
         test(`${title} pasa axe en claro y oscuro`, async ({ page, ui }) => {
             await page.goto(path);
@@ -60,6 +61,71 @@ test.describe('Eventos y asistencias', () => {
         await expect(
             attendances.getByRole('link', { name: 'Pérez Romero, Lucía', exact: true }),
         ).toBeHidden();
+    });
+
+    test('agrupa dos eventos y deshace el grupo', async ({ page }, testInfo) => {
+        test.skip(testInfo.project.name !== 'chromium', 'Las mutaciones solo en escritorio');
+
+        const notices = page.getByRole('region', { name: 'Avisos' });
+        const name = `Charla repetida ${Date.now()}`;
+        const group = `Git dos veces ${Date.now()}`;
+        await page.goto('/registercoordinator/event/create');
+        await page.getByLabel('Nombre', { exact: true }).fill(name);
+        await page.getByLabel('Inicio', { exact: true }).fill('2026-10-21T09:00');
+        await page.getByLabel('Fin', { exact: true }).fill('2026-10-21T10:00');
+        await page.getByRole('button', { name: 'Crear evento' }).click();
+        await expect(notices.getByText('Evento creado con éxito.')).toBeVisible();
+
+        await page.getByRole('link', { name: 'Grupos' }).click();
+        await expect(
+            page.getByRole('heading', { level: 1, name: 'Grupos de eventos' }),
+        ).toBeVisible();
+        await page.getByRole('button', { name: 'Agrupar' }).click();
+        await expect(page.getByText('Revisa el formulario')).toBeVisible();
+
+        await page.getByLabel('Nombre del grupo').fill(group);
+        await expect(page.locator('select[name="events[]"]')).toHaveAttribute(
+            'aria-hidden',
+            'true',
+        );
+        const events = page.getByRole('combobox', { name: 'Eventos' });
+        await events.fill('Taller de Git');
+        await events.press('Enter');
+        await events.fill(name);
+        await events.press('Enter');
+        await events.press('Escape');
+        await expect(
+            page.getByRole('list', { name: 'Seleccionados' }).getByRole('listitem'),
+        ).toHaveCount(2);
+        await page.getByRole('button', { name: 'Agrupar' }).click();
+        await expect(notices.getByText(`Grupo ${group} guardado.`)).toBeVisible();
+
+        const card = page.getByRole('listitem', { name: `Grupo ${group}` });
+        await expect(card.getByText(name)).toBeVisible();
+        await expect(card.getByText('Taller de Git')).toBeVisible();
+
+        await page.goto('/registercoordinator/event/list');
+        await expect(
+            page.getByRole('region', { name: 'Eventos del curso' }).getByText(`Grupo ${group}`),
+        ).toHaveCount(2);
+
+        await page.goto('/registercoordinator/event/groups');
+        await card.getByRole('button', { name: `Deshacer ${group}` }).click();
+        await page
+            .getByRole('alertdialog', { name: 'Deshacer el grupo' })
+            .getByRole('button', { name: 'Sí, deshacer' })
+            .click();
+        await expect(notices.getByText(`Grupo ${group} deshecho.`)).toBeVisible();
+        await expect(page.getByText('No hay grupos')).toBeVisible();
+
+        await page.goto('/registercoordinator/event/list');
+        const row = page.getByRole('region', { name: 'Eventos del curso' });
+        await row.getByRole('button', { name: `Borrar ${name}` }).click();
+        await page
+            .getByRole('alertdialog', { name: 'Borrar el evento' })
+            .getByRole('button', { name: 'Sí, borrar' })
+            .click();
+        await expect(notices.getByText('Evento borrado con éxito.')).toBeVisible();
     });
 
     test('crea un evento a mano, registra una asistencia y lo borra todo', async ({

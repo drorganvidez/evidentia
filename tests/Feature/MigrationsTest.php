@@ -48,6 +48,14 @@ class MigrationsTest extends TestCase
             $expected['configuration']['columns'],
             fn (array $column): bool => ! in_array($column['name'], ['max_evidences_hours', 'max_attendees_hours'], true),
         ));
+        $expected['events']['columns'] = array_values(array_filter(
+            $expected['events']['columns'],
+            fn (array $column): bool => $column['name'] !== 'event_group',
+        ));
+        $expected['events']['indexes'] = array_values(array_filter(
+            $expected['events']['indexes'],
+            fn (array $index): bool => $index['name'] !== 'events_event_group_index',
+        ));
         $this->assertEquals($expected, $this->schema());
 
         $this->assertSame(0, Artisan::call('migrate'));

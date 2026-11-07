@@ -22,6 +22,7 @@
         @endif
         @if ($open)
             <x-slot:actions>
+                <x-ui.button icon="layers" :href="route('registercoordinator.event.groups')">Grupos</x-ui.button>
                 <x-ui.button icon="rotate-ccw" :href="route('registercoordinator.event.load')">Cargar desde
                     Eventbrite</x-ui.button>
                 <x-ui.button variant="primary" icon="plus" :href="route('registercoordinator.event.create')">Nuevo
@@ -49,13 +50,17 @@
                     @else
                         <span class="font-semibold tracking-tight">{{ $name }}</span>
                     @endif
-                    @if ($manual || $event->hidden)
+                    @if ($manual || $event->hidden || $event->event_group !== null)
                         <span class="mt-1 flex flex-wrap items-center gap-1.5">
                             @if ($manual)
                                 <x-ui.badge variant="chip" size="sm">Creado a mano</x-ui.badge>
                             @endif
                             @if ($event->hidden)
                                 <x-ui.badge tone="draft" size="sm">Oculto</x-ui.badge>
+                            @endif
+                            @if ($event->event_group !== null)
+                                <x-ui.badge tone="notice"
+                                    size="sm">{{ 'Grupo ' . $event->event_group }}</x-ui.badge>
                             @endif
                         </span>
                     @endif

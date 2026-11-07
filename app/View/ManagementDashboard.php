@@ -5,6 +5,7 @@ namespace App\View;
 use App\Models\ActivityLog;
 use App\Models\Committee;
 use App\Models\ErrorReport;
+use App\Models\Event;
 use App\Models\Evidence;
 use App\Models\Role;
 use App\Models\User;
@@ -125,9 +126,11 @@ final class ManagementDashboard
                 ->groupBy('user_id')->selectRaw('user_id, sum(hours) as hours')->pluck('hours', 'user_id'),
             'meetings' => DB::table('meeting_user')->join('meetings', 'meetings.id', '=', 'meeting_user.meeting_id')
                 ->groupBy('meeting_user.user_id')->selectRaw('meeting_user.user_id as user_id, sum(meetings.hours) as hours')->pluck('hours', 'user_id'),
-            'events' => DB::table('attendees')->join('events', 'events.id', '=', 'attendees.event_id')
+            // of the events that share a group only the longest one counts (Event::countedHours)
+            'events' => Event::query()->join('attendees', 'events.id', '=', 'attendees.event_id')
                 ->where('attendees.status', 'Checked In')
-                ->groupBy('attendees.user_id')->selectRaw('attendees.user_id as user_id, sum(events.hours) as hours')->pluck('hours', 'user_id'),
+                ->get(['events.id', 'events.hours', 'events.event_group', 'attendees.user_id'])
+                ->groupBy('user_id')->map(fn (Collection $events): float => Event::countedHours($events)),
             'bonuses' => DB::table('bonus_user')->join('bonuses', 'bonuses.id', '=', 'bonus_user.bonus_id')
                 ->groupBy('bonus_user.user_id')->selectRaw('bonus_user.user_id as user_id, sum(bonuses.hours) as hours')->pluck('hours', 'user_id'),
         ];
