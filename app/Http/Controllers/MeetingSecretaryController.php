@@ -17,7 +17,7 @@ use App\Models\Point;
 use App\Models\SignatureSheet;
 use App\Rules\CheckHoursAndMinutes;
 use App\Support\Changes;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Support\MeetingPdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -130,9 +130,7 @@ class MeetingSecretaryController extends Controller
         });
 
         // Genera PDF de la convocatoria
-        $pdf = Pdf::loadView('meeting.request_template', ['meeting_request' => $meeting_request]);
-        $content = $pdf->download()->getOriginalContent();
-        Storage::put('/meeting_requests/meeting_request_'.$meeting_request->id.'.pdf', $content);
+        MeetingPdf::storeRequest($meeting_request);
 
         return redirect()->route('secretary.meeting.manage.request.list')->with('success', 'Convocatoria de reunión creada con éxito.');
     }
@@ -249,9 +247,7 @@ class MeetingSecretaryController extends Controller
         Storage::delete('/meeting_requests/meeting_request_'.$meeting_request->id.'.pdf');
 
         // Genera PDF de la convocatoria
-        $pdf = Pdf::loadView('meeting.request_template', ['meeting_request' => $meeting_request]);
-        $content = $pdf->download()->getOriginalContent();
-        Storage::put('/meeting_requests/meeting_request_'.$meeting_request->id.'.pdf', $content);
+        MeetingPdf::storeRequest($meeting_request);
 
         return redirect()->route('secretary.meeting.manage.request.list')->with('success', 'Convocatoria de reunión editada con éxito.');
     }
@@ -260,14 +256,7 @@ class MeetingSecretaryController extends Controller
     {
         $meeting_request = MeetingRequest::findOrFail($id);
 
-        $response = Storage::download('/meeting_requests/meeting_request_'.$meeting_request->id.'.pdf');
-
-        // limpiar búfer de salida
-        if (ob_get_level()) {
-            ob_end_clean();
-        }
-
-        return $response;
+        return MeetingPdf::downloadRequest($meeting_request);
     }
 
     public function request_remove(Request $request)
@@ -650,9 +639,7 @@ class MeetingSecretaryController extends Controller
         });
 
         // Genera PDF del acta
-        $pdf = Pdf::loadView('meeting.minutes_template', ['meeting_minutes' => $meeting_minutes]);
-        $content = $pdf->download()->getOriginalContent();
-        Storage::put('/meeting_minutes/meeting_minutes_'.$meeting_minutes->id.'.pdf', $content);
+        MeetingPdf::storeMinutes($meeting_minutes);
 
         return redirect()->route('secretary.meeting.manage.minutes.list')->with('success', 'Acta de reunión creada con éxito.');
 
@@ -817,9 +804,7 @@ class MeetingSecretaryController extends Controller
 
         // Generamos de nuevo el PDF con los puntos recién guardados
         $meeting_minutes->refresh();
-        $pdf = Pdf::loadView('meeting.minutes_template', ['meeting_minutes' => $meeting_minutes]);
-        $content = $pdf->download()->getOriginalContent();
-        Storage::put('/meeting_minutes/meeting_minutes_'.$meeting_minutes->id.'.pdf', $content);
+        MeetingPdf::storeMinutes($meeting_minutes);
 
         return redirect()->route('secretary.meeting.manage.minutes.list')->with('success', 'Acta de reunión editada con éxito.');
     }

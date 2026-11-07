@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MeetingMinutes;
 use App\Models\MeetingRequest;
-use Illuminate\Support\Facades\Storage;
+use App\Support\MeetingPdf;
 
 class DownloadController extends Controller
 {
@@ -17,27 +17,13 @@ class DownloadController extends Controller
     {
         $meeting_request = MeetingRequest::findOrFail($id);
 
-        $response = Storage::download('/meeting_requests/meeting_request_'.$meeting_request->id.'.pdf');
-
-        // limpiar búfer de salida
-        if (ob_get_level()) {
-            ob_end_clean();
-        }
-
-        return $response;
+        return MeetingPdf::downloadRequest($meeting_request);
     }
 
     public function minutes_download($id)
     {
         $meeting_minutes = MeetingMinutes::findOrFail($id);
 
-        $response = Storage::download('/meeting_minutes/meeting_minutes_'.$meeting_minutes->id.'.pdf');
-
-        // limpiar búfer de salida
-        if (ob_get_level()) {
-            ob_end_clean();
-        }
-
-        return $response;
+        return MeetingPdf::downloadMinutes($meeting_minutes);
     }
 }
