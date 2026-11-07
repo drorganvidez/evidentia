@@ -13,7 +13,7 @@ class FooterTest extends ComponentTestCase
         $this->assertStringContainsString('aria-label="Evidentia, inicio"', $html);
         $this->assertStringContainsString('<span>Evidentia</span>', $html);
         $this->assertStringContainsString('<nav aria-label="Enlaces del pie">', $html);
-        $this->assertSame(4, substr_count($html, '<li>'));
+        $this->assertSame(3, substr_count($html, '<li>'));
         $this->assertStringContainsString('Universidad de Sevilla · ETSII', $html);
         $this->assertStringContainsString('md:ml-auto md:w-auto', $html);
         $this->assertStringEndsWith('</footer>', trim($html));
