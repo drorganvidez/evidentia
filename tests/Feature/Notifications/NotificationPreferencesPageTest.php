@@ -52,7 +52,7 @@ class NotificationPreferencesPageTest extends ScreenTestCase
         $this->assertTrue($preference->digest);
         $this->assertEqualsCanonicalizing([
             'evidence.moved' => false, 'evidence.submitted' => false, 'meeting.convened' => true,
-            'minutes.registered' => false, 'user.roles_changed' => false,
+            'minutes.registered' => false, 'user.roles_changed' => false, 'evidence.coauthored' => false,
         ], array_filter($preference->mail, fn ($value, $key) => ! str_starts_with($key, 'message.'), ARRAY_FILTER_USE_BOTH));
 
         $log = ActivityLog::where('action', 'notification.preferences_changed')->sole();

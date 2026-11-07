@@ -31,6 +31,11 @@ class CheckProofDownload
             return $next($request);
         }
 
+        // 1b. Soy coautor de una evidencia ya enviada
+        if ($proof->evidence->status != 'DRAFT' && $proof->evidence->hasCoauthor(Auth::user())) {
+            return $next($request);
+        }
+
         // 2. Soy coordinador y la prueba es de una evidencia enviada a mi comité
         if (Auth::user()->hasRole('COORDINATOR') && $proof->evidence->status != 'DRAFT') {
             $committee = $proof->evidence->committee;

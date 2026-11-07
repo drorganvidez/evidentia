@@ -122,8 +122,12 @@ final class ManagementDashboard
     private function hoursByStudent(Collection $students): array
     {
         $sources = [
-            'evidences' => Evidence::where('last', true)->where('status', 'ACCEPTED')
-                ->groupBy('user_id')->selectRaw('user_id, sum(hours) as hours')->pluck('hours', 'user_id'),
+            // the coauthors of an accepted evidence get its full hours as well
+            'evidences' => Evidence::where('last', true)->where('status', 'ACCEPTED')->select('user_id', 'hours')
+                ->unionAll(DB::table('evidence_coauthors')->join('evidences', 'evidences.id', '=', 'evidence_coauthors.evidence_id')
+                    ->where('evidences.last', true)->where('evidences.status', 'ACCEPTED')
+                    ->select('evidence_coauthors.user_id', 'evidences.hours'))
+                ->get()->groupBy('user_id')->map(fn (Collection $rows): float => (float) $rows->sum('hours')),
             'meetings' => DB::table('meeting_user')->join('meetings', 'meetings.id', '=', 'meeting_user.meeting_id')
                 ->groupBy('meeting_user.user_id')->selectRaw('meeting_user.user_id as user_id, sum(meetings.hours) as hours')->pluck('hours', 'user_id'),
             // of the events that share a group only the longest one counts (Event::countedHours)

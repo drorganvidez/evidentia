@@ -33,7 +33,7 @@ final class ActivityPresenter
         'modality' => 'Modalidad', 'reason' => 'Motivo', 'status' => 'Estado', 'icon' => 'Icono', 'users' => 'Personas',
         'points' => 'Orden del día', 'biography' => 'Biografía', 'participation' => 'Participación', 'block' => 'Bloqueo',
         'roles' => 'Roles', 'meeting_request_id' => 'Convocatoria', 'event_id' => 'Evento', 'user_id' => 'Persona',
-        'description' => 'Descripción',
+        'description' => 'Descripción', 'coauthors' => 'Coautores',
     ];
 
     /** Fields whose value is a date and time. */

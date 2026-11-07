@@ -53,7 +53,8 @@ final class ActivityAccess
             return true;
         }
 
-        return $head->status !== 'DRAFT' && ($this->isManager($user) || $this->inCommittee($user, $head->committee_id));
+        return $head->status !== 'DRAFT'
+            && ($this->isManager($user) || $this->inCommittee($user, $head->committee_id) || $head->hasCoauthor($user));
     }
 
     public function seesFullEvidenceHistory(User $user, Evidence $head): bool
@@ -114,6 +115,7 @@ final class ActivityAccess
         return match (true) {
             $this->isAuthor($viewer, $head) => route('evidence.view', ['id' => $head->id]),
             $head->status === 'DRAFT' => null,
+            $head->hasCoauthor($viewer) => route('evidence.view', ['id' => $head->id]),
             $this->isCoordinatorOf($viewer, $head->committee_id) => route('coordinator.evidence.view', ['id' => $head->id]),
             $viewer->hasRole('PRESIDENT') && $head->last && $this->queue->goesToPresidency($head) => route('president.review.view', ['id' => $head->id]),
             $this->isManager($viewer) => route('profiles.view.evidence', ['id_user' => $head->user_id, 'id_evidence' => $head->id]),

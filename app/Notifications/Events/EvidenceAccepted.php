@@ -5,12 +5,13 @@ namespace App\Notifications\Events;
 use App\Enums\ActivityAction;
 use App\Enums\NotificationLevel;
 use App\Models\ActivityLog;
+use App\Models\Evidence;
 use App\Models\User;
 use App\Notifications\BaseNotification;
 use App\Notifications\Concerns\AboutEvidence;
 use Illuminate\Support\Collection;
 
-/** An accepted evidence, to its author with the hours it adds. */
+/** An accepted evidence, to its author and its coauthors with the hours it adds. */
 class EvidenceAccepted extends BaseNotification
 {
     use AboutEvidence;
@@ -37,7 +38,10 @@ class EvidenceAccepted extends BaseNotification
 
     public static function recipients(ActivityLog $activity): Collection
     {
-        return collect([$activity->targetUser])->filter()->values();
+        $evidence = $activity->subject;
+        $coauthors = $evidence instanceof Evidence ? $evidence->coauthors : collect();
+
+        return collect([$activity->targetUser])->filter()->concat($coauthors)->unique('id')->values();
     }
 
     public function title(User $notifiable): string
@@ -54,6 +58,10 @@ class EvidenceAccepted extends BaseNotification
     {
         $id = $this->evidenceId();
 
+        if ($id !== null && $this->coauthoring($notifiable)) {
+            return route('evidence.view', ['id' => $id]);
+        }
+
         return $id === null ? route('evidence.list') : self::authorLink($id);
     }
 
@@ -69,10 +77,19 @@ class EvidenceAccepted extends BaseNotification
 
     public function mailLines(User $notifiable): array
     {
+        $whose = $this->coauthoring($notifiable) ? 'la evidencia en la que eres coautor' : 'tu evidencia';
+
         return [
-            $this->actorName().' ha aceptado tu evidencia «'.$this->evidenceTitle().'» del comité '.$this->committeeName().'.',
+            $this->actorName().' ha aceptado '.$whose.' «'.$this->evidenceTitle().'» del comité '.$this->committeeName().'.',
             'Suma '.self::hours($this->evidence()?->hours).' h a tu cómputo.',
         ];
+    }
+
+    private function coauthoring(User $notifiable): bool
+    {
+        $evidence = $this->evidence();
+
+        return $evidence !== null && $evidence->user_id !== $notifiable->id && $evidence->hasCoauthor($notifiable);
     }
 
     public function mailAction(User $notifiable): string

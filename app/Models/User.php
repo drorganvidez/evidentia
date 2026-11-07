@@ -39,6 +39,12 @@ class User extends Authenticatable
         return $this->hasMany(Evidence::class);
     }
 
+    /** Evidences of other students where this one is a coauthor, every version included. */
+    public function coauthoredEvidences()
+    {
+        return $this->belongsToMany(Evidence::class, 'evidence_coauthors')->withTimestamps();
+    }
+
     public function hasRole($rol_param): bool
     {
         return $this->roles->contains(fn ($role) => $role->rol === $rol_param);
@@ -137,6 +143,12 @@ class User extends Authenticatable
         return $this->latestEvidences()->where('status', 'REJECTED');
     }
 
+    // evidencias aceptadas de otros alumnos en las que figura como coautor; suman sus horas completas
+    public function evidencesCoauthoredAccepted()
+    {
+        return $this->coauthoredEvidences->where('last', true)->where('status', 'ACCEPTED');
+    }
+
     public function attendees_pending()
     {
         return $this->attendees->where('status', 'Attending');
@@ -159,12 +171,12 @@ class User extends Authenticatable
 
     public function evidences_accepted_hours()
     {
-        return $this->collection_hours($this->evidencesAccepted());
+        return $this->collection_hours($this->evidencesAccepted()) + $this->collection_hours($this->evidencesCoauthoredAccepted());
     }
 
     public function evidences_accepted_count()
     {
-        return $this->collection_count($this->evidencesAccepted());
+        return $this->collection_count($this->evidencesAccepted()) + $this->collection_count($this->evidencesCoauthoredAccepted());
     }
 
     public function meetings_hours()

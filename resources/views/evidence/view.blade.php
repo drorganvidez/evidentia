@@ -176,6 +176,15 @@
                         <x-ui.dl.item term="Autor"><x-ui.person :name="$evidence->user?->name" :surname="$evidence->user?->surname"
                                 size="sm" /></x-ui.dl.item>
                     @endunless
+                    @if ($evidence->coauthors->isNotEmpty())
+                        <x-ui.dl.item term="Coautores">
+                            <span class="grid gap-1.5">
+                                @foreach ($evidence->coauthors as $coauthor)
+                                    <x-ui.person :name="$coauthor->name" :surname="$coauthor->surname" size="sm" />
+                                @endforeach
+                            </span>
+                        </x-ui.dl.item>
+                    @endif
                 </x-ui.dl>
             </x-ui.card>
 

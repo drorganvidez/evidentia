@@ -24,7 +24,10 @@ class EvidenceMine
         }
         $evidence = Evidence::find($id);
 
-        if ($evidence->user->id != Auth::id()) {
+        // a coauthor reads the evidence once it is sent, without touching it
+        $reader = $request->routeIs('evidence.view') && $evidence->status !== 'DRAFT' && $evidence->hasCoauthor(Auth::user());
+
+        if ($evidence->user->id != Auth::id() && ! $reader) {
             abort(404);
         }
 

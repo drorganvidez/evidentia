@@ -12,6 +12,7 @@ use App\Models\Committee;
 use App\Models\Evidence;
 use App\Models\File;
 use App\Models\Proof;
+use App\Models\User;
 use App\Rules\CheckHoursAndMinutes;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
@@ -23,6 +24,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class EvidenceController extends Controller
@@ -73,6 +75,8 @@ class EvidenceController extends Controller
         return view('evidence.list', [
             'evidences' => $this->paginateList($sort->apply($evidences->with(['committee', 'reasonRejection'])), $request),
             'hours' => $hours,
+            'coauthored' => Auth::user()->coauthoredEvidences()->where('last', true)->where('status', '!=', 'DRAFT')
+                ->with(['committee', 'user'])->latest('evidences.created_at')->get(),
             'term' => ListPage::term($request),
             'sort' => $sort,
         ]);
@@ -89,7 +93,8 @@ class EvidenceController extends Controller
 
         return view('evidence.createandedit', ['route_draft' => route('evidence.draft'),
             'route_publish' => route('evidence.publish'),
-            'committees' => $committees]);
+            'committees' => $committees,
+            'students' => $this->coauthor_options()]);
     }
 
     public function draft(Request $request)
@@ -123,7 +128,7 @@ class EvidenceController extends Controller
                     details: [
                         'status' => $status, 'hours' => (float) $evidence->hours, 'committee_id' => (int) $evidence->committee_id,
                         'files' => $files, 'version' => 1,
-                    ] + $this->automatic($status),
+                    ] + $this->coauthor_details($evidence) + $this->automatic($status),
                     flags: $this->overlap($status),
                 );
             });
@@ -147,7 +152,9 @@ class EvidenceController extends Controller
             'minutes' => ['required_without:hours', 'nullable', 'numeric', 'sometimes', 'max:60', new CheckHoursAndMinutes($request->input('hours'))],
             'description' => ['required', new MinCharacters(10), new MaxCharacters(20000)],
             'committee' => 'required|exists:committees,id',
-        ]);
+            'coauthors' => 'nullable|array|max:20',
+            'coauthors.*' => ['integer', 'distinct', Rule::in($this->coauthor_ids())],
+        ], [], ['coauthors' => 'coautores', 'coauthors.*' => 'coautor']);
 
         // datos necesarios para crear evidencias
         $user = Auth::user();
@@ -167,7 +174,36 @@ class EvidenceController extends Controller
         $evidence = \Stamp::compute_evidence($evidence);
         $evidence->save();
 
+        // cada versión guarda sus coautores, así el historial conserva quién figuraba en cada una
+        $evidence->coauthors()->sync(array_map('intval', (array) $request->input('coauthors', [])));
+
         return $evidence;
+    }
+
+    /** Ids of the coauthors for the log, so that their notices still reach them. */
+    private function coauthor_details(Evidence $evidence): array
+    {
+        $ids = $evidence->coauthors()->pluck('users.id')->map(fn ($id) => (int) $id)->all();
+
+        return $ids === [] ? [] : ['coauthor_ids' => $ids];
+    }
+
+    /** Students who may be named as coauthors: every other student. */
+    private function coauthor_query()
+    {
+        return User::query()->whereKeyNot(Auth::id())->whereHas('roles', fn ($query) => $query->where('rol', 'STUDENT'));
+    }
+
+    private function coauthor_ids(): array
+    {
+        return $this->coauthor_query()->pluck('id')->all();
+    }
+
+    private function coauthor_options(): array
+    {
+        return $this->coauthor_query()->orderBy('surname')->orderBy('name')->get(['id', 'name', 'surname', 'username'])
+            ->map(fn (User $user) => ['value' => $user->id, 'label' => trim($user->surname.', '.$user->name, ', '), 'hint' => $user->username])
+            ->all();
     }
 
     // mueve las pruebas subidas a la evidencia y devuelve sus nombres
@@ -238,6 +274,7 @@ class EvidenceController extends Controller
             'hours' => (float) $evidence->hours,
             'committee_id' => (int) $evidence->committee_id,
             'committee_name' => $evidence->committee?->name,
+            'coauthors' => $evidence->coauthors()->get()->map(fn (User $user) => trim($user->name.' '.$user->surname))->implode(', ') ?: null,
         ];
     }
 
@@ -306,6 +343,7 @@ class EvidenceController extends Controller
 
         return view('evidence.createandedit', ['evidence' => $evidence,
             'committees' => $committees,
+            'students' => $this->coauthor_options(),
             'edit' => true,
             'route_draft' => route('evidence.draft.edit'),
             'route_publish' => route('evidence.publish.edit')]);
@@ -351,7 +389,7 @@ class EvidenceController extends Controller
                     details: [
                         'status' => $status, 'previous_id' => $evidence_previous->id, 'version' => $evidence_new->versionNumber(),
                         'hours' => (float) $evidence_new->hours, 'files' => $files,
-                    ] + Changes::between($before, $this->snapshot($evidence_new)) + $this->automatic($status),
+                    ] + $this->coauthor_details($evidence_new) + Changes::between($before, $this->snapshot($evidence_new)) + $this->automatic($status),
                     flags: $this->overlap($status),
                 );
             });

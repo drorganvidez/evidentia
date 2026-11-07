@@ -35,6 +35,7 @@
                 'hours' => 'Horas',
                 'minutes' => 'Minutos',
                 'committee' => 'Comité',
+                'coauthors' => 'Coautores',
                 'description' => 'Descripción',
             ]">
                 @if ($editing)
@@ -56,6 +57,10 @@
 
                 <x-ui.field name="committee" label="Comité" type="select" :options="$committeeOptions" :value="$evidence->committee_id ?? null"
                     required />
+
+                <x-ui.picker name="coauthors[]" label="Coautores" :options="$students" :selected="$editing ? $evidence->coauthors : []"
+                    placeholder="Buscar compañeros por nombre o apellidos"
+                    hint="Si hiciste el trabajo con otros alumnos, añádelos y se les computarán las mismas horas cuando se acepte" />
 
                 <x-ui.field name="description" label="Descripción" type="textarea" :rows="8" :maxlength="20000"
                     :value="$editing ? \App\View\PlainText::fromHtml($evidence->description) : null" hint="Al menos 10 caracteres" required />

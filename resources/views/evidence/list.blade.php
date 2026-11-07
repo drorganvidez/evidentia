@@ -86,4 +86,38 @@
             </x-slot:footer>
         @endif
     </x-ui.table>
+
+    @if ($coauthored->isNotEmpty())
+        <x-ui.table caption="Evidencias en coautoría" :columns="[
+            ['label' => 'Título'],
+            ['label' => 'Autor', 'hide' => true],
+            ['label' => 'Horas', 'align' => 'end'],
+            ['label' => 'Estado', 'align' => 'end'],
+            ['label' => 'Acciones', 'srOnly' => true],
+        ]" class="mt-8">
+            @foreach ($coauthored as $evidence)
+                @php($href = route('evidence.view', ['id' => $evidence->id]))
+                <x-ui.table.row :href="$href">
+                    <x-ui.table.cell label="Título" primary>
+                        <a href="{{ $href }}">{{ $evidence->title }}</a>
+                        <span class="mt-1 block"><x-ui.committee-chip :committee="$evidence->committee" /></span>
+                    </x-ui.table.cell>
+                    <x-ui.table.cell label="Autor" hide>
+                        <x-ui.person :name="$evidence->user?->name" :surname="$evidence->user?->surname" size="sm" />
+                    </x-ui.table.cell>
+                    <x-ui.table.cell label="Horas" numeric meta><x-ui.hours :value="$evidence->hours" /></x-ui.table.cell>
+                    <x-ui.table.cell label="Estado" end>
+                        <x-ui.evidence-status :status="$evidence->status" size="sm" />
+                    </x-ui.table.cell>
+                    <x-ui.table.cell actions>
+                        <x-ui.button icon-only icon="eye" :label="'Abrir ' . $evidence->title" :href="$href" variant="ghost"
+                            size="sm" dim />
+                    </x-ui.table.cell>
+                </x-ui.table.row>
+            @endforeach
+            <x-slot:footer>
+                <span>Las horas de las aceptadas se suman a tu cómputo como a su autor.</span>
+            </x-slot:footer>
+        </x-ui.table>
+    @endif
 </x-layout.app>

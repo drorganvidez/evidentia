@@ -35,6 +35,17 @@ class Evidence extends Model
         return $this->belongsTo(User::class);
     }
 
+    /** Students who did it along with the author: the full hours of the evidence count for each of them. */
+    public function coauthors()
+    {
+        return $this->belongsToMany(User::class, 'evidence_coauthors')->withTimestamps()->orderBy('surname')->orderBy('name');
+    }
+
+    public function hasCoauthor(User $user): bool
+    {
+        return $this->coauthors->contains('id', $user->id);
+    }
+
     public function committee()
     {
         return $this->belongsTo(Committee::class);
