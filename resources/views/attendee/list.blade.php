@@ -41,6 +41,10 @@
                 <x-ui.table.cell label="Asistencia" end><x-ui.attendee-status :status="$attendee->status"
                         size="sm" /></x-ui.table.cell>
                 <x-ui.table.cell tools>
+                    @if ($attendee->status === \App\Models\Attendee::ATTENDED)
+                        <x-ui.button size="sm" variant="ghost" icon="award" icon-only :label="'Descargar el certificado de ' . $attendee->event->name"
+                            :href="route('certificate.attendance', $attendee->event_id)" />
+                    @endif
                     <x-ui.button size="sm" variant="ghost" icon="send" icon-only :label="'Escribir a la coordinación de registro sobre ' . $attendee->event->name"
                         :href="route('messages.create', [
                             'to' => 'REGISTER_COORDINATOR',
@@ -63,4 +67,24 @@
             </x-slot:footer>
         @endif
     </x-ui.table>
+
+    @if ($diplomas->isNotEmpty())
+        <x-ui.table caption="Mis diplomas" :columns="[
+            ['label' => 'Diploma'],
+            ['label' => 'Emitido'],
+            ['label' => 'Acciones', 'srOnly' => true],
+        ]" class="mt-6">
+            @foreach ($diplomas as $diploma)
+                <x-ui.table.row>
+                    <x-ui.table.cell label="Diploma" primary>{{ $diploma->title }}</x-ui.table.cell>
+                    <x-ui.table.cell label="Emitido" meta><x-ui.time :value="$diploma->issued_at" format="absolute"
+                            pattern="d/m/Y" /></x-ui.table.cell>
+                    <x-ui.table.cell tools>
+                        <x-ui.button size="sm" variant="ghost" icon="download" icon-only :label="'Descargar el diploma ' . $diploma->title"
+                            :href="route('certificate.download', $diploma->code)" />
+                    </x-ui.table.cell>
+                </x-ui.table.row>
+            @endforeach
+        </x-ui.table>
+    @endif
 </x-layout.app>

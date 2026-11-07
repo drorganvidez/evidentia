@@ -67,6 +67,10 @@ enum ActivityAction: string
     case EventbriteEventsSynced = 'eventbrite.events_synced';
     case EventbriteAttendeesSynced = 'eventbrite.attendees_synced';
 
+    // Certificados y diplomas
+    case CertificateIssued = 'certificate.issued';
+    case CertificateRevoked = 'certificate.revoked';
+
     // Gestión
     case UserCreated = 'user.created';
     case UserEdited = 'user.edited';
@@ -172,6 +176,9 @@ enum ActivityAction: string
         'eventbrite.token_saved' => ['Token de Eventbrite guardado', 'notice', 'attendance', Deadline::Attendees],
         'eventbrite.events_synced' => ['Eventos sincronizados', 'notice', 'attendance', Deadline::Attendees],
         'eventbrite.attendees_synced' => ['Asistencias sincronizadas', 'notice', 'attendance', Deadline::Attendees],
+
+        'certificate.issued' => ['Diploma emitido', 'accepted', 'management', null],
+        'certificate.revoked' => ['Certificado revocado', 'rejected', 'management', null],
 
         'user.created' => ['Usuario creado', 'accepted', 'management', null],
         'user.edited' => ['Usuario editado', 'draft', 'management', null],

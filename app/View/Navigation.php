@@ -161,6 +161,7 @@ final class Navigation
             if ($has('LECTURE')) {
                 $items[] = $item('Importar', 'lecture.import', 'import');
             }
+            $items[] = $item('Certificados', 'certificate.index', 'award', ['certificate.create']);
             $items[] = $item('Exportar', "$p.export", 'download');
             $items[] = $item('Registro de actividad', 'activity.index', 'activity', ['activity.export']);
             if (! $inboxShown) {

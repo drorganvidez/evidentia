@@ -14,6 +14,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Tests\Feature\Activity\AuthenticationActivityTest;
 use Tests\Feature\Activity\EventbriteSyncActivityTest;
+use Tests\Feature\CertificateTest;
 use Tests\Feature\EventbriteAttendeeImportTest;
 use Tests\TestCase;
 
@@ -407,6 +408,8 @@ final class LegacyWrites
             'registercoordinator.event.load' => EventbriteSyncActivityTest::class,
             'registercoordinator.attendee.load' => EventbriteSyncActivityTest::class,
             'registercoordinator.attendee.load.student.save' => EventbriteAttendeeImportTest::class,
+            'certificate.store' => CertificateTest::class,
+            'certificate.destroy' => CertificateTest::class,
         ];
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Middleware\CheckRoles;
 use App\Models\Attendee;
+use App\Models\Certificate;
 use App\Support\ListSort;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +34,7 @@ class AttendeeController extends Controller
 
         return view('attendee.list',
             ['attendees' => $attendees, 'sort' => $sort,
-                'events_update' => $events_update, 'attendees_update' => $attendees_update]);
+                'events_update' => $events_update, 'attendees_update' => $attendees_update,
+                'diplomas' => Certificate::where('user_id', Auth::id())->where('type', Certificate::DIPLOMA)->orderByDesc('issued_at')->get()]);
     }
 }

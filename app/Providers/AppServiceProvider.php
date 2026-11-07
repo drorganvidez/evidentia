@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Attendee;
 use App\Models\Bonus;
+use App\Models\Certificate;
 use App\Models\Committee;
 use App\Models\Configuration;
 use App\Models\DefaultList;
@@ -41,6 +42,7 @@ class AppServiceProvider extends ServiceProvider
         'attendee' => Attendee::class,
         'configuration' => Configuration::class,
         'message_thread' => MessageThread::class,
+        'certificate' => Certificate::class,
     ];
 
     /**

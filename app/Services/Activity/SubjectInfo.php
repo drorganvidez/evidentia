@@ -4,6 +4,7 @@ namespace App\Services\Activity;
 
 use App\Models\Attendee;
 use App\Models\Bonus;
+use App\Models\Certificate;
 use App\Models\Committee;
 use App\Models\Configuration;
 use App\Models\DefaultList;
@@ -50,6 +51,7 @@ final class SubjectInfo
             ], fn (string $part): bool => $part !== '')),
             $subject instanceof Configuration => 'Configuración del curso',
             $subject instanceof MessageThread => $subject->subject,
+            $subject instanceof Certificate => $subject->typeLabel().' · '.$subject->recipient_name,
             default => class_basename($subject).' '.$subject->getKey(),
         };
     }
@@ -111,7 +113,7 @@ final class SubjectInfo
         return [
             Evidence::class, MeetingRequest::class, SignatureSheet::class, MeetingMinutes::class, Meeting::class,
             Bonus::class, DefaultList::class, Committee::class, User::class, Event::class, Attendee::class,
-            Configuration::class, MessageThread::class,
+            Configuration::class, MessageThread::class, Certificate::class,
         ];
     }
 }

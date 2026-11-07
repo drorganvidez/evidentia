@@ -2,9 +2,10 @@
 
 use App\Http\Controllers\AgreementSearchController;
 use App\Http\Controllers\AttendeeController;
-// Controladores importados explícitamente
 use App\Http\Controllers\BlockController;
+// Controladores importados explícitamente
 use App\Http\Controllers\BonusSecretaryController;
+use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\CommitteeCoordinatorController;
 use App\Http\Controllers\CommitteeOverviewController;
 use App\Http\Controllers\ConfigController;
@@ -61,6 +62,9 @@ Route::prefix('sign')->withoutMiddleware('auth')->group(function () {
     Route::post('/sign_p', [SignController::class, 'sign_p'])->name('sign_p');
     Route::get('/{random_identifier}', [SignController::class, 'sign'])->name('sign');
 });
+
+// Public verification of a certificate or a diploma by its code
+Route::get('certificados/verificar/{code?}', [CertificateController::class, 'verify'])->withoutMiddleware('auth')->name('certificate.verify');
 
 // Home autenticado
 Route::middleware('auth')->group(function () {
@@ -189,6 +193,8 @@ Route::middleware('auth')->group(function () {
 
     // ATTENDEES
     Route::get('attendee/list', [AttendeeController::class, 'list'])->name('attendee.list');
+    Route::get('attendee/certificate/{id}', [CertificateController::class, 'attendance'])->whereNumber('id')->name('certificate.attendance');
+    Route::get('certificates/{code}/download', [CertificateController::class, 'download'])->name('certificate.download');
 
     // PROOFS
     Route::middleware([
@@ -294,6 +300,12 @@ Route::middleware('auth')->group(function () {
         });
 
         // Server errors, grouped and announced by App\Services\Errors\ErrorRecorder
+        // Diplomas (speakers, contest winners) and every certificate issued
+        Route::get('certificates', [CertificateController::class, 'index'])->name('certificate.index');
+        Route::get('certificates/create', [CertificateController::class, 'create'])->name('certificate.create');
+        Route::post('certificates', [CertificateController::class, 'store'])->name('certificate.store');
+        Route::delete('certificates/{id}', [CertificateController::class, 'destroy'])->whereNumber('id')->name('certificate.destroy');
+
         Route::get('president/errors', [ErrorReportController::class, 'index'])->name('president.errors');
         Route::get('president/errors/{id}', [ErrorReportController::class, 'show'])->whereNumber('id')->name('president.errors.show');
         Route::post('president/errors/{id}/resolve', [ErrorReportController::class, 'resolve'])->whereNumber('id')->name('president.errors.resolve');

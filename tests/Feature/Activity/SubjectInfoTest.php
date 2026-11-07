@@ -4,6 +4,7 @@ namespace Tests\Feature\Activity;
 
 use App\Models\Attendee;
 use App\Models\Bonus;
+use App\Models\Certificate;
 use App\Models\Committee;
 use App\Models\Configuration;
 use App\Models\DefaultList;
@@ -47,6 +48,8 @@ class SubjectInfoTest extends TestCase
             'recipient_role' => 'COORDINATOR', 'committee_id' => $committee->id, 'last_message_at' => now(),
         ]);
 
+        $certificate = Certificate::create(['type' => Certificate::DIPLOMA, 'recipient_name' => 'Ana Ruiz', 'title' => 'Ponente']);
+
         $expected = [
             [$evidence, 'Mesas', $committee->id],
             [$draft, 'Montaje', null],
@@ -63,6 +66,7 @@ class SubjectInfoTest extends TestCase
             [$attendee, 'Charla IA · Pérez, Juan', null],
             [$configuration, 'Configuración del curso', null],
             [$thread, 'Duda', null],
+            [$certificate, 'Diploma · Ana Ruiz', null],
         ];
 
         foreach ($expected as [$subject, $title, $committeeId]) {
