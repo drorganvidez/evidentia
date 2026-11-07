@@ -115,6 +115,7 @@ class ActivityPresenterTest extends TestCase
             ['user.deleted', ['roles' => ['STUDENT', 'SECRETARY'], 'bulk' => true], 'Estudiante, Secretario'],
             ['config.changed', ['before' => ['upload_evidences' => '2026-11-20 20:00:00'], 'after' => ['upload_evidences' => '2026-11-27 20:00:00']], 'Subida 20/11 20:00 → 27/11 20:00'],
             ['config.changed', ['before' => ['bonus_timestamp' => null], 'after' => ['bonus_timestamp' => '2026-12-01 20:00:00']], 'Bonos sin fecha → 01/12 20:00'],
+            ['config.changed', ['before' => ['max_evidences_hours' => null], 'after' => ['max_evidences_hours' => 20.5]], 'Límite de evidencias sin límite → 20,5 h'],
             ['import.users', ['created' => 25], '25 usuarios nuevos'],
             ['export.evidences', ['sections' => ['Evidencias', 'Reuniones']], 'Evidencias, Reuniones'],
             ['export.activity', ['rows' => 1], '1 fila'],

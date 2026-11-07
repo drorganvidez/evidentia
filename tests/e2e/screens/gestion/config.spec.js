@@ -63,4 +63,30 @@ test.describe('Configurar curso', () => {
         ).toBeVisible();
         await expect(validate.getByLabel('Día')).toHaveValue(original);
     });
+
+    test('guarda y quita los límites de horas', async ({ page }, testInfo) => {
+        test.skip(testInfo.project.name !== 'chromium', 'Las mutaciones solo en escritorio');
+
+        const limits = page.getByRole('region', { name: 'Límites de horas' });
+        await limits.getByLabel('Evidencias').fill('30');
+        await limits.getByLabel('Asistencia').fill('7.5');
+        await page.getByRole('button', { name: 'Guardar configuración' }).click();
+        await expect(
+            page
+                .getByRole('region', { name: 'Avisos' })
+                .getByText('Configuración guardada con éxito.'),
+        ).toBeVisible();
+        await expect(limits.getByLabel('Evidencias')).toHaveValue('30');
+        await expect(limits.getByLabel('Asistencia')).toHaveValue('7.5');
+
+        await limits.getByLabel('Evidencias').fill('');
+        await limits.getByLabel('Asistencia').fill('');
+        await page.getByRole('button', { name: 'Guardar configuración' }).click();
+        await expect(
+            page
+                .getByRole('region', { name: 'Avisos' })
+                .getByText('Configuración guardada con éxito.'),
+        ).toBeVisible();
+        await expect(limits.getByLabel('Evidencias')).toHaveValue('');
+    });
 });

@@ -15,6 +15,11 @@
             ],
         )
         ->all();
+    $fields += [
+        'max_evidences_hours' => 'Límite de horas de evidencias',
+        'max_attendees_hours' => 'Límite de horas de asistencia',
+    ];
+    $limit = fn($value) => $value === null ? null : rtrim(rtrim(number_format((float) $value, 2, '.', ''), '0'), '.');
 @endphp
 <x-layout.app title="Configurar curso" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Configurar curso']]">
     <x-ui.page-header title="Configurar curso" />
@@ -43,6 +48,18 @@
                     </fieldset>
                 </x-ui.card>
             @endforeach
+            <x-ui.card title="Límites de horas" :level="2" id="card-limits">
+                <p class="text-sm text-ink-muted">Tope de horas que cuentan para cada alumno. Déjalo vacío para que
+                    cuenten todas.</p>
+                <div class="mt-4 grid grid-cols-[minmax(0,1fr)] gap-4 md:grid-cols-2">
+                    <x-ui.field name="max_evidences_hours" label="Evidencias" type="number" suffix="h"
+                        inputmode="decimal" min="0" max="9999" step="0.25" :value="$limit($configuration?->max_evidences_hours)"
+                        hint="Horas de evidencias aceptadas" />
+                    <x-ui.field name="max_attendees_hours" label="Asistencia" type="number" suffix="h"
+                        inputmode="decimal" min="0" max="9999" step="0.25" :value="$limit($configuration?->max_attendees_hours)"
+                        hint="Horas de eventos asistidos" />
+                </div>
+            </x-ui.card>
         </div>
         <x-slot:actions>
             <x-ui.button type="submit" variant="primary" icon="save">Guardar configuración</x-ui.button>

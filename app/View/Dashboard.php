@@ -57,9 +57,9 @@ final class Dashboard
     public function hours(User $user): array
     {
         $hours = [
-            ['label' => 'Evidencias', 'tone' => 'accepted', 'hours' => (float) $user->evidences_accepted_hours()],
+            ['label' => 'Evidencias', 'tone' => 'accepted', 'hours' => (float) $user->evidences_computed_hours(), 'raw' => (float) $user->evidences_accepted_hours()],
             ['label' => 'Reuniones', 'tone' => 'notice', 'hours' => (float) $user->meetings_hours()],
-            ['label' => 'Asistencia', 'tone' => 'pending', 'hours' => (float) $user->events_hours()],
+            ['label' => 'Asistencia', 'tone' => 'pending', 'hours' => (float) $user->events_hours(), 'raw' => (float) $user->attendees_hours()],
             ['label' => 'Bonos', 'tone' => 'draft', 'hours' => (float) $user->bonus_hours()],
         ];
         $shares = $this->percentages(array_column($hours, 'hours'));
@@ -70,7 +70,9 @@ final class Dashboard
                 'value' => $share,
                 'tone' => $part['tone'],
                 'label' => $part['label'],
-                'text' => number_format($part['hours'], 2, ',', '.').' h',
+                // con el tope del curso aplicado se ven también las horas reales
+                'text' => number_format($part['hours'], 2, ',', '.').' h'
+                    .(($part['raw'] ?? $part['hours']) > $part['hours'] ? ' de '.number_format($part['raw'], 2, ',', '.').' (límite)' : ''),
             ], $hours, $shares),
         ];
     }

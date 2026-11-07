@@ -14,6 +14,8 @@ class Configuration extends Model
         'meetings_timestamp',
         'bonus_timestamp',
         'attendee_timestamp',
+        'max_evidences_hours',
+        'max_attendees_hours',
         'eventbrite_token',
         'events_uploaded_timestamp',
         'attendees_uploaded_timestamp',

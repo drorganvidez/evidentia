@@ -24,7 +24,7 @@ class MigrationsTest extends TestCase
 
     public function test_the_migrations_of_the_phase_roll_back_and_run_again(): void
     {
-        $steps = count(File::glob(database_path('migrations/2026_11_06_*.php')));
+        $steps = count(File::glob(database_path('migrations/2026_11_0[67]_*.php')));
         $this->assertGreaterThanOrEqual(4, $steps);
         $before = $this->schema();
 
@@ -44,6 +44,10 @@ class MigrationsTest extends TestCase
             fn (array $column): bool => $column['name'] !== 'presidency',
         ));
         $this->assertFalse(Schema::hasColumn('committees', 'presidency'));
+        $expected['configuration']['columns'] = array_values(array_filter(
+            $expected['configuration']['columns'],
+            fn (array $column): bool => ! in_array($column['name'], ['max_evidences_hours', 'max_attendees_hours'], true),
+        ));
         $this->assertEquals($expected, $this->schema());
 
         $this->assertSame(0, Artisan::call('migrate'));

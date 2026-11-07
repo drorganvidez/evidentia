@@ -54,7 +54,7 @@ class EvidencesExport implements FromCollection, ShouldAutoSize, WithHeadings, W
                     'horas_reuniones' => $user->meetings_hours(),
                     'bono_horas' => $user->bonus_hours(),
                     'evidencias_aceptadas' => $user->evidences_accepted_count(),
-                    'horas_evidencias' => $user->evidences_accepted_hours(),
+                    'horas_evidencias' => $user->evidences_computed_hours(),
                     'horas_totales' => 0,
                 ];
 
@@ -87,7 +87,7 @@ class EvidencesExport implements FromCollection, ShouldAutoSize, WithHeadings, W
                     $horas_totales += $user->meetings_hours();
                 }
                 if ($this->evidences_select == 'on') {
-                    $horas_totales += $user->evidences_accepted_hours();
+                    $horas_totales += $user->evidences_computed_hours();
                 }
                 if ($this->bonus == 'on') {
                     $horas_totales += $user->bonus_hours();

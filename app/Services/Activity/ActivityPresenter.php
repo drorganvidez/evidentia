@@ -306,7 +306,15 @@ final class ActivityPresenter
         $after = is_array($details['after'] ?? null) ? $details['after'] : [];
         $changes = [];
 
+        $limits = ['max_evidences_hours' => 'Límite de evidencias', 'max_attendees_hours' => 'Límite de asistencia'];
+        $hours = fn (mixed $value): string => is_numeric($value) ? str_replace('.', ',', (string) (float) $value).' h' : 'sin límite';
+
         foreach (array_keys($before + $after) as $key) {
+            if (isset($limits[$key])) {
+                $changes[] = $limits[$key].' '.$hours($before[$key] ?? null).' → '.$hours($after[$key] ?? null);
+
+                continue;
+            }
             $deadline = Deadline::tryFrom(str_replace('_timestamp', '', (string) $key));
             $format = fn (mixed $value): string => is_string($value) && $value !== '' ? Carbon::parse($value)->format('d/m H:i') : 'sin fecha';
             $changes[] = ($deadline?->shortLabel() ?? (string) $key).' '.$format($before[$key] ?? null).' → '.$format($after[$key] ?? null);

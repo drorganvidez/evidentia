@@ -52,6 +52,17 @@ class ConfigController extends Controller
         return $deadlines;
     }
 
+    // los plazos y los límites de horas, para anotar solo lo que cambia
+    private function settings(Configuration $configuration): array
+    {
+        $limit = fn ($value): ?float => $value === null ? null : (float) $value;
+
+        return $this->deadlines($configuration) + [
+            'max_evidences_hours' => $limit($configuration->max_evidences_hours),
+            'max_attendees_hours' => $limit($configuration->max_attendees_hours),
+        ];
+    }
+
     // cierra un plazo abierto en este minuto; cerrar la validación cierra también la subida
     public function close(Request $request)
     {
@@ -61,7 +72,7 @@ class ConfigController extends Controller
         $configuration = Configuration::findOrFail(1);
         $now = now()->startOfMinute();
         $closing = $deadline === Deadline::ValidateEvidences ? [Deadline::UploadEvidences, $deadline] : [$deadline];
-        $before = $this->deadlines($configuration);
+        $before = $this->settings($configuration);
 
         DB::transaction(function () use ($configuration, $closing, $now, $before) {
             foreach ($closing as $each) {
@@ -101,7 +112,9 @@ class ConfigController extends Controller
             'meetings_time' => 'required|date_format:H:i',
             'bonus_time' => 'required|date_format:H:i',
             'attendees_time' => 'required|date_format:H:i',
-        ]);
+            'max_evidences_hours' => 'nullable|numeric|min:0|max:9999',
+            'max_attendees_hours' => 'nullable|numeric|min:0|max:9999',
+        ], [], ['max_evidences_hours' => 'límite de horas de evidencias', 'max_attendees_hours' => 'límite de horas de asistencia']);
 
         $configuration = Configuration::find(1);
 
@@ -118,6 +131,8 @@ class ConfigController extends Controller
             $configuration->meetings_timestamp = $request->input('meetings_date').' '.$request->input('meetings_time');
             $configuration->bonus_timestamp = $request->input('bonus_date').' '.$request->input('bonus_time');
             $configuration->attendee_timestamp = $request->input('attendees_date').' '.$request->input('attendees_time');
+            $configuration->max_evidences_hours = $request->filled('max_evidences_hours') ? $request->input('max_evidences_hours') : null;
+            $configuration->max_attendees_hours = $request->filled('max_attendees_hours') ? $request->input('max_attendees_hours') : null;
 
             $configuration->save();
 
@@ -125,7 +140,7 @@ class ConfigController extends Controller
             Activity::record(
                 ActivityAction::ConfigChanged,
                 $configuration,
-                details: Changes::between($before, $this->deadlines($configuration)),
+                details: Changes::between($before, $this->settings($configuration)),
                 subjectTitle: 'Configuración del curso',
             );
         });

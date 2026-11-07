@@ -392,7 +392,7 @@ final class StudentRecord
     private function origins(User $user): array
     {
         return [
-            'Evidencias' => (float) $user->evidences_accepted_hours(),
+            'Evidencias' => (float) $user->evidences_computed_hours(),
             'Reuniones' => (float) $user->meetings_hours(),
             'Asistencia' => (float) $user->events_hours(),
             'Bonos' => (float) $user->bonus_hours(),

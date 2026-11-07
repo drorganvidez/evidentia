@@ -33,7 +33,7 @@
             : null);
     $access = session()->hasOldInput() ? old('pass') === 'on' : !$user->block;
     $hours = [
-        ['En evidencias', $user->evidences_accepted_hours()],
+        ['En evidencias', $user->evidences_computed_hours()],
         ['En reuniones', $user->meetings_hours()],
         ['En asistencia', $user->events_hours()],
         ['Bonificadas', $user->bonus_hours()],

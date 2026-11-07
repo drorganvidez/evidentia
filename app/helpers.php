@@ -83,9 +83,19 @@ class Config
         return Configuration::all()->find(1);
     }
 
-    public static function max_attendees_hours()
+    // tope de horas que cuentan de asistencias y de evidencias aceptadas; null las cuenta todas
+    public static function max_attendees_hours(): ?float
     {
-        return self::config_entity()?->max_attendees_hours;
+        $limit = self::config_entity()?->max_attendees_hours;
+
+        return $limit === null ? null : (float) $limit;
+    }
+
+    public static function max_evidences_hours(): ?float
+    {
+        $limit = self::config_entity()?->max_evidences_hours;
+
+        return $limit === null ? null : (float) $limit;
     }
 
     // configuración de fechas límite

@@ -191,17 +191,25 @@ class User extends Authenticatable
         return $this->attendees_checkedin()->sum(fn ($a) => $a->event->hours);
     }
 
+    // horas de asistencia que cuentan, con el tope del curso si lo hay
     public function events_hours()
     {
-        return $this->attendees_hours();
+        $limit = Config::max_attendees_hours();
+
+        return $limit === null ? $this->attendees_hours() : min($this->attendees_hours(), $limit);
     }
 
     public function max_events_hours()
     {
-        // sin un límite configurado cuentan todas las horas de asistencia, como en el perfil
-        $limit = Config::max_attendees_hours();
+        return $this->events_hours();
+    }
 
-        return $limit === null ? $this->attendees_hours() : min($this->attendees_hours(), $limit);
+    // horas de evidencias aceptadas que cuentan, con el tope del curso si lo hay
+    public function evidences_computed_hours()
+    {
+        $limit = Config::max_evidences_hours();
+
+        return $limit === null ? $this->evidences_accepted_hours() : min($this->evidences_accepted_hours(), $limit);
     }
 
     public function events_count()
@@ -216,7 +224,7 @@ class User extends Authenticatable
 
     public function total_computed_hours()
     {
-        return $this->evidences_accepted_hours() + $this->meetings_hours() + $this->events_hours() + $this->bonus_hours();
+        return $this->evidences_computed_hours() + $this->meetings_hours() + $this->events_hours() + $this->bonus_hours();
     }
 
     public function associate_committee()
