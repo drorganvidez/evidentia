@@ -63,7 +63,7 @@
                                     <span class="text-sm text-ink-muted">{{ (int) $point->duration }} min</span>
                                 </x-slot:extra>
                                 @if (filled($point->description))
-                                    <p class="whitespace-pre-line">{{ $point->description }}</p>
+                                    <x-ui.rich-text :html="\App\View\PlainText::rich($point->description)" />
                                 @endif
                                 @if ($point->agreements->isNotEmpty())
                                     <ul class="mt-3 grid gap-2">
@@ -71,7 +71,7 @@
                                             <li class="flex flex-wrap items-start gap-2">
                                                 <x-ui.badge variant="chip"
                                                     mono>{{ $agreement->identificator }}</x-ui.badge>
-                                                <span class="min-w-0 flex-1">{{ $agreement->description }}</span>
+                                                <x-ui.rich-text :html="\App\View\PlainText::rich($agreement->description)" class="min-w-0 flex-1" />
                                             </li>
                                         @endforeach
                                     </ul>

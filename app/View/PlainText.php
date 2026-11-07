@@ -2,6 +2,8 @@
 
 namespace App\View;
 
+use Illuminate\Support\Str;
+
 /**
  * Bridge between the HTML that the old rich text editor stored (descriptions, biographies) and the plain textareas
  * of the new UI. The textarea receives the text of the stored HTML with its paragraphs and line breaks; plain text
@@ -46,5 +48,29 @@ final class PlainText
             fn (string $paragraph): string => '<p>'.nl2br(e(trim($paragraph)), false).'</p>',
             array_filter($paragraphs, fn (string $paragraph): bool => trim($paragraph) !== ''),
         ));
+    }
+
+    /**
+     * Text written in a textarea (points, agreements) as safe HTML: a blank line opens a paragraph, a line break stays,
+     * lines starting with "- " or "1. " make a list and **bold**, *italics* and links work as in Markdown. Raw HTML in
+     * the text is escaped; HTML stored by the old editor is purified instead.
+     */
+    public static function rich(?string $value): string
+    {
+        if ($value === null || trim($value) === '') {
+            return '';
+        }
+
+        if (self::isHtml($value)) {
+            return \Html::clean($value);
+        }
+
+        $html = Str::markdown(str_replace("\r\n", "\n", $value), [
+            'html_input' => 'escape',
+            'allow_unsafe_links' => false,
+            'renderer' => ['soft_break' => "<br>\n"],
+        ]);
+
+        return \Html::clean($html);
     }
 }

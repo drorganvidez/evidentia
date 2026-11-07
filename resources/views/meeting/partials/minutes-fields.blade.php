@@ -61,5 +61,6 @@
 </x-ui.card>
 
 <x-ui.card title="Desarrollo" :level="2" id="card-desarrollo">
-    <x-ui.minutes-editor :points="session('points', $points)" label="Puntos y acuerdos" />
+    <x-ui.minutes-editor :points="session('points', $points)" label="Puntos y acuerdos"
+        hint="En la descripción y los acuerdos, una línea que empieza por «- » o «1. » hace una lista y **texto** lo pone en negrita." />
 </x-ui.card>
