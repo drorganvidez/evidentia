@@ -1,4 +1,4 @@
-{{-- Navigation: the sidebar list with its groups, the rail of the tablet, the bottom bar of the phone and the breadcrumbs --}}
+{{-- Navigation: the sidebar list with its groups, the rail of the tablet, the bottom bar of the phone and the back link of the topbar --}}
 @php
     $here = route('ui.index') . '#ui-nav';
     $main = [
@@ -62,12 +62,12 @@
     </div>
 
     <div class="grid grid-cols-[minmax(0,1fr)] gap-3">
-        <h3 class="text-lg font-bold tracking-tight">Migas de pan</h3>
+        <h3 class="text-lg font-bold tracking-tight">Volver</h3>
         <div class="glass-2 grid grid-cols-[minmax(0,1fr)] gap-3 rounded-lg p-4" data-demo="breadcrumbs">
-            <span class="font-mono text-2xs text-ink-muted">la última es la página actual; las anteriores se ocultan en
-                el teléfono</span>
+            <span class="font-mono text-2xs text-ink-muted">un paso arriba, hacia el padre de la página; nada en las
+                páginas
+                del menú</span>
             <x-ui.breadcrumbs :items="$crumbs" />
-            <x-ui.breadcrumbs :items="[['label' => 'Inicio', 'href' => $here], ['label' => 'Mis reuniones']]" label="Migas de pan (corta)" />
         </div>
     </div>
 </section>

@@ -304,40 +304,7 @@ test.describe('Shell en su propia página', () => {
         await expect(toggle).not.toBeChecked();
     });
 
-    test('el anillo de foco de las migas cabe en su lista recortada', async ({
-        page,
-    }, testInfo) => {
-        test.skip(
-            testInfo.project.name !== 'chromium',
-            'Las migas anteriores viven en la topbar ancha',
-        );
-
-        const link = page.locator('nav[aria-label="Migas de pan"] a').first();
-
-        await page.keyboard.press('Shift');
-        await link.focus();
-
-        const room = await link.evaluate((a) => {
-            const style = getComputedStyle(a);
-            const reach = parseFloat(style.outlineWidth) + parseFloat(style.outlineOffset);
-            const own = a.getBoundingClientRect();
-            const list = a.closest('ol').getBoundingClientRect();
-
-            return {
-                reach,
-                top: own.top - list.top,
-                bottom: list.bottom - own.bottom,
-                left: own.left - list.left,
-            };
-        });
-
-        expect(room.reach).toBeGreaterThan(0);
-        expect(room.top, 'Arriba').toBeGreaterThanOrEqual(room.reach);
-        expect(room.bottom, 'Abajo').toBeGreaterThanOrEqual(room.reach);
-        expect(room.left, 'Izquierda').toBeGreaterThanOrEqual(room.reach);
-    });
-
-    test('con puntero grueso los enlaces de las migas miden 44 px', async ({ page }, testInfo) => {
+    test('con puntero grueso el enlace volver mide 44 de alto', async ({ page }, testInfo) => {
         test.skip(
             testInfo.project.name !== 'mobile',
             'Solo el proyecto móvil tiene puntero grueso',
@@ -345,12 +312,12 @@ test.describe('Shell en su propia página', () => {
 
         expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(true);
 
-        // A tablet in both orientations: the parent alone below lg, every previous item from lg
+        // A tablet in both orientations
         for (const width of [820, 1180]) {
             await page.setViewportSize({ width, height: 1000 });
             await page.goto('/_ui/detail');
 
-            const links = page.locator('nav[aria-label="Migas de pan"] a');
+            const links = page.locator('[data-back]');
 
             await expect(links.first()).toBeAttached();
 
@@ -364,11 +331,10 @@ test.describe('Shell en su propia página', () => {
                     }),
             );
 
-            expect(boxes.length, `Migas visibles a ${width} px`).toBeGreaterThan(0);
+            expect(boxes.length, `Volver visible a ${width} px`).toBe(1);
 
             for (const box of boxes) {
                 expect(box.h, `Alto de «${box.text}» a ${width} px`).toBeGreaterThanOrEqual(44);
-                expect(box.w, `Ancho de «${box.text}» a ${width} px`).toBeGreaterThanOrEqual(44);
             }
         }
     });
@@ -472,7 +438,7 @@ test.describe('Shell en su propia página', () => {
     });
 });
 
-// Between md and xl the column is narrow: the shell (short breadcrumbs) and the detail (a long current one)
+// Between md and xl the column is narrow: the shell and the detail, both with a back link
 for (const path of ['/_ui/shell', '/_ui/detail']) {
     test.describe(`Topbar de ${path} en tableta y portátil pequeño`, () => {
         test.beforeEach(async ({ page }, testInfo) => {
@@ -514,35 +480,18 @@ for (const path of ['/_ui/shell', '/_ui/detail']) {
             }
         });
 
-        test('la miga actual se lee a 768, 1024 y 1100 px', async ({ page }) => {
-            const current = page.locator('nav[aria-label="Migas de pan"] [aria-current="page"]');
-
+        test('el enlace volver se lee entero a 768, 1024 y 1100 px', async ({ page }) => {
             for (const width of [768, 1024, 1100]) {
                 await page.setViewportSize({ width, height: 900 });
 
-                const box = await current.boundingBox();
+                const cut = await page.locator('[data-back] span.truncate').evaluateAll((spans) =>
+                    spans
+                        .filter((span) => span.getClientRects().length > 0)
+                        .filter((span) => span.scrollWidth > span.clientWidth)
+                        .map((span) => span.textContent),
+                );
 
-                expect(
-                    box?.width ?? 0,
-                    `Ancho de la miga actual a ${width} px`,
-                ).toBeGreaterThanOrEqual(63.5);
-            }
-        });
-
-        test('los enlaces de las migas se leen enteros a 768, 1024 y 1100 px', async ({ page }) => {
-            for (const width of [768, 1024, 1100]) {
-                await page.setViewportSize({ width, height: 900 });
-
-                const cut = await page
-                    .locator('nav[aria-label="Migas de pan"] a span')
-                    .evaluateAll((spans) =>
-                        spans
-                            .filter((span) => span.getClientRects().length > 0)
-                            .filter((span) => span.scrollWidth > span.clientWidth)
-                            .map((span) => span.textContent),
-                    );
-
-                expect(cut, `Migas recortadas a ${width} px`).toEqual([]);
+                expect(cut, `Volver recortado a ${width} px`).toEqual([]);
             }
         });
 

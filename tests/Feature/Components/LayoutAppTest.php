@@ -130,12 +130,12 @@ class LayoutAppTest extends ComponentTestCase
         $this->assertMatchesRegularExpression('/<div x-data="dialog"\s+x-on:ui-drawer.window="show"/', $html, 'The drawer listens to the event');
     }
 
-    public function test_the_last_breadcrumb_is_the_current_page(): void
+    public function test_a_page_of_the_menu_has_no_back_link(): void
     {
         $html = $this->render_shell();
 
-        $this->assertStringContainsString('<li aria-current="page" class="min-w-16 flex-1 truncate font-semibold text-ink">Mis evidencias</li>', $html);
-        $this->assertStringContainsString('href="/inicio"', $html);
+        $this->assertStringNotContainsString('data-back', $html);
+        $this->assertStringNotContainsString('Volver a', $html);
     }
 
     public function test_the_mobile_bar_takes_the_first_five_mobile_items_unless_given(): void
@@ -161,14 +161,14 @@ class LayoutAppTest extends ComponentTestCase
         $nav = collect($this->nav())->map(fn (array $group) => collect([...$group, 'items' => collect($group['items'])]));
         $html = $this->render('<x-layout.app :nav="$nav" :breadcrumbs="$breadcrumbs"><h1 id="page-title">Hola</h1></x-layout.app>', [
             'nav' => $nav,
-            'breadcrumbs' => collect([['label' => 'Inicio', 'href' => '/inicio'], ['label' => 'Mis evidencias']]),
+            'breadcrumbs' => collect([['label' => 'Inicio', 'href' => '/inicio'], ['label' => 'Mis evidencias', 'href' => '/evidencias'], ['label' => 'Photocall']]),
         ]);
 
         preg_match('/<nav aria-label="Navegación principal \(móvil\)".*?<\/nav>/s', $html, $bar);
         $this->assertNotEmpty($bar);
         $this->assertSame(5, substr_count($bar[0], '<li class="min-w-0">'), 'The first five mobile items');
         $this->assertSame(2, substr_count($html, '<nav aria-label="Mis cosas"'));
-        $this->assertStringContainsString('>Mis evidencias</li>', $html);
+        $this->assertStringContainsString('href="/evidencias" data-back', $html);
 
         $empty = $this->render('<x-layout.app :nav="$nav" :mobile-nav="$mobileNav">Hola</x-layout.app>', ['nav' => $nav, 'mobileNav' => collect()]);
         $this->assertStringNotContainsString('Navegación principal (móvil)', $empty, 'An empty collection draws no bar');

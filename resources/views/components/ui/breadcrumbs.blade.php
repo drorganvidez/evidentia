@@ -1,38 +1,28 @@
 {{--
-    Breadcrumbs of the topbar: the last item is the current page, the previous ones link back and hide on the phone.
-    <x-ui.breadcrumbs :items="[['label' => 'Inicio', 'href' => '/'], ['label' => 'Mis evidencias', 'href' => '/evidencias'], ['label' => 'Todas']]" />
-    Every item shrinks with an ellipsis. The current one, which repeats the h1, takes the room the links leave (flex-1)
-    and never drops below a readable minimum; only then the links shrink. Below lg only the parent comes before it.
-    The list clips its overflow, so it pads its box (and takes it back with a negative margin) for the focus ring.
-    items may be an array or a collection (of arrays or Arrayable items). Under a coarse pointer the links measure 44 px.
+    Back link of the topbar: one step up to the parent of the current page, or nothing on a page of the menu.
+    <x-ui.breadcrumbs :items="[['label' => 'Inicio', 'href' => '/'], ['label' => 'Mis evidencias', 'href' => '/evidencias'], ['label' => 'Montaje del photocall']]" />
+    renders «← Mis evidencias». The first item (Inicio) is the first entry of the menu and the last one repeats the h1,
+    so a full trail only showed what the sidebar and the title already say. Only the nearest item in between with a
+    link stays. items may be an array or a collection (of arrays or Arrayable items). The label shrinks with an
+    ellipsis and under a coarse pointer the link measures 44 px.
 --}}
-@props(['items' => [], 'label' => 'Migas de pan'])
+@props(['items' => []])
 @php
     // An array, a collection or anything Arrayable, with each item as an array
     $items = collect($items)
         ->map(fn($item) => $item instanceof \Illuminate\Contracts\Support\Arrayable ? $item->toArray() : $item)
-        ->values()
-        ->all();
-    $last = count($items) - 1;
-    $current = 'min-w-16 flex-1 truncate font-semibold text-ink';
+        ->values();
+    $parent = $items
+        ->slice(1, -1)
+        ->filter(fn($item) => filled($item['href'] ?? null))
+        ->last();
 @endphp
-<nav aria-label="{{ $label }}" {{ $attributes->class(['min-w-0']) }}>
-    <ol
-        class="-m-1.5 flex items-center gap-2 overflow-hidden p-1.5 text-md font-medium whitespace-nowrap text-ink-muted">
-        @foreach ($items as $index => $item)
-            @if ($index === $last)
-                <li aria-current="page" class="{{ $current }}">{{ $item['label'] }}</li>
-            @else
-                <li @class([
-                    'hidden min-w-0 items-center gap-2',
-                    $index === $last - 1 ? 'md:inline-flex' : 'lg:inline-flex',
-                ])>
-                    <a href="{{ $item['href'] }}"
-                        class="inline-flex min-h-6 min-w-0 items-center text-ink-muted no-underline transition hover:text-ink pointer-coarse:min-h-11 pointer-coarse:min-w-11"><span
-                            class="truncate">{{ $item['label'] }}</span></a>
-                    <x-lucide-chevron-right class="size-4 shrink-0 opacity-60" aria-hidden="true" />
-                </li>
-            @endif
-        @endforeach
-    </ol>
-</nav>
+<div {{ $attributes->class(['min-w-0']) }}>
+    @if ($parent !== null)
+        <a href="{{ $parent['href'] }}" data-back
+            class="-ml-1 inline-flex min-h-9 max-w-full min-w-0 items-center gap-1.5 rounded-full pr-3 pl-2 text-md font-medium text-ink-muted no-underline transition hover:bg-glass-2 hover:text-ink pointer-coarse:min-h-11">
+            <x-lucide-arrow-left class="size-4 shrink-0" aria-hidden="true" />
+            <span class="truncate"><span class="sr-only">Volver a </span>{{ $parent['label'] }}</span>
+        </a>
+    @endif
+</div>
