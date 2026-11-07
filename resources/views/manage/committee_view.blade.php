@@ -198,8 +198,8 @@
         @endforeach
         @if ($evidences->isNotEmpty())
             <x-slot:footer>
-                <a href="{{ $evidenceList() }}" class="font-semibold text-brand-ink">Todas las evidencias de
-                    {{ $committee->name }}</a>
+                <x-ui.button :href="$evidenceList()" icon="arrow-right" size="sm" variant="quiet">Todas las evidencias
+                    de {{ $committee->name }}</x-ui.button>
             </x-slot:footer>
         @endif
     </x-ui.table>
@@ -207,7 +207,8 @@
     <div class="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-2 lg:gap-8">
         <x-ui.card title="Reuniones" :level="2" id="meetings">
             <x-slot:extra>
-                <a href="{{ $meetingList }}" class="text-sm font-semibold text-brand-ink">Todas</a>
+                <x-ui.button :href="$meetingList" icon="arrow-right" size="sm" variant="quiet"
+                    aria-label="Todas las reuniones">Todas</x-ui.button>
             </x-slot:extra>
             <div class="grid gap-6">
                 <section aria-labelledby="meetings-requests" class="grid content-start gap-2">

@@ -31,9 +31,8 @@
                     size="sm" /></x-ui.table.cell>
             <x-ui.table.cell label="Actualizada" meta><x-ui.time :value="$evidence->updated_at" inline short /></x-ui.table.cell>
             <x-ui.table.cell>
-                <a href="{{ route('activity.evidence', ['id' => $evidence->id]) }}"
-                    class="text-sm font-semibold text-brand-ink pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center">Historial<span
-                        class="sr-only"> de {{ $evidence->title }}</span></a>
+                <x-ui.button :href="route('activity.evidence', ['id' => $evidence->id])" icon="history" size="sm" variant="ghost"
+                    :aria-label="'Historial de ' . $evidence->title">Historial</x-ui.button>
             </x-ui.table.cell>
         </x-ui.table.row>
     @endforeach

@@ -159,8 +159,8 @@
                         </ul>
                     @endif
                     <x-slot:footer>
-                        <a href="{{ route('coordinator.evidence.list.pending') }}"
-                            class="text-sm font-semibold text-brand-ink">Ver las pendientes</a>
+                        <x-ui.button :href="route('coordinator.evidence.list.pending')" icon="arrow-right" size="sm" variant="quiet">Ver las
+                            pendientes</x-ui.button>
                     </x-slot:footer>
                 </x-ui.card>
             @endif
@@ -192,8 +192,8 @@
                         </ul>
                     @endif
                     <x-slot:footer>
-                        <a href="{{ route('evidence.list') }}" class="text-sm font-semibold text-brand-ink">Ver todas
-                            mis evidencias</a>
+                        <x-ui.button :href="route('evidence.list')" icon="arrow-right" size="sm" variant="quiet">Ver todas mis
+                            evidencias</x-ui.button>
                     </x-slot:footer>
                 </x-ui.card>
             @endif

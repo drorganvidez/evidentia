@@ -78,9 +78,8 @@
                         size="sm">{{ $item['label'] }}</x-ui.badge></x-ui.table.cell>
                 <x-ui.table.cell>
                     @if ($minutes)
-                        <a href="{{ route('activity.minutes', ['id' => $minutes]) }}"
-                            class="text-sm font-semibold text-brand-ink pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:min-w-11 pointer-coarse:items-center">Acta<span
-                                class="sr-only"> de {{ $request->title }}</span></a>
+                        <x-ui.button :href="route('activity.minutes', ['id' => $minutes])" icon="file-text" size="sm" variant="ghost"
+                            :aria-label="'Acta de ' . $request->title">Acta</x-ui.button>
                     @endif
                 </x-ui.table.cell>
             </x-ui.table.row>
