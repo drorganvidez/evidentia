@@ -35,12 +35,12 @@ class FooterTest extends ComponentTestCase
             $labels[] = trim(strip_tags(preg_replace('/<span class="sr-only">.*?<\/span>/s', '', $match[2])));
         }
 
-        $this->assertSame(['Repositorio', 'GPL-3.0', 'Ayuda', 'Sugerencias'], $labels);
+        $this->assertSame(['Repositorio', 'GPL-3.0', 'Ayuda'], $labels);
         $this->assertSame(2, substr_count($html, 'target="_blank" rel="noopener noreferrer"'));
         $this->assertSame(2, substr_count($html, '<span class="sr-only">(se abre en una pestaña nueva)</span>'));
         $this->assertMatchesRegularExpression('#<a href="https://github.com/drorganvidez/evidentia"[^>]*target="_blank"#', $html);
         $this->assertDoesNotMatchRegularExpression('#<a href="[^"]*suggestionsmailbox"[^>]*target#', $html);
-        $this->assertSame(4, substr_count($html, 'class="shrink-0 size-4"'), 'One icon per link');
+        $this->assertSame(3, substr_count($html, 'class="shrink-0 size-4"'), 'One icon per link');
     }
 
     public function test_the_version_pill_is_printed_only_with_a_version_and_links_to_the_updates_when_asked(): void

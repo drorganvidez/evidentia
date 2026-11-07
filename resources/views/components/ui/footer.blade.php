@@ -28,7 +28,6 @@
             'external' => true,
         ],
         ['label' => 'Ayuda', 'href' => 'https://github.com/drorganvidez/evidentia#readme', 'icon' => 'circle-help'],
-        ['label' => 'Sugerencias', 'href' => route('messages.create', ['to' => 'LECTURE']), 'icon' => 'message-square'],
     ];
     $version ??= evidentia_version();
     $version = $version === false || $version === null || $version === '' ? null : ltrim((string) $version, 'vV');
