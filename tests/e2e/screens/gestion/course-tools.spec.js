@@ -1,6 +1,27 @@
 import { signIn } from '../../fixtures/auth.js';
 import { expect, test } from '../../fixtures/ui.js';
 
+// The work summary freezes once the evidences are randomized, so it is written here, before the pick below, and the
+// file runs in order: the summary, the tools with the pick, the frozen summary
+test.describe('Resumen del trabajo antes de aleatorizar', () => {
+    test('el secretario escribe su resumen y lo ve en el perfil', async ({ page }, testInfo) => {
+        test.skip(testInfo.project.name !== 'chromium', 'Las mutaciones solo en escritorio');
+
+        await signIn(page, 'secretario');
+        await page.goto('/profile');
+
+        await page
+            .getByLabel('Resumen del trabajo en las jornadas')
+            .fill('Convoqué las reuniones de logística.\n\nRedacté sus actas.');
+        await page.getByRole('button', { name: 'Guardar el resumen' }).click();
+
+        await expect(page.getByText('Biografía editada con éxito.').first()).toBeVisible();
+        await expect(
+            page.getByRole('region', { name: 'Marta Ruiz Díaz' }).getByText('Redacté sus actas.'),
+        ).toBeVisible();
+    });
+});
+
 // The tools of the lecturer: integrity, export, import and the random pick of evidences
 test.describe('Herramientas del curso', () => {
     test.beforeEach(async ({ page }) => {
@@ -113,5 +134,21 @@ test.describe('Herramientas del curso', () => {
                 .getByText('Evidencias aleatorizadas con éxito.'),
         ).toBeVisible();
         await expect(page.getByText('Evidencias elegidas')).toBeVisible();
+    });
+});
+
+test.describe('Resumen del trabajo tras aleatorizar', () => {
+    test('el resumen del secretario queda cerrado', async ({ page }, testInfo) => {
+        test.skip(testInfo.project.name !== 'chromium', 'Las mutaciones solo en escritorio');
+
+        await signIn(page, 'secretario');
+        await page.goto('/profile');
+
+        await expect(page.getByText('Resumen cerrado')).toBeVisible();
+        await expect(page.getByLabel('Resumen del trabajo en las jornadas')).toHaveAttribute(
+            'readonly',
+            '',
+        );
+        await expect(page.getByRole('button', { name: 'Guardar el resumen' })).toHaveCount(0);
     });
 });

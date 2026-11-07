@@ -32,24 +32,8 @@ test.describe('Mi perfil', () => {
     });
 
     test.describe('cambios', () => {
-        // Only on the desktop project; writing the same summary twice leaves the same profile, so a second run passes
+        // Only on the desktop project; the summary is written in course-tools.spec.js, before the evidences are randomized
         test.skip(({ isMobile }) => isMobile);
-
-        test('el secretario escribe su resumen y lo ve en el perfil', async ({ page }) => {
-            await signIn(page, 'secretario');
-            await page.goto('/profile');
-
-            await page
-                .getByLabel('Resumen del trabajo en las jornadas')
-                .fill('Convoqué las reuniones de logística.\n\nRedacté sus actas.');
-            await page.getByRole('button', { name: 'Guardar el resumen' }).click();
-
-            await expect(page.getByText('Biografía editada con éxito.').first()).toBeVisible();
-
-            const summary = page.getByRole('region', { name: 'Marta Ruiz Díaz' });
-
-            await expect(summary.getByText('Redacté sus actas.')).toBeVisible();
-        });
 
         test('un correo ya usado se marca en su campo', async ({ page }) => {
             await signIn(page, 'secretario');
