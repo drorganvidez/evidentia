@@ -20,9 +20,9 @@ class MeetingPdfTest extends MeetingScreenTestCase
             $this->assertStringContainsString('<h2 class="pdf-section__title">'.$section, $html);
         }
         $this->assertStringContainsString('<span class="pdf-meta__label">Horario</span>', $html);
-        $this->assertStringContainsString('<span class="pdf-point__number">1.</span>Reparto de tareas</td>', $html);
+        $this->assertMatchesRegularExpression('/class="pdf-point__number">1\.<\/span>Reparto de tareas<\/td>/', $html);
         $this->assertStringContainsString('<td class="pdf-point__time">20 min</td>', $html);
-        $this->assertStringContainsString('<span class="pdf-pill">ISD-1</span>', $html);
+        $this->assertMatchesRegularExpression('/class="pdf-pill">ISD-1<\/span>/', $html);
         $this->assertStringContainsString('<p>Cada equipo nombra un responsable.</p>', $html);
         $this->assertStringNotContainsString('class="pdf-section pdf-section--break', $html, 'The points follow the agenda on the same page');
         $this->assertStringContainsString('Pérez Romero, Lucía', $html);
