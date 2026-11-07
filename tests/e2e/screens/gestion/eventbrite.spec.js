@@ -14,6 +14,7 @@ test.describe('Eventos y asistencias', () => {
         ['/attendees', 'Asistencias'],
         ['/attendees/create', 'Añadir asistencia'],
         ['/attendees/import', 'Importar asistencias'],
+        ['/registercoordinator/attendee/load-student', 'Cargar asistencias de un estudiante'],
         ['/registercoordinator/event/groups', 'Grupos de eventos'],
     ]) {
         test(`${title} pasa axe en claro y oscuro`, async ({ page, ui }) => {

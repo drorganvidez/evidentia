@@ -140,6 +140,7 @@ final class ActivityPresenter
                 $this->count($d['created'] ?? null, 'nueva', 'nuevas'),
                 $this->count($d['updated'] ?? null, 'actualizada', 'actualizadas'),
                 $this->count($d['unmatched'] ?? null, 'sin emparejar', 'sin emparejar'),
+                $this->count($d['events'] ?? null, 'evento revisado', 'eventos revisados'),
             ],
             'user.created' => [$this->text($d['username'] ?? null)],
             'user.roles_changed' => [$this->arrow($this->roles($d['before']['roles'] ?? null), $this->roles($d['after']['roles'] ?? null))],

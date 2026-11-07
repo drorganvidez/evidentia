@@ -237,82 +237,16 @@ class EventbriteController extends Controller
 
         try {
             $client = new Client(['base_uri' => 'https://www.eventbriteapi.com/v3/']);
-            $page = 1;
+            $result = $this->sync_event_attendees($client, $token, $event);
 
-            // Para evitar duplicados de user_id
-            $syncedUserIds = [];
-            $created = 0;
-            $updated = 0;
-            $unmatched = 0;
-
-            do {
-                // Llamada a Eventbrite
-                $response = $client->request('GET', "events/{$event->id_eventbrite}/attendees", [
-                    'query' => ['token' => $token, 'page' => $page],
-                ]);
-
-                $data = json_decode($response->getBody());
-                $attendees = $data->attendees;
-                $has_more_items = $data->pagination->has_more_items;
-
-                foreach ($attendees as $attendee) {
-
-                    // Limpieza nombres
-                    $first_name = \StringUtilites::clean($attendee->profile->first_name);
-                    $last_name = \StringUtilites::clean($attendee->profile->last_name);
-
-                    $email = $attendee->profile->email;
-                    $status = $attendee->status;
-
-                    // Buscar usuario local
-                    $user = $this->find_attendee_user($first_name, $last_name, $email);
-
-                    if (! $user) {
-                        $unmatched++;
-
-                        continue; // Ignorar usuarios sin correspondencia en tu sistema
-                    }
-
-                    $syncedUserIds[] = $user->id;
-
-                    // Buscar asistencia usando el id interno del evento
-                    $record = Attendee::where('event_id', $event->id)
-                        ->where('user_id', $user->id)
-                        ->first();
-
-                    if ($record) {
-                        // Actualizar solo si cambia algo
-                        if ($record->status !== $status) {
-                            $updated++;
-                            $record->status = $status;
-                            $record->save();
-                        }
-                    } else {
-                        // Crear nuevo registro
-                        $created++;
-                        Attendee::create([
-                            'event_id' => $event->id,   // <-- AHORA CORRECTO
-                            'user_id' => $user->id,
-                            'status' => $status,
-                        ]);
-                    }
-                }
-
-                $page++;
-
-            } while ($has_more_items);
-
-            // Actualiza timestamp de sincronización
-            $config = Configuration::find(1);
-            $config->attendees_uploaded_timestamp = Carbon::now();
-            $config->save();
+            $this->touch_attendees_timestamp();
 
             // sin transacción: el bucle llama a Eventbrite; el coordinador de registro puede estar entre los emparejados
-            $syncedUserIds = array_values(array_unique(array_map('intval', $syncedUserIds)));
+            $syncedUserIds = $result['users'];
             Activity::record(
                 ActivityAction::EventbriteAttendeesSynced,
                 $event,
-                details: ['created' => $created, 'updated' => $updated, 'unmatched' => $unmatched]
+                details: ['created' => $result['created'], 'updated' => $result['updated'], 'unmatched' => $result['unmatched']]
                     + (in_array((int) Auth::id(), $syncedUserIds, true) ? ['self_included' => true] : []),
                 targets: $syncedUserIds,
             );
@@ -324,6 +258,122 @@ class EventbriteController extends Controller
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
         }
+    }
+
+    // carga solo las asistencias de un estudiante, recorriendo los eventos de Eventbrite
+    public function attendee_load_student()
+    {
+        $users = User::orderBy('surname')->get();
+
+        return view('eventbrite.attendee_load_student', compact('users'));
+    }
+
+    public function attendee_load_student_save(Request $request)
+    {
+        $request->validate(['user_id' => 'required|exists:users,id']);
+        $student = User::findOrFail($request->user_id);
+
+        // nadie carga su propia asistencia
+        if (SelfReview::violates(Auth::user(), $student->id)) {
+            SelfReview::deny(new Attendee(['user_id' => $student->id]), ActivityAction::EventbriteAttendeesSynced, Auth::user(), self::OWN_ATTENDANCE);
+        }
+
+        $token = \Config::eventbrite_token();
+
+        if (! EventbriteController::validate_token($token)) {
+            return back()->with('error', 'Ups, parece que hay un problema con el token.');
+        }
+
+        try {
+            $client = new Client(['base_uri' => 'https://www.eventbriteapi.com/v3/']);
+            $events = Event::whereNotNull('id_eventbrite')->get();
+            $created = 0;
+            $updated = 0;
+
+            foreach ($events as $event) {
+                $result = $this->sync_event_attendees($client, $token, $event, $student->id);
+                $created += $result['created'];
+                $updated += $result['updated'];
+            }
+
+            $this->touch_attendees_timestamp();
+
+            Activity::record(
+                ActivityAction::EventbriteAttendeesSynced,
+                $student,
+                details: ['created' => $created, 'updated' => $updated, 'events' => $events->count()],
+                targets: [$student->id],
+            );
+
+            return redirect()
+                ->route('registercoordinator.attendee.list')
+                ->with('success', "Asistencias de {$student->name} {$student->surname} cargadas: {$created} nuevas y {$updated} actualizadas.");
+
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    /**
+     * Brings the attendances of one event from Eventbrite; with $only_user_id it keeps those of that student alone.
+     *
+     * @return array{created: int, updated: int, unmatched: int, users: list<int>}
+     */
+    private function sync_event_attendees(Client $client, string $token, Event $event, ?int $only_user_id = null): array
+    {
+        $page = 1;
+        $synced = [];
+        $created = 0;
+        $updated = 0;
+        $unmatched = 0;
+
+        do {
+            $response = $client->request('GET', "events/{$event->id_eventbrite}/attendees", [
+                'query' => ['token' => $token, 'page' => $page],
+            ]);
+
+            $data = json_decode($response->getBody());
+            $has_more_items = $data->pagination->has_more_items ?? false;
+
+            foreach ($data->attendees ?? [] as $attendee) {
+                $first_name = \StringUtilites::clean($attendee->profile->first_name);
+                $last_name = \StringUtilites::clean($attendee->profile->last_name);
+                $user = $this->find_attendee_user($first_name, $last_name, $attendee->profile->email ?? null);
+
+                if (! $user) {
+                    $unmatched++;
+
+                    continue;
+                }
+
+                if ($only_user_id !== null && (int) $user->id !== $only_user_id) {
+                    continue;
+                }
+
+                $synced[] = (int) $user->id;
+                $record = Attendee::where('event_id', $event->id)->where('user_id', $user->id)->first();
+
+                if (! $record) {
+                    $created++;
+                    Attendee::create(['event_id' => $event->id, 'user_id' => $user->id, 'status' => $attendee->status]);
+                } elseif ($record->status !== $attendee->status) {
+                    $updated++;
+                    $record->status = $attendee->status;
+                    $record->save();
+                }
+            }
+
+            $page++;
+        } while ($has_more_items);
+
+        return ['created' => $created, 'updated' => $updated, 'unmatched' => $unmatched, 'users' => array_values(array_unique($synced))];
+    }
+
+    private function touch_attendees_timestamp(): void
+    {
+        $config = Configuration::find(1);
+        $config->attendees_uploaded_timestamp = Carbon::now();
+        $config->save();
     }
 
     public function event_list(Request $request)

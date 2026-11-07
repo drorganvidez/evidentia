@@ -38,6 +38,13 @@ class EventbriteAttendeeImportTest extends TestCase
                     ],
                     'pagination' => ['has_more_items' => false],
                 ])),
+                'events/222/attendees' => new Response(200, [], json_encode([
+                    'attendees' => [
+                        $this->attendee('Ana', 'García', 'ana.garcia@alum.us.es'),
+                        $this->attendee('Pedro', 'López', 'pedro.personal@gmail.com'),
+                    ],
+                    'pagination' => ['has_more_items' => false],
+                ])),
             });
 
         parent::setUp();
@@ -65,6 +72,46 @@ class EventbriteAttendeeImportTest extends TestCase
             Attendee::where('event_id', $event->id)->pluck('user_id')->all()
         );
         $this->assertSame(0, $juana->fresh()->attendees()->count());
+    }
+
+    public function test_loads_only_the_attendances_of_one_student_across_events(): void
+    {
+        $ana = $this->student('Ana', 'GARCIA', 'ana.garcia@alum.us.es');
+        $pedro = $this->student('Pedro', 'LOPEZ', 'pedro@alum.us.es');
+        $first = Event::forceCreate(['name' => 'Charla IA', 'id_eventbrite' => '111', 'hours' => 2]);
+        $second = Event::forceCreate(['name' => 'Taller Git', 'id_eventbrite' => '222', 'hours' => 1, 'hidden' => true]);
+        Event::forceCreate(['name' => 'Sesión a mano', 'hours' => 1]);
+        $coordinator = $this->coordinator();
+
+        $this->actingAs($coordinator)->get(route('registercoordinator.attendee.load.student'))->assertOk()->assertSee('Cargar asistencias');
+
+        $this->actingAs($coordinator)
+            ->post(route('registercoordinator.attendee.load.student.save'), ['user_id' => $ana->id])
+            ->assertRedirect(route('registercoordinator.attendee.list'))
+            ->assertSessionHas('success');
+
+        $this->assertEqualsCanonicalizing([$first->id, $second->id], $ana->fresh()->attendees()->pluck('event_id')->all());
+        $this->assertSame(0, $pedro->fresh()->attendees()->count());
+    }
+
+    public function test_a_coordinator_cannot_load_their_own_attendances(): void
+    {
+        Event::forceCreate(['name' => 'Charla IA', 'id_eventbrite' => '111', 'hours' => 2]);
+        $coordinator = $this->coordinator();
+
+        $this->actingAs($coordinator)
+            ->post(route('registercoordinator.attendee.load.student.save'), ['user_id' => $coordinator->id])
+            ->assertSessionHas('error');
+
+        $this->assertSame(0, Attendee::count());
+    }
+
+    private function coordinator(): User
+    {
+        $coordinator = User::factory()->create();
+        $coordinator->roles()->attach(Role::forceCreate(['rol' => 'REGISTER_COORDINATOR', 'slug' => 'register_coordinator']));
+
+        return $coordinator;
     }
 
     private function student(string $name, string $cleanSurname, string $email): User
