@@ -34,6 +34,21 @@
         <x-slot:actions>
             @if (Auth::user()->hasRole('LECTURE'))
                 <x-ui.button icon="import" :href="route('lecture.import')">Importar</x-ui.button>
+                <x-ui.dialog id="normalize-users" title="Arreglar los datos" trigger="Arreglar datos"
+                    trigger-icon="wand-sparkles" description="Se aplica a todas las cuentas salvo las del profesorado.">
+                    <form method="post" action="{{ route('management.user.normalize') }}" class="grid gap-3">
+                        @csrf
+                        <x-ui.choice name="fix_email" label="Poner el correo oficial"
+                            hint="UVUS@alum.us.es, salvo si ya lo usa otra cuenta" />
+                        <x-ui.choice name="fix_uppercase" label="Pasar nombres y apellidos a mayúsculas" />
+                        <x-ui.choice name="fix_access" label="Dar acceso a todos"
+                            hint="Desbloquea las cuentas bloqueadas" />
+                        <div class="mt-2 flex justify-end gap-2">
+                            <x-ui.button type="button" x-on:click="close">Cancelar</x-ui.button>
+                            <x-ui.button variant="primary" type="submit" icon="wand-sparkles">Arreglar</x-ui.button>
+                        </div>
+                    </form>
+                </x-ui.dialog>
                 <x-ui.dialog id="delete-all-users" variant="alert" title="Borrar todos los usuarios"
                     description="Se borrarán todos los usuarios salvo el tuyo, con sus evidencias, mensajes, avisos, asistencias y las reuniones que registraron. Esta acción no se puede deshacer."
                     trigger="Borrar todos" trigger-icon="trash-2">

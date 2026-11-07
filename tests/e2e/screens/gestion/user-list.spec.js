@@ -81,12 +81,28 @@ test.describe('Alumnos', () => {
         await expect(alert).toBeHidden();
     });
 
+    test('arreglar datos ofrece los tres arreglos y se puede cancelar', async ({ page, ui }) => {
+        await signIn(page, 'profesor');
+        await page.goto('/lecture/user/list');
+
+        await page.getByRole('button', { name: 'Arreglar datos' }).click();
+        const dialog = page.getByRole('dialog', { name: 'Arreglar los datos' });
+        await expect(dialog.getByLabel('Poner el correo oficial')).toBeVisible();
+        await expect(dialog.getByLabel('Pasar nombres y apellidos a mayúsculas')).toBeVisible();
+        await expect(dialog.getByLabel('Dar acceso a todos')).toBeVisible();
+        expect(await ui.axe()).toEqual([]);
+        await ui.noOverflow();
+        await dialog.getByRole('button', { name: 'Cancelar' }).click();
+        await expect(dialog).toBeHidden();
+    });
+
     test('el presidente no borra a todos ni importa', async ({ page, ui }) => {
         await signIn(page, 'presidente');
         await page.goto('/president/user/list');
 
         await expect(page.getByRole('heading', { level: 1, name: 'Alumnos' })).toBeVisible();
         await expect(page.getByRole('button', { name: 'Borrar todos' })).toHaveCount(0);
+        await expect(page.getByRole('button', { name: 'Arreglar datos' })).toHaveCount(0);
         await expect(page.getByRole('link', { name: 'Importar', exact: true })).toHaveCount(0);
         await expect(page.getByText('Romero Organvídez, David')).toHaveCount(0);
         await ui.noOverflow();

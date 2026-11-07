@@ -333,6 +333,7 @@ Route::middleware('auth')->group(function () {
 
         // User management delete all
         Route::post('management/user/delete/all', [ManagementController::class, 'user_management_delete_all'])->name('management.user.delete.all');
+        Route::post('management/user/normalize', [ManagementController::class, 'user_management_normalize'])->name('management.user.normalize');
 
     });
 

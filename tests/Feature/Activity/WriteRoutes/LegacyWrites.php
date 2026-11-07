@@ -134,6 +134,7 @@ final class LegacyWrites
             'management.user.new' => self::management('LECTURE', 'management.user.new', ['user.created'],
                 fn (array $ids) => ['name' => 'Lucía', 'surname' => 'Pérez', 'email' => 'lucia@alum.us.es', 'username' => 'lucper']),
             'management.user.delete.all' => self::management('LECTURE', 'management.user.delete.all', ['user.deleted']),
+            'management.user.normalize' => self::management('LECTURE', 'management.user.normalize', ['user.edited'], fn (array $ids) => ['fix_uppercase' => '1']),
             'randomize.save' => self::management('LECTURE', 'randomize.save', ['randomize.run']),
             'lecture.import.save' => self::management('LECTURE', 'lecture.import.save', ['import.users'], setup: function (TestCase $test, array $ids): void {
                 $spreadsheet = new Spreadsheet;

@@ -620,4 +620,56 @@ class ManagementController extends Controller
 
         return redirect()->route('lecture.user.list', [])->with('success', 'Usuarios borrados con éxito');
     }
+
+    // arregla de una vez los datos de los alumnos: correo oficial a partir del UVUS, nombres en mayúsculas y acceso abierto
+    public function user_management_normalize(Request $request)
+    {
+        $request->validate(['fix_email' => 'nullable|in:1', 'fix_uppercase' => 'nullable|in:1', 'fix_access' => 'nullable|in:1']);
+        if (! $request->hasAny(['fix_email', 'fix_uppercase', 'fix_access'])) {
+            return redirect()->route('lecture.user.list')->with('error', 'Elige al menos un arreglo.');
+        }
+
+        $changed = 0;
+        $skipped = 0;
+        $users = User::whereKeyNot(Auth::id())->whereDoesntHave('roles', fn ($query) => $query->where('rol', 'LECTURE'))->get();
+
+        foreach ($users as $user) {
+            $before = $this->user_snapshot($user);
+
+            if ($request->boolean('fix_email') && filled($user->username)) {
+                $email = mb_strtolower(trim($user->username)).'@alum.us.es';
+                if (User::where('email', $email)->whereKeyNot($user->id)->exists()) {
+                    $skipped++;
+                } else {
+                    $user->email = $email;
+                }
+            }
+            if ($request->boolean('fix_uppercase')) {
+                $user->name = mb_strtoupper((string) $user->name);
+                $user->surname = mb_strtoupper((string) $user->surname);
+            }
+            if ($request->boolean('fix_access')) {
+                $user->block = false;
+            }
+
+            if (! $user->isDirty()) {
+                continue;
+            }
+
+            DB::transaction(function () use ($user, $before) {
+                $user->save();
+                $this->record_user_changes($user, $before, $this->user_snapshot($user), false);
+            });
+            $changed++;
+        }
+
+        $message = $changed === 1 ? 'Datos arreglados en 1 usuario.' : "Datos arreglados en {$changed} usuarios.";
+        if ($skipped > 0) {
+            $message .= $skipped === 1
+                ? ' A 1 no se le cambió el correo porque ya lo usa otra cuenta.'
+                : " A {$skipped} no se les cambió el correo porque ya lo usan otras cuentas.";
+        }
+
+        return redirect()->route('lecture.user.list')->with('success', $message);
+    }
 }
