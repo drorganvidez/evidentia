@@ -124,8 +124,8 @@ final class Navigation
             if ($this->deadlines->isOpenForMenu(Deadline::Attendees)) {
                 $items[] = $item('Eventbrite', 'registercoordinator.token', 'key-round');
             }
-            $items[] = $item('Eventos', 'registercoordinator.event.list', 'calendar', ['registercoordinator.event.create', 'registercoordinator.event.edit']);
-            $items[] = $item('Asistencias', 'registercoordinator.attendee.list', 'user-check', ['attendee.create', 'attendee.edit']);
+            $items[] = $item('Eventos', 'registercoordinator.event.list', 'calendar', ['registercoordinator.event.create', 'registercoordinator.event.edit', 'registercoordinator.event.groups']);
+            $items[] = $item('Asistencias', 'registercoordinator.attendee.list', 'user-check', ['attendee.create', 'attendee.edit', 'attendee.import']);
             if (! $inboxShown && ! $management) {
                 $items[] = $inbox();
                 $inboxShown = true;
@@ -233,7 +233,7 @@ final class Navigation
             str_starts_with($route, 'coordinator.'), str_starts_with($route, 'president.review.') => Deadline::ValidateEvidences,
             str_starts_with($route, 'secretary.bonus.') => Deadline::Bonus,
             str_starts_with($route, 'secretary.') => Deadline::Meetings,
-            str_starts_with($route, 'registercoordinator.'), in_array($route, ['attendee.create', 'attendee.edit'], true) => Deadline::Attendees,
+            str_starts_with($route, 'registercoordinator.'), in_array($route, ['attendee.create', 'attendee.edit', 'attendee.import'], true) => Deadline::Attendees,
             default => null,
         };
         $section ??= array_intersect($roles, ['STUDENT', 'COORDINATOR', 'SECRETARY', 'REGISTER_COORDINATOR', 'PRESIDENT']) !== []
