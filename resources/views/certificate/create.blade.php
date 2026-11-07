@@ -22,13 +22,17 @@
             'hours' => 'Horas',
             'issued_at' => 'Fecha',
         ]">
-            <x-ui.field name="user_id" label="Persona" type="select" :options="$people" placeholder="Nadie de la plataforma" />
-            <x-ui.field name="recipient_name" label="Nombre" hint="Obligatorio si no eliges a nadie; si eliges a alguien, sustituye a su nombre" maxlength="255" />
+            <x-ui.field name="user_id" label="Persona" type="select" :options="$people"
+                placeholder="Nadie de la plataforma" />
+            <x-ui.field name="recipient_name" label="Nombre"
+                hint="Obligatorio si no eliges a nadie; si eliges a alguien, sustituye a su nombre" maxlength="255" />
             <x-ui.field name="title" label="Motivo" required maxlength="255"
                 hint="Completa la frase «por...», por ejemplo «impartir la charla Docker en producción»" />
-            <x-ui.field name="body" label="Texto" type="textarea" :rows="3" :maxlength="2000" hint="Opcional, aparece bajo el motivo" />
+            <x-ui.field name="body" label="Texto" type="textarea" :rows="3" :maxlength="2000"
+                hint="Opcional, aparece bajo el motivo" />
             <div class="grid gap-4 md:grid-cols-2">
-                <x-ui.field name="hours" label="Horas" type="number" suffix="h" inputmode="decimal" min="0" step="0.25" />
+                <x-ui.field name="hours" label="Horas" type="number" suffix="h" inputmode="decimal"
+                    min="0" step="0.25" />
                 <x-ui.field name="issued_at" label="Fecha" type="date" :value="now()->format('Y-m-d')" required />
             </div>
             <x-slot:actions>

@@ -14,18 +14,20 @@
                         @if ($certificate->hours)
                             <x-ui.dl.item term="Horas"><x-ui.hours :value="$certificate->hours" /></x-ui.dl.item>
                         @endif
-                        <x-ui.dl.item term="Emitido"><x-ui.time :value="$certificate->issued_at" format="absolute" pattern="d/m/Y" /></x-ui.dl.item>
+                        <x-ui.dl.item term="Emitido"><x-ui.time :value="$certificate->issued_at" format="absolute"
+                                pattern="d/m/Y" /></x-ui.dl.item>
                         <x-ui.dl.item term="Código" mono>{{ $certificate->code }}</x-ui.dl.item>
                     </x-ui.dl>
                 @else
                     <x-ui.alert tone="rejected" role="status" title="Código no válido">
-                        No hay ningún certificado con el código {{ $code }}. Puede estar mal escrito o haber sido revocado.
+                        No hay ningún certificado con el código {{ $code }}. Puede estar mal escrito o haber
+                        sido revocado.
                     </x-ui.alert>
                 @endif
             @endif
             <form method="get" action="{{ route('certificate.verify') }}" class="grid gap-4">
-                <x-ui.field name="code" label="Código de verificación" :value="$code" hint="Aparece al pie del PDF, por ejemplo ABCD-EFGH-JKMN"
-                    autocomplete="off" required />
+                <x-ui.field name="code" label="Código de verificación" :value="$code"
+                    hint="Aparece al pie del PDF, por ejemplo ABCD-EFGH-JKMN" autocomplete="off" required />
                 <div><x-ui.button type="submit" variant="primary" icon="search">Verificar</x-ui.button></div>
             </form>
         </div>

@@ -14,8 +14,7 @@
         lede="Consulta en Eventbrite todos los eventos del curso y guarda solo las asistencias de la persona elegida. Puede tardar si hay muchos eventos." />
 
     <x-ui.card title="Estudiante" :level="2" class="max-w-2xl">
-        <x-ui.form :action="route('registercoordinator.attendee.load.student.save')" id="attendee-load-student-form"
-            :fields="['user_id' => 'Estudiante']">
+        <x-ui.form :action="route('registercoordinator.attendee.load.student.save')" id="attendee-load-student-form" :fields="['user_id' => 'Estudiante']">
             <x-ui.field name="user_id" label="Estudiante" type="select" :options="$people" required />
             <x-slot:actions>
                 <x-ui.button type="submit" variant="primary" icon="download">Cargar asistencias</x-ui.button>

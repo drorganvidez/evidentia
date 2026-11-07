@@ -4,8 +4,16 @@
 --}}
 @php
     $tabs = [
-        ['label' => 'Acuerdos', 'href' => route('meeting.search', array_filter(['q' => $term])), 'current' => $tab === 'acuerdos'],
-        ['label' => 'Reuniones', 'href' => route('meeting.search', array_filter(['tab' => 'reuniones', 'q' => $term])), 'current' => $tab === 'reuniones'],
+        [
+            'label' => 'Acuerdos',
+            'href' => route('meeting.search', array_filter(['q' => $term])),
+            'current' => $tab === 'acuerdos',
+        ],
+        [
+            'label' => 'Reuniones',
+            'href' => route('meeting.search', array_filter(['tab' => 'reuniones', 'q' => $term])),
+            'current' => $tab === 'reuniones',
+        ],
     ];
 @endphp
 <x-layout.app title="Buscar acuerdos" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Buscar acuerdos']]">
@@ -13,19 +21,15 @@
         lede="Busca en las actas de todos los comités por palabras clave o por el identificador de un acuerdo." />
 
     @if ($tab === 'acuerdos')
-        <x-ui.table caption="Acuerdos" :columns="[
-            ['label' => 'Acuerdo'],
-            ['label' => 'Reunión'],
-            ['label' => 'Celebrada'],
-        ]" :paginator="$agreements" filterable
+        <x-ui.table caption="Acuerdos" :columns="[['label' => 'Acuerdo'], ['label' => 'Reunión'], ['label' => 'Celebrada']]" :paginator="$agreements" filterable
             filter-placeholder="Palabras o identificador" count-label="acuerdos" count-singular="acuerdo">
             <x-slot:toolbar>
                 <x-ui.tabs label="Buscar en" :items="$tabs" />
                 @if ($minutes)
                     <span class="inline-flex flex-wrap items-center gap-2 text-sm text-ink-muted">
                         Acuerdos de <strong class="text-ink">{{ $minutes->meeting?->title }}</strong>
-                        <x-ui.button size="sm" variant="ghost" icon="x"
-                            :href="route('meeting.search', array_filter(['q' => $term]))">Quitar filtro</x-ui.button>
+                        <x-ui.button size="sm" variant="ghost" icon="x" :href="route('meeting.search', array_filter(['q' => $term]))">Quitar
+                            filtro</x-ui.button>
                     </span>
                 @endif
             </x-slot:toolbar>
@@ -84,14 +88,14 @@
                             <x-ui.committee-chip :committee="$meeting->committee" />
                         @endif
                     </x-ui.table.cell>
-                    <x-ui.table.cell label="Acuerdos" numeric meta>{{ (int) $meeting->agreements_count }}</x-ui.table.cell>
+                    <x-ui.table.cell label="Acuerdos" numeric
+                        meta>{{ (int) $meeting->agreements_count }}</x-ui.table.cell>
                     <x-ui.table.cell label="Celebrada" meta>
                         <x-ui.time :value="$meeting->datetime" inline short />
                     </x-ui.table.cell>
                     <x-ui.table.cell tools>
                         @if ($meeting->agreements_count > 0)
-                            <x-ui.button size="sm" variant="ghost" icon="list" icon-only
-                                :label="'Ver los acuerdos de ' . $meeting->title"
+                            <x-ui.button size="sm" variant="ghost" icon="list" icon-only :label="'Ver los acuerdos de ' . $meeting->title"
                                 :href="route('meeting.search', ['acta' => $meeting->meetingMinutes->id])" />
                         @endif
                     </x-ui.table.cell>

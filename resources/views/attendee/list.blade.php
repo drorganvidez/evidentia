@@ -69,11 +69,7 @@
     </x-ui.table>
 
     @if ($diplomas->isNotEmpty())
-        <x-ui.table caption="Mis diplomas" :columns="[
-            ['label' => 'Diploma'],
-            ['label' => 'Emitido'],
-            ['label' => 'Acciones', 'srOnly' => true],
-        ]" class="mt-6">
+        <x-ui.table caption="Mis diplomas" :columns="[['label' => 'Diploma'], ['label' => 'Emitido'], ['label' => 'Acciones', 'srOnly' => true]]" class="mt-6">
             @foreach ($diplomas as $diploma)
                 <x-ui.table.row>
                     <x-ui.table.cell label="Diploma" primary>{{ $diploma->title }}</x-ui.table.cell>

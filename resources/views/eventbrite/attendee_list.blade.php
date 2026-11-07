@@ -23,8 +23,8 @@
             <x-ui.button icon="download" :href="route('registercoordinator.attendee.export')">Exportar</x-ui.button>
             @if ($open)
                 @if (\Config::eventbrite_token())
-                    <x-ui.button icon="download" :href="route('registercoordinator.attendee.load.student')"
-                        id="attendee-load-student">Cargar de un estudiante</x-ui.button>
+                    <x-ui.button icon="download" :href="route('registercoordinator.attendee.load.student')" id="attendee-load-student">Cargar de un
+                        estudiante</x-ui.button>
                 @endif
                 <x-ui.button icon="import" :href="route('attendee.import')" id="attendee-import">Importar</x-ui.button>
                 <x-ui.button variant="primary" icon="plus" :href="route('attendee.create')">Añadir

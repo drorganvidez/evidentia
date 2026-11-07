@@ -2,15 +2,24 @@
 @php
     $tabs = [
         ['label' => 'Todos', 'href' => route('certificate.index'), 'current' => $type === null],
-        ['label' => 'Diplomas', 'href' => route('certificate.index', ['tipo' => 'diplomas']), 'current' => $type === 'diplomas'],
-        ['label' => 'Asistencia', 'href' => route('certificate.index', ['tipo' => 'asistencia']), 'current' => $type === 'asistencia'],
+        [
+            'label' => 'Diplomas',
+            'href' => route('certificate.index', ['tipo' => 'diplomas']),
+            'current' => $type === 'diplomas',
+        ],
+        [
+            'label' => 'Asistencia',
+            'href' => route('certificate.index', ['tipo' => 'asistencia']),
+            'current' => $type === 'asistencia',
+        ],
     ];
 @endphp
 <x-layout.app title="Certificados y diplomas" :breadcrumbs="[['label' => 'Inicio', 'href' => route('home')], ['label' => 'Certificados y diplomas']]">
     <x-ui.page-header title="Certificados y diplomas"
         lede="Cada documento lleva un código que cualquiera comprueba en la página pública de verificación. Revocar uno invalida su código.">
         <x-slot:actions>
-            <x-ui.button variant="primary" icon="plus" :href="route('certificate.create')" id="certificate-create">Emitir diploma</x-ui.button>
+            <x-ui.button variant="primary" icon="plus" :href="route('certificate.create')" id="certificate-create">Emitir
+                diploma</x-ui.button>
         </x-slot:actions>
     </x-ui.page-header>
 
@@ -34,7 +43,8 @@
                 <x-ui.table.cell label="Documento">
                     <x-ui.badge :tone="$certificate->isDiploma() ? 'accepted' : 'notice'" size="sm">{{ $certificate->typeLabel() }}</x-ui.badge>
                 </x-ui.table.cell>
-                <x-ui.table.cell label="Código" meta><x-ui.badge variant="chip" mono>{{ $certificate->code }}</x-ui.badge></x-ui.table.cell>
+                <x-ui.table.cell label="Código" meta><x-ui.badge variant="chip"
+                        mono>{{ $certificate->code }}</x-ui.badge></x-ui.table.cell>
                 <x-ui.table.cell label="Emitido" meta>
                     <x-ui.time :value="$certificate->issued_at" format="absolute" pattern="d/m/Y" />
                 </x-ui.table.cell>
@@ -45,14 +55,17 @@
                         <x-ui.button size="sm" variant="ghost" icon="shield-check" icon-only :label="'Verificar ' . $certificate->code"
                             :href="$certificate->verifyUrl()" />
                         <x-ui.dialog :id="'revoke-certificate-' . $certificate->id" variant="alert" title="Revocar el certificado"
-                            :description="'El código ' . $certificate->code . ' dejará de ser válido. Esta acción no se puede deshacer.'" :trigger="'Revocar ' . $certificate->code"
-                            trigger-variant="ghost" trigger-icon="trash-2" trigger-icon-only>
+                            :description="'El código ' .
+                                $certificate->code .
+                                ' dejará de ser válido. Esta acción no se puede deshacer.'" :trigger="'Revocar ' . $certificate->code" trigger-variant="ghost" trigger-icon="trash-2"
+                            trigger-icon-only>
                             <x-slot:footer>
                                 <x-ui.button x-on:click="close" autofocus>Cancelar</x-ui.button>
                                 <form method="post" action="{{ route('certificate.destroy', $certificate->id) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <x-ui.button variant="danger" type="submit" icon="trash-2" block>Sí, revocar</x-ui.button>
+                                    <x-ui.button variant="danger" type="submit" icon="trash-2" block>Sí,
+                                        revocar</x-ui.button>
                                 </form>
                             </x-slot:footer>
                         </x-ui.dialog>
