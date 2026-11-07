@@ -9,7 +9,7 @@ test.describe('Registro de actividad', () => {
 
     test('la gestión filtra, ve las señaladas y agrupa una acción', async ({ page, ui }) => {
         await signIn(page, 'profesor');
-        await page.goto('/activity');
+        await page.goto('/activity?per_page=25');
 
         await expect(
             page.getByRole('heading', { level: 1, name: 'Registro de actividad' }),
@@ -32,7 +32,7 @@ test.describe('Registro de actividad', () => {
         await expect(table.getByText('Señalada, Autorrevisión', { exact: false })).toHaveCount(1);
         await expect(table.getByText('Comité editado')).toHaveCount(0);
 
-        await page.goto('/activity');
+        await page.goto('/activity?per_page=25');
         await table
             .getByRole('row')
             .filter({ hasText: 'Hoja de firmas creada' })
