@@ -163,6 +163,9 @@ class PageAccessTest extends TestCase
         return [
             'home' => [[], self::EVERYONE],
             'login' => [[], [self::GUEST]],
+            'sso.redirect' => [[], []],
+            'sso.callback' => [[], []],
+            'sso.mock' => [[], []],
             'block' => [[], []],
             'profile.view' => [[], self::EVERYONE],
             'password.custom_reset' => [[], [self::GUEST]],

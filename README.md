@@ -113,6 +113,23 @@ Every response carries a strict, nonce-based Content Security Policy (no `unsafe
 
 The client address and scheme come from the `X-Forwarded-*` headers of the reverse proxies in front of the app (`bootstrap/app.php`).
 
+## University of Seville SSO (CAS / SAML)
+
+Evidentia supports signing in with the institutional identity of the University of Seville (`uvus`) alongside the local password form. The button **"Entrar con la cuenta de la US"** on `/login` and the `/auth/sso/*` routes are only active when the integration is configured in `.env` (`config/services.php`).
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `US_SSO_ENABLED` | `false` | Enables the University of Seville SSO integration and shows the button on `/login` when `US_SSO_BASE_URL` is also set. |
+| `US_SSO_BASE_URL` | `https://sso.us.es/cas` | Base URL of the institutional CAS / SAML identity server of the University of Seville. |
+| `US_SSO_LOGIN_PATH` | `/login` | Relative path where the browser is redirected with `?service=<callback_url>`. |
+| `US_SSO_VALIDATE_PATH` | `/p3/serviceValidate` | Relative path used by the backend to validate the CAS `ticket` (`ST-...`) over HTTPS and extract `<cas:user>` or `<cas:uvus>` / `<cas:uid>`. |
+| `US_SSO_MOCK_ENABLED` | `false` | Local development simulator (`/auth/sso/mock`) to test the SSO callback from the browser with any `uvus` without connecting to the private US network. Automatically disabled in `production`. |
+
+- **Account matching and access control.** SSO does not create accounts on the fly: the authenticated `uvus` is matched case-insensitively against `users.username` (populated when accounts are imported via CSV/XLSX). If the `uvus` is not imported in the database, access is denied and `/login` shows a clear rejection notice (`Tu cuenta UVUS («...») no está importada o autorizada en Evidentia.`).
+- **Audit log.** Successful SSO sign-ins dispatch the standard authentication event and are recorded in `activity_log` with `action = login` and `via = form`, identical to a local password login. Unimported `uvus` attempts or invalid tickets are recorded as `login_failed`.
+- **US CAS / SAML protocol and registration requirements.** To enable SSO in production, the service URL `${APP_URL}/auth/sso/callback` (for example, `https://evidentia.us.es/auth/sso/callback`) must be registered and authorised with the *Servicio de Informática y Comunicaciones (SIC)* of the University of Seville so that `sso.us.es` issues service tickets for the domain and releases the user's `uvus` (`cas:user` / `uid`).
+- **Manual testing in local development (`US_SSO_MOCK_ENABLED=true`).** Set `US_SSO_MOCK_ENABLED=true` in `.env` and open `http://localhost:8000/login`. Clicking **"Entrar con la cuenta de la US"** opens the local simulator (`/auth/sso/mock`), where you can enter any `uvus` (for example, `profesor1` or `user1` for an imported user, or `noimportado` to verify the rejection alert).
+
 ## Quality
 
 The commands below run inside the containers of `docker-compose.dev.yml`; with PHP and Node installed on the host they also run directly.

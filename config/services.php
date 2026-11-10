@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    'us_sso' => [
+        'enabled' => (bool) env('US_SSO_ENABLED', false),
+        'base_url' => env('US_SSO_BASE_URL', 'https://sso.us.es/cas'),
+        'login_path' => env('US_SSO_LOGIN_PATH', '/login'),
+        'validate_path' => env('US_SSO_VALIDATE_PATH', '/p3/serviceValidate'),
+        'mock_enabled' => (bool) env('US_SSO_MOCK_ENABLED', false),
+    ],
+
 ];
