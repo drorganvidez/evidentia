@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Configuration;
 use App\Models\Evidence;
 use App\Models\Role;
+use App\Services\Auth\UsSsoService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -45,7 +46,7 @@ class LoginController extends Controller
     /**
      * The access page with the figures of the edition: the hours and the evidences accepted and the students.
      */
-    public function showLoginForm(): View
+    public function showLoginForm(UsSsoService $sso): View
     {
         $accepted = Evidence::where('last', true)->where('status', 'ACCEPTED');
         $students = Role::where('rol', 'STUDENT')->first();
@@ -57,6 +58,7 @@ class LoginController extends Controller
                 'evidences' => (clone $accepted)->count(),
                 'students' => $students?->users()->count() ?? 0,
             ],
+            'ssoEnabled' => $sso->isEnabled(),
         ]);
     }
 }
