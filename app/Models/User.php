@@ -39,6 +39,11 @@ class User extends Authenticatable
         return $this->hasMany(Evidence::class);
     }
 
+    public function workSessions(): HasMany
+    {
+        return $this->hasMany(WorkSession::class);
+    }
+
     /** Evidences of other students where this one is a coauthor, every version included. */
     public function coauthoredEvidences()
     {
