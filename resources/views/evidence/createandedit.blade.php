@@ -43,15 +43,15 @@
                 @endif
                 <input type="hidden" name="removed_files" id="removed_files">
 
-                <x-ui.field name="title" label="Título" :value="$evidence->title ?? null" required hint="Al menos 5 caracteres" />
+                <x-ui.field name="title" label="Título" :value="$evidence->title ?? ($prefill['title'] ?? null)" required hint="Al menos 5 caracteres" />
 
                 <fieldset class="grid gap-1.5">
                     <legend class="mb-1.5 text-sm font-semibold">Duración</legend>
                     <div class="grid grid-cols-2 gap-3">
                         <x-ui.field name="hours" label="Horas" type="number" suffix="h" inputmode="decimal"
-                            min="0" max="99" step="0.01" :value="\Time::complex_shape_hours($evidence->hours ?? '')" />
+                            min="0" max="99" step="0.01" :value="$prefill['hours'] ?? \Time::complex_shape_hours($evidence->hours ?? '')" />
                         <x-ui.field name="minutes" label="Minutos" type="number" suffix="min" inputmode="numeric"
-                            min="0" max="60" :value="\Time::complex_shape_minutes($evidence->hours ?? '')" />
+                            min="0" max="60" :value="$prefill['minutes'] ?? \Time::complex_shape_minutes($evidence->hours ?? '')" />
                     </div>
                 </fieldset>
 
