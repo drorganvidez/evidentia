@@ -11,19 +11,19 @@
 @endphp
 <div x-data="workTimer" data-state="{{ json_encode($state, JSON_THROW_ON_ERROR) }}"
     data-base-url="{{ $baseUrl }}" data-create-url="{{ $createUrl }}" x-on:keydown.escape.prevent="close"
-    class="relative inline-block">
+    class="inline-block md:relative">
     <button type="button" id="work-timer-trigger" aria-haspopup="dialog" aria-controls="work-timer-panel"
-        aria-expanded="false" x-bind:aria-expanded="open ? 'true' : 'false'" x-bind:aria-label="triggerLabel"
-        x-on:click="toggle"
+        aria-expanded="false" x-bind:aria-expanded="open ? 'true' : 'false'" x-on:click="toggle"
         class="inline-flex h-9 items-center gap-1.5 rounded-full px-2.5 text-ink-muted transition hover:bg-glass-2 hover:text-ink pointer-coarse:min-h-11 pointer-coarse:min-w-11">
         <x-lucide-timer class="size-4.5 shrink-0" aria-hidden="true" />
-        <span x-show="hasActive" x-text="activeClock"
+        <span class="sr-only" x-text="triggerLabel">Cronómetro de trabajo</span>
+        <span aria-hidden="true" x-show="hasActive" x-text="activeClock"
             class="font-mono text-xs font-semibold tabular-nums text-brand-ink"></span>
     </button>
 
     <div id="work-timer-panel" role="dialog" aria-label="Cronómetro de trabajo" hidden x-bind:hidden="!open"
         x-on:click.outside="onOutsideClick"
-        class="glass absolute right-0 top-[calc(100%+0.5rem)] z-30 grid w-[min(22rem,calc(100vw-1.5rem))] gap-4 rounded-xl p-4 text-sm text-ink shadow-glow">
+        class="glass absolute inset-x-0 top-[calc(100%+0.5rem)] z-30 grid gap-4 rounded-xl p-4 text-sm text-ink shadow-glow md:inset-x-auto md:right-0 md:w-[22rem]">
         <div class="flex items-center justify-between gap-2">
             <span class="font-bold tracking-tight text-ink">Cronómetro de trabajo</span>
             <span x-text="statusLabel"
@@ -32,7 +32,7 @@
 
         <div class="grid gap-3">
             <label for="work-timer-title" class="grid gap-1">
-                <span class="text-xs font-semibold text-ink">Título de la sesión</span>
+                <span class="text-xs font-semibold text-ink">Nombre de la sesión</span>
                 <input id="work-timer-title" type="text" x-model="title" x-on:keydown.enter.prevent="start"
                     placeholder="Ej. Montaje del stand" maxlength="255" autocomplete="off"
                     class="h-10 w-full rounded-md border border-field-edge bg-field px-3 text-sm text-ink outline-none placeholder:text-ink-muted focus:border-aurora-500">
