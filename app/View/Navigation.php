@@ -3,11 +3,13 @@
 namespace App\View;
 
 use App\Enums\Deadline;
+use App\Http\Controllers\WorkSessionController;
 use App\Models\ErrorReport;
 use App\Models\MessageThread;
 use App\Models\User;
 use App\Services\Deadlines;
 use App\Services\ReviewQueue;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Navigation of the signed-in person for x-layout.app: the groups of the sidebar by role, the bottom bar of the
@@ -29,7 +31,7 @@ final class Navigation
     ];
 
     /**
-     * @return array{nav: list<array{label: ?string, items: list<array<string, mixed>>}>, mobileNav: list<array<string, mixed>>, deadline: ?array<string, mixed>}
+     * @return array{nav: list<array{label: ?string, items: list<array<string, mixed>>}>, mobileNav: list<array<string, mixed>>, deadline: ?array<string, mixed>, notifications: array<string, mixed>, timer: ?array<string, mixed>}
      */
     public function for(User $user, ?string $route): array
     {
@@ -74,10 +76,13 @@ final class Navigation
         ]];
 
         // Everybody but a lecturer on their own has evidences, meetings and (students) attendances
+        $timer = null;
         if (array_diff($roles, ['LECTURE']) !== []) {
             $mine = [];
             if ($this->deadlines->isOpenForMenu(Deadline::UploadEvidences)) {
                 $mine[] = $item('Nueva evidencia', 'evidence.create', 'plus');
+                // The work stopwatch of the topbar fills the duration of a new evidence, so it lives while they can be sent
+                $timer = Schema::hasTable('work_sessions') ? WorkSessionController::stateFor($user) : null;
             }
             $mine[] = $item('Mis evidencias', 'evidence.list', 'file-text', ['evidence.view', 'evidence.edit']);
             $mine[] = $item('Mis reuniones', 'meeting.list', 'handshake');
@@ -179,6 +184,8 @@ final class Navigation
             'deadline' => $this->deadline($roles, $route),
             // The bell of the topbar: unread notices and the inbox
             'notifications' => ['count' => $user->unreadNotifications()->count(), 'href' => route('notifications.index')],
+            // The stopwatch of the topbar: the open session and the recent ones; null when the person cannot create evidences
+            'timer' => $timer,
         ];
     }
 

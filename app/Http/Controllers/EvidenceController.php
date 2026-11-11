@@ -13,6 +13,7 @@ use App\Models\Evidence;
 use App\Models\File;
 use App\Models\Proof;
 use App\Models\User;
+use App\Models\WorkSession;
 use App\Rules\CheckHoursAndMinutes;
 use App\Rules\MaxCharacters;
 use App\Rules\MinCharacters;
@@ -86,7 +87,7 @@ class EvidenceController extends Controller
      * CREATE AN EVIDENCE
      ****************************************************************************/
 
-    public function create()
+    public function create(Request $request)
     {
 
         $committees = Committee::all();
@@ -94,7 +95,37 @@ class EvidenceController extends Controller
         return view('evidence.createandedit', ['route_draft' => route('evidence.draft'),
             'route_publish' => route('evidence.publish'),
             'committees' => $committees,
-            'students' => $this->coauthor_options()]);
+            'students' => $this->coauthor_options(),
+            'prefill' => $this->prefillFromSessions($request)]);
+    }
+
+    /**
+     * Title and duration of the work sessions of the stopwatch chosen with ?sessions[]=id. Only the sessions of the
+     * signed-in person count: the ids of other people are ignored as if they did not exist.
+     *
+     * @return array{title: string, hours: int, minutes: int}|null
+     */
+    private function prefillFromSessions(Request $request): ?array
+    {
+        $ids = collect((array) $request->input('sessions', []))
+            ->filter(fn ($id) => is_scalar($id) && ctype_digit((string) $id))
+            ->map(fn ($id) => (int) $id)
+            ->unique()
+            ->values();
+
+        if ($ids->isEmpty()) {
+            return null;
+        }
+
+        $sessions = WorkSession::query()
+            ->where('user_id', Auth::id())
+            ->where('status', WorkSession::STATUS_STOPPED)
+            ->whereIn('id', $ids->all())
+            ->orderBy('stopped_at')
+            ->orderBy('id')
+            ->get();
+
+        return $sessions->isEmpty() ? null : WorkSession::summarizeSessions($sessions);
     }
 
     public function draft(Request $request)
