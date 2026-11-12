@@ -69,7 +69,7 @@ services:
     restart: always
 
   redis:
-    image: redis:7
+    image: redis:8
     container_name: evidentia_redis_container
     restart: unless-stopped
     networks:
