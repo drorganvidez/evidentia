@@ -99,6 +99,7 @@ class ActivityPresenterTest extends TestCase
             ['evidence.accepted', ['before' => 'PENDING'], null],
             ['evidence.rejected', ['reason' => 'Falta el certificado.'], '«Falta el certificado.»'],
             ['evidence.moved', ['before' => ['committee_name' => 'Programa'], 'after' => ['committee_name' => 'Logística'], 'status' => 'PENDING'], 'Programa → Logística'],
+            ['evidence.coauthor_left', ['version' => 2], 'Versión 2'],
             ['request.created', ['datetime' => '2026-11-20 10:30:00', 'place' => 'Aula A3.10'], '20/11/2026 10:30 · Aula A3.10'],
             ['request.deleted', ['sheet_unlinked' => true], 'Hoja desvinculada'],
             ['sheet.deleted', ['signatures_count' => 12], '12 firmas'],

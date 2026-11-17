@@ -51,5 +51,16 @@ test.describe('Evidencias en coautoría', () => {
         await expect(page.getByRole('term').filter({ hasText: 'Coautores' })).toBeVisible();
         await expect(page.getByRole('link', { name: 'Editar', exact: true })).toHaveCount(0);
         await audit(page, ui);
+
+        await page.getByRole('button', { name: 'Dejar de ser coautor', exact: true }).click();
+        const dialog = page.getByRole('alertdialog');
+        await expect(dialog).toBeVisible();
+        expect(await ui.axe(), 'axe con el diálogo de baja').toEqual([]);
+        await dialog.getByRole('button', { name: 'Sí, dejar de ser coautor' }).click();
+
+        await expect(
+            page.getByText('Has dejado de figurar como coautor en la evidencia.').first(),
+        ).toBeVisible();
+        await expect(page.getByRole('link', { name: title, exact: true })).toHaveCount(0);
     });
 });

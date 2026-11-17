@@ -110,8 +110,26 @@
                         <x-ui.evidence-status :status="$evidence->status" size="sm" />
                     </x-ui.table.cell>
                     <x-ui.table.cell actions>
-                        <x-ui.button icon-only icon="eye" :label="'Abrir ' . $evidence->title" :href="$href" variant="ghost"
-                            size="sm" dim />
+                        <div class="flex items-center justify-end gap-1">
+                            <x-ui.button icon-only icon="eye" :label="'Abrir ' . $evidence->title" :href="$href" variant="ghost"
+                                size="sm" dim />
+                            @if ($evidence->last && in_array($evidence->status, ['PENDING', 'ACCEPTED'], true))
+                                <x-ui.dialog :id="'leave-coauthor-' . $evidence->id" variant="alert" title="Dejar de ser coautor"
+                                    description="Dejarás de figurar en esta evidencia, sus horas no contarán en tu cómputo y se avisará a su autor."
+                                    :trigger="'Dejar de ser coautor de ' . $evidence->title" trigger-icon="log-out" trigger-icon-only trigger-variant="ghost">
+                                    <x-slot:footer>
+                                        <x-ui.button x-on:click="close" autofocus>Cancelar</x-ui.button>
+                                        <form method="post" action="{{ route('evidence.coauthor.leave') }}">
+                                            @csrf
+                                            <input type="hidden" name="_id" value="{{ $evidence->id }}">
+                                            <x-ui.button variant="danger" type="submit" icon="log-out" block>Sí, dejar
+                                                de ser
+                                                coautor</x-ui.button>
+                                        </form>
+                                    </x-slot:footer>
+                                </x-ui.dialog>
+                            @endif
+                        </div>
                     </x-ui.table.cell>
                 </x-ui.table.row>
             @endforeach

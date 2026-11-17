@@ -10,8 +10,10 @@ use App\Models\Role;
 use App\Models\User;
 use App\Notifications\Events\EvidenceAccepted;
 use App\Notifications\Events\EvidenceCoauthored;
+use App\Notifications\Events\EvidenceCoauthorLeft;
 use App\Services\Activity\ActivityAccess;
 use App\Services\EvidenceReview;
+use App\View\ManagementDashboard;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
@@ -120,6 +122,116 @@ class EvidenceCoauthorTest extends TestCase
 
         $this->assertEquals(4.0, $this->partner->fresh()->evidences_computed_hours());
         $this->assertEquals(4.0, $this->partner->fresh()->total_computed_hours());
+    }
+
+    public function test_a_coauthor_can_leave_a_pending_or_accepted_evidence_and_the_author_is_notified(): void
+    {
+        $this->actingAs($this->author)->post(route('evidence.publish'), $this->form([$this->partner->id]));
+        $evidence = Evidence::sole();
+
+        // Even with the upload deadline closed, a coauthor can leave
+        Configuration::query()->update(['upload_evidences_timestamp' => now()->subDay()]);
+
+        $this->actingAs($this->partner)->get(route('evidence.list'))
+            ->assertOk()
+            ->assertSee('Dejar de ser coautor')
+            ->assertSee('action="'.route('evidence.coauthor.leave').'"', false);
+
+        $this->get(route('evidence.view', ['id' => $evidence->id]))
+            ->assertOk()
+            ->assertSee('Dejar de ser coautor')
+            ->assertSee('action="'.route('evidence.coauthor.leave').'"', false);
+
+        $this->post(route('evidence.coauthor.leave'), ['_id' => $evidence->id])
+            ->assertRedirect(route('evidence.list'))
+            ->assertSessionHas('success', 'Has dejado de figurar como coautor en la evidencia.');
+
+        $this->assertSame([], $evidence->fresh()->coauthors->pluck('id')->all());
+
+        $log = ActivityLog::where('action', 'evidence.coauthor_left')->sole();
+        $this->assertSame($this->partner->id, $log->user_id);
+        $this->assertSame('STUDENT', $log->acting_role);
+        $this->assertSame($this->author->id, $log->target_user_id);
+        $this->assertFalse($log->flagged);
+        $this->assertSame(1, $log->details['version']);
+
+        Notification::assertSentTo($this->author, EvidenceCoauthorLeft::class, function (EvidenceCoauthorLeft $notice) use ($evidence): bool {
+            $data = $notice->toArray($this->author);
+            $this->assertSame('Un coautor ha dejado tu evidencia', $data['title']);
+            $this->assertSame('/activity/evidence/'.$evidence->id, $data['url']);
+            $this->assertStringContainsString('Talleres de robótica', $notice->mailSubject($this->author));
+
+            return true;
+        });
+        Notification::assertNotSentTo($this->partner, EvidenceCoauthorLeft::class);
+
+        $this->actingAs($this->author)->get(route('activity.evidence', ['id' => $evidence->id]))
+            ->assertOk()
+            ->assertSee('Coautoría abandonada');
+        $this->get(route('evidence.view', ['id' => $evidence->id]))
+            ->assertOk()
+            ->assertSee('Coautoría abandonada');
+    }
+
+    public function test_leaving_an_accepted_evidence_recalculates_the_hours_and_the_management_dashboard(): void
+    {
+        $other = $this->user('STUDENT');
+        $lecturer = $this->user('LECTURE');
+        $this->actingAs($this->author)->post(route('evidence.publish'), $this->form([$this->partner->id, $other->id]));
+        $evidence = Evidence::sole();
+
+        $this->actingAs($this->user('COORDINATOR'));
+        app(EvidenceReview::class)->accept($evidence, 'COORDINATOR');
+
+        $dashboard = app(ManagementDashboard::class);
+        $this->assertEquals(10.5, $dashboard->for($lecturer)['kpis']['hours']);
+        $this->assertEquals(3.5, $this->partner->fresh()->evidences_accepted_hours());
+
+        $this->actingAs($this->partner)->post(route('evidence.coauthor.leave'), ['_id' => $evidence->id])
+            ->assertRedirect(route('evidence.list'));
+
+        $this->assertEquals(0, $this->partner->fresh()->evidences_accepted_hours());
+        $this->assertEquals(0, $this->partner->fresh()->evidences_computed_hours());
+        $this->assertEquals(0, $this->partner->fresh()->total_computed_hours());
+        $this->assertSame(0, $this->partner->fresh()->evidences_accepted_count());
+
+        $this->assertEquals(3.5, $this->author->fresh()->evidences_accepted_hours());
+        $this->assertEquals(3.5, $other->fresh()->evidences_accepted_hours());
+        $this->assertEquals(7.0, $dashboard->for($lecturer)['kpis']['hours']);
+    }
+
+    public function test_only_a_coauthor_of_the_current_pending_or_accepted_version_can_leave(): void
+    {
+        $stranger = $this->user('STUDENT');
+        $this->actingAs($this->author)->post(route('evidence.draft'), $this->form([$this->partner->id]));
+        $first = Evidence::sole();
+
+        // Draft cannot be left
+        $this->actingAs($this->partner)->post(route('evidence.coauthor.leave'), ['_id' => $first->id])->assertNotFound();
+
+        // Publish a second version with the same coauthor
+        $this->actingAs($this->author)->post(route('evidence.publish.edit'), ['_id' => $first->id] + $this->form([$this->partner->id]));
+        $current = Evidence::where('last', true)->sole();
+
+        // Author, stranger and old version cannot leave
+        $this->actingAs($this->author)->post(route('evidence.coauthor.leave'), ['_id' => $current->id])->assertNotFound();
+        $this->actingAs($stranger)->post(route('evidence.coauthor.leave'), ['_id' => $current->id])->assertNotFound();
+        $this->actingAs($this->partner)->post(route('evidence.coauthor.leave'), ['_id' => $first->id])->assertNotFound();
+
+        // Rejected cannot be left either
+        $current->update(['status' => 'REJECTED']);
+        $this->actingAs($this->partner)->get(route('evidence.view', ['id' => $current->id]))
+            ->assertOk()
+            ->assertDontSee('action="'.route('evidence.coauthor.leave').'"', false);
+        $this->post(route('evidence.coauthor.leave'), ['_id' => $current->id])->assertNotFound();
+
+        // Once pending again, leaving only detaches from the current version
+        $current->update(['status' => 'PENDING']);
+        $this->actingAs($this->partner)->post(route('evidence.coauthor.leave'), ['_id' => $current->id])
+            ->assertRedirect(route('evidence.list'));
+
+        $this->assertSame([], $current->fresh()->coauthors->pluck('id')->all());
+        $this->assertSame([$this->partner->id], $first->fresh()->coauthors->pluck('id')->all());
     }
 
     private function user(string $role): User
