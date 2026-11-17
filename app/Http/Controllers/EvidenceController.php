@@ -503,4 +503,35 @@ class EvidenceController extends Controller
 
         return redirect()->route('evidence.list')->with('success', 'Evidencia reasignada como borrador con éxito.');
     }
+
+    /****************************************************************************
+     * LEAVE COAUTHORSHIP
+     ****************************************************************************/
+
+    public function leave_coauthorship(Request $request)
+    {
+        $user = Auth::user();
+        $evidence = Evidence::findOrFail($request->_id);
+
+        if (! $evidence->last || ! in_array($evidence->status, ['PENDING', 'ACCEPTED'], true) || ! $evidence->hasCoauthor($user)) {
+            abort(404);
+        }
+
+        DB::transaction(function () use ($evidence, $user) {
+            $evidence->coauthors()->detach($user->id);
+
+            Activity::record(
+                ActivityAction::EvidenceCoauthorLeft,
+                $evidence,
+                $evidence->user,
+                details: [
+                    'status' => $evidence->status,
+                    'hours' => (float) $evidence->hours,
+                    'version' => $evidence->versionNumber(),
+                ],
+            );
+        });
+
+        return redirect()->route('evidence.list')->with('success', 'Has dejado de figurar como coautor en la evidencia.');
+    }
 }

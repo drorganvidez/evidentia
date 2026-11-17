@@ -122,6 +122,7 @@ final class ActivityPresenter
             'proof.uploaded', 'proof.deleted' => [$this->text($d['file'] ?? null)],
             'evidence.rejected' => [filled($d['reason'] ?? null) ? '«'.$d['reason'].'»' : null],
             'evidence.moved' => [$this->arrow($d['before']['committee_name'] ?? null, $d['after']['committee_name'] ?? null)],
+            'evidence.coauthor_left' => [$version !== null ? 'Versión '.$version : null],
             'request.created' => [$this->date($d['datetime'] ?? null), $this->text($d['place'] ?? null)],
             'request.deleted' => [! empty($d['sheet_unlinked']) ? 'Hoja desvinculada' : null],
             'sheet.deleted' => [$this->count($d['signatures_count'] ?? null, 'firma', 'firmas')],

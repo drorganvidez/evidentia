@@ -16,6 +16,7 @@ use Tests\Feature\Activity\AuthenticationActivityTest;
 use Tests\Feature\Activity\EventbriteSyncActivityTest;
 use Tests\Feature\CertificateTest;
 use Tests\Feature\EventbriteAttendeeImportTest;
+use Tests\Feature\EvidenceCoauthorTest;
 use Tests\TestCase;
 
 /**
@@ -410,6 +411,7 @@ final class LegacyWrites
             'registercoordinator.attendee.load.student.save' => EventbriteAttendeeImportTest::class,
             'certificate.store' => CertificateTest::class,
             'certificate.destroy' => CertificateTest::class,
+            'evidence.coauthor.leave' => EvidenceCoauthorTest::class,
         ];
     }
 

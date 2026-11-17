@@ -384,6 +384,9 @@ Route::middleware('auth')->group(function () {
     // EVIDENCES
     Route::get('evidence/list', [EvidenceController::class, 'list'])->name('evidence.list');
     Route::get('evidence/archive', [EvidenceController::class, 'archive'])->name('evidence.archive');
+    Route::post('evidence/coauthor/leave', [EvidenceController::class, 'leave_coauthorship'])
+        ->middleware(CheckNotNull::class.':Evidence')
+        ->name('evidence.coauthor.leave');
 
     Route::middleware([CheckUploadEvidences::class])->group(function () {
         Route::get('evidence/create', [EvidenceController::class, 'create'])->name('evidence.create');

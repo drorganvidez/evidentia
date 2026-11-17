@@ -30,6 +30,7 @@ enum ActivityAction: string
     case EvidenceAccepted = 'evidence.accepted';
     case EvidenceRejected = 'evidence.rejected';
     case EvidenceMoved = 'evidence.moved';
+    case EvidenceCoauthorLeft = 'evidence.coauthor_left';
 
     // Reuniones
     case RequestCreated = 'request.created';
@@ -142,6 +143,7 @@ enum ActivityAction: string
         'evidence.rejected' => ['Evidencia rechazada', 'rejected', 'evidence', Deadline::ValidateEvidences],
         // el plazo depende del estado de la evidencia movida y lo pasa EvidenceMover
         'evidence.moved' => ['Evidencia movida de comité', 'notice', 'evidence', null],
+        'evidence.coauthor_left' => ['Coautoría abandonada', 'draft', 'evidence', null],
 
         // convocatorias y hojas de firmas no tienen plazo
         'request.created' => ['Convocatoria creada', 'pending', 'meetings', null],
