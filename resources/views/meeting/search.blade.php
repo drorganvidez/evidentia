@@ -24,8 +24,8 @@
     <x-ui.page-header title="Buscar acuerdos"
         lede="Busca en las actas de todos los comités por palabras clave o por el identificador de un acuerdo." />
 
-    <x-ui.filter-bar :action="$search" label="Filtros de acuerdos" :open="$active > 0" :active="$active"
-        :reset-href="$reset" :keep="ListPage::query(['comite', 'desde', 'hasta'])" id="agreement-filters">
+    <x-ui.filter-bar :action="$search" label="Filtros de acuerdos" :open="$active > 0" :active="$active" :reset-href="$reset"
+        :keep="ListPage::query(['comite', 'desde', 'hasta'])" id="agreement-filters">
         <x-ui.field name="comite" label="Comité" type="select" :options="[['value' => '', 'label' => 'Todos'], ...$committees]" :value="(string) ($filters['comite'] ?? '')" />
         <x-ui.field name="desde" label="Celebrada desde" type="date" :value="$filters['desde']?->format('Y-m-d')" />
         <x-ui.field name="hasta" label="Celebrada hasta" type="date" :value="$filters['hasta']?->format('Y-m-d')" />
