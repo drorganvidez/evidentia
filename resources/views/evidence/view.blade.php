@@ -19,6 +19,12 @@
     };
     $reviewRoutes = $kind === null ? null : \App\Services\ReviewQueue::routes($kind);
     $author = !$reviewer && $evidence->user_id === $user->id;
+    $canLeaveCoauthorship =
+        !$author &&
+        !$reviewer &&
+        $evidence->last &&
+        in_array($evidence->status, ['PENDING', 'ACCEPTED'], true) &&
+        $evidence->hasCoauthor($user);
     $validationOpen = !now()->gt(\Config::validate_evidences_timestamp() ?? now());
     $uploadClosesAt = \Config::upload_evidences_timestamp();
     $uploadOpen = !now()->gt($uploadClosesAt);
@@ -36,6 +42,12 @@
         ],
     );
     // Newest first; events of the same second keep their order (versions, then rejections by id)
+    $coauthorLeft = \App\Models\ActivityLog::query()
+        ->about($evidence)
+        ->where('action', \App\Enums\ActivityAction::EvidenceCoauthorLeft->value)
+        ->with('user')
+        ->orderBy('id')
+        ->get();
     $history = $versions
         ->sortBy('created_at')
         ->map(
@@ -53,6 +65,16 @@
                     'tone' => 'rejected',
                     'title' => 'Rechazada',
                     'text' => $rejection->reason,
+                ],
+            ),
+        )
+        ->concat(
+            $coauthorLeft->map(
+                fn($entry) => [
+                    'at' => $entry->created_at,
+                    'tone' => 'draft',
+                    'title' => 'Coautoría abandonada',
+                    'text' => $entry->user ? trim($entry->user->name . ' ' . $entry->user->surname) : $entry->user_name,
                 ],
             ),
         )
@@ -121,6 +143,21 @@
             @if ($canMove)
                 <x-ui.button icon="arrow-right-left"
                     :href="route('activity.evidence', ['id' => $evidence->id, 'move' => 1])">{{ $author ? 'Cambiar de comité' : 'Mover a otro comité' }}</x-ui.button>
+            @endif
+            @if ($canLeaveCoauthorship)
+                <x-ui.dialog id="leave-coauthor" variant="alert" title="Dejar de ser coautor"
+                    description="Dejarás de figurar en esta evidencia, sus horas no contarán en tu cómputo y se avisará a su autor."
+                    trigger="Dejar de ser coautor" trigger-icon="log-out" trigger-variant="danger">
+                    <x-slot:footer>
+                        <x-ui.button x-on:click="close" autofocus>Cancelar</x-ui.button>
+                        <form method="post" action="{{ route('evidence.coauthor.leave') }}">
+                            @csrf
+                            <input type="hidden" name="_id" value="{{ $evidence->id }}">
+                            <x-ui.button variant="danger" type="submit" icon="log-out" block>Sí, dejar de ser
+                                coautor</x-ui.button>
+                        </form>
+                    </x-slot:footer>
+                </x-ui.dialog>
             @endif
         </x-slot:actions>
     </x-ui.page-header>

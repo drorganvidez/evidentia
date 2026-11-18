@@ -25,7 +25,7 @@ class DialogTest extends ComponentTestCase
         $this->assertMatchesRegularExpression('/<h2 id="reject-33-title" tabindex="-1" class="text-xl font-bold tracking-tight">\s*Rechazar la evidencia\s*<\/h2>/', $html);
         $this->assertStringContainsString('aria-label="Cerrar" title="Cerrar"', $html);
         $this->assertStringContainsString('x-on:click="close"', $html);
-        $this->assertMatchesRegularExpression('/<p id="reject-33-desc" class="text-md text-ink-muted px-6 pt-2">\s*Explica el motivo.<\/p>/', $html);
+        $this->assertMatchesRegularExpression('/<p id="reject-33-desc" class="min-w-0 whitespace-normal text-md text-ink-muted px-6 pt-2">\s*Explica el motivo.<\/p>/', $html);
         $this->assertStringContainsString('<div class="p-6">Cuerpo</div>', $html);
         $this->assertStringNotContainsString('border-t border-rule', $html, 'No footer without the slot');
         $this->assertUniqueIds($html);
@@ -121,7 +121,7 @@ class DialogTest extends ComponentTestCase
 
         $this->assertStringContainsString('m-auto w-[calc(100%-2rem)] max-h-[calc(100dvh-2rem)] rounded-xl starting:open:translate-y-2 max-w-lg', $modal);
         $this->assertStringContainsString('max-md:mt-auto max-md:mb-0 max-md:max-h-[90dvh] max-md:w-full max-md:max-w-none max-md:rounded-b-none max-md:before:mx-auto', $modal);
-        $this->assertStringContainsString('glass content-start overflow-y-auto scrollbar-subtle p-0 text-ink transition transition-discrete backdrop:bg-slate-950/40 backdrop:backdrop-blur-glass open:grid starting:open:opacity-0', $modal);
+        $this->assertStringContainsString('glass grid-cols-1 content-start overflow-y-auto scrollbar-subtle p-0 text-left text-ink whitespace-normal transition transition-discrete backdrop:bg-slate-950/40 backdrop:backdrop-blur-glass open:grid starting:open:opacity-0', $modal);
         $this->assertStringNotContainsString('w-72', $modal);
 
         $this->assertStringContainsString('max-w-sm', $this->render('<x-ui.dialog id="x" title="x" size="sm" />'));

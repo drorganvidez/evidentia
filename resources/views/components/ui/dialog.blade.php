@@ -47,7 +47,7 @@
         default => 'max-w-lg',
     };
     $dialogClasses = [
-        'glass content-start overflow-y-auto scrollbar-subtle p-0 text-ink transition transition-discrete backdrop:bg-slate-950/40 backdrop:backdrop-blur-glass open:grid starting:open:opacity-0',
+        'glass grid-cols-1 content-start overflow-y-auto scrollbar-subtle p-0 text-left text-ink whitespace-normal transition transition-discrete backdrop:bg-slate-950/40 backdrop:backdrop-blur-glass open:grid starting:open:opacity-0',
         'm-auto w-[calc(100%-2rem)] max-h-[calc(100dvh-2rem)] rounded-xl starting:open:translate-y-2' => !$isDrawer,
         $sizeClass => !$isDrawer,
         'max-md:mt-auto max-md:mb-0 max-md:max-h-[90dvh] max-md:w-full max-md:max-w-none max-md:rounded-b-none max-md:before:mx-auto max-md:before:mt-2 max-md:before:block max-md:before:h-1 max-md:before:w-10 max-md:before:rounded-full max-md:before:bg-rule' =>
@@ -70,7 +70,7 @@
         x-on:close="onClose" @unless ($isAlert) x-on:click="onBackdropClick" closedby="any" @endunless
         @class($dialogClasses)>
         <div @class([
-            'flex items-start justify-between gap-4',
+            'flex min-w-0 items-start justify-between gap-4',
             $isDrawer ? 'px-4 pt-4' : 'p-6 pb-0',
         ])>
             <h2 id="{{ $id }}-title" tabindex="-1" class="text-xl font-bold tracking-tight">
@@ -82,7 +82,7 @@
         </div>
         @if ($description !== null)
             <p id="{{ $id }}-desc" @class([
-                'text-md text-ink-muted',
+                'min-w-0 whitespace-normal text-md text-ink-muted',
                 $isDrawer ? 'px-4 pt-1' : 'px-6 pt-2',
                 'pb-6' => $slot->isEmpty() && !$isDrawer,
             ])>
