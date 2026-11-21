@@ -64,7 +64,7 @@ class ProofPreviewTest extends TestCase
 
     public function test_any_other_file_goes_to_its_download(): void
     {
-        foreach (['zip', 'svg', 'docx', 'html'] as $type) {
+        foreach (['zip', 'svg', 'docx', 'html', 'psd', 'xcf'] as $type) {
             $proof = $this->proof('PENDING', 'archivo', $type, 'bytes');
 
             $this->actingAs($this->student)
