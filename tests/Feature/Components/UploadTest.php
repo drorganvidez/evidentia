@@ -22,7 +22,7 @@ class UploadTest extends ComponentTestCase
         $this->assertStringContainsString('<label for="field-uploaded"', $html);
         $this->assertMatchesRegularExpression('/<input id="field-uploaded" type="file" name="uploaded\[\]"/', $html);
         $this->assertMatchesRegularExpression('/<input [^>]*\smultiple[\s>]/', $html);
-        $this->assertStringContainsString('accept="image/*,.pdf,.zip,.rar,.7z,.tar,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.odt,.ods,.odp"', $html);
+        $this->assertStringContainsString('accept="image/*,.pdf,.zip,.rar,.7z,.tar,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.odt,.ods,.odp,.psd,.xcf"', $html);
         $this->assertStringContainsString('x-ref="input"', $html);
         $this->assertStringContainsString('x-on:change="onPick"', $html);
         $this->assertStringContainsString('x-on:drop.prevent="onDrop"', $html);
@@ -31,7 +31,7 @@ class UploadTest extends ComponentTestCase
         $this->assertStringContainsString('<strong>Arrastra aquí el documento</strong> o pulsa para elegirlo', $html);
         // The label names the input with its text alone; the hint only describes it
         $this->assertStringContainsString('<label for="field-uploaded" class="text-md"><strong>Arrastra aquí el documento</strong> o pulsa para elegirlo</label>', $html);
-        $this->assertStringContainsString('<span id="field-uploaded-hint" class="text-md text-ink-muted">PDF, imágenes o ZIP · hasta 50 MB por archivo</span>', $html);
+        $this->assertStringContainsString('<span id="field-uploaded-hint" class="text-md text-ink-muted">PDF, imágenes, documentos, PSD, XCF o ZIP · hasta 50 MB por archivo</span>', $html);
         $this->assertGreaterThan(strpos($html, '</label>'), strpos($html, 'id="field-uploaded-hint"'));
         $this->assertMatchesRegularExpression('/<input [^>]*aria-describedby="field-uploaded-hint"/', $html);
         $this->assertStringContainsString('<template x-for="file in files" x-bind:key="file.key">', $html);
