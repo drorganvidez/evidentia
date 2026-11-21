@@ -70,7 +70,7 @@ Con la demo levantada (ver `README.md`), abre `http://localhost:8000/_ui`. La ta
 | `x-ui.choice` | `ui/choice.blade.php` | — | Casilla, radio o conmutador dentro de su etiqueta; solo CSS. Tras una validación fallida manda `old()`. |
 | `x-ui.password-rules` | `ui/password-rules.blade.php` | `passwordRules` | Requisitos de una contraseña nueva marcados mientras se escribe; el botón de envío espera a que se cumplan todos. |
 | `x-ui.checkbox-group` | `ui/checkbox-group.blade.php` | `checkboxGroup` | Casillas bajo una leyenda con pista y error comunes y un bloque dependiente de lo marcado. |
-| `x-ui.upload` | `ui/upload.blade.php` | `upload` | Zona de subida sobre un `<input type="file">` real, lista de archivos con progreso y hidden por archivo subido. |
+| `x-ui.upload` | `ui/upload.blade.php` | `upload` | Zona de subida sobre un `<input type="file">` real, lista de archivos con progreso y hidden por archivo subido (admite imágenes, PDF, documentos de oficina, OpenDocument, PSD, XCF y comprimidos). |
 | `x-ui.picker` | `ui/picker.blade.php` | `picker` | Selector de personas, combobox con listbox y chips sobre un `<select multiple>` nativo, con listas predeterminadas. |
 | `x-ui.icon-picker` | `ui/icon-picker.blade.php` | `iconPicker` | Un radio por icono Lucide de la lista curada, con vista previa y búsqueda por nombre y alias. |
 | `x-ui.filter-bar` | `ui/filter-bar.blade.php` | — | Barra de filtros plegable (`<details>`) que cuenta los filtros activos, con un formulario GET, descarga y `keep` para reenviar el resto de la query string. |
