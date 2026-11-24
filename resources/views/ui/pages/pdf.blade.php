@@ -56,7 +56,7 @@
         ],
     ];
 @endphp
-<x-pdf.document title="Acta de reunión" :subtitle="$meeting['title']" :committee="$meeting['committee']" :footer-text="'Evidentia · Jornadas InnoSoft Days ' . now()->year">
+<x-pdf.document title="Acta de reunión" :event="'Jornadas InnoSoft Days ' . now()->year" :subtitle="$meeting['title']" :committee="$meeting['committee']" :footer-text="'Evidentia · Jornadas InnoSoft Days ' . now()->year">
     <x-pdf.section :number="1" title="Datos de la reunión">
         <x-pdf.table key-value :rows="[
             'Fecha' => $meeting['date'],
