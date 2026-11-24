@@ -104,6 +104,50 @@ class EvidenceProofUploadTest extends TestCase
         Storage::assertExists('tmp/anagar/upload-session/alumnos.xlsx');
     }
 
+    public function test_valid_psd_and_xcf_files_are_accepted_as_proofs_without_preview(): void
+    {
+        $psd = UploadedFile::fake()->createWithContent('cartel.psd', "8BPS\x00\x01\x00\x00\x00\x00\x00\x00".str_repeat("\x00", 14));
+        $xcf = UploadedFile::fake()->createWithContent('boceto.xcf', "gimp xcf v011\x00".str_repeat("\x00", 16));
+        $legacyXcf = UploadedFile::fake()->createWithContent('portada.XCF', "gimp xcf file\x00".str_repeat("\x00", 16));
+
+        $this->post(route('upload.process'), ['files' => [$psd]])->assertOk();
+        $this->post(route('upload.process'), ['files' => [$xcf]])->assertOk();
+        $this->post(route('upload.process'), ['files' => [$legacyXcf]])->assertOk();
+
+        Storage::assertExists('tmp/anagar/upload-session/cartel.psd');
+        Storage::assertExists('tmp/anagar/upload-session/boceto.xcf');
+        Storage::assertExists('tmp/anagar/upload-session/portada.XCF');
+
+        $this->post(route('evidence.publish'), $this->form())->assertRedirect(route('evidence.list'));
+
+        $proofs = Proof::with('file')->get();
+        $this->assertCount(3, $proofs);
+        foreach ($proofs as $proof) {
+            $this->assertNull($proof->file->previewMime());
+        }
+    }
+
+    public function test_fake_psd_and_xcf_files_are_rejected_by_content(): void
+    {
+        $cases = [
+            ['falso.psd', 'esto no es un archivo psd'],
+            ['falso.PSD', "\x89PNG\r\n\x1a\n".str_repeat("\x00", 16)],
+            ['vacio.psd', ''],
+            ['falso.xcf', 'esto no es un archivo xcf'],
+            ['falso.XCF', 'gimp xcf invalido'],
+            ['vacio.xcf', ''],
+        ];
+
+        foreach ($cases as [$name, $content]) {
+            $file = UploadedFile::fake()->createWithContent($name, $content);
+
+            $this->post(route('upload.process'), ['files' => [$file]])
+                ->assertStatus(422);
+
+            Storage::assertMissing('tmp/anagar/upload-session/'.$name);
+        }
+    }
+
     private function upload(string $name)
     {
         return $this->post(route('upload.process'), ['files' => [UploadedFile::fake()->create($name, 20, 'application/pdf')]]);

@@ -71,6 +71,64 @@ class AgreementSearchTest extends TestCase
             ->assertSee(route('meeting.search', ['acta' => $this->program->id]), false);
     }
 
+    public function test_filters_agreements_by_committee_and_dates_and_keeps_them_in_links(): void
+    {
+        $user = User::factory()->create();
+        $logisticsId = $this->logistics->meeting->committee_id;
+
+        $this->actingAs($user)
+            ->get(route('meeting.search', ['comite' => $logisticsId, 'q' => 'cartelería']))
+            ->assertOk()
+            ->assertSee('ACU-01')
+            ->assertDontSee('ACU-02')
+            ->assertDontSee('PRG-07');
+
+        $html = $this->actingAs($user)
+            ->get(route('meeting.search', ['desde' => '2026-10-25', 'hasta' => '2026-10-30']))
+            ->assertOk()
+            ->assertSee('PRG-07')
+            ->assertDontSee('ACU-01')
+            ->getContent();
+
+        $this->assertStringContainsString('name="desde" value="2026-10-25"', $html);
+        $this->assertStringContainsString('name="hasta" value="2026-10-30"', $html);
+        $this->assertStringContainsString('tab=reuniones', $html);
+
+        $this->actingAs($user)
+            ->get(route('meeting.search', ['desde' => '2026-11-01']))
+            ->assertOk()
+            ->assertSee('Ningún acuerdo coincide');
+
+        $this->actingAs($user)
+            ->get(route('meeting.search', ['comite' => 9999, 'desde' => '2026-02-31']))
+            ->assertOk()
+            ->assertSee('ACU-01')
+            ->assertSee('PRG-07');
+    }
+
+    public function test_filters_meetings_by_committee_and_dates(): void
+    {
+        $user = User::factory()->create();
+        $programId = $this->program->meeting->committee_id;
+
+        $this->actingAs($user)
+            ->get(route('meeting.search', ['tab' => 'reuniones', 'comite' => $programId]))
+            ->assertOk()
+            ->assertSee('Reunión de programa')
+            ->assertDontSee('Reunión de logística');
+
+        $this->actingAs($user)
+            ->get(route('meeting.search', ['tab' => 'reuniones', 'hasta' => '2026-10-22']))
+            ->assertOk()
+            ->assertSee('Reunión de logística')
+            ->assertDontSee('Reunión de programa');
+
+        $this->actingAs($user)
+            ->get(route('meeting.search', ['tab' => 'reuniones', 'desde' => '2026-11-01']))
+            ->assertOk()
+            ->assertSee('Ninguna reunión coincide');
+    }
+
     public function test_guests_are_sent_to_the_login(): void
     {
         $this->get(route('meeting.search'))->assertRedirect(route('login'));
