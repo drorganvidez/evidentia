@@ -11,7 +11,7 @@
 @endphp
 <div x-data="workTimer" data-state="{{ json_encode($state, JSON_THROW_ON_ERROR) }}"
     data-base-url="{{ $baseUrl }}" data-create-url="{{ $createUrl }}" x-on:keydown.escape.prevent="close"
-    class="inline-block md:relative">
+    x-on:keydown.escape.window="close" class="inline-block md:relative">
     <button type="button" id="work-timer-trigger" aria-haspopup="dialog" aria-controls="work-timer-panel"
         aria-expanded="false" x-bind:aria-expanded="open ? 'true' : 'false'" x-on:click="toggle"
         class="inline-flex h-9 items-center justify-center gap-1.5 rounded-full px-2.5 text-ink-muted transition hover:bg-glass-2 hover:text-ink pointer-coarse:min-h-11 pointer-coarse:min-w-11">
@@ -23,11 +23,11 @@
 
     <div id="work-timer-panel" role="dialog" aria-label="Cronómetro de trabajo" hidden x-bind:hidden="!open"
         x-on:click.outside="onOutsideClick"
-        class="glass absolute inset-x-0 top-[calc(100%+0.5rem)] z-30 grid gap-4 rounded-xl p-4 text-sm text-ink shadow-glow md:inset-x-auto md:right-0 md:w-[22rem]">
+        class="absolute inset-x-0 top-[calc(100%+0.5rem)] z-30 grid gap-4 rounded-xl border border-rule bg-canvas p-4 text-sm text-ink shadow-glass md:inset-x-auto md:right-0 md:w-[22rem]">
         <div class="flex items-center justify-between gap-2">
             <span class="font-bold tracking-tight text-ink">Cronómetro de trabajo</span>
             <span x-text="statusLabel"
-                class="rounded-full bg-glass-2 px-2.5 py-0.5 text-2xs font-semibold text-ink-muted"></span>
+                class="rounded-full border border-rule bg-glass-2 px-2.5 py-0.5 text-2xs font-semibold text-ink-muted"></span>
         </div>
 
         <div class="grid gap-3">
@@ -38,7 +38,7 @@
                     class="h-10 w-full rounded-md border border-field-edge bg-field px-3 text-sm text-ink outline-none placeholder:text-ink-muted focus:border-aurora-500">
             </label>
 
-            <div class="glass-2 flex items-center justify-between gap-3 rounded-lg px-3 py-2.5">
+            <div class="flex items-center justify-between gap-3 rounded-lg border border-rule bg-glass-2 px-3 py-2.5">
                 <div class="grid gap-0.5">
                     <span class="text-xs font-medium text-ink-muted">Tiempo acumulado</span>
                     <span class="text-2xs text-ink-muted" x-text="sessionLimitHint"></span>
@@ -52,24 +52,24 @@
                 class="rounded-md border border-pending/40 bg-pending-soft px-2.5 py-2 text-xs font-medium text-pending-ink">
             </p>
 
-            <div class="flex flex-wrap gap-2">
+            <div class="flex items-center gap-2">
                 <button type="button" x-show="isIdle" x-on:click="start" x-bind:disabled="busy"
-                    class="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-full bg-brand px-4 text-xs font-semibold text-on-brand shadow-glow transition hover:bg-brand-lo disabled:opacity-50">
+                    class="inline-flex h-10 min-w-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-brand px-4 text-xs font-semibold text-on-brand shadow-glow transition hover:bg-brand-lo disabled:opacity-50 pointer-coarse:min-h-11">
                     <x-lucide-play class="size-3.5" aria-hidden="true" />
                     Iniciar
                 </button>
                 <button type="button" x-show="isRunning" x-on:click="pause" x-bind:disabled="busy"
-                    class="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-full border border-glass-edge bg-glass-2 px-3 text-xs font-semibold text-ink transition hover:bg-glass-hi disabled:opacity-50">
+                    class="inline-flex h-10 min-w-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-field-edge/40 bg-glass-2 px-3 text-xs font-semibold text-ink shadow-raised transition hover:bg-glass-hi disabled:opacity-50 pointer-coarse:min-h-11">
                     <x-lucide-pause class="size-3.5" aria-hidden="true" />
                     Pausar
                 </button>
                 <button type="button" x-show="isPaused" x-on:click="resume" x-bind:disabled="busy"
-                    class="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-full bg-brand px-3 text-xs font-semibold text-on-brand shadow-glow transition hover:bg-brand-lo disabled:opacity-50">
+                    class="inline-flex h-10 min-w-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-brand px-4 text-xs font-semibold text-on-brand shadow-glow transition hover:bg-brand-lo disabled:opacity-50 pointer-coarse:min-h-11">
                     <x-lucide-play class="size-3.5" aria-hidden="true" />
                     Reanudar
                 </button>
                 <button type="button" x-show="hasActive" x-on:click="stop" x-bind:disabled="busy"
-                    class="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-full border border-rejected/40 bg-rejected-soft px-3 text-xs font-semibold text-rejected-ink transition hover:opacity-90 disabled:opacity-50">
+                    class="inline-flex h-10 min-w-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-rejected/40 bg-rejected-soft px-3 text-xs font-semibold text-rejected-ink transition hover:opacity-90 disabled:opacity-50 pointer-coarse:min-h-11">
                     <x-lucide-square class="size-3.5" aria-hidden="true" />
                     Detener
                 </button>
@@ -94,7 +94,7 @@
             <ul x-show="hasRecent" aria-label="Sesiones recientes"
                 class="grid max-h-44 gap-1.5 overflow-y-auto pr-0.5 scrollbar-subtle">
                 <template x-for="item in recent" x-bind:key="item.id">
-                    <li class="glass-2 flex items-center gap-2 rounded-md px-2.5 py-1.5">
+                    <li class="flex items-center gap-2 rounded-md border border-rule bg-glass-2 px-2.5 py-1.5">
                         <input type="checkbox" x-bind:value="item.id" x-bind:checked="isSelected(item.id)"
                             x-on:change="toggleSelect(item.id)" x-bind:aria-label="selectLabel(item)"
                             class="size-4 shrink-0 cursor-pointer accent-aurora-500">
