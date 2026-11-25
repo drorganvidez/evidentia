@@ -29,8 +29,12 @@ final class RecordAuthenticationActivity
             $event->user,
             details: [
                 'remember' => $event->remember,
-                // POST /login has no name, and sso.callback signs in through the university IdP; the remember cookie signs in on any other route
-                'via' => (request()->isMethod('POST') && request()->route()?->getName() === null) || request()->routeIs('sso.callback') ? 'form' : 'cookie',
+                // sso.callback signs in through the university IdP, POST /login has no name, and the remember cookie signs in on any other route
+                'via' => match (true) {
+                    request()->routeIs('sso.callback') => 'sso',
+                    request()->isMethod('POST') && request()->route()?->getName() === null => 'form',
+                    default => 'cookie',
+                },
                 'blocked' => (bool) $event->user->block,
             ],
             deadline: false,

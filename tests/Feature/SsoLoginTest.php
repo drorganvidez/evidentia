@@ -6,6 +6,7 @@ use App\Models\ActivityLog;
 use App\Models\Configuration;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\Activity\ActivityPresenter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -81,7 +82,7 @@ class SsoLoginTest extends TestCase
         $this->get(route('sso.redirect'))->assertRedirect($expected);
     }
 
-    public function test_an_imported_user_signs_in_through_cas_ticket_and_leaves_the_same_activity_log_as_password_login(): void
+    public function test_an_imported_user_signs_in_through_cas_ticket_and_records_sso_activity_log(): void
     {
         config([
             'services.us_sso.enabled' => true,
@@ -115,7 +116,8 @@ class SsoLoginTest extends TestCase
         $this->assertSame('alumnouso', $log->user_username);
         $this->assertNull($log->acting_role);
         $this->assertSame('user', $log->subject_type);
-        $this->assertSame(['remember' => false, 'via' => 'form', 'blocked' => false], $log->details);
+        $this->assertSame(['remember' => false, 'via' => 'sso', 'blocked' => false], $log->details);
+        $this->assertSame('SSO de la US', app(ActivityPresenter::class)->summary($log));
         $this->assertSame('127.0.0.1', $log->ip);
     }
 
@@ -214,6 +216,7 @@ class SsoLoginTest extends TestCase
         $this->get(route('sso.callback', ['uvus' => 'alumnouso']))
             ->assertRedirect(route('home'));
         $this->assertAuthenticatedAs($this->student);
+        $this->assertSame('sso', ActivityLog::where('action', 'login')->sole()->details['via'] ?? null);
 
         auth()->logout();
         $this->app['env'] = 'production';
