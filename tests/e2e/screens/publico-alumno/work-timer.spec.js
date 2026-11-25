@@ -22,6 +22,101 @@ const clock = async (page) => seconds(await panel(page).locator('#work-timer-dis
 /** The field of the evidence form: its label is exactly «Título», the one of the stopwatch is another. */
 const field = (page, label) => page.getByLabel(label, { exact: true });
 
+async function assertTopbarLayout(page, ui, isMobile, expectBackLink) {
+    await ui.noOverflow();
+
+    const header = page.locator('header.glass');
+    const headerMetrics = await header.evaluate((el) => ({
+        scrollWidth: el.scrollWidth,
+        clientWidth: el.clientWidth,
+        right: el.getBoundingClientRect().right,
+        viewportWidth: document.documentElement.clientWidth,
+    }));
+
+    expect(headerMetrics.scrollWidth, 'Topbar sin desborde interno').toBeLessThanOrEqual(
+        headerMetrics.clientWidth,
+    );
+    expect(headerMetrics.right, 'Topbar dentro del viewport').toBeLessThanOrEqual(
+        headerMetrics.viewportWidth + 0.5,
+    );
+
+    const headerBox = await header.boundingBox();
+    const controls = [
+        { name: 'cronómetro', locator: page.locator('#work-timer-trigger'), checkHit: true },
+        {
+            name: 'campana de avisos',
+            locator: header.locator('a[href$="/notifications"]'),
+            checkHit: true,
+        },
+    ];
+
+    if (expectBackLink) {
+        controls.push({
+            name: 'enlace volver',
+            locator: header.locator('[data-back]'),
+            checkHit: false,
+        });
+    }
+
+    if (isMobile) {
+        controls.push({
+            name: 'botón abrir menú',
+            locator: header.locator('button[aria-controls="drawer"]'),
+            checkHit: true,
+        });
+    } else {
+        controls.push({
+            name: 'menú de usuario',
+            locator: header.locator('button[aria-controls="user-menu"]'),
+            checkHit: true,
+        });
+    }
+
+    const boxes = [];
+
+    for (const control of controls) {
+        await expect(control.locator, `${control.name} visible en topbar`).toBeVisible();
+        const box = await control.locator.boundingBox();
+
+        expect(box, `${control.name} tiene dimensiones`).not.toBeNull();
+        expect(box.width, `${control.name} ancho > 0`).toBeGreaterThan(0);
+        expect(box.height, `${control.name} alto > 0`).toBeGreaterThan(0);
+        expect(box.x, `${control.name} no se sale por la izquierda`).toBeGreaterThanOrEqual(
+            headerBox.x - 0.5,
+        );
+        expect(box.x + box.width, `${control.name} no se sale por la derecha`).toBeLessThanOrEqual(
+            headerBox.x + headerBox.width + 0.5,
+        );
+
+        if (control.checkHit) {
+            const clickable = await control.locator.evaluate((el) => {
+                const rect = el.getBoundingClientRect();
+                const hit = document.elementFromPoint(
+                    rect.left + rect.width / 2,
+                    rect.top + rect.height / 2,
+                );
+
+                return hit !== null && (hit === el || el.contains(hit));
+            });
+
+            expect(clickable, `${control.name} no está tapado por otro elemento`).toBe(true);
+        }
+
+        boxes.push({ name: control.name, ...box });
+    }
+
+    boxes.sort((a, b) => a.x - b.x);
+    for (let i = 1; i < boxes.length; i += 1) {
+        const prev = boxes[i - 1];
+        const curr = boxes[i];
+
+        expect(
+            prev.x + prev.width,
+            `${prev.name} y ${curr.name} no se solapan`,
+        ).toBeLessThanOrEqual(curr.x + 0.5);
+    }
+}
+
 test.describe('Cronómetro de trabajo de la barra superior', () => {
     // Only on data of its own (a unique title) so the order of the tests and a second run never matter
     test('cuenta entre páginas y recargas, se detiene y crea la evidencia con título y duración', async ({
@@ -191,15 +286,52 @@ test.describe('Cronómetro de trabajo de la barra superior', () => {
         await expect(panel(page).getByText(first, { exact: true })).toBeVisible();
     });
 
-    test('el panel cabe en la pantalla', async ({ page }) => {
+    test('la barra superior no desborda ni tapa la campana ni el menú de usuario y el panel cabe en pantalla', async ({
+        page,
+        ui,
+        isMobile,
+    }) => {
+        test.slow();
+        const title = `Layout móvil y escritorio ${Date.now()}`;
+
         await signIn(page, 'estudiante');
         await page.goto('/evidence/list');
-        await open(page);
 
+        // Idle state in topbar
+        await assertTopbarLayout(page, ui, isMobile, false);
+
+        // Start a session so the trigger expands with the live clock
+        await open(page);
+        await panel(page).getByLabel('Nombre de la sesión').fill(title);
+        await panel(page).getByRole('button', { name: 'Iniciar' }).click();
+        await expect(panel(page).getByText('En curso', { exact: true })).toBeVisible();
+        await expect.poll(() => clock(page)).toBeGreaterThanOrEqual(1);
+
+        // Panel open fits within the viewport without overflow
         const box = await panel(page).boundingBox();
         const viewport = page.viewportSize();
 
         expect(box.x).toBeGreaterThanOrEqual(0);
-        expect(box.x + box.width).toBeLessThanOrEqual(viewport.width);
+        expect(box.x + box.width).toBeLessThanOrEqual(viewport.width + 0.5);
+        await ui.noOverflow();
+
+        // Close panel and check topbar layout while the timer is actively ticking
+        await page.keyboard.press('Escape');
+        await expect(panel(page)).toBeHidden();
+        await assertTopbarLayout(page, ui, isMobile, false);
+
+        // On /evidence/create there is also a back link (← Mis evidencias) in the topbar
+        await page.goto('/evidence/create');
+        await expect(trigger(page)).toHaveAccessibleName(/en curso/);
+        await assertTopbarLayout(page, ui, isMobile, true);
+
+        // Clean up the temporary session
+        await open(page);
+        await panel(page).getByRole('button', { name: 'Detener' }).click();
+        await expect(panel(page).getByText('Listo', { exact: true })).toBeVisible();
+        await panel(page)
+            .getByRole('button', { name: `Eliminar sesión ${title}` })
+            .click();
+        await expect(panel(page).getByText(title, { exact: true })).toHaveCount(0);
     });
 });
