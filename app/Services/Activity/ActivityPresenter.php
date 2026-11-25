@@ -101,7 +101,11 @@ final class ActivityPresenter
 
         $parts = match ($entry->action) {
             'login' => [
-                ($d['via'] ?? null) === 'cookie' ? 'Recordarme' : null,
+                match ($d['via'] ?? null) {
+                    'cookie' => 'Recordarme',
+                    'sso' => 'SSO de la US',
+                    default => null,
+                },
                 ! empty($d['blocked']) ? 'Cuenta bloqueada' : null,
             ],
             'login_failed' => [

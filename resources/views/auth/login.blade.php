@@ -9,6 +9,8 @@
     $message = $throttled
         ? 'Demasiados intentos, espera un minuto y vuelve a probar'
         : 'El correo o la contraseña no son correctos';
+    $ssoError = $errors->first('sso');
+    $ssoEnabled ??= app(\App\Services\Auth\UsSsoService::class)->isEnabled();
 @endphp
 <x-layout.public title="Acceso" wide :subtitle="$event?->event_name">
     <x-slot:aside class="content-center lg:pr-8">
@@ -34,6 +36,20 @@
     </x-slot:aside>
 
     <x-ui.card title="Iniciar sesión" :level="2">
+        @if (filled($ssoError))
+            <div class="mb-5">
+                <x-ui.alert tone="rejected" role="alert" :title="$ssoError" compact />
+            </div>
+        @endif
+        @if ($ssoEnabled)
+            <div class="mb-5 grid gap-5">
+                <x-ui.button :href="route('sso.redirect')" variant="quiet" size="lg" icon="shield-check" block>Entrar con
+                    la cuenta de la US</x-ui.button>
+                <p
+                    class="flex items-center gap-4 text-xs font-bold tracking-widest text-ink-muted uppercase before:h-px before:flex-1 before:bg-rule after:h-px after:flex-1 after:bg-rule">
+                    o con tu contraseña local</p>
+            </div>
+        @endif
         <x-ui.form :action="route('login')" busy-label="Entrando" id="login-form" :summary="false">
             @if ($failed)
                 <x-ui.alert tone="rejected" role="alert" :title="$message" compact />

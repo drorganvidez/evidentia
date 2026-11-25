@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AgreementSearchController;
 use App\Http\Controllers\AttendeeController;
+use App\Http\Controllers\Auth\SsoController;
 use App\Http\Controllers\BlockController;
 // Controladores importados explícitamente
 use App\Http\Controllers\BonusSecretaryController;
@@ -52,6 +53,13 @@ use Illuminate\Support\Str;
 
 // Rutas de autenticación: solo login y logout (las cuentas las crea la gestión y la contraseña se recupera en /password)
 Auth::routes(['register' => false, 'reset' => false, 'confirm' => false, 'verify' => false]);
+
+// Inicio de sesión mediante SSO de la Universidad de Sevilla (CAS / SAML y modo mock local)
+Route::prefix('auth/sso')->name('sso.')->group(function () {
+    Route::get('redirect', [SsoController::class, 'redirect'])->name('redirect');
+    Route::get('callback', [SsoController::class, 'callback'])->name('callback');
+    Route::get('mock', [SsoController::class, 'mock'])->name('mock');
+});
 
 // Aviso para los usuarios bloqueados
 Route::get('block', [BlockController::class, 'block'])->name('block');

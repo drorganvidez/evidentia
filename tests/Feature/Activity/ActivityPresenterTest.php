@@ -81,6 +81,8 @@ class ActivityPresenterTest extends TestCase
         $cases = [
             ['login', ['via' => 'cookie', 'blocked' => true], 'Recordarme · Cuenta bloqueada'],
             ['login', ['via' => 'form', 'blocked' => false], null],
+            ['login', ['via' => 'sso', 'blocked' => false], 'SSO de la US'],
+            ['login', ['via' => 'sso', 'blocked' => true], 'SSO de la US · Cuenta bloqueada'],
             ['login_failed', ['lockout' => true, 'context' => 'sign'], 'Bloqueo por intentos · En la firma pública'],
             ['password_reset_requested', ['mail_sent' => false], 'Correo no enviado'],
             ['password_reset_requested', ['mail_sent' => true], null],
