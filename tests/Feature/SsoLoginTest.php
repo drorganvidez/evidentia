@@ -220,4 +220,39 @@ class SsoLoginTest extends TestCase
 
         $this->get(route('sso.mock'))->assertNotFound();
     }
+
+    public function test_mock_mode_is_disabled_outside_local_and_testing_environments(): void
+    {
+        config([
+            'services.us_sso.enabled' => false,
+            'services.us_sso.mock_enabled' => true,
+        ]);
+
+        try {
+            foreach (['staging', 'demo', 'production'] as $env) {
+                $this->app['env'] = $env;
+
+                $this->get(route('sso.mock'))->assertNotFound();
+                $this->get(route('sso.redirect'))->assertNotFound();
+                $this->get(route('sso.callback', ['uvus' => 'alumnouso']))->assertNotFound();
+                $this->assertGuest();
+            }
+
+            // Even with real CAS SSO active, ?uvus= and /auth/sso/mock must stay disabled outside local/testing
+            config([
+                'services.us_sso.enabled' => true,
+                'services.us_sso.base_url' => 'https://sso.us.es/cas',
+                'services.us_sso.mock_enabled' => true,
+            ]);
+            $this->app['env'] = 'staging';
+
+            $this->get(route('sso.mock'))->assertNotFound();
+            $this->get(route('sso.callback', ['uvus' => 'alumnouso']))
+                ->assertRedirect(route('login'))
+                ->assertSessionHasErrors('sso');
+            $this->assertGuest();
+        } finally {
+            $this->app['env'] = 'testing';
+        }
+    }
 }

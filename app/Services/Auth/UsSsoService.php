@@ -25,11 +25,11 @@ class UsSsoService
     }
 
     /**
-     * Whether the local mock SSO screen is enabled (never allowed in production).
+     * Whether the local mock SSO screen is enabled (only allowed in local and testing environments).
      */
     public function isMockEnabled(): bool
     {
-        if (app()->environment('production')) {
+        if (! app()->environment('local', 'testing')) {
             return false;
         }
 
@@ -149,4 +149,3 @@ class UsSsoService
         return null;
     }
 }
-

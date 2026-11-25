@@ -123,7 +123,7 @@ Evidentia supports signing in with the institutional identity of the University 
 | `US_SSO_BASE_URL` | `https://sso.us.es/cas` | Base URL of the institutional CAS / SAML identity server of the University of Seville. |
 | `US_SSO_LOGIN_PATH` | `/login` | Relative path where the browser is redirected with `?service=<callback_url>`. |
 | `US_SSO_VALIDATE_PATH` | `/p3/serviceValidate` | Relative path used by the backend to validate the CAS `ticket` (`ST-...`) over HTTPS and extract `<cas:user>` or `<cas:uvus>` / `<cas:uid>`. |
-| `US_SSO_MOCK_ENABLED` | `false` | Local development simulator (`/auth/sso/mock`) to test the SSO callback from the browser with any `uvus` without connecting to the private US network. Automatically disabled in `production`. |
+| `US_SSO_MOCK_ENABLED` | `false` | Local development simulator (`/auth/sso/mock`) to test the SSO callback from the browser with any `uvus` without connecting to the private US network. Only allowed in `local` and `testing` environments (automatically disabled in `staging`, `production`, or any other environment). |
 
 - **Account matching and access control.** SSO does not create accounts on the fly: the authenticated `uvus` is matched case-insensitively against `users.username` (populated when accounts are imported via CSV/XLSX). If the `uvus` is not imported in the database, access is denied and `/login` shows a clear rejection notice (`Tu cuenta UVUS («...») no está importada o autorizada en Evidentia.`).
 - **Audit log.** Successful SSO sign-ins dispatch the standard authentication event and are recorded in `activity_log` with `action = login` and `via = form`, identical to a local password login. Unimported `uvus` attempts or invalid tickets are recorded as `login_failed`.
