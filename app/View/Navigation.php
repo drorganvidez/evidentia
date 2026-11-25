@@ -9,7 +9,6 @@ use App\Models\MessageThread;
 use App\Models\User;
 use App\Services\Deadlines;
 use App\Services\ReviewQueue;
-use Illuminate\Support\Facades\Schema;
 
 /**
  * Navigation of the signed-in person for x-layout.app: the groups of the sidebar by role, the bottom bar of the
@@ -82,7 +81,7 @@ final class Navigation
             if ($this->deadlines->isOpenForMenu(Deadline::UploadEvidences)) {
                 $mine[] = $item('Nueva evidencia', 'evidence.create', 'plus');
                 // The work stopwatch of the topbar fills the duration of a new evidence, so it lives while they can be sent
-                $timer = Schema::hasTable('work_sessions') ? WorkSessionController::stateFor($user) : null;
+                $timer = WorkSessionController::stateFor($user);
             }
             $mine[] = $item('Mis evidencias', 'evidence.list', 'file-text', ['evidence.view', 'evidence.edit']);
             $mine[] = $item('Mis reuniones', 'meeting.list', 'handshake');
