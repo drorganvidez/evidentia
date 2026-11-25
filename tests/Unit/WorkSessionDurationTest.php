@@ -136,4 +136,55 @@ class WorkSessionDurationTest extends TestCase
         $this->assertSame('01:00:00', WorkSession::formatClock(3600));
         $this->assertSame('100:00:01', WorkSession::formatClock(360001));
     }
+
+    public function test_a_running_session_is_capped_at_the_session_limit(): void
+    {
+        $now = CarbonImmutable::parse('2026-11-11 22:00:00');
+        $below = new WorkSession([
+            'title' => 'Al borde', 'status' => WorkSession::STATUS_RUNNING, 'accumulated_seconds' => 0,
+            'started_at' => $now->subSeconds(WorkSession::MAX_SESSION_SECONDS - 1),
+        ]);
+        $exact = new WorkSession([
+            'title' => 'Exacta', 'status' => WorkSession::STATUS_RUNNING, 'accumulated_seconds' => 0,
+            'started_at' => $now->subSeconds(WorkSession::MAX_SESSION_SECONDS),
+        ]);
+        $forgotten = new WorkSession([
+            'title' => 'Olvidada', 'status' => WorkSession::STATUS_RUNNING, 'accumulated_seconds' => 0,
+            'started_at' => $now->subHours(25),
+        ]);
+
+        $this->assertFalse($below->hasExceededSessionLimit($now));
+        $this->assertSame(WorkSession::MAX_SESSION_SECONDS - 1, $below->elapsedSeconds($now));
+        $this->assertTrue($exact->hasExceededSessionLimit($now));
+        $this->assertSame(WorkSession::MAX_SESSION_SECONDS, $exact->elapsedSeconds($now));
+        $this->assertTrue($forgotten->hasExceededSessionLimit($now));
+        $this->assertSame(WorkSession::MAX_SESSION_SECONDS, $forgotten->elapsedSeconds($now));
+    }
+
+    public function test_prefill_for_evidence_caps_and_flags_durations_above_ninety_nine_hours(): void
+    {
+        $atLimitStart = WorkSession::prefillForEvidence([$this->stopped(99 * 3600 + 59 * 60, 'Al borde')]);
+        $atLimitEnd = WorkSession::prefillForEvidence([$this->stopped(99 * 3600 + 59 * 60 + 59, 'Al borde')]);
+        $exactOver = WorkSession::prefillForEvidence([$this->stopped(100 * 3600, 'Cien horas')]);
+        $manySessions = array_merge(
+            array_map(fn (int $i): WorkSession => $this->stopped(12 * 3600, 'Bloque '.$i), range(1, 9)),
+            [$this->stopped(15 * 60, 'Extra')],
+        );
+        $combinedOver = WorkSession::prefillForEvidence($manySessions);
+
+        $this->assertFalse($atLimitStart['exceeded_limit']);
+        $this->assertSame([99, 59], [$atLimitStart['hours'], $atLimitStart['minutes']]);
+        $this->assertFalse($atLimitEnd['exceeded_limit']);
+        $this->assertSame([99, 59], [$atLimitEnd['hours'], $atLimitEnd['minutes']]);
+
+        $this->assertTrue($exactOver['exceeded_limit']);
+        $this->assertSame([99, 59, 100, 0], [
+            $exactOver['hours'], $exactOver['minutes'], $exactOver['original_hours'], $exactOver['original_minutes'],
+        ]);
+
+        $this->assertTrue($combinedOver['exceeded_limit']);
+        $this->assertSame([99, 59, 108, 15], [
+            $combinedOver['hours'], $combinedOver['minutes'], $combinedOver['original_hours'], $combinedOver['original_minutes'],
+        ]);
+    }
 }

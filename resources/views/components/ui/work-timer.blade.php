@@ -14,7 +14,7 @@
     class="inline-block md:relative">
     <button type="button" id="work-timer-trigger" aria-haspopup="dialog" aria-controls="work-timer-panel"
         aria-expanded="false" x-bind:aria-expanded="open ? 'true' : 'false'" x-on:click="toggle"
-        class="inline-flex h-9 items-center gap-1.5 rounded-full px-2.5 text-ink-muted transition hover:bg-glass-2 hover:text-ink pointer-coarse:min-h-11 pointer-coarse:min-w-11">
+        class="inline-flex h-9 items-center justify-center gap-1.5 rounded-full px-2.5 text-ink-muted transition hover:bg-glass-2 hover:text-ink pointer-coarse:min-h-11 pointer-coarse:min-w-11">
         <x-lucide-timer class="size-4.5 shrink-0" aria-hidden="true" />
         <span class="sr-only" x-text="triggerLabel">Cronómetro de trabajo</span>
         <span aria-hidden="true" x-show="hasActive" x-text="activeClock"
@@ -39,12 +39,18 @@
             </label>
 
             <div class="glass-2 flex items-center justify-between gap-3 rounded-lg px-3 py-2.5">
-                <span class="text-xs font-medium text-ink-muted">Tiempo acumulado</span>
+                <div class="grid gap-0.5">
+                    <span class="text-xs font-medium text-ink-muted">Tiempo acumulado</span>
+                    <span class="text-2xs text-ink-muted" x-text="sessionLimitHint"></span>
+                </div>
                 <output id="work-timer-display" aria-live="off"
                     class="font-mono text-xl font-bold tabular-nums text-ink" x-text="activeClock">00:00:00</output>
             </div>
 
             <p x-show="hasError" x-text="error" role="alert" class="text-xs font-semibold text-rejected-ink"></p>
+            <p x-show="hasNotice" x-text="notice" role="status"
+                class="rounded-md border border-pending/40 bg-pending-soft px-2.5 py-2 text-xs font-medium text-pending-ink">
+            </p>
 
             <div class="flex flex-wrap gap-2">
                 <button type="button" x-show="isIdle" x-on:click="start" x-bind:disabled="busy"
@@ -103,6 +109,9 @@
                     </li>
                 </template>
             </ul>
+            <p x-show="selectionExceedsLimit" x-text="selectedLimitWarning" role="alert"
+                class="rounded-md border border-pending/40 bg-pending-soft px-2.5 py-2 text-xs font-medium text-pending-ink">
+            </p>
             <a x-show="hasSelection" x-bind:href="selectedCreateUrl" x-text="selectedSummaryText"
                 class="mt-1 inline-flex h-9 w-full items-center justify-center rounded-full bg-brand px-3 text-center text-xs font-semibold text-on-brand no-underline shadow-glow transition hover:bg-brand-lo"></a>
         </div>

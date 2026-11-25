@@ -405,4 +405,85 @@ class WorkSessionTest extends TestCase
 
         $this->assertNull(app(Navigation::class)->for($this->ana, 'home')['timer']);
     }
+
+    // --------------------------------------------------- Caps and warnings
+
+    public function test_a_forgotten_running_session_stops_automatically_at_the_limit(): void
+    {
+        $this->actingAs($this->ana);
+        $startedAt = now()->copy();
+        $id = $this->postJson(route('work-sessions.start'), ['title' => 'Montaje olvidado'])->json('session.id');
+
+        $this->travel(20)->hours();
+        $response = $this->getJson(route('work-sessions.index'))->assertOk();
+
+        $response->assertJsonPath('active', null)
+            ->assertJsonPath('auto_stopped.id', $id)
+            ->assertJsonPath('auto_stopped.status', WorkSession::STATUS_STOPPED)
+            ->assertJsonPath('auto_stopped.elapsed_seconds', WorkSession::MAX_SESSION_SECONDS)
+            ->assertJsonPath('auto_stopped.hours', WorkSession::MAX_SESSION_HOURS)
+            ->assertJsonPath('auto_stopped.minutes', 0)
+            ->assertJsonPath('recent.0.id', $id);
+        $this->assertStringContainsString('12 h', (string) $response->json('notice'));
+
+        $session = WorkSession::findOrFail($id);
+        $this->assertSame(WorkSession::STATUS_STOPPED, $session->status);
+        $this->assertSame(WorkSession::MAX_SESSION_SECONDS, $session->accumulated_seconds);
+        $this->assertSame($startedAt->addHours(WorkSession::MAX_SESSION_HOURS)->timestamp, $session->stopped_at->timestamp);
+    }
+
+    public function test_pausing_an_overdue_session_caps_it_and_resume_at_limit_is_rejected(): void
+    {
+        $overdue = $this->workSession($this->ana, WorkSession::STATUS_RUNNING, 0, 'De treinta horas');
+        $this->travel(30)->hours();
+
+        $pauseResponse = $this->actingAs($this->ana)->postJson(route('work-sessions.pause', ['id' => $overdue->id]))->assertOk()
+            ->assertJsonPath('session.status', WorkSession::STATUS_STOPPED)
+            ->assertJsonPath('session.hours', WorkSession::MAX_SESSION_HOURS)
+            ->assertJsonPath('session.minutes', 0);
+        $this->assertStringContainsString('12 h', (string) $pauseResponse->json('notice'));
+        $this->assertSame(WorkSession::STATUS_STOPPED, $overdue->refresh()->status);
+        $this->assertSame(WorkSession::MAX_SESSION_SECONDS, $overdue->accumulated_seconds);
+
+        $atLimit = $this->workSession($this->ana, WorkSession::STATUS_PAUSED, WorkSession::MAX_SESSION_SECONDS, 'En el límite');
+
+        $this->actingAs($this->ana)->postJson(route('work-sessions.resume', ['id' => $atLimit->id]))->assertUnprocessable()
+            ->assertJsonPath('recent.0.id', $atLimit->id);
+        $this->assertSame(WorkSession::STATUS_STOPPED, $atLimit->refresh()->status);
+    }
+
+    public function test_prefilling_more_than_ninety_nine_hours_caps_the_form_warns_and_allows_saving(): void
+    {
+        $overIds = array_map(
+            fn (int $i): int => $this->workSession($this->ana, WorkSession::STATUS_STOPPED, 12 * 3600, 'Bloque '.$i)->id,
+            range(1, 9),
+        );
+
+        $overHtml = $this->actingAs($this->ana)->get(route('evidence.create', ['sessions' => $overIds]))->assertOk()->getContent();
+
+        $this->assertStringContainsString('value="99"', $this->fieldTag($overHtml, 'hours'));
+        $this->assertStringContainsString('value="59"', $this->fieldTag($overHtml, 'minutes'));
+        $this->assertStringNotContainsString('value="108"', $this->fieldTag($overHtml, 'hours'));
+        $this->assertStringContainsString('La duración acumulada supera el máximo permitido', $overHtml);
+        $this->assertStringContainsString('108 h', $overHtml);
+        $this->assertStringContainsString('99 h 59 min', $overHtml);
+
+        $exactIds = [
+            ...array_slice($overIds, 0, 8),
+            $this->workSession($this->ana, WorkSession::STATUS_STOPPED, 3 * 3600 + 59 * 60, 'Resto')->id,
+        ];
+        $exactHtml = $this->get(route('evidence.create', ['sessions' => $exactIds]))->assertOk()->getContent();
+
+        $this->assertStringContainsString('value="99"', $this->fieldTag($exactHtml, 'hours'));
+        $this->assertStringContainsString('value="59"', $this->fieldTag($exactHtml, 'minutes'));
+        $this->assertStringNotContainsString('La duración acumulada supera el máximo permitido', $exactHtml);
+
+        $this->post(route('evidence.draft'), [
+            'title' => 'Evidencia con sesiones largas',
+            'hours' => 99,
+            'minutes' => 59,
+            'committee' => Committee::firstOrFail()->id,
+            'description' => 'Trabajo acumulado repartido en varias sesiones.',
+        ])->assertRedirect(route('evidence.list'));
+    }
 }

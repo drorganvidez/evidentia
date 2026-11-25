@@ -31,6 +31,7 @@ export default function workTimer() {
         busy: false,
         title: '',
         error: '',
+        notice: '',
         active: null,
         recent: [],
         selectedIds: [],
@@ -41,6 +42,9 @@ export default function workTimer() {
         interval: null,
         baseUrl: '/work-sessions',
         createUrl: '/evidence/create',
+        maxSessionHours: 12,
+        maxSessionSeconds: 43200,
+        maxEvidenceHours: 99,
 
         init() {
             root = this.$root;
@@ -74,6 +78,27 @@ export default function workTimer() {
                 this.createUrl = state.create_url;
             }
 
+            if (Number(state.max_session_hours) > 0) {
+                this.maxSessionHours = Number(state.max_session_hours);
+            }
+
+            if (Number(state.max_session_seconds) > 0) {
+                this.maxSessionSeconds = Number(state.max_session_seconds);
+            }
+
+            if (Number(state.max_evidence_hours) > 0) {
+                this.maxEvidenceHours = Number(state.max_evidence_hours);
+            }
+
+            if (typeof state.notice === 'string' && state.notice !== '') {
+                this.notice = state.notice;
+            }
+
+            if (state.auto_stopped && !this.active) {
+                this.lastStopped = state.auto_stopped;
+                this.title = '';
+            }
+
             const validIds = new Set(this.recent.map((item) => Number(item.id)));
 
             this.selectedIds = this.selectedIds.filter((id) => validIds.has(Number(id)));
@@ -104,6 +129,17 @@ export default function workTimer() {
                 }
 
                 const delta = Math.max(0, Math.floor((Date.now() - this.syncedAtMs) / 1000));
+
+                if (this.baseElapsed + delta >= this.maxSessionSeconds) {
+                    this.tickSeconds = this.maxSessionSeconds;
+                    this.stopTicker();
+
+                    if (!this.busy) {
+                        this.stop();
+                    }
+
+                    return;
+                }
 
                 this.tickSeconds = this.baseElapsed + delta;
             }, 1000);
@@ -148,6 +184,14 @@ export default function workTimer() {
 
         get hasError() {
             return this.error !== '';
+        },
+
+        get hasNotice() {
+            return this.notice !== '';
+        },
+
+        get sessionLimitHint() {
+            return `Límite por sesión: ${this.maxSessionHours} h.`;
         },
 
         get hasLastStopped() {
@@ -213,6 +257,19 @@ export default function workTimer() {
             const { hours, minutes } = secondsToHoursAndMinutes(totalSeconds);
 
             return `Crear evidencia con seleccionadas (${hours} h ${minutes} min)`;
+        },
+
+        get selectionExceedsLimit() {
+            const totalSeconds = this.recent
+                .filter((item) => this.selectedIds.includes(Number(item.id)))
+                .reduce((sum, item) => sum + (Number(item.elapsed_seconds) || 0), 0);
+            const { hours } = secondsToHoursAndMinutes(totalSeconds);
+
+            return hours > this.maxEvidenceHours;
+        },
+
+        get selectedLimitWarning() {
+            return `El total seleccionado supera el máximo de ${this.maxEvidenceHours} h 59 min por evidencia. Se ajustará al abrir el formulario.`;
         },
 
         get selectedCreateUrl() {
@@ -309,6 +366,7 @@ export default function workTimer() {
                 return;
             }
 
+            this.notice = '';
             this.lastStopped = null;
             await this.request(this.baseUrl, 'POST', { title: trimmed });
         },

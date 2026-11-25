@@ -101,9 +101,10 @@ class EvidenceController extends Controller
 
     /**
      * Title and duration of the work sessions of the stopwatch chosen with ?sessions[]=id. Only the sessions of the
-     * signed-in person count: the ids of other people are ignored as if they did not exist.
+     * signed-in person count: the ids of other people are ignored as if they did not exist. Totals above 99 h 59 min
+     * are capped to the form limit with a warning flag.
      *
-     * @return array{title: string, hours: int, minutes: int}|null
+     * @return array{title: string, hours: int, minutes: int, total_seconds: int, total_minutes: int, exceeded_limit: bool, original_hours: int, original_minutes: int, max_hours: int, max_minutes: int}|null
      */
     private function prefillFromSessions(Request $request): ?array
     {
@@ -125,7 +126,7 @@ class EvidenceController extends Controller
             ->orderBy('id')
             ->get();
 
-        return $sessions->isEmpty() ? null : WorkSession::summarizeSessions($sessions);
+        return $sessions->isEmpty() ? null : WorkSession::prefillForEvidence($sessions);
     }
 
     public function draft(Request $request)

@@ -45,6 +45,19 @@
 
                 <x-ui.field name="title" label="Título" :value="$evidence->title ?? ($prefill['title'] ?? null)" required hint="Al menos 5 caracteres" />
 
+                @if (!$editing && !empty($prefill['exceeded_limit']))
+                    <x-ui.alert tone="pending" role="alert" compact
+                        title="La duración acumulada supera el máximo permitido">
+                        <p class="text-sm">
+                            Las sesiones seleccionadas suman {{ $prefill['original_hours'] }} h
+                            {{ $prefill['original_minutes'] }} min, pero una evidencia admite como máximo
+                            {{ $prefill['max_hours'] }} h {{ $prefill['max_minutes'] }} min. Se ha ajustado la duración
+                            al
+                            máximo permitido; revisa el tiempo o reparte las sesiones en varias evidencias.
+                        </p>
+                    </x-ui.alert>
+                @endif
+
                 <fieldset class="grid gap-1.5">
                     <legend class="mb-1.5 text-sm font-semibold">Duración</legend>
                     <div class="grid grid-cols-2 gap-3">

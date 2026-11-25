@@ -22,6 +22,14 @@ class WorkSession extends Model
 
     public const STATUS_STOPPED = 'stopped';
 
+    public const MAX_SESSION_HOURS = 12;
+
+    public const MAX_SESSION_SECONDS = self::MAX_SESSION_HOURS * 3600;
+
+    public const MAX_EVIDENCE_HOURS = 99;
+
+    public const MAX_EVIDENCE_MINUTES = 59;
+
     protected $table = 'work_sessions';
 
     protected $fillable = [
@@ -56,9 +64,9 @@ class WorkSession extends Model
     }
 
     /**
-     * Total elapsed seconds of the session up to $now, including the active running segment if any.
+     * Uncapped elapsed seconds of the session up to $now, including the active running segment if any.
      */
-    public function elapsedSeconds(?CarbonInterface $now = null): int
+    public function rawElapsedSeconds(?CarbonInterface $now = null): int
     {
         $accumulated = max(0, (int) $this->accumulated_seconds);
 
@@ -72,8 +80,56 @@ class WorkSession extends Model
         return $accumulated + $runningDelta;
     }
 
+    /**
+     * Total elapsed seconds of the session up to $now, capped at the per-session limit while running.
+     */
+    public function elapsedSeconds(?CarbonInterface $now = null): int
+    {
+        $raw = $this->rawElapsedSeconds($now);
+
+        if ($this->status === self::STATUS_RUNNING) {
+            return min(max(max(0, (int) $this->accumulated_seconds), self::MAX_SESSION_SECONDS), $raw);
+        }
+
+        return $raw;
+    }
+
+    public function hasExceededSessionLimit(?CarbonInterface $now = null): bool
+    {
+        return $this->status === self::STATUS_RUNNING
+            && $this->started_at !== null
+            && $this->rawElapsedSeconds($now) >= self::MAX_SESSION_SECONDS;
+    }
+
+    public function stopIfExceeded(?CarbonInterface $now = null): bool
+    {
+        if (! $this->hasExceededSessionLimit($now)) {
+            return false;
+        }
+
+        $reference = $now ?? now();
+        $previous = max(0, (int) $this->accumulated_seconds);
+        $remaining = max(0, self::MAX_SESSION_SECONDS - $previous);
+        $cappedAt = $this->started_at->copy()->addSeconds($remaining);
+        if ($cappedAt->gt($reference)) {
+            $cappedAt = $reference;
+        }
+
+        $this->accumulated_seconds = max($previous, self::MAX_SESSION_SECONDS);
+        $this->status = self::STATUS_STOPPED;
+        $this->started_at = null;
+        $this->stopped_at = $cappedAt;
+        $this->save();
+
+        return true;
+    }
+
     public function pause(?CarbonInterface $now = null): self
     {
+        if ($this->stopIfExceeded($now)) {
+            return $this;
+        }
+
         if ($this->status === self::STATUS_RUNNING) {
             $this->accumulated_seconds = $this->elapsedSeconds($now);
             $this->status = self::STATUS_PAUSED;
@@ -86,7 +142,7 @@ class WorkSession extends Model
 
     public function resume(?CarbonInterface $now = null): self
     {
-        if ($this->status === self::STATUS_PAUSED) {
+        if ($this->status === self::STATUS_PAUSED && max(0, (int) $this->accumulated_seconds) < self::MAX_SESSION_SECONDS) {
             $this->status = self::STATUS_RUNNING;
             $this->started_at = $now ?? now();
             $this->save();
@@ -97,6 +153,10 @@ class WorkSession extends Model
 
     public function stop(?CarbonInterface $now = null): self
     {
+        if ($this->stopIfExceeded($now)) {
+            return $this;
+        }
+
         if ($this->status !== self::STATUS_STOPPED) {
             $reference = $now ?? now();
             $this->accumulated_seconds = $this->elapsedSeconds($reference);
@@ -165,6 +225,30 @@ class WorkSession extends Model
     }
 
     /**
+     * Prepares the prefill payload for the evidence form, capping the duration at 99 h 59 min when the selected
+     * sessions exceed the form limit so the view can warn the student instead of blocking submission.
+     *
+     * @param  iterable<int, self>  $sessions
+     * @return array{title: string, hours: int, minutes: int, total_seconds: int, total_minutes: int, exceeded_limit: bool, original_hours: int, original_minutes: int, max_hours: int, max_minutes: int}
+     */
+    public static function prefillForEvidence(iterable $sessions, ?CarbonInterface $now = null): array
+    {
+        $summary = self::summarizeSessions($sessions, $now);
+        $exceeded = $summary['hours'] > self::MAX_EVIDENCE_HOURS;
+
+        return [
+            ...$summary,
+            'hours' => $exceeded ? self::MAX_EVIDENCE_HOURS : $summary['hours'],
+            'minutes' => $exceeded ? self::MAX_EVIDENCE_MINUTES : $summary['minutes'],
+            'exceeded_limit' => $exceeded,
+            'original_hours' => $summary['hours'],
+            'original_minutes' => $summary['minutes'],
+            'max_hours' => self::MAX_EVIDENCE_HOURS,
+            'max_minutes' => self::MAX_EVIDENCE_MINUTES,
+        ];
+    }
+
+    /**
      * Formats a duration in seconds as HH:MM:SS for display in the topbar stopwatch and session list.
      */
     public static function formatClock(int $seconds): string
@@ -177,4 +261,3 @@ class WorkSession extends Model
         return sprintf('%02d:%02d:%02d', $hours, $minutes, $secs);
     }
 }
-
