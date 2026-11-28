@@ -19,15 +19,19 @@
     };
     $reviewRoutes = $kind === null ? null : \App\Services\ReviewQueue::routes($kind);
     $author = !$reviewer && $evidence->user_id === $user->id;
+    $randomized ??= false;
+    $coauthorLeft ??= collect();
+    $validationOpen = !now()->gt(\Config::validate_evidences_timestamp() ?? now());
+    $uploadClosesAt = \Config::upload_evidences_timestamp();
+    $uploadOpen = !now()->gt($uploadClosesAt ?? now());
     $canLeaveCoauthorship =
         !$author &&
         !$reviewer &&
+        $uploadOpen &&
+        !$randomized &&
         $evidence->last &&
         in_array($evidence->status, ['PENDING', 'ACCEPTED'], true) &&
         $evidence->hasCoauthor($user);
-    $validationOpen = !now()->gt(\Config::validate_evidences_timestamp() ?? now());
-    $uploadClosesAt = \Config::upload_evidences_timestamp();
-    $uploadOpen = !now()->gt($uploadClosesAt);
     $reason = $evidence->status === 'REJECTED' ? $evidence->reasonRejection : null;
     $reasons = $evidence->allRejectionReasons();
     $versions = $evidence->flowEvidences();
@@ -42,12 +46,6 @@
         ],
     );
     // Newest first; events of the same second keep their order (versions, then rejections by id)
-    $coauthorLeft = \App\Models\ActivityLog::query()
-        ->about($evidence)
-        ->where('action', \App\Enums\ActivityAction::EvidenceCoauthorLeft->value)
-        ->with('user')
-        ->orderBy('id')
-        ->get();
     $history = $versions
         ->sortBy('created_at')
         ->map(

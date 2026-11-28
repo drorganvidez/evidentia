@@ -129,9 +129,6 @@ class EvidenceCoauthorTest extends TestCase
         $this->actingAs($this->author)->post(route('evidence.publish'), $this->form([$this->partner->id]));
         $evidence = Evidence::sole();
 
-        // Even with the upload deadline closed, a coauthor can leave
-        Configuration::query()->update(['upload_evidences_timestamp' => now()->subDay()]);
-
         $this->actingAs($this->partner)->get(route('evidence.list'))
             ->assertOk()
             ->assertSee('Dejar de ser coautor')
@@ -232,6 +229,49 @@ class EvidenceCoauthorTest extends TestCase
 
         $this->assertSame([], $current->fresh()->coauthors->pluck('id')->all());
         $this->assertSame([$this->partner->id], $first->fresh()->coauthors->pluck('id')->all());
+    }
+
+    public function test_a_coauthor_cannot_leave_once_the_upload_deadline_is_closed(): void
+    {
+        $this->actingAs($this->author)->post(route('evidence.publish'), $this->form([$this->partner->id]));
+        $evidence = Evidence::sole();
+
+        Configuration::query()->update(['upload_evidences_timestamp' => now()->subDay()]);
+
+        $this->actingAs($this->partner)->get(route('evidence.list'))
+            ->assertOk()
+            ->assertDontSee('action="'.route('evidence.coauthor.leave').'"', false);
+
+        $this->get(route('evidence.view', ['id' => $evidence->id]))
+            ->assertOk()
+            ->assertDontSee('action="'.route('evidence.coauthor.leave').'"', false);
+
+        $this->post(route('evidence.coauthor.leave'), ['_id' => $evidence->id])->assertNotFound();
+
+        $this->assertSame([$this->partner->id], $evidence->fresh()->coauthors->pluck('id')->all());
+        $this->assertSame(0, ActivityLog::where('action', 'evidence.coauthor_left')->count());
+        Notification::assertNotSentTo($this->author, EvidenceCoauthorLeft::class);
+    }
+
+    public function test_a_coauthor_cannot_leave_once_evidences_are_randomized(): void
+    {
+        $this->actingAs($this->author)->post(route('evidence.publish'), $this->form([$this->partner->id]));
+        $evidence = Evidence::sole();
+        $evidence->update(['rand' => true]);
+
+        $this->actingAs($this->partner)->get(route('evidence.list'))
+            ->assertOk()
+            ->assertDontSee('action="'.route('evidence.coauthor.leave').'"', false);
+
+        $this->get(route('evidence.view', ['id' => $evidence->id]))
+            ->assertOk()
+            ->assertDontSee('action="'.route('evidence.coauthor.leave').'"', false);
+
+        $this->post(route('evidence.coauthor.leave'), ['_id' => $evidence->id])->assertNotFound();
+
+        $this->assertSame([$this->partner->id], $evidence->fresh()->coauthors->pluck('id')->all());
+        $this->assertSame(0, ActivityLog::where('action', 'evidence.coauthor_left')->count());
+        Notification::assertNotSentTo($this->author, EvidenceCoauthorLeft::class);
     }
 
     private function user(string $role): User

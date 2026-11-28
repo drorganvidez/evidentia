@@ -6,6 +6,7 @@
     $closesAt = \Config::upload_evidences_timestamp();
     // Open as the routes read it (CheckUploadEvidences): until the date passes, also when there is none
     $open = !now()->gt($closesAt ?? now());
+    $randomized ??= false;
     $columns = $sort->columns([
         ['label' => 'Evidencia', 'key' => 'title'],
         ['label' => 'Comité', 'key' => 'committee', 'hide' => true],
@@ -113,7 +114,7 @@
                         <div class="flex items-center justify-end gap-1">
                             <x-ui.button icon-only icon="eye" :label="'Abrir ' . $evidence->title" :href="$href" variant="ghost"
                                 size="sm" dim />
-                            @if ($evidence->last && in_array($evidence->status, ['PENDING', 'ACCEPTED'], true))
+                            @if ($open && !$randomized && $evidence->last && in_array($evidence->status, ['PENDING', 'ACCEPTED'], true))
                                 <x-ui.dialog :id="'leave-coauthor-' . $evidence->id" variant="alert" title="Dejar de ser coautor"
                                     description="Dejarás de figurar en esta evidencia, sus horas no contarán en tu cómputo y se avisará a su autor."
                                     :trigger="'Dejar de ser coautor de ' . $evidence->title" trigger-icon="log-out" trigger-icon-only trigger-variant="ghost">

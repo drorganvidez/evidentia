@@ -8,6 +8,7 @@ use App\Exceptions\ProofNotStored;
 use App\Facades\Activity;
 use App\Http\Controllers\Concerns\PaginatesLists;
 use App\Http\Middleware\CheckRoles;
+use App\Models\ActivityLog;
 use App\Models\Committee;
 use App\Models\Evidence;
 use App\Models\File;
@@ -21,6 +22,7 @@ use App\Support\EvidenceArchive;
 use App\Support\ListPage;
 use App\Support\ListSort;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -41,8 +43,22 @@ class EvidenceController extends Controller
     {
         $evidence = Evidence::find($id);
 
-        return view('evidence.view',
-            ['evidence' => $evidence]);
+        return view('evidence.view', [
+            'evidence' => $evidence,
+            'coauthorLeft' => self::coauthorLeftHistory($evidence),
+            'randomized' => Evidence::randomized(),
+        ]);
+    }
+
+    /** Coauthor leave entries shown in the detail history timeline. */
+    public static function coauthorLeftHistory(Evidence $evidence): Collection
+    {
+        return ActivityLog::query()
+            ->about($evidence)
+            ->where('action', ActivityAction::EvidenceCoauthorLeft->value)
+            ->with('user')
+            ->orderBy('id')
+            ->get();
     }
 
     /**
@@ -79,6 +95,7 @@ class EvidenceController extends Controller
                 ->with(['committee', 'user'])->latest('evidences.created_at')->get(),
             'term' => ListPage::term($request),
             'sort' => $sort,
+            'randomized' => Evidence::randomized(),
         ]);
     }
 
@@ -513,7 +530,7 @@ class EvidenceController extends Controller
         $user = Auth::user();
         $evidence = Evidence::findOrFail($request->_id);
 
-        if (! $evidence->last || ! in_array($evidence->status, ['PENDING', 'ACCEPTED'], true) || ! $evidence->hasCoauthor($user)) {
+        if (Evidence::randomized() || ! $evidence->last || ! in_array($evidence->status, ['PENDING', 'ACCEPTED'], true) || ! $evidence->hasCoauthor($user)) {
             abort(404);
         }
 
