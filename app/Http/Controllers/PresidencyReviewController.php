@@ -41,6 +41,10 @@ class PresidencyReviewController extends ReviewQueueController
         $evidence = Evidence::findOrFail($id);
         abort_unless($evidence->status !== 'DRAFT' && $this->queue->goesToPresidency($evidence) && $evidence->user_id != Auth::id(), 404);
 
-        return view('evidence.view', ['evidence' => $evidence]);
+        return view('evidence.view', [
+            'evidence' => $evidence,
+            'coauthorLeft' => EvidenceController::coauthorLeftHistory($evidence),
+            'randomized' => Evidence::randomized(),
+        ]);
     }
 }

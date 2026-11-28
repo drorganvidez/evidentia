@@ -403,6 +403,7 @@ Route::middleware('auth')->group(function () {
             Route::post('evidence/publish/edit', [EvidenceController::class, 'publish_edit'])->name('evidence.publish.edit')->middleware(EvidenceCanBeEdited::class);
             Route::post('evidence/reedit', [EvidenceController::class, 'reedit'])->name('evidence.reedit');
             Route::post('evidence/remove', [EvidenceController::class, 'remove'])->name('evidence.remove');
+            Route::post('evidence/coauthor/leave', [EvidenceController::class, 'leave_coauthorship'])->name('evidence.coauthor.leave');
         });
     });
 
