@@ -20,7 +20,7 @@ class MigrationsTest extends TestCase
     private const NEW_TABLES = [
         'activity_log', 'activity_log_targets', 'notifications', 'notification_preferences', 'notification_reminders',
         'message_threads', 'messages', 'message_thread_reads', 'error_reports', 'error_occurrences', 'certificates',
-        'evidence_coauthors',
+        'evidence_coauthors', 'work_sessions',
     ];
 
     public function test_the_migrations_of_the_phase_roll_back_and_run_again(): void

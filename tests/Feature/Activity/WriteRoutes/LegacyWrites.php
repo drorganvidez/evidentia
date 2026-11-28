@@ -394,6 +394,11 @@ final class LegacyWrites
             'lecture.errors.reopen' => 'Errores del servidor, fuera del registro de actividad (ErrorReportingTest)',
             'president.errors.resolve' => 'Errores del servidor, fuera del registro de actividad (ErrorReportingTest)',
             'president.errors.reopen' => 'Errores del servidor, fuera del registro de actividad (ErrorReportingTest)',
+            'work-sessions.start' => 'Cronómetro personal previo a la evidencia (WorkSessionTest)',
+            'work-sessions.pause' => 'Cronómetro personal previo a la evidencia (WorkSessionTest)',
+            'work-sessions.resume' => 'Cronómetro personal previo a la evidencia (WorkSessionTest)',
+            'work-sessions.stop' => 'Cronómetro personal previo a la evidencia (WorkSessionTest)',
+            'work-sessions.destroy' => 'Cronómetro personal previo a la evidencia (WorkSessionTest)',
         ];
     }
 

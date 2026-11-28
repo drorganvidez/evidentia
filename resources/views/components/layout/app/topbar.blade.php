@@ -1,11 +1,11 @@
 {{--
-    Topbar of the app layout: menu button (phone), the link back to the parent page, search, bell, theme and the user menu.
+    Topbar of the app layout: menu button (phone), the link back to the parent page, search, work stopwatch, bell, theme and the user menu.
     <x-layout.app.topbar :breadcrumbs="$breadcrumbs" :search="$search" :notifications="$notifications" :user="$user" />
     The menu button dispatches ui-drawer, which the drawer dialog listens to on the window, and mirrors its state in
     aria-expanded (dialogTrigger.js). The user menu also turns the keyboard shortcuts on and off ($store.shortcuts),
     as the drawer does on the phone.
 --}}
-@props(['breadcrumbs' => [], 'search' => null, 'notifications' => null, 'user' => null])
+@props(['breadcrumbs' => [], 'search' => null, 'notifications' => null, 'timer' => null, 'user' => null])
 @php
     $fullName = $user !== null ? trim(($user['name'] ?? '') . ' ' . ($user['surname'] ?? '')) : null;
     $roles = $user !== null ? implode(' · ', $user['roles'] ?? []) : '';
@@ -19,6 +19,9 @@
     <div class="ml-auto flex shrink-0 items-center gap-1 md:gap-2">
         @if ($search !== null)
             <x-ui.search :action="$search['action']" :placeholder="$search['placeholder'] ?? 'Buscar evidencias'" :name="$search['name'] ?? 'q'" id="field-q-topbar" />
+        @endif
+        @if ($timer !== null)
+            <x-ui.work-timer :state="$timer" />
         @endif
         @if ($notifications !== null)
             <x-ui.bell :count="$notifications['count'] ?? 0" :href="$notifications['href']" />

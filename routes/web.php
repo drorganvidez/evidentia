@@ -30,6 +30,7 @@ use App\Http\Controllers\ProofController;
 use App\Http\Controllers\RandomizeController;
 use App\Http\Controllers\SignController;
 use App\Http\Controllers\UploadController;
+use App\Http\Controllers\WorkSessionController;
 use App\Http\Middleware\BonusMine;
 use App\Http\Middleware\CheckNotNull;
 use App\Http\Middleware\CheckProofDownload;
@@ -384,6 +385,16 @@ Route::middleware('auth')->group(function () {
     // EVIDENCES
     Route::get('evidence/list', [EvidenceController::class, 'list'])->name('evidence.list');
     Route::get('evidence/archive', [EvidenceController::class, 'archive'])->name('evidence.archive');
+
+    // WORK TIMER SESSIONS
+    Route::controller(WorkSessionController::class)->prefix('work-sessions')->name('work-sessions.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'start')->name('start');
+        Route::post('/{id}/pause', 'pause')->whereNumber('id')->name('pause');
+        Route::post('/{id}/resume', 'resume')->whereNumber('id')->name('resume');
+        Route::post('/{id}/stop', 'stop')->whereNumber('id')->name('stop');
+        Route::delete('/{id}', 'destroy')->whereNumber('id')->name('destroy');
+    });
 
     Route::middleware([CheckUploadEvidences::class])->group(function () {
         Route::get('evidence/create', [EvidenceController::class, 'create'])->name('evidence.create');

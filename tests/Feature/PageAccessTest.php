@@ -181,6 +181,7 @@ class PageAccessTest extends TestCase
             'evidence.list' => [[], self::WITH_EVIDENCES],
             'evidence.archive' => [[], self::WITH_EVIDENCES],
             'evidence.create' => [[], self::WITH_EVIDENCES],
+            'work-sessions.index' => [[], self::WITH_EVIDENCES],
             'evidence.view' => [['id' => 'evidence'], ['STUDENT']],
             'evidence.edit' => [['id' => 'draft'], ['STUDENT']],
             'proof.download' => [['id' => 'proof'], ['STUDENT', 'COORDINATOR', 'PRESIDENT', 'LECTURE']],

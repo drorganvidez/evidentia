@@ -10,6 +10,7 @@
     Without nav, App\View\Navigation composes the sidebar, the bottom bar and the deadline of the signed-in person;
     nav-current marks another route as current (a detail reached from a list). deadline=false hides the card.
     mobileNav defaults to the first five items flagged mobile; user to the signed-in person; flash to the session.
+    timer is the state of the work stopwatch of the topbar (composed with the navigation; false or absent hides it).
     main points at the page-title of the page-header only when the slot has that id; labelled-by gives another id or,
     with false, drops the reference. aurora=false drops the background light (the catalogue frames several shells at
     once and the blurred blobs are costly to paint).
@@ -23,6 +24,7 @@
     'deadline' => null,
     'user' => null,
     'notifications' => null,
+    'timer' => null,
     'search' => null,
     'subtitle' => null,
     'version' => null,
@@ -41,7 +43,9 @@
         $mobileNav ??= $composed['mobileNav'] ?? null;
         $deadline ??= $composed['deadline'] ?? null;
         $notifications ??= $composed['notifications'] ?? null;
+        $timer ??= $composed['timer'] ?? null;
     }
+    $timer = $timer === false ? null : $timer;
     $deadline = $deadline === false ? null : $deadline;
     $notifications = $notifications === false ? null : $notifications;
     // Never a dangling reference: main names the title only when the page renders it
@@ -101,7 +105,8 @@
         {{-- At least as tall as the sidebar from md: a short page keeps the footer level with its bottom edge --}}
         <div
             class="grid min-w-0 grid-cols-[minmax(0,1fr)] grid-rows-[auto_1fr_auto] gap-3 md:min-h-[calc(100dvh-2.5rem)] md:gap-6">
-            <x-layout.app.topbar :breadcrumbs="$breadcrumbs" :search="$search" :notifications="$notifications" :user="$user" />
+            <x-layout.app.topbar :breadcrumbs="$breadcrumbs" :search="$search" :notifications="$notifications" :timer="$timer"
+                :user="$user" />
             <x-ui.notices :messages="$flash" />
             <main id="main" tabindex="-1"
                 @if ($labelled) aria-labelledby="{{ $titleId }}" @endif
